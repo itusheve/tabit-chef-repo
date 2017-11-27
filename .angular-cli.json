@@ -19,9 +19,15 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
+        "../node_modules/bootstrap/dist/css/bootstrap-grid.min.css",
+        "../node_modules/devextreme/dist/css/dx.common.css",
+        "../node_modules/devextreme/dist/css/dx.light.css",                
         "styles.css"
       ],
-      "scripts": [],
+      "scripts": [
+        "js/vendor/rpbouman-xmla4j/xmla-min.js",
+        "js/xmla4j-wrapper.class.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

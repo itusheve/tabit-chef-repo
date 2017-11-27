@@ -1,0 +1,21 @@
+<!-- <p> -->
+  <!-- dsh-grid-1 works! -->
+  <dx-data-grid 
+    *ngIf="dxGrid.show" 
+    [dataSource]="dxGrid.data" 
+    [columnAutoWidth]="true"
+    [rtlEnabled]="true"
+    [showColumnLines]="false"
+    noDataText="אין נתונים"
+    >
+    <dxo-paging [enabled]="false"></dxo-paging>
+    <dxo-sorting ascendingText="סדר עולה" descendingText="סדר יורד" clearText="נקה מיון"></dxo-sorting>
+    <!-- <dxo-summary>
+      <dxi-total-item column="customers" summaryType="sum"></dxi-total-item>
+    </dxo-summary> -->
+    <dxi-column caption="יום" dataField="dateFormatted"></dxi-column>
+    <dxi-column caption='סה"כ' dataField="sales" format="currency"></dxi-column>
+    <dxi-column caption="סועדים" dataField="customers" format="#,###"></dxi-column>
+    <dxi-column caption="PPA" dataField="ppa" format="#,##0.00"></dxi-column>
+  </dx-data-grid>
+<!-- </p> -->
