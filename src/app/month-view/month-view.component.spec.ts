@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DshGrid1Component } from './dsh-grid-1.component';
+import { MonthViewComponent } from './month-view.component';
 
-describe('DshGrid1Component', () => {
-  let component: DshGrid1Component;
-  let fixture: ComponentFixture<DshGrid1Component>;
+describe('MonthViewComponent', () => {
+  let component: MonthViewComponent;
+  let fixture: ComponentFixture<MonthViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DshGrid1Component ]
+      declarations: [ MonthViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DshGrid1Component);
+    fixture = TestBed.createComponent(MonthViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col-md-12">
+    <!-- <input type="text" [(ngModel)]="name"> -->
+    <!-- <p>{{name}}</p>       -->
+    <!-- <dx-button text="Press me" (onClick)="helloWorld()"></dx-button>       -->
+    <!-- <app-dsh-gauge-1></app-dsh-gauge-1>       -->
+    <!-- <app-dsh-chart-1></app-dsh-chart-1> -->
+    <!-- <app-dsh-grid-1></app-dsh-grid-1> -->
+        
+    <app-card 
+      *ngIf="todayData"
+      class="mb10" 
+      tag="היום"
+      [title]="todayStr"
+      [sum]="todayData.sales"
+      [diners]="todayData.diners"
+      [ppa]="todayData.ppa"
+      >
+    </app-card>
+
+    <app-card 
+      *ngIf="yesterdayData" 
+      class="mb10" 
+      tag="אתמול" 
+      [title]="yesterdayStr" 
+      [sum]="yesterdayData.sales" 
+      [diners]="yesterdayData.diners"
+      [ppa]="yesterdayData.ppa">
+    </app-card>
+
+    <app-card 
+      *ngIf="monthToDateData"
+      class="mb10" 
+      tag="" 
+      title="??? MTD" 
+      [sum]="monthToDateData.sales" 
+      [diners]="monthToDateData.diners"
+      [ppa]="monthToDateData.ppa">
+    </app-card>
+
+    <app-card 
+      class="mb10"
+      *ngIf="monthForecastData" 
+      tag="" 
+      title="??? forecast" 
+      [sum]="monthForecastData.sales" 
+      [diners]="monthForecastData.diners"
+      [ppa]="monthForecastData.ppa">
+      >
+    </app-card>
+
+    <app-month-view></app-month-view>
+  </div>
+</div>

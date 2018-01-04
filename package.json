@@ -26,12 +26,13 @@
     "core-js": "^2.4.1",
     "devextreme": "^17.2.3",
     "devextreme-angular": "^17.2.3",
+    "lodash": "^4.17.4",
     "moment": "^2.19.2",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
-    "@angular/cli": "1.5.3",
+    "@angular/cli": "^1.6.3",
     "@angular/compiler-cli": "^5.0.0",
     "@angular/language-service": "^5.0.0",
     "@types/jasmine": "~2.5.53",
@@ -49,6 +50,7 @@
     "protractor": "~5.1.2",
     "ts-node": "~3.2.0",
     "tslint": "~5.7.0",
-    "typescript": "~2.4.2"
+    "typescript": "~2.4.2",
+    "webpack": "^3.10.0"
   }
 }

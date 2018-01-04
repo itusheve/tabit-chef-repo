@@ -1,0 +1,125 @@
+//container:
+.flex {
+  display: flex;
+}
+
+.iflex {
+  display: inline-flex;
+}
+
+  .f-ltr {
+    text-align: left!important;
+    direction: ltr!important;
+  }
+
+  .f-rtl {
+    text-align: right!important;
+    direction: rtl!important;
+  }
+
+.flex, iflex {
+
+
+
+  &.d-row {//default
+    flex-direction: row;
+  }
+
+  &.d-column, &.d-col {
+    flex-direction: column;
+  }
+
+  &.w-wrap, &.f-wrap {
+    flex-wrap: wrap;
+  }
+
+  &.j-start {//default
+    justify-content: flex-start;
+  }
+
+  &.j-center {
+    justify-content: center;
+  }
+
+  &.j-end {
+    justify-content: flex-end;
+  }
+
+  &.j-space-around, &.j-sa {
+    justify-content: space-around;
+  }
+
+  &.j-space-between, &.j-sb {
+    justify-content: space-between;
+  }
+
+
+  &.a-start {
+    align-items: flex-start;
+  }
+
+  &.a-end {
+    align-items: flex-end;
+  }
+
+  &.a-center {
+    align-items: center;
+  }
+
+  &.a-baseline {
+    align-items: baseline;
+  }
+
+  &.a-stretch, &.a-s {//default
+    align-items: stretch;
+  }
+
+//ALIGN-ITEMS VS ALIGN-CONTENT:
+//https://stackoverflow.com/questions/27539262/whats-the-difference-between-align-content-and-align-items
+	&.a-c-start {align-content: start}
+	&.a-c-end {align-content: end}
+	&.a-c-center {align-content: center}
+	&.a-c-baseline {align-content: baseline}
+	&.a-c-sb {align-content: space-between}
+	&.a-c-sa {align-content: space-around}
+	&.a-c-stretch {align-content: stretch}
+
+  //children:
+  & > * {
+    &.as-center {
+      align-self: center;
+    }
+
+    &.as-start {
+      align-self: flex-start;
+    }
+
+    &.as-end {
+      align-self: flex-end;
+    }
+
+    &.s-0 {
+      flex-shrink: 0;
+    }
+
+    &.s-1 {
+      flex-shrink: 1;
+    }
+
+    &.g-1 {
+      flex-grow: 1;
+    }
+
+    &.g-2 {
+      flex-grow: 2;
+    }
+
+    &.g-3 {
+      flex-grow: 3;
+    }
+
+    &.g-4 {
+      flex-grow: 4;
+    }
+  }
+}

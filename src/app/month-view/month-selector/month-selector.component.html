@@ -1,0 +1,17 @@
+<!-- <dx-calendar 
+  [min]="minDateValue" 
+  [max]="maxDateValue" 
+  [(value)]="currentValue" 
+  zoomLevel="month" 
+  [showTodayButton]="true"
+  [rtlEnabled]="true" 
+  minZoomLevel='year' 
+  maxZoomLevel='year'
+  >
+</dx-calendar> -->
+
+<div class="flex">
+  <button type="button" (click)="prevMonth()"><</button>
+  <div>{{currentValue | amDateFormat:'MMM YYYY'}}</div>
+  <button type="button" (click)="nextMonth()">></button>
+</div>

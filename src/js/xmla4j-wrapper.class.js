@@ -21,10 +21,12 @@ const Xmla4JWrapper = (function(){
 
         const rows = xmlaResponse._rows.map(oldRow => {
             const newRow = {};
-            oldRow.childNodes.forEach(childNode => {
-                const key = fieldsMap[childNode.nodeName];
-                newRow[key.name] = childNode.hasOwnProperty('childNodes') ? childNode.childNodes[0].data : undefined;
-            })
+            if (oldRow.childNodes) {
+                oldRow.childNodes.forEach(childNode => {
+                    const key = fieldsMap[childNode.nodeName];
+                    newRow[key.name] = childNode.hasOwnProperty('childNodes') ? childNode.childNodes[0].data : undefined;
+                })
+            }
             return newRow;
         })
 
