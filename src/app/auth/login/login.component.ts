@@ -8,25 +8,35 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+//export class LoginComponent implements OnInit {
+export class LoginComponent {  
 
-  constructor(private authService: AuthService, private router:Router) { }
-
-  ngOnInit() {
-  }
-
-  onLogin(form: NgForm) {
-    const email = form.value.email;
-    const password = form.value.password;
-    this.authService.login({      
+  constructor(private authService: AuthService, private router:Router) {
+    this.authService.login({
       email: 'or@tabit.cloud',//email,
       password: '100Ahbaroshim'//password
     })
-      .then(()=>{
+      .then(() => {
         this.router.navigate(['home']);
-      }, ()=>{
-        debugger;
       });
+
+  // ngOnInit() {
+    
   }
+
+  //onLogin(form?: NgForm) {
+  // onLogin(form?: NgForm) {    
+    // const email = form.value.email;
+    // const password = form.value.password;
+    // this.authService.login({      
+    //   email: 'or@tabit.cloud',//email,
+    //   password: '100Ahbaroshim'//password
+    // })
+    //   .then(()=>{
+    //     this.router.navigate(['home']);
+    //   }, ()=>{
+    //     debugger;
+    //   });
+  // }
 
 }

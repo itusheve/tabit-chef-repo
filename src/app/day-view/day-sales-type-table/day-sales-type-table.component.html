@@ -1,0 +1,31 @@
+<div>הכנסות</div>
+<div class="flex f-rtl d-col">
+    <div class="flex d-row">
+        <div class="flex"></div>
+        <div class="flex" *ngFor="let service of services">{{service}}</div>
+    </div>
+    <div class="flex d-row">
+        <div class="flex">בישיבה</div>
+        <div class="flex" *ngFor="let sales of rows.seated">{{sales}}</div>
+    </div>
+    <div class="flex d-row">
+        <div class="flex">דלפק</div>
+        <div class="flex" *ngFor="let sales of rows.counter">{{sales}}</div>
+    </div>
+    <div class="flex d-row">
+        <div class="flex">TA</div>
+        <div class="flex" *ngFor="let sales of rows.ta">{{sales}}</div>
+    </div>
+    <div class="flex d-row">
+        <div class="flex">משלוחים</div>
+        <div class="flex" *ngFor="let sales of rows.delivery">{{sales}}</div>
+    </div>
+    <div class="flex d-row">
+        <div class="flex">אחר</div>
+        <div class="flex" *ngFor="let sales of rows.other">{{sales}}</div>
+    </div>
+    <div class="flex d-row">
+        <div class="flex">סה"כ</div>
+        <div class="flex" *ngFor="let sales of rows.summary">{{sales}}</div>
+    </div>
+</div>

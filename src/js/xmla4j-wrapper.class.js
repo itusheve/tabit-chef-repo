@@ -33,6 +33,10 @@ const Xmla4JWrapper = (function(){
         this.resolve(rows);
     }
 
+    Xmla4j_wrapper.prototype._successHandlerNew = function (xmla, xmlaRequest, XmlaRowset) {
+        this.resolve(XmlaRowset.fetchAllAsObject());
+    }
+
     Xmla4j_wrapper.prototype._errorHandler = function (xmla, xmlaRequest, exception) {
         if (exception.code === 'XMLAnalysisError.0xc10a00b8') {
             this.reject({ type: 'cantDetailCalculatedField', message: 'Cant detail a calculated field' })
@@ -58,6 +62,32 @@ const Xmla4JWrapper = (function(){
                 },
                 async: true,
                 success: function () { that._successHandler.apply(that, arguments) },
+                error: function () { that._errorHandler.apply(that, arguments) },
+            });
+        })
+
+
+        //return this.deferred.promise;
+        return this.promise;
+    }
+
+    Xmla4j_wrapper.prototype.executeNew = function (query) {
+        let that = this;
+
+        this.promise = new Promise((resolve, reject) => {
+            that.resolve = resolve;
+            that.reject = reject;
+
+            const xmla = new Xmla();
+            xmla.executeTabular({
+                url: this.url,
+                statement: query,
+                properties: {
+                    Catalog: this.catalog,
+                    Timeout: 3600
+                },
+                async: true,
+                success: function () { that._successHandlerNew.apply(that, arguments) },
                 error: function () { that._errorHandler.apply(that, arguments) },
             });
         })

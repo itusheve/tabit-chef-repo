@@ -21,6 +21,7 @@ export class DataService {
 
     private ROS_base_url: String = 'https://ros-office-beta.herokuapp.com';//TODO get from config and consume in ROS ep
     
+    private shifts$: ReplaySubject<any>;
     private _currentBusinessDate;
     private _dashboardData;
     
@@ -29,9 +30,77 @@ export class DataService {
     private monthToDateData$;
     private monthForecastData$;
 
+    private orgSelected = false;
+    private selectOrg(): Promise<any> {
+        function getOrganizations() {
+            return that.rosEp.get(that.ROS_base_url + '/Organizations', {});
+        }
+
+        function selectOrg(org) {
+            return that.rosEp.post(`${that.ROS_base_url}/Organizations/${org.id}/change`, {});
+        }
+        
+        const that = this;
+        
+        return new Promise((res, rej)=>{
+            if (this.orgSelected) return res();
+            getOrganizations()
+                .then(orgs => {
+                    const nono = orgs.find(o => o.name === 'נונו');
+                    selectOrg(nono)
+                        .then(()=>{
+                            res();
+                        });
+                });
+        });
+    }
 
     getDailyData(fromDate: moment.Moment, toDate?: moment.Moment) {
         return this.olapEp.getDailyData(fromDate, toDate);
+    }
+
+    get shifts(): ReplaySubject<any> {
+        if (this.shifts$) return this.shifts$;
+        this.shifts$ = new ReplaySubject<any>();
+
+        this.selectOrg()
+            .then(()=>{
+                this.rosEp.get(this.ROS_base_url + '/configuration', {})
+                    .then(data=>{
+                        const serverShiftsConfig = data[0].regionalSettings.ownerDashboard;
+                        const shiftsConfig = {
+                            morning: {
+                                active: serverShiftsConfig.hasOwnProperty('morningShiftActive') ? serverShiftsConfig.morningShiftActive : true,
+                                name: serverShiftsConfig.morningShiftName,
+                                startTime: serverShiftsConfig.morningStartTime
+                            },
+                            afternoon: {
+                                active: serverShiftsConfig.hasOwnProperty('afternoonShiftActive') ? serverShiftsConfig.afternoonShiftActive : true,
+                                name: serverShiftsConfig.afternoonShiftName,
+                                startTime: serverShiftsConfig.afternoonStartTime
+                            },
+                            evening: {
+                                active: serverShiftsConfig.hasOwnProperty('eveningShiftActive') ? serverShiftsConfig.eveningShiftActive : true,
+                                name: serverShiftsConfig.eveningShiftName,
+                                startTime: serverShiftsConfig.eveningStartTime
+                            },
+                            fourth: {
+                                active: serverShiftsConfig.hasOwnProperty('fourthShiftActive') ? serverShiftsConfig.fourthShiftActive : false,
+                                name: serverShiftsConfig.fourthShiftName,
+                                startTime: serverShiftsConfig.fourthStartTime
+                            },
+                            fifth: {
+                                active: serverShiftsConfig.hasOwnProperty('fifthShiftActive') ? serverShiftsConfig.fifthShiftActive : false,
+                                name: serverShiftsConfig.fifthShiftName,
+                                startTime: serverShiftsConfig.fifthStartTime
+                            }
+                        };
+                        // shiftsConfig.morning.endTime = shiftsConfig.afternoon.startTime;
+                        // shiftsConfig.afternoon.endTime = shiftsConfig.evening.startTime;
+                    });
+            });
+
+        return this.shifts$;
     }
 
     get currentBusinessDate(): ReplaySubject<moment.Moment> {
@@ -54,13 +123,7 @@ export class DataService {
 
         let that = this;
 
-        function getOrganizations() {
-            return that.rosEp.get(that.ROS_base_url + '/Organizations', {});
-        }
 
-        function selectOrg(org) {
-            return that.rosEp.post(`${that.ROS_base_url}/Organizations/${org.id}/change`, {});
-        }
 
         // function getRegionalSettings() {
         //     return that.rosEp.get(ROS_base_url + '/configuration/regionalSettings', {});
@@ -70,11 +133,7 @@ export class DataService {
         //return that.rosEp.get(ROS_base_url + '/businessdays/current', {});
         // }
 
-        getOrganizations()
-            .then(orgs => {
-                const nono = orgs.find(o => o.name === 'נונו');
-                return selectOrg(nono);
-            })
+        this.selectOrg()
             .then(() => this.rosEp.get(this.ROS_base_url + '/businessdays/current', {}))
             .then((results: any) => moment(results.businessDate))
             .then((bd: moment.Moment) => {
@@ -279,6 +338,41 @@ export class DataService {
             });
     
         return this.monthForecastData$;
+    }
+
+    getDailyDataByTypeAndService(date: moment.Moment): Subject<any> {        
+        const sub$ = new Subject<any>();
+        this.olapEp.get_sales_and_ppa_by_OrderType_by_Service(date)
+            .subscribe(data=>{
+                const salesByOrderType = _.groupBy(data, item => {
+                    switch (item.orderType) {
+                        case 'בישיבה':
+                            return 'seated';
+                        case 'דלפק':
+                            return 'counter';
+                        case 'לקחת':
+                            return 'ta';
+                        case 'משלוח':
+                            return 'delivery';
+                        case 'החזר':
+                            return 'returns';
+                    }
+                });
+                Object.keys(salesByOrderType).forEach(service => {
+                    salesByOrderType[service] = salesByOrderType[service].reduce((acc, curr) => {
+                        return acc + curr.sales;
+                    }, 0);
+                });
+                const totalSales = Object.keys(salesByOrderType).reduce((acc, currKey, currIdx, arr) => {
+                    return acc + salesByOrderType[currKey];
+                }, 0);
+                sub$.next({
+                    byOrderTypeAndService: data,
+                    salesByOrderType: salesByOrderType,
+                    totalSales: totalSales
+                });
+            });
+        return sub$;
     }
 
 }

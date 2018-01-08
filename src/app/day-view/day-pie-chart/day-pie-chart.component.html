@@ -1,0 +1,20 @@
+<!-- <dx-chart 
+    [dataSource]="dxChart.dataSource"
+    [rtlEnabled]="true"
+    >
+    <dxo-legend [visible]="false"></dxo-legend>
+    <dxi-series argumentField="dateFormatted" valueField="sales" type="bar"></dxi-series>
+</dx-chart> -->
+
+
+<dx-pie-chart id="pie" type="doughnut" title="The Population of Continents and Regions" palette="Soft Pastel" [dataSource]="dataSource" [rtlEnabled]="true">
+    <dxi-series argumentField="orderType">
+        <dxo-label [visible]="true" format="thousands">
+            <dxo-connector [visible]="true"></dxo-connector>
+        </dxo-label>
+    </dxi-series>
+    <dxo-export [enabled]="false"></dxo-export>
+    <dxo-legend [margin]="0" horizontalAlignment="right" verticalAlignment="top"></dxo-legend>
+    <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip" format="thousands">
+    </dxo-tooltip>
+</dx-pie-chart>

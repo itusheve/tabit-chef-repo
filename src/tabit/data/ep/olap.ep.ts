@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
-// import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Subject } from 'rxjs/Subject';
 
 declare var Xmla4JWrapper: any;
 
@@ -20,10 +20,37 @@ export class OlapEp {
             diners: '[Measures].[PPADinersSeated]'
         }
     };
+
+    private dims = {
+        orderType: {
+            hierarchy: '[Ordertype]',
+            dim: '[Tlog Header Ordertype]',
+            members: {
+                seated: '&[seated]',
+                takeaway: '&[takeaway]',
+                delivery: '&[delivery]',
+                otc: '&[otc]',
+                refund: '&[refund]',
+                mediaexchange: '&[mediaexchange]'
+            }
+        },
+        service: {
+            hierarchy: '[Service]',
+            dim: '[Service Name]',
+        },
+        BusinessDate: {
+            hierarchy: '[BusinessDate]',
+            dims: {
+                date: '[Date Key]',
+                dateAndWeekDay: '[Shortdayofweek Name]'
+            }
+        }
+    };
     
     private SHORTDAYOFWEEK_NAME_REGEX = / *\S* *(\S*)/;
 
     private dailyData$: ReplaySubject<any>;
+    // private MDX_sales_and_ppa_byOrderType_byService$: ReplaySubject<any>;
 
     private expoToNumer(eStr) {
         const splitted = eStr.split('E');
@@ -80,24 +107,20 @@ export class OlapEp {
                 ${this.measures.ppa.diners}
             } ON 0,
             {
-                [BusinessDate].[Shortdayofweek Name].[Shortdayofweek Name].members
+                ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.dateAndWeekDay}.${this.dims.BusinessDate.dims.dateAndWeekDay}.members
             } ON 1
             FROM ${this.cube}
             WHERE (
-                [BusinessDate].[Date Key].&[${dateFrom.format('YYYYMMDD')}]:[BusinessDate].[Date Key].&[${dateTo.format('YYYYMMDD')}]
+                ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateFrom.format('YYYYMMDD')}]:${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateTo.format('YYYYMMDD')}]
             )
         `;
-            // [BusinessDate].[Year Month Key].&[${date.format('YYYYMM')}]
-        //should be like: WHERE ([BusinessDate].[Year Month Key].&[201711])
-
-        //
         const xmla4j_w = new Xmla4JWrapper({ url: this.url, catalog: this.catalog });
 
         xmla4j_w.execute(mdx)
             .then(rowset => {
                 const treated = rowset.map(r => {
                     // raw date looks like: " ש 01/10/2017"
-                    const rawDate = r['[BusinessDate].[Shortdayofweek Name].[Shortdayofweek Name].[MEMBER_CAPTION]'];
+                    const rawDate = r[`${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.dateAndWeekDay}.${this.dims.BusinessDate.dims.dateAndWeekDay}.[MEMBER_CAPTION]`];
                     let m;
                     let dateAsString;
                     if ((m = this.SHORTDAYOFWEEK_NAME_REGEX.exec(rawDate)) !== null && m.length > 1) {
@@ -136,43 +159,72 @@ export class OlapEp {
 
     }
 
-    // getMonthToDateData() {
+    public get_sales_and_ppa_by_OrderType_by_Service(day: moment.Moment): Subject<any> {
+        // if (this.MDX_sales_and_ppa_byOrderType_byService$) return this.MDX_sales_and_ppa_byOrderType_byService$;
+        const obs$ = new Subject<any>();
+        // this.MDX_sales_and_ppa_byOrderType_byService$ = new ReplaySubject<any>();
 
-    //     const mdx = `
-    //         SELECT 
-    //         {
-    //             ${this.measures.sales.key},
-    //             ${this.measures.customers.key},
-    //             ${this.measures.ppa.key}
-    //         } ON 0
-    //         FROM ${this.cube}
-    //         WHERE (                
-    //             [BusinessDate].[MTD].&[1]
-    //         )
-    //         `;
+        const mdx = `
+            SELECT
+            {
+                ${this.measures.sales},
+                ${this.measures.ppa.sales},
+                ${this.measures.ppa.diners}
+            } ON 0,
+            NON EMPTY {
+                (
+                    {
+                        ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.members.seated},
+                        ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.members.takeaway},
+                        ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.members.delivery},
+                        ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.members.otc},
+                        ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.members.refund}
+                    },
+                    ${this.dims.service.hierarchy}.${this.dims.service.dim}.${this.dims.service.dim}.members
+	            )
+            } ON 1
+            FROM ${this.cube}
+            WHERE (
+                ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${day.format('YYYYMMDD')}]
+            )
+        `;
 
-    //     const xmla4j_w = new Xmla4JWrapper({ url: this.url, catalog: this.catalog });
+        const xmla4j_w = new Xmla4JWrapper({ url: this.url, catalog: this.catalog });
 
-    //     return xmla4j_w.execute(mdx)
-    //         .then(rowset => {
-    //             const r = rowset[0];
-    //             let sales = r[this.measures.sales.key];
-    //             let customers = r[this.measures.customers.key];
-    //             let ppa = r[this.measures.ppa.key];
-    //             if (sales) sales = this.expoToNumer(sales);
-    //             if (customers) customers = customers * 1;
-    //             if (ppa) ppa = this.expoToNumer(ppa);
-    //             return {
-    //                 sales: sales,
-    //                 customers: customers,
-    //                 ppa: ppa
-    //             };
-    //         })
-    //         .catch(e => {
-    //             debugger;
-    //         });
+        xmla4j_w.executeNew(mdx)
+            .then(rowset => {
+                const treated = rowset.map(r => {
 
-    // }
+                    let orderType = r[`${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.dim}.[MEMBER_CAPTION]`];
+                    let service = r[`${this.dims.service.hierarchy}.${this.dims.service.dim}.${this.dims.service.dim}.[MEMBER_CAPTION]`];
+                    let sales = r[this.measures.sales];
+                    let salesPPA = r[this.measures.ppa.sales];
+                    let dinersPPA = r[this.measures.ppa.diners];
+
+                    if (sales) sales = this.expoToNumer(sales);
+                    if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
+                    if (dinersPPA) dinersPPA = dinersPPA * 1;
+
+                    return {
+                        orderType: orderType,
+                        service: service,
+                        sales: sales,
+                        salesPPA: salesPPA,
+                        dinersPPA: dinersPPA
+                    };
+                });
+
+                obs$.next(treated);
+            })
+            .catch(e => {
+                //debugger;
+            });
+
+
+        return obs$;
+
+    }
+
 }
 
 
