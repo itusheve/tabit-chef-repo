@@ -178,7 +178,8 @@ export class OlapEp {
                         ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.members.takeaway},
                         ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.members.delivery},
                         ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.members.otc},
-                        ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.members.refund}
+                        ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.members.refund},
+                        ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.[All].UNKNOWNMEMBER
                     },
                     ${this.dims.service.hierarchy}.${this.dims.service.dim}.${this.dims.service.dim}.members
 	            )
@@ -194,7 +195,6 @@ export class OlapEp {
         xmla4j_w.executeNew(mdx)
             .then(rowset => {
                 const treated = rowset.map(r => {
-
                     let orderType = r[`${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.dim}.[MEMBER_CAPTION]`];
                     let service = r[`${this.dims.service.hierarchy}.${this.dims.service.dim}.${this.dims.service.dim}.[MEMBER_CAPTION]`];
                     let sales = r[this.measures.sales];

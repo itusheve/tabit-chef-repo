@@ -68,7 +68,7 @@ export class DataService {
                 this.rosEp.get(this.ROS_base_url + '/configuration', {})
                     .then(data=>{
                         const serverShiftsConfig = data[0].regionalSettings.ownerDashboard;
-                        const shiftsConfig = {
+                        const shiftsConfig: any = {
                             morning: {
                                 active: serverShiftsConfig.hasOwnProperty('morningShiftActive') ? serverShiftsConfig.morningShiftActive : true,
                                 name: serverShiftsConfig.morningShiftName,
@@ -84,19 +84,22 @@ export class DataService {
                                 name: serverShiftsConfig.eveningShiftName,
                                 startTime: serverShiftsConfig.eveningStartTime
                             },
-                            fourth: {
-                                active: serverShiftsConfig.hasOwnProperty('fourthShiftActive') ? serverShiftsConfig.fourthShiftActive : false,
-                                name: serverShiftsConfig.fourthShiftName,
-                                startTime: serverShiftsConfig.fourthStartTime
-                            },
-                            fifth: {
-                                active: serverShiftsConfig.hasOwnProperty('fifthShiftActive') ? serverShiftsConfig.fifthShiftActive : false,
-                                name: serverShiftsConfig.fifthShiftName,
-                                startTime: serverShiftsConfig.fifthStartTime
-                            }
+                            // fourth: {
+                            //     active: serverShiftsConfig.hasOwnProperty('fourthShiftActive') ? serverShiftsConfig.fourthShiftActive : false,
+                            //     name: serverShiftsConfig.fourthShiftName,
+                            //     startTime: serverShiftsConfig.fourthStartTime
+                            // },
+                            // fifth: {
+                            //     active: serverShiftsConfig.hasOwnProperty('fifthShiftActive') ? serverShiftsConfig.fifthShiftActive : false,
+                            //     name: serverShiftsConfig.fifthShiftName,
+                            //     startTime: serverShiftsConfig.fifthStartTime
+                            // }
                         };
-                        // shiftsConfig.morning.endTime = shiftsConfig.afternoon.startTime;
-                        // shiftsConfig.afternoon.endTime = shiftsConfig.evening.startTime;
+                        shiftsConfig.morning.endTime = shiftsConfig.afternoon.startTime;
+                        shiftsConfig.afternoon.endTime = shiftsConfig.evening.startTime;
+                        shiftsConfig.evening.endTime = shiftsConfig.morning.startTime;
+
+                        this.shifts$.next(shiftsConfig);
                     });
             });
 

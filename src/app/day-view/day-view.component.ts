@@ -5,6 +5,8 @@ import { DataService } from '../../tabit/data/data.service';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { zip } from 'rxjs/observable/zip';
+import { Subscriber } from 'rxjs/Subscriber';
 
 @Component({
   selector: 'app-day-view',
@@ -24,16 +26,16 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
     // let queryFrom, queryTo;
     // const date = moment('01-05-2018');
 
-    this.dataService.shifts
-      .subscribe(shifts=>{
-        debugger;
-      });
+    const data$ = zip(
+      this.dataService.shifts, 
+      this.dataService.getDailyDataByTypeAndService(this.date), 
+      (shifts: any, dailyDataByTypeAndService: any) => Object.assign({}, { shifts: shifts }, dailyDataByTypeAndService)
+    );
 
-    this.dataService.getDailyDataByTypeAndService(this.date)
-      .subscribe(data=>{
-        // this.dayPieChart.render(data.salesByOrderType);
-        this.daySalesTypeTable.render(data.byOrderTypeAndService);
-      });
+    data$.subscribe(data=>{
+      // this.dayPieChart.render(data.salesByOrderType);
+      this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
+    });
 
     // if (this.day.isSame(now, 'month')) {
     //   if (now.date()===1) {
