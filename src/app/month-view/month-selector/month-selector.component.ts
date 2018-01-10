@@ -15,18 +15,20 @@ export class MonthSelectorComponent implements OnInit {
   @Output() onDateChanged = new EventEmitter();
 
   //currentValue: Date = new Date();
-  minDateValue: Date = new Date(2017, 1, 1);
-  maxDateValue: Date = new Date();
+  minDateValue: moment.Moment = moment('2017-01-01 00:00:00Z');
+  maxDateValue: moment.Moment = moment();
 
   ngOnInit() {
     this.currentValue = moment(this.currentValue);
   }
 
   prevMonth = ()=>{
+    if (this.currentValue.isSame(this.minDateValue, 'month')) return;
     this.onDateChanged.emit(moment(this.currentValue).subtract(1, 'months'));
   }
 
   nextMonth = ()=>{
+    if (this.currentValue.isSame(this.maxDateValue, 'month')) return;
     this.onDateChanged.emit(moment(this.currentValue).add(1, 'months'));
   }
 

@@ -17,6 +17,8 @@ import { Subscriber } from 'rxjs/Subscriber';
 export class DayViewComponent implements OnInit, AfterViewInit  {
   @ViewChild('dayPieChart') dayPieChart;
   @ViewChild('daySalesTypeTable') daySalesTypeTable;
+  @ViewChild('dayDinersTable') dayDinersTable;  
+  @ViewChild('dayShifts') dayShifts;  
   
   date: moment.Moment = moment().startOf('month');   
 
@@ -28,13 +30,15 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
 
     const data$ = zip(
       this.dataService.shifts, 
-      this.dataService.getDailyDataByTypeAndService(this.date), 
-      (shifts: any, dailyDataByTypeAndService: any) => Object.assign({}, { shifts: shifts }, dailyDataByTypeAndService)
+      this.dataService.getDailyDataByShiftAndType(this.date), 
+      (shifts: any, dailyData: any) => Object.assign({}, { shifts: shifts }, dailyData)
     );
 
     data$.subscribe(data=>{
-      // this.dayPieChart.render(data.salesByOrderType);
+      this.dayPieChart.render(data.salesByOrderType);
       this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
+      this.dayDinersTable.render(data.shifts, data.dinersAndPPAByShift);
+      this.dayShifts.render(data.shifts);
     });
 
     // if (this.day.isSame(now, 'month')) {

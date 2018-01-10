@@ -38,6 +38,8 @@ import { MonthSelectorComponent } from './month-view/month-selector/month-select
 import { DayViewComponent } from './day-view/day-view.component';
 import { DayPieChartComponent } from './day-view/day-pie-chart/day-pie-chart.component';
 import { DaySalesTypeTableComponent } from './day-view/day-sales-type-table/day-sales-type-table.component';
+import { DayDinersTableComponent } from './day-view/day-diners-table/day-diners-table.component';
+import { DayShiftsComponent } from './day-view/day-shifts/day-shifts.component';
 // import { MonthGridComponent } from './month-view/month-grid/month-grid.component';
 
 import { CardComponent } from './ui/card/card.component';
@@ -61,6 +63,8 @@ import { AuthGuard } from './auth/auth-guard.service';
     DayViewComponent,
     DayPieChartComponent,
     DaySalesTypeTableComponent,
+    DayDinersTableComponent,
+    DayShiftsComponent,
 
     CardComponent,
     // DshGauge1Component,

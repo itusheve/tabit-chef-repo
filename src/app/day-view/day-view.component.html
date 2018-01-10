@@ -1,11 +1,12 @@
 <div class="row">
   <div class="col-md-12">    
     
-    <div>{{date | amDateFormat:'LL'}}</div>
-    <!-- <app-day-pie-chart #dayPieChart></app-day-pie-chart> -->
+    <div class="widget">{{date | amDateFormat:'LL'}}</div>
+    <app-day-pie-chart #dayPieChart></app-day-pie-chart>
     <app-day-sales-type-table #daySalesTypeTable></app-day-sales-type-table>
-    <!-- <app-month-selector #monthSelector [currentValue]="month" (onDateChanged)="onDateChanged($event)"></app-month-selector> -->
-    <!-- <app-month-grid #monthGrid [options]="components.grid.options"></app-month-grid> -->
+    <app-day-diners-table #dayDinersTable></app-day-diners-table>
+    <app-day-shifts #dayShifts></app-day-shifts>
+      
   </div>
 </div>
 

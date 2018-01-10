@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
+import * as _ from 'lodash';
+
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 
@@ -137,12 +139,15 @@ export class OlapEp {
                     if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
                     if (dinersPPA) dinersPPA = dinersPPA * 1;
                     
+                    const ppa = (salesPPA ? salesPPA : 0) / (dinersPPA ? dinersPPA : 1);
+
                     return {
                         date: date,
                         dateFormatted: dateFormatted,
                         sales: sales,
                         salesPPA: salesPPA,
-                        dinersPPA: dinersPPA
+                        dinersPPA: dinersPPA,
+                        ppa: ppa
                     };
                 })
                     .filter(r => r.sales !== undefined)

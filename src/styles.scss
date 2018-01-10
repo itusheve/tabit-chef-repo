@@ -1,9 +1,76 @@
 /* You can add global styles to this file, and also import other style files */
 
+$baseText: #343E56;
+$greyText: #6e7482;
 
-body {
+html, body {
+    width: 100%;
+    height: 100%;
     padding: 0;
     margin: 0;
+    font-family: "Alef", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    //EN: font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    color: $baseText;
+    background-color: #edf1f2;
+}
+
+::-webkit-scrollbar {
+    height: 10px;
+    width: 0px;
+    background: #ddd;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+::-webkit-scrollbar-corner {
+    background: #000;
+}
+
+
+
+.widget {
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    color: #343E56;
+    &.blueAccent {
+        background-color: #3A5675;
+        color: #fff;
+    }
+    &.greyAccent {
+        background-color: #6e7482;
+        color: #fff;
+    }
+
+    .title {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;        
+    }
+
+    .body {
+        .table {
+            color: $greyText;
+            .tblRow {
+                padding: 8px 0px;
+                border-top: 1px solid #eaeff0;
+                &:first-child {
+                    border-top: none;
+                }
+
+                &.tblTotalRow {
+                    font-weight: bold;
+                }
+            }
+        }
+    }
 }
 
 @import 'tabit/styles/util';

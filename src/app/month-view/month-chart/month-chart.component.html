@@ -1,11 +1,13 @@
-<dx-chart 
-    [dataSource]="dxChart.dataSource"
-    [rtlEnabled]="true"
-    >
-    <dxo-legend [visible]="false"></dxo-legend>
-    <!-- <dxo-common-series-settings
-        argumentField="date"
-        type="bar"> -->
-    <!-- </dxo-common-series-settings> -->
-    <dxi-series argumentField="dateFormatted" valueField="sales" type="bar"></dxi-series>
-</dx-chart>
+<div class="widget">
+    <dx-chart 
+        [dataSource]="dxChart.dataSource"
+        [rtlEnabled]="true"
+        >
+        <dxo-legend [visible]="false"></dxo-legend>
+        <!-- <dxo-common-series-settings
+            argumentField="date"
+            type="bar"> -->
+        <!-- </dxo-common-series-settings> -->
+        <dxi-series argumentField="dateFormatted" valueField="sales" type="bar"></dxi-series>
+    </dx-chart>
+</div>

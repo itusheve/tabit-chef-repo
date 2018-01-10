@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { PercentPipe } from '@angular/common';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-day-sales-type-table',
@@ -65,25 +66,46 @@ export class DaySalesTypeTableComponent implements OnInit {
     const otherAfternoon = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.other && i.service === shiftsMap.afternoon);
     const otherEvening = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.other && i.service === shiftsMap.evening);    
 
-    this.rows.seated.morning = seatedMorning ? seatedMorning : 0;
-    this.rows.seated.afternoon = seatedAfternoon ? seatedAfternoon : 0;
-    this.rows.seated.evening = seatedEvening ? seatedEvening : 0;
+    this.rows.seated.morning = _.get(seatedMorning, 'sales', 0) * 1;
+    this.rows.seated.afternoon = _.get(seatedAfternoon, 'sales', 0) * 1;
+    this.rows.seated.evening = _.get(seatedEvening, 'sales', 0) * 1;
 
-    this.rows.counter.morning = counterMorning ? counterMorning : 0;
-    this.rows.counter.afternoon = counterAfternoon ? counterAfternoon : 0;
-    this.rows.counter.evening = counterEvening ? counterEvening : 0;
+    this.rows.counter.morning = _.get(counterMorning, 'sales', 0) * 1;
+    this.rows.counter.afternoon = _.get(counterAfternoon, 'sales', 0) * 1;
+    this.rows.counter.evening = _.get(counterEvening, 'sales', 0) * 1;
 
-    this.rows.ta.morning = taMorning ? taMorning : 0;
-    this.rows.ta.afternoon = taAfternoon ? taAfternoon : 0;
-    this.rows.ta.evening = taEvening ? taEvening : 0;
+    this.rows.ta.morning = _.get(taMorning, 'sales', 0) * 1;
+    this.rows.ta.afternoon = _.get(taAfternoon, 'sales', 0) * 1;
+    this.rows.ta.evening =_.get( taEvening, 'sales', 0) * 1;
 
-    this.rows.delivery.morning = deliveryMorning ? deliveryMorning : 0;
-    this.rows.delivery.afternoon = deliveryAfternoon ? deliveryAfternoon : 0;
-    this.rows.delivery.evening = deliveryEvening ? deliveryEvening : 0;
+    this.rows.delivery.morning = _.get(deliveryMorning, 'sales', 0) * 1;
+    this.rows.delivery.afternoon = _.get(deliveryAfternoon, 'sales', 0) * 1;
+    this.rows.delivery.evening = _.get(deliveryEvening, 'sales', 0) * 1;
 
-    this.rows.other.morning = otherMorning ? otherMorning : 0;
-    this.rows.other.afternoon = otherAfternoon ? otherAfternoon : 0;
-    this.rows.other.evening = otherEvening ? otherEvening : 0;  
+    this.rows.other.morning = _.get(otherMorning, 'sales', 0) * 1;
+    this.rows.other.afternoon = _.get(otherAfternoon, 'sales', 0) * 1;
+    this.rows.other.evening = _.get(otherEvening, 'sales', 0) * 1;
+
+    this.rows.summary.morning = 
+      this.rows.seated.morning +
+      this.rows.counter.morning +
+      this.rows.ta.morning +
+      this.rows.delivery.morning +
+      this.rows.other.morning;
+
+    this.rows.summary.afternoon =
+      this.rows.seated.afternoon +
+      this.rows.counter.afternoon +
+      this.rows.ta.afternoon +
+      this.rows.delivery.afternoon +
+      this.rows.other.afternoon;
+      
+    this.rows.summary.evening =
+      this.rows.seated.evening +
+      this.rows.counter.evening +
+      this.rows.ta.evening +
+      this.rows.delivery.evening +
+      this.rows.other.evening;      
   }
 
   ngOnInit() {}
