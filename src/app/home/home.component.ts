@@ -13,7 +13,6 @@ export class HomeComponent implements OnInit {
   todayData: any;
   yesterdayData: any;
   monthToDateData: any;  
-  monthForecastData: any;
 
   today: moment.Moment = moment();
   yesterday: moment.Moment = moment().subtract(1, 'days');
@@ -38,11 +37,6 @@ export class HomeComponent implements OnInit {
     this.dataService.monthToDateData
       .subscribe(data=>{
         this.monthToDateData = data;
-      });
-
-    this.dataService.monthForecastData
-      .subscribe(data => {
-        this.monthForecastData = data;
       });
 
   }

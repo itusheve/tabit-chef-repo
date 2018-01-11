@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-12">        
-    <!-- <app-card 
+    <app-card 
       *ngIf="todayData"
       class="mb10" 
       tag="היום"
@@ -31,17 +31,8 @@
       [ppa]="monthToDateData.ppa">
     </app-card>
 
-    <app-card 
-      class="mb10"
-      *ngIf="monthForecastData" 
-      tag="" 
-      title="??? forecast" 
-      [sum]="monthForecastData.sales" 
-      [diners]="monthForecastData.diners"
-      [ppa]="monthForecastData.ppa">
-      >
-    </app-card>
- -->
+
+
     <app-month-view></app-month-view>
 
     <app-day-view></app-day-view>

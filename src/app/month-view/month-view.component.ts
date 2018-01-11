@@ -18,7 +18,15 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
   month: moment.Moment = moment().startOf('month');  
 
   components = {
-    calendar: {},
+    // calendar: {},
+    forecastCard: {
+      data: undefined,
+      show: false
+    },
+    monthCard: {
+      data: undefined,
+      show: false
+    },
     grid: {
       options: {
         dataSource: undefined
@@ -37,7 +45,19 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
     let queryFrom, queryTo;
     const now = moment();
 
+    
+    
+    
     if (this.month.isSame(now, 'month')) {
+      
+      this.components.monthCard.show = false;
+      this.dataService.monthForecastData
+        .subscribe(data => {
+          this.components.forecastCard.data = data;
+          this.components.forecastCard.show = true;
+        });
+
+
       if (now.date()===1) {
         this.components.chart.options.dataSource = [];
         this.components.grid.options.dataSource = [];
@@ -46,7 +66,14 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
         queryFrom = moment(this.month).startOf('month');        
         queryTo = now.subtract(1, 'day');
       }
-    } else {
+    } else if (this.month.isBefore(now, 'month')) {
+      this.components.forecastCard.show = false;
+      this.dataService.getMonthlyData(this.month)
+        .then(monthlyData=>{
+          this.components.monthCard.data = monthlyData;
+          this.components.monthCard.show = true;
+        });
+
       queryFrom = moment(this.month).startOf('month');
       queryTo = moment(this.month).endOf('month');
     }

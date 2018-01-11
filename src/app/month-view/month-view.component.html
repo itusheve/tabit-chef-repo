@@ -1,6 +1,26 @@
 <div class="row">
   <div class="col-md-12">    
     <app-month-selector #monthSelector [currentValue]="month" (onDateChanged)="onDateChanged($event)"></app-month-selector>
+    <app-card 
+      class="mb10" 
+      *ngIf="components.forecastCard.show" 
+      tag="" 
+      title="??? forecast" 
+      [sum]="components.forecastCard.data.sales" 
+      [diners]="components.forecastCard.data.diners"
+      [ppa]="components.forecastCard.data.ppa"
+      >
+    </app-card>
+    <app-card 
+      class="mb10" 
+      *ngIf="components.monthCard.show" 
+      tag="" 
+      title="??? סופי" 
+      [sum]="components.monthCard.data.sales" 
+      [diners]="components.monthCard.data.diners"
+      [ppa]="components.monthCard.data.ppa"
+      >
+    </app-card>
     <app-month-chart #monthChart [options]="components.chart.options"></app-month-chart>
     <app-month-grid #monthGrid [options]="components.grid.options"></app-month-grid>
   </div>

@@ -58,6 +58,25 @@ export class DataService {
     getDailyData(fromDate: moment.Moment, toDate?: moment.Moment) {
         return this.olapEp.getDailyData(fromDate, toDate);
     }
+    
+    getMonthlyData(month: moment.Moment): Promise<any> {
+        return new Promise((res, rej)=>{
+            this.olapEp.monthlyData
+                .subscribe(dataByMonth=>{
+                    const monthlyData = dataByMonth.find(dataItem => dataItem.date.isSame(month, 'month'));
+                    if (!monthlyData) {
+                        throw new Error(`err 763: error extracting monthly data: ${month.format()}. please contact support.`);
+                    }
+                    const diners = monthlyData.dinersPPA;
+                    const ppa = (monthlyData.salesPPA ? monthlyData.salesPPA : 0) / (diners ? diners : 1);
+                    res({
+                        sales: monthlyData.sales,
+                        diners: diners,
+                        ppa: ppa
+                    });
+                });
+        });
+    }
 
     get shifts(): ReplaySubject<any> {
         if (this.shifts$) return this.shifts$;
@@ -153,8 +172,7 @@ export class DataService {
         
         return this._dashboardData;
     }
-    
-    
+        
     get todayData(): ReplaySubject<any> {
         if (this.todayData$) return this.todayData$;        
         let that = this;
@@ -242,7 +260,7 @@ export class DataService {
                     return this.yesterdayData$;
     }
 
-    /* excluding today! */
+    /* excluding today! this is why we use getDailyData and not getMonthlyData  */
     get monthToDateData(): ReplaySubject<any> {
         if(this.monthToDateData$) return this.monthToDateData$;
         let that = this;
