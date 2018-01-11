@@ -1,13 +1,27 @@
 <div class="widget blueAccent">
-    <dx-pie-chart id="pie" type="doughnut" title="The Population of Continents and Regions" palette="Soft Pastel" [dataSource]="dataSource" [rtlEnabled]="true">
-        <dxi-series argumentField="orderType">
-            <dxo-label [visible]="true" format="thousands">
-                <dxo-connector [visible]="true"></dxo-connector>
-            </dxo-label>
-        </dxi-series>
-        <dxo-export [enabled]="false"></dxo-export>
-        <dxo-legend [margin]="0" horizontalAlignment="right" verticalAlignment="top"></dxo-legend>
-        <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip" format="thousands">
-        </dxo-tooltip>
-    </dx-pie-chart>
+    <div class="title">הכנסות</div>
+    <div class="body">
+        <dx-pie-chart 
+            id="pie" 
+            type="doughnut" 
+            palette="Soft Pastel" 
+            diameter="1" 
+            [dataSource]="dataSource" 
+            [rtlEnabled]="true"
+
+            
+            
+            >
+            <!-- innerRadius="0.8", legend: { horizontalAlignment: 'center', verticalAlignment: 'bottom' }, -->
+            <dxi-series argumentField="orderType">
+                <dxo-label [visible]="true" format="thousands">
+                    <dxo-connector [visible]="true"></dxo-connector>
+                </dxo-label>
+            </dxi-series>
+            <dxo-export [enabled]="false"></dxo-export>
+            <dxo-legend [margin]="0" horizontalAlignment="right" verticalAlignment="top"></dxo-legend>
+            <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip" format="thousands">
+            </dxo-tooltip>
+        </dx-pie-chart>
+    </div>
 </div>

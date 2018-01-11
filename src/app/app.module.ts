@@ -31,11 +31,12 @@ import { LoginComponent } from './auth/login/login.component';
 import { HomeComponent } from './home/home.component';
 
 import { MonthViewComponent } from './month-view/month-view.component';
+import { MonthSelectorComponent } from './month-view/month-selector/month-selector.component';
 import { MonthGridComponent } from './month-view/month-grid/month-grid.component';
 import { MonthChartComponent } from './month-view/month-chart/month-chart.component';
-import { MonthSelectorComponent } from './month-view/month-selector/month-selector.component';
 
 import { DayViewComponent } from './day-view/day-view.component';
+import { DaySelectorComponent } from './day-view/day-selector/day-selector.component';
 import { DayPieChartComponent } from './day-view/day-pie-chart/day-pie-chart.component';
 import { DaySalesTypeTableComponent } from './day-view/day-sales-type-table/day-sales-type-table.component';
 import { DayDinersTableComponent } from './day-view/day-diners-table/day-diners-table.component';
@@ -56,11 +57,12 @@ import { AuthGuard } from './auth/auth-guard.service';
     HomeComponent,
     
     MonthViewComponent,
+    MonthSelectorComponent,
     MonthGridComponent,
     MonthChartComponent,
-    MonthSelectorComponent,
     
     DayViewComponent,
+    DaySelectorComponent,
     DayPieChartComponent,
     DaySalesTypeTableComponent,
     DayDinersTableComponent,

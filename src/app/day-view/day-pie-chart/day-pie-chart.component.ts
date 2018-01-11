@@ -35,7 +35,7 @@ export class DayPieChartComponent implements OnInit {
   }
 
   render(data) {
-    // const dataSource = [];
+    this.dataSource = [];
     Object.keys(data).forEach(orderType=>{
       this.dataSource.push({
         orderType: orderType,

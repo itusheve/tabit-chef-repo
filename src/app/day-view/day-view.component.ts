@@ -20,7 +20,7 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
   @ViewChild('dayDinersTable') dayDinersTable;  
   @ViewChild('dayShifts') dayShifts;  
   
-  date: moment.Moment = moment().startOf('month');   
+  day: moment.Moment = moment().subtract(1, 'day');   
 
   constructor(private dataService: DataService) {}
 
@@ -30,7 +30,7 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
 
     const data$ = zip(
       this.dataService.shifts, 
-      this.dataService.getDailyDataByShiftAndType(this.date), 
+      this.dataService.getDailyDataByShiftAndType(this.day), 
       (shifts: any, dailyData: any) => Object.assign({}, { shifts: shifts }, dailyData)
     );
 
@@ -72,10 +72,9 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
     this.render();
   }
 
-  onDateChanged(date: moment.Moment) {
-    this.date = moment(date);    
-    
-    // this.render();
+  onDateChanged(day: moment.Moment) {
+    this.day = moment(day);        
+    this.render();
   }
 
 }

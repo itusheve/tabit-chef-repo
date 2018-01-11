@@ -17,8 +17,9 @@ export class HomeComponent implements OnInit {
   today: moment.Moment = moment();
   yesterday: moment.Moment = moment().subtract(1, 'days');
 
-  todayStr: string = this.today.format();
-  yesterdayStr: string = this.yesterday.format();
+  todayStr = `היום, ${this.today.format('LL')}`;
+  yesterdayStr = `אתמול, ${this.yesterday.format('LL')}`;
+  mtdStr = `${this.today.format('MMMM')} MTD`;
 
   constructor(private dataService: DataService) { }
 

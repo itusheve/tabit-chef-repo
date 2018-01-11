@@ -25,7 +25,7 @@
       *ngIf="monthToDateData"
       class="mb10" 
       tag="" 
-      title="??? MTD" 
+      [title]="mtdStr" 
       [sum]="monthToDateData.sales" 
       [diners]="monthToDateData.diners"
       [ppa]="monthToDateData.ppa">

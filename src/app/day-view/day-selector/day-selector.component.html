@@ -19,7 +19,7 @@
 <div class="flex widget">
   <div class="dx-widget dx-calendar-navigator">
     <a 
-     (click)="prevMonth()"
+     (click)="prevDay()"
       class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-previous-view dx-calendar-navigator-previous-month"
       role="button" aria-label="chevronleft">
       <div class="dx-button-content">
@@ -28,11 +28,11 @@
     </a>
     <a class="dx-calendar-caption-button dx-button dx-button-normal dx-widget dx-button-has-text" role="button" aria-label="">
       <div class="dx-button-content">
-        <span class="dx-button-text">{{currentValue | amDateFormat:'MMM YYYY'}}</span>
+        <span class="dx-button-text">{{currentValue | amDateFormat:'LL'}}</span>
       </div>
     </a>
     <a 
-     (click)="nextMonth()"
+     (click)="nextDay()"
       class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-next-view dx-calendar-navigator-next-month"
       role="button" aria-label="chevronright">
       <div class="dx-button-content">
