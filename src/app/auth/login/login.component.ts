@@ -12,31 +12,31 @@ import { Router } from '@angular/router';
 export class LoginComponent {  
 
   constructor(private authService: AuthService, private router:Router) {
-    this.authService.login({
-      email: 'or@tabit.cloud',//email,
-      password: '100Ahbaroshim'//password
-    })
-      .then(() => {
-        this.router.navigate(['home']);
-      });
+    // this.authService.login({
+    //   email: 'or@tabit.cloud',//email,
+    //   password: '100Ahbaroshim'//password
+    // })
+    //   .then(() => {
+    //     this.router.navigate(['home']);
+    //   });
 
   // ngOnInit() {
     
   }
+  
+  onLogin(form?: NgForm) {    
+    const email = form.value.email;
+    const password = form.value.password;
+    this.authService.login({      
+      email: 'or@tabit.cloud',//email,
+      password: '100Ahbaroshim'//password
+    })
+      .then(()=>{
+        this.router.navigate(['u/orgs']);
+      }, ()=>{
+        debugger;
+      });
+  }
 
-  //onLogin(form?: NgForm) {
-  // onLogin(form?: NgForm) {    
-    // const email = form.value.email;
-    // const password = form.value.password;
-    // this.authService.login({      
-    //   email: 'or@tabit.cloud',//email,
-    //   password: '100Ahbaroshim'//password
-    // })
-    //   .then(()=>{
-    //     this.router.navigate(['home']);
-    //   }, ()=>{
-    //     debugger;
-    //   });
-  // }
 
 }

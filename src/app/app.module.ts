@@ -8,6 +8,12 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { TokenInterceptor } from './auth/token.interceptor';
 
+import { AsyncLocalStorageModule } from 'angular-async-local-storage';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';//required by some material components
+import { MatButtonModule, MatIconModule, MatMenuModule } from '@angular/material';//material modules
+
+
 import { MomentModule } from 'angular2-moment';
 
 import { ROSEp } from '../tabit/data/ep/ros.ep';
@@ -28,6 +34,9 @@ import { DxDataGridModule } from 'devextreme-angular';
 import { AppComponent } from './app.component';
 
 import { LoginComponent } from './auth/login/login.component';
+
+import { OrgsComponent } from './orgs/orgs.component';
+
 import { HomeComponent } from './home/home.component';
 
 import { MonthViewComponent } from './month-view/month-view.component';
@@ -46,7 +55,8 @@ import { DayShiftsComponent } from './day-view/day-shifts/day-shifts.component';
 import { CardComponent } from './ui/card/card.component';
 
 import { AuthService } from './auth/auth.service';
-import { AuthGuard } from './auth/auth-guard.service';
+import { UserGuard } from './auth/user-guard.service';
+import { OrgGuard } from './auth/org-guard.service';
 // import { DshGauge1Component } from './dsh-gauge-1/dsh-gauge-1.component';
 
 @NgModule({
@@ -54,6 +64,9 @@ import { AuthGuard } from './auth/auth-guard.service';
     AppComponent,
     
     LoginComponent,
+    
+    OrgsComponent,
+    
     HomeComponent,
     
     MonthViewComponent,
@@ -77,6 +90,13 @@ import { AuthGuard } from './auth/auth-guard.service';
     BrowserModule,
     FormsModule,
     MomentModule,
+    BrowserAnimationsModule,
+    AsyncLocalStorageModule,
+
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+
     DxButtonModule,
     DxCalendarModule,
     DxChartModule,
@@ -91,7 +111,8 @@ import { AuthGuard } from './auth/auth-guard.service';
       multi: true
     },
     AuthService, 
-    AuthGuard, 
+    UserGuard,
+    OrgGuard,
     DataService, 
     ROSEp, 
     OlapEp

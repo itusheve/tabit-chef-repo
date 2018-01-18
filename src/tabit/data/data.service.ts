@@ -21,6 +21,8 @@ export class DataService {
 
     private ROS_base_url: String = 'https://ros-office-beta.herokuapp.com';//TODO get from config and consume in ROS ep
     
+    private organizations$: ReplaySubject<any>;
+
     private shifts$: ReplaySubject<any>;
     private _currentBusinessDate;
     private _dashboardData;
@@ -30,29 +32,16 @@ export class DataService {
     private monthToDateData$;
     private monthForecastData$;
 
-    private orgSelected = false;
-    private selectOrg(): Promise<any> {
-        function getOrganizations() {
-            return that.rosEp.get(that.ROS_base_url + '/Organizations', {});
-        }
+    get organizations(): ReplaySubject<any> {
+        if (this.organizations$) return this.organizations$;
+        this.organizations$ = new ReplaySubject<any>();
 
-        function selectOrg(org) {
-            return that.rosEp.post(`${that.ROS_base_url}/Organizations/${org.id}/change`, {});
-        }
-        
-        const that = this;
-        
-        return new Promise((res, rej)=>{
-            if (this.orgSelected) return res();
-            getOrganizations()
-                .then(orgs => {
-                    const nono = orgs.find(o => o.name === 'נונו');
-                    selectOrg(nono)
-                        .then(()=>{
-                            res();
-                        });
-                });
-        });
+        this.rosEp.get(this.ROS_base_url + '/organizations', {})
+            .then(data => {
+                this.organizations$.next(data);
+            });
+
+        return this.organizations$;
     }
 
     getDailyData(fromDate: moment.Moment, toDate?: moment.Moment) {
@@ -82,46 +71,44 @@ export class DataService {
         if (this.shifts$) return this.shifts$;
         this.shifts$ = new ReplaySubject<any>();
 
-        this.selectOrg()
-            .then(()=>{
-                this.rosEp.get(this.ROS_base_url + '/configuration', {})
-                    .then(data=>{
-                        const serverShiftsConfig = data[0].regionalSettings.ownerDashboard;
-                        const shiftsConfig: any = {
-                            morning: {
-                                active: serverShiftsConfig.hasOwnProperty('morningShiftActive') ? serverShiftsConfig.morningShiftActive : true,
-                                name: serverShiftsConfig.morningShiftName,
-                                startTime: serverShiftsConfig.morningStartTime
-                            },
-                            afternoon: {
-                                active: serverShiftsConfig.hasOwnProperty('afternoonShiftActive') ? serverShiftsConfig.afternoonShiftActive : true,
-                                name: serverShiftsConfig.afternoonShiftName,
-                                startTime: serverShiftsConfig.afternoonStartTime
-                            },
-                            evening: {
-                                active: serverShiftsConfig.hasOwnProperty('eveningShiftActive') ? serverShiftsConfig.eveningShiftActive : true,
-                                name: serverShiftsConfig.eveningShiftName,
-                                startTime: serverShiftsConfig.eveningStartTime
-                            },
-                            // fourth: {
-                            //     active: serverShiftsConfig.hasOwnProperty('fourthShiftActive') ? serverShiftsConfig.fourthShiftActive : false,
-                            //     name: serverShiftsConfig.fourthShiftName,
-                            //     startTime: serverShiftsConfig.fourthStartTime
-                            // },
-                            // fifth: {
-                            //     active: serverShiftsConfig.hasOwnProperty('fifthShiftActive') ? serverShiftsConfig.fifthShiftActive : false,
-                            //     name: serverShiftsConfig.fifthShiftName,
-                            //     startTime: serverShiftsConfig.fifthStartTime
-                            // }
-                        };
-                        shiftsConfig.morning.endTime = shiftsConfig.afternoon.startTime;
-                        shiftsConfig.afternoon.endTime = shiftsConfig.evening.startTime;
-                        shiftsConfig.evening.endTime = shiftsConfig.morning.startTime;
+        this.rosEp.get(this.ROS_base_url + '/configuration', {})
+            .then(data=>{
+                const serverShiftsConfig = data[0].regionalSettings.ownerDashboard;
+                const shiftsConfig: any = {
+                    morning: {
+                        active: serverShiftsConfig.hasOwnProperty('morningShiftActive') ? serverShiftsConfig.morningShiftActive : true,
+                        name: serverShiftsConfig.morningShiftName,
+                        startTime: serverShiftsConfig.morningStartTime
+                    },
+                    afternoon: {
+                        active: serverShiftsConfig.hasOwnProperty('afternoonShiftActive') ? serverShiftsConfig.afternoonShiftActive : true,
+                        name: serverShiftsConfig.afternoonShiftName,
+                        startTime: serverShiftsConfig.afternoonStartTime
+                    },
+                    evening: {
+                        active: serverShiftsConfig.hasOwnProperty('eveningShiftActive') ? serverShiftsConfig.eveningShiftActive : true,
+                        name: serverShiftsConfig.eveningShiftName,
+                        startTime: serverShiftsConfig.eveningStartTime
+                    },
+                    // fourth: {
+                    //     active: serverShiftsConfig.hasOwnProperty('fourthShiftActive') ? serverShiftsConfig.fourthShiftActive : false,
+                    //     name: serverShiftsConfig.fourthShiftName,
+                    //     startTime: serverShiftsConfig.fourthStartTime
+                    // },
+                    // fifth: {
+                    //     active: serverShiftsConfig.hasOwnProperty('fifthShiftActive') ? serverShiftsConfig.fifthShiftActive : false,
+                    //     name: serverShiftsConfig.fifthShiftName,
+                    //     startTime: serverShiftsConfig.fifthStartTime
+                    // }
+                };
+                shiftsConfig.morning.endTime = shiftsConfig.afternoon.startTime;
+                shiftsConfig.afternoon.endTime = shiftsConfig.evening.startTime;
+                shiftsConfig.evening.endTime = shiftsConfig.morning.startTime;
 
-                        this.shifts$.next(shiftsConfig);
-                    });
+                this.shifts$.next(shiftsConfig);
             });
 
+        
         return this.shifts$;
     }
 
@@ -155,8 +142,7 @@ export class DataService {
         //return that.rosEp.get(ROS_base_url + '/businessdays/current', {});
         // }
 
-        this.selectOrg()
-            .then(() => this.rosEp.get(this.ROS_base_url + '/businessdays/current', {}))
+        this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
             .then((results: any) => moment(results.businessDate))
             .then((bd: moment.Moment) => {
                 const payload = {

@@ -13,6 +13,7 @@
 
     <app-card 
       *ngIf="yesterdayData" 
+      [routerLink]="['/day']"
       class="mb10" 
       tag="אתמול" 
       [title]="yesterdayStr" 
@@ -35,6 +36,6 @@
 
     <app-month-view></app-month-view>
 
-    <app-day-view></app-day-view>
+    <!-- <app-day-view></app-day-view> -->
   </div>
 </div>
