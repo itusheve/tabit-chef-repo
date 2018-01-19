@@ -9,16 +9,18 @@
         <!-- <button mat-menu-item>
           <mat-icon>dialpad</mat-icon>
           <span>Redial</span>
-        </button>
-        <button mat-menu-item disabled>
-          <mat-icon>voicemail</mat-icon>
-          <span>Check voicemail</span>
-        </button> -->
+        </button>        
+        <button mat-menu-item> -->
+          <!-- <mat-icon>notifications_off</mat-icon> -->
+          <!-- <span (click)="changeRest()">החלף מסעדה</span> -->
+        <!-- </button> -->
         <button mat-menu-item>
           <!-- <mat-icon>notifications_off</mat-icon> -->
-          <span>התנתק</span>
+          <span (click)="logout()">התנתק</span>
         </button>
       </mat-menu>
+
+      <div *ngIf="org">{{org.name}}</div>
 
 
       <router-outlet></router-outlet>

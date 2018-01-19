@@ -1,3 +1,5 @@
+import { APP_INITIALIZER } from '@angular/core';//https://stackoverflow.com/questions/35191617/how-to-run-a-service-when-the-app-starts-in-angular-2/35191647
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +13,7 @@ import { TokenInterceptor } from './auth/token.interceptor';
 import { AsyncLocalStorageModule } from 'angular-async-local-storage';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';//required by some material components
-import { MatButtonModule, MatIconModule, MatMenuModule } from '@angular/material';//material modules
+import { MatButtonModule, MatIconModule, MatMenuModule, MatCardModule } from '@angular/material';//material modules
 
 
 import { MomentModule } from 'angular2-moment';
@@ -96,6 +98,7 @@ import { OrgGuard } from './auth/org-guard.service';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    MatCardModule,
 
     DxButtonModule,
     DxCalendarModule,
@@ -111,6 +114,12 @@ import { OrgGuard } from './auth/org-guard.service';
       multi: true
     },
     AuthService, 
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (as: AuthService) => function () { return as.authByToken(); },
+      deps: [AuthService],
+      multi: true
+    },
     UserGuard,
     OrgGuard,
     DataService, 

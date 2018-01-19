@@ -15,7 +15,7 @@ export class OrgGuard implements CanActivateChild {
             .then(
             (authenticated: boolean) => {
                 if (authenticated) return true;
-                this.router.navigate(['/u/o']);
+                this.router.navigate(['/u/orgs']);
                 return false;
             }
             );

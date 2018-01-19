@@ -21,7 +21,9 @@ export class TokenInterceptor implements HttpInterceptor {
 
         this.authService = this.injector.get(AuthService); //https://github.com/angular/angular/issues/18224
 
-        // const authToken = 
+        //white list:
+        if (request.url.indexOf('oauth2')>-1) return next.handle(request);
+        
         return this.authService.getAuthToken('ros').mergeMap(authToken=>{
                 request = request.clone({
                     setHeaders: {

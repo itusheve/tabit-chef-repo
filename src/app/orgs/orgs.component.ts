@@ -17,8 +17,12 @@ export class OrgsComponent implements OnInit {
   private render() {
 
     this.dataService.organizations
-      .subscribe(data=>{
-        this.orgs = data;
+      .subscribe(orgs=>{
+        if (orgs.length===1) {
+          this.selectOrg(orgs[0]);
+        } else {
+          this.orgs = orgs;
+        }
       });
 
   }

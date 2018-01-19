@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { OlapEp } from './ep/olap.ep';
 import { ROSEp } from './ep/ros.ep';
 
+import { AsyncLocalStorage } from 'angular-async-local-storage';
+
 import * as moment from 'moment';
 //import { forOwn } from 'lodash/forOwn';
 //import { groupBy } from 'lodash/groupby';
@@ -15,7 +17,7 @@ import { zip } from 'rxjs/observable/zip';
 
 @Injectable()
 export class DataService {
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp) {
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
 
     }
 
@@ -37,11 +39,16 @@ export class DataService {
         this.organizations$ = new ReplaySubject<any>();
 
         this.rosEp.get(this.ROS_base_url + '/organizations', {})
-            .then(data => {
-                this.organizations$.next(data);
+            .then(orgs => {
+                const filtered = orgs.filter(o=>o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT');
+                this.organizations$.next(filtered);
             });
 
         return this.organizations$;
+    }
+
+    get organization(): Observable<any> {
+        return this.localStorage.getItem<any>('org');
     }
 
     getDailyData(fromDate: moment.Moment, toDate?: moment.Moment) {

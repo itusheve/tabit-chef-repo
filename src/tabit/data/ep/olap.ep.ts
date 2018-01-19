@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AsyncLocalStorage } from 'angular-async-local-storage';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -10,10 +11,21 @@ declare var Xmla4JWrapper: any;
 
 @Injectable()
 export class OlapEp {
-
-    private url = 'https://analytics.tabit.cloud/olapproxy/proxy.ashx?customdata=S582ae49284574a1f00fc76e4';//nono
+    
+    private BASE_URL = 'https://analytics.tabit.cloud/olapproxy/proxy.ashx';
+    //private url = '582ae49284574a1f00fc76e4';//nono
     private catalog = 'ssas_tabit_prod';
     private cube = 'tabit_sales';
+    private url$: ReplaySubject<any>;
+
+    constructor(protected localStorage: AsyncLocalStorage) { 
+        this.url$ = new ReplaySubject<any>();
+        this.localStorage.getItem<any>('org')
+            .subscribe(org => {
+                this.url$.next(`${this.BASE_URL}?customdata=S${org.id}`);
+            });
+    }
+
     
     private measures = {
         sales: '[Measures].[Tlog Header Total Payment Amount]',
@@ -76,7 +88,7 @@ export class OlapEp {
         }
     }
 
-    constructor() { }
+    // constructor() { }
         
     
     public getDailyData(fromDate?: moment.Moment, toDate?: moment.Moment): Promise<any> {
@@ -131,60 +143,65 @@ export class OlapEp {
         };
 
         const regex = /(\d+) (\D+)/;
+        
+        this.url$
+            .subscribe(url=>{
+                const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+                xmla4j_w.executeNew(mdx)
+                    .then(rowset => {
+                        const filtered = rowset.filter(r => {
+                            let yearAndMonth = r[`${that.dims.BusinessDate.hierarchy}.${that.dims.BusinessDate.dims.yearAndMonth}.${that.dims.BusinessDate.dims.yearAndMonth}.[MEMBER_CAPTION]`];
+                            if (!yearAndMonth) return false;
+                            //data looks like: 2017 ינואר
 
-        const xmla4j_w = new Xmla4JWrapper({ url: this.url, catalog: this.catalog });
-        xmla4j_w.executeNew(mdx)
-            .then(rowset => {
-                const filtered = rowset.filter(r => {
-                    let yearAndMonth = r[`${that.dims.BusinessDate.hierarchy}.${that.dims.BusinessDate.dims.yearAndMonth}.${that.dims.BusinessDate.dims.yearAndMonth}.[MEMBER_CAPTION]`];
-                    if (!yearAndMonth) return false;
-                    //data looks like: 2017 ינואר
-                                        
-                    let m;
-                    let year;
-                    let month;
-                    let monthInt;
-                    try {
-                        m = regex.exec(yearAndMonth);
-                        year = m[1];
-                        month = m[2];
-                        if (!year || !month) {
-                            throw new Error(`err 761: error extracting monthly data: ${yearAndMonth}. please contact support.`);
-                        }
-                        monthInt = monthsMap['he'][month];
-                        if (!monthInt) {
-                            throw new Error(`err 762: error extracting monthly data: ${yearAndMonth}. please contact support.`);
-                        }                        
-                    } catch (e) {
-                        throw new Error(`err 760: error extracting monthly data: ${yearAndMonth}. please contact support.`);
-                    }
-                    
-                    r.date = moment().year(year).month(monthInt-1).date(1);
-                    return true;                    
-                    
-                }); 
-                const treated = filtered.map(r => {
-                    let sales = r[that.measures.sales];
-                    let salesPPA = r[that.measures.ppa.sales];
-                    let dinersPPA = r[that.measures.ppa.diners];
+                            let m;
+                            let year;
+                            let month;
+                            let monthInt;
+                            try {
+                                m = regex.exec(yearAndMonth);
+                                year = m[1];
+                                month = m[2];
+                                if (!year || !month) {
+                                    throw new Error(`err 761: error extracting monthly data: ${yearAndMonth}. please contact support.`);
+                                }
+                                monthInt = monthsMap['he'][month];
+                                if (!monthInt) {
+                                    throw new Error(`err 762: error extracting monthly data: ${yearAndMonth}. please contact support.`);
+                                }
+                            } catch (e) {
+                                throw new Error(`err 760: error extracting monthly data: ${yearAndMonth}. please contact support.`);
+                            }
 
-                    if (sales) sales = that.expoToNumer(sales);
-                    if (salesPPA) salesPPA = that.expoToNumer(salesPPA);
-                    if (dinersPPA) dinersPPA = dinersPPA * 1;
+                            r.date = moment().year(year).month(monthInt - 1).date(1);
+                            return true;
 
-                    return {
-                        date: r.date,
-                        sales: sales,
-                        salesPPA: salesPPA,
-                        dinersPPA: dinersPPA
-                    };
-                });
+                        });
+                        const treated = filtered.map(r => {
+                            let sales = r[that.measures.sales];
+                            let salesPPA = r[that.measures.ppa.sales];
+                            let dinersPPA = r[that.measures.ppa.diners];
 
-                this.monthlyData$.next(treated);
-            })
-            .catch(e => {
-                //debugger;
+                            if (sales) sales = that.expoToNumer(sales);
+                            if (salesPPA) salesPPA = that.expoToNumer(salesPPA);
+                            if (dinersPPA) dinersPPA = dinersPPA * 1;
+
+                            return {
+                                date: r.date,
+                                sales: sales,
+                                salesPPA: salesPPA,
+                                dinersPPA: dinersPPA
+                            };
+                        });
+
+                        this.monthlyData$.next(treated);
+                    })
+                    .catch(e => {
+                        //debugger;
+                    });
             });
+        
+
 
         return this.monthlyData$;
     }
@@ -219,50 +236,53 @@ export class OlapEp {
                 ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateFrom.format('YYYYMMDD')}]:${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateTo.format('YYYYMMDD')}]
             )
         `;
-        const xmla4j_w = new Xmla4JWrapper({ url: this.url, catalog: this.catalog });
-
-        xmla4j_w.execute(mdx)
-            .then(rowset => {
-                const treated = rowset.map(r => {
-                    // raw date looks like: " ש 01/10/2017"
-                    const rawDate = r[`${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.dateAndWeekDay}.${this.dims.BusinessDate.dims.dateAndWeekDay}.[MEMBER_CAPTION]`];
-                    let m;
-                    let dateAsString;
-                    if ((m = this.SHORTDAYOFWEEK_NAME_REGEX.exec(rawDate)) !== null && m.length > 1) {
-                        dateAsString = m[1];
-                    }
-                    let date = moment(dateAsString, 'DD-MM-YYYY');
-                    let dateFormatted = date.format('dd') + '-' + date.format('DD');
-
-                    let sales = r[this.measures.sales];
-                    let salesPPA = r[this.measures.ppa.sales];
-                    let dinersPPA = r[this.measures.ppa.diners];
-                    
-                    if (sales) sales = this.expoToNumer(sales);
-                    if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
-                    if (dinersPPA) dinersPPA = dinersPPA * 1;
-                    
-                    const ppa = (salesPPA ? salesPPA : 0) / (dinersPPA ? dinersPPA : 1);
-
-                    return {
-                        date: date,
-                        dateFormatted: dateFormatted,
-                        sales: sales,
-                        salesPPA: salesPPA,
-                        dinersPPA: dinersPPA,
-                        ppa: ppa
-                    };
-                })
-                    .filter(r => r.sales !== undefined)
-                    .sort(this.shortDayOfWeek_compareFunction);
-
-                this.dailyData$.next(treated);
-            })
-            .catch(e => {
-                //debugger;
+        
+        this.url$
+            .subscribe(url=>{
+                const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+        
+                xmla4j_w.execute(mdx)
+                    .then(rowset => {
+                        const treated = rowset.map(r => {
+                            // raw date looks like: " ש 01/10/2017"
+                            const rawDate = r[`${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.dateAndWeekDay}.${this.dims.BusinessDate.dims.dateAndWeekDay}.[MEMBER_CAPTION]`];
+                            let m;
+                            let dateAsString;
+                            if ((m = this.SHORTDAYOFWEEK_NAME_REGEX.exec(rawDate)) !== null && m.length > 1) {
+                                dateAsString = m[1];
+                            }
+                            let date = moment(dateAsString, 'DD-MM-YYYY');
+                            let dateFormatted = date.format('dd') + '-' + date.format('DD');
+        
+                            let sales = r[this.measures.sales];
+                            let salesPPA = r[this.measures.ppa.sales];
+                            let dinersPPA = r[this.measures.ppa.diners];
+                            
+                            if (sales) sales = this.expoToNumer(sales);
+                            if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
+                            if (dinersPPA) dinersPPA = dinersPPA * 1;
+                            
+                            const ppa = (salesPPA ? salesPPA : 0) / (dinersPPA ? dinersPPA : 1);
+        
+                            return {
+                                date: date,
+                                dateFormatted: dateFormatted,
+                                sales: sales,
+                                salesPPA: salesPPA,
+                                dinersPPA: dinersPPA,
+                                ppa: ppa
+                            };
+                        })
+                            .filter(r => r.sales !== undefined)
+                            .sort(this.shortDayOfWeek_compareFunction);
+        
+                        this.dailyData$.next(treated);
+                    })
+                    .catch(e => {
+                        //debugger;
+                    });
             });
-
-
+        
         return this.dailyData$;
     }
 
@@ -297,37 +317,40 @@ export class OlapEp {
             )
         `;
 
-        const xmla4j_w = new Xmla4JWrapper({ url: this.url, catalog: this.catalog });
+        
+        this.url$
+            .subscribe(url=>{
+                const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
 
-        xmla4j_w.executeNew(mdx)
-            .then(rowset => {
-                const treated = rowset.map(r => {
-                    let orderType = r[`${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.dim}.[MEMBER_CAPTION]`];
-                    let service = r[`${this.dims.service.hierarchy}.${this.dims.service.dim}.${this.dims.service.dim}.[MEMBER_CAPTION]`];
-                    let sales = r[this.measures.sales];
-                    let salesPPA = r[this.measures.ppa.sales];
-                    let dinersPPA = r[this.measures.ppa.diners];
+                xmla4j_w.executeNew(mdx)
+                    .then(rowset => {
+                        const treated = rowset.map(r => {
+                            let orderType = r[`${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.dim}.[MEMBER_CAPTION]`];
+                            let service = r[`${this.dims.service.hierarchy}.${this.dims.service.dim}.${this.dims.service.dim}.[MEMBER_CAPTION]`];
+                            let sales = r[this.measures.sales];
+                            let salesPPA = r[this.measures.ppa.sales];
+                            let dinersPPA = r[this.measures.ppa.diners];
 
-                    if (sales) sales = this.expoToNumer(sales);
-                    if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
-                    if (dinersPPA) dinersPPA = dinersPPA * 1;
+                            if (sales) sales = this.expoToNumer(sales);
+                            if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
+                            if (dinersPPA) dinersPPA = dinersPPA * 1;
 
-                    return {
-                        orderType: orderType,
-                        service: service,
-                        sales: sales,
-                        salesPPA: salesPPA,
-                        dinersPPA: dinersPPA
-                    };
-                });
+                            return {
+                                orderType: orderType,
+                                service: service,
+                                sales: sales,
+                                salesPPA: salesPPA,
+                                dinersPPA: dinersPPA
+                            };
+                        });
 
-                obs$.next(treated);
-            })
-            .catch(e => {
-                //debugger;
+                        obs$.next(treated);
+                    })
+                    .catch(e => {
+                        //debugger;
+                    });
             });
-
-
+    
         return obs$;
 
     }

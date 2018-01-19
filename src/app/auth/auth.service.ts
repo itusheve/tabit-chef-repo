@@ -2,15 +2,18 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angul
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+// import { Router } from '@angular/router';
 
 import { AsyncLocalStorage } from 'angular-async-local-storage';
 import { JSONSchema } from 'angular-async-local-storage';
 
 import { User } from '../../tabit/model/User.model';
 import { Subject } from 'rxjs/Subject';
+import { zip } from 'rxjs/observable/zip';
 
 const ROS_base_url = 'https://ros-office-beta.herokuapp.com';//TODO get from config
 const loginUrl = '/oauth2/token';
+const meUrl = '/account/me';
 
 // class Token {
 //     access: string;
@@ -33,9 +36,11 @@ export class AuthService {
         return new Promise((resolve, reject)=>{
             if (this.authState >= 1) {
                 this.httpClient.post(`${ROS_base_url}/Organizations/${org.id}/change`, {})
-                    .subscribe(data=>{
-                        this.authState = 2;
-                        resolve();
+                    .subscribe(org_=>{
+                        this.localStorage.setItem('org', org_).subscribe(() => { 
+                            this.authState = 2;
+                            resolve();
+                        });
                     });
             } else {
                 reject();
@@ -47,11 +52,16 @@ export class AuthService {
         return this.unauthenticate();
     }
 
+    /* the func gets called on app boot time to try and authenticate with existing token */
+    authByToken(): Promise<any> {
+        return this.authenticate();
+    }
 
-    /* the func authenticates with credentials (if supplied) or with a token (regular/refresh)  */
+    /* the func authenticates with credentials or by existing token */
     private authenticate(credentials?): Promise<any> {
         return new Promise((resolve, reject)=>{
             if (credentials) {
+                /* login attempt. get token & user, store locally and set authState to 1 (user mode) */
                 this.httpClient.post(ROS_base_url + loginUrl, {
                     client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
                     grant_type: 'password',
@@ -65,22 +75,65 @@ export class AuthService {
                             refresh_token: string
                         }
                     ) => {
-                        this.localStorage.setItem('token', token).subscribe(() => { });
-                        this.authState = 1;
-                        resolve();
+                        this.localStorage.setItem('token', token).subscribe(() => { 
+                            this.httpClient.get(ROS_base_url + meUrl)
+                                .subscribe(
+                                    user=>{
+                                        this.localStorage.setItem('user', user).subscribe(() => { 
+                                            this.authState = 1;
+                                            resolve();
+                                        });
+                                    }, 
+                                    ()=>{}, 
+                                    ()=>{
+                                        //reverse process upon error
+                                        this.localStorage.clear().subscribe(() => {});
+                                    }
+                                );
+                        });
+                        
                     },
                     () => {}
                 );
             } else {
-                //look for refresh token?
+                //look for token, user and possibly an org
+                const data$ = zip(
+                    this.localStorage.getItem<any>('token'),
+                    this.localStorage.getItem<any>('user'),
+                    this.localStorage.getItem<any>('org')
+                    // (token: any, dailyData: any) => Object.assign({}, { shifts: shifts }, dailyData)
+                );
 
+                data$.subscribe(data => {
+                    if (!!data[0] && !!data[1]) {
+                        if (!!data[2]) {
+                            this.authState = 2;
+                            //this.router.navigate(['u/o/home']);
+                        } else {
+                            this.authState = 1;
+                        }
+                    }
+                    //  else {
+                        // this.router.navigate(['login']);
+                    // }
+                    // this.dayPieChart.render(data.salesByOrderType);
+                    // this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
+                    // this.dayDinersTable.render(data.shifts, data.dinersAndPPAByShift);
+                    // this.dayShifts.render(data.shifts);
+                });
+
+
+                this.localStorage.getItem<any>('token').subscribe((token) => {
+                    resolve();
+                });
             }
         });
     }
 
     private unauthenticate(): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.localStorage.removeItem('token').subscribe(() => { });
+            // this.localStorage.removeItem('token').subscribe(() => { });
+            this.localStorage.clear().subscribe(() => { });
             this.authState = 0;
             resolve();
         });
