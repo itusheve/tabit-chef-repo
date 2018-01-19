@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { DataService } from '../../tabit/data/data.service';
+import { DataService } from '../../../tabit/data/data.service';
 
 // import { MonthChartComponent } from './month-chart/month-chart.component';
 

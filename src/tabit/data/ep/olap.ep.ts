@@ -18,14 +18,19 @@ export class OlapEp {
     private cube = 'tabit_sales';
     private url$: ReplaySubject<any>;
 
-    constructor(protected localStorage: AsyncLocalStorage) { 
+    constructor(protected localStorage: AsyncLocalStorage) { }
+
+    get url(): ReplaySubject<any> {
+        if (this.url$) return this.url$;
         this.url$ = new ReplaySubject<any>();
+
         this.localStorage.getItem<any>('org')
             .subscribe(org => {
                 this.url$.next(`${this.BASE_URL}?customdata=S${org.id}`);
             });
-    }
 
+        return this.url$;
+    }
     
     private measures = {
         sales: '[Measures].[Tlog Header Total Payment Amount]',
@@ -144,7 +149,7 @@ export class OlapEp {
 
         const regex = /(\d+) (\D+)/;
         
-        this.url$
+        this.url
             .subscribe(url=>{
                 const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
                 xmla4j_w.executeNew(mdx)
@@ -237,7 +242,7 @@ export class OlapEp {
             )
         `;
         
-        this.url$
+        this.url
             .subscribe(url=>{
                 const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
         
@@ -318,7 +323,7 @@ export class OlapEp {
         `;
 
         
-        this.url$
+        this.url
             .subscribe(url=>{
                 const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
 

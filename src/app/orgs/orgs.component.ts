@@ -30,7 +30,7 @@ export class OrgsComponent implements OnInit {
   selectOrg(org:any) {
     this.authService.selectOrg(org)
       .then(() => {
-        this.router.navigate(['u/o/home']);
+        this.router.navigate(['owners-dashboard']);
       });
   }
 

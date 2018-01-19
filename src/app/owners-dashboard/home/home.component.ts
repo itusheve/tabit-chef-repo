@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../tabit/data/data.service';
+import { DataService } from '../../..//tabit/data/data.service';
 
 import * as moment from 'moment';
 

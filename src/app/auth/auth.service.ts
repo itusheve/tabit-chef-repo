@@ -108,18 +108,10 @@ export class AuthService {
                     if (!!data[0] && !!data[1]) {
                         if (!!data[2]) {
                             this.authState = 2;
-                            //this.router.navigate(['u/o/home']);
                         } else {
                             this.authState = 1;
                         }
                     }
-                    //  else {
-                        // this.router.navigate(['login']);
-                    // }
-                    // this.dayPieChart.render(data.salesByOrderType);
-                    // this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
-                    // this.dayDinersTable.render(data.shifts, data.dinersAndPPAByShift);
-                    // this.dayShifts.render(data.shifts);
                 });
 
 

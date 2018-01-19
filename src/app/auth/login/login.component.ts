@@ -11,18 +11,7 @@ import { Router } from '@angular/router';
 //export class LoginComponent implements OnInit {
 export class LoginComponent {  
 
-  constructor(private authService: AuthService, private router:Router) {
-    // this.authService.login({
-    //   email: 'or@tabit.cloud',//email,
-    //   password: '100Ahbaroshim'//password
-    // })
-    //   .then(() => {
-    //     this.router.navigate(['home']);
-    //   });
-
-  // ngOnInit() {
-    
-  }
+  constructor(private authService: AuthService, private router:Router) { }
   
   onLogin(form?: NgForm) {    
     const email = form.value.email;
@@ -32,7 +21,7 @@ export class LoginComponent {
       password: '100Ahbaroshim'//password
     })
       .then(()=>{
-        this.router.navigate(['u/orgs']);
+        this.router.navigate(['/restaurants']);
       }, ()=>{
         debugger;
       });
