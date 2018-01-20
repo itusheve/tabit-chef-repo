@@ -7,6 +7,7 @@ export class MonthViewService {
 
     }
 
+
     // getGridData() {
         //console.log('bla');
         // return this.dataService.getGridData();

@@ -30,4 +30,8 @@ export class OwnersDashboardComponent {
         debugger;
       });
   }
+
+  onDayRequest(date: string) {
+    debugger;
+  }
 }

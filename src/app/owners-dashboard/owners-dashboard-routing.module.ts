@@ -3,9 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { OwnersDashboardComponent } from './owners-dashboard.component';
 import { HomeComponent } from './home/home.component';
-// import { OrgsComponent } from './orgs/orgs.component';
-// import { HomeComponent } from './home/home.component';
-// import { DayViewComponent } from './day-view/day-view.component';
+import { DayViewComponent } from './day-view/day-view.component';
 // import { UserGuard } from './auth/user-guard.service';
 // import { OrgGuard } from './auth/org-guard.service';
 
@@ -17,6 +15,10 @@ const ownersDashboardRoutes: Routes = [
         {
             path: '',
             component: HomeComponent
+        },
+        {
+            path: ':businessDate',
+            component: DayViewComponent
         }
     ]
   },

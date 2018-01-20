@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../../..//tabit/data/data.service';
 
 import * as moment from 'moment';
+import { zip } from 'rxjs/observable/zip';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -14,14 +16,28 @@ export class HomeComponent implements OnInit {
   yesterdayData: any;
   monthToDateData: any;  
 
-  today: moment.Moment = moment();
-  yesterday: moment.Moment = moment().subtract(1, 'days');
+  currentBusinessDate: moment.Moment;
+  previousBusinessDate: moment.Moment;
 
-  todayStr = `היום, ${this.today.format('LL')}`;
-  yesterdayStr = `אתמול, ${this.yesterday.format('LL')}`;
-  mtdStr = `${this.today.format('MMMM')} MTD`;
+  currentBusinessDateStr: string;
+  previousBusinessDateStr: string;
+  // previousBusinessDateLinkStr: string;
+  mtdStr: string;
 
-  constructor(private dataService: DataService) { }
+  
+  constructor(private dataService: DataService, private router: Router) { 
+    const cbd$ = dataService.currentBusinessDate;
+    const pbd$ = dataService.previousBusinessDate;
+    const all$ = zip(cbd$, pbd$)
+      .subscribe(data=>{
+        this.currentBusinessDate = data[0];
+        this.previousBusinessDate = data[1];
+        
+        this.currentBusinessDateStr = `היום, ${this.currentBusinessDate.format('LL')}`;
+        this.previousBusinessDateStr = `אתמול, ${this.previousBusinessDate.format('LL')}`;        
+        this.mtdStr = `${this.currentBusinessDate.format('MMMM')} MTD`;
+      });
+  }
 
   private render() {
 
@@ -44,6 +60,13 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.render();  
+  }
+
+  onDayRequest(date: string) {
+    if (date ==='previousBD') {
+      date = this.previousBusinessDate.format('YYYY-MM-DD');
+    }
+    this.router.navigate(['/owners-dashboard', date]);
   }
 
 }

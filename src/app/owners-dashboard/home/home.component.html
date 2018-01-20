@@ -5,19 +5,20 @@
       *ngIf="todayData"
       class="mb10" 
       tag="היום"
-      [title]="todayStr"
+      [title]="currentBusinessDateStr"
       [sum]="todayData.sales"
       [diners]="todayData.diners"
       [ppa]="todayData.ppa"
       >
     </app-card> 
 
+    <!-- [routerLink]="['/owners-dashboard', previousBusinessDateLinkStr]" -->
     <app-card 
       *ngIf="yesterdayData" 
-      [routerLink]="['/day']"
+      (click)="onDayRequest('previousBD')"
       class="mb10" 
       tag="אתמול" 
-      [title]="yesterdayStr" 
+      [title]="previousBusinessDateStr" 
       [sum]="yesterdayData.sales" 
       [diners]="yesterdayData.diners"
       [ppa]="yesterdayData.ppa">
@@ -33,6 +34,7 @@
       [ppa]="monthToDateData.ppa">
     </app-card>
 
-    <app-month-view></app-month-view>
+    <app-month-view (onDayRequest)="onDayRequest($event)"></app-month-view>
+    <!-- <app-month-view></app-month-view> -->
   </div>
 </div>

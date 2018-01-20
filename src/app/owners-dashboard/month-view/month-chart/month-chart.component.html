@@ -1,5 +1,7 @@
+<!-- (onInitialized)="onInitializedEventHandler($event)" -->
 <div class="widget">
     <dx-chart 
+        (onPointClick)="pointClickHandler($event)"
         [dataSource]="dxChart.dataSource"
         [rtlEnabled]="true"
         >

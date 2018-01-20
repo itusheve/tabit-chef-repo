@@ -21,7 +21,7 @@
       [ppa]="components.monthCard.data.ppa"
       >
     </app-card>
-    <app-month-chart #monthChart [options]="components.chart.options"></app-month-chart>
+    <app-month-chart #monthChart [options]="components.chart.options" (onDateClicked)="onDateClicked($event)"></app-month-chart>
     <app-month-grid #monthGrid [options]="components.grid.options"></app-month-grid>
   </div>
 </div>

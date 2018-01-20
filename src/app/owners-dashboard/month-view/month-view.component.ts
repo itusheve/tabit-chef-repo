@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { DataService } from '../../../tabit/data/data.service';
 
 // import { MonthChartComponent } from './month-chart/month-chart.component';
@@ -14,6 +14,8 @@ import * as moment from 'moment';
 export class MonthViewComponent implements OnInit, AfterViewInit  {
   @ViewChild('monthChart') monthChart;
   @ViewChild('monthGrid') monthGrid;
+
+  @Output() onDayRequest = new EventEmitter();
 
   month: moment.Moment = moment().startOf('month');  
 
@@ -40,6 +42,13 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
   };      
 
   constructor(private dataService: DataService) { }
+
+  /* if chart / grid date is clicked */
+  onDateClicked(dayInMonth: string) {
+    const day:string = moment(this.month).day(dayInMonth).format('YYYY-MM-DD');
+    this.onDayRequest.emit(day);
+  }
+
 
   private render() {
     let queryFrom, queryTo;

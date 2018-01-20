@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { DataService } from '../../../tabit/data/data.service';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 // import { MonthChartComponent } from './month-chart/month-chart.component';
 
@@ -7,6 +8,8 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import { zip } from 'rxjs/observable/zip';
 import { Subscriber } from 'rxjs/Subscriber';
+import 'rxjs/add/operator/switchMap';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-day-view',
@@ -20,9 +23,13 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
   @ViewChild('dayDinersTable') dayDinersTable;  
   @ViewChild('dayShifts') dayShifts;  
   
-  day: moment.Moment = moment().subtract(1, 'day');   
+  day: moment.Moment;
 
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
 
   private render() {
     // let queryFrom, queryTo;
@@ -65,11 +72,23 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
       // });
   } 
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.route.paramMap
+      .subscribe((params: ParamMap) => { 
+        const dateStr = params.get('businessDate');
+        if (dateStr) {
+          this.day = moment(dateStr);
+        } else {
+          this.day = moment().subtract(1, 'day');   
+        }
+        this.render();
+      });
+      // .switchMap((params: ParamMap) => {});
+  }
 
   ngAfterViewInit() {
     // children are set
-    this.render();
+    // this.render();
   }
 
   onDateChanged(day: moment.Moment) {

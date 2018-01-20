@@ -26,7 +26,8 @@ export class DataService {
     private organizations$: ReplaySubject<any>;
 
     private shifts$: ReplaySubject<any>;
-    private _currentBusinessDate;
+    private currentBusinessDate$;
+    private previousBusinessDate$;
     private _dashboardData;
     
     private todayData$;
@@ -120,17 +121,30 @@ export class DataService {
     }
 
     get currentBusinessDate(): ReplaySubject<moment.Moment> {
-        if (this._currentBusinessDate) return this._currentBusinessDate;
-        this._currentBusinessDate = new ReplaySubject<any>();
+        if (this.currentBusinessDate$) return this.currentBusinessDate$;
+        this.currentBusinessDate$ = new ReplaySubject<any>();
 
         this.dashboardData
             .subscribe(data=>{
                 const bdStr = data.today.businessDate.substring(0, 10);
                 const bd: moment.Moment = moment(bdStr).startOf('day');
-                this._currentBusinessDate.next(bd);
+                this.currentBusinessDate$.next(bd);
             });        
 
-        return this._currentBusinessDate;
+        return this.currentBusinessDate$;
+    }
+
+    get previousBusinessDate(): ReplaySubject<moment.Moment> {
+        if (this.previousBusinessDate$) return this.previousBusinessDate$;
+        this.previousBusinessDate$ = new ReplaySubject<any>();
+
+        this.currentBusinessDate
+            .subscribe(cbd => {
+                const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
+                this.previousBusinessDate$.next(pbd);
+            });
+
+        return this.previousBusinessDate$;
     }
 
     get dashboardData(): ReplaySubject<any> {
@@ -223,9 +237,9 @@ export class DataService {
 
         this.yesterdayData$ = new ReplaySubject<any>();
 
-        that.currentBusinessDate
-            .subscribe(data => {
-                const dateFrom: moment.Moment = moment(data).subtract(1, 'day');
+        that.previousBusinessDate
+            .subscribe(pbd => {
+                const dateFrom: moment.Moment = moment(pbd);
                 const dateTo: moment.Moment = dateFrom;
                 that.getDailyData(dateFrom, dateTo)    
                     .then(dailyData => {
