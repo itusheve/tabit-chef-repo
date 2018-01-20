@@ -1,4 +1,4 @@
-// import { APP_INITIALIZER } from '@angular/core';//https://stackoverflow.com/questions/35191617/how-to-run-a-service-when-the-app-starts-in-angular-2/35191647
+import { APP_INITIALIZER } from '@angular/core';//https://stackoverflow.com/questions/35191617/how-to-run-a-service-when-the-app-starts-in-angular-2/35191647
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -66,12 +66,12 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
       multi: true
     },
     AuthService, 
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: (as: AuthService) => function () { return as.authByToken(); },
-    //   deps: [AuthService],
-    //   multi: true
-    // },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (as: AuthService) => function () { return as.authByToken(); },
+      deps: [AuthService],
+      multi: true
+    },
     UserGuard,
     OrgGuard,
     DataService, 

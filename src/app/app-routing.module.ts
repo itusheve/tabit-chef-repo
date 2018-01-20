@@ -12,7 +12,7 @@ const appRoutes: Routes = [
     path: 'login', 
     component: LoginComponent 
   },
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/owners-dashboard' }
   // { 
   //   path: 'u', 
   //   canActivateChild: [UserGuard], 
@@ -38,7 +38,9 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    ),
   ],
   exports: [
       RouterModule

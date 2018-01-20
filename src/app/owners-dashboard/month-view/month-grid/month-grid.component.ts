@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-month-grid',
@@ -8,6 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class MonthGridComponent implements OnInit {
 
   @Input() options: any;
+  @Output() onDateClicked = new EventEmitter();
 
   dxGrid = {
     show: false,
@@ -23,6 +24,11 @@ export class MonthGridComponent implements OnInit {
 
   ngOnInit() {
     // this.render();
+  }
+
+  rowClickHandler(e) {
+    const date:string = e.key.date.format('YYYY-MM-DD');
+    this.onDateClicked.emit(date);
   }
 
 }

@@ -1,6 +1,7 @@
 <div class="widget">
   <dx-data-grid 
     *ngIf="dxGrid.show" 
+    (onRowClick)="rowClickHandler($event)"
     [dataSource]="dxGrid.dataSource" 
     [columnAutoWidth]="true"
     [rtlEnabled]="true"

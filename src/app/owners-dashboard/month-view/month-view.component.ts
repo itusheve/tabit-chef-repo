@@ -49,6 +49,9 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
     this.onDayRequest.emit(day);
   }
 
+  onDateClicked2(date: string) {//TODO ugly..
+    this.onDayRequest.emit(date);
+  }
 
   private render() {
     let queryFrom, queryTo;

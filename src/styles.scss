@@ -1,5 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
+//https://stackoverflow.com/questions/46465888/custom-font-import-in-angular4
+$dashboard-daily-woff-font-path: "./fonts/archistico_bold-webfont.woff";
+// $dashboard-daily-woff2-font-path: "./fonts/archistico_bold-webfont.woff2";
+$font-family-brand: 'archisticobold';
+
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 $baseText: #343E56;

@@ -5,8 +5,6 @@ import { ROSEp } from './ep/ros.ep';
 import { AsyncLocalStorage } from 'angular-async-local-storage';
 
 import * as moment from 'moment';
-//import { forOwn } from 'lodash/forOwn';
-//import { groupBy } from 'lodash/groupby';
 import * as _ from 'lodash';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
@@ -152,16 +150,6 @@ export class DataService {
         this._dashboardData = new ReplaySubject<any>();
 
         let that = this;
-
-
-
-        // function getRegionalSettings() {
-        //     return that.rosEp.get(ROS_base_url + '/configuration/regionalSettings', {});
-        // }
-
-        // function getCurrentBusinessDay() {
-        //return that.rosEp.get(ROS_base_url + '/businessdays/current', {});
-        // }
 
         this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
             .then((results: any) => moment(results.businessDate))

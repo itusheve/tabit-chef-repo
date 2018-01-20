@@ -17,8 +17,8 @@ export class LoginComponent {
     const email = form.value.email;
     const password = form.value.password;
     this.authService.login({      
-      email: 'or@tabit.cloud',//email,
-      password: '100Ahbaroshim'//password
+      email: email,
+      password: password
     })
       .then(()=>{
         this.router.navigate(['/restaurants']);

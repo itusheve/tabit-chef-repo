@@ -22,7 +22,7 @@
       >
     </app-card>
     <app-month-chart #monthChart [options]="components.chart.options" (onDateClicked)="onDateClicked($event)"></app-month-chart>
-    <app-month-grid #monthGrid [options]="components.grid.options"></app-month-grid>
+    <app-month-grid #monthGrid [options]="components.grid.options" (onDateClicked)="onDateClicked2($event)"></app-month-grid>
   </div>
 </div>
 

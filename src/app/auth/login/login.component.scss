@@ -1,0 +1,11 @@
+.login {
+  .logo {
+    height: 405px;
+    & > div {
+        // width: 386px;  
+        background: url(/assets/images/chef-logo.jpg);
+        background-repeat: no-repeat;
+        background-position-x: center;
+    }
+  }
+}
