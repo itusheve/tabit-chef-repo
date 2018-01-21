@@ -1,11 +1,15 @@
 .login {
+  font-size: 20px;
   .logo {
-    height: 405px;
+    // height: 300px;
     & > div {
         // width: 386px;  
-        background: url(/assets/images/chef-logo.jpg);
+        background: url(/assets/images/chef-logo.png);
         background-repeat: no-repeat;
         background-position-x: center;
+        height: 300px;
+        /* width: 200px; */
+        background-size: contain;
     }
   }
 }

@@ -1,21 +1,42 @@
-<div class="row justify-content-center login">
-  <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-    <div class="row justify-content-center logo">
-      <div class="col-12"></div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col-12">
-        <form (ngSubmit)="onLogin(f)" #f="ngForm">
-          <div class="form-group">
-            <label for="email">Mail</label>
-            <input class="form-control" type="email" id="email" name="email" ngModel>
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input class="form-control" type="password" id="password" name="password" ngModel>
-          </div>
-          <button class="btn btn-primary" type="submit">Log In</button>
-        </form>
+<div class="container">
+  <div class="row justify-content-center login">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <div class="row justify-content-center logo">
+        <div class="col-12"></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="flex d-col col-12">
+
+            <!-- reactive form + material design: -->
+            <form [formGroup]="loginForm" novalidate>
+              <div class="flex d-col example-container">
+                <mat-form-field style="width:100%">
+                  <input matInput placeholder="מייל" formControlName="email" required>
+                  <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+                    <!-- <div *ngIf="email.errors.required"> -->
+                      
+                    <!-- </div> -->
+                    <div *ngIf="email.errors.email">
+                      מייל לא חוקי
+                    </div>
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="סיסמא" [type]="hidePass ? 'password' : 'text'" formControlName="password" required>
+                  <mat-icon matSuffix (click)="hidePass = !hidePass">{{hidePass ? 'visibility' : 'visibility_off'}}</mat-icon>
+                  <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
+                    <!-- <div *ngIf="password.errors.required"> -->
+                      
+                    <!-- </div> -->
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </form>
+            <button class="as-center mt10" mat-fab color="primary" (click)="login()">
+              <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+
+        </div>
       </div>
     </div>
   </div>

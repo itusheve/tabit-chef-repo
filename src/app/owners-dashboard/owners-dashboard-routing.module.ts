@@ -8,20 +8,25 @@ import { DayViewComponent } from './day-view/day-view.component';
 // import { OrgGuard } from './auth/org-guard.service';
 
 const ownersDashboardRoutes: Routes = [
-  { 
-    path: 'owners-dashboard', 
-    component: OwnersDashboardComponent,
-    children: [
-        {
-            path: '',
-            component: HomeComponent
-        },
-        {
-            path: ':businessDate',
-            component: DayViewComponent
-        }
-    ]
-  },
+    { 
+        path: 'owners-dashboard', 
+        component: OwnersDashboardComponent,
+        children: [
+            {
+                path: '',
+                component: HomeComponent
+            },
+            {
+                path: ':businessDate',
+                component: DayViewComponent
+            }
+        ]
+    }
+    // ,
+    // { 
+    //     path: '', 
+    //     redirectTo: '/owners-dashboard' 
+    // }
     // {
     //     path: 'business-day/:bd',
     //     component: HomeComponent

@@ -1,4 +1,13 @@
 mat-card {
     cursor: pointer;
     margin-bottom: 20px;
+
+    padding: 10px 10px;
+    height: 100px;
+    overflow: hidden;
+    // max-height: 100px;
+    // min-height: 100px;
+    mat-card-content {
+        word-wrap: break-word;
+    }
 }

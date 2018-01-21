@@ -12,10 +12,10 @@ export class OwnersDashboardComponent {
   org: any;
 
   constructor(private dataService: DataService, private authService: AuthService, private router: Router) {
-    // this.dataService.organization
-    //   .subscribe(org=>{
-    //     this.org = org;
-    //   });
+    this.dataService.organization
+      .subscribe(org=>{
+        this.org = org;
+      });
   }
 
   changeRest() {

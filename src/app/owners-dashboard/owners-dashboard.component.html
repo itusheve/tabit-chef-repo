@@ -1,26 +1,40 @@
-<div class="row">
-  <div class="col-md-12">        
+<mat-sidenav-container>
+<!-- <div class="row"> -->
+  <!-- <div class="col-md-12">         -->
       
-    <button mat-icon-button [matMenuTriggerFor]="menu">
+    <!-- <button mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <!--      
-                <button mat-menu-item> -->
-      <!-- <mat-icon>notifications_off</mat-icon> -->
-      <!-- <span (click)="changeRest()">החלף מסעדה</span> -->
-      <!-- </button> -->
       <button mat-menu-item>
-        <!-- <mat-icon>notifications_off</mat-icon> -->
         <span [routerLink]="['/owners-dashboard']">בית</span>
       </button>
       <button mat-menu-item>
-        <!-- <mat-icon>notifications_off</mat-icon> -->
         <span (click)="logout()">התנתק</span>
       </button>
     </mat-menu>
-    <div *ngIf="org">{{org.name}}</div>
+    <div *ngIf="org">{{org.name}}</div> -->
 
-    <router-outlet></router-outlet>
-  </div>
-</div>
+    
+  <mat-sidenav #sidenav mode="over">
+    <button mat-menu-item>
+      <span [routerLink]="['/owners-dashboard']">בית</span>
+    </button>
+    <button mat-menu-item>
+      <span (click)="logout()">התנתק</span>
+    </button>
+  </mat-sidenav>
+  
+  <mat-sidenav-content>
+    <div class="flex f-rtl a-center header">
+      <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+      <div *ngIf="org">{{org.name}}</div>
+    </div>
+    <div class="body">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+
+  <!-- </div> -->
+<!-- </div> -->
+</mat-sidenav-container>

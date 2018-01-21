@@ -2,7 +2,7 @@ import { APP_INITIALIZER } from '@angular/core';//https://stackoverflow.com/ques
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
@@ -13,7 +13,40 @@ import { TokenInterceptor } from './auth/token.interceptor';
 import { AsyncLocalStorageModule } from 'angular-async-local-storage';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';//required by some material components
-import { MatButtonModule, MatIconModule, MatMenuModule, MatCardModule } from '@angular/material';//material modules
+import { 
+  MatButtonModule, 
+  MatIconModule, 
+  MatMenuModule, 
+  MatCardModule,
+
+  MatAutocompleteModule,
+  MatButtonToggleModule,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDatepickerModule,
+  MatDialogModule,
+  MatExpansionModule,
+  MatGridListModule,
+  MatInputModule,
+  MatListModule,
+  MatNativeDateModule,
+  MatPaginatorModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
+  MatRadioModule,
+  MatRippleModule,
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+} from '@angular/material';//material modules
 
 
 import { MomentModule } from 'angular2-moment';
@@ -43,7 +76,7 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
   imports: [
     BrowserModule,
     HttpClientModule,
-    FormsModule,
+    ReactiveFormsModule,
     MomentModule,
     BrowserAnimationsModule,
     AsyncLocalStorageModule,
@@ -58,6 +91,36 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
     MatIconModule,
     MatMenuModule,
     MatCardModule,
+
+
+    MatAutocompleteModule,
+    MatButtonToggleModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatGridListModule,
+    MatInputModule,
+    MatListModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatRippleModule,
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+        
+ 
   ],
   providers: [
     {

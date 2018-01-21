@@ -1,0 +1,15 @@
+$oldDashBG: #edf1f2;
+
+mat-sidenav-content {
+    background-color: $oldDashBG;
+    .header {
+        background-color: #363636;
+        color: rgb(157, 157, 157);
+        font-size: 18px;
+        height: 65px;
+        padding: 0 15px;
+    }
+    .body {
+        padding: 15px;
+    }
+}

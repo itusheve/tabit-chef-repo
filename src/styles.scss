@@ -1,14 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
 
 //https://stackoverflow.com/questions/46465888/custom-font-import-in-angular4
-$dashboard-daily-woff-font-path: "./fonts/archistico_bold-webfont.woff";
+// $dashboard-daily-woff-font-path: "./fonts/archistico_bold-webfont.woff";
 // $dashboard-daily-woff2-font-path: "./fonts/archistico_bold-webfont.woff2";
 $font-family-brand: 'archisticobold';
 
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+// @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+// @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "./tabit-material-theme.scss";
 
 $baseText: #343E56;
 $greyText: #6e7482;
+
+$oldDashBG: #edf1f2;
+$galsBGColor: hsl(36, 100%, 78%);
+
+// https://stackoverflow.com/questions/2338102/override-browser-form-filling-and-input-highlighting-with-html-css
+input:-webkit-autofill {
+    -webkit-box-shadow:0 0 0 50px $oldDashBG inset!important; /* Change the color to your own background color */
+    -webkit-text-fill-color: $baseText!important;
+}
+
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 50px $oldDashBG inset!important;
+    -webkit-text-fill-color: $baseText!important;
+} 
 
 html, body {
     width: 100%;
@@ -16,11 +32,11 @@ html, body {
     padding: 0;
     margin: 0;
     font-family: "Alef", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    //EN: font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     color: $baseText;
-    background-color: #edf1f2;
+    background-color: $oldDashBG;
+
 }
 
 ::-webkit-scrollbar {

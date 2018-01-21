@@ -26,7 +26,15 @@ import { CardComponent } from '../ui/card/card.component';
 
 import { OwnersDashboardRoutingModule } from './owners-dashboard-routing.module';
 
-import { MatButtonModule, MatIconModule, MatMenuModule, MatCardModule } from '@angular/material';//material modules
+import { 
+  MatButtonModule, 
+  MatIconModule, 
+  MatMenuModule, 
+  MatCardModule,
+  MatSidenavModule
+} from '@angular/material';//material modules
+
+
 
 import { DxButtonModule } from 'devextreme-angular';
 import { DxCalendarModule } from 'devextreme-angular';
@@ -45,6 +53,7 @@ import { DxDataGridModule } from 'devextreme-angular';
     MatIconModule,
     MatMenuModule,
     MatCardModule,
+    MatSidenavModule,
 
     DxButtonModule,
     DxCalendarModule,
