@@ -1,15 +1,15 @@
 {
     "name": "Tabit Chef",
-    "dir": "rtl",
-    "lang": "he",
-    "short_name": "Chef",
-    "start_url": ".",
-    "display": "standalone",
-    "background_color": "#5A3942",
-    "theme_color": "#5A3942",
-    "description": "Tabit Chef App",
-    "icons": [
-        {
+        "dir": "rtl",
+        "lang": "he",
+        "short_name": "Chef",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#5A3942",
+        "theme_color": "#5A3942",
+        "description": "Tabit Chef App",
+        "icons": [
+            {
             "src": "assets/images/icons/mdpi.png",
             "sizes": "48x48",
             "type": "image/png"
