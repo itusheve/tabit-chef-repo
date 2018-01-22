@@ -12,7 +12,8 @@ const appRoutes: Routes = [
     path: 'login', 
     component: LoginComponent 
   },
-  { path: '**', redirectTo: '/login' }
+  // { path: '', redirectTo: '/owners-dashboard' },
+  { path: '**', redirectTo: '/owners-dashboard' }
   // { 
   //   path: 'u', 
   //   canActivateChild: [UserGuard], 

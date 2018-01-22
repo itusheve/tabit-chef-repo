@@ -8,13 +8,13 @@
   <div class="body">
     <div class="flex j-sb">
       <div class="flex"></div>
-      <div class="flex">{{sum}}</div>
+      <div class="flex">{{sum | currency:'ILS':'symbol':'1.0-0'}}</div>
       <div class="flex"></div>
     </div>
     <div class="flex j-sb">
-      <div class="flex">{{diners}} ppl</div>
+      <div class="flex">{{diners | number:'1.0-0'}} סועדים</div>
       <div class="flex"></div>
-      <div class="flex">PPA {{ppa}}</div>
+      <div class="flex">ממוצע לסועדּ {{ppa | currency:'ILS':'symbol':'1.1-1'}}</div>
     </div>
   </div>
 </div>

@@ -4,13 +4,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { OwnersDashboardComponent } from './owners-dashboard.component';
 import { HomeComponent } from './home/home.component';
 import { DayViewComponent } from './day-view/day-view.component';
-// import { UserGuard } from './auth/user-guard.service';
-// import { OrgGuard } from './auth/org-guard.service';
+import { OrgGuard } from '../auth/org-guard.service';
 
 const ownersDashboardRoutes: Routes = [
     { 
         path: 'owners-dashboard', 
         component: OwnersDashboardComponent,
+        canActivate: [OrgGuard],
+        canActivateChild: [OrgGuard],
         children: [
             {
                 path: '',

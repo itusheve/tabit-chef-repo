@@ -1,18 +1,20 @@
-import { APP_INITIALIZER } from '@angular/core';//https://stackoverflow.com/questions/35191617/how-to-run-a-service-when-the-app-starts-in-angular-2/35191647
-
+import { APP_INITIALIZER, NgModule, LOCALE_ID } from '@angular/core';//https://stackoverflow.com/questions/35191617/how-to-run-a-service-when-the-app-starts-in-angular-2/35191647
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';//required by some material components
+import { registerLocaleData } from '@angular/common';
+import localeHe from '@angular/common/locales/he';
+// the second parameter 'fr' is optional
+registerLocaleData(localeHe, 'fr');//https://angular.io/guide/i18n
+
+import { environment } from '../environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
-
 import { TokenInterceptor } from './auth/token.interceptor';
-
 import { AsyncLocalStorageModule } from 'angular-async-local-storage';
 
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';//required by some material components
 import { 
   MatButtonModule, 
   MatIconModule, 
@@ -35,17 +37,6 @@ import {
   MatProgressSpinnerModule,
   MatRadioModule,
   MatRippleModule,
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
 } from '@angular/material';//material modules
 
 
@@ -68,6 +59,8 @@ import { OrgGuard } from './auth/org-guard.service';
 import { OrgsModule } from './orgs/orgs.module';
 import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.module';
 
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -77,6 +70,8 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
+
     MomentModule,
     BrowserAnimationsModule,
     AsyncLocalStorageModule,
@@ -124,17 +119,21 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
   ],
   providers: [
     {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true
-    },
-    AuthService, 
-    {
       provide: APP_INITIALIZER,
       useFactory: (as: AuthService) => function () { return as.authByToken(); },
       deps: [AuthService],
       multi: true
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    { 
+      provide: LOCALE_ID, 
+      useValue: 'he' 
+    },
+    AuthService, 
     UserGuard,
     OrgGuard,
     DataService, 

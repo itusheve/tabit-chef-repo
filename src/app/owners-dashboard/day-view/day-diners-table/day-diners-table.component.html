@@ -16,9 +16,9 @@
             </div>
             <div class="flex d-row tblRow">
                 <div class="flex" style="width:25%">PPA</div>
-                <div class="flex" style="width:25%">{{rows.ppa.morning | number : '1.2-2'}}</div>
-                <div class="flex" style="width:25%">{{rows.ppa.afternoon | number : '1.2-2'}}</div>
-                <div class="flex" style="width:25%">{{rows.ppa.evening | number : '1.2-2'}}</div>
+                <div class="flex" style="width:25%">{{rows.ppa.morning | currency:'ILS':'symbol':'1.1-1'}}</div>
+                <div class="flex" style="width:25%">{{rows.ppa.afternoon | currency:'ILS':'symbol':'1.1-1'}}</div>
+                <div class="flex" style="width:25%">{{rows.ppa.evening | currency:'ILS':'symbol':'1.1-1'}}</div>
             </div>
         </div>
     </div>

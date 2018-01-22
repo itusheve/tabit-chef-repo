@@ -10,8 +10,7 @@
       "assets": [
         "assets",
         "favicon.ico",
-        "manifest.json",
-        "service-worker.js"
+        "manifest.json"
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -35,7 +34,8 @@
       "environments": {
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
-      }
+      },
+      "serviceWorker": true
     }
   ],
   "e2e": {

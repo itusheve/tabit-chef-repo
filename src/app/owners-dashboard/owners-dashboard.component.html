@@ -17,9 +17,9 @@
 
     
   <mat-sidenav #sidenav mode="over">
-    <button mat-menu-item>
+    <!-- <button mat-menu-item>
       <span [routerLink]="['/owners-dashboard']">בית</span>
-    </button>
+    </button> -->
     <button mat-menu-item>
       <span (click)="logout()">התנתק</span>
     </button>
@@ -29,6 +29,8 @@
     <div class="flex f-rtl a-center header">
       <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
       <div *ngIf="org">{{org.name}}</div>
+      <!-- <button mat-button [routerLink]="['/owners-dashboard']">חזור</button> -->
+      <button *ngIf="!active" mat-button routerLink="/owners-dashboard">חזור</button>
     </div>
     <div class="body">
       <router-outlet></router-outlet>

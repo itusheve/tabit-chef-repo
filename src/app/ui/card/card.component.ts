@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { DecimalPipe, CurrencyPipe, PercentPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-card',

@@ -1,11 +1,25 @@
-import { CanActivateChild, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { CanActivateChild, ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from './auth.service';
 
 @Injectable()
-export class OrgGuard implements CanActivateChild {
+export class OrgGuard implements CanActivate, CanActivateChild {
     constructor(private authService: AuthService, private router: Router) { }
+
+    canActivate(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot
+    ): Observable<boolean> | Promise<boolean> | boolean {
+        return this.authService.isOrgAuthed()
+            .then(
+            (authenticated: boolean) => {
+                if (authenticated) return true;
+                this.router.navigate(['/restaurants']);
+                return false;
+            }
+            );
+    }
 
     canActivateChild(
         route: ActivatedRouteSnapshot,
@@ -15,9 +29,10 @@ export class OrgGuard implements CanActivateChild {
             .then(
             (authenticated: boolean) => {
                 if (authenticated) return true;
-                this.router.navigate(['/u/orgs']);
+                this.router.navigate(['/restaurants']);
                 return false;
             }
             );
     }
+    
 }

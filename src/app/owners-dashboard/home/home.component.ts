@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DecimalPipe, CurrencyPipe, PercentPipe, DatePipe } from '@angular/common';
+
 import { DataService } from '../../..//tabit/data/data.service';
 
 import * as moment from 'moment';
@@ -8,7 +10,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  providers: [DatePipe]
 })
 export class HomeComponent implements OnInit {
 
@@ -24,8 +27,9 @@ export class HomeComponent implements OnInit {
   // previousBusinessDateLinkStr: string;
   mtdStr: string;
 
+  // datePipe: any = new DatePipe();//TODO use currency pipe instead
   
-  constructor(private dataService: DataService, private router: Router) { 
+  constructor(private dataService: DataService, private router: Router, private datePipe: DatePipe) { 
     const cbd$ = dataService.currentBusinessDate;
     const pbd$ = dataService.previousBusinessDate;
     const all$ = zip(cbd$, pbd$)
@@ -33,9 +37,14 @@ export class HomeComponent implements OnInit {
         this.currentBusinessDate = data[0];
         this.previousBusinessDate = data[1];
         
-        this.currentBusinessDateStr = `היום, ${this.currentBusinessDate.format('LL')}`;
-        this.previousBusinessDateStr = `אתמול, ${this.previousBusinessDate.format('LL')}`;        
-        this.mtdStr = `${this.currentBusinessDate.format('MMMM')} MTD`;
+        this.currentBusinessDateStr = `היום, ${this.datePipe.transform(this.currentBusinessDate.valueOf(), 'fullDate')}`;
+        this.previousBusinessDateStr = `אתמול, ${this.datePipe.transform(this.previousBusinessDate.valueOf(), 'fullDate')}`;        
+        this.mtdStr = `${this.datePipe.transform(this.currentBusinessDate.valueOf(), 'MMMM')} (עד כה)`;
+        // const ms = this.currentBusinessDate.valueOf();
+        // const formatted = this.datePipe.transform(this.currentBusinessDate.valueOf(), 'fullDate');
+        // this.currentBusinessDateStr = `${this.datePipe.transform()}`;
+        //this.previousBusinessDateStr = `אתמול, ${this.previousBusinessDate.format('LL')}`;        
+        //this.mtdStr = `${this.currentBusinessDate.format('MMMM')} MTD`;
       });
   }
 
