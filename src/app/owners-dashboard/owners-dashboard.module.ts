@@ -31,7 +31,8 @@ import {
   MatIconModule, 
   MatMenuModule, 
   MatCardModule,
-  MatSidenavModule
+  MatSidenavModule,
+  MatSlideToggleModule
 } from '@angular/material';//material modules
 
 
@@ -54,6 +55,7 @@ import { DxDataGridModule } from 'devextreme-angular';
     MatMenuModule,
     MatCardModule,
     MatSidenavModule,
+    MatSlideToggleModule,
 
     DxButtonModule,
     DxCalendarModule,

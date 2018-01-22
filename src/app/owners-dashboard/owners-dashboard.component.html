@@ -1,9 +1,12 @@
 <mat-sidenav-container>
 
   <mat-sidenav #sidenav mode="over">
+    <mat-slide-toggle class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)">
+      מע"מ
+    </mat-slide-toggle>
     <button mat-menu-item>
       <span (click)="logout()">התנתק</span>
-    </button>
+    </button>    
   </mat-sidenav>
   
   <mat-sidenav-content>

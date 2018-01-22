@@ -15,23 +15,41 @@ import { zip } from 'rxjs/observable/zip';
 
 @Injectable()
 export class DataService {
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
-
-    }
-
     private ROS_base_url: String = 'https://ros-office-beta.herokuapp.com';//TODO get from config and consume in ROS ep
-    
+
     private organizations$: ReplaySubject<any>;
 
     private shifts$: ReplaySubject<any>;
     private currentBusinessDate$;
     private previousBusinessDate$;
     private _dashboardData;
-    
+
     private todayData$;
     private yesterdayData$;
     private monthToDateData$;
     private monthForecastData$;
+
+
+    public vat$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
+        this.vat$.next(true);
+        // this.vat$.subscribe(data=>{
+            // debugger;
+        // });
+    }
+
+
+    // this.vat$.next(true);
+
+    // private _vat = true;
+    // get vat(): boolean {
+    //     return this._vat;
+    // }
+    // set vat(v: boolean) {
+    //     this._vat = v;
+    // }
+
 
     get organizations(): ReplaySubject<any> {
         if (this.organizations$) return this.organizations$;

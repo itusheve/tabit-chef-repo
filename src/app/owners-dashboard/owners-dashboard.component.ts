@@ -10,12 +10,23 @@ import { Router } from '@angular/router';
 export class OwnersDashboardComponent {
 
   org: any;
+  vat: boolean;
 
   constructor(private dataService: DataService, private authService: AuthService, private router: Router) {
+    dataService.vat$.subscribe((vat:boolean)=>{
+      // debugger;
+      this.vat = vat;
+    });
+
     this.dataService.organization
       .subscribe(org=>{
         this.org = org;
       });
+  }
+
+  vatChange(event) {
+    // debugger;
+    // this.dataService.vat$.next(event.checked);
   }
 
   changeRest() {
