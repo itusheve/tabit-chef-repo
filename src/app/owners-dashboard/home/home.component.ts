@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
     if (date ==='previousBD') {
       date = this.previousBusinessDate.format('YYYY-MM-DD');
     }
-    this.router.navigate(['/owners-dashboard', date]);
+    this.router.navigate(['/owners-dashboard/day', date]);
   }
 
 }

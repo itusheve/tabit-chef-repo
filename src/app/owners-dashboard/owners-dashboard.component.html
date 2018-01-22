@@ -1,25 +1,6 @@
 <mat-sidenav-container>
-<!-- <div class="row"> -->
-  <!-- <div class="col-md-12">         -->
-      
-    <!-- <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item>
-        <span [routerLink]="['/owners-dashboard']">בית</span>
-      </button>
-      <button mat-menu-item>
-        <span (click)="logout()">התנתק</span>
-      </button>
-    </mat-menu>
-    <div *ngIf="org">{{org.name}}</div> -->
 
-    
   <mat-sidenav #sidenav mode="over">
-    <!-- <button mat-menu-item>
-      <span [routerLink]="['/owners-dashboard']">בית</span>
-    </button> -->
     <button mat-menu-item>
       <span (click)="logout()">התנתק</span>
     </button>
@@ -29,8 +10,8 @@
     <div class="flex f-rtl a-center header">
       <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
       <div *ngIf="org">{{org.name}}</div>
-      <!-- <button mat-button [routerLink]="['/owners-dashboard']">חזור</button> -->
-      <button *ngIf="!active" mat-button routerLink="/owners-dashboard">חזור</button>
+      
+      <button mat-button color="accent" *ngIf="router.url != '/owners-dashboard/home'" routerLink="/owners-dashboard/home">חזור</button>
     </div>
     <div class="body">
       <router-outlet></router-outlet>

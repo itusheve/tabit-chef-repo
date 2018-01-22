@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { LoginComponent } from './auth/login/login.component';
 import { OrgsComponent } from './orgs/orgs.component';
-// import { DayViewComponent } from './day-view/day-view.component';
 import { UserGuard } from './auth/user-guard.service';
 import { OrgGuard } from './auth/org-guard.service';
 
@@ -12,29 +11,7 @@ const appRoutes: Routes = [
     path: 'login', 
     component: LoginComponent 
   },
-  // { path: '', redirectTo: '/owners-dashboard' },
-  { path: '**', redirectTo: '/owners-dashboard' }
-  // { 
-  //   path: 'u', 
-  //   canActivateChild: [UserGuard], 
-  //   children: [
-  //     {
-  //       path: 'orgs',
-  //       component: OrgsComponent
-  //     },
-  //     {
-  //       path: 'o',
-  //       canActivateChild: [OrgGuard], 
-  //       children: [
-  //         {
-  //           path: 'day', 
-  //           component: DayViewComponent
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // },
-  //{ path: '**', redirectTo: '/u/o/home' }
+  { path: '**', redirectTo: '/owners-dashboard/home' }
 ];
 
 @NgModule({

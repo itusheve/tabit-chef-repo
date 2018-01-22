@@ -14,11 +14,11 @@ const ownersDashboardRoutes: Routes = [
         canActivateChild: [OrgGuard],
         children: [
             {
-                path: '',
+                path: 'home',
                 component: HomeComponent
             },
             {
-                path: ':businessDate',
+                path: 'day/:businessDate',
                 component: DayViewComponent
             }
         ]

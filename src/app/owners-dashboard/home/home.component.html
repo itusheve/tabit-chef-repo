@@ -12,7 +12,7 @@
       >
     </app-card> 
 
-    <!-- [routerLink]="['/owners-dashboard', previousBusinessDateLinkStr]" -->
+    <!-- [routerLink]="['/owners-dashboard/day', previousBusinessDateLinkStr]" -->
     <app-card 
       *ngIf="yesterdayData" 
       (click)="onDayRequest('previousBD')"
