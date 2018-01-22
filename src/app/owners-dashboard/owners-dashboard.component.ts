@@ -12,7 +12,7 @@ export class OwnersDashboardComponent {
   org: any;
   vat: boolean;
 
-  constructor(private dataService: DataService, private authService: AuthService, protected router: Router) {
+  constructor(private dataService: DataService, private authService: AuthService, public router: Router) {
     dataService.vat$.subscribe((vat:boolean)=>{
       // debugger;
       this.vat = vat;
