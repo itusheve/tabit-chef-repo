@@ -14,23 +14,16 @@ export class ROSEp {
 
     get(url, options): Promise<any> {
         return new Promise((resolve, reject)=>{
-            //this.authService.getAuthToken('ros')
-                //.then((authRoken: string)=>{
-                    this.httpClient.get(url)
-                        .subscribe(
-                            (results: any)=>{
-                                // if (results === undefined) return undefined;
-                                // if (results.data) return results.data;
-                                //return Observable.of(results);
-                                resolve(results);
-                            },
-                            ()=>{
-                                debugger;
-                            },
-                            ()=>{}
-                        );
-                //});
-            // return p;
+            this.httpClient.get(url)
+                .subscribe(
+                    (results: any)=>{
+                        resolve(results);
+                    },
+                    ()=>{
+                        debugger;
+                    },
+                    ()=>{}
+                );
         });
     }
 

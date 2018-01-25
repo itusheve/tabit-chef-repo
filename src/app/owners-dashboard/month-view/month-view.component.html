@@ -1,28 +1,10 @@
 <div class="row">
   <div class="col-md-12">    
-    <app-month-selector #monthSelector [currentValue]="month" (onDateChanged)="onDateChanged($event)"></app-month-selector>
-    <app-card 
-      class="mb10" 
-      *ngIf="components.forecastCard.show" 
-      tag="" 
-      title="{{month | date:'MMMM'}} (צפוי)" 
-      [sum]="components.forecastCard.data.sales" 
-      [diners]="components.forecastCard.data.diners"
-      [ppa]="components.forecastCard.data.ppa"
-      >
-    </app-card>
-    <app-card 
-      class="mb10" 
-      *ngIf="components.monthCard.show" 
-      tag="" 
-      title="{{month | date:'MMMM'}} (סופי)" 
-      [sum]="components.monthCard.data.sales" 
-      [diners]="components.monthCard.data.diners"
-      [ppa]="components.monthCard.data.ppa"
-      >
-    </app-card>
+    <app-month-selector #monthSelector [month$]="month$" (onDateChanged)="onDateChanged($event)"></app-month-selector>    
+    <app-card *ngIf="showForecast" class="mb10" [cardData]="forecastCardData"></app-card>
+    <app-card *ngIf="showSummary" class="mb10" [cardData]="summaryCardData"></app-card>
     <app-month-chart #monthChart [options]="components.chart.options" (onDateClicked)="onDateClicked($event)"></app-month-chart>
-    <app-month-grid #monthGrid [options]="components.grid.options" (onDateClicked)="onDateClicked2($event)"></app-month-grid>
+    <app-month-grid #monthGrid [options]="components.grid.options" (onDateClicked)="onDateClicked2($event)"></app-month-grid> 
   </div>
 </div>
 

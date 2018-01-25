@@ -100,7 +100,7 @@ export class OlapEp {
         let that = this;    
         return new Promise((resolve, reject) => {
             that.dailyData.subscribe(dailyData => {                                
-                const filtered = dailyData.filter(r => {                    
+                const filtered = dailyData.filter(r => {//TODO EP should be stateless!
                     const minValidate = fromDate ? r.date.isSameOrAfter(fromDate, 'day') : true;
                     const maxValidate = toDate ? r.date.isSameOrBefore(toDate, 'day') : true;
                     return minValidate && maxValidate;

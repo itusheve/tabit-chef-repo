@@ -32,9 +32,6 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
   ) { }
 
   private render() {
-    // let queryFrom, queryTo;
-    // const date = moment('01-05-2018');
-
     const data$ = zip(
       this.dataService.shifts, 
       this.dataService.getDailyDataByShiftAndType(this.day), 
@@ -47,29 +44,6 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
       this.dayDinersTable.render(data.shifts, data.dinersAndPPAByShift);
       this.dayShifts.render(data.shifts);
     });
-
-    // if (this.day.isSame(now, 'month')) {
-    //   if (now.date()===1) {
-        // this.components.chart.options.dataSource = [];
-        // this.components.grid.options.dataSource = [];
-    //     return Promise.resolve();
-    //   } else {
-    //     queryFrom = moment(this.day).startOf('month');        
-    //     queryTo = now.subtract(1, 'day');
-    //   }
-    // } else {
-    //   queryFrom = moment(this.day).startOf('month');
-    //   queryTo = moment(this.day).endOf('month');
-    // }
-
-    // this.dataService.getDailyData(queryFrom, queryTo)
-      // .then(rowset => {
-        // this.components.chart.options.dataSource = rowset;
-        // this.components.grid.options.dataSource = rowset;
-
-        // this.dayPieChart.render();
-        // this.monthGrid.render();
-      // });
   } 
 
   ngOnInit() {
@@ -81,19 +55,17 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
         } else {
           this.day = moment().subtract(1, 'day');   
         }
-        this.render();
+        // this.render();
       });
-      // .switchMap((params: ParamMap) => {});
   }
 
   ngAfterViewInit() {
-    // children are set
-    // this.render();
+
   }
 
   onDateChanged(day: moment.Moment) {
     this.day = moment(day);        
-    this.render();
+    // this.render();
   }
 
 }

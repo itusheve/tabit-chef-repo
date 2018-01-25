@@ -26,7 +26,8 @@ export class AuthService {
     constructor(private httpClient: HttpClient, protected localStorage: AsyncLocalStorage) {}
 
     private authState = 0;//0: anon, 1: user mode, 2: org mode
-    // private authToken = undefined;//TODO for optimization, save also here, since local storage is slower (is it? using DBstorage API)
+    
+    public authToken: string;
 
     login(credentials): Promise<any> {        
         return this.authenticate(credentials);
@@ -75,6 +76,7 @@ export class AuthService {
                             refresh_token: string
                         }
                     ) => {
+                        this.authToken = token.access_token;
                         this.localStorage.setItem('token', token).subscribe(() => { 
                             this.httpClient.get(ROS_base_url + meUrl)
                                 .subscribe(
@@ -87,6 +89,7 @@ export class AuthService {
                                     ()=>{}, 
                                     ()=>{
                                         //reverse process upon error
+                                        this.authToken = undefined;
                                         this.localStorage.clear().subscribe(() => {});
                                     }
                                 );
@@ -105,6 +108,7 @@ export class AuthService {
                 );
 
                 data$.subscribe(data => {
+                    this.authToken = data[0].access_token;
                     if (!!data[0] && !!data[1]) {
                         if (!!data[2]) {
                             this.authState = 2;
@@ -122,11 +126,37 @@ export class AuthService {
         });
     }
 
+    /* 
+    try to authenticate with the refresh token.
+    on success resolve with new token obj (access+refresh)
+     */
+    public refreshToken(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this.localStorage.getItem<any>('token')
+                .subscribe(token_=>{
+                    this.httpClient.post(ROS_base_url + loginUrl, {
+                        client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
+                        grant_type: 'refresh_token',
+                        refresh_token: token_.refresh_token
+                    })
+                        .subscribe((token: {
+                            access_token: string,
+                            refresh_token: string
+                        })=>{
+                            this.authToken = token.access_token;
+                            this.localStorage.setItem('token', token).subscribe(() => { });
+                            resolve(this.authToken);
+                        });
+                });
+        });
+    }
+
     private unauthenticate(): Promise<any> {
         return new Promise((resolve, reject)=>{
             // this.localStorage.removeItem('token').subscribe(() => { });
             this.localStorage.clear().subscribe(() => { });
             this.authState = 0;
+            this.authToken = undefined;
             resolve();
         });
     }

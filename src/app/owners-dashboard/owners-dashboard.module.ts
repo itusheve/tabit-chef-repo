@@ -42,6 +42,7 @@ import { DxCalendarModule } from 'devextreme-angular';
 import { DxChartModule } from 'devextreme-angular';
 import { DxPieChartModule } from 'devextreme-angular';
 import { DxDataGridModule } from 'devextreme-angular';
+import { DxLoadIndicatorModule } from 'devextreme-angular';
 // import { DxCircularGaugeModule } from 'devextreme-angular';
 
 @NgModule({
@@ -61,7 +62,8 @@ import { DxDataGridModule } from 'devextreme-angular';
     DxCalendarModule,
     DxChartModule,
     DxPieChartModule,
-    DxDataGridModule
+    DxDataGridModule,
+    DxLoadIndicatorModule
     // DxCircularGaugeModule,
   ],
   declarations: [

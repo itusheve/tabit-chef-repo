@@ -1,41 +1,10 @@
 <div class="row">
   <div class="col-md-12">        
 
-    <app-card 
-      *ngIf="todayData"
-      class="mb10" 
-      tag="היום"
-      [title]="currentBusinessDateStr"
-      [sum]="todayData.sales"
-      [diners]="todayData.diners"
-      [ppa]="todayData.ppa"
-      >
-    </app-card> 
-
-    <!-- [routerLink]="['/owners-dashboard/day', previousBusinessDateLinkStr]" -->
-    <app-card 
-      *ngIf="yesterdayData" 
-      (click)="onDayRequest('previousBD')"
-      class="mb10" 
-      style="cursor: pointer"
-      tag="אתמול" 
-      [title]="previousBusinessDateStr" 
-      [sum]="yesterdayData.sales" 
-      [diners]="yesterdayData.diners"
-      [ppa]="yesterdayData.ppa">
-    </app-card>
-
-    <app-card 
-      *ngIf="monthToDateData"
-      class="mb10" 
-      tag="" 
-      [title]="mtdStr" 
-      [sum]="monthToDateData.sales" 
-      [diners]="monthToDateData.diners"
-      [ppa]="monthToDateData.ppa">
-    </app-card>
+    <app-card class="mb10" [cardData]="todayCardData"></app-card> 
+    <app-card class="mb10" [cardData]="yesterdayCardData" style="cursor: pointer"></app-card>
+    <app-card class="mb10" [cardData]="mtdCardData"></app-card>
 
     <app-month-view (onDayRequest)="onDayRequest($event)"></app-month-view>
-    <!-- <app-month-view></app-month-view> -->
   </div>
 </div>

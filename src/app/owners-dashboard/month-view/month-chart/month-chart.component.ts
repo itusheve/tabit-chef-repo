@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-month-chart',
@@ -21,6 +21,7 @@ export class MonthChartComponent implements OnInit {
   // onInitializedEventHandler(e) {
   //   this.chartInstance = e.component;
   // }
+
 
   pointClickHandler(e) {
     const str = e.target.originalArgument;
@@ -45,5 +46,6 @@ export class MonthChartComponent implements OnInit {
   ngOnInit() {
     // this.render();
   }
+
 
 }

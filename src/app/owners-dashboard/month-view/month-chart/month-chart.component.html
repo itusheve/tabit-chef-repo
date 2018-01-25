@@ -1,15 +1,13 @@
 <!-- (onInitialized)="onInitializedEventHandler($event)" -->
-<div class="widget">
-    <dx-chart 
+<div class="widget flex d-col a-stretch monthChartComponent">
+    <dx-load-indicator class="as-center" *ngIf="!dxChart.show" rtlEnabled="true"></dx-load-indicator>
+    <dx-chart            
+        *ngIf="dxChart.show"
         (onPointClick)="pointClickHandler($event)"
         [dataSource]="dxChart.dataSource"
         [rtlEnabled]="true"
         >
         <dxo-legend [visible]="false"></dxo-legend>
-        <!-- <dxo-common-series-settings
-            argumentField="date"
-            type="bar"> -->
-        <!-- </dxo-common-series-settings> -->
         <dxi-series argumentField="dateFormatted" valueField="sales" type="bar"></dxi-series>
     </dx-chart>
 </div>

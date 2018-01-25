@@ -3,6 +3,7 @@ import { DataService } from '../../tabit/data/data.service';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
 
+
 @Component({
   templateUrl: './owners-dashboard.component.html',
   styleUrls: ['./owners-dashboard.component.scss']
@@ -25,8 +26,7 @@ export class OwnersDashboardComponent {
   }
 
   vatChange(event) {
-    // debugger;
-    // this.dataService.vat$.next(event.checked);
+    this.dataService.vat$.next(event.checked);
   }
 
   changeRest() {

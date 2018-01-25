@@ -10,8 +10,9 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { zip } from 'rxjs/observable/zip';
-
-
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import 'rxjs/add/operator/concatMap';
 
 @Injectable()
 export class DataService {
@@ -20,36 +21,176 @@ export class DataService {
     private organizations$: ReplaySubject<any>;
 
     private shifts$: ReplaySubject<any>;
-    private currentBusinessDate$;
     private previousBusinessDate$;
-    private _dashboardData;
+    
+    private dashboardData$;//:Observable<any>;
 
-    private todayData$;
-    private yesterdayData$;
     private monthToDateData$;
     private monthForecastData$;
 
+    public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
-    public vat$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
-        this.vat$.next(true);
-        // this.vat$.subscribe(data=>{
-            // debugger;
-        // });
+
+    //TODO today data comes with data without tax. use it instead of dividing by 1.17 (which is incorrect).
+    //TODO take cube "sales data excl. tax" instead of dividing by 1.17. 
+    //TODO take cube "salesPPA excl. tax" (not implemented yet, talk with Ofer) instead of dividing by 1.17.
+    //TODO today sales data should get autorefreshed every X seconds..
+    private todayDataVatInclusive$: Observable<{ sales: number, diners: number, ppa: number }> = Observable.create(obs=>{
+        /* we get the diners and ppa measures from olap and the sales from ros */
+        const that = this;
+
+        function getDinersAndPPA(): Observable<any> {
+            return Observable.create(sub => {
+                that.currentBd$
+                    .subscribe(data => {
+                        const dateFrom: moment.Moment = data;
+                        const dateTo: moment.Moment = data;
+                        that.getDailyData(dateFrom, dateTo)
+                            .then(dailyData => {
+                                if (dailyData.length) {
+                                    const dinersPPA = dailyData[0]['dinersPPA'];
+                                    const salesPPA = dailyData[0]['salesPPA'];
+                                    const ppa = (dinersPPA ? salesPPA / dinersPPA : undefined);
+                                    sub.next({
+                                        diners: dinersPPA,
+                                        ppa: ppa
+                                    });
+                                } else {
+                                    sub.next({
+                                        diners: 0,
+                                        ppa: 0
+                                    });
+                                }
+                            });
+                    });
+            });
+        }
+
+        function getSales(): Observable<any> {
+            return Observable.create(sub => {
+                that.dashboardData
+                    .subscribe(data => {
+                        const sales = data.today.totalSales;
+                        sub.next({
+                            sales: sales
+                        });
+                    });
+            });
+        }
+
+      
+        const dinersAndPPA$: Observable<any> = getDinersAndPPA();
+        const sales$: Observable<any> = getSales();
+        zip(dinersAndPPA$, sales$, (dinersAndPPA: any, sales: any) => Object.assign({}, dinersAndPPA, sales))
+            .subscribe(data=>{
+                obs.next(data);
+            });
+
+    });
+    
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) { }
+
+    get currentBd$(): Observable<moment.Moment> {
+        return this.dashboardData
+            .map(data => {
+                const bdStr = data.today.businessDate.substring(0, 10);
+                const bd: moment.Moment = moment(bdStr).startOf('day');
+                return bd;
+            });
     }
 
+    get currentBdData$(): Observable<any> {
+        return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
+            data = _.merge({}, data);
+            if (!vat) {
+                data.ppa = data.ppa / 1.17;//TODO bring VAT per month from some api?
+                data.sales = data.sales / 1.17;
+            }
+            return data;
+        });
+    }
 
-    // this.vat$.next(true);
+    get previousBd$(): Observable<moment.Moment> {
+        return this.currentBd$
+            .map(cbd=>{
+                const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
+                return pbd;
+            });
+    }
+    
+    get previousBdData$(): Observable<any> {
+        return combineLatest(this.vat$, this.previousBd$)
+            .concatMap(
+                vals=>{
+                    return Observable.create(obs=>{
+                        const vat = vals[0];
+                        const pbd = vals[1];
+                        const dateFrom: moment.Moment = moment(pbd);
+                        const dateTo: moment.Moment = dateFrom;
+                        this.getDailyData(dateFrom, dateTo)
+                            .then(dailyData => {
+                                if (dailyData.length) {
+                                    let sales = dailyData[0]['sales'];
+                                    let dinersPPA = dailyData[0]['dinersPPA'];
+                                    let salesPPA = dailyData[0]['salesPPA'];
+                                    let ppa = (dinersPPA ? salesPPA / dinersPPA : 0);
 
-    // private _vat = true;
-    // get vat(): boolean {
-    //     return this._vat;
-    // }
-    // set vat(v: boolean) {
-    //     this._vat = v;
-    // }
+                                    if (!vat) {
+                                        ppa = ppa / 1.17;//TODO bring VAT per month from some api?
+                                        sales = sales / 1.17;
+                                    }
+                                    obs.next({
+                                        sales: sales,
+                                        diners: dinersPPA,
+                                        ppa: ppa
+                                    });
+                                } else {
+                                    obs.next({
+                                        sales: 0,
+                                        diners: 0,
+                                        ppa: 0
+                                    });
+                                }
+                                
 
+                            });
+                    }).take(1);
+                }
+            );
+    }
+
+    /* excluding today! this is why we use getDailyData and not getMonthlyData  */
+    get mtdData$(): Observable<any> {
+        let that = this;
+        return this.vat$
+            .concatMap(
+                (vat:boolean) => {
+                    return Observable.create(obs => {
+                        const dateFrom: moment.Moment = moment().startOf('month');
+                        const dateTo: moment.Moment = moment().subtract(1, 'days');
+                        this.getDailyData(dateFrom, dateTo)
+                            .then(dailyData => {
+                                let sales = _.sumBy(dailyData, 'sales');
+                                let diners = _.sumBy(dailyData, 'dinersPPA');
+                                let ppa = _.sumBy(dailyData, 'salesPPA') / diners;
+
+                                if (!vat) {
+                                    ppa = ppa / 1.17;//TODO bring VAT per month from some api?
+                                    sales = sales / 1.17;
+                                }
+
+                                const data = {
+                                    sales: sales,
+                                    diners: diners,
+                                    ppa: ppa
+                                };
+
+                                obs.next(data);
+                            });
+                    }).take(1);
+                });
+    }
 
     get organizations(): ReplaySubject<any> {
         if (this.organizations$) return this.organizations$;
@@ -68,7 +209,7 @@ export class DataService {
         return this.localStorage.getItem<any>('org');
     }
 
-    getDailyData(fromDate: moment.Moment, toDate?: moment.Moment) {
+    getDailyData(fromDate: moment.Moment, toDate?: moment.Moment):Promise<any> {
         return this.olapEp.getDailyData(fromDate, toDate);
     }
     
@@ -136,166 +277,28 @@ export class DataService {
         return this.shifts$;
     }
 
-    get currentBusinessDate(): ReplaySubject<moment.Moment> {
-        if (this.currentBusinessDate$) return this.currentBusinessDate$;
-        this.currentBusinessDate$ = new ReplaySubject<any>();
-
-        this.dashboardData
-            .subscribe(data=>{
-                const bdStr = data.today.businessDate.substring(0, 10);
-                const bd: moment.Moment = moment(bdStr).startOf('day');
-                this.currentBusinessDate$.next(bd);
-            });        
-
-        return this.currentBusinessDate$;
-    }
-
-    get previousBusinessDate(): ReplaySubject<moment.Moment> {
-        if (this.previousBusinessDate$) return this.previousBusinessDate$;
-        this.previousBusinessDate$ = new ReplaySubject<any>();
-
-        this.currentBusinessDate
-            .subscribe(cbd => {
-                const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
-                this.previousBusinessDate$.next(pbd);
-            });
-
-        return this.previousBusinessDate$;
-    }
-
-    get dashboardData(): ReplaySubject<any> {
-        if (this._dashboardData) return this._dashboardData;
-        this._dashboardData = new ReplaySubject<any>();
-
+    get dashboardData(): Observable<any> {
+        if (this.dashboardData$) return this.dashboardData$;
+                
         let that = this;
-
-        this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
-            .then((results: any) => moment(results.businessDate))
-            .then((bd: moment.Moment) => {
-                const payload = {
-                    params: {
-                        to: bd.format('YYYY-MM-D'),
-                        daysOfHistory: 2
-                    }
-                };
-                return this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', {});
-            })
-            .then(data => this._dashboardData.next(data));
-
         
-        return this._dashboardData;
-    }
-        
-    get todayData(): ReplaySubject<any> {
-        if (this.todayData$) return this.todayData$;        
-        let that = this;
-
-        const dinersAndPPA$: Observable<any> = getDinersAndPPA();
-        const sales$: Observable<any> = getSales();
-        this.todayData$ = zip(dinersAndPPA$, sales$, (dinersAndPPA: any, sales: any) => Object.assign({}, dinersAndPPA, sales));
-
-        /* we get the diners and ppa measures from olap and the sales from ros */
-        function getDinersAndPPA(): Subject<any> {
-            const sub = new Subject<any>();
-            that.currentBusinessDate
-                .subscribe(data=>{
-                    const dateFrom: moment.Moment = data;
-                    const dateTo: moment.Moment = data;
-                    that.getDailyData(dateFrom, dateTo)
-                        .then(dailyData => {
-                            if (dailyData.length) {
-                                const dinersPPA = dailyData[0]['dinersPPA'];
-                                const salesPPA = dailyData[0]['salesPPA'];
-                                const ppa = (dinersPPA ? salesPPA / dinersPPA : undefined);
-                                sub.next({
-                                    diners: dinersPPA,
-                                    ppa: ppa
-                                });
-                            } else {
-                                sub.next({
-                                    diners: 0,
-                                    ppa: undefined
-                                });
-                            }
-                        });
-                });        
-            return sub;
-        }
-
-        function getSales(): Subject<any> {
-            const sub = new Subject<any>();
-            that.dashboardData
-                .subscribe(data => {                
-                    const sales = data.today.totalSales;                    
-                    sub.next({
-                        sales: sales
-                    });
-                });
-            return sub;
-        }
-
-        return this.todayData$;
-    }
-    
-    get yesterdayData(): ReplaySubject<any> {
-        if (this.yesterdayData$) return this.yesterdayData$;
-        let that = this;
-
-        this.yesterdayData$ = new ReplaySubject<any>();
-
-        that.previousBusinessDate
-            .subscribe(pbd => {
-                const dateFrom: moment.Moment = moment(pbd);
-                const dateTo: moment.Moment = dateFrom;
-                that.getDailyData(dateFrom, dateTo)    
-                    .then(dailyData => {
-                        if (dailyData.length) {
-                            const sales = dailyData[0]['sales'];
-                            const dinersPPA = dailyData[0]['dinersPPA'];
-                            const salesPPA = dailyData[0]['salesPPA'];
-                            const ppa = (dinersPPA ? salesPPA / dinersPPA : undefined);
-                            this.yesterdayData$.next({
-                                sales: sales,
-                                diners: dinersPPA,
-                                ppa: ppa
-                            });
-                        } else {
-                            this.yesterdayData$.next({
-                                sales: 0,
-                                diners: 0,
-                                ppa: undefined
-                            });
+        this.dashboardData$ = Observable.create(obs=>{
+            this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
+                .then((results: any) => moment(results.businessDate))
+                .then((bd: moment.Moment) => {
+                    const payload = {
+                        params: {
+                            to: bd.format('YYYY-MM-D'),
+                            daysOfHistory: 2
                         }
-
-                    });
-            });
+                    };
+                    return this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', {});
+                })
+                .then(data => obs.next(data));
+        });
         
-                    return this.yesterdayData$;
-    }
-
-    /* excluding today! this is why we use getDailyData and not getMonthlyData  */
-    get monthToDateData(): ReplaySubject<any> {
-        if(this.monthToDateData$) return this.monthToDateData$;
-        let that = this;
-
-        this.monthToDateData$ = new ReplaySubject<any>();
-
-        const dateFrom: moment.Moment = moment().startOf('month');
-        const dateTo: moment.Moment = moment().subtract(1, 'days');
-
-        this.getDailyData(dateFrom, dateTo)
-            .then(dailyData => {
-                const aggregated = {
-                    sales: _.sumBy(dailyData, 'sales'),
-                    diners: _.sumBy(dailyData, 'dinersPPA'),
-                    ppa: _.sumBy(dailyData, 'salesPPA') / _.sumBy(dailyData, 'dinersPPA')
-                };
-
-                this.monthToDateData$.next(aggregated);
-            });
-
-        return this.monthToDateData$;
-    }
+        return this.dashboardData$;
+    }        
 
     get monthForecastData(): ReplaySubject<any> {
         if (this.monthForecastData$) return this.monthForecastData$;

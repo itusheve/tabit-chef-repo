@@ -6,6 +6,13 @@ import { DataService } from '../../..//tabit/data/data.service';
 import * as moment from 'moment';
 import { zip } from 'rxjs/observable/zip';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { CardData } from '../../ui/card/card.component';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/map';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+
 
 @Component({
   selector: 'app-home',
@@ -14,68 +21,75 @@ import { Router } from '@angular/router';
   providers: [DatePipe]
 })
 export class HomeComponent implements OnInit {
+  
+  todayCardData: CardData = {
+    loading: true,
+    title: '',
+    sales: 0,
+    diners: 0,
+    ppa: 0
+  };
 
-  todayData: any;
-  yesterdayData: any;
-  monthToDateData: any;  
+  yesterdayCardData: CardData = {
+    loading: true,
+    title: '',
+    sales: 0,
+    diners: 0,
+    ppa: 0
+  };
 
-  currentBusinessDate: moment.Moment;
-  previousBusinessDate: moment.Moment;
-
-  currentBusinessDateStr: string;
-  previousBusinessDateStr: string;
-  // previousBusinessDateLinkStr: string;
-  mtdStr: string;
-
-  // datePipe: any = new DatePipe();//TODO use currency pipe instead
+  mtdCardData: CardData = {
+    loading: true,
+    title: '',
+    sales: 0,
+    diners: 0,
+    ppa: 0
+  };
   
   constructor(private dataService: DataService, private router: Router, private datePipe: DatePipe) { 
-    const cbd$ = dataService.currentBusinessDate;
-    const pbd$ = dataService.previousBusinessDate;
-    const all$ = zip(cbd$, pbd$)
+
+    combineLatest(this.dataService.currentBdData$, this.dataService.currentBd$)
       .subscribe(data=>{
-        this.currentBusinessDate = data[0];
-        this.previousBusinessDate = data[1];
-        
-        this.currentBusinessDateStr = `היום, ${this.datePipe.transform(this.currentBusinessDate.valueOf(), 'fullDate')}`;
-        this.previousBusinessDateStr = `אתמול, ${this.datePipe.transform(this.previousBusinessDate.valueOf(), 'fullDate')}`;        
-        this.mtdStr = `${this.datePipe.transform(this.currentBusinessDate.valueOf(), 'MMMM')} (עד כה)`;
-        // const ms = this.currentBusinessDate.valueOf();
-        // const formatted = this.datePipe.transform(this.currentBusinessDate.valueOf(), 'fullDate');
-        // this.currentBusinessDateStr = `${this.datePipe.transform()}`;
-        //this.previousBusinessDateStr = `אתמול, ${this.previousBusinessDate.format('LL')}`;        
-        //this.mtdStr = `${this.currentBusinessDate.format('MMMM')} MTD`;
+        const title = `היום, ${this.datePipe.transform(data[1].valueOf(), 'fullDate')}`;
+        this.todayCardData.diners = data[0].diners;
+        this.todayCardData.ppa = data[0].ppa;
+        this.todayCardData.sales = data[0].sales;
+        this.todayCardData.title = title;
+        this.todayCardData.loading = false;
+      });
+
+    combineLatest(this.dataService.previousBdData$, this.dataService.previousBd$)
+      .subscribe(data => {
+        const title = `אתמול, ${this.datePipe.transform(data[1].valueOf(), 'fullDate')}`;
+        this.yesterdayCardData.diners = data[0].diners;
+        this.yesterdayCardData.ppa = data[0].ppa;
+        this.yesterdayCardData.sales = data[0].sales;
+        this.yesterdayCardData.title = title;
+        this.yesterdayCardData.loading = false;
+      });
+
+    combineLatest(this.dataService.mtdData$, this.dataService.currentBd$)
+      .subscribe(data => {
+        const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} (עד כה)`;
+        this.mtdCardData.diners = data[0].diners;
+        this.mtdCardData.ppa = data[0].ppa;
+        this.mtdCardData.sales = data[0].sales;
+        this.mtdCardData.title = title;
+        this.mtdCardData.loading = false;
       });
   }
 
-  private render() {
-
-    this.dataService.todayData
-      .subscribe(data=>{
-        this.todayData = data;
-      });
-
-    this.dataService.yesterdayData
-      .subscribe(data=>{
-        this.yesterdayData = data;
-      });
-
-    this.dataService.monthToDateData
-      .subscribe(data=>{
-        this.monthToDateData = data;
-      });
-
-  }
-
-  ngOnInit() {
-    this.render();  
-  }
+  ngOnInit() { }
 
   onDayRequest(date: string) {
     if (date ==='previousBD') {
-      date = this.previousBusinessDate.format('YYYY-MM-DD');
+      this.dataService.previousBd$.take(1).subscribe(pbd=>{
+        date = pbd.format('YYYY-MM-DD');
+        this.router.navigate(['/owners-dashboard/day', date]);
+      });
+    } else {
+      this.router.navigate(['/owners-dashboard/day', date]);
     }
-    this.router.navigate(['/owners-dashboard/day', date]);
   }
 
 }

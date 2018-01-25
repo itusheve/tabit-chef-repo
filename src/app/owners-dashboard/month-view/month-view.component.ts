@@ -2,15 +2,17 @@ import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter } fro
 import { DataService } from '../../../tabit/data/data.service';
 import { DatePipe } from '@angular/common';
 
-// import { MonthChartComponent } from './month-chart/month-chart.component';
-
 import * as moment from 'moment';
+import { Observable } from 'rxjs/Observable';
+// import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { CardData } from '../../ui/card/card.component';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
   selector: 'app-month-view',
   templateUrl: './month-view.component.html',
-  styleUrls: ['./month-view.component.css'],
-  providers: [DataService]
+  styleUrls: ['./month-view.component.css']
 })
 export class MonthViewComponent implements OnInit, AfterViewInit  {
   @ViewChild('monthChart') monthChart;
@@ -18,18 +20,28 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
 
   @Output() onDayRequest = new EventEmitter();
 
-  month: moment.Moment = moment().startOf('month');  
+  now: moment.Moment = moment();
+  month$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment().startOf('month'));
+
+  showForecast = false;
+  forecastCardData: CardData = {
+    loading: true,
+    title: '',
+    sales: 0,
+    diners: 0,
+    ppa: 0
+  };
+
+  showSummary = false;
+  summaryCardData: CardData = {
+    loading: true,
+    title: '',
+    sales: 0,
+    diners: 0,
+    ppa: 0
+  };
 
   components = {
-    // calendar: {},
-    forecastCard: {
-      data: undefined,
-      show: false
-    },
-    monthCard: {
-      data: undefined,
-      show: false
-    },
     grid: {
       options: {
         dataSource: undefined
@@ -40,78 +52,93 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
         dataSource: undefined
       }
     }
-  };      
+  };   
 
-  constructor(private dataService: DataService) { }
+//TODO dont forget to unsubscribe from streams when component dies!! cross system!
+  constructor(private dataService: DataService, private datePipe: DatePipe) { 
+    
+    let that = this;
+    
+    combineLatest(this.month$, dataService.vat$)
+      .subscribe(data=>{
+        update(data[0], data[1]);
+      });
+
+    function update(month, vat) {
+      const queryFrom = moment(month).startOf('month');
+      const queryTo = moment(month).endOf('month');
+
+      that.dataService.getDailyData(queryFrom, queryTo)
+        .then(rowset => {
+          if (!vat) {
+            rowset = rowset.map(r => {
+              return {
+                date: r.date,
+                dateFormatted: r.dateFormatted,
+                dinersPPA: r.dinersPPA,
+                ppa: r.ppa/1.17,
+                sales: r.sales/1.17,
+                salesPPA: r.salesPPA/1.17
+              };
+            });
+          }
+          that.components.chart.options.dataSource = rowset;
+          that.components.grid.options.dataSource = rowset;
+
+          that.monthChart.render();
+          that.monthGrid.render();
+        });
+
+      if (month.isSame(that.now, 'month')) {
+        that.showForecast = true;
+        that.showSummary = false;
+        that.dataService.monthForecastData
+          .take(1)
+          .subscribe(data => {
+            const title = `${month.format('MMMM')} (צפוי)`;
+            that.forecastCardData.diners = data.diners;
+            that.forecastCardData.ppa = vat ? data.ppa : data.ppa / 1.17;
+            that.forecastCardData.sales = vat ? data.sales : data.sales / 1.17;
+            that.forecastCardData.title = title;
+            that.forecastCardData.loading = false;
+          });
+      } else {
+        that.showForecast = false;
+        that.showSummary = true;
+        that.dataService.getMonthlyData(month)
+          .then(data => {
+            const title = `${month.format('MMMM')} (סופי)`;
+            that.summaryCardData.diners = data.diners;
+            that.summaryCardData.ppa = vat ? data.ppa : data.ppa / 1.17;
+            that.summaryCardData.sales = vat ? data.sales : data.sales / 1.17;
+            that.summaryCardData.title = title;
+            that.summaryCardData.loading = false;
+          });
+      }
+    }    
+  }
 
   /* if chart / grid date is clicked */
   onDateClicked(dayInMonth: string) {
-    const day:string = moment(this.month).day(dayInMonth).format('YYYY-MM-DD');
-    this.onDayRequest.emit(day);
+    // const day:string = moment(this.month).day(dayInMonth).format('YYYY-MM-DD');
+    // this.onDayRequest.emit(day);
   }
 
   onDateClicked2(date: string) {//TODO ugly..
-    this.onDayRequest.emit(date);
+    // this.onDayRequest.emit(date);
   }
 
-  private render() {
-    let queryFrom, queryTo;
-    const now = moment();
+  private render() {  } 
 
+  ngOnInit() {
     
-    
-    
-    if (this.month.isSame(now, 'month')) {
-      
-      this.components.monthCard.show = false;
-      this.dataService.monthForecastData
-        .subscribe(data => {
-          this.components.forecastCard.data = data;
-          this.components.forecastCard.show = true;
-        });
-
-
-      if (now.date()===1) {
-        this.components.chart.options.dataSource = [];
-        this.components.grid.options.dataSource = [];
-        return Promise.resolve();
-      } else {
-        queryFrom = moment(this.month).startOf('month');        
-        queryTo = now.subtract(1, 'day');
-      }
-    } else if (this.month.isBefore(now, 'month')) {
-      this.components.forecastCard.show = false;
-      this.dataService.getMonthlyData(this.month)
-        .then(monthlyData=>{
-          this.components.monthCard.data = monthlyData;
-          this.components.monthCard.show = true;
-        });
-
-      queryFrom = moment(this.month).startOf('month');
-      queryTo = moment(this.month).endOf('month');
-    }
-
-    this.dataService.getDailyData(queryFrom, queryTo)
-      .then(rowset => {
-        this.components.chart.options.dataSource = rowset;
-        this.components.grid.options.dataSource = rowset;
-
-        this.monthChart.render();
-        this.monthGrid.render();
-      });
-  } 
-
-  ngOnInit() {}
-
-  ngAfterViewInit() {
-    // children are set
-    this.render();
   }
+
+  ngAfterViewInit() { }
 
   onDateChanged(mom: moment.Moment) {
-    this.month = moment(mom).startOf('month');    
-    
-    this.render();
+    const month = moment(mom).startOf('month');    
+    this.month$.next(month);
   }
 
 }

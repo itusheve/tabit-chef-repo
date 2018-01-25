@@ -1,20 +1,18 @@
 <div class="flex d-col card widget">
   <div class="title">
-    {{title}}
-    <!-- <div class="flex">{{tag}}</div> -->
-    <!-- <div class="flex">{{title}}</div> -->
-    <!-- <div class="flex"></div> -->
+    {{cardData?.title || '&nbsp;'}}
   </div>
-  <div class="body">
+  <dx-load-indicator [(visible)]="!cardData || cardData.loading" rtlEnabled="true"></dx-load-indicator>
+  <div *ngIf="cardData && !cardData.loading" class="body">
     <div class="flex j-sb">
       <div class="flex"></div>
-      <div class="flex">{{sum | currency:'ILS':'symbol':'1.0-0'}}</div>
+      <div class="flex">{{cardData?.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
       <div class="flex"></div>
     </div>
     <div class="flex j-sb">
-      <div class="flex">{{diners | number:'1.0-0'}} סועדים</div>
+      <div class="flex">{{cardData?.diners | number:'1.0-0'}} סועדים</div>
       <div class="flex"></div>
-      <div class="flex">ממוצע לסועדּ {{ppa | currency:'ILS':'symbol':'1.1-1'}}</div>
+      <div class="flex">ממוצע לסועדּ {{cardData?.ppa | currency:'ILS':'symbol':'1.1-1'}}</div>
     </div>
   </div>
 </div>
