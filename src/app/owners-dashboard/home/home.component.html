@@ -1,9 +1,10 @@
 <div class="row">
   <div class="col-md-12">        
 
-    <app-card class="mb10" [cardData]="todayCardData"></app-card> 
-    <app-card class="mb10" [cardData]="yesterdayCardData" style="cursor: pointer"></app-card>
+    <app-card class="mb10" [cardData]="currentBdCardData"></app-card> 
+    <app-card class="mb10" [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')" style="cursor: pointer"></app-card>
     <app-card class="mb10" [cardData]="mtdCardData"></app-card>
+    
 
     <app-month-view (onDayRequest)="onDayRequest($event)"></app-month-view>
   </div>

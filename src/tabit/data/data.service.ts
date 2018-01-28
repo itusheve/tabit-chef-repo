@@ -20,17 +20,13 @@ export class DataService {
 
     private organizations$: ReplaySubject<any>;
 
-    private shifts$: ReplaySubject<any>;
-    private previousBusinessDate$;
+    // private shifts$: ReplaySubject<any>;
     
     private dashboardData$;//:Observable<any>;
 
-    private monthToDateData$;
     private monthForecastData$;
 
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-
-
 
     //TODO today data comes with data without tax. use it instead of dividing by 1.17 (which is incorrect).
     //TODO take cube "sales data excl. tax" instead of dividing by 1.17. 
@@ -89,7 +85,51 @@ export class DataService {
 
     });
     
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) { }
+    public shifts$: Observable<any>;
+    public dailyDataByShiftAndType$: Observable<any>;
+
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
+
+        this.shifts$ = Observable.create(obs => {
+            this.rosEp.get(this.ROS_base_url + '/configuration', {})
+                .then(data => {
+                    const serverShiftsConfig = data[0].regionalSettings.ownerDashboard;
+                    const shiftsConfig: any = {
+                        morning: {
+                            active: serverShiftsConfig.hasOwnProperty('morningShiftActive') ? serverShiftsConfig.morningShiftActive : true,
+                            name: serverShiftsConfig.morningShiftName,
+                            startTime: serverShiftsConfig.morningStartTime
+                        },
+                        afternoon: {
+                            active: serverShiftsConfig.hasOwnProperty('afternoonShiftActive') ? serverShiftsConfig.afternoonShiftActive : true,
+                            name: serverShiftsConfig.afternoonShiftName,
+                            startTime: serverShiftsConfig.afternoonStartTime
+                        },
+                        evening: {
+                            active: serverShiftsConfig.hasOwnProperty('eveningShiftActive') ? serverShiftsConfig.eveningShiftActive : true,
+                            name: serverShiftsConfig.eveningShiftName,
+                            startTime: serverShiftsConfig.eveningStartTime
+                        },
+                        // fourth: {
+                        //     active: serverShiftsConfig.hasOwnProperty('fourthShiftActive') ? serverShiftsConfig.fourthShiftActive : false,
+                        //     name: serverShiftsConfig.fourthShiftName,
+                        //     startTime: serverShiftsConfig.fourthStartTime
+                        // },
+                        // fifth: {
+                        //     active: serverShiftsConfig.hasOwnProperty('fifthShiftActive') ? serverShiftsConfig.fifthShiftActive : false,
+                        //     name: serverShiftsConfig.fifthShiftName,
+                        //     startTime: serverShiftsConfig.fifthStartTime
+                        // }
+                    };
+                    shiftsConfig.morning.endTime = shiftsConfig.afternoon.startTime;
+                    shiftsConfig.afternoon.endTime = shiftsConfig.evening.startTime;
+                    shiftsConfig.evening.endTime = shiftsConfig.morning.startTime;
+
+                    obs.next(shiftsConfig);
+                });
+        }).take(1);
+
+    }
 
     get currentBd$(): Observable<moment.Moment> {
         return this.dashboardData
@@ -232,50 +272,7 @@ export class DataService {
         });
     }
 
-    get shifts(): ReplaySubject<any> {
-        if (this.shifts$) return this.shifts$;
-        this.shifts$ = new ReplaySubject<any>();
 
-        this.rosEp.get(this.ROS_base_url + '/configuration', {})
-            .then(data=>{
-                const serverShiftsConfig = data[0].regionalSettings.ownerDashboard;
-                const shiftsConfig: any = {
-                    morning: {
-                        active: serverShiftsConfig.hasOwnProperty('morningShiftActive') ? serverShiftsConfig.morningShiftActive : true,
-                        name: serverShiftsConfig.morningShiftName,
-                        startTime: serverShiftsConfig.morningStartTime
-                    },
-                    afternoon: {
-                        active: serverShiftsConfig.hasOwnProperty('afternoonShiftActive') ? serverShiftsConfig.afternoonShiftActive : true,
-                        name: serverShiftsConfig.afternoonShiftName,
-                        startTime: serverShiftsConfig.afternoonStartTime
-                    },
-                    evening: {
-                        active: serverShiftsConfig.hasOwnProperty('eveningShiftActive') ? serverShiftsConfig.eveningShiftActive : true,
-                        name: serverShiftsConfig.eveningShiftName,
-                        startTime: serverShiftsConfig.eveningStartTime
-                    },
-                    // fourth: {
-                    //     active: serverShiftsConfig.hasOwnProperty('fourthShiftActive') ? serverShiftsConfig.fourthShiftActive : false,
-                    //     name: serverShiftsConfig.fourthShiftName,
-                    //     startTime: serverShiftsConfig.fourthStartTime
-                    // },
-                    // fifth: {
-                    //     active: serverShiftsConfig.hasOwnProperty('fifthShiftActive') ? serverShiftsConfig.fifthShiftActive : false,
-                    //     name: serverShiftsConfig.fifthShiftName,
-                    //     startTime: serverShiftsConfig.fifthStartTime
-                    // }
-                };
-                shiftsConfig.morning.endTime = shiftsConfig.afternoon.startTime;
-                shiftsConfig.afternoon.endTime = shiftsConfig.evening.startTime;
-                shiftsConfig.evening.endTime = shiftsConfig.morning.startTime;
-
-                this.shifts$.next(shiftsConfig);
-            });
-
-        
-        return this.shifts$;
-    }
 
     get dashboardData(): Observable<any> {
         if (this.dashboardData$) return this.dashboardData$;
@@ -377,16 +374,30 @@ export class DataService {
         return this.monthForecastData$;
     }
 
+
+
     getDailyDataByShiftAndType(date: moment.Moment): Subject<any> {        
         const sub$ = new Subject<any>();
 
-        const data$ = zip(
-            this.shifts,
-            this.olapEp.get_sales_and_ppa_by_OrderType_by_Service(date),
-            (shifts: any, daily_data_by_orderType_by_service: any) => Object.assign({}, { shifts: shifts }, { daily_data_by_orderType_by_service: daily_data_by_orderType_by_service })
+        const data$ = combineLatest(
+            this.vat$,
+            this.shifts$,
+            this.olapEp.get_sales_and_ppa_by_OrderType_by_Service(date).take(1),//TODO olapEp should be stateless!
+            (vat: boolean, shifts: any, daily_data_by_orderType_by_service: any) => Object.assign({}, { shifts: shifts }, { daily_data_by_orderType_by_service: daily_data_by_orderType_by_service }, {vat: vat})
         );
 
         data$.subscribe(data => {
+
+            const daily_data_by_orderType_by_service = _.cloneDeep(data.daily_data_by_orderType_by_service);
+            
+            if (!data.vat) {
+                daily_data_by_orderType_by_service.forEach(tuple=>{
+                    tuple.sales = tuple.sales/1.17;
+                    tuple.salesPPA = tuple.salesPPA/1.17;
+                });
+            }
+
+
             const shiftsMap = {
                 morning: data.shifts.morning.name,
                 afternoon: data.shifts.afternoon.name,
@@ -401,7 +412,7 @@ export class DataService {
                 other: 'סוג הזמנה לא מוגדר'
             };
 
-            const salesByOrderType = _.groupBy(data.daily_data_by_orderType_by_service, item => {
+            const salesByOrderType = _.groupBy(daily_data_by_orderType_by_service, item => {
                 switch (item.orderType) {
                     case 'בישיבה':
                         return 'seated';
@@ -421,9 +432,9 @@ export class DataService {
                 }, 0);
             });
 
-            const morningSeatedItem = data.daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.morning && dataItem.orderType === orderTypesMap.seated);
-            const afternoonSeatedItem = data.daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.afternoon && dataItem.orderType === orderTypesMap.seated);
-            const eveningSeatedItem = data.daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.evening && dataItem.orderType === orderTypesMap.seated);
+            const morningSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.morning && dataItem.orderType === orderTypesMap.seated);
+            const afternoonSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.afternoon && dataItem.orderType === orderTypesMap.seated);
+            const eveningSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.evening && dataItem.orderType === orderTypesMap.seated);
 
             const dinersAndPPAByShift = {
                 morning: {
@@ -445,7 +456,7 @@ export class DataService {
             }, 0);
 
             sub$.next({
-                byOrderTypeAndService: data.daily_data_by_orderType_by_service,
+                byOrderTypeAndService: daily_data_by_orderType_by_service,
                 salesByOrderType: salesByOrderType,
                 dinersAndPPAByShift: dinersAndPPAByShift,
                 totalSales: totalSales

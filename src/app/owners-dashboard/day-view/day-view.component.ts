@@ -10,12 +10,12 @@ import { zip } from 'rxjs/observable/zip';
 import { Subscriber } from 'rxjs/Subscriber';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
   selector: 'app-day-view',
   templateUrl: './day-view.component.html',
-  styleUrls: ['./day-view.component.css'],
-  providers: [DataService]
+  styleUrls: ['./day-view.component.css']
 })
 export class DayViewComponent implements OnInit, AfterViewInit  {
   @ViewChild('dayPieChart') dayPieChart;
@@ -32,8 +32,8 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
   ) { }
 
   private render() {
-    const data$ = zip(
-      this.dataService.shifts, 
+    const data$ = combineLatest(
+      this.dataService.shifts$, 
       this.dataService.getDailyDataByShiftAndType(this.day), 
       (shifts: any, dailyData: any) => Object.assign({}, { shifts: shifts }, dailyData)
     );
@@ -55,7 +55,7 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
         } else {
           this.day = moment().subtract(1, 'day');   
         }
-        // this.render();
+        this.render();
       });
   }
 
@@ -65,7 +65,7 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
 
   onDateChanged(day: moment.Moment) {
     this.day = moment(day);        
-    // this.render();
+    this.render();
   }
 
 }

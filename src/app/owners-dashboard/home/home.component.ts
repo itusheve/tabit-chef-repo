@@ -22,7 +22,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 })
 export class HomeComponent implements OnInit {
   
-  todayCardData: CardData = {
+  currentBdCardData: CardData = {
     loading: true,
     title: '',
     sales: 0,
@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
     ppa: 0
   };
 
-  yesterdayCardData: CardData = {
+  previousBdCardData: CardData = {
     loading: true,
     title: '',
     sales: 0,
@@ -51,21 +51,21 @@ export class HomeComponent implements OnInit {
     combineLatest(this.dataService.currentBdData$, this.dataService.currentBd$)
       .subscribe(data=>{
         const title = `היום, ${this.datePipe.transform(data[1].valueOf(), 'fullDate')}`;
-        this.todayCardData.diners = data[0].diners;
-        this.todayCardData.ppa = data[0].ppa;
-        this.todayCardData.sales = data[0].sales;
-        this.todayCardData.title = title;
-        this.todayCardData.loading = false;
+        this.currentBdCardData.diners = data[0].diners;
+        this.currentBdCardData.ppa = data[0].ppa;
+        this.currentBdCardData.sales = data[0].sales;
+        this.currentBdCardData.title = title;
+        this.currentBdCardData.loading = false;
       });
 
     combineLatest(this.dataService.previousBdData$, this.dataService.previousBd$)
       .subscribe(data => {
         const title = `אתמול, ${this.datePipe.transform(data[1].valueOf(), 'fullDate')}`;
-        this.yesterdayCardData.diners = data[0].diners;
-        this.yesterdayCardData.ppa = data[0].ppa;
-        this.yesterdayCardData.sales = data[0].sales;
-        this.yesterdayCardData.title = title;
-        this.yesterdayCardData.loading = false;
+        this.previousBdCardData.diners = data[0].diners;
+        this.previousBdCardData.ppa = data[0].ppa;
+        this.previousBdCardData.sales = data[0].sales;
+        this.previousBdCardData.title = title;
+        this.previousBdCardData.loading = false;
       });
 
     combineLatest(this.dataService.mtdData$, this.dataService.currentBd$)

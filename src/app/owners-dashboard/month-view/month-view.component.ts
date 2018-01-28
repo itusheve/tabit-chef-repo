@@ -20,8 +20,9 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
 
   @Output() onDayRequest = new EventEmitter();
 
-  now: moment.Moment = moment();
   month$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment().startOf('month'));
+  month: moment.Moment;
+  now: moment.Moment = moment();
 
   showForecast = false;
   forecastCardData: CardData = {
@@ -59,12 +60,16 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
     
     let that = this;
     
+    // this.month$.subscribe(month=>this.month=month);
+
     combineLatest(this.month$, dataService.vat$)
       .subscribe(data=>{
         update(data[0], data[1]);
       });
 
     function update(month, vat) {
+      that.month = month;
+      
       const queryFrom = moment(month).startOf('month');
       const queryTo = moment(month).endOf('month');
 
@@ -120,12 +125,12 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
 
   /* if chart / grid date is clicked */
   onDateClicked(dayInMonth: string) {
-    // const day:string = moment(this.month).day(dayInMonth).format('YYYY-MM-DD');
-    // this.onDayRequest.emit(day);
+    const day:string = moment(this.month).day(dayInMonth).format('YYYY-MM-DD');
+    this.onDayRequest.emit(day);
   }
 
   onDateClicked2(date: string) {//TODO ugly..
-    // this.onDayRequest.emit(date);
+    this.onDayRequest.emit(date);
   }
 
   private render() {  } 
