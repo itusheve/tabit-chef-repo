@@ -4,10 +4,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';//required by some material components
+
+
 import { registerLocaleData } from '@angular/common';
 import localeHe from '@angular/common/locales/he';
 // the second parameter 'fr' is optional
-registerLocaleData(localeHe, 'fr');//https://angular.io/guide/i18n
+registerLocaleData(localeHe, 'he');//https://angular.io/guide/i18n
 
 import { environment } from '../environments/environment';
 
@@ -58,6 +60,7 @@ import { OrgGuard } from './auth/org-guard.service';
 //feature modules:
 import { OrgsModule } from './orgs/orgs.module';
 import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.module';
+
 
 
 

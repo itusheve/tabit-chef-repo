@@ -1,3 +1,12 @@
 /deep/ #pie {
-    height: 440px;
+    height: 350px;
+}
+
+.widget.body {
+    padding: 37px 0px;  
+}
+
+dx-pie-chart {
+    position: relative;
+    /* this is needed for the alignment of the total */
 }

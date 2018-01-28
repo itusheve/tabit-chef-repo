@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DecimalPipe, CurrencyPipe, PercentPipe, DatePipe } from '@angular/common';
+import { DecimalPipe, PercentPipe, DatePipe } from '@angular/common';
 
 import { DataService } from '../../..//tabit/data/data.service';
 

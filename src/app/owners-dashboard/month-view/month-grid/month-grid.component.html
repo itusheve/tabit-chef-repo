@@ -12,8 +12,20 @@
     <dxo-paging [enabled]="false"></dxo-paging>
     <dxo-sorting ascendingText="סדר עולה" descendingText="סדר יורד" clearText="נקה מיון"></dxo-sorting>
     <dxi-column caption="יום" dataField="dateFormatted"></dxi-column>
-    <dxi-column caption='סה"כ' dataField="sales" format="currency"></dxi-column>
-    <dxi-column caption="סועדים" dataField="dinersPPA" format="#,###"></dxi-column>
-    <dxi-column caption="PPA" dataField="ppa" format="#,##0.00"></dxi-column>
+    
+    <!-- <dxi-column caption='סה"כ' dataField="sales" format="currency"></dxi-column> -->
+    <dxi-column   
+      caption='סה"כ' 
+      dataField="sales" 
+      dataType="number"
+      [format]="{ style: 'currency', currency: 'ILS', currencyDisplay: 'symbol', minimumFractionDigits: 0, maximumFractionDigits: 0 }"></dxi-column>    
+    <dxi-column 
+      caption="סועדים" 
+      dataField="dinersPPA" 
+      format="#,###"></dxi-column>
+    <dxi-column 
+      caption="PPA" 
+      dataField="ppa" 
+      [format]="{ style: 'currency', currency: 'ILS', minimumFractionDigits: 1, maximumFractionDigits: 1 }"></dxi-column>
   </dx-data-grid>
 </div>

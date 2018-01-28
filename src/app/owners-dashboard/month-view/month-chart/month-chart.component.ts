@@ -7,7 +7,7 @@ import { Component, OnInit, AfterViewChecked, Input, Output, EventEmitter } from
 })
 export class MonthChartComponent implements OnInit {
 
-  @Input() options: any;
+  // @Input() options: any;
   @Output() onDateClicked = new EventEmitter();
 
   dxChart = {
@@ -15,7 +15,9 @@ export class MonthChartComponent implements OnInit {
     dataSource: undefined
   };
 
-  constructor() { }
+  constructor() { 
+    // debugger;
+  }
 
   // chartInstance = {};
   // onInitializedEventHandler(e) {
@@ -38,8 +40,8 @@ export class MonthChartComponent implements OnInit {
 
   }
 
-  render() {
-    this.dxChart.dataSource = this.options.dataSource;
+  render(dataSource) {
+    this.dxChart.dataSource = dataSource;
     this.dxChart.show = true;    
   }
 

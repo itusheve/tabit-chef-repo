@@ -37,6 +37,7 @@ import {
 
 
 
+import { locale, loadMessages } from 'devextreme/localization'; //https://github.com/DevExpress/devextreme-examples/tree/17_2/intl-angular
 import { DxButtonModule } from 'devextreme-angular';
 import { DxCalendarModule } from 'devextreme-angular';
 import { DxChartModule } from 'devextreme-angular';
@@ -44,6 +45,20 @@ import { DxPieChartModule } from 'devextreme-angular';
 import { DxDataGridModule } from 'devextreme-angular';
 import { DxLoadIndicatorModule } from 'devextreme-angular';
 // import { DxCircularGaugeModule } from 'devextreme-angular';
+import 'devextreme-intl';
+
+//Load localized messages (English included by default)
+// let messagesDe = require("devextreme/localization/messages/de.json"),
+//   messagesJa = require("devextreme/localization/messages/ja.json"),
+//   messagesRu = require("devextreme/localization/messages/ru.json");
+
+// loadMessages(messagesRu);
+// loadMessages(messagesDe);
+// loadMessages(messagesJa);
+
+
+locale('he');
+
 
 @NgModule({
   imports: [

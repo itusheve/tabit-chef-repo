@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DecimalPipe, CurrencyPipe, PercentPipe, DatePipe } from '@angular/common';
+import { DecimalPipe, PercentPipe, DatePipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export interface CardData {

@@ -58,6 +58,7 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
 //TODO dont forget to unsubscribe from streams when component dies!! cross system!
   constructor(private dataService: DataService, private datePipe: DatePipe) { 
     
+    // debugger;
     let that = this;
     
     // this.month$.subscribe(month=>this.month=month);
@@ -87,11 +88,11 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
               };
             });
           }
-          that.components.chart.options.dataSource = rowset;
-          that.components.grid.options.dataSource = rowset;
+          // that.components.chart.options.dataSource = rowset;
+          // that.components.grid.options.dataSource = rowset;
 
-          that.monthChart.render();
-          that.monthGrid.render();
+          that.monthChart.render(rowset);
+          that.monthGrid.render(rowset);
         });
 
       if (month.isSame(that.now, 'month')) {

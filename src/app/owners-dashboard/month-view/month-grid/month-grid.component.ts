@@ -7,7 +7,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class MonthGridComponent implements OnInit {
 
-  @Input() options: any;
+  // @Input() options: any;
   @Output() onDateClicked = new EventEmitter();
 
   dxGrid = {
@@ -17,8 +17,8 @@ export class MonthGridComponent implements OnInit {
 
   constructor() { }
 
-  render() {
-    this.dxGrid.dataSource = this.options.dataSource;
+  render(dataSource) {
+    this.dxGrid.dataSource=dataSource;
     this.dxGrid.show = true;
   }
 

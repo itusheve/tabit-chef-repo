@@ -1,16 +1,20 @@
-<div class="widget blueAccent">
+<div class="widget blueAccent dayPieChart">
     <div class="title">הכנסות</div>
-    <div class="body">
+    <div class="body" style="height:350px">
         <dx-pie-chart 
-            id="pie" 
-            type="doughnut" 
-            palette="Soft Pastel" 
-            diameter="1" 
+        id="pie" 
+        (onInitialized)="onInitializedEventHandler($event)"
+        type="doughnut" 
+        innerRadius="0.95"
+        diameter="0.68" 
+        startAngle="90"
+            [palette]="['rgb(101, 166, 211)', 'rgb(84, 153, 140)', 'rgb(196, 205, 214)', 'rgb(75, 118, 155)', 'rgb(147, 173, 168)']" 
             [dataSource]="dataSource" 
             [rtlEnabled]="true"
+             resolveLabelOverlapping="shift"             
 
-            innerRadius="0.8"
-            
+             
+
             >
             <!-- innerRadius="0.8", legend: { horizontalAlignment: 'center', verticalAlignment: 'bottom' }, -->
             <dxi-series argumentField="orderType">
@@ -19,7 +23,9 @@
                 </dxo-label>
             </dxi-series>
             <dxo-export [enabled]="false"></dxo-export>
-            <dxo-legend [margin]="0" horizontalAlignment="right" verticalAlignment="top"></dxo-legend>
+            <dxo-legend [margin]="0" horizontalAlignment="center" verticalAlignment="bottom" columnCount="1" [customizeText]="customizeText" paddingTopBottom="80">
+                <dxo-font color="white" family="'Alef', 'Helvetica Neue', Helvetica, Arial" size="16"></dxo-font>
+            </dxo-legend>
             <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip" format="thousands">
             </dxo-tooltip>
         </dx-pie-chart>
