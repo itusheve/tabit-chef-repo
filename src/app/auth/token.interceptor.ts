@@ -42,6 +42,8 @@ export class TokenInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
         this.authService = this.injector.get(AuthService); 
             
+        if (request.url.indexOf('oauth2')>-1) return next.handle(request);
+
         return next.handle(this.addToken(request, this.authService.authToken))
                 .catch(error => {
                     if (error instanceof HttpErrorResponse) {

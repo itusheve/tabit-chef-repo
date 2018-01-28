@@ -1,20 +1,35 @@
 <mat-sidenav-container>
 
   <mat-sidenav #sidenav mode="over">
-    <mat-slide-toggle class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)">
-      מע"מ
-    </mat-slide-toggle>
-    <button mat-menu-item>
-      <span (click)="logout()">התנתק</span>
-    </button>    
+    <div class="flex f-rtl d-col sidenav">
+      <div class="flex d-col user">
+        <button mat-fab disabled style="background-color:white;color: black;">OA</button>
+        <div class="mt10 mb10">Or Adler</div>
+        <div>B.B.B. פתח תקווה</div>
+      </div>
+      <div class="flex d-col buttons">
+        <mat-slide-toggle class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)">
+          מע"מ
+        </mat-slide-toggle>
+        <button mat-raised-button>
+          <span>המסעדות שלי</span>
+        </button>
+        <button mat-raised-button>
+          <span (click)="logout()">התנתק</span>
+        </button>    
+      </div>
+    </div>
   </mat-sidenav>
   
   <mat-sidenav-content>
-    <div class="flex f-rtl a-center header">
+    <div class="flex f-rtl j-sb a-center header">
       <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
-      <div *ngIf="org">{{org.name}}</div>
+      <div class="" style="color:white" *ngIf="org">{{org.name}}</div>
       
-      <button mat-button color="accent" *ngIf="router.url != '/owners-dashboard/home'" routerLink="/owners-dashboard/home">חזור</button>
+      <button mat-icon-button *ngIf="router.url != '/owners-dashboard/home'" routerLink="/owners-dashboard/home">
+        <!-- חזור -->
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
     </div>
     <div class="body">
       <router-outlet></router-outlet>

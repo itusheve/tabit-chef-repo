@@ -1,12 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// import { FormsModule } from '@angular/forms';
 
 import { OwnersDashboardComponent } from './owners-dashboard.component';
 import { HomeComponent } from './home/home.component';
-// import { HeroDetailComponent } from './hero-detail.component';
-
-// import { HeroService } from './hero.service';
 
 import { MomentModule } from 'angular2-moment';
 
@@ -44,7 +40,6 @@ import { DxChartModule } from 'devextreme-angular';
 import { DxPieChartModule } from 'devextreme-angular';
 import { DxDataGridModule } from 'devextreme-angular';
 import { DxLoadIndicatorModule } from 'devextreme-angular';
-// import { DxCircularGaugeModule } from 'devextreme-angular';
 import 'devextreme-intl';
 
 //Load localized messages (English included by default)
@@ -63,7 +58,6 @@ locale('he');
 @NgModule({
   imports: [
     CommonModule,
-    // FormsModule,
     OwnersDashboardRoutingModule,
     MomentModule,
     MatButtonModule,
@@ -79,7 +73,6 @@ locale('he');
     DxPieChartModule,
     DxDataGridModule,
     DxLoadIndicatorModule
-    // DxCircularGaugeModule,
   ],
   declarations: [
     OwnersDashboardComponent,
@@ -97,9 +90,6 @@ locale('he');
     DaySalesTypeTableComponent,
     DayDinersTableComponent,
     DayShiftsComponent,
-    // HeroDetailComponent
-  ],
-  //providers: [HeroService]
-  providers: []
+  ]
 })
 export class OwnersDashboardModule { }

@@ -86,11 +86,14 @@ export class AuthService {
                                             resolve();
                                         });
                                     }, 
-                                    ()=>{}, 
-                                    ()=>{
+                                    e=>{
                                         //reverse process upon error
                                         this.authToken = undefined;
                                         this.localStorage.clear().subscribe(() => {});
+                                        console.error(e);
+                                    },
+                                    ()=>{
+                                        //console.log('bla');
                                     }
                                 );
                         });
