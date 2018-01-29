@@ -1,21 +1,30 @@
-// import { Component, OnInit } from '@angular/core';
-// import { NgForm, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { MatSnackBar } from '@angular/material';
+
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-//export class LoginComponent implements OnInit {
-export class LoginComponent {  
+export class LoginComponent implements OnInit {
 
-  constructor(private authService: AuthService, private router:Router) { }
-  
+  constructor(
+    private authService: AuthService, 
+    private router:Router,
+    public snackBar: MatSnackBar
+  ) { }
+
+  //TODO: show when user/pass are wring
+  //TODO: side menu add X and enable sliding off
+  //TODO: ecognize email input as email for keyboard
+
+
+
   hidePass = true;
   
   loginForm = new FormGroup({
@@ -32,6 +41,9 @@ export class LoginComponent {
   //       '';
   // }
 
+  ngOnInit() {
+  }
+
   login() {    
     if (this.email.invalid || this.password.invalid) return;
     this.authService.login({      
@@ -40,8 +52,14 @@ export class LoginComponent {
     })
       .then(()=>{
         this.router.navigate(['/restaurants']);
-      }, ()=>{
-        debugger;
+      })
+      .catch(err=>{
+        if (err.status===403) {
+          this.snackBar.open('שם משתמש ו/או סיסמא אינם נכונים', null, {
+            direction: 'rtl',
+            duration: 3000,
+              });
+        }
       });
   }
 

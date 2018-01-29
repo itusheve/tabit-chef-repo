@@ -124,7 +124,9 @@ export class AuthService {
                         });
                         
                     },
-                    () => {}
+                    err => {
+                        reject(err);
+                    }
                 );
             } else {
                 //look for token, user and possibly an org
@@ -136,8 +138,8 @@ export class AuthService {
                 );
 
                 data$.subscribe(data => {
-                    this.authToken = data[0].access_token;
                     if (!!data[0] && !!data[1]) {
+                        this.authToken = data[0].access_token;
                         if (!!data[2]) {
                             this.authState = 2;
                         } else {

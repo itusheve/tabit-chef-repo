@@ -18,29 +18,15 @@ import { TokenInterceptor } from './auth/token.interceptor';
 import { AsyncLocalStorageModule } from 'angular-async-local-storage';
 
 import { 
+  MatFormFieldModule,
+  MatInputModule,
   MatButtonModule, 
   MatIconModule, 
-  MatMenuModule, 
   MatCardModule,
-
-  MatAutocompleteModule,
+  MatSnackBarModule,
   MatButtonToggleModule,
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatExpansionModule,
   MatGridListModule,
-  MatInputModule,
-  MatListModule,
-  MatNativeDateModule,
-  MatPaginatorModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatRadioModule,
-  MatRippleModule,
 } from '@angular/material';//material modules
-
 
 import { MomentModule } from 'angular2-moment';
 
@@ -60,9 +46,6 @@ import { OrgGuard } from './auth/org-guard.service';
 //feature modules:
 import { OrgsModule } from './orgs/orgs.module';
 import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.module';
-
-
-
 
 @NgModule({
   declarations: [
@@ -85,40 +68,14 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
     
     AppRoutingModule,//must be after the feature modules: "Each routing module augments the route configuration in the order of import."
 
+    MatFormFieldModule,
+    MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatMenuModule,
     MatCardModule,
-
-
-    MatAutocompleteModule,
+    MatSnackBarModule,
     MatButtonToggleModule,
-    MatCheckboxModule,
-    MatChipsModule,
-    MatDatepickerModule,
-    MatDialogModule,
-    MatExpansionModule,
     MatGridListModule,
-    MatInputModule,
-    MatListModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatRadioModule,
-    MatRippleModule,
-    
-  
-    
-    
-    
-    
-    
-    
-    
-    
-        
- 
   ],
   providers: [
     {

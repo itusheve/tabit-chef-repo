@@ -107,5 +107,11 @@ html, body {
 }
 
 
+html[dir=rtl] {
+    mat-card-content {
+        text-align: start;
+    }
+}
+
 @import 'tabit/styles/util';
 @import 'tabit/styles/flex';
