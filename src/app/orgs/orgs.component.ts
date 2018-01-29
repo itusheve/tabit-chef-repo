@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../../tabit/data/data.service';
 import { AuthService } from '../auth/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-orgs',
@@ -10,7 +10,14 @@ import { Router } from '@angular/router';
 })
 export class OrgsComponent implements OnInit {
 
-  constructor(private dataService: DataService, private authService: AuthService, private router: Router) { }
+  constructor(
+    private dataService: DataService, 
+    private authService: AuthService, 
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
+
+  mode: string;// normal (selecting org and continuing to app), switch (changing an org, restart should occur)
 
   orgs: any;
 
@@ -28,14 +35,32 @@ export class OrgsComponent implements OnInit {
   }
 
   selectOrg(org:any) {
-    this.authService.selectOrg(org)
-      .then(() => {
-        this.router.navigate(['owners-dashboard/home']);
-      });
+    if (this.mode==='normal') {
+      this.authService.selectOrg(org)
+        .then(() => {
+          this.router.navigate(['owners-dashboard/home']);
+        });
+    } else {
+      this.authService.switchOrg(org)
+        .then(()=>{
+            this.router.navigate([''])
+              .then(()=>{
+                  location.reload();
+              });
+        });
+    }
   }
 
   ngOnInit() {
-    this.render();  
+    
+    this.route.queryParams
+      //  .filter(params => params.m)
+      .subscribe(params => { 
+        const mode = params.m;
+        this.mode = (mode && mode==='s') ? 'switch' : 'normal';
+      });
+    
+      this.render();  
   }
 
 }

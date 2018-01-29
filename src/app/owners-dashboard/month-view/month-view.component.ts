@@ -105,7 +105,7 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
         that.dataService.monthForecastData
           .take(1)
           .subscribe(data => {
-            const title = `${month.format('MMMM')} (צפוי)`;
+            const title = `${that.datePipe.transform(month, 'MMMM')} (צפוי)`;
             that.forecastCardData.diners = data.diners;
             that.forecastCardData.ppa = vat ? data.ppa : data.ppa / 1.17;
             that.forecastCardData.sales = vat ? data.sales : data.sales / 1.17;
@@ -117,7 +117,7 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
         that.showSummary = true;
         that.dataService.getMonthlyData(month)
           .then(data => {
-            const title = `${month.format('MMMM')} (סופי)`;
+            const title = `${that.datePipe.transform(month, 'MMMM')} (סופי)`;
             that.summaryCardData.diners = data.diners;
             that.summaryCardData.ppa = vat ? data.ppa : data.ppa / 1.17;
             that.summaryCardData.sales = vat ? data.sales : data.sales / 1.17;

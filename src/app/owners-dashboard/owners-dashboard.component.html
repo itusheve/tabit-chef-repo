@@ -11,7 +11,7 @@
         <mat-slide-toggle class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)">
           מע"מ
         </mat-slide-toggle>
-        <button mat-raised-button>
+        <button mat-raised-button [routerLink]="['/restaurants']" [queryParams]="{ m: 's'}">
           <span>המסעדות שלי</span>
         </button>
         <button mat-raised-button>

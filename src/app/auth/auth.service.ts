@@ -1,3 +1,4 @@
+// import { Location } from '@angular/common';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
@@ -23,7 +24,11 @@ const meUrl = '/account/me';
 @Injectable()
 export class AuthService {
 
-    constructor(private httpClient: HttpClient, protected localStorage: AsyncLocalStorage) {}
+    constructor(
+            private httpClient: HttpClient, 
+            protected localStorage: AsyncLocalStorage
+            // private router: Router
+    ) {}
 
     private authState = 0;//0: anon, 1: user mode, 2: org mode
     
@@ -45,6 +50,26 @@ export class AuthService {
                     });
             } else {
                 reject();
+            }
+        });
+    }
+
+    switchOrg(org:any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (this.authState >= 1) {
+                this.httpClient.post(`${ROS_base_url}/Organizations/${org.id}/change`, {})
+                    .subscribe(org_ => {
+                        this.localStorage.setItem('org', org_).subscribe(() => {
+                            resolve();
+                            //location='#/';
+                            //location.reload();
+                            //location.replace(location.host);
+                            // this.router.navigate([''])
+                            //     .then(()=>{
+                            //         location.reload();
+                            //     });
+                        });
+                    });
             }
         });
     }
@@ -192,32 +217,6 @@ export class AuthService {
         // });
         return subject;
     }
-
-
-    
-    // private selectOrg(): Promise<any> {
-    //     function getOrganizations() {
-    //         return that.rosEp.get(that.ROS_base_url + '/Organizations', {});
-    //     }
-
-    //     function selectOrg(org) {
-    //         return that.rosEp.post(`${that.ROS_base_url}/Organizations/${org.id}/change`, {});
-    //     }
-
-    //     const that = this;
-
-    //     return new Promise((res, rej) => {
-    //         if (this.orgSelected) return res();
-    //         getOrganizations()
-    //             .then(orgs => {
-    //                 const nono = orgs.find(o => o.name === 'נונו');
-    //                 selectOrg(nono)
-    //                     .then(() => {
-    //                         res();
-    //                     });
-    //             });
-    //     });
-    // }    
 }
 
 
