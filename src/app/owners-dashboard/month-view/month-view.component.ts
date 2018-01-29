@@ -55,8 +55,10 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
     }
   };   
 
+  datePipe: DatePipe = new DatePipe('he-IL');
+
 //TODO dont forget to unsubscribe from streams when component dies!! cross system!
-  constructor(private dataService: DataService, private datePipe: DatePipe) { 
+  constructor(private dataService: DataService) { 
     
     // debugger;
     let that = this;
@@ -76,18 +78,20 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
 
       that.dataService.getDailyData(queryFrom, queryTo)
         .then(rowset => {
-          if (!vat) {
-            rowset = rowset.map(r => {
-              return {
-                date: r.date,
-                dateFormatted: r.dateFormatted,
-                dinersPPA: r.dinersPPA,
-                ppa: r.ppa/1.17,
-                sales: r.sales/1.17,
-                salesPPA: r.salesPPA/1.17
-              };
-            });
-          }
+          rowset = rowset.map(r => {
+            const dateFormatted = that.datePipe.transform(r.date.valueOf(), 'dd-EEEEE');
+            const ppa = (vat ? r.ppa : r.ppa / 1.17);
+            const sales = (vat ? r.sales : r.sales/1.17);
+            const salesPPA = (vat ? r.salesPPA : r.salesPPA / 1.17);
+            return {
+              date: r.date,
+              dateFormatted: dateFormatted,
+              dinersPPA: r.dinersPPA,
+              ppa: ppa,
+              sales: sales,
+              salesPPA: salesPPA
+            };
+          });
           // that.components.chart.options.dataSource = rowset;
           // that.components.grid.options.dataSource = rowset;
 

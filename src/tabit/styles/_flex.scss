@@ -74,6 +74,11 @@
     align-items: stretch;
   }
 
+  &.aj-center {
+    align-items: center;
+    justify-content: center;
+  }
+
 //ALIGN-ITEMS VS ALIGN-CONTENT:
 //https://stackoverflow.com/questions/27539262/whats-the-difference-between-align-content-and-align-items
 	&.a-c-start {align-content: start}

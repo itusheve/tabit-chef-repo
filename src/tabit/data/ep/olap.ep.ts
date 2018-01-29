@@ -257,7 +257,7 @@ export class OlapEp {
                                 dateAsString = m[1];
                             }
                             let date = moment(dateAsString, 'DD-MM-YYYY');
-                            let dateFormatted = date.format('dd') + '-' + date.format('DD');
+                            //let dateFormatted = date.format('dd') + '-' + date.format('DD');
         
                             let sales = r[this.measures.sales];
                             let salesPPA = r[this.measures.ppa.sales];
@@ -271,7 +271,7 @@ export class OlapEp {
         
                             return {
                                 date: date,
-                                dateFormatted: dateFormatted,
+                                // dateFormatted: dateFormatted,
                                 sales: sales,
                                 salesPPA: salesPPA,
                                 dinersPPA: dinersPPA,

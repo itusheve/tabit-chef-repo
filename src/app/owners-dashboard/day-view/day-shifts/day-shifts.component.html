@@ -1,5 +1,14 @@
-<div class="flex f-ltr widget greyAccent" *ngIf="show">
-    <div class="flex j-center" style="width:33%">{{shifts.evening.startTime}}-{{shifts.evening.endTime}}</div>
-    <div class="flex j-center" style="width:33%">{{shifts.afternoon.startTime}}-{{shifts.afternoon.endTime}}</div>
-    <div class="flex j-center" style="width:33%">{{shifts.morning.startTime}}-{{shifts.morning.endTime}}</div>
+<div class="flex f-ltr" *ngIf="show">
+    <div class="flex d-col aj-center" style="width:33%">
+        <i class="mb5 icon-daily-evening"></i>
+        {{shifts.evening.startTime}}-{{shifts.evening.endTime}}
+    </div>
+    <div class="flex d-col aj-center" style="width:33%">
+        <i class="mb5 icon-daily-afternoon"></i>
+        {{shifts.afternoon.startTime}}-{{shifts.afternoon.endTime}}
+    </div>
+    <div class="flex d-col aj-center" style="width:33%">
+        <i class="mb5 icon-daily-morning"></i>
+        {{shifts.morning.startTime}}-{{shifts.morning.endTime}}
+    </div>
 </div>

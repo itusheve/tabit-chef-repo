@@ -1,9 +1,25 @@
-// .card {
-    
-    // padding: 15px;
-    // background-color: white;
-// }
+
+.card {
+    height: 93px;
+    .ctitle {
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;        
+    }
+    .cbody {
+        .cmain {
+            .csales {
+                font-size: 36px;
+            }
+        }
+        .cfooter {
+            font-size: 16p  x;            
+        }
+    }
+}
 
 dx-load-indicator {
     align-self: center;
 }
+
+

@@ -1,9 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
-//https://stackoverflow.com/questions/46465888/custom-font-import-in-angular4
-// $dashboard-daily-woff-font-path: "./fonts/archistico_bold-webfont.woff";
-// $dashboard-daily-woff2-font-path: "./fonts/archistico_bold-webfont.woff2";
-$font-family-brand: 'archisticobold';
+@import "fonts";
+
+
 
 // @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 // @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
@@ -59,6 +58,7 @@ html, body {
 
 
 .widget {
+    display: block;
     padding: 15px;
     margin-bottom: 10px;
     background-color: #fff;
@@ -66,18 +66,25 @@ html, body {
     &.blueAccent {
         background-color: #3A5675;
         color: #fff;
+
+        dx-load-indicator {
+            .dx-loadindicator-segment {
+                background-color: #fff;
+            }
+        }
     }
     &.greyAccent {
         background-color: #6e7482;
         color: #fff;
     }
 
-    &.card {
-        height: 120px;
+    &.noPadding {
+        padding: 0;
+        background-color: transparent;
     }
 
     .title {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         text-align: center;        
     }
@@ -99,6 +106,7 @@ html, body {
         }
     }
 }
+
 
 @import 'tabit/styles/util';
 @import 'tabit/styles/flex';
