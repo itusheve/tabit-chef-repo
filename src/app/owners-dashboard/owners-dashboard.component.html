@@ -3,9 +3,9 @@
   <mat-sidenav #sidenav mode="over">
     <div class="flex f-rtl d-col sidenav">
       <div class="flex d-col user">
-        <button mat-fab disabled style="background-color:white;color: black;">OA</button>
-        <div class="mt10 mb10">Or Adler</div>
-        <div>B.B.B. פתח תקווה</div>
+        <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{userInitials}}</button>
+        <div class="mt10 mb10">{{user?.firstName}} {{user?.lastName}}</div>
+        <div>{{org?.name}}</div>
       </div>
       <div class="flex d-col buttons">
         <mat-slide-toggle class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)">

@@ -245,6 +245,10 @@ export class DataService {
         return this.organizations$;
     }
 
+    get user(): Observable<any> {
+        return this.localStorage.getItem<any>('user');
+    }
+
     get organization(): Observable<any> {
         return this.localStorage.getItem<any>('org');
     }

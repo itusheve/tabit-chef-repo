@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { PercentPipe } from '@angular/common';
 import * as _ from 'lodash';
@@ -8,11 +8,10 @@ import * as _ from 'lodash';
   templateUrl: './day-sales-type-table.component.html',
   styleUrls: ['./day-sales-type-table.component.css']
 })
-export class DaySalesTypeTableComponent implements OnInit {
+export class DaySalesTypeTableComponent {
 
   // @Input() options: any;
-
-  decPipe: any = new DecimalPipe('en-US');//TODO use currency pipe instead
+  // decPipe: any = new DecimalPipe('en-US');
 
   rows: any = {
     header: {},
@@ -107,7 +106,5 @@ export class DaySalesTypeTableComponent implements OnInit {
       this.rows.delivery.evening +
       this.rows.other.evening;      
   }
-
-  ngOnInit() {}
 
 }

@@ -5,33 +5,38 @@
         "short_name": "Chef",
         "start_url": ".",
         "display": "standalone",
-        "background_color": "#5A3942",
-        "theme_color": "#5A3942",
+        "background_color": "#80C5E6",
+        "theme_color": "#ff9800",
         "description": "Tabit Chef App",
         "icons": [
             {
-            "src": "assets/images/icons/mdpi.png",
+            "src": "assets/images/icons/mipmap-mdpi/ic_launcher.png",
             "sizes": "48x48",
             "type": "image/png"
         },
         {
-            "src": "assets/images/icons/hdpi.png",
+            "src": "assets/images/icons/mipmap-hdpi/ic_launcher.png",
             "sizes": "72x72",
             "type": "image/png"
         },
         {
-            "src": "assets/images/icons/xhdpi.png",
+            "src": "assets/images/icons/mipmap-xhdpi/ic_launcher.png",
             "sizes": "96x96",
             "type": "image/png"
         },
         {
-            "src": "assets/images/icons/xxhdpi.png",
+            "src": "assets/images/icons/mipmap-xxhdpi/ic_launcher.png",
             "sizes": "144x144",
             "type": "image/png"
         },
         {
-            "src": "assets/images/icons/xxxhdpi.png",
+            "src": "assets/images/icons/mipmap-xxxhdpi/ic_launcher.png",
             "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/images/icons/web_hi_res_512.png",
+            "sizes": "512x512",
             "type": "image/png"
         }
     ],
