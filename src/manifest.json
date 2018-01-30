@@ -6,7 +6,7 @@
         "start_url": ".",
         "display": "standalone",
         "background_color": "#80C5E6",
-        "theme_color": "#ff9800",
+        "theme_color": "#414e5f",
         "description": "Tabit Chef App",
         "icons": [
             {
