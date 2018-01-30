@@ -19,7 +19,6 @@ export class LoginComponent implements OnInit {
     public snackBar: MatSnackBar
   ) { }
 
-  //TODO: show when user/pass are wring
   //TODO: side menu add X and enable sliding off
   //TODO: ecognize email input as email for keyboard
 

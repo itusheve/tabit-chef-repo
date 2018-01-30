@@ -79,7 +79,9 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    window.scrollTo(0, 0);
+  }
 
   onDayRequest(date: string) {
     if (date ==='previousBD') {

@@ -26,7 +26,8 @@ export class OrgsComponent implements OnInit {
     this.keyUp.subscribe((filter: string)=>{
       if (filter==='') this.orgsFiltered = this.orgs;
       else {
-        this.orgsFiltered = this.orgs.filter(o=>o.name.indexOf(filter)>-1);
+        filter = filter.toUpperCase();
+        this.orgsFiltered = this.orgs.filter(o=>o.name.toUpperCase().indexOf(filter)>-1);
       }
     });
   }

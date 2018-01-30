@@ -47,6 +47,8 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
   } 
 
   ngOnInit() {
+    window.scrollTo(0, 0);
+    
     this.route.paramMap
       .subscribe((params: ParamMap) => { 
         const dateStr = params.get('businessDate');
