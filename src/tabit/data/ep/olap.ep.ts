@@ -259,9 +259,9 @@ export class OlapEp {
                             let date = moment(dateAsString, 'DD-MM-YYYY');
                             //let dateFormatted = date.format('dd') + '-' + date.format('DD');
         
-                            let sales = r[this.measures.sales];
-                            let salesPPA = r[this.measures.ppa.sales];
-                            let dinersPPA = r[this.measures.ppa.diners];
+                            let sales = r[this.measures.sales] || 0;
+                            let salesPPA = r[this.measures.ppa.sales] || 0;
+                            let dinersPPA = r[this.measures.ppa.diners] || 0;
                             
                             if (sales) sales = this.expoToNumer(sales);
                             if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
@@ -278,7 +278,7 @@ export class OlapEp {
                                 ppa: ppa
                             };
                         })
-                            .filter(r => r.sales !== undefined)
+                            //.filter(r => r.sales !== undefined)
                             .sort(this.shortDayOfWeek_compareFunction);
         
                         this.dailyData$.next(treated);

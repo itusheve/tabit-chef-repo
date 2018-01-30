@@ -12,7 +12,7 @@
     <div class="c-0 flex j-sb cfooter">
       <div class="flex"><mat-icon>person</mat-icon> {{cardData?.diners | number:'1.0-0'}}</div>
       <div class="flex"></div>
-      <div class="flex">ממוצע לסועד {{cardData?.ppa | currency:'ILS':'symbol':'1.1-1'}}</div>
+      <div class="flex"><span *ngIf="cardData && cardData.diners > 0">ממוצע לסועד {{cardData?.ppa | currency:'ILS':'symbol':'1.1-1'}}</span></div>
     </div>
   </div>
 </div>
