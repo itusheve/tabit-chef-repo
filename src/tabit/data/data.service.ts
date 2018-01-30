@@ -238,7 +238,7 @@ export class DataService {
 
         this.rosEp.get(this.ROS_base_url + '/organizations', {})
             .then(orgs => {
-                const filtered = orgs.filter(o=>o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT');
+                const filtered = orgs.filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT');
                 this.organizations$.next(filtered);
             });
 
