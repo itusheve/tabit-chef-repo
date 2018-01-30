@@ -94,6 +94,7 @@ export class DataService {
             this.rosEp.get(this.ROS_base_url + '/configuration', {})
                 .then(data => {
                     const serverShiftsConfig = data[0].regionalSettings.ownerDashboard;
+                    if (!serverShiftsConfig) console.error('error 7727: missing configuration: regionalSettings.ownerDashboard config is missing. please contact support.');
                     const shiftsConfig: any = {
                         morning: {
                             active: serverShiftsConfig.hasOwnProperty('morningShiftActive') ? serverShiftsConfig.morningShiftActive : true,

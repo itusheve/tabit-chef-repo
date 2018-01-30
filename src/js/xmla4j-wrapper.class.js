@@ -23,7 +23,7 @@ const Xmla4JWrapper = (function(){
             const newRow = {};
             if (oldRow.childNodes) {
                 oldRow.childNodes.forEach(childNode => {
-                    const key = fieldsMap[childNode.nodeName];
+                    const key = fieldsMap[childNode.nodeName];                    
                     newRow[key.name] = childNode.hasOwnProperty('childNodes') ? childNode.childNodes[0].data : undefined;
                 })
             }
