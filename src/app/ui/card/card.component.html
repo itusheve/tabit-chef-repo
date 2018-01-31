@@ -1,6 +1,8 @@
-<div class="flex d-col card">
-  <div class="c-0 flex aj-center ctitle">
-    {{cardData?.title || '&nbsp;'}}
+<div class="flex f-rtl d-col card">
+  <div class="flex ctitle">
+    <div class="flex j-start ctag" style="width:25%">{{cardData?.tag}}</div>
+    <div class="flex j-center" style="width:75%">{{cardData?.title || '&nbsp;'}}</div>
+    <div class="flex j-end" style="width:25%"></div>
   </div>
   <dx-load-indicator [(visible)]="!cardData || cardData.loading" rtlEnabled="true"></dx-load-indicator>
   <div *ngIf="cardData && !cardData.loading" class="g-1 flex d-col cbody">
@@ -9,10 +11,10 @@
       <div class="flex aj-center csales">{{cardData?.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
       <div class="flex"></div>
     </div>
-    <div class="c-0 flex j-sb cfooter">
-      <div class="flex"><mat-icon>person</mat-icon> {{cardData?.diners | number:'1.0-0'}}</div>
+    <div class="flex j-sb cfooter">
+      <div class="flex a-baseline cperson"><div class="flex a-baseline" *ngIf="cardData && cardData.diners > 0"><i class="icomoon-man"></i>&nbsp;{{cardData?.diners | number:'1.0-0'}}</div></div>
       <div class="flex"></div>
-      <div class="flex"><span *ngIf="cardData && cardData.diners > 0">ממוצע לסועד {{cardData?.ppa | currency:'ILS':'symbol':'1.1-1'}}</span></div>
+      <div class="flex"><div class="flex" *ngIf="cardData && cardData.diners > 0">PPA&nbsp;{{cardData?.ppa | currency:'ILS':'symbol':'1.1-1'}}</div></div>
     </div>
   </div>
 </div>

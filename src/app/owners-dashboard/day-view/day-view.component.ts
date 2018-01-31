@@ -20,10 +20,15 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 export class DayViewComponent implements OnInit, AfterViewInit  {
   @ViewChild('dayPieChart') dayPieChart;
   @ViewChild('daySalesTypeTable') daySalesTypeTable;
-  @ViewChild('dayDinersTable') dayDinersTable;  
+  // @ViewChild('dayDinersTable') dayDinersTable;  
   @ViewChild('dayShifts') dayShifts;  
   
-  day: moment.Moment;
+  day: moment.Moment;  
+
+  dinersTable = {
+    data: undefined,
+    show: false
+  };
 
   constructor(
     private dataService: DataService,
@@ -33,15 +38,24 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
 
   private render() {
     const data$ = combineLatest(
-      this.dataService.shifts$, 
-      this.dataService.getDailyDataByShiftAndType(this.day), 
+      this.dataService.shifts$.take(1), 
+      this.dataService.getDailyDataByShiftAndType(this.day).take(1), 
       (shifts: any, dailyData: any) => Object.assign({}, { shifts: shifts }, dailyData)
     );
 
     data$.subscribe(data=>{
+      
+      this.dinersTable.data = {
+        shifts: data.shifts,
+        dinersAndPPAByShift: data.dinersAndPPAByShift
+      };
+      if (this.dinersTable.data.dinersAndPPAByShift.morning.diners || this.dinersTable.data.dinersAndPPAByShift.afternoon.diners || this.dinersTable.data.dinersAndPPAByShift.evening.diners) {
+        this.dinersTable.show = true;
+      }
+
       this.dayPieChart.render(data.salesByOrderType);
       this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
-      this.dayDinersTable.render(data.shifts, data.dinersAndPPAByShift);
+      // this.dayDinersTable.render(data.shifts, data.dinersAndPPAByShift);
       this.dayShifts.render(data.shifts);
     });
   } 

@@ -1,5 +1,5 @@
 <div class="dayPieChart">
-    <div class="title">הכנסות</div>
+    <!-- <div class="title">הכנסות</div> -->
     <div class="body" style="height:350px">
         <dx-pie-chart 
         id="pie" 
@@ -18,7 +18,7 @@
             >
             <!-- innerRadius="0.8", legend: { horizontalAlignment: 'center', verticalAlignment: 'bottom' }, -->
             <dxi-series argumentField="orderType">
-                <dxo-label [visible]="true" format="thousands">
+                <dxo-label [visible]="true" [customizeText]="customizeLabelText" format="percent">
                     <dxo-connector [visible]="true"></dxo-connector>
                 </dxo-label>
             </dxi-series>
@@ -26,8 +26,10 @@
             <dxo-legend [margin]="0" horizontalAlignment="center" verticalAlignment="bottom" columnCount="1" [customizeText]="customizeText" paddingTopBottom="80">
                 <dxo-font color="white" family="'Alef', 'Helvetica Neue', Helvetica, Arial" size="16"></dxo-font>
             </dxo-legend>
-            <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip" format="thousands">
-            </dxo-tooltip>
+            <!-- <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip" format="thousands">
+            </dxo-tooltip> -->
+            <!-- <dxo-tooltip [enabled]="true" format="percent">
+            </dxo-tooltip> -->
         </dx-pie-chart>
     </div>
 </div>

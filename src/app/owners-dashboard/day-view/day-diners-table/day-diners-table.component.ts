@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 })
 export class DayDinersTableComponent implements OnInit {
 
-  // @Input() options: any;
+  @Input() data: any;
 
   decPipe: any = new DecimalPipe('en-US');//TODO use currency pipe instead
 
@@ -35,6 +35,8 @@ export class DayDinersTableComponent implements OnInit {
     this.rows.ppa.evening = _.get(dinersAndPPAByShift, 'evening.ppa', 0) * 1;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.render(this.data.shifts, this.data.dinersAndPPAByShift);
+  }
 
 }

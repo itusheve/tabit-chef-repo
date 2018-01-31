@@ -13,16 +13,37 @@ import { zip } from 'rxjs/observable/zip';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/concatMap';
+import 'rxjs/add/operator/publishReplay';
 
 @Injectable()
 export class DataService {
     private ROS_base_url: String = 'https://ros-office-beta.herokuapp.com';//TODO get from config and consume in ROS ep
 
     private organizations$: ReplaySubject<any>;
-
-    // private shifts$: ReplaySubject<any>;
     
-    private dashboardData$;//:Observable<any>;
+    // private dashboardData;
+    private dashboardData$: Observable<any> = Observable.create(obs => {
+        // if (this.dashboardData) {
+        //     obs.next(this.dashboardData);
+        //     return;
+        // }
+
+        this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
+            .then((results: any) => moment(results.businessDate))
+            .then((bd: moment.Moment) => {
+                const payload = {
+                    params: {
+                        to: bd.format('YYYY-MM-D'),
+                        daysOfHistory: 2
+                    }
+                };
+                return this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', {});
+            })
+            .then(data => {
+                // this.dashboardData = data;
+                obs.next(data);
+            });
+    }).publishReplay(1).refCount();
 
     private monthForecastData$;
 
@@ -65,7 +86,7 @@ export class DataService {
 
         function getSales(): Observable<any> {
             return Observable.create(sub => {
-                that.dashboardData
+                that.dashboardData$
                     .subscribe(data => {
                         const sales = data.today.totalSales;
                         sub.next({
@@ -74,7 +95,6 @@ export class DataService {
                     });
             });
         }
-
       
         const dinersAndPPA$: Observable<any> = getDinersAndPPA();
         const sales$: Observable<any> = getSales();
@@ -133,7 +153,7 @@ export class DataService {
     }
 
     get currentBd$(): Observable<moment.Moment> {
-        return this.dashboardData
+        return this.dashboardData$
             .map(data => {
                 const bdStr = data.today.businessDate.substring(0, 10);
                 const bd: moment.Moment = moment(bdStr).startOf('day');
@@ -279,28 +299,28 @@ export class DataService {
 
 
 
-    get dashboardData(): Observable<any> {
-        if (this.dashboardData$) return this.dashboardData$;
+    // get dashboardData(): Observable<any> {
+    //     if (this.dashboardDataGal) return this.dashboardDataGal;
                 
-        let that = this;
+    //     let that = this;
         
-        this.dashboardData$ = Observable.create(obs=>{
-            this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
-                .then((results: any) => moment(results.businessDate))
-                .then((bd: moment.Moment) => {
-                    const payload = {
-                        params: {
-                            to: bd.format('YYYY-MM-D'),
-                            daysOfHistory: 2
-                        }
-                    };
-                    return this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', {});
-                })
-                .then(data => obs.next(data));
-        });
+    //     this.dashboardDataGal = Observable.create(obs=>{
+    //         this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
+    //             .then((results: any) => moment(results.businessDate))
+    //             .then((bd: moment.Moment) => {
+    //                 const payload = {
+    //                     params: {
+    //                         to: bd.format('YYYY-MM-D'),
+    //                         daysOfHistory: 2
+    //                     }
+    //                 };
+    //                 return this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', {});
+    //             })
+    //             .then(data => obs.next(data));
+    //     }).take(1);
         
-        return this.dashboardData$;
-    }        
+    //     return this.dashboardDataGal;
+    // }        
 
     get monthForecastData(): ReplaySubject<any> {
         if (this.monthForecastData$) return this.monthForecastData$;

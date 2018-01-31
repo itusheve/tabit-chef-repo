@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export interface CardData {
   loading: boolean;
   title: string;
+  tag: string;
   sales: number;
   diners: number;
   ppa: number;
@@ -17,19 +18,10 @@ export interface CardData {
 })
 export class CardComponent implements OnInit {
 
-  @Input() cardData: CardData;//: BehaviorSubject<CardData>;
-  // cardData;//: CardData;
-  // @Input() tag: string;
-  // @Input() title: string;
-  // @Input() sum: number;
-  // @Input() diners: number;
-  // @Input() ppa: number;
+  @Input() cardData: CardData;
 
   constructor() { }
 
-  ngOnInit() { 
-    // this.cardData$
-      // .subscribe(cd=>this.cardData=cd);
-  }
+  ngOnInit() { }
 
 }

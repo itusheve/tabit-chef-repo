@@ -1,0 +1,56 @@
+//https://stackoverflow.com/questions/46465888/custom-font-import-in-angular4
+$icomoon-woff-font-path: "./assets/fonts/icomoon/icomoon.woff";
+$icomoon-ttf-font-path: "./assets/fonts/icomoon/icomoon.ttf";
+@font-face {
+    font-family: 'icomoon';
+    src:url($icomoon-woff-font-path) format('woff'),
+        url($icomoon-ttf-font-path) format('ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icomoon-"], [class*=" icomoon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    // font-size: 1.5em;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// .icon-menu:before {
+//     content: "\e900";
+// }
+// .icon-date:before {
+//     content: "\e901";
+// }
+// .icon-man-blue:before {
+//     content: "\e902";
+// }
+.icomoon-man:before {
+    content: "\e903";
+}
+// .icon-Polygon:before {
+//     content: "\e904";
+// }
+// .icon-upload .path1:before {
+//     content: "\e91a";
+//     color: rgb(255, 204, 0);
+// }
+// .icon-upload .path2:before {
+//     content: "\e91b";
+//     margin-left: -1.212890625em;
+//     color: rgb(18, 138, 210);
+// }
+// .icon-upload .path3:before {
+//     content: "\e91c";
+//     margin-left: -1.212890625em;
+//     color: rgb(18, 138, 210);
+// }

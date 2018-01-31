@@ -44,10 +44,8 @@ export class DayPieChartComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dxInstance = e.component;
   }
 
-  customizeTooltip = (arg: any) => {
-    return {
-      text: `${this.decPipe.transform(arg.value, '1.2-2')} - ${this.pctPipe.transform(arg.percent, '1.2-2')}`
-    };
+  customizeLabelText = (pointInfo: any) => {
+    return pointInfo.percentText;
   }
 
   customizeText = (pointInfo: any) => {

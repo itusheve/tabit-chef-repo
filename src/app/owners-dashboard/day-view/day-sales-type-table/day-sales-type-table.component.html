@@ -17,31 +17,31 @@
                     <span>{{rows.header.evening}}</span>
                 </div>
             </div>
-            <div class="flex d-row tblRow">
+            <div class="flex d-row tblRow" *ngIf="rows.seated.morning || rows.seated.afternoon || rows.seated.evening">
                 <div class="flex" style="width:25%">בישיבה</div>
                 <div class="flex" style="width:25%">{{rows.seated.morning | currency:'ILS':'symbol':'1.0-0'}}</div>
                 <div class="flex" style="width:25%">{{rows.seated.afternoon | currency:'ILS':'symbol':'1.0-0'}}</div>
                 <div class="flex" style="width:25%">{{rows.seated.evening | currency:'ILS':'symbol':'1.0-0'}}</div>
             </div>
-            <div class="flex d-row tblRow">
+            <div class="flex d-row tblRow" *ngIf="rows.counter.morning || rows.counter.afternoon || rows.counter.evening">
                 <div class="flex" style="width:25%">דלפק</div>
                 <div class="flex" style="width:25%">{{rows.counter.morning | currency:'ILS':'symbol':'1.0-0'}}</div>
                 <div class="flex" style="width:25%">{{rows.counter.afternoon | currency:'ILS':'symbol':'1.0-0'}}</div>
                 <div class="flex" style="width:25%">{{rows.counter.evening | currency:'ILS':'symbol':'1.0-0'}}</div>
             </div>
-            <div class="flex d-row tblRow">
+            <div class="flex d-row tblRow" *ngIf="rows.ta.morning || rows.ta.afternoon || rows.ta.evening">
                 <div class="flex" style="width:25%">TA</div>
                 <div class="flex" style="width:25%">{{rows.ta.morning | currency:'ILS':'symbol':'1.0-0'}}</div>
                 <div class="flex" style="width:25%">{{rows.ta.afternoon | currency:'ILS':'symbol':'1.0-0'}}</div>
                 <div class="flex" style="width:25%">{{rows.ta.evening | currency:'ILS':'symbol':'1.0-0'}}</div>
             </div>
-            <div class="flex d-row tblRow">
+            <div class="flex d-row tblRow" *ngIf="rows.delivery.morning || rows.delivery.afternoon || rows.delivery.evening">
                 <div class="flex" style="width:25%">משלוחים</div>
                 <div class="flex" style="width:25%">{{rows.delivery.morning | currency:'ILS':'symbol':'1.0-0'}}</div>
                 <div class="flex" style="width:25%">{{rows.delivery.afternoon | currency:'ILS':'symbol':'1.0-0'}}</div>
                 <div class="flex" style="width:25%">{{rows.delivery.evening | currency:'ILS':'symbol':'1.0-0'}}</div>
             </div>
-            <div class="flex d-row tblRow">
+            <div class="flex d-row tblRow" *ngIf="rows.other.morning || rows.other.afternoon || rows.other.evening">
                 <div class="flex" style="width:25%">אחר</div>
                 <div class="flex" style="width:25%">{{rows.other.morning | currency:'ILS':'symbol':'1.0-0'}}</div>
                 <div class="flex" style="width:25%">{{rows.other.afternoon | currency:'ILS':'symbol':'1.0-0'}}</div>

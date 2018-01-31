@@ -2,9 +2,11 @@
 .card {
     height: 93px;
     .ctitle {
-        font-size: 14px;
-        font-weight: 700;
-        text-align: center;        
+        font-size: 16px;
+        text-align: center;     
+        .ctag {
+            color: #7CBCEC;
+        }   
     }
     .cbody {
         .cmain {
@@ -13,7 +15,12 @@
             }
         }
         .cfooter {
-            font-size: 16p  x;            
+            font-size: 16px;
+            .cperson {
+                i {
+                    color: #7CBCEC;
+                }
+            }
         }
     }
 }

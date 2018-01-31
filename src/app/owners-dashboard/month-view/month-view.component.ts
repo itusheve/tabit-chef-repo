@@ -28,6 +28,7 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
   forecastCardData: CardData = {
     loading: true,
     title: '',
+    tag: '',
     sales: 0,
     diners: 0,
     ppa: 0
@@ -37,6 +38,7 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
   summaryCardData: CardData = {
     loading: true,
     title: '',
+    tag: '',
     sales: 0,
     diners: 0,
     ppa: 0
@@ -80,9 +82,10 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
         .then(rowset => {
           rowset = rowset.map(r => {
             const dateFormatted = that.datePipe.transform(r.date.valueOf(), 'dd-EEEEE');
-            const ppa = (vat ? r.ppa : r.ppa / 1.17);
-            const sales = (vat ? r.sales : r.sales/1.17);
-            const salesPPA = (vat ? r.salesPPA : r.salesPPA / 1.17);
+            let ppa = (vat ? r.ppa : r.ppa / 1.17);
+            let sales = (vat ? r.sales : r.sales/1.17);
+            let salesPPA = (vat ? r.salesPPA : r.salesPPA / 1.17);
+            if (ppa===0) ppa=null;
             return {
               date: r.date,
               dateFormatted: dateFormatted,
@@ -105,7 +108,7 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
         that.dataService.monthForecastData
           .take(1)
           .subscribe(data => {
-            const title = `${that.datePipe.transform(month, 'MMMM')} (צפוי)`;
+            const title = `${that.datePipe.transform(month, 'MMMM')} צפוי`;
             that.forecastCardData.diners = data.diners;
             that.forecastCardData.ppa = vat ? data.ppa : data.ppa / 1.17;
             that.forecastCardData.sales = vat ? data.sales : data.sales / 1.17;
@@ -117,7 +120,7 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
         that.showSummary = true;
         that.dataService.getMonthlyData(month)
           .then(data => {
-            const title = `${that.datePipe.transform(month, 'MMMM')} (סופי)`;
+            const title = `${that.datePipe.transform(month, 'MMMM')} סופי`;
             that.summaryCardData.diners = data.diners;
             that.summaryCardData.ppa = vat ? data.ppa : data.ppa / 1.17;
             that.summaryCardData.sales = vat ? data.sales : data.sales / 1.17;

@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
   currentBdCardData: CardData = {
     loading: true,
     title: '',
+    tag: 'היום',
     sales: 0,
     diners: 0,
     ppa: 0
@@ -33,6 +34,7 @@ export class HomeComponent implements OnInit {
   previousBdCardData: CardData = {
     loading: true,
     title: '',
+    tag: 'אתמול',
     sales: 0,
     diners: 0,
     ppa: 0
@@ -41,6 +43,7 @@ export class HomeComponent implements OnInit {
   mtdCardData: CardData = {
     loading: true,
     title: '',
+    tag: '',
     sales: 0,
     diners: 0,
     ppa: 0
@@ -50,7 +53,7 @@ export class HomeComponent implements OnInit {
 
     combineLatest(this.dataService.currentBdData$, this.dataService.currentBd$)
       .subscribe(data=>{
-        const title = `היום, ${this.datePipe.transform(data[1].valueOf(), 'fullDate')}`;
+        const title = this.datePipe.transform(data[1].valueOf(), 'fullDate');
         this.currentBdCardData.diners = data[0].diners;
         this.currentBdCardData.ppa = data[0].ppa;
         this.currentBdCardData.sales = data[0].sales;
@@ -60,7 +63,7 @@ export class HomeComponent implements OnInit {
 
     combineLatest(this.dataService.previousBdData$, this.dataService.previousBd$)
       .subscribe(data => {
-        const title = `אתמול, ${this.datePipe.transform(data[1].valueOf(), 'fullDate')}`;
+        const title = this.datePipe.transform(data[1].valueOf(), 'fullDate');
         this.previousBdCardData.diners = data[0].diners;
         this.previousBdCardData.ppa = data[0].ppa;
         this.previousBdCardData.sales = data[0].sales;
@@ -70,7 +73,7 @@ export class HomeComponent implements OnInit {
 
     combineLatest(this.dataService.mtdData$, this.dataService.currentBd$)
       .subscribe(data => {
-        const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} (עד כה)`;
+        const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} עד כה`;
         this.mtdCardData.diners = data[0].diners;
         this.mtdCardData.ppa = data[0].ppa;
         this.mtdCardData.sales = data[0].sales;

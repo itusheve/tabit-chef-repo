@@ -3,7 +3,11 @@
     <app-day-selector class="widget noPadding" #daySelector [currentValue]="day" (onDateChanged)="onDateChanged($event)"></app-day-selector>
     <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
     <app-day-sales-type-table class="widget" #daySalesTypeTable></app-day-sales-type-table>
-    <app-day-diners-table class="widget" #dayDinersTable></app-day-diners-table>
+    <app-day-diners-table 
+      class="widget" 
+      [data]="dinersTable.data"
+      *ngIf="dinersTable.show"
+      ></app-day-diners-table>
     <app-day-shifts class="widget greyAccent" #dayShifts></app-day-shifts>      
   </div>
 </div>

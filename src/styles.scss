@@ -29,7 +29,7 @@ html, body {
     height: 100%;
     padding: 0;
     margin: 0;
-    font-family: "Alef", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Assistant', sans-serif;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     color: $baseText;
@@ -110,6 +110,29 @@ html, body {
 html[dir=rtl] {
     mat-card-content {
         text-align: start;
+    }
+}
+
+.dx-widget, dx-datagrid, dx-pie-chart, dx-chart {
+    font-family: 'Assistant', sans-serif!important;
+}
+dx-chart svg text {
+    font-family: 'Assistant', sans-serif!important;
+}
+dx-pie-chart svg text {
+    font-family: 'Assistant', sans-serif!important;
+}
+
+$navigatorHeight: 50px;
+$navigatorBtnWidth: 50px;
+.dx-calendar-navigator {
+    height: $navigatorHeight;
+    .dx-calendar-caption-button {
+        right: $navigatorBtnWidth;
+        left: $navigatorBtnWidth;
+    }
+    .dx-calendar-navigator-next-view, .dx-calendar-navigator-previous-view {
+        width: $navigatorBtnWidth;
     }
 }
 
