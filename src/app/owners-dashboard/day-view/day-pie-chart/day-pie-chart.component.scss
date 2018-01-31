@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+/deep/ #pie {
+    height: 350px;
+}
+
+// .widget.body {
+    // padding: 37px 0px;  
+// }
+
+.dayPieChart {
+
+}
+
+dx-pie-chart {
+    position: relative;
+    /* this is needed for the alignment of the total */
+}
+
+.customLegend {
+    .legendRow {
+        .itemColor {
+            border-radius: 2px;
+            width: 15px;
+            height: 15px;
+        }
+        .itemName {
+            
+        }
+        .itemVal {
+            
+        }
+    }
+}

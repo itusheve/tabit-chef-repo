@@ -5,7 +5,7 @@ import { DecimalPipe, PercentPipe, CurrencyPipe } from '@angular/common';
 @Component({
   selector: 'app-day-pie-chart',
   templateUrl: './day-pie-chart.component.html',
-  styleUrls: ['./day-pie-chart.component.css'],
+  styleUrls: ['./day-pie-chart.component.scss'],
   providers: [Service]
 })
 export class DayPieChartComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -23,12 +23,17 @@ export class DayPieChartComponent implements OnInit, OnDestroy, AfterViewInit {
     // dataSource: undefined
   // };
 
+  pallete = ['rgb(101, 166, 211)', 'rgb(84, 153, 140)', 'rgb(196, 205, 214)', 'rgb(75, 118, 155)', 'rgb(147, 173, 168)'];
+
+  currencySymbol = '&#8362;';
+
   private orderTypesMap = {
     seated: 'בישיבה',
     counter: 'דלפק',
     ta: 'לקחת',
     delivery: 'משלוח',
-    other: 'סוג הזמנה לא מוגדר'
+    other: 'סוג הזמנה לא מוגדר',
+    returns: 'החזר'
   };
 
   private total: number;
@@ -89,12 +94,21 @@ export class DayPieChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.dataSource = [];
     this.total = 0;
+    
+    let i=0;    
+
     Object.keys(data).forEach(orderType=>{
       this.total += data[orderType];
+      
+      //const valFormatted = this.currPipe.transform(data[orderType], 'ILS', 'symbol', '1.0-0');
+      const valFormatted = this.decPipe.transform(data[orderType], '1.0-0');
       this.dataSource.push({
+        color: this.pallete[i],
         orderType: this.orderTypesMap[orderType],
-        val: data[orderType]
+        val: data[orderType],
+        valFormatted: valFormatted
       });
+      i++;
     });
     // this.dataSource = dataSource;
     // this.dxChart.dataSource = this.options.dataSource;

@@ -21,7 +21,6 @@ export class DataService {
 
     private organizations$: ReplaySubject<any>;
     
-    // private dashboardData;
     private dashboardData$: Observable<any> = Observable.create(obs => {
         // if (this.dashboardData) {
         //     obs.next(this.dashboardData);
@@ -42,6 +41,46 @@ export class DataService {
             .then(data => {
                 // this.dashboardData = data;
                 obs.next(data);
+            });
+    }).publishReplay(1).refCount();
+
+    public shifts$: Observable<any> = Observable.create(obs => {
+        this.rosEp.get(this.ROS_base_url + '/configuration', {})
+            .then(data => {
+                const serverShiftsConfig = data[0].regionalSettings.ownerDashboard;
+                if (!serverShiftsConfig) console.error('error 7727: missing configuration: regionalSettings.ownerDashboard config is missing. please contact support.');
+                const shiftsConfig: any = {
+                    morning: {
+                        active: serverShiftsConfig.hasOwnProperty('morningShiftActive') ? serverShiftsConfig.morningShiftActive : true,
+                        name: serverShiftsConfig.morningShiftName,
+                        startTime: serverShiftsConfig.morningStartTime
+                    },
+                    afternoon: {
+                        active: serverShiftsConfig.hasOwnProperty('afternoonShiftActive') ? serverShiftsConfig.afternoonShiftActive : true,
+                        name: serverShiftsConfig.afternoonShiftName,
+                        startTime: serverShiftsConfig.afternoonStartTime
+                    },
+                    evening: {
+                        active: serverShiftsConfig.hasOwnProperty('eveningShiftActive') ? serverShiftsConfig.eveningShiftActive : true,
+                        name: serverShiftsConfig.eveningShiftName,
+                        startTime: serverShiftsConfig.eveningStartTime
+                    },
+                    // fourth: {
+                    //     active: serverShiftsConfig.hasOwnProperty('fourthShiftActive') ? serverShiftsConfig.fourthShiftActive : false,
+                    //     name: serverShiftsConfig.fourthShiftName,
+                    //     startTime: serverShiftsConfig.fourthStartTime
+                    // },
+                    // fifth: {
+                    //     active: serverShiftsConfig.hasOwnProperty('fifthShiftActive') ? serverShiftsConfig.fifthShiftActive : false,
+                    //     name: serverShiftsConfig.fifthShiftName,
+                    //     startTime: serverShiftsConfig.fifthStartTime
+                    // }
+                };
+                shiftsConfig.morning.endTime = shiftsConfig.afternoon.startTime;
+                shiftsConfig.afternoon.endTime = shiftsConfig.evening.startTime;
+                shiftsConfig.evening.endTime = shiftsConfig.morning.startTime;
+
+                obs.next(shiftsConfig);
             });
     }).publishReplay(1).refCount();
 
@@ -105,52 +144,9 @@ export class DataService {
 
     });
     
-    public shifts$: Observable<any>;
     public dailyDataByShiftAndType$: Observable<any>;
 
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
-
-        this.shifts$ = Observable.create(obs => {
-            this.rosEp.get(this.ROS_base_url + '/configuration', {})
-                .then(data => {
-                    const serverShiftsConfig = data[0].regionalSettings.ownerDashboard;
-                    if (!serverShiftsConfig) console.error('error 7727: missing configuration: regionalSettings.ownerDashboard config is missing. please contact support.');
-                    const shiftsConfig: any = {
-                        morning: {
-                            active: serverShiftsConfig.hasOwnProperty('morningShiftActive') ? serverShiftsConfig.morningShiftActive : true,
-                            name: serverShiftsConfig.morningShiftName,
-                            startTime: serverShiftsConfig.morningStartTime
-                        },
-                        afternoon: {
-                            active: serverShiftsConfig.hasOwnProperty('afternoonShiftActive') ? serverShiftsConfig.afternoonShiftActive : true,
-                            name: serverShiftsConfig.afternoonShiftName,
-                            startTime: serverShiftsConfig.afternoonStartTime
-                        },
-                        evening: {
-                            active: serverShiftsConfig.hasOwnProperty('eveningShiftActive') ? serverShiftsConfig.eveningShiftActive : true,
-                            name: serverShiftsConfig.eveningShiftName,
-                            startTime: serverShiftsConfig.eveningStartTime
-                        },
-                        // fourth: {
-                        //     active: serverShiftsConfig.hasOwnProperty('fourthShiftActive') ? serverShiftsConfig.fourthShiftActive : false,
-                        //     name: serverShiftsConfig.fourthShiftName,
-                        //     startTime: serverShiftsConfig.fourthStartTime
-                        // },
-                        // fifth: {
-                        //     active: serverShiftsConfig.hasOwnProperty('fifthShiftActive') ? serverShiftsConfig.fifthShiftActive : false,
-                        //     name: serverShiftsConfig.fifthShiftName,
-                        //     startTime: serverShiftsConfig.fifthStartTime
-                        // }
-                    };
-                    shiftsConfig.morning.endTime = shiftsConfig.afternoon.startTime;
-                    shiftsConfig.afternoon.endTime = shiftsConfig.evening.startTime;
-                    shiftsConfig.evening.endTime = shiftsConfig.morning.startTime;
-
-                    obs.next(shiftsConfig);
-                });
-        }).take(1);
-
-    }
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {}
 
     get currentBd$(): Observable<moment.Moment> {
         return this.dashboardData$

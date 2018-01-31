@@ -1,35 +1,34 @@
-<div class="dayPieChart">
-    <!-- <div class="title">הכנסות</div> -->
-    <div class="body" style="height:350px">
-        <dx-pie-chart 
+<div class="flex d-col aj-center dayPieChart">
+    <dx-pie-chart 
         id="pie" 
         (onInitialized)="onInitializedEventHandler($event)"
         type="doughnut" 
         innerRadius="0.95"
         diameter="0.68" 
         startAngle="90"
-            [palette]="['rgb(101, 166, 211)', 'rgb(84, 153, 140)', 'rgb(196, 205, 214)', 'rgb(75, 118, 155)', 'rgb(147, 173, 168)']" 
-            [dataSource]="dataSource" 
-            [rtlEnabled]="true"
-             resolveLabelOverlapping="shift"             
-
-             
-
-            >
-            <!-- innerRadius="0.8", legend: { horizontalAlignment: 'center', verticalAlignment: 'bottom' }, -->
-            <dxi-series argumentField="orderType">
-                <dxo-label [visible]="true" [customizeText]="customizeLabelText" format="percent">
-                    <dxo-connector [visible]="true"></dxo-connector>
-                </dxo-label>
-            </dxi-series>
-            <dxo-export [enabled]="false"></dxo-export>
-            <dxo-legend [margin]="0" horizontalAlignment="center" verticalAlignment="bottom" columnCount="1" [customizeText]="customizeText" paddingTopBottom="80">
-                <dxo-font color="white" family="'Alef', 'Helvetica Neue', Helvetica, Arial" size="16"></dxo-font>
-            </dxo-legend>
-            <!-- <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip" format="thousands">
-            </dxo-tooltip> -->
-            <!-- <dxo-tooltip [enabled]="true" format="percent">
-            </dxo-tooltip> -->
-        </dx-pie-chart>
+        [palette]="pallete" 
+        [dataSource]="dataSource" 
+        [rtlEnabled]="true"
+        resolveLabelOverlapping="shift"             
+        >
+        <dxi-series argumentField="orderType">
+            <dxo-label [visible]="true" [customizeText]="customizeLabelText" format="percent">
+                <dxo-connector [visible]="true"></dxo-connector>
+            </dxo-label>
+        </dxi-series>
+        <dxo-export [enabled]="false"></dxo-export>
+        <!-- moved to custmo legend because of the negative returns figure (not supported by DX) -->
+        <dxo-legend [visible]="false"></dxo-legend>
+        <!-- <dxo-legend visible="false" [margin]="0" horizontalAlignment="center" verticalAlignment="bottom" columnCount="1" [customizeText]="customizeText" paddingTopBottom="80">
+            <dxo-font color="white" family="'Alef', 'Helvetica Neue', Helvetica, Arial" size="16"></dxo-font>
+        </dxo-legend> -->
+    </dx-pie-chart>
+    <div class="flex d-col customLegend" *ngIf="dataSource">
+        <div class="flex a-center legendRow" *ngFor="let entry of dataSource">
+            <div class="flex mh5 itemColor" [style.background-color]="entry.color"></div>
+            <div class="flex mh5 itemName">{{entry.orderType}}</div>
+            <div class="flex mh5 itemVal">{{entry.valFormatted}}</div>
+            <div class="flex" [innerHTML]="currencySymbol"></div>
+        </div>
     </div>
 </div>
