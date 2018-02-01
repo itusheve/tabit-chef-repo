@@ -1,20 +1,19 @@
-import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { DataService } from '../../../tabit/data/data.service';
 import { DatePipe } from '@angular/common';
 
 import * as moment from 'moment';
-import { Observable } from 'rxjs/Observable';
-// import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { CardData } from '../../ui/card/card.component';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+// import { isComponentView } from '@angular/core/src/view/util';
 
 @Component({
   selector: 'app-month-view',
   templateUrl: './month-view.component.html',
   styleUrls: ['./month-view.component.css']
 })
-export class MonthViewComponent implements OnInit, AfterViewInit  {
+export class MonthViewComponent  {
   @ViewChild('monthChart') monthChart;
   @ViewChild('monthGrid') monthGrid;
 
@@ -22,7 +21,8 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
 
   month$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment().startOf('month'));
   month: moment.Moment;
-  now: moment.Moment = moment();
+
+  renderGridAndChart = true;
 
   showForecast = false;
   forecastCardData: CardData = {
@@ -60,32 +60,33 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
   datePipe: DatePipe = new DatePipe('he-IL');
 
 //TODO dont forget to unsubscribe from streams when component dies!! cross system!
-  constructor(private dataService: DataService) { 
-    
-    // debugger;
+  constructor(private dataService: DataService) {     
     let that = this;
     
-    // this.month$.subscribe(month=>this.month=month);
-
-    combineLatest(this.month$, dataService.vat$)
+    combineLatest(this.month$, dataService.vat$, dataService.currentBd$)
       .subscribe(data=>{
-        update(data[0], data[1]);
+        update(data[0], data[1], data[2]);
       });
 
-    function update(month, vat) {
-      that.month = month;
-      
-      const queryFrom = moment(month).startOf('month');
-      const queryTo = moment(month).endOf('month');
+    function updateGridAndChart(month, vat, currentBd: moment.Moment) {
+      const isCurrentMonth = month.isSame(currentBd, 'month');
+
+      let queryFrom = moment(month).startOf('month');
+      let queryTo: moment.Moment;
+      if (isCurrentMonth) {
+        queryTo = moment(currentBd).subtract(1, 'day');
+      } else {
+        queryTo = moment(month).endOf('month');
+      }
 
       that.dataService.getDailyData(queryFrom, queryTo)
         .then(rowset => {
           rowset = rowset.map(r => {
             const dateFormatted = that.datePipe.transform(r.date.valueOf(), 'dd-EEEEE');
             let ppa = (vat ? r.ppa : r.ppa / 1.17);
-            let sales = (vat ? r.sales : r.sales/1.17);
+            let sales = (vat ? r.sales : r.sales / 1.17);
             let salesPPA = (vat ? r.salesPPA : r.salesPPA / 1.17);
-            if (ppa===0) ppa=null;
+            if (ppa === 0) ppa = null;
             return {
               date: r.date,
               dateFormatted: dateFormatted,
@@ -95,14 +96,16 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
               salesPPA: salesPPA
             };
           });
-          // that.components.chart.options.dataSource = rowset;
-          // that.components.grid.options.dataSource = rowset;
 
           that.monthChart.render(rowset);
           that.monthGrid.render(rowset);
         });
+    }
 
-      if (month.isSame(that.now, 'month')) {
+    function updateForecastOrSummary(month, vat, currentBd: moment.Moment) {      
+      const isCurrentMonth = month.isSame(currentBd, 'month');
+
+      if (isCurrentMonth) {
         that.showForecast = true;
         that.showSummary = false;
         that.dataService.monthForecastData
@@ -128,7 +131,21 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
             that.summaryCardData.loading = false;
           });
       }
-    }    
+    }
+
+    function update(month, vat, currentBd:moment.Moment) {
+      that.month = month;
+      
+      const isCurrentMonth = month.isSame(currentBd, 'month');
+      if (isCurrentMonth && currentBd.date()===1) that.renderGridAndChart = false;
+      else that.renderGridAndChart = true;
+      
+      if (that.renderGridAndChart) {
+        updateGridAndChart(month, vat, currentBd);
+      }
+
+      updateForecastOrSummary(month, vat, currentBd);
+    }
   }
 
   /* if chart / grid date is clicked */
@@ -140,14 +157,6 @@ export class MonthViewComponent implements OnInit, AfterViewInit  {
   onDateClicked2(date: string) {//TODO ugly..
     this.onDayRequest.emit(date);
   }
-
-  private render() {  } 
-
-  ngOnInit() {
-    
-  }
-
-  ngAfterViewInit() { }
 
   onDateChanged(mom: moment.Moment) {
     const month = moment(mom).startOf('month');    

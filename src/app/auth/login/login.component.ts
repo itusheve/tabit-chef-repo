@@ -20,9 +20,6 @@ export class LoginComponent implements OnInit {
   ) { }
 
   //TODO: side menu add X and enable sliding off
-  //TODO: ecognize email input as email for keyboard
-
-
 
   hidePass = true;
   
@@ -33,12 +30,6 @@ export class LoginComponent implements OnInit {
 
   get email() { return this.loginForm.get('email'); }
   get password() { return this.loginForm.get('password'); }
-
-  // getErrorMessage() {
-  //   return this.email.hasError('required') ? 'You must enter a value' :
-  //     this.loginForm.get('email').hasError('email') ? 'Not a valid email' :
-  //       '';
-  // }
 
   ngOnInit() {
   }
@@ -61,21 +52,5 @@ export class LoginComponent implements OnInit {
         }
       });
   }
-
-
-  // onLogin(form?: NgForm) {    
-  //   const email = form.value.email;
-  //   const password = form.value.password;
-  //   this.authService.login({      
-  //     email: email,
-  //     password: password
-  //   })
-  //     .then(()=>{
-  //       this.router.navigate(['/restaurants']);
-  //     }, ()=>{
-  //       debugger;
-  //     });
-  // }
-
 
 }

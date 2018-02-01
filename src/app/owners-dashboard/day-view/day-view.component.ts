@@ -2,8 +2,6 @@ import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { DataService } from '../../../tabit/data/data.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
-// import { MonthChartComponent } from './month-chart/month-chart.component';
-
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { zip } from 'rxjs/observable/zip';
@@ -20,9 +18,9 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 export class DayViewComponent implements OnInit, AfterViewInit  {
   @ViewChild('dayPieChart') dayPieChart;
   @ViewChild('daySalesTypeTable') daySalesTypeTable;
-  // @ViewChild('dayDinersTable') dayDinersTable;  
   @ViewChild('dayShifts') dayShifts;  
   
+
   day: moment.Moment;  
 
   dinersTable = {
@@ -55,7 +53,6 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
 
       this.dayPieChart.render(data.salesByOrderType);
       this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
-      // this.dayDinersTable.render(data.shifts, data.dinersAndPPAByShift);
       this.dayShifts.render(data.shifts);
     });
   } 
@@ -76,12 +73,12 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
   }
 
   ngAfterViewInit() {
-
   }
 
-  onDateChanged(day: moment.Moment) {
-    this.day = moment(day);        
-    this.render();
+  onDateChanged(dateM: moment.Moment) {
+    
+    const date = dateM.format('YYYY-MM-DD');
+    this.router.navigate(['/owners-dashboard/day', date]);
   }
 
 }

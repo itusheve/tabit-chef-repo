@@ -3,8 +3,8 @@
     <app-month-selector class="widget noPadding" #monthSelector [month$]="month$" (onDateChanged)="onDateChanged($event)"></app-month-selector>    
     <app-card *ngIf="showForecast" class="mb10 widget" [cardData]="forecastCardData"></app-card>
     <app-card *ngIf="showSummary" class="mb10 widget" [cardData]="summaryCardData"></app-card>
-    <app-month-chart class="widget" #monthChart (onDateClicked)="onDateClicked($event)"></app-month-chart>
-    <app-month-grid class="widget" #monthGrid (onDateClicked)="onDateClicked2($event)"></app-month-grid>
+    <app-month-chart [hidden]="!renderGridAndChart" class="widget" #monthChart (onDateClicked)="onDateClicked($event)"></app-month-chart>
+    <app-month-grid [hidden]="!renderGridAndChart" class="widget" #monthGrid (onDateClicked)="onDateClicked2($event)"></app-month-grid>
   </div>
 </div>
 

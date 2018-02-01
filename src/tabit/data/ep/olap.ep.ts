@@ -202,7 +202,6 @@ export class OlapEp {
                         this.monthlyData$.next(treated);
                     })
                     .catch(e => {
-                        //debugger;
                     });
             });
         
@@ -284,7 +283,6 @@ export class OlapEp {
                         this.dailyData$.next(treated);
                     })
                     .catch(e => {
-                        //debugger;
                     });
             });
         
@@ -352,7 +350,6 @@ export class OlapEp {
                         obs$.next(treated);
                     })
                     .catch(e => {
-                        //debugger;
                     });
             });
     

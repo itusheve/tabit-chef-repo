@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { PopulationByRegion, Service } from './day-pie-chart.service';
 import { DecimalPipe, PercentPipe, CurrencyPipe } from '@angular/common';
 
@@ -8,20 +8,14 @@ import { DecimalPipe, PercentPipe, CurrencyPipe } from '@angular/common';
   styleUrls: ['./day-pie-chart.component.scss'],
   providers: [Service]
 })
-export class DayPieChartComponent implements OnInit, OnDestroy, AfterViewInit {
-
-  // @Input() options: any;
+export class DayPieChartComponent implements OnDestroy {
 
   decPipe: any = new DecimalPipe('he-IL');
   pctPipe: any = new PercentPipe('he-IL');
   currPipe: CurrencyPipe = new CurrencyPipe('he-IL');
-  // populationByRegions: PopulationByRegion[];
 
-  // dxChart = {
   dataSource = [];
   show = false;
-    // dataSource: undefined
-  // };
 
   pallete = ['rgb(101, 166, 211)', 'rgb(84, 153, 140)', 'rgb(196, 205, 214)', 'rgb(75, 118, 155)', 'rgb(147, 173, 168)'];
 
@@ -40,7 +34,6 @@ export class DayPieChartComponent implements OnInit, OnDestroy, AfterViewInit {
   private totalEl: Element;
 
   constructor(service: Service) {
-    // this.populationByRegions = service.getPopulationByRegions();
     this.customizeText = this.customizeText.bind(this);
   }
 
@@ -109,20 +102,9 @@ export class DayPieChartComponent implements OnInit, OnDestroy, AfterViewInit {
         valFormatted: valFormatted
       });
       i++;
-    });
-    // this.dataSource = dataSource;
-    // this.dxChart.dataSource = this.options.dataSource;
-    // this.dxChart.show = true;    
+    }); 
   }
 
-  ngAfterViewInit() {
-
-  }
-
-  ngOnInit() {
-    // debugger;
-    // this.render();
-  }
 
   ngOnDestroy() {
     try {

@@ -20,9 +20,7 @@ export class OwnersDashboardComponent {
     public router: Router
   ) {
   
-
     dataService.vat$.subscribe((vat:boolean)=>{
-      // debugger;
       this.vat = vat;
     });
 
@@ -51,11 +49,9 @@ export class OwnersDashboardComponent {
       .then(() => {
         this.router.navigate(['login']);
       }, () => {
-        debugger;
       });
   }
 
-  onDayRequest(date: string) {
-    debugger;
-  }
+  // onDayRequest(date: string) {
+  // }
 }
