@@ -13,6 +13,8 @@ export class DaySalesTypeTableComponent {
   // @Input() options: any;
   // decPipe: any = new DecimalPipe('en-US');
 
+  currencySymbol = '&#8362;';
+
   rows: any = {
     header: {},
     seated: {},
@@ -20,6 +22,7 @@ export class DaySalesTypeTableComponent {
     ta: {},
     delivery: {},
     other: {},
+    returns: {},
     summary: {}
   };
 
@@ -37,12 +40,13 @@ export class DaySalesTypeTableComponent {
       evening: shifts.evening.name
     };
 
-    const orderTypesMap = {
+    const orderTypesMap = {//TODO supply map to components from DS, and replace static tokens in htmls
       seated: 'בישיבה',
       counter: 'דלפק',
       ta: 'לקחת',
       delivery: 'משלוח',
-      other: 'סוג הזמנה לא מוגדר'
+      other: 'סוג הזמנה לא מוגדר',
+      returns: 'החזר'
     };
     
     const seatedMorning = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.seated && i.service === shiftsMap.morning);
@@ -65,6 +69,10 @@ export class DaySalesTypeTableComponent {
     const otherAfternoon = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.other && i.service === shiftsMap.afternoon);
     const otherEvening = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.other && i.service === shiftsMap.evening);    
 
+    const returnsMorning = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.returns && i.service === shiftsMap.morning);
+    const returnsAfternoon = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.returns && i.service === shiftsMap.afternoon);
+    const returnsEvening = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.returns && i.service === shiftsMap.evening);    
+
     this.rows.seated.morning = _.get(seatedMorning, 'sales', 0) * 1;
     this.rows.seated.afternoon = _.get(seatedAfternoon, 'sales', 0) * 1;
     this.rows.seated.evening = _.get(seatedEvening, 'sales', 0) * 1;
@@ -85,26 +93,33 @@ export class DaySalesTypeTableComponent {
     this.rows.other.afternoon = _.get(otherAfternoon, 'sales', 0) * 1;
     this.rows.other.evening = _.get(otherEvening, 'sales', 0) * 1;
 
+    this.rows.returns.morning = _.get(returnsMorning, 'sales', 0) * 1;
+    this.rows.returns.afternoon = _.get(returnsAfternoon, 'sales', 0) * 1;
+    this.rows.returns.evening = _.get(returnsEvening, 'sales', 0) * 1;    
+
     this.rows.summary.morning = 
       this.rows.seated.morning +
       this.rows.counter.morning +
       this.rows.ta.morning +
       this.rows.delivery.morning +
-      this.rows.other.morning;
+      this.rows.other.morning +
+      this.rows.returns.morning;      
 
     this.rows.summary.afternoon =
       this.rows.seated.afternoon +
       this.rows.counter.afternoon +
       this.rows.ta.afternoon +
       this.rows.delivery.afternoon +
-      this.rows.other.afternoon;
+      this.rows.other.afternoon +
+      this.rows.returns.afternoon;      
       
     this.rows.summary.evening =
       this.rows.seated.evening +
       this.rows.counter.evening +
       this.rows.ta.evening +
       this.rows.delivery.evening +
-      this.rows.other.evening;      
+      this.rows.other.evening + 
+      this.rows.returns.evening;      
   }
 
 }

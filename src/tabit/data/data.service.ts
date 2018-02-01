@@ -430,7 +430,8 @@ export class DataService {
                 counter: 'דלפק',
                 ta: 'לקחת',
                 delivery: 'משלוח',
-                other: 'סוג הזמנה לא מוגדר'
+                other: 'סוג הזמנה לא מוגדר',
+                returns: 'החזר'
             };
 
             const salesByOrderType = _.groupBy(daily_data_by_orderType_by_service, item => {
