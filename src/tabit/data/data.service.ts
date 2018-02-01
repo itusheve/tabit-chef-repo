@@ -14,6 +14,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/publishReplay';
+import 'rxjs/add/operator/share';
 
 @Injectable()
 export class DataService {
@@ -22,27 +23,24 @@ export class DataService {
     private organizations$: ReplaySubject<any>;
     
     private dashboardData$: Observable<any> = Observable.create(obs => {
-        // if (this.dashboardData) {
-        //     obs.next(this.dashboardData);
-        //     return;
-        // }
-
-        this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
-            .then((results: any) => moment(results.businessDate))
-            .then((bd: moment.Moment) => {
-                const payload = {
-                    params: {
-                        to: bd.format('YYYY-MM-D'),
-                        daysOfHistory: 2
-                    }
-                };
-                return this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', {});
-            })
+        const params = {
+            daysOfHistory: 1//0 returns everything...
+        };
+        this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', params)
             .then(data => {
-                // this.dashboardData = data;
                 obs.next(data);
             });
     }).publishReplay(1).refCount();
+
+    // private dashboardData$: Observable<any> = Observable.create(obs => {
+    //     const params = {
+    //         daysOfHistory: 1//0 returns everything... //TODO promote TAB-2269 for perf optimization
+    //     };
+    //     return this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', params)
+    //         .then(data => {
+    //             obs.next(data);
+    //         });
+    // }).share();
 
     public shifts$: Observable<any> = Observable.create(obs => {
         this.rosEp.get(this.ROS_base_url + '/configuration', {})

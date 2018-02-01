@@ -12,9 +12,11 @@ export class ROSEp {
 
     constructor(private httpClient: HttpClient, private authService: AuthService) {}
 
-    get(url, options): Promise<any> {
+    get(url, params): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.httpClient.get(url)
+            this.httpClient.get(url, {
+                params: params
+            })
                 .subscribe(
                     (results: any)=>{
                         resolve(results);
