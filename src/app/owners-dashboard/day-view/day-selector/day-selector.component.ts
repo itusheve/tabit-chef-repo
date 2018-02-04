@@ -15,7 +15,7 @@ export class DaySelectorComponent implements OnInit {
   @Output() onDateChanged = new EventEmitter();
 
   //currentValue: Date = new Date();
-  minDateValue: moment.Moment = moment('2017-01-01 00:00:00Z');
+  minDateValue: moment.Moment = moment().subtract(2, 'year').startOf('month');//TODO bring from config
   maxDateValue: moment.Moment = moment().subtract(1, 'days');
 
   ngOnInit() {

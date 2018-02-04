@@ -21,7 +21,21 @@ export class DataService {
     private ROS_base_url: String = 'https://ros-office-beta.herokuapp.com';//TODO get from config and consume in ROS ep
 
     private organizations$: ReplaySubject<any>;
-    
+
+    // private dashboardData$: Observable<any> = Observable.create(obs => {//Barry: do not auto-update this figure
+    //     const params = {
+    //         daysOfHistory: 2//0 returns everything...
+    //     };
+    //     setInterval(() => {
+    //         this.rosEp.getMocked(this.ROS_base_url + '/reports/owner-dashboard', params)
+    //             .then(data => {
+    //                 obs.next(data);
+    //             });
+    //     }, 5000);
+    // }).publishReplay(1).refCount();
+
+
+
     private dashboardData$: Observable<any> = Observable.create(obs => {
         const params = {
             daysOfHistory: 1//0 returns everything...
@@ -31,16 +45,6 @@ export class DataService {
                 obs.next(data);
             });
     }).publishReplay(1).refCount();
-
-    // private dashboardData$: Observable<any> = Observable.create(obs => {
-    //     const params = {
-    //         daysOfHistory: 1//0 returns everything... //TODO promote TAB-2269 for perf optimization
-    //     };
-    //     return this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', params)
-    //         .then(data => {
-    //             obs.next(data);
-    //         });
-    // }).share();
 
     public shifts$: Observable<any> = Observable.create(obs => {
         this.rosEp.get(this.ROS_base_url + '/configuration', {})
@@ -144,7 +148,17 @@ export class DataService {
     
     public dailyDataByShiftAndType$: Observable<any>;
 
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {}
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
+        // const sub1 = this.dashboardDataNg$.subscribe(data=>{
+        //     console.log('sub1: ' + data.today.totalSales);
+        // });
+        // const sub2 = this.dashboardDataNg$.subscribe(data => { 
+        //     console.log('sub2: ' + data.today.totalSales);
+        // });
+        // const sub3 = this.dashboardDataNg$.subscribe(data => { 
+        //     console.log('sub3: ' + data.today.totalSales);
+        // });
+    }
 
     get currentBd$(): Observable<moment.Moment> {
         return this.dashboardData$
@@ -289,32 +303,7 @@ export class DataService {
                     });
                 });
         });
-    }
-
-
-
-    // get dashboardData(): Observable<any> {
-    //     if (this.dashboardDataGal) return this.dashboardDataGal;
-                
-    //     let that = this;
-        
-    //     this.dashboardDataGal = Observable.create(obs=>{
-    //         this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
-    //             .then((results: any) => moment(results.businessDate))
-    //             .then((bd: moment.Moment) => {
-    //                 const payload = {
-    //                     params: {
-    //                         to: bd.format('YYYY-MM-D'),
-    //                         daysOfHistory: 2
-    //                     }
-    //                 };
-    //                 return this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', {});
-    //             })
-    //             .then(data => obs.next(data));
-    //     }).take(1);
-        
-    //     return this.dashboardDataGal;
-    // }        
+    }    
 
     get monthForecastData(): ReplaySubject<any> {
         if (this.monthForecastData$) return this.monthForecastData$;

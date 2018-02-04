@@ -52,6 +52,7 @@ export class TokenInterceptor implements HttpInterceptor {
                                 //TODO (general bad request the server couldnt understand)
                                 console.error(error);
                                 return Observable.throw(error);        
+                                // return this.handle400Error(request, next);
                             case 401:
                                 return this.handle401Error(request, next);
                         }
@@ -94,6 +95,39 @@ export class TokenInterceptor implements HttpInterceptor {
         }
     }
     
+    // handle400Error(req: HttpRequest<any>, next: HttpHandler) {
+    //     if (!this.isRefreshingToken) {
+    //         this.isRefreshingToken = true;
+
+    //         // Reset here so that the following requests wait until the token
+    //         // comes back from the refreshToken call.
+    //         this.tokenSubject.next(null);
+
+    //         return this.authService.refreshToken()
+    //             .then((newToken: string) => {
+    //                 if (newToken) {
+    //                     this.tokenSubject.next(newToken);
+    //                     return next.handle(this.addToken(req, newToken));
+    //                 }
+    //                 // If we don't get a new token, we are in trouble so logout.
+    //                 this.isRefreshingToken = false;
+    //                 return this.authService.logout();
+    //             })
+    //             .catch(error => {
+    //                 // If there is an exception calling 'refreshToken', bad news so logout.
+    //                 this.isRefreshingToken = false;
+    //                 return this.authService.logout();
+    //             });
+    //     } else {
+    //         return this.tokenSubject
+    //             .filter(token => token != null)
+    //             .take(1)
+    //             .switchMap(token => {
+    //                 return next.handle(this.addToken(req, token));
+    //             });
+    //     }
+    // }
+
 }
 
     // private authService: AuthService;//https://github.com/angular/angular/issues/18224

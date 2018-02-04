@@ -37,7 +37,7 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
   private render() {
     const data$ = combineLatest(
       this.dataService.shifts$.take(1), 
-      this.dataService.getDailyDataByShiftAndType(this.day).take(1), 
+      this.dataService.getDailyDataByShiftAndType(this.day), 
       (shifts: any, dailyData: any) => Object.assign({}, { shifts: shifts }, dailyData)
     );
 

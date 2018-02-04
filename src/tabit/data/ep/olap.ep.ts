@@ -213,13 +213,9 @@ export class OlapEp {
     get dailyData(): ReplaySubject<any> {                
         if (this.dailyData$) return this.dailyData$;
         this.dailyData$ = new ReplaySubject<any>();
-
-        // we buffer 10 week of data.
-        // const days = 70;
-        // const dateFrom: moment.Moment = moment().subtract(days - 1, 'days');
         
-        //we buffer data from 2017 start. OPTIMIZATION: if query takes too long take smaller chunks and cache.
-        const dateFrom: moment.Moment = moment().year(2017).startOf('year');
+        //we buffer X years of data. //TODO bring from config (3 places of DRY). TODO: OPTIMIZATION: if query takes too long take smaller chunks and cache.        
+        const dateFrom: moment.Moment = moment().subtract(2, 'year').startOf('month');
         const dateTo: moment.Moment = moment();
 
         // PPA per date range === ppa.sales / ppa.diners. 
