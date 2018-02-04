@@ -49,7 +49,8 @@ export class TokenInterceptor implements HttpInterceptor {
                     if (error instanceof HttpErrorResponse) {
                         switch ((<HttpErrorResponse>error).status) {
                             case 400:
-                                //TODO (general bad request the server couldnt understand)
+                                //TODO (general bad request the server couldnt understand)                                
+                                console.error('Token Interceptor 400', request);
                                 console.error(error);
                                 return Observable.throw(error);        
                                 // return this.handle400Error(request, next);

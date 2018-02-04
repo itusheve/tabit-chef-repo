@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import * as _ from 'lodash';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-day-diners-table',
@@ -9,7 +10,7 @@ import * as _ from 'lodash';
 })
 export class DayDinersTableComponent implements OnInit {
 
-  @Input() data: any;
+  @Input() data$: Observable<any>;
 
   decPipe: any = new DecimalPipe('en-US');//TODO use currency pipe instead
 
@@ -21,22 +22,24 @@ export class DayDinersTableComponent implements OnInit {
 
   constructor() {}
 
-  render(shifts, dinersAndPPAByShift) {
-    this.rows.header.morning = shifts.morning.name;
-    this.rows.header.afternoon = shifts.afternoon.name;
-    this.rows.header.evening = shifts.evening.name;
-
-    this.rows.diners.morning = _.get(dinersAndPPAByShift, 'morning.diners', 0) * 1;
-    this.rows.diners.afternoon = _.get(dinersAndPPAByShift, 'afternoon.diners', 0) * 1;
-    this.rows.diners.evening = _.get(dinersAndPPAByShift, 'evening.diners', 0) * 1;
-
-    this.rows.ppa.morning = _.get(dinersAndPPAByShift, 'morning.ppa', 0) * 1;
-    this.rows.ppa.afternoon = _.get(dinersAndPPAByShift, 'afternoon.ppa', 0) * 1;
-    this.rows.ppa.evening = _.get(dinersAndPPAByShift, 'evening.ppa', 0) * 1;
-  }
-
+  // render(shifts, dinersAndPPAByShift) {
+  // }
+  
   ngOnInit() {
-    this.render(this.data.shifts, this.data.dinersAndPPAByShift);
+    //this.render(this.data.shifts, this.data.dinersAndPPAByShift);
+    this.data$.subscribe(data=>{
+      this.rows.header.morning = data.shifts.morning.name;
+      this.rows.header.afternoon = data.shifts.afternoon.name;
+      this.rows.header.evening = data.shifts.evening.name;
+    
+      this.rows.diners.morning = _.get(data.dinersAndPPAByShift, 'morning.diners', 0) * 1;
+      this.rows.diners.afternoon = _.get(data.dinersAndPPAByShift, 'afternoon.diners', 0) * 1;
+      this.rows.diners.evening = _.get(data.dinersAndPPAByShift, 'evening.diners', 0) * 1;
+    
+      this.rows.ppa.morning = _.get(data.dinersAndPPAByShift, 'morning.ppa', 0) * 1;
+      this.rows.ppa.afternoon = _.get(data.dinersAndPPAByShift, 'afternoon.ppa', 0) * 1;
+      this.rows.ppa.evening = _.get(data.dinersAndPPAByShift, 'evening.ppa', 0) * 1;      
+    });
   }
 
 }

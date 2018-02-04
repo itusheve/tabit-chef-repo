@@ -5,8 +5,8 @@
     <app-day-sales-type-table class="widget" #daySalesTypeTable></app-day-sales-type-table>
     <app-day-diners-table 
       class="widget" 
-      [data]="dinersTable.data"
       *ngIf="dinersTable.show"
+      [data$]="dinersTableData$"
       ></app-day-diners-table>
     <app-day-shifts class="widget greyAccent" #dayShifts></app-day-shifts>      
   </div>

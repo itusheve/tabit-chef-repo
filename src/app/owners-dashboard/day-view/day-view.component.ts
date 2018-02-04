@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../../../tabit/data/data.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
@@ -9,24 +9,29 @@ import { Subscriber } from 'rxjs/Subscriber';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-day-view',
   templateUrl: './day-view.component.html',
   styleUrls: ['./day-view.component.css']
 })
-export class DayViewComponent implements OnInit, AfterViewInit  {
+export class DayViewComponent implements OnInit  {
   @ViewChild('dayPieChart') dayPieChart;
   @ViewChild('daySalesTypeTable') daySalesTypeTable;
   @ViewChild('dayShifts') dayShifts;  
-  
 
   day: moment.Moment;  
 
   dinersTable = {
-    data: undefined,
     show: false
   };
+  
+  public dinersTableData$: BehaviorSubject<any> = new BehaviorSubject<any>({
+    loading: true,
+    shifts: undefined,
+    dinersAndPPAByShift: undefined
+  });
 
   constructor(
     private dataService: DataService,
@@ -43,11 +48,14 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
 
     data$.subscribe(data=>{
       
-      this.dinersTable.data = {
+      const dinersTableData = {
         shifts: data.shifts,
         dinersAndPPAByShift: data.dinersAndPPAByShift
       };
-      if (this.dinersTable.data.dinersAndPPAByShift.morning.diners || this.dinersTable.data.dinersAndPPAByShift.afternoon.diners || this.dinersTable.data.dinersAndPPAByShift.evening.diners) {
+
+      this.dinersTableData$.next(dinersTableData);
+
+      if (dinersTableData.dinersAndPPAByShift.morning.diners || dinersTableData.dinersAndPPAByShift.afternoon.diners || dinersTableData.dinersAndPPAByShift.evening.diners) {
         this.dinersTable.show = true;
       }
 
@@ -70,9 +78,6 @@ export class DayViewComponent implements OnInit, AfterViewInit  {
         }
         this.render();
       });
-  }
-
-  ngAfterViewInit() {
   }
 
   onDateChanged(dateM: moment.Moment) {
