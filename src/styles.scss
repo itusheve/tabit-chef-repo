@@ -89,6 +89,31 @@ html, body {
     }
 
     .body {
+        
+        table {
+            color: $greyText;
+
+            &.fixedWidth {
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            tr {
+                border-top: 1px solid #eaeff0;
+                &:first-child {
+                    border-top: none;
+                }                
+                
+                &.tblTotalRow {
+                    font-weight: bold;
+                }
+
+                td {
+                    padding: 8px 0px;                    
+                }
+            }
+        }
+
         .table {
             color: $greyText;
             .tblRow {
@@ -143,19 +168,20 @@ $navigatorBtnWidth: 50px;
     .dx-row {
         border-top: none!important;
         border-bottom: none!important;
-        &.dx-header-row > td {
-            padding: 8px 15px;
-            line-height: 40px;
-            font-weight: normal;
-            color: #aaa;
+        &.dx-header-row > td, &.dx-data-row > td {
+            padding: 8px 5px;
             font-size: 16px;
+            font-weight: normal;
+
+        }
+        &.dx-header-row > td {
+            line-height: 40px;
+            color: #aaa;
             border-bottom: 1px solid #aaa;
         }
         &.dx-data-row > td {
-            padding: 8px 15px;
             line-height: 30px;
             color: #6E7482;
-            font-size: 18px;
             border-top: 1px solid #eaeff0;
         }
         &:first-child {

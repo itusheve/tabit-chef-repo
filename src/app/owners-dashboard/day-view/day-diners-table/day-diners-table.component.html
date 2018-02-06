@@ -1,34 +1,33 @@
 <div class="">
     <div class="title">סועדים</div>
     <div class="flex f-rtl d-col body">
-        <div class="table">
+        <!-- <div class="table">
             <div class="flex d-row tblRow">
                 <div class="flex" style="width:25%"></div>
-                <div class="flex d-col" style="width:25%">
-                    <i class="mb5 icon-daily-morning"></i>
-                    {{rows.header.morning}}
-                </div>
-                <div class="flex d-col" style="width:25%">
-                    <i class="mb5 icon-daily-afternoon"></i>
-                    {{rows.header.afternoon}}
-                </div>
-                <div class="flex d-col" style="width:25%">
-                    <i class="mb5 icon-daily-evening"></i>
-                    {{rows.header.evening}}
-                </div>
+                <div class="g-1 flex" *ngFor="let shift of dataByShifts">{{shift.name}}</div>
             </div>
             <div class="flex d-row tblRow">
                 <div class="flex" style="width:25%">סועדים</div>
-                <div class="flex" style="width:25%">{{rows.diners.morning | number : '1.0-0'}}</div>
-                <div class="flex" style="width:25%">{{rows.diners.afternoon | number : '1.0-0'}}</div>
-                <div class="flex" style="width:25%">{{rows.diners.evening | number : '1.0-0'}}</div>
+                <div class="g-1 flex" *ngFor="let shift of dataByShifts">{{shift.diners | number : '1.0-0'}}</div>
             </div>
             <div class="flex d-row tblRow">
                 <div class="flex" style="width:25%">PPA</div>
-                <div class="flex" style="width:25%">{{rows.ppa.morning | currency:'ILS':'symbol':'1.2-2'}}</div>
-                <div class="flex" style="width:25%">{{rows.ppa.afternoon | currency:'ILS':'symbol':'1.2-2'}}</div>
-                <div class="flex" style="width:25%">{{rows.ppa.evening | currency:'ILS':'symbol':'1.2-2'}}</div>
+                <div class="g-1 flex" *ngFor="let shift of dataByShifts">{{shift.ppa | currency:'ILS':'symbol':'1.2-2'}}</div>
             </div>
-        </div>
+        </div> -->
+        <table class="fixedWidth">
+            <tr>
+                <td></td>
+                <td *ngFor="let shift of dataByShifts">{{shift.name}}</td>
+            </tr>
+            <tr>
+                <td>סועדים</td>
+                <td *ngFor="let shift of dataByShifts">{{shift.diners | number : '1.0-0'}}</td>
+            </tr>
+            <tr>
+                <td>PPA</td>
+                <td *ngFor="let shift of dataByShifts">{{shift.ppa | currency:'ILS':'symbol':'1.2-2'}}</td>
+            </tr>
+        </table>
     </div>
 </div>

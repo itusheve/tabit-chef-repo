@@ -47,15 +47,11 @@ export class DayViewComponent implements OnInit  {
     );
 
     data$.subscribe(data=>{
-      
-      const dinersTableData = {
-        shifts: data.shifts,
-        dinersAndPPAByShift: data.dinersAndPPAByShift
-      };
 
-      this.dinersTableData$.next(dinersTableData);
+      this.dinersTableData$.next(data.dinersAndPPAByShift);
 
-      if (dinersTableData.dinersAndPPAByShift.morning.diners || dinersTableData.dinersAndPPAByShift.afternoon.diners || dinersTableData.dinersAndPPAByShift.evening.diners) {
+      const shiftWithDiners = data.dinersAndPPAByShift.find(i=>i.diners>0);
+      if (shiftWithDiners) {
         this.dinersTable.show = true;
       }
 

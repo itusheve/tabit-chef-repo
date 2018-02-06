@@ -10,116 +10,83 @@ import * as _ from 'lodash';
 })
 export class DaySalesTypeTableComponent {
 
-  // @Input() options: any;
-  // decPipe: any = new DecimalPipe('en-US');
-
   currencySymbol = '&#8362;';
 
-  rows: any = {
-    header: {},
-    seated: {},
-    counter: {},
-    ta: {},
-    delivery: {},
-    other: {},
-    returns: {},
-    summary: {}
-  };
+  public show = false;
+
+  //TODO supply map to components from DS, and replace static tokens in htmls
+  private orderTypes = [
+    'בישיבה',
+    'דלפק',
+    'לקחת',
+    'משלוח',
+    'סוג הזמנה לא מוגדר',
+    'החזר'
+  ];
+
+  public byTypeByShiftArr = [];
+  public summary = [];
+  // public shifts;
 
   constructor() {}
 
   render(shifts, salesByOrderTypeAndService) {
-    
-    this.rows.header.morning = shifts.morning.name;
-    this.rows.header.afternoon = shifts.afternoon.name;
-    this.rows.header.evening = shifts.evening.name;
+    const byTypeByShiftArr_preFiltering = [];
 
-    const shiftsMap = {
-      morning: shifts.morning.name,
-      afternoon: shifts.afternoon.name,
-      evening: shifts.evening.name
-    };
+    for (let j = 0; j < this.orderTypes.length; j++) {    
+        const orderType = this.orderTypes[j];
+        const byType = {
+          orderType: orderType,
+          byShift: []
+        };
+        for (let i = 0; i < shifts.length; i++) {
+          const shiftName = shifts[i].name;
+          const tuple = salesByOrderTypeAndService.find(t => t.orderType === orderType && t.service === shiftName);
+          const byShift = {
+            shiftName: shiftName,
+            sales: _.get(tuple, 'sales', 0)
+          };
+          byType.byShift.push(byShift);
+        }
+        byTypeByShiftArr_preFiltering.push(byType);
+    }
 
-    const orderTypesMap = {//TODO supply map to components from DS, and replace static tokens in htmls
-      seated: 'בישיבה',
-      counter: 'דלפק',
-      ta: 'לקחת',
-      delivery: 'משלוח',
-      other: 'סוג הזמנה לא מוגדר',
-      returns: 'החזר'
-    };
-    
-    const seatedMorning = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.seated && i.service === shiftsMap.morning);
-    const seatedAfternoon = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.seated && i.service === shiftsMap.afternoon);
-    const seatedEvening = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.seated && i.service === shiftsMap.evening);
-    
-    const counterMorning = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.counter && i.service === shiftsMap.morning);
-    const counterAfternoon = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.counter && i.service === shiftsMap.afternoon);
-    const counterEvening = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.counter && i.service === shiftsMap.evening);
+    //remove empty rows:
+    byTypeByShiftArr_preFiltering.forEach(byType=>{
+      const columnWithSales = byType.byShift.find(i=>i.sales>0);
+      if (columnWithSales) this.byTypeByShiftArr.push(byType);
+    });
 
-    const taMorning = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.ta && i.service === shiftsMap.morning);
-    const taAfternoon = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.ta && i.service === shiftsMap.afternoon);
-    const taEvening = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.ta && i.service === shiftsMap.evening);
+    //remove empty columns:
+    const columnsToRemove = [];
+    for (let column = 0; column < this.byTypeByShiftArr[0].byShift.length; column++) {
+      let colAccSales = 0;
+      this.byTypeByShiftArr.forEach(row=>{
+        colAccSales += row.byShift[column].sales;
+      });
+      if (colAccSales===0) {
+        columnsToRemove.push(column);
+      }
+    }    
 
-    const deliveryMorning = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.delivery && i.service === shiftsMap.morning);
-    const deliveryAfternoon = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.delivery && i.service === shiftsMap.afternoon);
-    const deliveryEvening = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.delivery && i.service === shiftsMap.evening);
+    if (columnsToRemove.length) {
+      for (let c=columnsToRemove.length-1;c>=0;c--) {
+        this.byTypeByShiftArr.forEach(row => {
+          row.byShift.splice(c, 1);
+        });
+      }
+    }
 
-    const otherMorning = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.other && i.service === shiftsMap.morning);
-    const otherAfternoon = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.other && i.service === shiftsMap.afternoon);
-    const otherEvening = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.other && i.service === shiftsMap.evening);    
+    // summary computation:
+    for (let i = 0; i < this.byTypeByShiftArr[0].byShift.length;i++) {
+      const shiftName = this.byTypeByShiftArr[0].byShift[i].shiftName;
+      const tuples = salesByOrderTypeAndService.filter(t => t.service === shiftName);
+      const sum = tuples.reduce((acc, tuple)=>acc+tuple.sales, 0);
+      this.summary.push(sum);
+    }
 
-    const returnsMorning = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.returns && i.service === shiftsMap.morning);
-    const returnsAfternoon = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.returns && i.service === shiftsMap.afternoon);
-    const returnsEvening = salesByOrderTypeAndService.find(i => i.orderType === orderTypesMap.returns && i.service === shiftsMap.evening);    
+    this.show = true;
 
-    this.rows.seated.morning = _.get(seatedMorning, 'sales', 0) * 1;
-    this.rows.seated.afternoon = _.get(seatedAfternoon, 'sales', 0) * 1;
-    this.rows.seated.evening = _.get(seatedEvening, 'sales', 0) * 1;
-
-    this.rows.counter.morning = _.get(counterMorning, 'sales', 0) * 1;
-    this.rows.counter.afternoon = _.get(counterAfternoon, 'sales', 0) * 1;
-    this.rows.counter.evening = _.get(counterEvening, 'sales', 0) * 1;
-
-    this.rows.ta.morning = _.get(taMorning, 'sales', 0) * 1;
-    this.rows.ta.afternoon = _.get(taAfternoon, 'sales', 0) * 1;
-    this.rows.ta.evening =_.get( taEvening, 'sales', 0) * 1;
-
-    this.rows.delivery.morning = _.get(deliveryMorning, 'sales', 0) * 1;
-    this.rows.delivery.afternoon = _.get(deliveryAfternoon, 'sales', 0) * 1;
-    this.rows.delivery.evening = _.get(deliveryEvening, 'sales', 0) * 1;
-
-    this.rows.other.morning = _.get(otherMorning, 'sales', 0) * 1;
-    this.rows.other.afternoon = _.get(otherAfternoon, 'sales', 0) * 1;
-    this.rows.other.evening = _.get(otherEvening, 'sales', 0) * 1;
-
-    this.rows.returns.morning = _.get(returnsMorning, 'sales', 0) * 1;
-    this.rows.returns.afternoon = _.get(returnsAfternoon, 'sales', 0) * 1;
-    this.rows.returns.evening = _.get(returnsEvening, 'sales', 0) * 1;    
-
-    this.rows.summary.morning = 
-      this.rows.seated.morning +
-      this.rows.counter.morning +
-      this.rows.ta.morning +
-      this.rows.delivery.morning +
-      this.rows.other.morning +
-      this.rows.returns.morning;      
-
-    this.rows.summary.afternoon =
-      this.rows.seated.afternoon +
-      this.rows.counter.afternoon +
-      this.rows.ta.afternoon +
-      this.rows.delivery.afternoon +
-      this.rows.other.afternoon +
-      this.rows.returns.afternoon;      
-      
-    this.rows.summary.evening =
-      this.rows.seated.evening +
-      this.rows.counter.evening +
-      this.rows.ta.evening +
-      this.rows.delivery.evening +
-      this.rows.other.evening + 
-      this.rows.returns.evening;      
   }
 
 }

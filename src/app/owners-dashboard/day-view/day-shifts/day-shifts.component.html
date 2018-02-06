@@ -1,14 +1,6 @@
-<div class="flex f-ltr" *ngIf="show">
-    <div class="flex d-col aj-center" style="width:33%">
-        <i class="mb5 icon-daily-evening"></i>
-        {{shifts.evening.startTime}}-{{shifts.evening.endTime}}
-    </div>
-    <div class="flex d-col aj-center" style="width:33%">
-        <i class="mb5 icon-daily-afternoon"></i>
-        {{shifts.afternoon.startTime}}-{{shifts.afternoon.endTime}}
-    </div>
-    <div class="flex d-col aj-center" style="width:33%">
-        <i class="mb5 icon-daily-morning"></i>
-        {{shifts.morning.startTime}}-{{shifts.morning.endTime}}
+<div class="flex" *ngIf="show">
+    <div class="g-1 flex d-col aj-center" *ngFor="let shift of shifts">
+        <div>{{shift.name}}</div>
+        <div>{{shift.startTime}}-{{shift.endTime}}</div>
     </div>
 </div>
