@@ -8,10 +8,11 @@
   <div *ngIf="cardData && !cardData.loading" class="g-1 flex d-col cbody">
     <div class="g-1 flex a-center j-sb cmain">
       <div style="width:25%" class="s-0 flex j-end a-center">          
-        <!-- <div class="flex d-col a-center trend up">
+        <div *ngIf="cardData.trends && cardData.trends.right && cardData.trends.right.status==='ready'" class="flex d-col a-center trend"
+          [ngClass]="cardData.trends.right.val > 0 ? 'up' : 'down'">
           <mat-icon>play_arrow</mat-icon>
-          <div class="figure">{{0.074 | percent:'1.1-1'}}</div>
-        </div> -->
+          <div class="figure">{{cardData.trends.right.val | percent:'1.1-1'}}</div>
+        </div>
       </div>
       <div style="width:45%" class="flex aj-center csales">{{cardData.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
       <div style="width:25%" class="s-0 flex a-center">

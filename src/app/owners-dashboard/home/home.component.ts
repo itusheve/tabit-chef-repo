@@ -73,7 +73,8 @@ export class HomeComponent implements OnInit {
         this.currentBdCardData.title = title;
         
         this.currentBdCardData.trends = {
-          left: trends.currentBd.last4
+          left: trends.currentBd.last4,
+          right: trends.currentBd.lastYear
         };
 
         this.currentBdCardData.loading = false;
@@ -90,7 +91,8 @@ export class HomeComponent implements OnInit {
         this.previousBdCardData.title = title;
 
         this.previousBdCardData.trends = {
-          left: trends.previousBd.last4
+          left: trends.previousBd.last4,
+          right: trends.previousBd.lastYear
         };
 
         this.previousBdCardData.loading = false;

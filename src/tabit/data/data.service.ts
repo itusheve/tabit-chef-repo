@@ -36,6 +36,12 @@ export class DataService {
     // }).publishReplay(1).refCount();
 
 
+    public businessDay$: Observable<any> = Observable.create(obs=>{
+        this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
+            .then(data => {
+                obs.next(data);
+            });        
+    }).publishReplay(1).refCount();
 
     public dashboardData$: Observable<any> = Observable.create(obs => {
         const params = {
@@ -106,11 +112,11 @@ export class DataService {
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
     /* 
-    replaces the depracated getDailyData which relies wrongly on the olapEp deprectaed statefull getDailyData
+    replaces the depracated getDailyData which relies wrongly on the olapEp deprectaed stthe depracated getDailyData which relies wrongly on the olapEp deprectaed statefull getDailyData
     emits vat inclusive data of closed orders (from the Cube), up to two years ago
     */    
     public dailyData$: Observable<any> = new Observable(obs=>{
-        this.olapEp.getDailyDataNew()
+        this.olapEp.getDailyDataNew({})
             .then(dailyData=>{
                 obs.next(dailyData);
             });

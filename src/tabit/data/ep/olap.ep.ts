@@ -298,11 +298,14 @@ export class OlapEp {
 
     // replaces the statefull dailyData getter
     /* if timeTo is supplied, then only orders that were closed up to timeTo will be be retreived, e.g. if timeTo is 1745 than only orders that were clsed untill 17:45 will be retreived  */
-    public getDailyDataNew(timeTo?:string): Promise<any> {
+    public getDailyDataNew(o: {dateFrom?:moment.Moment, dateTo?:moment.Moment, timeFrom?:string, timeTo?:string}): Promise<any> {
         return new Promise<any>((res, rej)=>{
             //we buffer X years of data. //TODO bring from config (3 places of DRY). TODO: OPTIMIZATION: if query takes too long take smaller chunks and cache.        
-            const dateFrom: moment.Moment = moment().subtract(2, 'year').startOf('month');
-            const dateTo: moment.Moment = moment();
+            const dateFrom: moment.Moment = o.dateFrom || moment().subtract(2, 'year').startOf('month');
+            const dateTo: moment.Moment = o.dateTo || moment();
+
+            const timeFrom = o.timeFrom || '0000';
+            const timeTo = o.timeTo || '2359';
 
             // PPA per date range === ppa.sales / ppa.diners. 
             // we calc the PPA ourselve (not using the calc' PPA measure) 
@@ -310,10 +313,10 @@ export class OlapEp {
             let whereClause = `
                 ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateFrom.format('YYYYMMDD')}]:${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateTo.format('YYYYMMDD')}]
             `;
-            if (timeTo) {
+            if (o.timeFrom || o.timeTo) {
                 whereClause = `
                     ${whereClause}, 
-                    ${this.dims.orderClosingTime.hierarchy}.${this.dims.orderClosingTime.dims.time}.&[0000]:${this.dims.orderClosingTime.hierarchy}.${this.dims.orderClosingTime.dims.time}.&[${timeTo}]
+                    ${this.dims.orderClosingTime.hierarchy}.${this.dims.orderClosingTime.dims.time}.&[${timeFrom}]:${this.dims.orderClosingTime.hierarchy}.${this.dims.orderClosingTime.dims.time}.&[${timeTo}]
                 `;   
             }
             whereClause = `

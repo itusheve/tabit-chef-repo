@@ -18,9 +18,8 @@ export class TrendsDataService {
 
         obs.next(trend);
 
-        zip(this.dataService.currentBd$.take(1), this.closedOrdersDataService.lastClosedOrderTime$.take(1))
+        zip(this.dataService.currentBd$.take(1), this.closedOrdersDataService.lastClosedOrderTime$.take(1), this.dataService.businessDay$)
             .subscribe(data => {
-
                 const currentBd: moment.Moment = data[0];
                 const lastClosedOrderTime: string = data[1];
                 
@@ -29,8 +28,20 @@ export class TrendsDataService {
                     obs.next(trend);
                     return;
                 }
+                
+                let timeTo = lastClosedOrderTime;
+                let timeFrom;
+                const bdOpeningTime = moment(data[2].openedOn);
+                if (bdOpeningTime.isBefore(currentBd, 'day')) {
+                    timeFrom = '0000';
+                } else {
+                    timeFrom = bdOpeningTime.format('hhmm');
+                }
+                
 
-                this.olapEp.getDailyDataNew(lastClosedOrderTime)//TODO no reason to query for two years in this case. enable passing a dateFrom/To argument to getDailyDataNew
+                const dateFrom: moment.Moment = moment(currentBd).subtract(6, 'weeks');
+                const dateTo: moment.Moment = moment(currentBd);
+                this.olapEp.getDailyDataNew({ timeFrom: timeFrom, timeTo: timeTo, dateFrom: dateFrom, dateTo: dateTo})//TODO no reason to query for two years in this case. enable passing a dateFrom/To argument to getDailyDataNew
                     .then(dailyData=>{
                         
                         const currentBdData = dailyData.find(dayData => dayData.date.isSame(currentBd, 'day'));
@@ -141,32 +152,180 @@ export class TrendsDataService {
             });
     });
 
+    private currentBd_lastYear_trend$: Observable<TrendModel> = new Observable(obs => {
+        const trend = new TrendModel();
+        trend.name = 'currentBdLastYear';
+        trend.description = 'currentBdLastYear description';
+
+        obs.next(trend);
+
+        zip(this.dataService.currentBd$.take(1), this.closedOrdersDataService.lastClosedOrderTime$.take(1), this.dataService.businessDay$)
+            .subscribe(data => {
+                const currentBd: moment.Moment = data[0];
+                const lastClosedOrderTime: string = data[1];
+
+                if (!lastClosedOrderTime) {
+                    trend.status = 'nodata';//TODO make status to be ENUMS..
+                    obs.next(trend);
+                    return;
+                }
+
+                let timeTo = lastClosedOrderTime;
+                let timeFrom;
+                const bdOpeningTime = moment(data[2].openedOn);
+                if (bdOpeningTime.isBefore(currentBd, 'day')) {
+                    timeFrom = '0000';
+                } else {
+                    timeFrom = bdOpeningTime.format('hhmm');
+                }                
+
+                const dateFrom: moment.Moment = moment(currentBd).subtract(1, 'year').subtract(1, 'month');
+                const dateTo: moment.Moment = moment(currentBd).subtract(1, 'year').add(1, 'month');
+                
+                const pCurrentBd = this.olapEp.getDailyDataNew({ timeFrom: timeFrom, timeTo: timeTo, dateFrom: moment(currentBd), dateTo: moment(currentBd) });
+                const pYearAgo = this.olapEp.getDailyDataNew({ timeFrom: timeFrom, timeTo: timeTo, dateFrom: dateFrom, dateTo: dateTo });
+
+                Promise.all([pCurrentBd, pYearAgo])                
+                    .then(pdata => {
+                        let currentBdData = pdata[0];
+                        let lastYearData = pdata[1];
+                        
+                        if (!currentBdData || !currentBdData.length) {
+                            trend.status = 'error';
+                            obs.next(trend);
+                            return;
+                        }
+
+                        currentBdData = currentBdData[0];
+                        const currentBdSales = currentBdData.sales;
+                        
+                        // const dailyData = data[1];
+                        
+
+                        const currentBdWeekDay = currentBd.day();
+                        const currentBdWeekOfYear = currentBd.week();
+
+                        let found = false;
+                        let lastYearSales;
+                        for (let i = 0; i < lastYearData.length; i++) {
+                            const dayData = lastYearData[i];
+                            if (dayData.date.week() === currentBdWeekOfYear && dayData.date.day() === currentBdWeekDay) {
+                                lastYearSales = dayData.sales;
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            if (lastYearSales === 0) {
+                                trend.status = 'nodata';
+                                obs.next(trend);
+                                return;
+                            }
+                            const changePct = (currentBdSales / lastYearSales) - 1;
+
+                            trend.val = changePct;
+                            trend.status = 'ready';
+                            obs.next(trend);
+                            return;
+                        } else {
+                            trend.status = 'nodata';
+                            obs.next(trend);
+                            return;
+                        }
+                    });
+
+            });
+    });
+
+    private previousBd_lastYear_trend$: Observable<TrendModel> = new Observable(obs => {
+        const trend = new TrendModel();
+        trend.name = 'previousBdLastYear';
+        trend.description = 'previousBdLastYear description';
+
+        obs.next(trend);
+        
+        zip(this.dataService.dailyData$.take(1), this.dataService.previousBd$.take(1))
+            .subscribe(data => {
+                const dailyData = data[0];
+                const previousBd: moment.Moment = data[1];
+
+                const previousBdData = dailyData.find(dayData => dayData.date.isSame(previousBd, 'day'));
+                if (!previousBdData) {
+                    trend.status = 'error';
+                    obs.next(trend);
+                    return;
+                }
+
+                const previousBdSales = previousBdData.sales;
+
+                const previousBdWeekDay = previousBd.day();
+                const previousBdWeekOfYear = previousBd.week();
+
+                let found = false;
+                let lastYearSales = 0;
+                for (let i = 0; i < dailyData.length; i++) {
+                    const dayData = dailyData[i];
+                    if (dayData.date.week() === previousBdWeekOfYear &&  dayData.date.day() === previousBdWeekDay) {
+                        if (dayData.date.isBefore(previousBd, 'day')) {
+                            lastYearSales = dayData.sales;
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (found) {
+                    if (lastYearSales === 0) {
+                        trend.status = 'nodata';
+                        obs.next(trend);
+                        return;
+                    }
+                    const changePct = (previousBdSales / lastYearSales) - 1;
+
+                    trend.val = changePct;
+                    trend.status = 'ready';
+                    obs.next(trend);
+                    return;
+                } else {
+                    trend.status = 'nodata';
+                    obs.next(trend);
+                    return;
+                }
+            });
+
+
+   });
 
     /* stream of all the trends */
     public trends$: Observable<{
         currentBd: {
-            last4: TrendModel
-        //     //lastYear: TrendModel
+            last4: TrendModel,
+            lastYear: TrendModel
         },
         previousBd: {
             last4: TrendModel,
-            // lastYear: TrendModel
+            lastYear: TrendModel
         }
     }> = new Observable(obs=>{
 
         let trends = {
             currentBd: {
-                last4: undefined
+                last4: undefined,
+                lastYear: undefined
             },
             previousBd: {
-                last4: undefined
+                last4: undefined,
+                lastYear: undefined
             }    
         };
 
-            zip(this.currentBd_last4_trend$, this.previousBd_last4_trend$)
+            zip(this.currentBd_last4_trend$, this.previousBd_last4_trend$, this.currentBd_lastYear_trend$, this.previousBd_lastYear_trend$)
             .subscribe(trendsArr=>{
                 trends.currentBd.last4 = trendsArr[0];
                 trends.previousBd.last4 = trendsArr[1];
+                trends.currentBd.lastYear = trendsArr[2];
+                trends.previousBd.lastYear = trendsArr[3];
 
                 obs.next(trends);
             });
