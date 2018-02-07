@@ -1,8 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "fonts";
-
-
+    
 
 // @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 // @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
@@ -109,7 +108,11 @@ html, body {
                 }
 
                 td {
-                    padding: 8px 0px;                    
+                    padding: 8px 0px;
+                    &:first-child {
+                        background: linear-gradient(90deg, white,white 20%, rgba(143, 193, 220, 0.25) 20%,rgba(143, 193, 220, 0.25) 20%);
+                        padding: 8px 5px!important;
+                    }
                 }
             }
         }
