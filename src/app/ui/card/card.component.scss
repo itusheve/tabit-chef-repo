@@ -13,6 +13,26 @@
             .csales {
                 font-size: 36px;
             }
+            .trend {
+                // width: 45px;
+                color: transparent;
+                .figure {
+                    font-size: 16px;
+                }
+                &.up {
+                    color: green;
+                    mat-icon {
+                        transform: rotateZ(-90deg) scale(1.3);
+                    }
+                }
+                &.down {
+                    color: red;
+                    mat-icon {
+                        transform: rotateZ(90deg) scale(1.3);
+                        order: 2;
+                    }
+                }
+            }
         }
         .cfooter {
             font-size: 16px;

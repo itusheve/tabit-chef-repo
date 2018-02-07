@@ -6,10 +6,19 @@
   </div>
   <dx-load-indicator [(visible)]="!cardData || cardData.loading" rtlEnabled="true"></dx-load-indicator>
   <div *ngIf="cardData && !cardData.loading" class="g-1 flex d-col cbody">
-    <div class="g-1 flex j-sb cmain">
-      <div class="flex"></div>
-      <div class="flex aj-center csales">{{cardData?.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
-      <div class="flex"></div>
+    <div class="g-1 flex a-center cmain">
+      <div style="width:30%" class="flex s-0 a-center">          
+      </div>
+      <div style="width:40%" class="flex aj-center csales">{{cardData.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
+      <div style="width:30%" class="flex s-0 a-center">
+        <div           
+          *ngIf="cardData.trends && cardData.trends.left && cardData.trends.left.status==='ready'"
+          class="flex d-col a-center trend" 
+          [ngClass]="cardData.trends.left.val > 0 ? 'up' : 'down'">
+          <mat-icon>forward</mat-icon>
+          <div class="figure">{{cardData.trends.left.val | percent:'1.1-1'}}</div>
+        </div>
+      </div>
     </div>
     <div class="flex j-sb cfooter">
       <div class="flex a-baseline cperson"><div class="flex a-baseline" *ngIf="cardData && cardData.diners > 0"><i class="icomoon-man"></i>&nbsp;{{cardData?.diners | number:'1.0-0'}}</div></div>

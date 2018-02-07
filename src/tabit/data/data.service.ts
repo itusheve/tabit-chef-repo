@@ -15,6 +15,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/share';
+// import { TrendModel } from '../model/Trend.model';
 
 @Injectable()
 export class DataService {
@@ -36,7 +37,7 @@ export class DataService {
 
 
 
-    private dashboardData$: Observable<any> = Observable.create(obs => {
+    public dashboardData$: Observable<any> = Observable.create(obs => {
         const params = {
             daysOfHistory: 1//0 returns everything...
         };
@@ -90,6 +91,17 @@ export class DataService {
 
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
+    /* 
+    replaces the depracated getDailyData which relies wrongly on the olapEp deprectaed statefull getDailyData
+    emits vat inclusive data of closed orders (from the Cube), up to two years ago
+    */    
+    public dailyData$: Observable<any> = new Observable(obs=>{
+        this.olapEp.getDailyDataNew()
+            .then(dailyData=>{
+                obs.next(dailyData);
+            });
+    }).publishReplay(1).refCount();
+
     //TODO today data comes with data without tax. use it instead of dividing by 1.17 (which is incorrect).
     //TODO take cube "sales data excl. tax" instead of dividing by 1.17. 
     //TODO take cube "salesPPA excl. tax" (not implemented yet, talk with Ofer) instead of dividing by 1.17.
@@ -97,6 +109,8 @@ export class DataService {
     private todayDataVatInclusive$: Observable<{ sales: number, diners: number, ppa: number }> = Observable.create(obs=>{
         /* we get the diners and ppa measures from olap and the sales from ros */
         const that = this;
+
+        //function getTrend(): Observable<Trend
 
         function getDinersAndPPA(): Observable<any> {
             return Observable.create(sub => {
@@ -282,6 +296,7 @@ export class DataService {
         return this.localStorage.getItem<any>('org');
     }
 
+    /* DEPRECATED USE dailyData$ instead! */
     getDailyData(fromDate: moment.Moment, toDate?: moment.Moment):Promise<any> {
         return this.olapEp.getDailyData(fromDate, toDate);
     }

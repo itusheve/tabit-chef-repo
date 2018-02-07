@@ -32,6 +32,8 @@ import { MomentModule } from 'angular2-moment';
 
 import { ROSEp } from '../tabit/data/ep/ros.ep';
 import { OlapEp } from '../tabit/data/ep/olap.ep';
+import { ClosedOrdersDataService } from '../tabit/data/dc/closedOrders.data.service';
+import { TrendsDataService } from '../tabit/data/dc/trends.data.service';
 import { DataService } from '../tabit/data/data.service';
 
 import { AppComponent } from './app.component';
@@ -97,6 +99,8 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
     UserGuard,
     OrgGuard,
     DataService, 
+    ClosedOrdersDataService,
+    TrendsDataService,
     ROSEp, 
     OlapEp
   ],

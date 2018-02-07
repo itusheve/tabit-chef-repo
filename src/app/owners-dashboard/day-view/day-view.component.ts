@@ -80,8 +80,7 @@ export class DayViewComponent implements OnInit  {
       });
   }
 
-  onDateChanged(dateM: moment.Moment) {
-    
+  onDateChanged(dateM: moment.Moment) {    
     const date = dateM.format('YYYY-MM-DD');
     this.router.navigate(['/owners-dashboard/day', date]);
   }

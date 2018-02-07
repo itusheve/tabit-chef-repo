@@ -2,6 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { DecimalPipe, PercentPipe, DatePipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+// export interface Trend {
+//   show: boolean;
+//   val: number;
+// }
+
 export interface CardData {
   loading: boolean;
   title: string;
@@ -9,6 +14,7 @@ export interface CardData {
   sales: number;
   diners: number;
   ppa: number;
+  trends?: any;
 }
 
 @Component({

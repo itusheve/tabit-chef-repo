@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DecimalPipe, PercentPipe, DatePipe } from '@angular/common';
 
-import { DataService } from '../../..//tabit/data/data.service';
+import { TrendsDataService } from '../../../tabit/data/dc/trends.data.service';
+import { DataService } from '../../../tabit/data/data.service';
 
 import * as moment from 'moment';
 import { zip } from 'rxjs/observable/zip';
@@ -49,25 +50,49 @@ export class HomeComponent implements OnInit {
     ppa: 0
   };
   
-  constructor(private dataService: DataService, private router: Router, private datePipe: DatePipe) { 
+  constructor(
+    private dataService: DataService, 
+    private trendsDataService: TrendsDataService, 
+    private router: Router, 
+    private datePipe: DatePipe
+  ) { 
 
-    combineLatest(this.dataService.currentBdData$, this.dataService.currentBd$)
+    // this.trendsDataService.trends$
+    //   .subscribe(trends=>{
+    //     debugger;
+    //   });
+
+    combineLatest(this.dataService.currentBdData$, this.dataService.currentBd$, this.trendsDataService.trends$)
       .subscribe(data=>{
+        const trends = data[2];
+
         const title = this.datePipe.transform(data[1].valueOf(), 'fullDate');
         this.currentBdCardData.diners = data[0].diners;
         this.currentBdCardData.ppa = data[0].ppa;
         this.currentBdCardData.sales = data[0].sales;
         this.currentBdCardData.title = title;
+        
+        this.currentBdCardData.trends = {
+          left: trends.currentBd.last4
+        };
+
         this.currentBdCardData.loading = false;
       });
 
-    combineLatest(this.dataService.previousBdData$, this.dataService.previousBd$)
+    combineLatest(this.dataService.previousBdData$, this.dataService.previousBd$, this.trendsDataService.trends$)
       .subscribe(data => {
+        const trends = data[2];
+
         const title = this.datePipe.transform(data[1].valueOf(), 'fullDate');
         this.previousBdCardData.diners = data[0].diners;
         this.previousBdCardData.ppa = data[0].ppa;
         this.previousBdCardData.sales = data[0].sales;
         this.previousBdCardData.title = title;
+
+        this.previousBdCardData.trends = {
+          left: trends.previousBd.last4
+        };
+
         this.previousBdCardData.loading = false;
       });
 

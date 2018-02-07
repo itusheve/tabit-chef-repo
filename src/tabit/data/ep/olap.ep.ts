@@ -64,12 +64,21 @@ export class OlapEp {
                 dateAndWeekDay: '[Shortdayofweek Name]',
                 yearAndMonth: '[Year Month Key]'
             }
+        },
+        orderClosingTime: {
+            hierarchy: '[CloseTime]',
+            dims: {
+                time: '[Time Id]'
+            }
         }
+        ////[CloseTime].[Time Id].&[0000]:[CloseTime].[Time Id].&[1940]
     };
     
     private SHORTDAYOFWEEK_NAME_REGEX = / *\S* *(\S*)/;
 
+    /* DEPRECATED! use the stateless getDailyDataNew instead */
     private dailyData$: ReplaySubject<any>;
+    
     private monthlyData$: ReplaySubject<any>;
     // private MDX_sales_and_ppa_byOrderType_byService$: ReplaySubject<any>;
 
@@ -96,6 +105,7 @@ export class OlapEp {
     // constructor() { }
         
     
+    /* DEPRECATED! use the stateless getDailyDataNew instead */
     public getDailyData(fromDate?: moment.Moment, toDate?: moment.Moment): Promise<any> {
         let that = this;    
         return new Promise((resolve, reject) => {
@@ -210,6 +220,7 @@ export class OlapEp {
         return this.monthlyData$;
     }
 
+    /* DEPRECATED! use the stateless getDailyDataNew instead! */
     get dailyData(): ReplaySubject<any> {                
         if (this.dailyData$) return this.dailyData$;
         this.dailyData$ = new ReplaySubject<any>();
@@ -283,6 +294,141 @@ export class OlapEp {
             });
         
         return this.dailyData$;
+    }
+
+    // replaces the statefull dailyData getter
+    /* if timeTo is supplied, then only orders that were closed up to timeTo will be be retreived, e.g. if timeTo is 1745 than only orders that were clsed untill 17:45 will be retreived  */
+    public getDailyDataNew(timeTo?:string): Promise<any> {
+        return new Promise<any>((res, rej)=>{
+            //we buffer X years of data. //TODO bring from config (3 places of DRY). TODO: OPTIMIZATION: if query takes too long take smaller chunks and cache.        
+            const dateFrom: moment.Moment = moment().subtract(2, 'year').startOf('month');
+            const dateTo: moment.Moment = moment();
+
+            // PPA per date range === ppa.sales / ppa.diners. 
+            // we calc the PPA ourselve (not using the calc' PPA measure) 
+            // in order to be able to use only the daily data as our source for the entire app.
+            let whereClause = `
+                ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateFrom.format('YYYYMMDD')}]:${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateTo.format('YYYYMMDD')}]
+            `;
+            if (timeTo) {
+                whereClause = `
+                    ${whereClause}, 
+                    ${this.dims.orderClosingTime.hierarchy}.${this.dims.orderClosingTime.dims.time}.&[0000]:${this.dims.orderClosingTime.hierarchy}.${this.dims.orderClosingTime.dims.time}.&[${timeTo}]
+                `;   
+            }
+            whereClause = `
+                WHERE (
+                    ${whereClause}
+                )
+            `;
+
+
+            const mdx = `
+                SELECT 
+                {
+                    ${this.measures.sales},
+                    ${this.measures.ppa.sales},
+                    ${this.measures.ppa.diners}
+                } ON 0,
+                {
+                    ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.dateAndWeekDay}.${this.dims.BusinessDate.dims.dateAndWeekDay}.members
+                } ON 1
+                FROM ${this.cube}
+                ${whereClause}
+            `;
+
+////[CloseTime].[Time Id].&[0000]:[CloseTime].[Time Id].&[1940]
+
+            this.url.take(1)
+                .subscribe(url => {
+                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+
+                    xmla4j_w.execute(mdx)
+                        .then(rowset => {
+                            const treated = rowset.map(r => {
+                                // raw date looks like: " ש 01/10/2017"
+                                const rawDate = r[`${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.dateAndWeekDay}.${this.dims.BusinessDate.dims.dateAndWeekDay}.[MEMBER_CAPTION]`];
+                                let m;
+                                let dateAsString;
+                                if ((m = this.SHORTDAYOFWEEK_NAME_REGEX.exec(rawDate)) !== null && m.length > 1) {
+                                    dateAsString = m[1];
+                                }
+                                let date = moment(dateAsString, 'DD-MM-YYYY');
+                                //let dateFormatted = date.format('dd') + '-' + date.format('DD');
+
+                                let sales = r[this.measures.sales] || 0;
+                                let salesPPA = r[this.measures.ppa.sales] || 0;
+                                let dinersPPA = r[this.measures.ppa.diners] || 0;
+
+                                if (sales) sales = this.expoToNumer(sales);
+                                if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
+                                if (dinersPPA) dinersPPA = dinersPPA * 1;
+
+                                const ppa = (salesPPA ? salesPPA : 0) / (dinersPPA ? dinersPPA : 1);
+
+                                return {
+                                    date: date,
+                                    // dateFormatted: dateFormatted,
+                                    sales: sales,
+                                    salesPPA: salesPPA,
+                                    dinersPPA: dinersPPA,
+                                    ppa: ppa
+                                };
+                            })
+                                //.filter(r => r.sales !== undefined)
+                                .sort(this.shortDayOfWeek_compareFunction);
+
+                            //this.dailyData$.next(treated);
+
+                            res(treated);
+
+                        })
+                        .catch(e => {
+                        });
+                });
+        });
+    }
+
+    /* 
+        returns the last time a closed order was closed in the provided businessDate, in the restaurant's timezone and in the format dddd
+        e.g. 1426 means the last order was closed at 14:26, restaurnat time
+        //TODO optimize to make a lighter call (MAX operator?)
+     */
+    public getLastClosedOrderTime(businessDate: moment.Moment): Promise<string> {
+        const that = this;
+        return new Promise<string>((resolve, reject)=>{
+            
+            const mdx = `
+                SELECT 
+                {
+                    ${this.measures.sales}
+                } ON 0,
+                {
+                    NONEMPTY(${this.dims.orderClosingTime.hierarchy}.${this.dims.orderClosingTime.dims.time}.MEMBERS)
+                } ON 1
+                FROM ${this.cube}
+                WHERE (
+                    ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${businessDate.format('YYYYMMDD')}]
+                )
+            `;
+
+            this.url.take(1)
+                .subscribe(url => {
+                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+
+                    xmla4j_w.execute(mdx)
+                        .then(rowset => {
+                            if (!rowset.length) resolve(undefined);
+                            const lastRow = rowset[rowset.length - 1];
+                            const property = `${that.dims.orderClosingTime.hierarchy}.${that.dims.orderClosingTime.dims.time}.${that.dims.orderClosingTime.dims.time}.[MEMBER_CAPTION]`;
+                            const lastTimeStr: string = lastRow[property];
+                            if (!lastTimeStr) resolve(undefined);
+                            resolve(lastTimeStr);
+                        })
+                        .catch(e => {
+                        });
+                });
+        });
     }
 
     public get_sales_and_ppa_by_OrderType_by_Service(day: moment.Moment): Subject<any> {
