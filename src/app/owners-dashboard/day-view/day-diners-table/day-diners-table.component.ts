@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+// import { DecimalPipe } from '@angular/common';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 
@@ -12,33 +12,23 @@ export class DayDinersTableComponent implements OnInit {
 
   @Input() data$: Observable<any>;
 
-  decPipe: any = new DecimalPipe('en-US');//TODO use currency pipe instead
+  // decPipe: any = new DecimalPipe('en-US');//TODO use currency pipe instead
 
-  rows: any = {
-    header: {},
-    diners: {},
-    ppa: {},
-  };
+  dataByShifts: any;
 
   constructor() {}
-
-  // render(shifts, dinersAndPPAByShift) {
-  // }
   
   ngOnInit() {
-    //this.render(this.data.shifts, this.data.dinersAndPPAByShift);
-    this.data$.subscribe(data=>{
-      this.rows.header.morning = data.shifts.morning.name;
-      this.rows.header.afternoon = data.shifts.afternoon.name;
-      this.rows.header.evening = data.shifts.evening.name;
-    
-      this.rows.diners.morning = _.get(data.dinersAndPPAByShift, 'morning.diners', 0) * 1;
-      this.rows.diners.afternoon = _.get(data.dinersAndPPAByShift, 'afternoon.diners', 0) * 1;
-      this.rows.diners.evening = _.get(data.dinersAndPPAByShift, 'evening.diners', 0) * 1;
-    
-      this.rows.ppa.morning = _.get(data.dinersAndPPAByShift, 'morning.ppa', 0) * 1;
-      this.rows.ppa.afternoon = _.get(data.dinersAndPPAByShift, 'afternoon.ppa', 0) * 1;
-      this.rows.ppa.evening = _.get(data.dinersAndPPAByShift, 'evening.ppa', 0) * 1;      
+    this.data$.subscribe(dataByShifts=>{
+      const dataByShifts_filtered = _.cloneDeep(dataByShifts);
+      if (dataByShifts.length) {
+        for (let i = dataByShifts.length-1; i>=0; i--) {
+          if (!dataByShifts[i].ppa && !dataByShifts[i].sales) {
+            dataByShifts_filtered.splice(i, 1);
+          }
+        }
+      }
+      this.dataByShifts = dataByShifts_filtered;
     });
   }
 

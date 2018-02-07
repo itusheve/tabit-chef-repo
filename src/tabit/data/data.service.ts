@@ -52,38 +52,52 @@ export class DataService {
             .then(data => {
                 const serverShiftsConfig = data[0].regionalSettings.ownerDashboard;
                 if (!serverShiftsConfig) console.error('error 7727: missing configuration: regionalSettings.ownerDashboard config is missing. please contact support.');
-                const shiftsConfig: any = {
-                    morning: {
-                        active: serverShiftsConfig.hasOwnProperty('morningShiftActive') ? serverShiftsConfig.morningShiftActive : true,
-                        name: serverShiftsConfig.morningShiftName,
-                        startTime: serverShiftsConfig.morningStartTime
-                    },
-                    afternoon: {
-                        active: serverShiftsConfig.hasOwnProperty('afternoonShiftActive') ? serverShiftsConfig.afternoonShiftActive : true,
-                        name: serverShiftsConfig.afternoonShiftName,
-                        startTime: serverShiftsConfig.afternoonStartTime
-                    },
-                    evening: {
-                        active: serverShiftsConfig.hasOwnProperty('eveningShiftActive') ? serverShiftsConfig.eveningShiftActive : true,
-                        name: serverShiftsConfig.eveningShiftName,
-                        startTime: serverShiftsConfig.eveningStartTime
-                    },
-                    // fourth: {
-                    //     active: serverShiftsConfig.hasOwnProperty('fourthShiftActive') ? serverShiftsConfig.fourthShiftActive : false,
-                    //     name: serverShiftsConfig.fourthShiftName,
-                    //     startTime: serverShiftsConfig.fourthStartTime
-                    // },
-                    // fifth: {
-                    //     active: serverShiftsConfig.hasOwnProperty('fifthShiftActive') ? serverShiftsConfig.fifthShiftActive : false,
-                    //     name: serverShiftsConfig.fifthShiftName,
-                    //     startTime: serverShiftsConfig.fifthStartTime
-                    // }
-                };
-                shiftsConfig.morning.endTime = shiftsConfig.afternoon.startTime;
-                shiftsConfig.afternoon.endTime = shiftsConfig.evening.startTime;
-                shiftsConfig.evening.endTime = shiftsConfig.morning.startTime;
 
-                obs.next(shiftsConfig);
+                const shiftsConfig = [
+                    {
+                        active: _.get(serverShiftsConfig, 'morningShiftActive', true),
+                        name: _.get(serverShiftsConfig, 'morningShiftName'),
+                        startTime: _.get(serverShiftsConfig, 'morningStartTime')
+                    },
+                    {
+                        active: _.get(serverShiftsConfig, 'afternoonShiftActive', true),
+                        name: _.get(serverShiftsConfig, 'afternoonShiftName'),
+                        startTime: _.get(serverShiftsConfig, 'afternoonStartTime')
+                    },
+                    {
+                        active: _.get(serverShiftsConfig, 'eveningShiftActive', true),
+                        name: _.get(serverShiftsConfig, 'eveningShiftName'),
+                        startTime: _.get(serverShiftsConfig, 'eveningStartTime')
+                    },
+                    {
+                        active: _.get(serverShiftsConfig, 'fourthShiftActive', false),
+                        name: _.get(serverShiftsConfig, 'fourthShiftName'),
+                        startTime: _.get(serverShiftsConfig, 'fourthStartTime')
+                    },
+                    {
+                        active: _.get(serverShiftsConfig, 'fifthShiftActive', false),
+                        name: _.get(serverShiftsConfig, 'fifthShiftName'),
+                        startTime: _.get(serverShiftsConfig, 'fifthStartTime')
+                    }
+                ];
+
+                const shifts = [];
+
+                for (let i=0;i<shiftsConfig.length;i++) {
+                    if (shiftsConfig[i].active) {
+                        shifts.push({
+                            name: shiftsConfig[i].name,
+                            startTime: shiftsConfig[i].startTime
+                        });
+                    }
+                }
+
+                for (let i = 0; i < shifts.length; i++) {
+                    const nextIndex = i===shifts.length-1 ? 0 : i+1;
+                    shifts[i].endTime = shifts[nextIndex].startTime;
+                }
+
+                obs.next(shifts);
             });
     }).publishReplay(1).refCount();
 
@@ -421,11 +435,11 @@ export class DataService {
             }
 
 
-            const shiftsMap = {
-                morning: data.shifts.morning.name,
-                afternoon: data.shifts.afternoon.name,
-                evening: data.shifts.evening.name
-            };
+            // const shiftsMap = {
+            //     morning: data.shifts.morning.name,
+            //     afternoon: data.shifts.afternoon.name,
+            //     evening: data.shifts.evening.name
+            // };
 
             const orderTypesMap = {
                 seated: 'בישיבה',
@@ -456,24 +470,37 @@ export class DataService {
                 }, 0);
             });
 
-            const morningSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.morning && dataItem.orderType === orderTypesMap.seated);
-            const afternoonSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.afternoon && dataItem.orderType === orderTypesMap.seated);
-            const eveningSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.evening && dataItem.orderType === orderTypesMap.seated);
+            // const morningSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.morning && dataItem.orderType === orderTypesMap.seated);
+            // const afternoonSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.afternoon && dataItem.orderType === orderTypesMap.seated);
+            // const eveningSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.evening && dataItem.orderType === orderTypesMap.seated);
 
-            const dinersAndPPAByShift = {
-                morning: {
-                    diners: _.get(morningSeatedItem, 'dinersPPA', 0),
-                    ppa: _.get(morningSeatedItem, 'salesPPA', 0) / _.get(morningSeatedItem, 'dinersPPA', 1)
-                },
-                afternoon: {
-                    diners: _.get(afternoonSeatedItem, 'dinersPPA', 0),
-                    ppa: _.get(afternoonSeatedItem, 'salesPPA', 0) / _.get(afternoonSeatedItem, 'dinersPPA', 1)
-                },
-                evening: {
-                    diners: _.get(eveningSeatedItem, 'dinersPPA', 0),
-                    ppa: _.get(eveningSeatedItem, 'salesPPA', 0) / _.get(eveningSeatedItem, 'dinersPPA', 1)
-                }                                                
-            };
+            const dinersAndPPAByShift = [];
+            for (let i=0;i<data.shifts.length;i++) {
+                dinersAndPPAByShift.push({
+                    name: data.shifts[i].name
+                });
+            }
+            dinersAndPPAByShift.forEach(i=>{
+                const datai = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === i.name && dataItem.orderType === orderTypesMap.seated);
+                i.diners = _.get(datai, 'dinersPPA', 0);
+                i.ppa = _.get(datai, 'salesPPA', 0) / _.get(datai, 'dinersPPA', 1);
+            });
+            
+
+            // const dinersAndPPAByShift = {
+            //     morning: {
+            //         diners: _.get(morningSeatedItem, 'dinersPPA', 0),
+            //         ppa: _.get(morningSeatedItem, 'salesPPA', 0) / _.get(morningSeatedItem, 'dinersPPA', 1)
+            //     },
+            //     afternoon: {
+            //         diners: _.get(afternoonSeatedItem, 'dinersPPA', 0),
+            //         ppa: _.get(afternoonSeatedItem, 'salesPPA', 0) / _.get(afternoonSeatedItem, 'dinersPPA', 1)
+            //     },
+            //     evening: {
+            //         diners: _.get(eveningSeatedItem, 'dinersPPA', 0),
+            //         ppa: _.get(eveningSeatedItem, 'salesPPA', 0) / _.get(eveningSeatedItem, 'dinersPPA', 1)
+            //     }                                                
+            // };
 
             const totalSales = Object.keys(salesByOrderType).reduce((acc, currKey, currIdx, arr) => {
                 return acc + salesByOrderType[currKey];
