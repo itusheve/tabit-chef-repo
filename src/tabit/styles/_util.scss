@@ -1,3 +1,16 @@
+/* horizontal sizing */
+* {
+    &.hLarge {
+        font-size: 90%;
+    }
+    &.hxLarge {
+        font-size: 80%;
+    }
+    &.hxxLarge {
+        font-size: 70%;
+    }
+}           
+
 .pl5 {padding-left: 5px; }
 .pl10 {padding-left: 10px; }
 .pl15 {padding-left: 15px; }

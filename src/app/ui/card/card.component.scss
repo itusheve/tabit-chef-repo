@@ -17,18 +17,23 @@
                 // width: 45px;
                 color: transparent;
                 .figure {
-                    font-size: 16px;
+                    font-size: 15px;
+                }
+                mat-icon {
+                    font-size: 30px;
                 }
                 &.up {
-                    color: green;
+                    color: #1ef21e;
                     mat-icon {
-                        transform: rotateZ(-90deg) scale(1.3);
+                        text-shadow: #eeffee 0px 0px 2px;
+                        transform: rotateZ(-90deg) translateY(-4px) translateX(-10px);
                     }
                 }
                 &.down {
-                    color: red;
-                    mat-icon {
-                        transform: rotateZ(90deg) scale(1.3);
+                    color: #ff2121;
+                    mat-icon {                        
+                        text-shadow: #f48f8f 0px 0px 2px;
+                        transform: rotateZ(90deg) translateY(-1px) translateX(-10px);
                         order: 2;
                     }
                 }

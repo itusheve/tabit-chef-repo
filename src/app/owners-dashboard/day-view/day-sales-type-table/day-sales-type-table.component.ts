@@ -14,6 +14,8 @@ export class DaySalesTypeTableComponent {
 
   public show = false;
 
+  public hSize = 'normal';
+
   //TODO supply map to components from DS, and replace static tokens in htmls
   private orderTypes = [
     'בישיבה',
@@ -75,6 +77,13 @@ export class DaySalesTypeTableComponent {
           row.byShift.splice(c, 1);
         });
       }
+    }
+    
+    if (this.byTypeByShiftArr[0].byShift.length === 4) {
+      this.hSize = 'large';
+    }
+    if (this.byTypeByShiftArr[0].byShift.length === 5) {
+      this.hSize = 'xlarge';
     }
 
     // summary computation:

@@ -16,6 +16,8 @@ export class DayDinersTableComponent implements OnInit {
 
   dataByShifts: any;
 
+  public hSize = 'normal';
+
   constructor() {}
   
   ngOnInit() {
@@ -29,6 +31,13 @@ export class DayDinersTableComponent implements OnInit {
         }
       }
       this.dataByShifts = dataByShifts_filtered;
+
+      if (this.dataByShifts.length === 4) {
+        this.hSize = 'large';
+      }
+      if (this.dataByShifts.length === 5) {
+        this.hSize = 'xlarge';
+      }
     });
   }
 

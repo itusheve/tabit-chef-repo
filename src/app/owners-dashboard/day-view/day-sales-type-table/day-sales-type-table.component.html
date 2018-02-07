@@ -1,7 +1,7 @@
 <div class="f-rtl">
     <div class="title">הכנסות</div>
-    <div class="flex d-col body">
-        <div class="table" *ngIf="show">
+    <div class="flex body">
+        <!-- <div class="table" *ngIf="show">
             <div class="flex d-row tblRow">
                 <div class="g-1 flex"></div>
                 <div class="g-1 flex" *ngFor="let shift of byTypeByShiftArr[0].byShift">
@@ -21,6 +21,26 @@
                     <div class="flex" [innerHTML]="currencySymbol"></div>
                 </div>
             </div>
-        </div>
+        </div> -->
+        <table class="fixedWidth" [ngClass]="{'hLarge':hSize==='large', 'hxLarge':hSize==='xlarge'}" *ngIf="show">
+            <tr>
+                <td></td>
+                <td *ngFor="let shift of byTypeByShiftArr[0].byShift">{{shift.shiftName}}</td>
+            </tr>
+            <tr *ngFor="let orderType of byTypeByShiftArr">
+                <td>{{orderType.orderType}}</td>
+                <td *ngFor="let shift of orderType.byShift">
+                    <span>{{shift.sales | number:'1.0-0'}}</span>&nbsp;
+                    <span [innerHTML]="currencySymbol"></span>
+                </td>
+            </tr>
+            <tr class="tblTotalRow">
+                <td>סה"כ</td>
+                <td *ngFor="let sumVal of summary">
+                    <span>{{sumVal | number:'1.0-0'}}</span>&nbsp;
+                    <span [innerHTML]="currencySymbol"></span>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>

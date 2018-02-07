@@ -17,13 +17,14 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/take';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { AsyncLocalStorage } from 'angular-async-local-storage';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {    
     
     private authService: AuthService;//https://github.com/angular/angular/issues/18224
 
-    constructor(private injector: Injector) { 
+    constructor(private injector: Injector, protected localStorage: AsyncLocalStorage) { 
         
     }
 
@@ -44,47 +45,67 @@ export class TokenInterceptor implements HttpInterceptor {
             
         if (request.url.indexOf('oauth2')>-1) return next.handle(request);
 
-        return next.handle(this.addToken(request, this.authService.authToken))
-                .catch(error => {
-                    if (error instanceof HttpErrorResponse) {
-                        switch ((<HttpErrorResponse>error).status) {
-                            case 400:
-                                //TODO (general bad request the server couldnt understand)                                
-                                console.error('Token Interceptor 400', request);
-                                console.error(error);
-                                return Observable.throw(error);        
-                                // return this.handle400Error(request, next);
-                            case 401:
-                                return this.handle401Error(request, next);
-                        }
-                    } else {
-                        return Observable.throw(error);
+        const that = this;
+                    
+        //to test the 401 behaviour:
+        // let clonedReq = request.clone({
+        //     setHeaders: {
+        //         Authorization: 'Bearer ' + 'xxx'
+        //     }
+        // });
+        // return next.handle(clonedReq)
+        
+        return next.handle(that.addToken(request, that.authService.authToken))
+            .catch(error => {
+                if (error instanceof HttpErrorResponse) {
+                    switch ((<HttpErrorResponse>error).status) {
+                        case 400:
+                            //TODO (general bad request the server couldnt understand)                                
+                            console.error('Token Interceptor 400', request);
+                            console.error(error);
+                            return Observable.throw(error);
+                        // return this.handle400Error(request, next);
+                        case 401:
+                            return that.handle401Error(request, next);
                     }
-                });
+                } else {
+                    return Observable.throw(error);
+                }
+            });
     }
 
-    handle401Error(req: HttpRequest<any>, next: HttpHandler) {
+    handle401Error(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
         if (!this.isRefreshingToken) {
             this.isRefreshingToken = true;
-
+            
             // Reset here so that the following requests wait until the token
             // comes back from the refreshToken call.
             this.tokenSubject.next(null);
 
-            return this.authService.refreshToken()
-                .then((newToken: string) => {
-                    if (newToken) {
-                        this.tokenSubject.next(newToken);
-                        return next.handle(this.addToken(req, newToken));
-                    }
-                    // If we don't get a new token, we are in trouble so logout.
-                    this.isRefreshingToken = false;
-                    return this.authService.logout();
-                })
-                .catch(error => {
-                    // If there is an exception calling 'refreshToken', bad news so logout.
-                    this.isRefreshingToken = false;
-                    return this.authService.logout();
+            return Observable.create(sub=>{
+                return this.authService.refreshToken()
+                    .then((newToken: string) => {
+                        if (newToken) {
+                            this.tokenSubject.next(newToken);
+                            //return next.handle(this.addToken(req, newToken));
+                            sub.next(newToken);
+                        } else {
+                            console.error('handle401Error: error 1');
+                            // If we don't get a new token, we are in trouble so logout.
+                            this.isRefreshingToken = false;
+                            return this.authService.logout();
+                        }
+                    })
+                    .catch(error => {
+                        // If there is an exception calling 'refreshToken', bad news so logout.
+                        console.error('handle401Error: error 2');
+                        this.isRefreshingToken = false;
+                        return this.authService.logout();
+                    });
+            })
+                .take(1)
+                .switchMap(token => {
+                    return next.handle(this.addToken(req, token));
                 });
         } else {
             return this.tokenSubject

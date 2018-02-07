@@ -1,6 +1,6 @@
-<div class="">
+<div class="f-rtl">
     <div class="title">סועדים</div>
-    <div class="flex f-rtl d-col body">
+    <div class="flex body">
         <!-- <div class="table">
             <div class="flex d-row tblRow">
                 <div class="flex" style="width:25%"></div>
@@ -15,7 +15,7 @@
                 <div class="g-1 flex" *ngFor="let shift of dataByShifts">{{shift.ppa | currency:'ILS':'symbol':'1.2-2'}}</div>
             </div>
         </div> -->
-        <table class="fixedWidth">
+        <table class="fixedWidth" [ngClass]="{'hLarge':hSize==='large', 'hxLarge':hSize==='xlarge'}">
             <tr>
                 <td></td>
                 <td *ngFor="let shift of dataByShifts">{{shift.name}}</td>
