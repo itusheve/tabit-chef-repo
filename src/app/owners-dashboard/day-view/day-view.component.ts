@@ -10,6 +10,8 @@ import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Order } from '../../../tabit/model/Order.model';
+import { ClosedOrdersDataService } from '../../../tabit/data/dc/closedOrders.data.service';
 
 @Component({
   selector: 'app-day-view',
@@ -27,6 +29,9 @@ export class DayViewComponent implements OnInit  {
     show: false
   };
   
+  /* the day's Orders */
+  public orders: Order[];
+
   public dinersTableData$: BehaviorSubject<any> = new BehaviorSubject<any>({
     loading: true,
     shifts: undefined,
@@ -34,6 +39,7 @@ export class DayViewComponent implements OnInit  {
   });
 
   constructor(
+    private closedOrdersDataService: ClosedOrdersDataService,
     private dataService: DataService,
     private route: ActivatedRoute,
     private router: Router
@@ -45,19 +51,24 @@ export class DayViewComponent implements OnInit  {
       this.dataService.getDailyDataByShiftAndType(this.day), 
       (shifts: any, dailyData: any) => Object.assign({}, { shifts: shifts }, dailyData)
     );
-
+    
     data$.subscribe(data=>{
-
+      
       this.dinersTableData$.next(data.dinersAndPPAByShift);
-
+      
       const shiftWithDiners = data.dinersAndPPAByShift.find(i=>i.diners>0);
       if (shiftWithDiners) {
         this.dinersTable.show = true;
       }
-
+      
       this.dayPieChart.render(data.salesByOrderType);
       this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
       this.dayShifts.render(data.shifts);
+      
+      this.closedOrdersDataService.getOrders({ day: this.day })
+        .then((orders: Order[]) => {
+          this.orders = orders;
+        });
     });
   } 
 
@@ -79,6 +90,10 @@ export class DayViewComponent implements OnInit  {
   onDateChanged(dateM: moment.Moment) {    
     const date = dateM.format('YYYY-MM-DD');
     this.router.navigate(['/owners-dashboard/day', date]);
+  }
+
+  onGoToOrders(filter, type) {    
+    this.router.navigate(['/owners-dashboard/orders', this.day.format('YYYY-MM-DD'), filter.id, '']);
   }
 
 }

@@ -35,6 +35,15 @@ export class DataService {
     //     }, 5000);
     // }).publishReplay(1).refCount();
 
+    public orderTypes = [
+        { id: 'seated', caption: 'בישיבה' },
+        { id: 'counter', caption: 'דלפק' },
+        { id: 'ta', caption: 'לקחת' },
+        { id: 'delivery', caption: 'משלוח' },
+        { id: 'undefined', caption: 'סוג הזמנה לא מוגדר' },
+        { id: 'returns', caption: 'החזר' }
+    ];
+
 
     public businessDay$: Observable<any> = Observable.create(obs=>{
         this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})

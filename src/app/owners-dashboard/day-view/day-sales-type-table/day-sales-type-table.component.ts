@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { PercentPipe } from '@angular/common';
 import * as _ from 'lodash';
+import { DataService } from '../../../../tabit/data/data.service';
 
 @Component({
   selector: 'app-day-sales-type-table',
@@ -10,33 +11,27 @@ import * as _ from 'lodash';
 })
 export class DaySalesTypeTableComponent {
 
+  @Output() onRowClicked = new EventEmitter();
+
   currencySymbol = '&#8362;';
 
   public show = false;
 
   public hSize = 'normal';
 
-  //TODO supply map to components from DS, and replace static tokens in htmls
-  private orderTypes = [
-    'בישיבה',
-    'דלפק',
-    'לקחת',
-    'משלוח',
-    'סוג הזמנה לא מוגדר',
-    'החזר'
-  ];
-
   public byTypeByShiftArr = [];
   public summary = [];
   // public shifts;
 
-  constructor() {}
+  constructor(
+    private dataService: DataService
+  ) {}
 
   render(shifts, salesByOrderTypeAndService) {
     const byTypeByShiftArr_preFiltering = [];
 
-    for (let j = 0; j < this.orderTypes.length; j++) {    
-        const orderType = this.orderTypes[j];
+    for (let j = 0; j < this.dataService.orderTypes.length; j++) {    
+        const orderType = this.dataService.orderTypes[j]['caption'];
         const byType = {
           orderType: orderType,
           byShift: []
@@ -96,6 +91,13 @@ export class DaySalesTypeTableComponent {
 
     this.show = true;
 
+  }
+
+  onRowClick(o) {
+    const orderType = this.dataService.orderTypes.find(ot=>ot.caption===o.orderType);
+    if (orderType) {
+      this.onRowClicked.emit(orderType);    
+    }
   }
 
 }

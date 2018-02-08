@@ -16,7 +16,11 @@ import { DaySelectorComponent } from './day-view/day-selector/day-selector.compo
 import { DayPieChartComponent } from './day-view/day-pie-chart/day-pie-chart.component';
 import { DaySalesTypeTableComponent } from './day-view/day-sales-type-table/day-sales-type-table.component';
 import { DayDinersTableComponent } from './day-view/day-diners-table/day-diners-table.component';
+import { DayOrdersTableComponent } from './day-view/day-orders-table/day-orders-table.component';
+import { DayOrdersTableHasSalesPipe } from './day-view/day-orders-table/pipes';
 import { DayShiftsComponent } from './day-view/day-shifts/day-shifts.component';
+
+// import { OrdersViewComponent } from './orders-view/orders-view.component';
 
 import { CardComponent } from '../ui/card/card.component';
 
@@ -28,7 +32,8 @@ import {
   MatMenuModule, 
   MatCardModule,
   MatSidenavModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  MatExpansionModule
 } from '@angular/material';//material modules
 
 
@@ -41,6 +46,7 @@ import { DxPieChartModule } from 'devextreme-angular';
 import { DxDataGridModule } from 'devextreme-angular';
 import { DxLoadIndicatorModule } from 'devextreme-angular';
 import 'devextreme-intl';
+
 
 //Load localized messages (English included by default)
 // let messagesDe = require("devextreme/localization/messages/de.json"),
@@ -66,6 +72,7 @@ locale('he');
     MatCardModule,
     MatSidenavModule,
     MatSlideToggleModule,
+    MatExpansionModule,
 
     DxButtonModule,
     DxCalendarModule,
@@ -89,7 +96,12 @@ locale('he');
     DayPieChartComponent,
     DaySalesTypeTableComponent,
     DayDinersTableComponent,
+    DayOrdersTableComponent,
+    DayOrdersTableHasSalesPipe,
     DayShiftsComponent,
+
+    // OrdersViewComponent,
+    // OrdersTableComponent
   ]
 })
 export class OwnersDashboardModule { }

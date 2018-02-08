@@ -27,7 +27,7 @@
                 <td></td>
                 <td *ngFor="let shift of byTypeByShiftArr[0].byShift">{{shift.shiftName}}</td>
             </tr>
-            <tr *ngFor="let orderType of byTypeByShiftArr">
+            <tr *ngFor="let orderType of byTypeByShiftArr" (click)="onRowClick(orderType)">
                 <td>{{orderType.orderType}}</td>
                 <td *ngFor="let shift of orderType.byShift">
                     <span>{{shift.sales | number:'1.0-0'}}</span>&nbsp;

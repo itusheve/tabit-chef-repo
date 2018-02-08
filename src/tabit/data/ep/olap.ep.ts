@@ -65,13 +65,36 @@ export class OlapEp {
                 yearAndMonth: '[Year Month Key]'
             }
         },
+        orderOpeningDate: {
+            hierarchy: '[DateOpen]',
+            dims: {
+                date: '[Date Key]'
+            }
+        },
+        orderOpeningTime: {
+            hierarchy: '[TimeOpen]',
+            dims: {
+                time: '[Time Id]'
+            }            
+        },
         orderClosingTime: {
             hierarchy: '[CloseTime]',
             dims: {
                 time: '[Time Id]'
             }
+        },
+        orders: {
+            hierarchy: '[Ordernumber]',
+            dims: {
+                orderNumber: '[Tlog Header Order Number]'
+            }            
+        },
+        waiters: {
+            hierarchy: '[Owners]',
+            dims: {
+                waiter: '[Tlog Header Owner Id]'
+            }
         }
-        ////[CloseTime].[Time Id].&[0000]:[CloseTime].[Time Id].&[1940]
     };
     
     private SHORTDAYOFWEEK_NAME_REGEX = / *\S* *(\S*)/;
@@ -325,7 +348,6 @@ export class OlapEp {
                 )
             `;
 
-
             const mdx = `
                 SELECT 
                 {
@@ -339,8 +361,6 @@ export class OlapEp {
                 FROM ${this.cube}
                 ${whereClause}
             `;
-
-////[CloseTime].[Time Id].&[0000]:[CloseTime].[Time Id].&[1940]
 
             this.url.take(1)
                 .subscribe(url => {
@@ -431,6 +451,100 @@ export class OlapEp {
                         .catch(e => {
                         });
                 });
+        });
+    }
+
+    public getOrders(o: { day: moment.Moment, orderTypeId?: string }): Promise<any[]> {
+        return new Promise((resolve, reject) => {
+            if (!o.day) reject('day is missing');
+            
+            let whereClause = `
+                ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${o.day.format('YYYYMMDD')}]
+            `;
+            whereClause = `
+                WHERE (
+                    ${whereClause}
+                )
+            `;
+
+            const mdx = `
+                SELECT 
+                {
+                    ${this.measures.sales},
+                    ${this.measures.ppa.sales},
+                    ${this.measures.ppa.diners}
+                } ON 0,
+                NonEmptyCrossJoin(
+                    ${this.dims.orders.hierarchy}.${this.dims.orders.dims.orderNumber}.${this.dims.orders.dims.orderNumber}.Members, 
+                    ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.dim}.Members,                    
+                    ${this.dims.orderOpeningDate.hierarchy}.${this.dims.orderOpeningDate.dims.date}.${this.dims.orderOpeningDate.dims.date}.Members,
+                    ${this.dims.orderOpeningTime.hierarchy}.${this.dims.orderOpeningTime.dims.time}.${this.dims.orderOpeningTime.dims.time}.Members,
+                    ${this.dims.waiters.hierarchy}.${this.dims.waiters.dims.waiter}.${this.dims.waiters.dims.waiter}.Members
+                ) ON 1
+                FROM ${this.cube}
+                ${whereClause}
+            `;
+
+            this.url.take(1)
+                .subscribe(url => {
+                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+
+                    xmla4j_w.executeNew(mdx)
+                        .then(rowset => {
+                            const treated = rowset.map(r => {
+
+                                // raw date looks like: " ש 01/10/2017"
+                                let rawOrderNumber = r[`${this.dims.orders.hierarchy}.${this.dims.orders.dims.orderNumber}.${this.dims.orders.dims.orderNumber}.[MEMBER_CAPTION]`];
+                                try {
+                                    rawOrderNumber = rawOrderNumber.replace('הזמנה מס ', '')*1;
+                                } catch (e) {
+                                    rawOrderNumber = 0;
+                                }
+                                
+                                const rawOrderType = r[`${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.dim}.[MEMBER_CAPTION]`];                                
+                                
+                                //format: DD/MM/YYYY
+                                const rawOrderDate = r[`${this.dims.orderOpeningDate.hierarchy}.${this.dims.orderOpeningDate.dims.date}.${this.dims.orderOpeningDate.dims.date}.[MEMBER_CAPTION]`];
+                                //format:  Hmm (637, 1823)
+                                const rawOrderTime = r[`${this.dims.orderOpeningTime.hierarchy}.${this.dims.orderOpeningTime.dims.time}.${this.dims.orderOpeningTime.dims.time}.[MEMBER_CAPTION]`];
+                                //TODO take into consideration the rest' TZ! moment.timezone
+
+                                const orderWaiter = r[`${this.dims.waiters.hierarchy}.${this.dims.waiters.dims.waiter}.${this.dims.waiters.dims.waiter}.[MEMBER_CAPTION]`];
+
+                                const openingTime: moment.Moment = moment(`${rawOrderDate} ${rawOrderTime}`, 'DD/MM/YYYY Hmm');
+
+                                let sales = r[this.measures.sales] || 0;
+                                let salesPPA = r[this.measures.ppa.sales] || 0;
+                                let dinersPPA = r[this.measures.ppa.diners] || 0;
+
+                                if (sales) sales = this.expoToNumer(sales);
+                                if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
+                                if (dinersPPA) dinersPPA = dinersPPA * 1;
+
+                                const ppa = (salesPPA ? salesPPA : 0) / (dinersPPA ? dinersPPA : 1);
+
+                                return {
+                                    openingTime: openingTime,
+                                    orderTypeCaption: rawOrderType,
+                                    orderNumber: rawOrderNumber,
+                                    waiter: orderWaiter,
+                                    sales: sales,
+                                    salesPPA: salesPPA,
+                                    dinersPPA: dinersPPA,
+                                    ppa: ppa
+                                };
+                            })
+                            .sort();
+
+                            resolve(treated);
+
+                        })
+                        .catch(e => {
+                        });
+                });
+
+
+
         });
     }
 

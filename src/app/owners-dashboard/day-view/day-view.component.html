@@ -2,13 +2,24 @@
   <div class="col-md-12">        
     <app-day-selector class="widget noPadding" #daySelector [currentValue]="day" (onDateChanged)="onDateChanged($event)"></app-day-selector>
     <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
-    <app-day-sales-type-table class="widget" #daySalesTypeTable></app-day-sales-type-table>
+    <app-day-sales-type-table 
+      class="widget" 
+      #daySalesTypeTable
+      (onRowClicked)="onGoToOrders($event, 'orderType')"
+      >
+    </app-day-sales-type-table>
     <app-day-diners-table 
       class="widget" 
       *ngIf="dinersTable.show"
       [data$]="dinersTableData$"
       ></app-day-diners-table>
+    <app-day-orders-table 
+      class="widget"
+      *ngIf="orders"
+      [orders]="orders"
+      ></app-day-orders-table>
     <app-day-shifts class="widget greyAccent" #dayShifts></app-day-shifts>      
+
   </div>
 </div>
 
