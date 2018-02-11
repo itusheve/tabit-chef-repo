@@ -72,6 +72,8 @@ export class DayViewComponent implements OnInit  {
     });
   } 
 
+  //TODO on iOS when touching the circle it disappears
+
   ngOnInit() {
     window.scrollTo(0, 0);
     

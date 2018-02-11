@@ -71,27 +71,27 @@ export class DataService {
                 const shiftsConfig = [
                     {
                         active: _.get(serverShiftsConfig, 'morningShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'morningShiftName'),
+                        name: _.get(serverShiftsConfig, 'morningShiftName', 'בוקר'),
                         startTime: _.get(serverShiftsConfig, 'morningStartTime')
                     },
                     {
                         active: _.get(serverShiftsConfig, 'afternoonShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'afternoonShiftName'),
+                        name: _.get(serverShiftsConfig, 'afternoonShiftName', 'צהריים'),
                         startTime: _.get(serverShiftsConfig, 'afternoonStartTime')
                     },
                     {
                         active: _.get(serverShiftsConfig, 'eveningShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'eveningShiftName'),
+                        name: _.get(serverShiftsConfig, 'eveningShiftName', 'ערב'),
                         startTime: _.get(serverShiftsConfig, 'eveningStartTime')
                     },
                     {
                         active: _.get(serverShiftsConfig, 'fourthShiftActive', false),
-                        name: _.get(serverShiftsConfig, 'fourthShiftName'),
+                        name: _.get(serverShiftsConfig, 'fourthShiftName', 'רביעית'),
                         startTime: _.get(serverShiftsConfig, 'fourthStartTime')
                     },
                     {
                         active: _.get(serverShiftsConfig, 'fifthShiftActive', false),
-                        name: _.get(serverShiftsConfig, 'fifthShiftName'),
+                        name: _.get(serverShiftsConfig, 'fifthShiftName', 'חמישית'),
                         startTime: _.get(serverShiftsConfig, 'fifthStartTime')
                     }
                 ];
