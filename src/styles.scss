@@ -61,6 +61,11 @@ html, body {
     margin-bottom: 10px;
     background-color: #fff;
     color: #343E56;
+    
+    &.fullWidth {
+        padding: 15px 0;
+    }
+
     &.blueAccent {
         background-color: #3A5675;
         color: #fff;

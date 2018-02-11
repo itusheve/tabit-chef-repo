@@ -1,0 +1,20 @@
+mat-expansion-panel-header {
+    height: 41px!important;
+}
+
+.mat-expansion-panel-body {
+    padding: 0 10px 16px;
+}
+
+table {
+    table-layout: auto;
+}
+
+table tr td {
+    padding-right: 3px!important;
+    padding-left: 3px!important;         
+}
+table tr td:first-child {
+    padding-right: 8px!important;
+    padding-left: 8px!important;     
+}
