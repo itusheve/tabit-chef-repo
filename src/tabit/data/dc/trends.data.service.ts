@@ -11,73 +11,107 @@ import { OlapEp } from '../ep/olap.ep';
 @Injectable()
 export class TrendsDataService {
 
-    private currentBd_last4_trend$: Observable<TrendModel> = new Observable(obs => {
+    private currentBd_last4_trend$: Observable<TrendModel> = Observable.create(obs => {
         const trend = new TrendModel();
         trend.name = 'currentBdLast4';
         trend.description = 'currentBdLast4 description';
 
         obs.next(trend);
 
-        zip(this.dataService.currentBd$.take(1), this.closedOrdersDataService.lastClosedOrderTime$.take(1), this.dataService.businessDay$)
+        // zip(this.dataService.currentBd$.take(1), this.closedOrdersDataService.lastClosedOrderTime$.take(1), this.dataService.businessDay$, this.dataService.shifts$)
+        zip(this.dataService.currentBd$.take(1), this.dataService.shifts$, this.dataService.todayDataVatInclusive$.take(1))
             .subscribe(data => {
+                let timeFrom1, timeFrom2, timeTo1, timeTo2;
+
                 const currentBd: moment.Moment = data[0];
-                const lastClosedOrderTime: string = data[1];
+                console.info(`Trends: Current: Last 4: Current Business Day is: ${currentBd.format('DD/MM/YYYY')}`);
+
+                const currentBusinessDaySales = data[2].sales;
+                console.info(`Trends: Current: Last 4: Current BD Total Sales (Open & Closed): ${currentBusinessDaySales}`);
+
+                const tmpCurrentRestTime = moment();                
+                console.info(`Trends: Current: Last 4: Current Rest Time: ${tmpCurrentRestTime.format('HH:mm')}`);
                 
-                if (!lastClosedOrderTime) {
-                    trend.status = 'nodata';//TODO make status to be ENUMS..
-                    obs.next(trend);
-                    return;
-                }
+                const firstShiftStartingTime = moment(data[1][0]['startTime'], 'H:mm');
+                console.info(`Trends: Current: Last 4: First Shift Starting Time: ${firstShiftStartingTime.format('HH:mm')}`);
                 
-                let timeTo = lastClosedOrderTime;
-                let timeFrom;
-                const bdOpeningTime = moment(data[2].openedOn);
-                if (bdOpeningTime.isBefore(currentBd, 'day')) {
-                    timeFrom = '0000';
+                if (tmpCurrentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
+                    timeFrom1 = firstShiftStartingTime.format('HHmm');
+                    console.info(`Trends: Current: Last 4: Current Rest Time >= First Shift Starting Time`);
                 } else {
-                    timeFrom = bdOpeningTime.format('hhmm');
+                    timeFrom1 = '0000';
+                    timeFrom2 = firstShiftStartingTime.format('HHmm');
+                    timeTo2 = '2359';
+                    console.info(`Trends: Current: Last 4: Current Rest Time < First Shift Starting Time`);
                 }
-                
+                timeTo1 = tmpCurrentRestTime.format('HHmm');
+                console.info(`Trends: Current: Last 4: query TimeFrom1: ${timeFrom1}`);
+                console.info(`Trends: Current: Last 4: query TimeTo1: ${timeTo1}`);
+                if (timeTo2) {
+                    console.info(`Trends: Current: Last 4: performing Query 1 + Query 2`);
+                } else {
+                    console.info(`Trends: Current: Last 4: performing only Query 1`);
+                }
 
                 const dateFrom: moment.Moment = moment(currentBd).subtract(6, 'weeks');
                 const dateTo: moment.Moment = moment(currentBd);
-                this.olapEp.getDailyDataNew({ timeFrom: timeFrom, timeTo: timeTo, dateFrom: dateFrom, dateTo: dateTo})//TODO no reason to query for two years in this case. enable passing a dateFrom/To argument to getDailyDataNew
-                    .then(dailyData=>{
+                
+                const qAll = [];
+                qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime'}));
+                if (timeFrom2) {
+                    qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom2, timeTo: timeTo2, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime'}));
+                }
+
+                Promise.all(qAll)
+                    .then(dailyDataArr=>{
                         
-                        const currentBdData = dailyData.find(dayData => dayData.date.isSame(currentBd, 'day'));
-                        if (!currentBdData) {
-                            trend.status = 'error';
-                            obs.next(trend);
-                            return;
-                        }
-        
-                        const currentBdSales = currentBdData.sales;
-        
+                        let dailyData1 = dailyDataArr[0];
+                        let dailyData2;
+                        if (dailyDataArr.length === 2) dailyData2 = dailyDataArr[1];
+                              
                         const currentBdWeekDay = currentBd.day();
-        
-                        let found = 0;
-                        let sumTotalSales = 0;
+                        
                         let avgTotalSales;
+                        
                         const seekTill: moment.Moment = moment(currentBd).subtract(4, 'weeks');
-                        for (let i = 0; i < dailyData.length; i++) {
-                            const dayData = dailyData[i];
+                        
+                        let found1 = 0;
+                        let sumTotalSales1 = 0;
+                        for (let i = 0; i < dailyData1.length; i++) {
+                            const dayData = dailyData1[i];
                             if (dayData.date.isSameOrAfter(currentBd, 'day')) continue;
                             if (dayData.date.isBefore(seekTill, 'day')) break;
         
                             if (dayData.date.day() === currentBdWeekDay) {
-                                sumTotalSales += dayData.sales;
-                                found++;
+                                sumTotalSales1 += dayData.sales;
+                                found1++;
                             }
                         }
-        
-                        if (found) {
-                            if (sumTotalSales === 0) {
-                                trend.status = 'nodata';
-                                obs.next(trend);
-                                return;
+                        console.info(`Trends: Current: Last 4: Sum Total Sales 1: ${sumTotalSales1}`);
+
+                        let found2 = 0;
+                        let sumTotalSales2 = 0;
+                        if (dailyData2) {
+                            for (let i = 0; i < dailyData2.length; i++) {
+                                const dayData = dailyData2[i];
+                                if (dayData.date.isSameOrAfter(currentBd, 'day')) continue;
+                                if (dayData.date.isBefore(seekTill, 'day')) break;
+
+                                if (dayData.date.day() === currentBdWeekDay) {
+                                    sumTotalSales2 += dayData.sales;
+                                    found2++;
+                                }
                             }
-                            avgTotalSales = sumTotalSales / found;
-                            const changePct = (currentBdSales / avgTotalSales) - 1;
+                            console.info(`Trends: Current: Last 4: Sum Total Sales 2: ${sumTotalSales2}`);
+                        }                        
+        
+                        let sumTotalSales = sumTotalSales1 + sumTotalSales2;
+                        console.info(`Trends: Current: Last 4: Sum Total Sales (Total): ${sumTotalSales}`);
+                        if (sumTotalSales) {
+                            avgTotalSales = sumTotalSales / Math.max(found1, found2);
+                            console.info(`Trends: Current: Last 4: avg total sales of up to last 4: ${avgTotalSales}`);
+                            
+                            const changePct = (currentBusinessDaySales / avgTotalSales) - 1;
         
                             trend.val = changePct;
                             trend.status = 'ready';
@@ -91,9 +125,9 @@ export class TrendsDataService {
                     });
 
             });
-    });
+    }).publishReplay(1).refCount();
 
-    private previousBd_last4_trend$: Observable<TrendModel> = new Observable(obs=>{
+    private previousBd_last4_trend$: Observable<TrendModel> = Observable.create(obs=>{
         const trend = new TrendModel();
         trend.name = 'previousBdLast4';
         trend.description = 'previousBdLast4 description';
@@ -150,79 +184,81 @@ export class TrendsDataService {
                     return;
                 }
             });
-    });
+    }).publishReplay(1).refCount();
 
-    private currentBd_lastYear_trend$: Observable<TrendModel> = new Observable(obs => {
+    private currentBd_lastYear_trend$: Observable<TrendModel> = Observable.create(obs => {
         const trend = new TrendModel();
         trend.name = 'currentBdLastYear';
         trend.description = 'currentBdLastYear description';
 
         obs.next(trend);
 
-        zip(this.dataService.currentBd$.take(1), this.closedOrdersDataService.lastClosedOrderTime$.take(1), this.dataService.businessDay$)
+        zip(this.dataService.currentBd$.take(1), this.dataService.shifts$, this.dataService.todayDataVatInclusive$.take(1))
             .subscribe(data => {
+                let timeFrom1, timeFrom2, timeTo1, timeTo2;
+
                 const currentBd: moment.Moment = data[0];
-                const lastClosedOrderTime: string = data[1];
 
-                if (!lastClosedOrderTime) {
-                    trend.status = 'nodata';//TODO make status to be ENUMS..
-                    obs.next(trend);
-                    return;
-                }
+                const currentBusinessDaySales = data[2].sales;
 
-                let timeTo = lastClosedOrderTime;
-                let timeFrom;
-                const bdOpeningTime = moment(data[2].openedOn);
-                if (bdOpeningTime.isBefore(currentBd, 'day')) {
-                    timeFrom = '0000';
+                const tmpCurrentRestTime = moment();
+
+                const firstShiftStartingTime = moment(data[1][0]['startTime'], 'H:mm');
+
+                if (tmpCurrentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
+                    timeFrom1 = firstShiftStartingTime.format('HHmm');
                 } else {
-                    timeFrom = bdOpeningTime.format('hhmm');
-                }                
-
+                    timeFrom1 = '0000';
+                    timeFrom2 = firstShiftStartingTime.format('HHmm');
+                    timeTo2 = '2359';
+                }
+                timeTo1 = tmpCurrentRestTime.format('HHmm');
+              
                 const dateFrom: moment.Moment = moment(currentBd).subtract(1, 'year').subtract(1, 'month');
                 const dateTo: moment.Moment = moment(currentBd).subtract(1, 'year').add(1, 'month');
-                
-                const pCurrentBd = this.olapEp.getDailyDataNew({ timeFrom: timeFrom, timeTo: timeTo, dateFrom: moment(currentBd), dateTo: moment(currentBd) });
-                const pYearAgo = this.olapEp.getDailyDataNew({ timeFrom: timeFrom, timeTo: timeTo, dateFrom: dateFrom, dateTo: dateTo });
 
-                Promise.all([pCurrentBd, pYearAgo])                
-                    .then(pdata => {
-                        let currentBdData = pdata[0];
-                        let lastYearData = pdata[1];
+                const qAll = [];
+                qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
+                if (timeFrom2) {
+                    qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom2, timeTo: timeTo2, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
+                }
+                                
+                Promise.all(qAll)
+                    .then(dailyDataArr => {
                         
-                        if (!currentBdData || !currentBdData.length) {
-                            trend.status = 'error';
-                            obs.next(trend);
-                            return;
-                        }
-
-                        currentBdData = currentBdData[0];
-                        const currentBdSales = currentBdData.sales;
+                        let dailyData1 = dailyDataArr[0];
+                        let dailyData2;
+                        if (dailyDataArr.length === 2) dailyData2 = dailyDataArr[1];
                         
-                        // const dailyData = data[1];
-                        
-
                         const currentBdWeekDay = currentBd.day();
                         const currentBdWeekOfYear = currentBd.week();
+                        
+                        let avgTotalSales;
 
-                        let found = false;
-                        let lastYearSales;
-                        for (let i = 0; i < lastYearData.length; i++) {
-                            const dayData = lastYearData[i];
+                        let sumTotalSales1 = 0;
+                        for (let i = 0; i < dailyData1.length; i++) {
+                            const dayData = dailyData1[i];
                             if (dayData.date.week() === currentBdWeekOfYear && dayData.date.day() === currentBdWeekDay) {
-                                lastYearSales = dayData.sales;
-                                found = true;
+                                sumTotalSales1 = dayData.sales;
                                 break;
                             }
                         }
 
-                        if (found) {
-                            if (lastYearSales === 0) {
-                                trend.status = 'nodata';
-                                obs.next(trend);
-                                return;
+                        let sumTotalSales2 = 0;
+                        if (dailyData2) {
+                            for (let i = 0; i < dailyData2.length; i++) {
+                                const dayData = dailyData2[i];
+                                if (dayData.date.week() === currentBdWeekOfYear && dayData.date.day() === currentBdWeekDay) {
+                                    sumTotalSales2 = dayData.sales;
+                                    break;
+                                }
                             }
-                            const changePct = (currentBdSales / lastYearSales) - 1;
+                        }
+
+                        let sumTotalSales = sumTotalSales1 + sumTotalSales2;
+
+                        if (sumTotalSales) {
+                            const changePct = (currentBusinessDaySales / sumTotalSales) - 1;
 
                             trend.val = changePct;
                             trend.status = 'ready';
@@ -236,9 +272,9 @@ export class TrendsDataService {
                     });
 
             });
-    });
+    }).publishReplay(1).refCount();
 
-    private previousBd_lastYear_trend$: Observable<TrendModel> = new Observable(obs => {
+    private previousBd_lastYear_trend$: Observable<TrendModel> = Observable.create(obs => {
         const trend = new TrendModel();
         trend.name = 'previousBdLastYear';
         trend.description = 'previousBdLastYear description';
@@ -295,7 +331,7 @@ export class TrendsDataService {
             });
 
 
-   });
+    }).publishReplay(1).refCount();
 
     /* stream of all the trends */
     public trends$: Observable<{
@@ -307,7 +343,7 @@ export class TrendsDataService {
             last4: TrendModel,
             lastYear: TrendModel
         }
-    }> = new Observable(obs=>{
+    }> = Observable.create(obs=>{
 
         let trends = {
             currentBd: {
@@ -329,7 +365,7 @@ export class TrendsDataService {
 
                 obs.next(trends);
             });
-    });
+        }).publishReplay(1).refCount();
 
     constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService, private olapEp: OlapEp) { }
 

@@ -135,7 +135,7 @@ export class DataService {
     //TODO take cube "sales data excl. tax" instead of dividing by 1.17. 
     //TODO take cube "salesPPA excl. tax" (not implemented yet, talk with Ofer) instead of dividing by 1.17.
     //TODO today sales data should get autorefreshed every X seconds..
-    private todayDataVatInclusive$: Observable<{ sales: number, diners: number, ppa: number }> = Observable.create(obs=>{
+    public todayDataVatInclusive$: Observable<{ sales: number, diners: number, ppa: number }> = Observable.create(obs=>{
         /* we get the diners and ppa measures from olap and the sales from ros */
         const that = this;
 

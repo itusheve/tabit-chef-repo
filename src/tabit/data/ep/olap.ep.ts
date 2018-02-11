@@ -34,6 +34,7 @@ export class OlapEp {
     
     private measures = {
         sales: '[Measures].[Tlog Header Total Payment Amount]',
+        itemsSales: '[Measures].[Tlog Items Net Amount]',
         ppa: {
             sales: '[Measures].[PPANetAmountSeated]',
             diners: '[Measures].[PPADinersSeated]'
@@ -79,6 +80,12 @@ export class OlapEp {
         },
         orderClosingTime: {
             hierarchy: '[CloseTime]',
+            dims: {
+                time: '[Time Id]'
+            }
+        },
+        firingTime: {
+            hierarchy: '[FireTime]',
             dims: {
                 time: '[Time Id]'
             }
@@ -321,7 +328,7 @@ export class OlapEp {
 
     // replaces the statefull dailyData getter
     /* if timeTo is supplied, then only orders that were closed up to timeTo will be be retreived, e.g. if timeTo is 1745 than only orders that were clsed untill 17:45 will be retreived  */
-    public getDailyDataNew(o: {dateFrom?:moment.Moment, dateTo?:moment.Moment, timeFrom?:string, timeTo?:string}): Promise<any> {
+    public getDailyDataNew(o: {dateFrom?:moment.Moment, dateTo?:moment.Moment, timeFrom?:string, timeTo?:string, timeType?:string}): Promise<any> {
         return new Promise<any>((res, rej)=>{
             //we buffer X years of data. //TODO bring from config (3 places of DRY). TODO: OPTIMIZATION: if query takes too long take smaller chunks and cache.        
             const dateFrom: moment.Moment = o.dateFrom || moment().subtract(2, 'year').startOf('month');
@@ -329,6 +336,34 @@ export class OlapEp {
 
             const timeFrom = o.timeFrom || '0000';
             const timeTo = o.timeTo || '2359';
+            
+            let timeHierarchy;
+            let timeDim;
+            if (o.timeType === 'firingTime') {
+                timeHierarchy = this.dims.firingTime.hierarchy;
+                timeDim = this.dims.firingTime.dims.time;
+            } else {
+                timeHierarchy = this.dims.orderClosingTime.hierarchy;
+                timeDim = this.dims.orderClosingTime.dims.time;
+            }
+
+
+            let selectClause = `
+                SELECT
+                {
+                    ${this.measures.sales},
+                    ${this.measures.ppa.sales},
+                    ${this.measures.ppa.diners}
+                } ON 0,
+            `;
+            if (o.timeType) {
+                selectClause = `
+                    SELECT
+                    {
+                        ${this.measures.itemsSales}
+                    } ON 0,
+                `;
+            }
 
             // PPA per date range === ppa.sales / ppa.diners. 
             // we calc the PPA ourselve (not using the calc' PPA measure) 
@@ -339,7 +374,7 @@ export class OlapEp {
             if (o.timeFrom || o.timeTo) {
                 whereClause = `
                     ${whereClause}, 
-                    ${this.dims.orderClosingTime.hierarchy}.${this.dims.orderClosingTime.dims.time}.&[${timeFrom}]:${this.dims.orderClosingTime.hierarchy}.${this.dims.orderClosingTime.dims.time}.&[${timeTo}]
+                    ${timeHierarchy}.${timeDim}.&[${timeFrom}]:${timeHierarchy}.${timeDim}.&[${timeTo}]
                 `;   
             }
             whereClause = `
@@ -349,12 +384,7 @@ export class OlapEp {
             `;
 
             const mdx = `
-                SELECT 
-                {
-                    ${this.measures.sales},
-                    ${this.measures.ppa.sales},
-                    ${this.measures.ppa.diners}
-                } ON 0,
+                ${selectClause}
                 {
                     ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.dateAndWeekDay}.${this.dims.BusinessDate.dims.dateAndWeekDay}.members
                 } ON 1
@@ -379,7 +409,7 @@ export class OlapEp {
                                 let date = moment(dateAsString, 'DD-MM-YYYY');
                                 //let dateFormatted = date.format('dd') + '-' + date.format('DD');
 
-                                let sales = r[this.measures.sales] || 0;
+                                let sales = r[this.measures.sales] || r[this.measures.itemsSales] || 0;
                                 let salesPPA = r[this.measures.ppa.sales] || 0;
                                 let dinersPPA = r[this.measures.ppa.diners] || 0;
 
