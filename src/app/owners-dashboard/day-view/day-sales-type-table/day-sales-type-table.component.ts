@@ -28,6 +28,7 @@ export class DaySalesTypeTableComponent {
   ) {}
 
   render(shifts, salesByOrderTypeAndService) {
+    this.byTypeByShiftArr = [];
     const byTypeByShiftArr_preFiltering = [];
 
     for (let j = 0; j < this.dataService.orderTypes.length; j++) {    
@@ -82,6 +83,7 @@ export class DaySalesTypeTableComponent {
     }
 
     // summary computation:
+    this.summary = [];
     for (let i = 0; i < this.byTypeByShiftArr[0].byShift.length;i++) {
       const shiftName = this.byTypeByShiftArr[0].byShift[i].shiftName;
       const tuples = salesByOrderTypeAndService.filter(t => t.service === shiftName);
