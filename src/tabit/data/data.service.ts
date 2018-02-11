@@ -63,9 +63,9 @@ export class DataService {
     }).publishReplay(1).refCount();
 
     public shifts$: Observable<any> = Observable.create(obs => {
-        this.rosEp.get(this.ROS_base_url + '/configuration', {})
+        this.rosEp.get(this.ROS_base_url + '/configuration/regionalSettings', {})
             .then(data => {
-                const serverShiftsConfig = data[0].regionalSettings.ownerDashboard;
+                const serverShiftsConfig = data[0].ownerDashboard;
                 if (!serverShiftsConfig) console.error('error 7727: missing configuration: regionalSettings.ownerDashboard config is missing. please contact support.');
 
                 const shiftsConfig = [
