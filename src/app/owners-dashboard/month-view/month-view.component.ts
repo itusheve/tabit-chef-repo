@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { CardData } from '../../ui/card/card.component';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { TrendsDataService } from '../../../tabit/data/dc/trends.data.service';
 // import { isComponentView } from '@angular/core/src/view/util';
 
 @Component({
@@ -60,7 +61,7 @@ export class MonthViewComponent  {
   datePipe: DatePipe = new DatePipe('he-IL');
 
 //TODO dont forget to unsubscribe from streams when component dies!! cross system!
-  constructor(private dataService: DataService) {     
+  constructor(private dataService: DataService, private trendsDataService: TrendsDataService) {     
     let that = this;
     
     combineLatest(this.month$, dataService.vat$, dataService.currentBd$)
@@ -121,13 +122,26 @@ export class MonthViewComponent  {
       } else {
         that.showForecast = false;
         that.showSummary = true;
-        that.dataService.getMonthlyData(month)
+        
+        Promise.all([
+          that.dataService.getMonthlyData(month),
+          that.trendsDataService.month_lastYear_trend(month)
+        ])
           .then(data => {
+            const monthlyData = data[0];
+            const lastYearTrendModel = data[1];
+
             const title = `${that.datePipe.transform(month, 'MMMM')} סופי`;
-            that.summaryCardData.diners = data.diners;
-            that.summaryCardData.ppa = vat ? data.ppa : data.ppa / 1.17;
-            that.summaryCardData.sales = vat ? data.sales : data.sales / 1.17;
+            that.summaryCardData.diners = monthlyData.diners;
+            that.summaryCardData.ppa = vat ? monthlyData.ppa : monthlyData.ppa / 1.17;
+            that.summaryCardData.sales = vat ? monthlyData.sales : monthlyData.sales / 1.17;
             that.summaryCardData.title = title;
+            
+            that.summaryCardData.trends = {
+              //left: trends.currentBd.last4,
+              right: lastYearTrendModel
+            };
+            
             that.summaryCardData.loading = false;
           });
       }

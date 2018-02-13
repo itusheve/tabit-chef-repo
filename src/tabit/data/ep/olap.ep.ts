@@ -104,6 +104,23 @@ export class OlapEp {
         }
     };
     
+    private monthsMap = {
+        he: {
+            'ינואר': 1,
+            'פברואר': 2,
+            'מרץ': 3,
+            'אפריל': 4,
+            'מאי': 5,
+            'יוני': 6,
+            'יולי': 7,
+            'אוגוסט': 8,
+            'ספטמבר': 9,
+            'אוקטובר': 10,
+            'נובמבר': 11,
+            'דצמבר': 12
+        }
+    };
+
     private SHORTDAYOFWEEK_NAME_REGEX = / *\S* *(\S*)/;
 
     /* DEPRECATED! use the stateless getDailyDataNew instead */
@@ -169,24 +186,6 @@ export class OlapEp {
             FROM ${this.cube}
         `;
 
-        //TODO by querying the OLAP dims metadata we can extract the values normally
-        const monthsMap = {
-            he: {
-                'ינואר': 1,
-                'פברואר': 2,
-                'מרץ': 3,
-                'אפריל': 4,
-                'מאי': 5,
-                'יוני': 6,
-                'יולי': 7,
-                'אוגוסט': 8,
-                'ספטמבר': 9,
-                'אוקטובר': 10,
-                'נובמבר': 11,
-                'דצמבר': 12
-            }
-        };
-
         const regex = /(\d+) (\D+)/;
         
         this.url
@@ -210,7 +209,7 @@ export class OlapEp {
                                 if (!year || !month) {
                                     throw new Error(`err 761: error extracting monthly data: ${yearAndMonth}. please contact support.`);
                                 }
-                                monthInt = monthsMap['he'][month];
+                                monthInt = this.monthsMap['he'][month];
                                 if (!monthInt) {
                                     throw new Error(`err 762: error extracting monthly data: ${yearAndMonth}. please contact support.`);
                                 }
@@ -434,6 +433,101 @@ export class OlapEp {
                             //this.dailyData$.next(treated);
 
                             res(treated);
+
+                        })
+                        .catch(e => {
+                        });
+                });
+        });
+    }
+
+    /* 
+        returns a promise that resolves with data in months resolution
+    */
+    public getDataByMonths(o: { monthFrom: moment.Moment, monthTo: moment.Moment }): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+
+            let selectClause = `
+                SELECT
+                {
+                    ${this.measures.sales}
+                } ON 0,
+                {
+                    ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.yearAndMonth}.members
+                } ON 1
+            `;
+
+            // let whereClause = ``;
+            //     ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateFrom.format('YYYYMMDD')}]:${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateTo.format('YYYYMMDD')}]
+                
+            // `;
+            
+            // WHERE (
+            //     ${whereClause}
+            // )
+            // whereClause = `
+            // `;
+
+            const mdx = `
+                ${selectClause}
+                FROM ${this.cube}
+            `;
+                // ${whereClause}
+
+            const regex = /(\d+) (\D+)/;
+
+            this.url.take(1)
+                .subscribe(url => {
+                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+
+                    xmla4j_w.executeNew(mdx)
+                        .then(rowset => {
+                                                        
+                            const filtered = rowset.filter(r => {
+                                let yearAndMonth = r[`${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.yearAndMonth}.${this.dims.BusinessDate.dims.yearAndMonth}.[MEMBER_CAPTION]`];
+                                if (!yearAndMonth) return false;
+                                //data looks like: 2017 ינואר
+
+                                let m;
+                                let year;
+                                let month;
+                                let monthInt;
+                                try {
+                                    m = regex.exec(yearAndMonth);
+                                    year = m[1];
+                                    month = m[2];
+                                    if (!year || !month) {
+                                        //throw new Error(`err 7618: error extracting monthly data: ${yearAndMonth}. please contact support.`);
+                                        return false;
+                                    }
+                                    monthInt = this.monthsMap['he'][month];
+                                    if (!monthInt) {
+                                        //throw new Error(`err 7628: error extracting monthly data: ${yearAndMonth}. please contact support.`);
+                                        return false;
+                                    }
+                                } catch (e) {
+                                    // throw new Error(`err 7608: error extracting monthly data: ${yearAndMonth}. please contact support.`);
+                                    return false;
+                                }
+
+                                r.month = moment().year(year).month(monthInt - 1).date(1);
+                                return true;
+
+                            });
+
+
+                            const treated = filtered.map(r => {
+                                let sales = r[this.measures.sales];
+
+                                if (sales) sales = this.expoToNumer(sales);
+
+                                return {
+                                    month: r.month,
+                                    sales: sales
+                                };
+                            });
+
+                            resolve(treated);
 
                         })
                         .catch(e => {

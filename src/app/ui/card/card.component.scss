@@ -18,23 +18,42 @@
                 // color: transparent;
                 .figure {
                     font-size: 16px;
+                    line-height: 0.8;
                 }
-                mat-icon {
-                    font-size: 30px;
-                }
-                &.up {
+                
+                .label {
+                    line-height: 1;
                     mat-icon {
+                        font-size: 30px;
+                    }
+                    .letter {
+                        font-size: 22px;
+                    }
+                }
+                
+                &.up {
+                    .label {
                         color: #30e430;
                         text-shadow: #eeffee 0px 0px 2px;
-                        transform: rotateZ(-90deg) translateY(-4px) translateX(-10px);
+                        .letter {
+                            transform: translateX(-3px);
+                        }
+                        mat-icon {
+                            transform: rotateZ(-90deg) translateY(-3px) translateX(-6px);
+                        }
                     }
                 }
                 &.down {
-                    mat-icon {                        
+                    .label {
                         color: #ff2121;
                         text-shadow: #f48f8f 0px 0px 2px;
-                        transform: rotateZ(90deg) translateY(-1px) translateX(-10px);
                         order: 2;
+                        .letter {
+                            transform: translateX(-1px) translateY(-2px);
+                        }
+                        mat-icon {
+                            transform: rotateZ(90deg) translateY(-4px) translateX(-6px);
+                        }
                     }
                 }
             }

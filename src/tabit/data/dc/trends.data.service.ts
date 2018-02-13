@@ -404,18 +404,18 @@ export class TrendsDataService {
 
     /* stream of all the trends */
     public trends$: Observable<{
-        currentBd: {
-            last4: TrendModel,
-            lastYear: TrendModel
-        },
-        previousBd: {
-            last4: TrendModel,
-            lastYear: TrendModel
-        },
-        mtd: {
-            lastYear: TrendModel
-        }
-    }> = Observable.create(obs=>{
+            currentBd: {
+                last4: TrendModel,
+                lastYear: TrendModel
+            },
+            previousBd: {
+                last4: TrendModel,
+                lastYear: TrendModel
+            },
+            mtd: {
+                lastYear: TrendModel
+            }
+        }> = Observable.create(obs=>{
 
         let trends = {
             currentBd: {
@@ -449,6 +449,45 @@ export class TrendsDataService {
             });
         }).publishReplay(1).refCount();
 
-    constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService, private olapEp: OlapEp) { }
 
-}
+
+    constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService, private olapEp: OlapEp) { 
+
+        // this.month_lastYear_trend(moment().subtract(1, 'month'))
+        //     .then((trendModel:TrendModel)=>{
+        //         debugger;
+        //     });
+    }
+
+    /* 
+        the func returns a TrendModel that compares the sales of the month to the sales of the same month in previous year.        
+    */
+    public month_lastYear_trend(month: moment.Moment): Promise<TrendModel> {
+        return new Promise((resolve, reject)=>{
+            const trend = new TrendModel();
+            trend.name = 'completeMonthLastYear';
+            trend.description = 'completeMonthLastYear description';
+            
+            const prevYearMonth = moment(month).subtract(1, 'year');
+            
+            this.dataService.olapDataByMonths$
+                .subscribe(olapDataByMonths=>{
+                    const tuple = olapDataByMonths.find(monthData => monthData.month.isSame(month, 'month'));
+                    const prevYearTuple = olapDataByMonths.find(monthData => monthData.month.isSame(prevYearMonth, 'month'));
+                    if (!prevYearTuple || !prevYearTuple.sales) {
+                        trend.status = 'nodata';
+                    } else {
+                        const sales = tuple.sales || 0;
+                        const prevYearSales = prevYearTuple.sales;
+
+                        const changePct = (sales / prevYearSales) - 1;
+
+                        trend.val = changePct;
+                        trend.status = 'ready';                        
+                    }
+                    resolve(trend);
+                });
+
+            });
+        }
+    }

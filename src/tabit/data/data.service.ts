@@ -132,6 +132,23 @@ export class DataService {
             });
     }).publishReplay(1).refCount();
 
+    /* 
+        emits months and their sales from the Cube, up to two years ago.
+    */
+    public olapDataByMonths$: Observable<any> = new Observable(obs => {
+        this.currentBd$.take(1)
+            .subscribe((cbd:moment.Moment)=>{
+                this.olapEp.getDataByMonths({
+                    monthFrom: moment(cbd),
+                    monthTo: moment(cbd).subtract(2, 'year').subtract(1, 'month')
+                })
+                    .then(olapDataByMonths => {
+                        obs.next(olapDataByMonths);
+                    });
+
+            });
+    }).publishReplay(1).refCount();
+
     //TODO today data comes with data without tax. use it instead of dividing by 1.17 (which is incorrect).
     //TODO take cube "sales data excl. tax" instead of dividing by 1.17. 
     //TODO take cube "salesPPA excl. tax" (not implemented yet, talk with Ofer) instead of dividing by 1.17.
@@ -191,7 +208,7 @@ export class DataService {
     });
     
     public dailyDataByShiftAndType$: Observable<any>;
-
+    
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
         // const sub1 = this.dashboardDataNg$.subscribe(data=>{
         //     console.log('sub1: ' + data.today.totalSales);
@@ -331,7 +348,7 @@ export class DataService {
         return this.olapEp.getDailyData(fromDate, toDate);
     }
     
-    getMonthlyData(month: moment.Moment): Promise<any> {
+    getMonthlyData(month: moment.Moment): Promise<any> {//TODO now that olapDataByMonths is available, use it? or is it too slow?
         return new Promise((res, rej)=>{
             this.olapEp.monthlyData
                 .subscribe(dataByMonth=>{
@@ -348,7 +365,7 @@ export class DataService {
                     });
                 });
         });
-    }    
+    }     
 
     get monthForecastData(): ReplaySubject<any> {
         if (this.monthForecastData$) return this.monthForecastData$;
@@ -426,8 +443,6 @@ export class DataService {
     
         return this.monthForecastData$;
     }
-
-
 
     getDailyDataByShiftAndType(date: moment.Moment): Subject<any> {        
         const sub$ = new Subject<any>();

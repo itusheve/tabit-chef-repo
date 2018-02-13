@@ -10,7 +10,7 @@
       <div style="width:25%" class="s-0 flex j-end a-center">          
         <div *ngIf="cardData.trends && cardData.trends.right && cardData.trends.right.status==='ready'" class="flex d-col a-center trend"
           [ngClass]="cardData.trends.right.val > 0 ? 'up' : 'down'">
-          <mat-icon>play_arrow</mat-icon>
+          <div class="flex label"><div class="flex letter">ש</div><mat-icon>play_arrow</mat-icon></div>
           <div class="figure">{{cardData.trends.right.val | percent:'1.1-1'}}</div>
         </div>
       </div>
@@ -21,7 +21,7 @@
           class="flex d-col a-center trend" 
           [ngClass]="cardData.trends.left.val > 0 ? 'up' : 'down'"
           >
-          <mat-icon>play_arrow</mat-icon>
+          <div class="flex label"><div class="flex letter">מ</div><mat-icon>play_arrow</mat-icon></div>
           <div class="figure">{{cardData.trends.left.val | percent:'1.1-1'}}</div>
         </div>
       </div>
