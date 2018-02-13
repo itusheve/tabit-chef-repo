@@ -114,6 +114,11 @@ export class HomeComponent implements OnInit {
         };
 
         this.mtdCardData.loading = false;
+
+        this.trendsDataService.partial_month_forecast_to_start_of_month_partial_month_forecast()
+          .then(partial_month_forecast_to_start_of_month_partial_month_forecast=>{
+            this.mtdCardData.trends.left = partial_month_forecast_to_start_of_month_partial_month_forecast;
+          });
       });
   }
 

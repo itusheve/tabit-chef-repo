@@ -7,21 +7,21 @@
   <dx-load-indicator [(visible)]="!cardData || cardData.loading" rtlEnabled="true"></dx-load-indicator>
   <div *ngIf="cardData && !cardData.loading" class="g-1 flex d-col cbody">
     <div class="g-1 flex a-center j-sb cmain">
-      <div style="width:25%" class="s-0 flex j-end a-center">          
+      <div style="width:18%" class="s-0 flex j-end a-center">          
         <div *ngIf="cardData.trends && cardData.trends.right && cardData.trends.right.status==='ready'" class="flex d-col a-center trend"
           [ngClass]="cardData.trends.right.val > 0 ? 'up' : 'down'">
-          <div class="flex label"><div class="flex letter">ש</div><mat-icon>play_arrow</mat-icon></div>
+          <div class="flex label"><div class="flex letter">{{cardData.trends.right.letter}}</div><mat-icon>play_arrow</mat-icon></div>
           <div class="figure">{{cardData.trends.right.val | percent:'1.1-1'}}</div>
         </div>
       </div>
-      <div style="width:45%" class="flex aj-center csales">{{cardData.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
-      <div style="width:25%" class="s-0 flex a-center">
+      <div style="width:60%" class="flex aj-center csales">{{cardData.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
+      <div style="width:18%" class="s-0 flex a-center">
         <div           
           *ngIf="cardData.trends && cardData.trends.left && cardData.trends.left.status==='ready'"
           class="flex d-col a-center trend" 
           [ngClass]="cardData.trends.left.val > 0 ? 'up' : 'down'"
           >
-          <div class="flex label"><div class="flex letter">מ</div><mat-icon>play_arrow</mat-icon></div>
+          <div class="flex label"><div class="flex letter">{{cardData.trends.left.letter}}</div><mat-icon>play_arrow</mat-icon></div>
           <div class="figure">{{cardData.trends.left.val | percent:'1.1-1'}}</div>
         </div>
       </div>

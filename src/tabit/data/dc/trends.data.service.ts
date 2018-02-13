@@ -15,6 +15,7 @@ export class TrendsDataService {
         const trend = new TrendModel();
         trend.name = 'currentBdLast4';
         trend.description = 'currentBdLast4 description';
+        trend.letter = 'מ';
 
         obs.next(trend);
 
@@ -131,6 +132,7 @@ export class TrendsDataService {
         const trend = new TrendModel();
         trend.name = 'currentBdLastYear';
         trend.description = 'currentBdLastYear description';
+        trend.letter = 'ש';
 
         obs.next(trend);
 
@@ -219,6 +221,7 @@ export class TrendsDataService {
         const trend = new TrendModel();
         trend.name = 'previousBdLast4';
         trend.description = 'previousBdLast4 description';
+        trend.letter = 'מ';
 
         obs.next(trend);
 
@@ -278,6 +281,7 @@ export class TrendsDataService {
         const trend = new TrendModel();
         trend.name = 'previousBdLastYear';
         trend.description = 'previousBdLastYear description';
+        trend.letter = 'ש';
 
         obs.next(trend);
         
@@ -337,6 +341,7 @@ export class TrendsDataService {
         const trend = new TrendModel();
         trend.name = 'mtdBdLastYear';
         trend.description = 'mtdBdLastYear description';
+        trend.letter = 'ש';
 
         obs.next(trend);
 
@@ -451,7 +456,8 @@ export class TrendsDataService {
 
 
 
-    constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService, private olapEp: OlapEp) { 
+    
+        constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService, private olapEp: OlapEp) { 
 
         // this.month_lastYear_trend(moment().subtract(1, 'month'))
         //     .then((trendModel:TrendModel)=>{
@@ -467,6 +473,7 @@ export class TrendsDataService {
             const trend = new TrendModel();
             trend.name = 'completeMonthLastYear';
             trend.description = 'completeMonthLastYear description';
+            trend.letter = 'ש';
             
             const prevYearMonth = moment(month).subtract(1, 'year');
             
@@ -490,16 +497,16 @@ export class TrendsDataService {
 
         });
     }
-
     
     /* 
-    the func returns a TrendModel that compares the sales of the month to the sales of the same month in previous year.        
+        the func returns a TrendModel that compares the sales of the month to the sales of the same month in previous year.        
     */
     public month_forecast_to_last_year_trend(): Promise<TrendModel> {
         return new Promise((resolve, reject) => {
             const trend = new TrendModel();
             trend.name = 'month_forecast_to_last_year';
             trend.description = 'month_forecast_to_last_year description';
+            trend.letter = 'ש';
 
             zip(this.dataService.olapDataByMonths$, this.dataService.currentMonthForecast$, this.dataService.currentBd$.take(1))
                 .subscribe(data => {
@@ -530,18 +537,17 @@ export class TrendsDataService {
     }
 
     /* 
-        the func returns a TrendModel that compares the sales of the month to the sales of the same month in previous year.        
+        the func returns a TrendModel that compares the current monthly forecast to the monthly forecast as if it was calculated on the first day of the month.
     */
     public month_forecast_to_start_of_month_forecast(): Promise<TrendModel> {
         return new Promise((resolve, reject) => {
             const trend = new TrendModel();
             trend.name = 'month_forecast_to_start_of_month_forecast';
             trend.description = 'month_forecast_to_start_of_month_forecast description';
+            trend.letter = 'ת';
 
             zip(this.dataService.currentMonthForecast$, this.dataService.currentBd$.take(1))
                 .subscribe(data => {
-
-                    debugger;
 
                     const forecastData = data[0];
                     const cbd = data[1];
@@ -558,6 +564,51 @@ export class TrendsDataService {
         
                                 const changePct = (sales / startOfMonthSales) - 1;
         
+                                trend.val = changePct;
+                                trend.status = 'ready';
+                            }
+                            resolve(trend);
+                        });
+
+
+                });
+
+        });
+    }
+
+    /* 
+        the func returns a TrendModel that compares:
+            the MTD sales (closed sales up to previous BD, including) 
+            with
+            a partial forecast up to the previous BD (including), as if it was calculated on the first day of the month.
+    */
+    public partial_month_forecast_to_start_of_month_partial_month_forecast(): Promise<TrendModel> {
+        return new Promise((resolve, reject) => {
+            const trend = new TrendModel();
+            trend.name = 'partial_month_forecast_to_start_of_month_partial_month_forecast';
+            trend.description = 'partial_month_forecast_to_start_of_month_partial_month_forecast description';
+            trend.letter = 'ת';
+
+            zip(this.dataService.currentBd$.take(1), this.dataService.mtdData$.take(1))
+                .subscribe(data => {
+
+                    // const forecastData = data[0];
+                    const cbd = data[0];
+                    const mtd = data[1];
+
+                    const startOfMonth = moment(cbd).startOf('month');
+                    const upToBd = moment(cbd).subtract(1, 'day');
+
+                    this.dataService.getMonthForecastData({ calculationBd: startOfMonth, upToBd: upToBd })
+                        .then(startOfMonthForecastData => {
+                            if (!startOfMonthForecastData.sales) {
+                                trend.status = 'nodata';
+                            } else {
+                                const sales = mtd.sales || 0;
+                                const startOfMonthSales = startOfMonthForecastData.sales;
+
+                                const changePct = (sales / startOfMonthSales) - 1;
+
                                 trend.val = changePct;
                                 trend.status = 'ready';
                             }

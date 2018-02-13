@@ -5,4 +5,5 @@ export class TrendModel implements TbtViewModel {//TODO Trend interface should b
     name: string;
     description: string;
     val: number;
+    letter: string;
 }

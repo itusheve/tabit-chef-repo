@@ -15,7 +15,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/share';
-// import { TrendModel } from '../model/Trend.model';
 
 @Injectable()
 export class DataService {
