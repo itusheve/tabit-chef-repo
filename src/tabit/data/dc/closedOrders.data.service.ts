@@ -37,6 +37,7 @@ export class ClosedOrdersDataService {
                     order.openingTime = ordersRaw[i].openingTime;
                     order.number = ordersRaw[i].orderNumber;
                     order.waiter = ordersRaw[i].waiter;
+                    // console.info(ordersRaw[i].orderTypeCaption);
                     order.orderTypeId = this.dataService.orderTypes.find(ot => ot.caption === ordersRaw[i].orderTypeCaption)['id'];
                     order.sales = ordersRaw[i].sales;
                     order.diners = ordersRaw[i].dinersPPA;

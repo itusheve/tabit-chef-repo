@@ -98,13 +98,21 @@ export class HomeComponent implements OnInit {
         this.previousBdCardData.loading = false;
       });
 
-    combineLatest(this.dataService.mtdData$, this.dataService.currentBd$)
+    combineLatest(this.dataService.mtdData$, this.dataService.currentBd$, this.trendsDataService.trends$)
       .subscribe(data => {
+        const trends = data[2];
+
         const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} עד כה`;
         this.mtdCardData.diners = data[0].diners;
         this.mtdCardData.ppa = data[0].ppa;
         this.mtdCardData.sales = data[0].sales;
         this.mtdCardData.title = title;
+
+        this.mtdCardData.trends = {
+          // left: ,
+          right: trends.mtd.lastYear
+        };
+
         this.mtdCardData.loading = false;
       });
   }

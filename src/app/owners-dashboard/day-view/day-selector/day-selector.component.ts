@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 
 import * as moment from 'moment';
 
@@ -9,7 +9,7 @@ import * as moment from 'moment';
   templateUrl: './day-selector.component.html',
   styleUrls: ['./day-selector.component.css']
 })
-export class DaySelectorComponent implements OnInit {
+export class DaySelectorComponent implements OnInit, OnChanges {
   @Input() currentValue: moment.Moment;
 
   @Output() onDateChanged = new EventEmitter();
@@ -18,8 +18,29 @@ export class DaySelectorComponent implements OnInit {
   minDateValue: moment.Moment = moment().subtract(2, 'year').startOf('month');//TODO bring from config
   maxDateValue: moment.Moment = moment().subtract(1, 'days');
 
+  disablePrevious = false;
+  disableNext = false;
+
+  private setDisable() {
+    if (this.currentValue.isSame(this.minDateValue, 'day')) {
+      this.disablePrevious = true;
+    } else {
+      this.disablePrevious = false;
+    }
+
+    if (this.currentValue.isSame(this.maxDateValue, 'day')) {
+      this.disableNext = true;
+    } else {
+      this.disableNext = false;
+    }
+  }
+
   ngOnInit() {
     this.currentValue = moment(this.currentValue);
+  }
+
+  ngOnChanges() {
+    this.setDisable();
   }
 
   prevDay = ()=>{

@@ -21,6 +21,7 @@
     <a 
      (click)="nextMonth()"
       class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-previous-view dx-calendar-navigator-previous-month"
+      [ngClass]="{'disable':disableNext}"
       role="button" aria-label="chevronleft">
       <div class="dx-button-content">
         <i class="dx-icon dx-icon-chevronleft"></i>
@@ -34,6 +35,7 @@
     <a 
      (click)="prevMonth()"
       class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-next-view dx-calendar-navigator-next-month"
+      [ngClass]="{'disable':disablePrevious}"
       role="button" aria-label="chevronright">
       <div class="dx-button-content">
         <i class="dx-icon dx-icon-chevronright"></i>

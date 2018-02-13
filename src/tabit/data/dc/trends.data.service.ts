@@ -127,6 +127,94 @@ export class TrendsDataService {
             });
     }).publishReplay(1).refCount();
 
+    private currentBd_lastYear_trend$: Observable<TrendModel> = Observable.create(obs => {
+        const trend = new TrendModel();
+        trend.name = 'currentBdLastYear';
+        trend.description = 'currentBdLastYear description';
+
+        obs.next(trend);
+
+        zip(this.dataService.currentBd$.take(1), this.dataService.shifts$, this.dataService.todayDataVatInclusive$.take(1))
+            .subscribe(data => {
+                let timeFrom1, timeFrom2, timeTo1, timeTo2;
+
+                const currentBd: moment.Moment = data[0];
+
+                const currentBusinessDaySales = data[2].sales;
+
+                const tmpCurrentRestTime = moment();
+
+                const firstShiftStartingTime = moment(data[1][0]['startTime'], 'H:mm');
+
+                if (tmpCurrentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
+                    timeFrom1 = firstShiftStartingTime.format('HHmm');
+                } else {
+                    timeFrom1 = '0000';
+                    timeFrom2 = firstShiftStartingTime.format('HHmm');
+                    timeTo2 = '2359';
+                }
+                timeTo1 = tmpCurrentRestTime.format('HHmm');
+
+                const dateFrom: moment.Moment = moment(currentBd).subtract(1, 'year').subtract(1, 'month');
+                const dateTo: moment.Moment = moment(currentBd).subtract(1, 'year').add(1, 'month');
+
+                const qAll = [];
+                qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
+                if (timeFrom2) {
+                    qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom2, timeTo: timeTo2, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
+                }
+
+                Promise.all(qAll)
+                    .then(dailyDataArr => {
+
+                        let dailyData1 = dailyDataArr[0];
+                        let dailyData2;
+                        if (dailyDataArr.length === 2) dailyData2 = dailyDataArr[1];
+
+                        const currentBdWeekDay = currentBd.day();
+                        const currentBdWeekOfYear = currentBd.week();
+
+                        let avgTotalSales;
+
+                        let sumTotalSales1 = 0;
+                        for (let i = 0; i < dailyData1.length; i++) {
+                            const dayData = dailyData1[i];
+                            if (dayData.date.week() === currentBdWeekOfYear && dayData.date.day() === currentBdWeekDay) {
+                                sumTotalSales1 = dayData.sales;
+                                break;
+                            }
+                        }
+
+                        let sumTotalSales2 = 0;
+                        if (dailyData2) {
+                            for (let i = 0; i < dailyData2.length; i++) {
+                                const dayData = dailyData2[i];
+                                if (dayData.date.week() === currentBdWeekOfYear && dayData.date.day() === currentBdWeekDay) {
+                                    sumTotalSales2 = dayData.sales;
+                                    break;
+                                }
+                            }
+                        }
+
+                        let sumTotalSales = sumTotalSales1 + sumTotalSales2;
+
+                        if (sumTotalSales) {
+                            const changePct = (currentBusinessDaySales / sumTotalSales) - 1;
+
+                            trend.val = changePct;
+                            trend.status = 'ready';
+                            obs.next(trend);
+                            return;
+                        } else {
+                            trend.status = 'nodata';
+                            obs.next(trend);
+                            return;
+                        }
+                    });
+
+            });
+    }).publishReplay(1).refCount();
+
     private previousBd_last4_trend$: Observable<TrendModel> = Observable.create(obs=>{
         const trend = new TrendModel();
         trend.name = 'previousBdLast4';
@@ -183,94 +271,6 @@ export class TrendsDataService {
                     obs.next(trend);
                     return;
                 }
-            });
-    }).publishReplay(1).refCount();
-
-    private currentBd_lastYear_trend$: Observable<TrendModel> = Observable.create(obs => {
-        const trend = new TrendModel();
-        trend.name = 'currentBdLastYear';
-        trend.description = 'currentBdLastYear description';
-
-        obs.next(trend);
-
-        zip(this.dataService.currentBd$.take(1), this.dataService.shifts$, this.dataService.todayDataVatInclusive$.take(1))
-            .subscribe(data => {
-                let timeFrom1, timeFrom2, timeTo1, timeTo2;
-
-                const currentBd: moment.Moment = data[0];
-
-                const currentBusinessDaySales = data[2].sales;
-
-                const tmpCurrentRestTime = moment();
-
-                const firstShiftStartingTime = moment(data[1][0]['startTime'], 'H:mm');
-
-                if (tmpCurrentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
-                    timeFrom1 = firstShiftStartingTime.format('HHmm');
-                } else {
-                    timeFrom1 = '0000';
-                    timeFrom2 = firstShiftStartingTime.format('HHmm');
-                    timeTo2 = '2359';
-                }
-                timeTo1 = tmpCurrentRestTime.format('HHmm');
-              
-                const dateFrom: moment.Moment = moment(currentBd).subtract(1, 'year').subtract(1, 'month');
-                const dateTo: moment.Moment = moment(currentBd).subtract(1, 'year').add(1, 'month');
-
-                const qAll = [];
-                qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
-                if (timeFrom2) {
-                    qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom2, timeTo: timeTo2, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
-                }
-                                
-                Promise.all(qAll)
-                    .then(dailyDataArr => {
-                        
-                        let dailyData1 = dailyDataArr[0];
-                        let dailyData2;
-                        if (dailyDataArr.length === 2) dailyData2 = dailyDataArr[1];
-                        
-                        const currentBdWeekDay = currentBd.day();
-                        const currentBdWeekOfYear = currentBd.week();
-                        
-                        let avgTotalSales;
-
-                        let sumTotalSales1 = 0;
-                        for (let i = 0; i < dailyData1.length; i++) {
-                            const dayData = dailyData1[i];
-                            if (dayData.date.week() === currentBdWeekOfYear && dayData.date.day() === currentBdWeekDay) {
-                                sumTotalSales1 = dayData.sales;
-                                break;
-                            }
-                        }
-
-                        let sumTotalSales2 = 0;
-                        if (dailyData2) {
-                            for (let i = 0; i < dailyData2.length; i++) {
-                                const dayData = dailyData2[i];
-                                if (dayData.date.week() === currentBdWeekOfYear && dayData.date.day() === currentBdWeekDay) {
-                                    sumTotalSales2 = dayData.sales;
-                                    break;
-                                }
-                            }
-                        }
-
-                        let sumTotalSales = sumTotalSales1 + sumTotalSales2;
-
-                        if (sumTotalSales) {
-                            const changePct = (currentBusinessDaySales / sumTotalSales) - 1;
-
-                            trend.val = changePct;
-                            trend.status = 'ready';
-                            obs.next(trend);
-                            return;
-                        } else {
-                            trend.status = 'nodata';
-                            obs.next(trend);
-                            return;
-                        }
-                    });
-
             });
     }).publishReplay(1).refCount();
 
@@ -333,6 +333,75 @@ export class TrendsDataService {
 
     }).publishReplay(1).refCount();
 
+    private mtd_lastYear_trend$: Observable<TrendModel> = Observable.create(obs => {
+        const trend = new TrendModel();
+        trend.name = 'mtdBdLastYear';
+        trend.description = 'mtdBdLastYear description';
+
+        obs.next(trend);
+
+        zip(this.dataService.currentBd$.take(1))
+            .subscribe(data => {
+                const currentBd: moment.Moment = data[0];
+                console.info(`Trends: MTD: Last Year: Current Business Day is: ${currentBd.format('DD/MM/YYYY')}`);
+
+                if (currentBd.date()===1) {
+                    trend.status = 'nodata';
+                    obs.next(trend);
+                    return;                    
+                }
+
+                const dateFrom1: moment.Moment = moment(currentBd).startOf('month');//TODO reuse the mtd card call
+                const dateTo1: moment.Moment = moment(currentBd.subtract(1, 'day'));
+                console.info(`Trends: MTD: Last Year: MTD: From ${dateFrom1.format('DD/MM/YYYY')} To ${dateTo1.format('DD/MM/YYYY')}`);
+
+                const dateFrom2: moment.Moment = moment(currentBd).subtract(1, 'year').startOf('month');
+                const dateTo2: moment.Moment = moment(currentBd).subtract(1, 'year');
+                console.info(`Trends: MTD: Last Year: MTD Previous Year: From ${dateFrom2.format('DD/MM/YYYY')} To ${dateTo2.format('DD/MM/YYYY')}`);
+
+                const qAll = [];
+                qAll.push(this.olapEp.getDailyDataNew({ dateFrom: dateFrom1, dateTo: dateTo1 }));
+                qAll.push(this.olapEp.getDailyDataNew({ dateFrom: dateFrom2, dateTo: dateTo2 }));
+
+                Promise.all(qAll)
+                    .then(dailyDataArr => {
+
+                        let dailyData1 = dailyDataArr[0];
+                        let dailyData2 = dailyDataArr[1];
+                        
+                        let sumTotalSalesMTD = 0;
+                        for (let i = 0; i < dailyData1.length; i++) {
+                            const dayData = dailyData1[i];
+                            sumTotalSalesMTD += dayData.sales;
+                        }
+                        console.info(`Trends: MTD: Last Year: Sum Total Sales MTD: ${sumTotalSalesMTD}`);
+
+                        let sumTotalSalesMTDpreviousYear = 0;
+                        for (let i = 0; i < dailyData2.length; i++) {
+                            const dayData = dailyData2[i];
+                            sumTotalSalesMTDpreviousYear += dayData.sales;
+                        }
+                        console.info(`Trends: MTD: Last Year: Sum Total Sales MTD Last Year: ${sumTotalSalesMTDpreviousYear}`);
+
+                        if (!sumTotalSalesMTDpreviousYear) {
+                            trend.status = 'nodata';
+                            obs.next(trend);
+                            return;                            
+                        }
+
+                        const changePct = (sumTotalSalesMTD / sumTotalSalesMTDpreviousYear) - 1;
+
+                        trend.val = changePct;
+                        trend.status = 'ready';
+                        obs.next(trend);
+                        return;
+
+                    });
+
+            });
+
+    }).publishReplay(1).refCount();
+
     /* stream of all the trends */
     public trends$: Observable<{
         currentBd: {
@@ -341,6 +410,9 @@ export class TrendsDataService {
         },
         previousBd: {
             last4: TrendModel,
+            lastYear: TrendModel
+        },
+        mtd: {
             lastYear: TrendModel
         }
     }> = Observable.create(obs=>{
@@ -353,15 +425,25 @@ export class TrendsDataService {
             previousBd: {
                 last4: undefined,
                 lastYear: undefined
-            }    
+            },
+            mtd: {
+                lastYear: undefined
+            }
         };
 
-            zip(this.currentBd_last4_trend$, this.previousBd_last4_trend$, this.currentBd_lastYear_trend$, this.previousBd_lastYear_trend$)
+            zip(
+                this.currentBd_last4_trend$, 
+                this.previousBd_last4_trend$, 
+                this.currentBd_lastYear_trend$, 
+                this.previousBd_lastYear_trend$,
+                this.mtd_lastYear_trend$,
+            )
             .subscribe(trendsArr=>{
                 trends.currentBd.last4 = trendsArr[0];
                 trends.previousBd.last4 = trendsArr[1];
                 trends.currentBd.lastYear = trendsArr[2];
                 trends.previousBd.lastYear = trendsArr[3];
+                trends.mtd.lastYear = trendsArr[4];
 
                 obs.next(trends);
             });

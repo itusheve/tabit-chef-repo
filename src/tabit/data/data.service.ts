@@ -41,16 +41,17 @@ export class DataService {
         { id: 'ta', caption: 'לקחת' },
         { id: 'delivery', caption: 'משלוח' },
         { id: 'undefined', caption: 'סוג הזמנה לא מוגדר' },
-        { id: 'returns', caption: 'החזר' }
+        { id: 'returns', caption: 'החזר' },
+        {id: 'het', caption: 'החלפת אמצעי תשלום'}
     ];
 
 
-    public businessDay$: Observable<any> = Observable.create(obs=>{
-        this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
-            .then(data => {
-                obs.next(data);
-            });        
-    }).publishReplay(1).refCount();
+    // public businessDay$: Observable<any> = Observable.create(obs=>{
+    //     this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
+    //         .then(data => {
+    //             obs.next(data);
+    //         });        
+    // }).publishReplay(1).refCount();
 
     public dashboardData$: Observable<any> = Observable.create(obs => {
         const params = {
@@ -205,7 +206,7 @@ export class DataService {
 
     get currentBd$(): Observable<moment.Moment> {
         return this.dashboardData$
-            .map(data => {
+            .map(data => {                
                 const bdStr = data.today.businessDate.substring(0, 10);
                 const bd: moment.Moment = moment(bdStr).startOf('day');
                 return bd;
@@ -280,7 +281,7 @@ export class DataService {
                 (vat:boolean) => {
                     return Observable.create(obs => {
                         const dateFrom: moment.Moment = moment().startOf('month');
-                        const dateTo: moment.Moment = moment().subtract(1, 'days');
+                        const dateTo: moment.Moment = moment().subtract(1, 'days');//TODO should be base on currentBd!
                         this.getDailyData(dateFrom, dateTo)
                             .then(dailyData => {
                                 let sales = _.sumBy(dailyData, 'sales');
