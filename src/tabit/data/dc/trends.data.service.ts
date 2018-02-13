@@ -494,14 +494,14 @@ export class TrendsDataService {
     
     /* 
     the func returns a TrendModel that compares the sales of the month to the sales of the same month in previous year.        
-*/
+    */
     public month_forecast_to_last_year_trend(): Promise<TrendModel> {
         return new Promise((resolve, reject) => {
             const trend = new TrendModel();
             trend.name = 'month_forecast_to_last_year';
             trend.description = 'month_forecast_to_last_year description';
 
-            zip(this.dataService.olapDataByMonths$, this.dataService.monthForecastData.take(1), this.dataService.currentBd$.take(1))
+            zip(this.dataService.olapDataByMonths$, this.dataService.currentMonthForecast$, this.dataService.currentBd$.take(1))
                 .subscribe(data => {
 
                     const olapDataByMonths = data[0];
@@ -524,6 +524,47 @@ export class TrendsDataService {
                         trend.status = 'ready';
                     }
                     resolve(trend);
+                });
+
+        });
+    }
+
+    /* 
+        the func returns a TrendModel that compares the sales of the month to the sales of the same month in previous year.        
+    */
+    public month_forecast_to_start_of_month_forecast(): Promise<TrendModel> {
+        return new Promise((resolve, reject) => {
+            const trend = new TrendModel();
+            trend.name = 'month_forecast_to_start_of_month_forecast';
+            trend.description = 'month_forecast_to_start_of_month_forecast description';
+
+            zip(this.dataService.currentMonthForecast$, this.dataService.currentBd$.take(1))
+                .subscribe(data => {
+
+                    debugger;
+
+                    const forecastData = data[0];
+                    const cbd = data[1];
+
+                    const startOfMonth = moment(cbd).startOf('month');
+
+                    this.dataService.getMonthForecastData({ calculationBd: startOfMonth })
+                        .then(startOfMonthForecastData=>{
+                            if (!startOfMonthForecastData.sales) {
+                                trend.status = 'nodata';
+                            } else {
+                                const sales = forecastData.sales || 0;
+                                const startOfMonthSales = startOfMonthForecastData.sales;
+        
+                                const changePct = (sales / startOfMonthSales) - 1;
+        
+                                trend.val = changePct;
+                                trend.status = 'ready';
+                            }
+                            resolve(trend);
+                        });
+
+
                 });
 
         });

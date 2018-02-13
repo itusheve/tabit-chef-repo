@@ -117,8 +117,6 @@ export class DataService {
             });
     }).publishReplay(1).refCount();
 
-    private monthForecastData$;
-
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
     /* 
@@ -149,6 +147,19 @@ export class DataService {
             });
     }).publishReplay(1).refCount();
 
+    /* 
+        the stream emits the current BD's monthly forecast (by utilizing getMonthForecastData())
+    */
+    public currentMonthForecast$: Observable<any> = new Observable(obs => {
+        this.currentBd$
+            .subscribe(cbd=>{
+                this.getMonthForecastData({calculationBd: cbd})
+                    .then(mfd=>{
+                        obs.next(mfd);
+                    });
+            });
+    }).publishReplay(1).refCount();
+    
     //TODO today data comes with data without tax. use it instead of dividing by 1.17 (which is incorrect).
     //TODO take cube "sales data excl. tax" instead of dividing by 1.17. 
     //TODO take cube "salesPPA excl. tax" (not implemented yet, talk with Ofer) instead of dividing by 1.17.
@@ -207,8 +218,11 @@ export class DataService {
 
     });
     
+    
+    
     public dailyDataByShiftAndType$: Observable<any>;
     
+
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
         // const sub1 = this.dashboardDataNg$.subscribe(data=>{
         //     console.log('sub1: ' + data.today.totalSales);
@@ -367,82 +381,99 @@ export class DataService {
         });
     }     
 
-    get monthForecastData(): ReplaySubject<any> {
-        if (this.monthForecastData$) return this.monthForecastData$;
-        let that = this;
+    /* 
+        The function returns a Promise that resolves with:
+        forecast data, which consists of the following measures: sales, diners and ppa
+        that are expected for the month of the provided calculationBd (calculation's Business Day) (e.g. for BD: 07/12/2017 the forecast is for December).
+        the forecast is the sum (for ppa, the average) of data from two components:
+        1. the closed orders that were recorded from the start of the forecast month up to 1 day before the calculationBd (e.g., for BD: 07/12/2017 this component will sum the orders from Dec' 1st till Dec' 6th)
+        2. the sum of daily forecasts for the days from:
+            calculationBd (including), till
+            the last day of the forecast month (including), or, if supplied, upToBd (including)
+            
+            where each daily forecast is computed by calc the average measures for the specific week day over up to 8 weeks of data previous to the calculationBd, 
+            e.g., the forecast for the 09/12/2017 which is Saturday, is the average of all the measures in the last 8 Saturdays
+     */
+    getMonthForecastData(o: { calculationBd: moment.Moment, upToBd?: moment.Moment }): 
+        Promise<{
+            sales: number,
+            diners: number,
+            ppa: number
+        }> {
+            const days = 56;//56 // we fetch past 56 days (exclusive of today).
+            const dateTo: moment.Moment = moment(o.calculationBd).subtract(1, 'days');//TODO should take cbd...
+            const dateFrom: moment.Moment = moment(dateTo).subtract(days-1, 'days');                        
+            const upToBd = o.upToBd ? moment(o.upToBd) : moment(o.calculationBd).endOf('month');
 
-        this.monthForecastData$ = new ReplaySubject<any>();
+            return new Promise((resolve, reject)=>{
 
-        const days = 56;//56 // we fetch past 56 days (exclusive of today).
-        const dateTo: moment.Moment = moment().subtract(1, 'days');
-        const dateFrom: moment.Moment = moment(dateTo).subtract(days-1, 'days');        
+                this.getDailyData(dateFrom, dateTo)
+                    .then(dailyData => {
+                        // bring only days that has sales
+                        dailyData = dailyData.filter(r => r.sales > 0);
 
-        this.getDailyData(dateFrom, dateTo)
-            .then(dailyData=>{
+                        if (dailyData.length < 7) {
+                            return new Error('not enough data for forecasting');
+                        }
 
-                // bring only days that has sales
-                dailyData = dailyData.filter(r=>r.sales > 0);
+                        // group history days by weekday, sunday = 0, monday = 1...
+                        const groupedByWeekDay = _.groupBy(dailyData, d => d.date.weekday());
 
-                if (dailyData.length < 7) {
-                    return new Error('not enough data for forecasting');
-                }
+                        if (_.keys(groupedByWeekDay).length < 7) { // don't have all week days
+                            const missingDays = _.difference(['0', '1', '2', '3', '4', '5', '6'], _.keys(groupedByWeekDay));
+                            _.each(missingDays, function (day) {
+                                groupedByWeekDay[day] = [
+                                    {
+                                        sales: 0,
+                                        salesPPA: 0,
+                                        dinersPPA: 0
+                                    }
+                                ];
+                            });
+                        }
 
-                // group history days by weekday, sunday = 0, monday = 1...
-                const groupedByWeekDay = _.groupBy(dailyData, d => d.date.weekday());
+                        const statsByWeekDay = _.map(groupedByWeekDay, function (d) {
+                            return {
+                                sales: _.sumBy(d, 'sales') / d.length,
+                                salesPPA: _.sumBy(d, 'salesPPA') / d.length,
+                                dinersPPA: _.sumBy(d, 'dinersPPA') / d.length
+                            };
+                        });
 
-                if (_.keys(groupedByWeekDay).length < 7) { // don't have all week days
-                    const missingDays = _.difference(['0', '1', '2', '3', '4', '5', '6'], _.keys(groupedByWeekDay));
-                    _.each(missingDays, function (day) {
-                        groupedByWeekDay[day] = [
-                            {
-                                sales: 0,
-                                salesPPA: 0,
-                                dinersPPA: 0
-                            }
-                        ];
+                        // calculate days left
+                        const lastHistoryDate = dailyData[0].date;
+                        const daysLeftCount = upToBd.diff(lastHistoryDate, 'days');
+
+                        // push each day his avg for the last 28 days by weekday
+                        for (let i = 1; i <= daysLeftCount; i++) {
+                            const date = lastHistoryDate.clone().add(i, 'days');
+                            const dayOfWeek = date.weekday();
+                            const dayliForecast = Object.assign({}, statsByWeekDay[dayOfWeek], { date: date });
+                            dailyData.push(dayliForecast);
+                        }
+
+                        //remove previous months data:
+                        const monthStart: moment.Moment = moment().startOf('month');
+                        dailyData = dailyData.filter(d => d.date.isSameOrAfter(monthStart, 'day'));
+
+                        const salesSum = _.sumBy(dailyData, 'sales');
+                        const dinersPPAsum = _.sumBy(dailyData, 'dinersPPA');
+                        const salesPPAsum = _.sumBy(dailyData, 'salesPPA');
+                        const ppa = salesPPAsum / dinersPPAsum;
+
+                        const forecast = {
+                            sales: salesSum,
+                            diners: dinersPPAsum,
+                            ppa: ppa
+                        };
+
+                        resolve(forecast);
+
                     });
-                }
 
-                const statsByWeekDay = _.map(groupedByWeekDay, function (d) {
-                    return {
-                        sales: _.sumBy(d, 'sales') / d.length,
-                        salesPPA: _.sumBy(d, 'salesPPA') / d.length,
-                        dinersPPA: _.sumBy(d, 'dinersPPA') / d.length
-                    };
-                });
-
-                // calculate days left
-                const lastHistoryDate = dailyData[0].date;
-                const daysLeftCount = moment().endOf('month').diff(lastHistoryDate, 'days');
-
-                // push each day his avg for the last 28 days by weekday
-                for (let i = 1; i <= daysLeftCount; i++) {
-                    const date = lastHistoryDate.clone().add(i, 'days');
-                    const dayOfWeek = date.weekday();
-                    const dayliForecast = Object.assign({}, statsByWeekDay[dayOfWeek], {date: date});
-                    dailyData.push(dayliForecast);
-                }
-
-                //remove previous months data:
-                const monthStart: moment.Moment = moment().startOf('month');
-                dailyData = dailyData.filter(d => d.date.isSameOrAfter(monthStart, 'day'));
-
-                const salesSum = _.sumBy(dailyData, 'sales');
-                const dinersPPAsum = _.sumBy(dailyData, 'dinersPPA');
-                const salesPPAsum = _.sumBy(dailyData, 'salesPPA');
-                const ppa = salesPPAsum / dinersPPAsum;
-
-                const forecast = {
-                    sales: salesSum,
-                    diners: dinersPPAsum,
-                    ppa: ppa
-                };
-
-                this.monthForecastData$.next(forecast);
             });
-    
-        return this.monthForecastData$;
     }
+
 
     getDailyDataByShiftAndType(date: moment.Moment): Subject<any> {        
         const sub$ = new Subject<any>();
