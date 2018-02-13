@@ -488,6 +488,45 @@ export class TrendsDataService {
                     resolve(trend);
                 });
 
-            });
-        }
+        });
     }
+
+    
+    /* 
+    the func returns a TrendModel that compares the sales of the month to the sales of the same month in previous year.        
+*/
+    public month_forecast_to_last_year_trend(): Promise<TrendModel> {
+        return new Promise((resolve, reject) => {
+            const trend = new TrendModel();
+            trend.name = 'month_forecast_to_last_year';
+            trend.description = 'month_forecast_to_last_year description';
+
+            zip(this.dataService.olapDataByMonths$, this.dataService.monthForecastData.take(1), this.dataService.currentBd$.take(1))
+                .subscribe(data => {
+
+                    const olapDataByMonths = data[0];
+                    const forecastData = data[1];
+                    const cbd = data[2];
+
+                    const prevYearMonth = moment(cbd).subtract(1, 'year');
+                    
+                    const prevYearTuple = olapDataByMonths.find(monthData => monthData.month.isSame(prevYearMonth, 'month'));
+
+                    if (!prevYearTuple || !prevYearTuple.sales) {
+                        trend.status = 'nodata';
+                    } else {
+                        const sales = forecastData.sales || 0;
+                        const prevYearSales = prevYearTuple.sales;
+
+                        const changePct = (sales / prevYearSales) - 1;
+
+                        trend.val = changePct;
+                        trend.status = 'ready';
+                    }
+                    resolve(trend);
+                });
+
+        });
+    }
+
+}

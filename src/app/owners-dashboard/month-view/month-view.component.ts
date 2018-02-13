@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { CardData } from '../../ui/card/card.component';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { TrendsDataService } from '../../../tabit/data/dc/trends.data.service';
+import { TrendModel } from '../../../tabit/model/Trend.model';
 // import { isComponentView } from '@angular/core/src/view/util';
 
 @Component({
@@ -109,6 +110,7 @@ export class MonthViewComponent  {
       if (isCurrentMonth) {
         that.showForecast = true;
         that.showSummary = false;
+        
         that.dataService.monthForecastData
           .take(1)
           .subscribe(data => {
@@ -118,6 +120,14 @@ export class MonthViewComponent  {
             that.forecastCardData.sales = vat ? data.sales : data.sales / 1.17;
             that.forecastCardData.title = title;
             that.forecastCardData.loading = false;
+
+            that.trendsDataService.month_forecast_to_last_year_trend()
+              .then((month_forecast_to_last_year_trend:TrendModel)=>{
+                that.forecastCardData.trends = {
+                  //left: trends.currentBd.last4,
+                  right: month_forecast_to_last_year_trend
+                };
+              });
           });
       } else {
         that.showForecast = false;
