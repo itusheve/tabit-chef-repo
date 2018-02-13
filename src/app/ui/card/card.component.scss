@@ -27,7 +27,7 @@
                         font-size: 30px;
                     }
                     .letter {
-                        font-size: 22px;
+                        font-size: 15px;
                     }
                 }
                 
@@ -36,7 +36,7 @@
                         color: #30e430;
                         text-shadow: #eeffee 0px 0px 2px;
                         .letter {
-                            transform: translateX(-3px);
+                            transform: translateX(-3px) translateY(4px);
                         }
                         mat-icon {
                             transform: rotateZ(-90deg) translateY(-3px) translateX(-6px);
@@ -49,7 +49,7 @@
                         text-shadow: #f48f8f 0px 0px 2px;
                         order: 2;
                         .letter {
-                            transform: translateX(-1px) translateY(-2px);
+                            transform: translateX(-1px) translateY(2px);
                         }
                         mat-icon {
                             transform: rotateZ(90deg) translateY(-4px) translateX(-6px);
