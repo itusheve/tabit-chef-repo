@@ -119,7 +119,7 @@ export class DataService {
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
     /* 
-    replaces the depracated getDailyData which relies wrongly on the olapEp deprectaed stthe depracated getDailyData which relies wrongly on the olapEp deprectaed statefull getDailyData
+    replaces the depracated getDailyData which relies wrongly on the olapEp deprectaed statefull getDailyData
     emits vat inclusive data of closed orders (from the Cube), up to two years ago
     */    
     public dailyData$: Observable<any> = new Observable(obs=>{

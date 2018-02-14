@@ -57,7 +57,7 @@ export class TrendsDataService {
                 const dateFrom: moment.Moment = moment(currentBd).subtract(6, 'weeks');
                 const dateTo: moment.Moment = moment(currentBd);
                 
-                const qAll = [];
+                const qAll = [];//TODO a high level dac should'nt call directly an EP. only data.service should.
                 qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime'}));
                 if (timeFrom2) {
                     qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom2, timeTo: timeTo2, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime'}));
@@ -655,6 +655,94 @@ export class TrendsDataService {
 
                 });
 
+        });
+    }
+
+    /* 
+        the func returns a Promise that resolves with an object consisting of 3 TrendModels for 3 measures: sales, diners and ppa.
+        for each measure, its corresponding TrendModel compares the business day's ('bd') measure against the average measure from up to 4 previous business days with the same week day.        
+    */
+    public bd_to_last_4_bd(bd: moment.Moment): Promise<{sales: TrendModel, diners: TrendModel, ppa: TrendModel}> {
+        return new Promise((resolve, reject) => {
+            const trend_s = new TrendModel();
+            const trend_d = new TrendModel();
+            const trend_p = new TrendModel();
+
+            trend_s.name = 'bd_sales_to_last_4_bd_sales';
+            trend_d.name = 'bd_sales_to_last_4_bd_diners';
+            trend_p.name = 'bd_sales_to_last_4_bd_ppa';
+
+            trend_s.description = 'bd_sales_to_last_4_bd_sales description';
+            trend_d.description = 'bd_sales_to_last_4_bd_diners description';
+            trend_p.description = 'bd_sales_to_last_4_bd_ppa description';
+
+            trend_s.letter = 'מ';
+            trend_d.letter = 'מ';
+            trend_p.letter = 'מ';
+
+            const bdWeekDay = bd.day();
+            
+            const seekTill: moment.Moment = moment(bd).subtract(4, 'weeks');
+            
+            let bdSales, bdDiners, bdPPA;
+
+            let avgTotalSales, avgTotalDiners, avgPPA;
+            let sumTotalSales = 0, sumTotalDiners = 0, sumTotalSalesPPA = 0;
+            let found = 0;
+            
+            this.dataService.dailyData$
+                .subscribe(dailyData => {
+                    for (let i = 0; i < dailyData.length; i++) {
+                        const dayData = dailyData[i];
+                        if (dayData.date.isAfter(bd, 'day')) {
+                            continue;
+                        } else if (dayData.date.isSame(bd, 'day')) {
+                            bdSales = dayData.sales;
+                            bdDiners = dayData.dinersPPA;
+                            if (bdDiners) bdPPA = dayData.salesPPA / bdDiners;
+                        } else if (dayData.date.isBefore(seekTill, 'day')) {
+                            break;
+                        } else if (dayData.date.day() === bdWeekDay) {
+                            sumTotalSales += dayData.sales;
+                            sumTotalDiners += dayData.dinersPPA;
+                            sumTotalSalesPPA += dayData.salesPPA;
+                            found++;
+                        }        
+                    }
+
+                    if (!sumTotalSales || bdSales===undefined) {
+                        trend_s.status = 'nodata';
+                    } else {
+                        avgTotalSales = sumTotalSales / found;
+                        const changePct_s = (bdSales / avgTotalSales) - 1;
+                        trend_s.val = changePct_s;
+                        trend_s.status = 'ready';
+                    }
+
+                    if (!sumTotalDiners || bdDiners === undefined) {
+                        trend_d.status = 'nodata';
+                    } else {
+                        avgTotalDiners = sumTotalDiners / found;
+                        const changePct_d = (bdDiners / avgTotalDiners) - 1;
+                        trend_d.val = changePct_d;
+                        trend_d.status = 'ready';
+                    }
+
+                    if (!sumTotalSalesPPA || !sumTotalDiners || bdPPA === undefined) {
+                        trend_p.status = 'nodata';
+                    } else {
+                        avgPPA = sumTotalSalesPPA / sumTotalDiners;
+                        const changePct_p = (bdPPA / avgPPA) - 1;
+                        trend_p.val = changePct_p;
+                        trend_p.status = 'ready';
+                    }
+
+                    resolve({
+                        sales: trend_s,
+                        diners: trend_d,
+                        ppa: trend_p
+                    });
+                });
         });
     }
 

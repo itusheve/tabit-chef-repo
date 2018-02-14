@@ -10,6 +10,15 @@ import { TrendsDataService } from '../../../tabit/data/dc/trends.data.service';
 import { TrendModel } from '../../../tabit/model/Trend.model';
 // import { isComponentView } from '@angular/core/src/view/util';
 
+interface DailyTrends {
+  date: moment.Moment,
+  trends: { 
+    sales: TrendModel, 
+    diners: TrendModel, 
+    ppa: TrendModel 
+  }
+}
+
 @Component({
   selector: 'app-month-view',
   templateUrl: './month-view.component.html',
@@ -71,6 +80,31 @@ export class MonthViewComponent  {
       });
 
     function updateGridAndChart(month, vat, currentBd: moment.Moment) {
+      
+      function getDailyTrends(queryFrom:moment.Moment, queryTo:moment.Moment):Promise<DailyTrends[]> {
+        
+        function getDailyTrend(m: moment.Moment): Promise<DailyTrends> {
+          return that.trendsDataService.bd_to_last_4_bd(m)
+            .then((trends: { sales: TrendModel, diners: TrendModel, ppa: TrendModel })=>{
+              return {
+                date: m,
+                trends: trends
+              }
+            });
+        }
+
+        return new Promise((resolve, reject)=>{
+          const pArr = [];
+          for (let m = moment(queryFrom); m.isSameOrBefore(queryTo, 'day'); m=moment(m).add(1, 'day')) {
+            pArr.push(getDailyTrend(m));
+          }
+          Promise.all(pArr)
+            .then(data=>{
+              resolve(data);
+            });
+        });
+      }
+
       const isCurrentMonth = month.isSame(currentBd, 'month');
 
       let queryFrom = moment(month).startOf('month');
@@ -81,21 +115,33 @@ export class MonthViewComponent  {
         queryTo = moment(month).endOf('month');
       }
 
-      that.dataService.getDailyData(queryFrom, queryTo)
-        .then(rowset => {
+      let dailyTrends: DailyTrends[];
+      
+      Promise.all([
+        that.dataService.getDailyData(queryFrom, queryTo),
+        getDailyTrends(moment(queryFrom), moment(queryTo))
+      ])
+        .then(data => {
+          let rowset = data[0];
+          let dailyTrends = data[1];
+          
           rowset = rowset.map(r => {
             const dateFormatted = that.datePipe.transform(r.date.valueOf(), 'dd-EEEEE');
             let ppa = (vat ? r.ppa : r.ppa / 1.17);
             let sales = (vat ? r.sales : r.sales / 1.17);
             let salesPPA = (vat ? r.salesPPA : r.salesPPA / 1.17);
             if (ppa === 0) ppa = null;
+            
+            const dailyTrends_ = dailyTrends.find(dt => dt.date.isSame(r.date, 'day'));
+
             return {
               date: r.date,
               dateFormatted: dateFormatted,
               dinersPPA: r.dinersPPA,
               ppa: ppa,
               sales: sales,
-              salesPPA: salesPPA
+              salesPPA: salesPPA,
+              dailyTrends: dailyTrends_
             };
           });
 
@@ -176,6 +222,7 @@ export class MonthViewComponent  {
       }
 
       updateForecastOrSummary(month, vat, currentBd);
+
     }
   }
 

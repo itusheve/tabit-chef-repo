@@ -8,12 +8,16 @@
     [rtlEnabled]="true"
     [showColumnLines]="false"
     noDataText="אין נתונים"
+    
+    rowTemplate="rowTemplateName"
+
     >
     <dxo-paging [enabled]="false"></dxo-paging>
     <dxo-sorting ascendingText="סדר עולה" descendingText="סדר יורד" clearText="נקה מיון"></dxo-sorting>
-    <dxi-column caption="יום" dataField="dateFormatted"></dxi-column>
     
-    <!-- <dxi-column caption='סה"כ' dataField="sales" format="currency"></dxi-column> -->
+    <dxi-column 
+      caption="יום" 
+      dataField="dateFormatted"></dxi-column>
     <dxi-column   
       caption='סה"כ' 
       dataField="sales" 
@@ -27,5 +31,57 @@
       caption="PPA" 
       dataField="ppa" 
       [format]="{ style: 'currency', currency: 'ILS', minimumFractionDigits: 2, maximumFractionDigits: 2 }"></dxi-column>
+
+    <tbody *dxTemplate="let data of 'rowTemplateName'">
+      <tr class="dx-row dx-data-row dx-row-lines">
+        <td style="text-align: right;">{{data.data.dateFormatted}}</td>
+        <td style="text-align: right;">
+          <div class="flex">
+            <div class="flex">{{data.data.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
+            <div 
+              *ngIf="data.data.dailyTrends.trends.sales.status==='ready'" 
+              class="flex d-col a-center trend"
+              [ngClass]="data.data.dailyTrends.trends.sales.val > 0 ? 'up' : 'down'">
+              <div class="flex label">
+                <div class="flex letter">{{data.data.dailyTrends.trends.sales.letter}}</div>
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+              <div class="figure">{{data.data.dailyTrends.trends.sales.val | percent:'1.1-1'}}</div>
+            </div>
+          </div>
+        </td>
+        
+        <td style="text-align: right;">          
+          <div class="flex">
+            <div class="flex">{{data.data.dinersPPA | number : '1.0-0'}}</div>
+            <div *ngIf="data.data.dailyTrends.trends.diners.status==='ready'" class="flex d-col a-center trend" [ngClass]="data.data.dailyTrends.trends.diners.val > 0 ? 'up' : 'down'">
+              <div class="flex label">
+                <div class="flex letter">{{data.data.dailyTrends.trends.diners.letter}}</div>
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+              <div class="figure">{{data.data.dailyTrends.trends.diners.val | percent:'1.1-1'}}</div>
+            </div>
+          </div>
+        </td>
+        
+        <td style="text-align: right;">        
+          <div class="flex">
+            <div class="flex">{{data.data.ppa | currency:'ILS':'symbol':'1.2-2'}}</div>
+            <div 
+              *ngIf="data.data.dailyTrends.trends.ppa.status==='ready'" 
+              class="flex d-col a-center trend"
+              [ngClass]="data.data.dailyTrends.trends.ppa.val > 0 ? 'up' : 'down'">
+              <div class="flex label">
+                <div class="flex letter">{{data.data.dailyTrends.trends.ppa.letter}}</div>
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+              <div class="figure">{{data.data.dailyTrends.trends.ppa.val | percent:'1.1-1'}}</div>
+            </div>
+          </div>          
+        </td>
+
+      </tr>
+    </tbody>
+
   </dx-data-grid>
 </div>

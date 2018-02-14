@@ -3,7 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-month-grid',
   templateUrl: './month-grid.component.html',
-  styleUrls: ['./month-grid.component.css']
+  styleUrls: ['./month-grid.component.scss']
 })
 export class MonthGridComponent implements OnInit {
 

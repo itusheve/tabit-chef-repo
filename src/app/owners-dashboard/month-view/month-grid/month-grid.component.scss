@@ -1,0 +1,53 @@
+/deep/ td:first-child {
+    background: linear-gradient(90deg, white,white 20%, rgba(143, 193, 220, 0.25) 20%,rgba(143, 193, 220, 0.25) 20%);
+    padding: 8px 5px!important;
+}
+
+.trend {
+    // width: 45px;
+    // color: transparent;
+    
+    transform: scale(0.7);//scaling compared to the card trend components
+    margin-right: 4px;
+
+    .figure {
+        font-size: 16px;
+        line-height: 0.8;
+    }
+    
+    .label {
+        line-height: 1;
+        mat-icon {
+            font-size: 30px;
+        }
+        .letter {
+            font-size: 15px;
+        }
+    }
+    
+    &.up {
+        .label {
+            color: #30e430;
+            text-shadow: #eeffee 0px 0px 2px;
+            .letter {
+                transform: translateX(-3px) translateY(4px);
+            }
+            mat-icon {
+                transform: rotateZ(-90deg) translateY(-3px) translateX(-6px);
+            }
+        }
+    }
+    &.down {
+        .label {
+            color: #ff2121;
+            text-shadow: #f48f8f 0px 0px 2px;
+            order: 2;
+            .letter {
+                transform: translateX(-1px) translateY(2px);
+            }
+            mat-icon {
+                transform: rotateZ(90deg) translateY(-4px) translateX(-6px);
+            }
+        }
+    }
+}
