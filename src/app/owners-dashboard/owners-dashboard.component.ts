@@ -37,7 +37,9 @@ export class OwnersDashboardComponent {
   }
 
   vatChange(event) {
-    this.dataService.vat$.next(event.checked);
+    setTimeout(() => {
+      this.dataService.vat$.next(event.checked);    
+    }, 300);
   }
 
   changeRest() {

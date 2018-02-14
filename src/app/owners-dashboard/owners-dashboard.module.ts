@@ -20,8 +20,6 @@ import { DayOrdersTableComponent } from './day-view/day-orders-table/day-orders-
 import { DayOrdersTableHasSalesPipe } from './day-view/day-orders-table/pipes';
 import { DayShiftsComponent } from './day-view/day-shifts/day-shifts.component';
 
-// import { OrdersViewComponent } from './orders-view/orders-view.component';
-
 import { CardComponent } from '../ui/card/card.component';
 
 import { OwnersDashboardRoutingModule } from './owners-dashboard-routing.module';
