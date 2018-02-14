@@ -452,7 +452,7 @@ export class DataService {
                         }
 
                         //remove previous months data:
-                        const monthStart: moment.Moment = moment().startOf('month');
+                        const monthStart: moment.Moment = moment(o.calculationBd).startOf('month');
                         dailyData = dailyData.filter(d => d.date.isSameOrAfter(monthStart, 'day'));
 
                         const salesSum = _.sumBy(dailyData, 'sales');

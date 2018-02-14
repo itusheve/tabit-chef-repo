@@ -135,13 +135,8 @@ export class MonthViewComponent  {
         that.showForecast = false;
         that.showSummary = true;
         
-        Promise.all([
-          that.dataService.getMonthlyData(month),
-          that.trendsDataService.month_lastYear_trend(month)
-        ])
-          .then(data => {
-            const monthlyData = data[0];
-            const lastYearTrendModel = data[1];
+        that.dataService.getMonthlyData(month)
+          .then(monthlyData => {
 
             const title = `${that.datePipe.transform(month, 'MMMM')} סופי`;
             that.summaryCardData.diners = monthlyData.diners;
@@ -149,12 +144,22 @@ export class MonthViewComponent  {
             that.summaryCardData.sales = vat ? monthlyData.sales : monthlyData.sales / 1.17;
             that.summaryCardData.title = title;
             
-            that.summaryCardData.trends = {
-              //left: trends.currentBd.last4,
-              right: lastYearTrendModel
-            };
-            
+            that.summaryCardData.trends = {};
+
             that.summaryCardData.loading = false;
+
+            Promise.all([
+              that.dataService.getMonthlyData(month),
+              that.trendsDataService.month_lastYear_trend(month),
+              that.trendsDataService.month_sales_to_start_of_month_forecast(month)
+            ])
+              .then(data=>{
+                const lastYearTrendModel = data[1];
+                const forecastTrendModel = data[2];
+
+                that.summaryCardData.trends.left = forecastTrendModel;
+                that.summaryCardData.trends.right = lastYearTrendModel;
+              });
           });
       }
     }

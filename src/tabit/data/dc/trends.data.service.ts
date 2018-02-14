@@ -544,7 +544,7 @@ export class TrendsDataService {
             const trend = new TrendModel();
             trend.name = 'month_forecast_to_start_of_month_forecast';
             trend.description = 'month_forecast_to_start_of_month_forecast description';
-            trend.letter = 'ת';
+            trend.letter = 'מ';
 
             zip(this.dataService.currentMonthForecast$, this.dataService.currentBd$.take(1))
                 .subscribe(data => {
@@ -577,6 +577,43 @@ export class TrendsDataService {
     }
 
     /* 
+        the func returns a TrendModel that compares 'month's sales with a monthly forecast for 'month' as if it was calculated on the first day of 'month'.
+    */
+    public month_sales_to_start_of_month_forecast(month: moment.Moment): Promise<TrendModel> {
+        return new Promise((resolve, reject) => {
+            const trend = new TrendModel();
+            trend.name = 'month_sales_to_start_of_month_forecast';
+            trend.description = 'month_sales_to_start_of_month_forecast description';
+            trend.letter = 'מ';
+
+            const startOfMonth = moment(month).startOf('month');
+
+            const qAll = [
+                this.dataService.getMonthlyData(month),
+                this.dataService.getMonthForecastData({ calculationBd: startOfMonth })
+            ];
+
+            Promise.all(qAll)
+                .then(data=>{
+                    const monthData = data[0];
+                    const forecastData = data[1];
+                    if (!forecastData.sales || !monthData.sales) {
+                        trend.status = 'nodata';
+                    } else {
+                        const sales = monthData.sales;
+                        const forecastDataSales = forecastData.sales;
+
+                        const changePct = (sales / forecastDataSales) - 1;
+
+                        trend.val = changePct;
+                        trend.status = 'ready';
+                    }
+                    resolve(trend);                    
+                });
+        });
+    }
+
+    /* 
         the func returns a TrendModel that compares:
             the MTD sales (closed sales up to previous BD, including) 
             with
@@ -587,7 +624,7 @@ export class TrendsDataService {
             const trend = new TrendModel();
             trend.name = 'partial_month_forecast_to_start_of_month_partial_month_forecast';
             trend.description = 'partial_month_forecast_to_start_of_month_partial_month_forecast description';
-            trend.letter = 'ת';
+            trend.letter = 'מ';
 
             zip(this.dataService.currentBd$.take(1), this.dataService.mtdData$.take(1))
                 .subscribe(data => {
