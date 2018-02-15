@@ -57,15 +57,35 @@ export class ClosedOrdersDataService {
                     order.diners = ordersRaw[i].dinersPPA;
                     order.ppa = ordersRaw[i].ppa;
                     
-                    const orderPriceReductionsRaw = priceReductionsRaw.find(pr => pr.orderNumber === order.number);
-                    if (orderPriceReductionsRaw) {
-                        order.priceReductions = {
-                            cancellation: orderPriceReductionsRaw.cancellation,
-                            operational: orderPriceReductionsRaw.operational,
-                            retention: orderPriceReductionsRaw.retention,
-                            organizational: orderPriceReductionsRaw.organizational
-                        };
-                    }
+                    const orderPriceReductionsRaw_aggregated = {
+                        cancellation: 0,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
+                        discountsAndOTH: 0,//{dim:retention,measure:retention}  heb: שימור ושיווק
+                        employees: 0,//{dim:organizational,measure:organizational}  heb: עובדים
+                        promotions: 0,//{dim:promotions,measure:retention}  heb: מבצעים
+                    };
+
+                    priceReductionsRaw
+                        .filter(pr => pr.orderNumber === order.number)
+                        .forEach(o=>{
+                            const dim = o.reductionReason;                            
+                            switch (dim) {
+                                case 'cancellation':
+                                case 'compensation':
+                                    orderPriceReductionsRaw_aggregated.cancellation += (o.cancellation + o.operational);
+                                    break;
+                                case 'retention':
+                                    orderPriceReductionsRaw_aggregated.discountsAndOTH += o.retention;
+                                    break;                                    
+                                case 'organizational':
+                                    orderPriceReductionsRaw_aggregated.employees += o.organizational;
+                                    break;                                                                        
+                                case 'promotions':
+                                    orderPriceReductionsRaw_aggregated.promotions += o.retention;
+                                    break;                                                                        
+                            }
+                        });
+
+                    order.priceReductions = orderPriceReductionsRaw_aggregated;
 
                     orders.push(order);
                 }

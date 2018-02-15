@@ -11,8 +11,8 @@ export class Order {
     ppa: number;
     priceReductions: {
         cancellation: number,
-        operational: number,
-        retention: number,
-        organizational: number
+        discountsAndOTH: number,
+        employees: number,
+        promotions: number
     };
 }

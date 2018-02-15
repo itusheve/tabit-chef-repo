@@ -255,7 +255,7 @@ export class OlapEp {
 
     private expoToNumer(input) {
         if (typeof input === 'number') return input;
-        if (input.indexOf('E')===0) return input * 1;
+        if (input.indexOf('E')===-1) return input * 1;
         const splitted = input.split('E');
         const num = splitted[0];
         const exp = splitted[1];
@@ -813,6 +813,7 @@ export class OlapEp {
     */
     public getOrdersPriceReductionData(day: moment.Moment): Promise<{
         orderNumber: number,
+        reductionReason: string,
         cancellation: number,
         operational: number,
         retention: number,
@@ -865,7 +866,7 @@ export class OlapEp {
                         .then(rowset => {
                             const treated = rowset.map(r => {
                                 const orderNumber = this.parseDim(r, this.dims.ordersV2.attr.orderNumber);
-                                const rawReductionReason = this.parseDim(r, this.dims.priceReductions.attr.reasons);
+                                const reductionReason = this.parseDim(r, this.dims.priceReductions.attr.reasons);
 
                                 const cancellation = this.parseMeasure(r, this.measureGroups.priceReductions.measures.cancellation);
                                 const operational = this.parseMeasure(r, this.measureGroups.priceReductions.measures.operational);
@@ -874,6 +875,7 @@ export class OlapEp {
 
                                 return {
                                     orderNumber: orderNumber,
+                                    reductionReason: reductionReason,
                                     cancellation: cancellation,
                                     operational: operational,
                                     retention: retention,

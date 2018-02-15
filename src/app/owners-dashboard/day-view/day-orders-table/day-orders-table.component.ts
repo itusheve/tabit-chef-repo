@@ -33,11 +33,9 @@ export class DayOrdersTableComponent implements OnInit {
   ngOnInit() {
     const ordersCloned = _.cloneDeep(this.orders);
     ordersCloned.forEach((order:any)=>{
-      if (order.priceReductions) {
-        order._hasReturns = (order.priceReductions.cancellation + order.priceReductions.operational) ? true : false;
-        order._hasDiscounts = order.priceReductions.retention ? true : false;
-        order._hasOrganizational = order.priceReductions.organizational ? true : false;
-      }
+      // order._hasReturns = (order.priceReductions.cancellation + order.priceReductions.operational) ? true : false;
+      // order._hasDiscounts = order.priceReductions.retention ? true : false;
+      // order._hasOrganizational = order.priceReductions.organizational ? true : false;      
     });
 
     const orderTypes = _.cloneDeep(this.dataService.orderTypes);

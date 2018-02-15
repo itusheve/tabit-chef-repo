@@ -29,9 +29,10 @@
                         <td>{{order.waiter}}</td>
                         <td>{{order.sales | currency:'ILS':'symbol':'1.0-0'}}</td>
                         <td>
-                            <mat-icon *ngIf="order._hasReturns" style="color: red;">warning</mat-icon>
-                            <mat-icon *ngIf="order._hasDiscounts" style="color: orange;">album</mat-icon>
-                            <mat-icon *ngIf="order._hasOrganizational" style="color: blue;">games</mat-icon>
+                            <mat-icon *ngIf="order.priceReductions.cancellations" style="color: red;">warning</mat-icon>
+                            <mat-icon *ngIf="order.priceReductions.discountsAndOTH" style="color: orange;">album</mat-icon>
+                            <mat-icon *ngIf="order.priceReductions.employees" style="color: blue;">games</mat-icon>
+                            <mat-icon *ngIf="order.priceReductions.promotions" style="color: green;">insert_emoticon</mat-icon>
                         </td>
                     </tr>
                 </table>
