@@ -22,18 +22,17 @@ export class MonthChartComponent implements OnInit {
   // }
 
   pointClickHandler(e) {
-    const str = e.target.originalArgument;
-    const regex = /\d+/;
-    let m;
+    // const str = e.target.originalArgument;
+    // const regex = /\d+/;
+    // let m;
 
-    try {
-      m = regex.exec(str);
-      const dayInMonth = m[0];
-      this.onDateClicked.emit(dayInMonth);
-    } catch (e) {
+    // try {
+    //   m = regex.exec(str);
+    //   const dayInMonth = m[0];
+    //   this.onDateClicked.emit(dayInMonth);
+    // } catch (e) {
 
-    }
-
+    // }
   }
 
   render(dataSource) {

@@ -27,7 +27,7 @@
         <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
       </div>      
       <div class="flex d-col aj-center" style="width:80%;">
-        <div style="color:white">{{org.name}}</div>
+        <div style="color:white">{{org?.name}}</div>
         <div *ngIf="!vat" style="color:white;font-size:12px;">(הנתונים ללא מע"מ)</div>
       </div>
       <div class="flex j-end" style="width:20%;">

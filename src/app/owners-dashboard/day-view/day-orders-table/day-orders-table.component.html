@@ -21,12 +21,18 @@
                         <td>הזמנה מס'</td>
                         <td>מלצר</td>
                         <td>סכום</td>
+                        <td></td>
                     </tr>
                     <tr *ngFor="let order of orderType.orders">
                         <td>{{order.openingTime | date:'H:mm'}}</td>
                         <td>{{order.number | number:'1.0-0'}}</td>
                         <td>{{order.waiter}}</td>
                         <td>{{order.sales | currency:'ILS':'symbol':'1.0-0'}}</td>
+                        <td>
+                            <mat-icon *ngIf="order._hasReturns" style="color: red;">warning</mat-icon>
+                            <mat-icon *ngIf="order._hasDiscounts" style="color: orange;">album</mat-icon>
+                            <mat-icon *ngIf="order._hasOrganizational" style="color: blue;">games</mat-icon>
+                        </td>
                     </tr>
                 </table>
 

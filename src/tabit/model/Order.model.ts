@@ -9,4 +9,10 @@ export class Order {
     sales: number;
     diners: number;
     ppa: number;
+    priceReductions: {
+        cancellation: number,
+        operational: number,
+        retention: number,
+        organizational: number
+    };
 }

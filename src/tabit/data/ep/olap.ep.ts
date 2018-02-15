@@ -32,7 +32,7 @@ export class OlapEp {
         return this.url$;
     }
     
-    private measures = {
+    private measures = {//deprecated, use measureGroups instead
         sales: '[Measures].[Tlog Header Total Payment Amount]',
         itemsSales: '[Measures].[Tlog Items Net Amount]',
         ppa: {
@@ -41,8 +41,31 @@ export class OlapEp {
         }
     };
 
+    private measureGroups = {
+        priceReductions: {
+            measures: {
+                cancellation: {
+                    path: 'Tlog Pricereductions Cancellation Amount',
+                    type: 'number'
+                },
+                operational: {
+                    path: 'Tlog Pricereductions Operational Discount Amount',
+                    type: 'number'
+                },
+                retention: {
+                    path: 'Tlog Pricereductions Retention Discount Amount',
+                    type: 'number'
+                },
+                organizational: {
+                    path: 'Tlog Pricereductions Organizational Discount Amount',
+                    type: 'number'
+                }
+            }
+        }
+    };    
+
     private dims = {
-        orderType: {
+        orderType: {//v1, deprecated
             hierarchy: '[Ordertype]',
             dim: '[Tlog Header Ordertype]',
             members: {
@@ -54,11 +77,11 @@ export class OlapEp {
                 mediaexchange: '&[mediaexchange]'
             }
         },
-        service: {
+        service: {//v1, deprecated
             hierarchy: '[Service]',
             dim: '[Service Name]',
         },
-        BusinessDate: {
+        BusinessDate: {//v1, deprecated
             hierarchy: '[BusinessDate]',
             dims: {
                 date: '[Date Key]',
@@ -66,43 +89,112 @@ export class OlapEp {
                 yearAndMonth: '[Year Month Key]'
             }
         },
-        orderOpeningDate: {
+        orderOpeningDate: {//v1, deprecated
             hierarchy: '[DateOpen]',
             dims: {
                 date: '[Date Key]'
             }
         },
-        orderOpeningTime: {
+        orderOpeningTime: {//v1, deprecated
             hierarchy: '[TimeOpen]',
             dims: {
                 time: '[Time Id]'
             }            
         },
-        orderClosingTime: {
+        orderClosingTime: {//v1, deprecated
             hierarchy: '[CloseTime]',
             dims: {
                 time: '[Time Id]'
             }
         },
-        firingTime: {
+        firingTime: {//v1, deprecated
             hierarchy: '[FireTime]',
             dims: {
                 time: '[Time Id]'
             }
         },
-        orders: {
+        orders: {//v1, deprecated
             hierarchy: '[Ordernumber]',
             dims: {
                 orderNumber: '[Tlog Header Order Number]'
             }            
-        },
-        waiters: {
+        },      
+        waiters: {//v1, deprecated
             hierarchy: '[Owners]',
             dims: {
                 waiter: '[Tlog Header Owner Id]'
             }
+        },
+        ordersV2: {//v2, V2 for BC
+            v: 2,//for BC
+            path: 'Ordernumber',
+            attr: {
+                orderNumber: {
+                    path: 'Tlog Header Order Number',
+                    parse: raw => (raw.replace('הזמנה מס ', '') * 1)
+                }
+            }
+        },  
+        priceReductions: {//v2
+            v: 2,//for BC
+            path: 'Pricereductionreasons',
+            attr: {
+                reasons: {
+                    path: 'Tlog Pricereductions Reason Type',
+                    parse: raw => {
+                        switch (raw) {
+                            case 'ביטולים':
+                                return 'cancellation';
+                            case 'תפעול':
+                                return 'compensation';
+                            case 'שימור ושיווק':
+                                return 'retention';
+                            case 'ארגוני':
+                                return 'organizational';
+                            case 'מבצעים':
+                                return 'promotions';
+                        }
+                    },
+                    members: {
+                        cancellation: {
+                            path: 'cancellation',
+                            caption: 'ביטולים'
+                        },
+                        operational: {
+                            path: 'compensation',
+                            caption: 'תפעול'
+                        },
+                        retention: {
+                            path: 'retention',
+                            caption: 'שימור ושיווק'
+                        },
+                        organizational: {
+                            path: 'organizational',
+                            caption: 'ארגוני'
+                        },
+                        promotions: {
+                            path: '',
+                            caption: 'מבצעים'
+                        }
+                    }
+                }
+            }
+        },
+        init: function() {
+            const that = this;
+            Object.keys(this).forEach(k=>{                
+                if (k!=='init') {
+                    if (that[k].hasOwnProperty('v') && that[k]['v']===2) {
+                        Object.keys(that[k]['attr']).forEach(k2 => {
+                            that[k]['attr'][k2]['parent'] = that[k];
+                        });
+                    }
+                }
+            });
+            delete this.init;
+            return this;
         }
-    };
+    }.init();
     
     private monthsMap = {
         he: {
@@ -128,6 +220,38 @@ export class OlapEp {
     
     private monthlyData$: ReplaySubject<any>;
     // private MDX_sales_and_ppa_byOrderType_byService$: ReplaySubject<any>;
+
+    // measure helpers
+    private measure(measure: any) {
+        return `[Measures].[${measure.path}]`;
+    }
+
+    private parseMeasure(row: any, measure: any) {
+        const path = `[Measures].[${measure.path}]`;
+        const raw = row[path];
+        const type = measure.type || 'number';
+        let value;
+        switch (type) {
+            case 'number':
+                value = raw ? this.expoToNumer(raw) : 0;
+                break;
+        }
+        return value;
+    }
+    // measure helpers
+
+    // dim helpers
+    private members(dimAttr: any) {
+        return `[${dimAttr.parent.path}].[${dimAttr.path}].[${dimAttr.path}].MEMBERS`;
+    }
+
+    private parseDim(row: any, dimAttr: any) {
+        const path = `[${dimAttr.parent.path}].[${dimAttr.path}].[${dimAttr.path}].[MEMBER_CAPTION]`;
+        const raw = row[path];
+        return dimAttr.hasOwnProperty('parse') ? dimAttr.parse(raw) : raw;
+    }
+    // dim helpers
+
 
     private expoToNumer(input) {
         if (typeof input === 'number') return input;
@@ -578,7 +702,16 @@ export class OlapEp {
         });
     }
 
-    public getOrders(o: { day: moment.Moment, orderTypeId?: string }): Promise<any[]> {
+    public getOrders(o: { day: moment.Moment }): Promise<{
+        openingTime: moment.Moment,
+        orderTypeCaption: string,
+        orderNumber: number,
+        waiter: string,
+        sales: number,
+        salesPPA: number,
+        dinersPPA: number,
+        ppa: number
+    }[]> {
         return new Promise((resolve, reject) => {
             if (!o.day) reject('day is missing');
             
@@ -672,10 +805,93 @@ export class OlapEp {
         });
     }
 
+    /* 
+        the returned Promise resolves with the following data set:
+        for the provided business day ('day'):
+        the product of 'order numbers' dim attr and 'price reduction reasons' dim attr on rows
+        the different price reduction measures on columns
+    */
+    public getOrdersPriceReductionData(day: moment.Moment): Promise<{
+        orderNumber: number,
+        cancellation: number,
+        operational: number,
+        retention: number,
+        organizational: number
+    }[]> {
+        return new Promise((resolve, reject) => {
+            if (!day) reject('day is missing');
+
+            day = moment(day);
+
+            const mdx = `
+                SELECT {
+                    ${this.measure(this.measureGroups.priceReductions.measures.cancellation)},
+                    ${this.measure(this.measureGroups.priceReductions.measures.operational)},
+                    ${this.measure(this.measureGroups.priceReductions.measures.retention)},
+                    ${this.measure(this.measureGroups.priceReductions.measures.organizational)}
+                } 
+                ON columns,
+                NonEmpty(
+                    CrossJoin(
+                        {
+                            ${this.members(this.dims.priceReductions.attr.reasons)}
+                        },
+                        {
+                            ${this.members(this.dims.ordersV2.attr.orderNumber)}
+                        }
+                    ), 
+                    {
+                        ${this.measure(this.measureGroups.priceReductions.measures.cancellation)},
+                        ${this.measure(this.measureGroups.priceReductions.measures.operational)},
+                        ${this.measure(this.measureGroups.priceReductions.measures.retention)},
+                        ${this.measure(this.measureGroups.priceReductions.measures.organizational)}
+                    }
+                )
+                ON rows 
+                FROM (
+                    SELECT {
+                        ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${day.format('YYYYMMDD')}]
+                    }
+                    on 0 
+                    FROM [${this.cube}] 
+                )  
+            `;
+
+            this.url.take(1)
+                .subscribe(url => {
+                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+
+                    xmla4j_w.executeNew(mdx)
+                        .then(rowset => {
+                            const treated = rowset.map(r => {
+                                const orderNumber = this.parseDim(r, this.dims.ordersV2.attr.orderNumber);
+                                const rawReductionReason = this.parseDim(r, this.dims.priceReductions.attr.reasons);
+
+                                const cancellation = this.parseMeasure(r, this.measureGroups.priceReductions.measures.cancellation);
+                                const operational = this.parseMeasure(r, this.measureGroups.priceReductions.measures.operational);
+                                const retention = this.parseMeasure(r, this.measureGroups.priceReductions.measures.retention);
+                                const organizational = this.parseMeasure(r, this.measureGroups.priceReductions.measures.organizational);
+
+                                return {
+                                    orderNumber: orderNumber,
+                                    cancellation: cancellation,
+                                    operational: operational,
+                                    retention: retention,
+                                    organizational: organizational
+                                };
+                            });
+
+                            resolve(treated);
+
+                        })
+                        .catch(e => {
+                        });
+                });
+        });
+    }
+
     public get_sales_and_ppa_by_OrderType_by_Service(day: moment.Moment): Subject<any> {
-        // if (this.MDX_sales_and_ppa_byOrderType_byService$) return this.MDX_sales_and_ppa_byOrderType_byService$;
         const obs$ = new Subject<any>();
-        // this.MDX_sales_and_ppa_byOrderType_byService$ = new ReplaySubject<any>();
 
         const mdx = `
             SELECT

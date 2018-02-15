@@ -6,6 +6,7 @@ import { DataService } from '../../../../tabit/data/data.service';
 
 
 import * as _ from 'lodash';
+import { ClosedOrdersDataService } from '../../../../tabit/data/dc/closedOrders.data.service';
 
 export interface OrderTypeVM {
   id: string;
@@ -27,21 +28,23 @@ export class DayOrdersTableComponent implements OnInit {
 
   datePipe: DatePipe = new DatePipe('he-IL');
 
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService) {}
   
   ngOnInit() {
+    const ordersCloned = _.cloneDeep(this.orders);
+    ordersCloned.forEach((order:any)=>{
+      if (order.priceReductions) {
+        order._hasReturns = (order.priceReductions.cancellation + order.priceReductions.operational) ? true : false;
+        order._hasDiscounts = order.priceReductions.retention ? true : false;
+        order._hasOrganizational = order.priceReductions.organizational ? true : false;
+      }
+    });
+
     const orderTypes = _.cloneDeep(this.dataService.orderTypes);
+
     orderTypes.forEach(ot=>{
-      ot.orders = this.orders.filter(o => o.orderTypeId === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);
-      ot.sales = ot.orders.reduce((acc, curr) => acc + (curr.sales || 0), 0);            
-      // ot.orders = this.orders.filter(o=>o.orderTypeId===ot.id).map(o=>({
-      //   id: o.id,
-      //   openingTime: o.openingTime.format('H:mm'),
-      //   number: o.number,
-      //   waiter: o.waiter,
-      //   sales: o.sales
-      // })).sort((a,b)=>a.number<b.number ? -1 : 1);
-      // ot.sales = ot.orders.reduce((acc, curr)=>acc+(curr.sales || 0),0);      
+      ot.orders = ordersCloned.filter(o => o.orderTypeId === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);    
+      ot.sales = ot.orders.reduce((acc, curr) => acc + (curr.sales || 0), 0);
     });
     this.byOrderTypes = orderTypes;
 
