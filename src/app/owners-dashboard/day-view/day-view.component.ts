@@ -65,6 +65,7 @@ export class DayViewComponent implements OnInit  {
       this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
       this.dayShifts.render(data.shifts);
       
+      this.orders = undefined;
       this.closedOrdersDataService.getOrders(this.day, {withPriceReductions: true})
         .then((orders: Order[]) => {
           this.orders = orders;
