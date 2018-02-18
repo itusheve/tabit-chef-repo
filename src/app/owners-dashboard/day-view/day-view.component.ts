@@ -53,7 +53,6 @@ export class DayViewComponent implements OnInit  {
     );
     
     data$.subscribe(data=>{
-      
       this.dinersTableData$.next(data.dinersAndPPAByShift);
       
       const shiftWithDiners = data.dinersAndPPAByShift.find(i=>i.diners>0);

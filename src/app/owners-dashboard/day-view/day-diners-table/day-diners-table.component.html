@@ -4,14 +4,22 @@
         <table class="fixedWidth" [ngClass]="{'hLarge':hSize==='large', 'hxLarge':hSize==='xlarge'}">
             <tr>
                 <td></td>
+                <td>סה"כ</td>
                 <td *ngFor="let shift of dataByShifts">{{shift.name}}</td>
+            </tr>            
+            <tr>
+                <td>מכירות סועדים</td>
+                <td>{{totalSalesPPA | number : '1.0-0'}}</td>
+                <td *ngFor="let shift of dataByShifts">{{shift.salesPPA | number : '1.0-0'}}</td>
             </tr>
             <tr>
                 <td>סועדים</td>
+                <td>{{totalDiners | number : '1.0-0'}}</td>
                 <td *ngFor="let shift of dataByShifts">{{shift.diners | number : '1.0-0'}}</td>
             </tr>
             <tr>
                 <td>PPA</td>
+                <td>{{totalPPA | currency:'ILS':'symbol':'1.2-2'}}</td>
                 <td *ngFor="let shift of dataByShifts">{{shift.ppa | currency:'ILS':'symbol':'1.2-2'}}</td>
             </tr>
         </table>

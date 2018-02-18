@@ -32,7 +32,8 @@ html, body {
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     color: $baseText;
-    background-color: $oldDashBG;
+    //background-color: $oldDashBG;
+    background-color: black;
 
 }
 
@@ -57,7 +58,7 @@ html, body {
 
 .widget {
     display: block;
-    padding: 15px;
+    padding: 15px 12px;
     margin-bottom: 10px;
     background-color: #fff;
     color: #343E56;

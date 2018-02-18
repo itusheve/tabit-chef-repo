@@ -1,34 +1,18 @@
 <div class="f-rtl">
     <div class="title">הכנסות</div>
     <div class="flex body">
-        <!-- <div class="table" *ngIf="show">
-            <div class="flex d-row tblRow">
-                <div class="g-1 flex"></div>
-                <div class="g-1 flex" *ngFor="let shift of byTypeByShiftArr[0].byShift">
-                    <div>{{shift.shiftName}}</div>
-                </div>
-            </div>
-            <div class="flex d-row tblRow" *ngFor="let orderType of byTypeByShiftArr">
-                <div class="g-1 flex">{{orderType.orderType}}</div>
-                <div class="g-1 flex" *ngFor="let shift of orderType.byShift">
-                    <div>{{shift.sales | number:'1.0-0'}}</div>&nbsp;<div class="flex" [innerHTML]="currencySymbol"></div>
-                </div>
-            </div>
-            <div class="flex d-row tblRow tblTotalRow">
-                <div class="g-1 flex">סה"כ</div>
-                <div class="g-1 flex" *ngFor="let sumVal of summary">
-                    <div>{{sumVal | number:'1.0-0'}}</div>&nbsp;
-                    <div class="flex" [innerHTML]="currencySymbol"></div>
-                </div>
-            </div>
-        </div> -->
         <table class="fixedWidth" [ngClass]="{'hLarge':hSize==='large', 'hxLarge':hSize==='xlarge'}" *ngIf="show">
             <tr>
                 <td></td>
+                <td>סה"כ</td>
                 <td *ngFor="let shift of byTypeByShiftArr[0].byShift">{{shift.shiftName}}</td>
             </tr>
             <tr *ngFor="let orderType of byTypeByShiftArr" (click)="onRowClick(orderType)">
                 <td>{{orderType.orderType}}</td>
+                <td>
+                    <span>{{orderType.total | number:'1.0-0'}}</span>
+                    <span [innerHTML]="currencySymbol"></span>
+                </td>
                 <td *ngFor="let shift of orderType.byShift">
                     <span>{{shift.sales | number:'1.0-0'}}</span>&nbsp;
                     <span [innerHTML]="currencySymbol"></span>
@@ -36,6 +20,10 @@
             </tr>
             <tr class="tblTotalRow">
                 <td>סה"כ</td>
+                <td>
+                    <span>{{total | number:'1.0-0'}}</span>
+                    <span [innerHTML]="currencySymbol"></span>
+                </td>
                 <td *ngFor="let sumVal of summary">
                     <span>{{sumVal | number:'1.0-0'}}</span>&nbsp;
                     <span [innerHTML]="currencySymbol"></span>

@@ -23,11 +23,16 @@ export class DaySalesTypeTableComponent {
   public summary = [];
   // public shifts;
 
+  public total;
+
   constructor(
     private dataService: DataService
   ) {}
 
   render(shifts, salesByOrderTypeAndService) {
+    debugger;
+    this.total = 0;
+
     this.byTypeByShiftArr = [];
     const byTypeByShiftArr_preFiltering = [];
 
@@ -35,23 +40,29 @@ export class DaySalesTypeTableComponent {
         const orderType = this.dataService.orderTypes[j]['caption'];
         const byType = {
           orderType: orderType,
+          total: 0,
           byShift: []
         };
         for (let i = 0; i < shifts.length; i++) {
           const shiftName = shifts[i].name;
           const tuple = salesByOrderTypeAndService.find(t => t.orderType === orderType && t.service === shiftName);
+          
+          const sales = _.get(tuple, 'sales', 0);
+
           const byShift = {
             shiftName: shiftName,
-            sales: _.get(tuple, 'sales', 0)
+            sales: sales
           };
           byType.byShift.push(byShift);
+          byType.total += sales;
+          this.total += sales;
         }
         byTypeByShiftArr_preFiltering.push(byType);
     }
 
     //remove empty rows:
     byTypeByShiftArr_preFiltering.forEach(byType=>{
-      const columnWithSales = byType.byShift.find(i=>i.sales>0);
+      const columnWithSales = byType.byShift.find(i=>i.sales!==0);
       if (columnWithSales) this.byTypeByShiftArr.push(byType);
     });
 

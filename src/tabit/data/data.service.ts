@@ -41,7 +41,7 @@ export class DataService {
         { id: 'delivery', caption: 'משלוח' },
         { id: 'undefined', caption: 'סוג הזמנה לא מוגדר' },
         { id: 'returns', caption: 'החזר' },
-        {id: 'het', caption: 'החלפת אמצעי תשלום'}
+        { id: 'het', caption: 'החלפת אמצעי תשלום' }
     ];
 
 
@@ -495,13 +495,6 @@ export class DataService {
                 });
             }
 
-
-            // const shiftsMap = {
-            //     morning: data.shifts.morning.name,
-            //     afternoon: data.shifts.afternoon.name,
-            //     evening: data.shifts.evening.name
-            // };
-
             const orderTypesMap = {
                 seated: 'בישיבה',
                 counter: 'דלפק',
@@ -531,10 +524,6 @@ export class DataService {
                 }, 0);
             });
 
-            // const morningSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.morning && dataItem.orderType === orderTypesMap.seated);
-            // const afternoonSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.afternoon && dataItem.orderType === orderTypesMap.seated);
-            // const eveningSeatedItem = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === shiftsMap.evening && dataItem.orderType === orderTypesMap.seated);
-
             const dinersAndPPAByShift = [];
             for (let i=0;i<data.shifts.length;i++) {
                 dinersAndPPAByShift.push({
@@ -544,24 +533,10 @@ export class DataService {
             dinersAndPPAByShift.forEach(i=>{
                 const datai = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === i.name && dataItem.orderType === orderTypesMap.seated);
                 i.diners = _.get(datai, 'dinersPPA', 0);
+                i.sales = _.get(datai, 'sales', 0);
+                i.salesPPA = _.get(datai, 'salesPPA', 0);
                 i.ppa = _.get(datai, 'salesPPA', 0) / _.get(datai, 'dinersPPA', 1);
             });
-            
-
-            // const dinersAndPPAByShift = {
-            //     morning: {
-            //         diners: _.get(morningSeatedItem, 'dinersPPA', 0),
-            //         ppa: _.get(morningSeatedItem, 'salesPPA', 0) / _.get(morningSeatedItem, 'dinersPPA', 1)
-            //     },
-            //     afternoon: {
-            //         diners: _.get(afternoonSeatedItem, 'dinersPPA', 0),
-            //         ppa: _.get(afternoonSeatedItem, 'salesPPA', 0) / _.get(afternoonSeatedItem, 'dinersPPA', 1)
-            //     },
-            //     evening: {
-            //         diners: _.get(eveningSeatedItem, 'dinersPPA', 0),
-            //         ppa: _.get(eveningSeatedItem, 'salesPPA', 0) / _.get(eveningSeatedItem, 'dinersPPA', 1)
-            //     }                                                
-            // };
 
             const totalSales = Object.keys(salesByOrderType).reduce((acc, currKey, currIdx, arr) => {
                 return acc + salesByOrderType[currKey];

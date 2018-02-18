@@ -114,6 +114,12 @@ export class TrendsDataService {
                             
                             const changePct = (currentBusinessDaySales / avgTotalSales) - 1;
         
+                            if (changePct > 9) {
+                                trend.status = 'nodata';
+                                obs.next(trend);
+                                return;
+                            }
+
                             trend.val = changePct;
                             trend.status = 'ready';
                             obs.next(trend);
@@ -203,6 +209,12 @@ export class TrendsDataService {
                         if (sumTotalSales) {
                             const changePct = (currentBusinessDaySales / sumTotalSales) - 1;
 
+                            if (changePct > 9) {
+                                trend.status = 'nodata';
+                                obs.next(trend);
+                                return;
+                            }
+
                             trend.val = changePct;
                             trend.status = 'ready';
                             obs.next(trend);
@@ -265,6 +277,12 @@ export class TrendsDataService {
                     avgTotalSales = sumTotalSales / found;                                        
                     const changePct = (previousBdSales / avgTotalSales) - 1;
 
+                    if (changePct > 9) {
+                        trend.status = 'nodata';
+                        obs.next(trend);
+                        return;
+                    }
+
                     trend.val = changePct;
                     trend.status = 'ready';
                     obs.next(trend);
@@ -322,6 +340,12 @@ export class TrendsDataService {
                         return;
                     }
                     const changePct = (previousBdSales / lastYearSales) - 1;
+
+                    if (changePct > 9) {
+                        trend.status = 'nodata';
+                        obs.next(trend);
+                        return;
+                    }
 
                     trend.val = changePct;
                     trend.status = 'ready';
@@ -395,6 +419,12 @@ export class TrendsDataService {
                         }
 
                         const changePct = (sumTotalSalesMTD / sumTotalSalesMTDpreviousYear) - 1;
+
+                        if (changePct > 9) {
+                            trend.status = 'nodata';
+                            obs.next(trend);
+                            return;
+                        }
 
                         trend.val = changePct;
                         trend.status = 'ready';
@@ -489,6 +519,12 @@ export class TrendsDataService {
 
                         const changePct = (sales / prevYearSales) - 1;
 
+                        if (changePct > 9) {
+                            trend.status = 'nodata';
+                            resolve(trend);
+                            return;
+                        }
+
                         trend.val = changePct;
                         trend.status = 'ready';                        
                     }
@@ -527,6 +563,12 @@ export class TrendsDataService {
 
                         const changePct = (sales / prevYearSales) - 1;
 
+                        if (changePct > 9) {
+                            trend.status = 'nodata';
+                            resolve(trend);
+                            return;
+                        }
+
                         trend.val = changePct;
                         trend.status = 'ready';
                     }
@@ -563,7 +605,13 @@ export class TrendsDataService {
                                 const startOfMonthSales = startOfMonthForecastData.sales;
         
                                 const changePct = (sales / startOfMonthSales) - 1;
-        
+
+                                if (changePct > 9) {
+                                    trend.status = 'nodata';
+                                    resolve(trend);
+                                    return;
+                                }
+
                                 trend.val = changePct;
                                 trend.status = 'ready';
                             }
@@ -605,6 +653,12 @@ export class TrendsDataService {
 
                         const changePct = (sales / forecastDataSales) - 1;
 
+                        if (changePct > 9) {
+                            trend.status = 'nodata';
+                            resolve(trend);
+                            return;
+                        }
+
                         trend.val = changePct;
                         trend.status = 'ready';
                     }
@@ -645,6 +699,12 @@ export class TrendsDataService {
                                 const startOfMonthSales = startOfMonthForecastData.sales;
 
                                 const changePct = (sales / startOfMonthSales) - 1;
+
+                                if (changePct > 9) {
+                                    trend.status = 'nodata';
+                                    resolve(trend);
+                                    return;
+                                }
 
                                 trend.val = changePct;
                                 trend.status = 'ready';
@@ -715,8 +775,12 @@ export class TrendsDataService {
                     } else {
                         avgTotalSales = sumTotalSales / found;
                         const changePct_s = (bdSales / avgTotalSales) - 1;
-                        trend_s.val = changePct_s;
-                        trend_s.status = 'ready';
+                        if (changePct_s > 9) {
+                            trend_s.status = 'nodata';
+                        } else {
+                            trend_s.val = changePct_s;
+                            trend_s.status = 'ready';
+                        }
                     }
 
                     if (!sumTotalDiners || bdDiners === undefined) {
@@ -724,8 +788,12 @@ export class TrendsDataService {
                     } else {
                         avgTotalDiners = sumTotalDiners / found;
                         const changePct_d = (bdDiners / avgTotalDiners) - 1;
-                        trend_d.val = changePct_d;
-                        trend_d.status = 'ready';
+                        if (changePct_d > 9) {
+                            trend_d.status = 'nodata';
+                        } else {
+                            trend_d.val = changePct_d;
+                            trend_d.status = 'ready';
+                        }
                     }
 
                     if (!sumTotalSalesPPA || !sumTotalDiners || bdPPA === undefined) {
@@ -733,8 +801,12 @@ export class TrendsDataService {
                     } else {
                         avgPPA = sumTotalSalesPPA / sumTotalDiners;
                         const changePct_p = (bdPPA / avgPPA) - 1;
-                        trend_p.val = changePct_p;
-                        trend_p.status = 'ready';
+                        if (changePct_p > 9) {
+                            trend_p.status = 'nodata';
+                        } else {
+                            trend_p.val = changePct_p;
+                            trend_p.status = 'ready';
+                        }
                     }
 
                     resolve({
