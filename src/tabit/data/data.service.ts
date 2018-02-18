@@ -52,13 +52,42 @@ export class DataService {
     //         });        
     // }).publishReplay(1).refCount();
 
-    public dashboardData$: Observable<any> = Observable.create(obs => {
-        const params = {
-            daysOfHistory: 1//0 returns everything...
-        };
-        this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', params)
+    public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
+        this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
             .then(data => {
-                obs.next(data);
+                const bdStr = data.businessDate.substring(0, 10);
+                const bd: moment.Moment = moment(bdStr).startOf('day');
+                // return bd;
+                obs.next(bd);
+            });        
+        // return this.dashboardData$
+        //     .map(data => {
+        //         const bdStr = data.today.businessDate.substring(0, 10);
+        //         const bd: moment.Moment = moment(bdStr).startOf('day');
+        //         return bd;
+        //     });
+    }).publishReplay(1).refCount();
+
+    public previousBd$: Observable<moment.Moment> = Observable.create(obs => {
+        this.currentBd$
+            .subscribe(cbd=>{
+                const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
+                obs.next(pbd);
+            });
+    }).publishReplay(1).refCount();
+
+    public dashboardData$: Observable<any> = Observable.create(obs => {
+        this.currentBd$
+            .subscribe(cbd => {
+                cbd = moment(cbd);
+                const params = {
+                    daysOfHistory: 1,//0 returns everything...
+                    to: cbd.format('YYYY-MM-DD')
+                };
+                this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', params)
+                    .then(data => {
+                        obs.next(data);
+                    });
             });
     }).publishReplay(1).refCount();
 
@@ -173,8 +202,8 @@ export class DataService {
             return Observable.create(sub => {
                 that.currentBd$
                     .subscribe(data => {
-                        const dateFrom: moment.Moment = data;
-                        const dateTo: moment.Moment = data;
+                        const dateFrom: moment.Moment = moment(data);
+                        const dateTo: moment.Moment = moment(data);
                         that.getDailyData(dateFrom, dateTo)
                             .then(dailyData => {
                                 if (dailyData.length) {
@@ -234,14 +263,14 @@ export class DataService {
         // });
     }
 
-    get currentBd$(): Observable<moment.Moment> {
-        return this.dashboardData$
-            .map(data => {                
-                const bdStr = data.today.businessDate.substring(0, 10);
-                const bd: moment.Moment = moment(bdStr).startOf('day');
-                return bd;
-            });
-    }
+    // get currentBd$(): Observable<moment.Moment> {
+    //     return this.dashboardData$
+    //         .map(data => {                
+    //             const bdStr = data.today.businessDate.substring(0, 10);
+    //             const bd: moment.Moment = moment(bdStr).startOf('day');
+    //             return bd;
+    //         });
+    // }
 
     get currentBdData$(): Observable<any> {
         return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
@@ -254,13 +283,14 @@ export class DataService {
         });
     }
 
-    get previousBd$(): Observable<moment.Moment> {
-        return this.currentBd$
-            .map(cbd=>{
-                const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
-                return pbd;
-            });
-    }
+    // get previousBd$(): Observable<moment.Moment> {
+    //     return this.currentBd$
+    //         .map(cbd=>{
+    //             debugger;
+    //             const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
+    //             return pbd;
+    //         });
+    // }
     
     get previousBdData$(): Observable<any> {
         return combineLatest(this.vat$, this.previousBd$)

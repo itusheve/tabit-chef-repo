@@ -57,16 +57,11 @@ export class HomeComponent implements OnInit {
     private datePipe: DatePipe
   ) { 
 
-    // this.trendsDataService.trends$
-    //   .subscribe(trends=>{
-    //     debugger;
-    //   });
-
     combineLatest(this.dataService.currentBdData$, this.dataService.currentBd$, this.trendsDataService.trends$)
       .subscribe(data=>{
         const trends = data[2];
 
-        const title = this.datePipe.transform(data[1].valueOf(), 'fullDate');
+        const title = this.datePipe.transform(moment(data[1]).valueOf(), 'fullDate');
         this.currentBdCardData.diners = data[0].diners;
         this.currentBdCardData.ppa = data[0].ppa;
         this.currentBdCardData.sales = data[0].sales;

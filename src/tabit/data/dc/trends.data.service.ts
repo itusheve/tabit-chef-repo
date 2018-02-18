@@ -371,7 +371,7 @@ export class TrendsDataService {
 
         zip(this.dataService.currentBd$.take(1))
             .subscribe(data => {
-                const currentBd: moment.Moment = data[0];
+                const currentBd: moment.Moment = moment(data[0]);
                 console.info(`Trends: MTD: Last Year: Current Business Day is: ${currentBd.format('DD/MM/YYYY')}`);
 
                 if (currentBd.date()===1) {
@@ -549,7 +549,7 @@ export class TrendsDataService {
 
                     const olapDataByMonths = data[0];
                     const forecastData = data[1];
-                    const cbd = data[2];
+                    const cbd = moment(data[2]);
 
                     const prevYearMonth = moment(cbd).subtract(1, 'year');
                     
@@ -592,7 +592,7 @@ export class TrendsDataService {
                 .subscribe(data => {
 
                     const forecastData = data[0];
-                    const cbd = data[1];
+                    const cbd = moment(data[1]);
 
                     const startOfMonth = moment(cbd).startOf('month');
 
@@ -684,7 +684,7 @@ export class TrendsDataService {
                 .subscribe(data => {
 
                     // const forecastData = data[0];
-                    const cbd = data[0];
+                    const cbd = moment(data[0]);
                     const mtd = data[1];
 
                     const startOfMonth = moment(cbd).startOf('month');
