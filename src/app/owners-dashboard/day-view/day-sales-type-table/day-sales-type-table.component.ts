@@ -30,7 +30,6 @@ export class DaySalesTypeTableComponent {
   ) {}
 
   render(shifts, salesByOrderTypeAndService) {
-    debugger;
     this.total = 0;
 
     this.byTypeByShiftArr = [];
