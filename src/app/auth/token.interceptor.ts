@@ -98,7 +98,7 @@ export class TokenInterceptor implements HttpInterceptor {
                     })
                     .catch(error => {
                         // If there is an exception calling 'refreshToken', bad news so logout.
-                        console.error('handle401Error: error 2');
+                        console.error('handle401Error: error 2: couldnt regenerate access token', error);
                         this.isRefreshingToken = false;
                         return this.authService.logout();
                     });

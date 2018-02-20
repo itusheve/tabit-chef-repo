@@ -1,9 +1,7 @@
-// import { Location } from '@angular/common';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// import { Router } from '@angular/router';
 
 import { AsyncLocalStorage } from 'angular-async-local-storage';
 import { JSONSchema } from 'angular-async-local-storage';
@@ -12,14 +10,12 @@ import { User } from '../../tabit/model/User.model';
 import { Subject } from 'rxjs/Subject';
 import { zip } from 'rxjs/observable/zip';
 
-const ROS_base_url = 'https://ros-office-beta.herokuapp.com';//TODO get from config
-const loginUrl = '/oauth2/token';
-const meUrl = '/account/me';
+//const ROS_base_url: String = 'https://ros-office-beta.herokuapp.com/';//TODO DRY, get from config
+const ROS_base_url: String = 'https://ros-report-prd.herokuapp.com/';//TMP, work with beta as it holds Product 4.X
 
-// class Token {
-//     access: string;
-//     refresh: string;
-// }
+const loginUrl = 'oauth2/token';
+const meUrl = 'account/me';
+
 
 @Injectable()
 export class AuthService {
@@ -41,7 +37,7 @@ export class AuthService {
     selectOrg(org: any): Promise<any> {
         return new Promise((resolve, reject)=>{
             if (this.authState >= 1) {
-                this.httpClient.post(`${ROS_base_url}/Organizations/${org.id}/change`, {})
+                this.httpClient.post(`${ROS_base_url}Organizations/${org.id}/change`, {})
                     .subscribe(org_=>{
                         this.localStorage.setItem('org', org_).subscribe(() => { 
                             this.authState = 2;
@@ -57,17 +53,10 @@ export class AuthService {
     switchOrg(org:any): Promise<any> {
         return new Promise((resolve, reject) => {
             if (this.authState >= 1) {
-                this.httpClient.post(`${ROS_base_url}/Organizations/${org.id}/change`, {})
+                this.httpClient.post(`${ROS_base_url}Organizations/${org.id}/change`, {})
                     .subscribe(org_ => {
                         this.localStorage.setItem('org', org_).subscribe(() => {
                             resolve();
-                            //location='#/';
-                            //location.reload();
-                            //location.replace(location.host);
-                            // this.router.navigate([''])
-                            //     .then(()=>{
-                            //         location.reload();
-                            //     });
                         });
                     });
             }
@@ -88,7 +77,7 @@ export class AuthService {
         return new Promise((resolve, reject)=>{
             if (credentials) {
                 /* login attempt. get token & user, store locally and set authState to 1 (user mode) */
-                this.httpClient.post(ROS_base_url + loginUrl, {
+                this.httpClient.post(`${ROS_base_url}${loginUrl}`, {
                     client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
                     grant_type: 'password',
                     username: credentials.email,
@@ -103,7 +92,7 @@ export class AuthService {
                     ) => {
                         this.authToken = token.access_token;
                         this.localStorage.setItem('token', token).subscribe(() => { 
-                            this.httpClient.get(ROS_base_url + meUrl)
+                            this.httpClient.get(`${ROS_base_url}${meUrl}`)
                                 .subscribe(
                                     user=>{
                                         this.localStorage.setItem('user', user).subscribe(() => { 
@@ -164,7 +153,7 @@ export class AuthService {
         return new Promise((resolve, reject) => {
             this.localStorage.getItem<any>('token')
                 .subscribe(token_=>{
-                    this.httpClient.post(ROS_base_url + loginUrl, {
+                    this.httpClient.post(`${ROS_base_url}${loginUrl}`, {
                         client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
                         grant_type: 'refresh_token',
                         refresh_token: token_.refresh_token
@@ -176,6 +165,8 @@ export class AuthService {
                             this.authToken = token.access_token;
                             this.localStorage.setItem('token', token).subscribe(() => { });
                             resolve(this.authToken);
+                        },err=>{
+                            reject(err);
                         });
                 });
         });

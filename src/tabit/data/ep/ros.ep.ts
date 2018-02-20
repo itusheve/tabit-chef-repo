@@ -7,6 +7,9 @@ import { of } from 'rxjs/observable/of';
 
 // import * as moment from 'moment';
 
+//const ROS_base_url: String = 'https://ros-office-beta.herokuapp.com/';//TODO get from config
+const ROS_base_url: String = 'https://ros-report-prd.herokuapp.com/';//TMP, work with beta as it holds Product 4.X
+
 @Injectable()
 export class ROSEp {
 
@@ -26,10 +29,10 @@ export class ROSEp {
             'byTime': {}, 'totalGuestSalesBeforeTax': 16458.97, 'totalSalesBeforeTax': 18601.71, 'ppaBeforeTax': 51.49
         }
     };
-
+    
     get(url, params): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.httpClient.get(url, {
+            this.httpClient.get(ROS_base_url + url, {
                 params: params
             })
                 .subscribe(
@@ -56,7 +59,7 @@ export class ROSEp {
 
     post(url, payload): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.httpClient.post(url, payload)
+            this.httpClient.post(ROS_base_url + url, payload)
                 .subscribe(
                     (results: any)=>{
                         resolve(results);

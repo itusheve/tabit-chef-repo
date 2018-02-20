@@ -18,7 +18,6 @@ import 'rxjs/add/operator/share';
 
 @Injectable()
 export class DataService {
-    private ROS_base_url: String = 'https://ros-office-beta.herokuapp.com';//TODO get from config and consume in ROS ep
 
     private organizations$: ReplaySubject<any>;
 
@@ -27,7 +26,7 @@ export class DataService {
     //         daysOfHistory: 2//0 returns everything...
     //     };
     //     setInterval(() => {
-    //         this.rosEp.getMocked(this.ROS_base_url + '/reports/owner-dashboard', params)
+    //         this.rosEp.getMocked('reports/owner-dashboard', params)
     //             .then(data => {
     //                 obs.next(data);
     //             });
@@ -46,14 +45,14 @@ export class DataService {
 
 
     // public businessDay$: Observable<any> = Observable.create(obs=>{
-    //     this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
+    //     this.rosEp.get('businessdays/current', {})
     //         .then(data => {
     //             obs.next(data);
     //         });        
     // }).publishReplay(1).refCount();
 
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
-        this.rosEp.get(this.ROS_base_url + '/businessdays/current', {})
+        this.rosEp.get('businessdays/current', {})
             .then(data => {
                 const bdStr = data.businessDate.substring(0, 10);
                 const bd: moment.Moment = moment(bdStr).startOf('day');
@@ -84,7 +83,7 @@ export class DataService {
                     daysOfHistory: 1,//0 returns everything...
                     to: cbd.format('YYYY-MM-DD')
                 };
-                this.rosEp.get(this.ROS_base_url + '/reports/owner-dashboard', params)
+                this.rosEp.get('reports/owner-dashboard', params)
                     .then(data => {
                         obs.next(data);
                     });
@@ -92,7 +91,7 @@ export class DataService {
     }).publishReplay(1).refCount();
 
     public shifts$: Observable<any> = Observable.create(obs => {
-        this.rosEp.get(this.ROS_base_url + '/configuration/regionalSettings', {})
+        this.rosEp.get('configuration/regionalSettings', {})
             .then(data => {
                 const serverShiftsConfig = data[0].ownerDashboard;
                 if (!serverShiftsConfig) console.error('error 7727: missing configuration: regionalSettings.ownerDashboard config is missing. please contact support.');
@@ -369,7 +368,7 @@ export class DataService {
         if (this.organizations$) return this.organizations$;
         this.organizations$ = new ReplaySubject<any>();
 
-        this.rosEp.get(this.ROS_base_url + '/organizations', {})
+        this.rosEp.get('organizations', {})
             .then(orgs => {
                 const filtered = orgs.filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT');
                 this.organizations$.next(filtered);

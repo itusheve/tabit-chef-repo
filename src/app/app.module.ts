@@ -32,6 +32,17 @@ import { MomentModule } from 'angular2-moment';
 
 import { ROSEp } from '../tabit/data/ep/ros.ep';
 import { OlapEp } from '../tabit/data/ep/olap.ep';
+
+
+import { UsersDataService } from '../tabit/data/dc/_users.data.service';
+import { CategoriesDataService } from '../tabit/data/dc/_categories.data.service';
+import { ItemsDataService } from '../tabit/data/dc/_items.data.service';
+import { ModifierGroupsDataService } from '../tabit/data/dc/_modifierGroups.data.service';
+import { OffersDataService } from '../tabit/data/dc/_offers.data.service';
+import { PeripheralsDataService } from '../tabit/data/dc/_peripherals.data.service';
+import { PromotionsDataService } from '../tabit/data/dc/_promotions.data.service';
+import { TablesDataService } from '../tabit/data/dc/_tables.data.service';
+
 import { ClosedOrdersDataService } from '../tabit/data/dc/closedOrders.data.service';
 import { TrendsDataService } from '../tabit/data/dc/trends.data.service';
 import { DataService } from '../tabit/data/data.service';
@@ -99,6 +110,16 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
     UserGuard,
     OrgGuard,
     DataService, 
+    
+    UsersDataService,
+    CategoriesDataService,
+    ItemsDataService,
+    ModifierGroupsDataService,
+    OffersDataService,
+    PeripheralsDataService,
+    PromotionsDataService,
+    TablesDataService,
+
     ClosedOrdersDataService,
     TrendsDataService,
     ROSEp, 
