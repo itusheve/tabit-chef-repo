@@ -8,6 +8,7 @@ export class PromotionsDataService {
     /* 
         
     */
+   
     public promotions$: Observable<any> = new Observable(obs => {
         this.rosEp.get('promotions', {})
             .then((promotionsRaw: {}[]) => {

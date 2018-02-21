@@ -20,6 +20,7 @@ import { DataService } from '../data.service';
 import { OlapEp } from '../ep/olap.ep';
 import { ROSEp } from '../ep/ros.ep';
 import { CurrencyPipe } from '@angular/common';
+import { User } from '../../model/User.model';
 
 let ORDERS_VIEW = {//TODO establish propert translation service
     'general': 'כללי',
@@ -164,6 +165,9 @@ export class ClosedOrdersDataService {
         });
     }).publishReplay(1).refCount();
     
+    /* cache of Orders by business date ('YYYY-MM-DD') */
+    private ordersCache: Map<string, Order[]> = new Map<string, Order[]>();
+
     constructor(
         private olapEp: OlapEp, 
         private rosEp: ROSEp,
@@ -181,19 +185,60 @@ export class ClosedOrdersDataService {
     }
 
     /* 
-        return a promise that resolves with a collection of Orders.
-        if withPriceReductions, each order will also get enriched with price reduction related data
+        @caching(indirect)
+        @:promise
+        resolves with the Order with the provided tlogId (and orderOld as copied from Office).
+        you supply the business date ('YYYY-MM-DD').
+        if 'enriched', enriches the order.
+    */
+    public getOrder(
+        businessDateStr: string,
+        tlogId: string,
+        { enriched = false }: { enriched?: boolean } = {}
+    ): Promise<{
+        order: Order,
+        orderOld?: any
+    }> {
+        return new Promise((resolve, reject)=>{
+            this.getOrders(moment(businessDateStr))
+                .then(orders=>{
+                    const order = orders.find(o=>o.tlogId===tlogId);
+                    if (enriched) {
+                        if (order.enrichmentLevels.orderDetails) {
+                            resolve({order: order});
+                        } else {
+                            return this.enrichOrder(order)
+                                .then(data => resolve(data));
+                        }
+                    }
+                });
+        });
+    }
+       
+       /* 
+        @caching
+        @:promise
+        resolves with a collection of 'Order's for the provided businesDate.
+        //(canceled, now always bring price reductions) if withPriceReductions, each order will also be enriched with price reduction related data.
     */
     public getOrders(
-        day: moment.Moment, 
-        { withPriceReductions = false }: { withPriceReductions?: boolean } = {}
+        businessDate: moment.Moment
+        // { withPriceReductions = false }: { withPriceReductions?: boolean } = {}
     ): Promise<Order[]> {        
-        const that = this;
+        // cache check
+        const bdKey = businessDate.format('YYYY-MM-DD');
+        if (this.ordersCache.has(bdKey)) {
+            return Promise.resolve(this.ordersCache.get(bdKey));
+        }
         
+        //not cached:
+        const that = this;        
+
         const pAll: any = [
-            this.olapEp.getOrders({ day: day })
+            this.olapEp.getOrders({ day: businessDate }),
+            this.olapEp.getOrdersPriceReductionData(businessDate)
         ];
-        if (withPriceReductions) pAll.push(this.olapEp.getOrdersPriceReductionData(day));
+        //if (withPriceReductions) pAll.push(this.olapEp.getOrdersPriceReductionData(businessDate));
 
         return Promise.all(pAll)
             .then((data: any[])=>{
@@ -204,6 +249,7 @@ export class ClosedOrdersDataService {
                 for (let i = 0; i < ordersRaw.length; i++) {
                     const order: Order = new Order();
                     order.id = i;
+                    order.tlogId = ordersRaw[i].tlogId;
                     order.openingTime = ordersRaw[i].openingTime;
                     order.number = ordersRaw[i].orderNumber;
                     order.waiter = ordersRaw[i].waiter;
@@ -257,25 +303,30 @@ export class ClosedOrdersDataService {
             b. 
             ...
      */
-    public enrichOrder(order_: Order): Promise<any> {        
+    public enrichOrder(order_: Order): Promise<{
+        order: Order,
+        orderOld: any
+    }> {        
         const that = this;
 
-        // OrderPreview.service.js : resolveOrder
-        function enrichOrder_(tlog, bundles, allModifiers, users, items, tables, promotions) {
+        function enrichOrder_(orderObj:Order, tlog, bundles, allModifiers, users, items, tables, promotions): Promise<any> {
             const courseActions = ['notified', 'fired', 'served', 'prepared', 'taken'];
+            
+            const userNone = new User('None', '');
+
+            function resolveUser(userId): User {
+                const user = users.find(u => u._id === userId);
+                if (user) {
+                    return new User(user.firstName, user.lastName);
+                }
+                return userNone;
+            }
 
             function resolveOrderedItem(oiId) {
                 return _.find(order.orderedItems, function (oi) {
                     return oi._id === oiId;
                 });
             }
-
-            // function findMainItem(item) {
-            //     const mainItem = _.find(mainCategories, { _id: item.category });
-            //     if (mainItem) {
-            //         return bundles[item.offer];
-            //     }
-            // }
 
             function findClubMembers(order__) {
                 let clubMembers = [];
@@ -379,13 +430,7 @@ export class ClosedOrdersDataService {
                 return _.find(tables, function (t) {
                     return t._id === tableId;
                 });
-            }
-
-            function resolveName(userId) {
-                let user = users.find(u => u._id === userId);
-                if (user) return `${user.firstName} ${user.lastName}`;
-                return `None`;
-            }
+            }        
 
             function resolveOffer(_order, reward) {
                 let offer = '';
@@ -405,12 +450,6 @@ export class ClosedOrdersDataService {
                     return null;
                 }
             }
-
-            // let order;
-            // if (tlog.order === undefined)
-            //     order = tlog;
-            // else
-            //     order = tlog.order[0];
 
             let order = tlog.order[0];
 
@@ -465,12 +504,27 @@ export class ClosedOrdersDataService {
                 });
             }
 
-            order.waiter = resolveName(order.openedBy);
-            order.owner = resolveName(order.owner);
-            order.openedBy = resolveName(order.openedBy);
-            if (order.lockedBy) {
-                order.lockedBy = resolveName(order.lockedBy);
-            }
+            //transformed
+            //pre:
+            // function resolveName(userId) {
+            //     let user = users.find(u => u._id === userId);
+            //     if (user) return `${user.firstName} ${user.lastName}`;
+            //     return `None`;
+            // }
+            // order.waiter = resolveName(order.openedBy);
+            // order.owner = resolveName(order.owner);
+            // order.openedBy = resolveName(order.openedBy);
+            // if (order.lockedBy) {
+            //     order.lockedBy = resolveName(order.lockedBy);
+            // }
+            //post:
+            orderObj.users = {
+                waiter: resolveUser(order.openedBy),
+                owner: resolveUser(order.owner),
+                opened: resolveUser(order.openedBy),
+                locked: resolveUser(order.lockedBy)
+            };
+            //transformed
 
             order.clubMembers = findClubMembers(order);
 
@@ -698,7 +752,7 @@ export class ClosedOrdersDataService {
                 _.each(order.courses, function (course) {
 
                     _.each(courseActions, function (action) {
-                        if (course[action]) course[action].waiter = resolveName(course[action].by);
+                        if (course[action]) course[action].waiter = resolveUser(course[action].by);
                     });
 
                     if (course.orderedItems.length) {
@@ -717,9 +771,9 @@ export class ClosedOrdersDataService {
                 _.each(order.orderedItems, function (item) {
                     if (item.cancellation) {
                         if (item.cancellation.applied) {
-                            item.cancellation.applied.user = resolveName(item.cancellation.applied.by);
+                            item.cancellation.applied.user = resolveUser(item.cancellation.applied.by);
                         }
-                        if (item.cancellation.approved) { item.cancellation.approved.user = resolveName(item.cancellation.approved.by); }
+                        if (item.cancellation.approved) { item.cancellation.approved.user = resolveUser(item.cancellation.approved.by); }
                         if (item.cancellation.reason) {
                             if (item.cancellation.reason.returnType === 'cancellation') { // canceled items
                                 //item.returnType = $translate.instant('ORDERS_VIEW.cancel');
@@ -786,11 +840,10 @@ export class ClosedOrdersDataService {
                     action: 'תשלום',
                     data: payment.tenderType + ' - ' + payment.accountName + ': ' + that.currPipe.transform(payment.amount, that.currency, 'symbol', '1.0-0'),
                     at: payment.lastUpdated,
-                    by: resolveName(payment.user)
+                    by: resolveUser(payment.user)
                 });
             });
-
-            
+        
             // add cancellations and OTH
             if (order.orderedItems.length) {
                 let data;
@@ -813,7 +866,7 @@ export class ClosedOrdersDataService {
                                 action: 'בקשה לביטול פריט',
                                 data: data,
                                 at: item.cancellation.applied.at,
-                                by: resolveName(item.cancellation.applied.by)
+                                by: resolveUser(item.cancellation.applied.by)
                             });
                             // cancellation approved
                             if (item.cancellation.approved) {
@@ -822,7 +875,7 @@ export class ClosedOrdersDataService {
                                     action: 'אישור ביטול פריט',
                                     data: data,
                                     at: item.cancellation.approved.at,
-                                    by: resolveName(item.cancellation.approved.by)
+                                    by: resolveUser(item.cancellation.approved.by)
                                 });
                             }
                         } else {
@@ -832,7 +885,7 @@ export class ClosedOrdersDataService {
                                 action: 'בקשה להחזרת פריט',
                                 data: data,
                                 at: item.cancellation.applied.at,
-                                by: resolveName(item.cancellation.applied.by)
+                                by: resolveUser(item.cancellation.applied.by)
                             });
                             // return approved
                             if (item.cancellation.approved) {
@@ -841,7 +894,7 @@ export class ClosedOrdersDataService {
                                     action: 'אישור החזרת פריט',
                                     data: data,
                                     at: item.cancellation.approved.at,
-                                    by: resolveName(item.cancellation.approved.by)
+                                    by: resolveUser(item.cancellation.approved.by)
                                 });
                             }
                         }
@@ -859,7 +912,7 @@ export class ClosedOrdersDataService {
                             action: 'בקשה ל-OTH פריט',
                             data: data,
                             at: item.onTheHouse.applied.at,
-                            by: resolveName(item.onTheHouse.applied.by)
+                            by: resolveUser(item.onTheHouse.applied.by)
                         });
                         // OTH approved
                         if (item.onTheHouse.approved) {
@@ -868,7 +921,7 @@ export class ClosedOrdersDataService {
                                 action: 'אישור OTH פריט',
                                 data: data,
                                 at: item.onTheHouse.approved.at,
-                                by: resolveName(item.onTheHouse.approved.by)
+                                by: resolveUser(item.onTheHouse.approved.by)
                             });
                         }
                     }
@@ -888,7 +941,7 @@ export class ClosedOrdersDataService {
                     action: 'בקשה ל-OTH חשבון',
                     data: data,
                     at: order.onTheHouse.applied.at,
-                    by: resolveName(order.onTheHouse.applied.by)
+                    by: resolveUser(order.onTheHouse.applied.by)
                 });
                 // OTH approved
                 if (order.onTheHouse.approved) {
@@ -897,7 +950,7 @@ export class ClosedOrdersDataService {
                         action: 'אישור OTH חשבון',
                         data: data,
                         at: order.onTheHouse.applied.at,
-                        by: resolveName(order.onTheHouse.applied.by)
+                        by: resolveUser(order.onTheHouse.applied.by)
                     });
                 }
             }
@@ -982,7 +1035,7 @@ export class ClosedOrdersDataService {
                         action: action,
                         data: __data,
                         at: discount.applied.at,
-                        by: resolveName(discount.applied.by)
+                        by: resolveUser(discount.applied.by)
                     });
                 });
             }
@@ -995,7 +1048,7 @@ export class ClosedOrdersDataService {
                         action: 'בקשה לתיוג',
                         data: segment.name,
                         at: segment.applied.at,
-                        by: resolveName(segment.applied.by)
+                        by: resolveUser(segment.applied.by)
                     });
 
                     if (segment.approved) {
@@ -1004,7 +1057,7 @@ export class ClosedOrdersDataService {
                             action: 'אישור תיוג',
                             data: segment.name,
                             at: segment.approved.at,
-                            by: resolveName(segment.approved.by)
+                            by: resolveUser(segment.approved.by)
                         });
                     }
                 });
@@ -1017,12 +1070,14 @@ export class ClosedOrdersDataService {
                         action: ORDERS_VIEW[historyItem.action],
                         data: `Device name: ${historyItem.deviceName}`,
                         at: historyItem.at,
-                        by: resolveName(historyItem.by)
+                        by: resolveUser(historyItem.by)
                     });
                 });
             }
 
             order.timeline = _.sortBy(order.timeline, 'at');
+
+            return Promise.resolve(order);
 
             // TODO: US Stuff (Split Check):
             //resolve check data.
@@ -1123,12 +1178,20 @@ export class ClosedOrdersDataService {
             return that.rosEp.get(`tlogs/${tlogId}`, {});
         }
         
+        function getBillData(order__: Order) {
+            const tlogId = '5a8a17d08a22f42e009013ac';//bbb pt 19/02/2018 #340
+            return that.rosEp.get(`tlogs/${tlogId}/bill`, {});
+        }
+
+        //return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])
         return Promise.all([getTlog(order_), getLookupData()])
             .then(data=>{
                 const tlog:any = data[0];
-                const lookupData: any = data[1];                
+                const lookupData: any = data[1];   
+                //const billD             
 
                 return enrichOrder_(
+                    order_,
                     tlog, 
                     // lookupData.categoriesData.mainCategoriesRaw, 
                     lookupData.offersData.bundlesRaw, 
@@ -1141,7 +1204,11 @@ export class ClosedOrdersDataService {
                 
                 //return order_;
             })
-            .then(enrichedOrder=>{
+            .then(orderOld=>{
+                return {
+                    order: order_,
+                    orderOld: orderOld
+                };
                 // $ctrl.taxRate = $ctrl.selectedOrder.tax.rate + '%';
                 // $ctrl.orderOptions = [];
                 
@@ -1400,7 +1467,7 @@ export class ClosedOrdersDataService {
                 // if (modalParams.onLoaded)
                 //     modalParams.onLoaded();
 
-                return enrichedOrder;
+                // return enrichedOrder;
             });
     }
 

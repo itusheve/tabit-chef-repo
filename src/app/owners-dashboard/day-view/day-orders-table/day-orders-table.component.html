@@ -23,7 +23,7 @@
                         <td>סכום</td>
                         <td></td>
                     </tr>
-                    <tr *ngFor="let order of orderType.orders">
+                    <tr *ngFor="let order of orderType.orders" (click)="orderClicked(order)">
                         <td>{{order.openingTime | date:'H:mm'}}</td>
                         <td>{{order.number | number:'1.0-0'}}</td>
                         <td>{{order.waiter}}</td>

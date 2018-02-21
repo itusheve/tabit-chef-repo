@@ -118,11 +118,21 @@ export class OlapEp {
             dims: {
                 orderNumber: '[Tlog Header Order Number]'
             }            
-        },      
+        },     
         waiters: {//v1, deprecated
             hierarchy: '[Owners]',
             dims: {
                 waiter: '[Tlog Header Owner Id]'
+            }
+        },
+        tlog: {
+            v: 2,
+            path: 'Tlog',
+            attr: {
+                id: {
+                    path: 'Tlog Header Tlog Id',
+                    parse: raw => raw
+                }
             }
         },
         ordersV2: {//v2, V2 for BC
@@ -703,6 +713,7 @@ export class OlapEp {
     }
 
     public getOrders(o: { day: moment.Moment }): Promise<{
+        tlogId: string,
         openingTime: moment.Moment,
         orderTypeCaption: string,
         orderNumber: number,
@@ -732,6 +743,7 @@ export class OlapEp {
                     ${this.measures.ppa.diners}
                 } ON 0,
                 NonEmptyCrossJoin(
+                    ${this.members(this.dims.tlog.attr.id)},
                     ${this.dims.orders.hierarchy}.${this.dims.orders.dims.orderNumber}.${this.dims.orders.dims.orderNumber}.Members, 
                     ${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.dim}.Members,                    
                     ${this.dims.orderOpeningDate.hierarchy}.${this.dims.orderOpeningDate.dims.date}.${this.dims.orderOpeningDate.dims.date}.Members,
@@ -749,7 +761,8 @@ export class OlapEp {
                     xmla4j_w.executeNew(mdx)
                         .then(rowset => {
                             const treated = rowset.map(r => {
-
+                                const tlogId = this.parseDim(r, this.dims.tlog.attr.id);
+                                
                                 // raw date looks like: " ש 01/10/2017"
                                 let rawOrderNumber = r[`${this.dims.orders.hierarchy}.${this.dims.orders.dims.orderNumber}.${this.dims.orders.dims.orderNumber}.[MEMBER_CAPTION]`];
                                 try {
@@ -781,6 +794,7 @@ export class OlapEp {
                                 const ppa = (salesPPA ? salesPPA : 0) / (dinersPPA ? dinersPPA : 1);
 
                                 return {
+                                    tlogId: tlogId,
                                     openingTime: openingTime,
                                     orderTypeCaption: rawOrderType,
                                     orderNumber: rawOrderNumber,

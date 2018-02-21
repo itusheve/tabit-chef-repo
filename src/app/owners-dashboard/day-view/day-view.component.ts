@@ -65,7 +65,8 @@ export class DayViewComponent implements OnInit  {
       this.dayShifts.render(data.shifts);
       
       this.orders = undefined;
-      this.closedOrdersDataService.getOrders(this.day, {withPriceReductions: true})
+      //this.closedOrdersDataService.getOrders(this.day, {withPriceReductions: true})
+      this.closedOrdersDataService.getOrders(this.day)
         .then((orders: Order[]) => {
           this.orders = orders;
         });
@@ -96,6 +97,12 @@ export class DayViewComponent implements OnInit  {
 
   onGoToOrders(filter, type) {    
     this.router.navigate(['/owners-dashboard/orders', this.day.format('YYYY-MM-DD'), filter.id, '']);
+  }
+
+  /* called by day-orders-table */
+  onOrderClicked(tlogId: string) {
+    const bd = this.day.format('YYYY-MM-DD');
+    this.router.navigate([`/owners-dashboard/bd/${bd}/tlogid/${tlogId}`]);
   }
 
 }

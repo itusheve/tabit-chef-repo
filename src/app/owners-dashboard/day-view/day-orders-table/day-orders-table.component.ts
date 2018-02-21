@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { Order } from '../../../../tabit/model/Order.model';
@@ -23,6 +23,7 @@ export interface OrderTypeVM {
 export class DayOrdersTableComponent implements OnInit {
 
   @Input() orders: Order[];
+  @Output() onOrderClicked = new EventEmitter();
 
   public byOrderTypes: OrderTypeVM[];
 
@@ -46,6 +47,10 @@ export class DayOrdersTableComponent implements OnInit {
     });
     this.byOrderTypes = orderTypes;
 
+  }
+
+  orderClicked(order:any) {
+    this.onOrderClicked.emit(order.tlogId);    
   }
 
 }

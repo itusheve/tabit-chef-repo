@@ -4,6 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { OwnersDashboardComponent } from './owners-dashboard.component';
 import { HomeComponent } from './home/home.component';
 import { DayViewComponent } from './day-view/day-view.component';
+import { OrderViewComponent } from './order-view/order-view.component';
+
 import { OrgGuard } from '../auth/org-guard.service';
 
 const ownersDashboardRoutes: Routes = [
@@ -20,6 +22,10 @@ const ownersDashboardRoutes: Routes = [
             {
                 path: 'day/:businessDate',
                 component: DayViewComponent
+            },
+            {
+                path: 'bd/:businessDate/tlogid/:tlogid',
+                component: OrderViewComponent
             }
         ]
     }
