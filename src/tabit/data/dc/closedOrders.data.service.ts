@@ -22,128 +22,437 @@ import { ROSEp } from '../ep/ros.ep';
 import { CurrencyPipe } from '@angular/common';
 import { User } from '../../model/User.model';
 
-let ORDERS_VIEW = {//TODO establish propert translation service
-    'general': 'כללי',
-    'tip_behavior': 'סוג טיפ',
-    'amount': 'סכום',
-    'tip': 'תשר',
-    'discount': 'הנחה',
-    'optimization': 'אופטימיזציה',
-    'time_line': 'ציר זמן',
-    'action': 'פעולה',
-    'data': 'מידע',
-    'at': 'זמן',
-    'by': 'ע"י',
-    'orders': 'מנות',
-    'item': 'פריט',
-    'price': 'מחיר',
-    'no_orders': 'אין מנות',
-    'cancelled_items': 'ביטולים והחזרות',
-    'no_cancelled_items': 'אין ביטולים והחזרות',
-    'unassigned_items': 'פריטים לא משוייכים',
-    'no_unassigned_items': 'אין פריטים לא משוייכים',
-    'payments': 'תשלומים',
-    'no_payments': 'אין תשלומים',
-    'tender_type': 'סוג תשלום',
-    'last_4': '4 ספרות',
-    'face_value': 'ערך נקוב',
-    'change': 'עודף',
-    'no_changes': 'אין תשלומים',
-    'discounts': 'הנחות',
-    'discount_type': 'סוג הנחה',
-    'reason': 'סיבה',
-    'no_discounts': 'אין הנחות',
-    'promotions': 'מבצעים',
-    'promotion': 'מבצע',
-    'no_promotions': 'אין מבצעים',
-    'redeem_code': 'קוד',
-    'return_type': 'סוג ביטול',
-    'comment': 'הערה',
-    'applied': 'בקשה ע"י',
-    'approved': 'אישור ע"י',
-    'oth': 'OTH',
-    'charge_account': 'הקפה',
-    'cash': 'מזומן',
-    'cheque': 'המחאה',
-    'credit': 'אשראי',
-    'giftCard': 'כרטיס תשלום',
-    'giftCardLoad': 'טעינת כרטיס תשלום',
-    'charge_account_refund': 'החזר הקפה',
-    'cash_refund': 'החזר מזומן',
-    'cheque_refund': 'החזר המחאה',
-    'credit_refund': 'החזר אשראי',
-    'refund': 'החזר',
-    'TA': 'TA',
-    'delivery': 'משלוח',
-    'order': 'הזמנה',
-    'delivery_note': 'תעודת משלוח',
-    'refund_note': 'תעודת החזר',
-    'invoice': 'חשבונית',
-    'refund_invoice': 'חשבונית החזר',
-    'cancel': 'ביטול',
-    'return': 'החזרה',
-    'open': 'פתיחה',
-    'close': 'סגירה',
-    'payment': 'תשלום',
-    'cancel_item_applied': 'בקשה לביטול פריט',
-    'cancel_item_approved': 'אישור ביטול פריט',
-    'return_item_applied': 'בקשה להחזרת פריט',
-    'return_item_approved': 'אישור החזרת פריט',
-    'oth_item_applied': 'בקשה ל-OTH פריט',
-    'oth_item_approved': 'אישור OTH פריט',
-    'oth_order_applied': 'בקשה ל-OTH חשבון',
-    'oth_order_approved': 'אישור OTH חשבון',
-    'percent_off_order': '% הנחת הזמנה',
-    'amount_off_order': ' הנחת סכום הזמנה',
-    'percent_off_item': '% הנחת פריט',
-    'amount_off_item': ' הנחת סכום פריט',
-    'delivery_note_number': 'תעודת משלוח מס ',
-    'refund_note_number': 'תעודת זיכוי מס ',
-    'invoice_number': 'חשבונית מס קבלה מס ',
-    'credit_invoice_number': 'חשבונית זיכוי מס ',
-    'forcedClosed': 'Forced Closed',
-    'clubMembers': 'חברי מועדון',
-    'orderer_name': 'שם',
-    'orderer_phone': 'טלפון',
-    'orderer_delivery_summary': 'כתובת',
-    'orderer_delivery_notes': 'הערות כתובת',
-    'orderer_courier': 'שליח',
-    'orderer_floor': 'ק',
-    'orderer_apartment': 'ד',
-    'total_inc_vat': 'סה"כ לתשלום',
-    'total_order': 'סה"כ הזמנה',
-    'payments_print': 'התקבל',
-    'bn-number': 'ח.פ.',
-    'phone': 'טל\'',
-    'print_date': 'הודפס בתאריך',
-    //'print_by_order': 'לפי הזמנה מס' { { order_number } } בתאריך { { order_date } } בשעה { { order_time } } ',
-    'copy': 'העתק',
-    'order_number': 'הזמנה מס\'',
-    'table': 'שולחן',
-    'waiter_diners': 'מלצר {{waiter}} סועדים {{diners}} שולחן {{table}}',
-    'oth_print': 'על חשבון הבית',
-    'all_order_oth': 'הזמנה על חשבון הבית',
-    'order_discount': 'הנחת חשבון',
-    'manual_item_discount': 'הנחה יזומה',
-    'print_date_document': '{{document_type}} הופקה בתאריך {{order_date}} בשעה {{order_time}}',
-    'print_date_deliveryNote': 'תעודת משלוח הופקה בתאריך {{order_date}} בשעה {{order_time}}',
-    'print_date_invoice': 'חשבונית הופקה בתאריך {{order_date}} בשעה {{order_time}}',
-    'diner': 'אירוח',
-    'paid_by': 'התקבל ב',
-    'refunded_by': 'הוחזר ב',
-    'charge_account_name': 'חשבון הקפה',
-    'company': 'חברה',
-    'customer_id': 'ח.פ / ת.ז',
-    'customer_name': 'שם',
-    'card_number': 'מספר כרטיס',
-    'order_search_comment': 'חיפוש ההזמנה הינו לפי שעת סגירתה',
-    'from': 'מ-',
-    'to': 'עד',
-    'appliedSegmentation': 'בקשה לתיוג',
-    'approvedSegmentation': 'אישור תיוג',
-    'kickout': 'Kickout',
-    'Kicked_out': 'Kicked out'
-    };
+// copied as is from office 4.X
+//TODO establish propert translation service
+// tslint:disable:quotemark
+let ORDERS_VIEW = {
+    "title": "איתור הזמנה",
+    "orderState": "מצב הזמנה",
+    "general": "כללי",
+    "tip_behavior": "סוג טיפ",
+    "amount": "סכום",
+    "tip": "תשר",
+    "discount": "הנחה",
+    "optimization": "אופטימיזציה",
+    "time_line": "ציר זמן",
+    "action": "פעולה",
+    "data": "מידע",
+    "at": "זמן",
+    "by": "ע\"י",
+    "orders": "מנות",
+    "item": "פריט",
+    "price": "מחיר",
+    "no_orders": "אין מנות",
+    "cancelled_items": "ביטולים והחזרות",
+    "no_cancelled_items": "אין ביטולים והחזרות",
+    "unassigned_items": "פריטים לא משוייכים",
+    "no_unassigned_items": "אין פריטים לא משוייכים",
+    "payments": "תשלומים",
+    "no_payments": "אין תשלומים",
+    "tender_type": "סוג תשלום",
+    "last_4": "4 ספרות",
+    "face_value": "ערך נקוב",
+    "change": "עודף",
+    "no_changes": "אין תשלומים",
+    "discounts": "הנחות",
+    "discount_type": "סוג הנחה",
+    "reason": "סיבה",
+    "no_discounts": "אין הנחות",
+    "promotions": "מבצעים",
+    "promotion": "מבצע",
+    "no_promotions": "אין מבצעים",
+    "redeem_code": "קוד",
+    "return_type": "סוג ביטול",
+    "return": "ביטול",
+    "comment": "הערה",
+    "applied": "בקשה ע\"י",
+    "approved": "אישור ע\"י",
+    "oth": "OTH",
+    "charge_account": "הקפה",
+    "cash": "מזומן",
+    "cheque": "המחאה",
+    "credit": "אשראי",
+    "giftCard": "כרטיס תשלום",
+    "giftCardLoad": "טעינת כרטיס תשלום",
+    "charge_account_refund": "החזר הקפה",
+    "cash_refund": "החזר מזומן",
+    "cheque_refund": "החזר המחאה",
+    "credit_refund": "החזר אשראי",
+    "refund": "החזר",
+    "TA": "TA",
+    "delivery": "משלוח",
+    "order": "הזמנה",
+    "delivery_note": "תעודת משלוח",
+    "refund_note": "תעודת החזר",
+    "invoice": "חשבונית",
+    "refund_invoice": "חשבונית החזר",
+    "cancel": "ביטול",
+    "open": "פתיחה",
+    "close": "סגירה",
+    "payment": "תשלום",
+    "cancel_item_applied": "בקשה לביטול פריט",
+    "cancel_item_approved": "אישור ביטול פריט",
+    "return_item_applied": "בקשה להחזרת פריט",
+    "return_item_approved": "אישור החזרת פריט",
+    "oth_item_applied": "בקשה ל-OTH פריט",
+    "oth_item_approved": "אישור OTH פריט",
+    "oth_order_applied": "בקשה ל-OTH חשבון",
+    "oth_order_approved": "אישור OTH חשבון",
+    "percent_off_order": "% הנחת הזמנה",
+    "amount_off_order": " הנחת סכום הזמנה",
+    "percent_off_item": "% הנחת פריט",
+    "amount_off_item": " הנחת סכום פריט",
+    "delivery_note_number": "תעודת משלוח מס ",
+    "refund_note_number": "תעודת זיכוי מס ",
+    "invoice_number": "חשבונית מס קבלה מס ",
+    "credit_invoice_number": "חשבונית זיכוי מס ",
+    "forcedClosed": "Forced Closed",
+    "clubMembers": "חברי מועדון",
+    "orderer_name": "שם",
+    "orderer_phone": "טלפון",
+    "orderer_delivery_summary": "כתובת",
+    "orderer_delivery_notes": "הערות כתובת",
+    "orderer_courier": "שליח",
+    "orderer_floor": "ק",
+    "orderer_apartment": "ד",
+    "total_inc_vat": "סה\"כ לתשלום",
+    "total_order": "סה\"כ הזמנה",
+    "payments_print": "התקבל",
+    "bn-number": "ח.פ.",
+    "phone": "טל'",
+    "print_date": "הודפס בתאריך",
+    "print_by_order": (order_number, order_date, order_time)=>`לפי הזמנה מס' ${order_number} בתאריך ${order_date} בשעה ${order_time}`,
+    "copy": "העתק",
+    "order_number": "הזמנה מס'",
+    "table": "שולחן",
+    "waiter_diners": (waiter, diners, table)=>`מלצר ${waiter} סועדים ${diners} שולחן ${table}`,
+    "oth_print": "על חשבון הבית",
+    "all_order_oth": "הזמנה על חשבון הבית",
+    "order_discount": "הנחת חשבון",
+    "manual_item_discount": "הנחה יזומה",
+    "print_date_document": (document_type, order_date, order_time)=>`${document_type} הופקה בתאריך ${order_date} בשעה ${order_time}`,
+    "print_date_deliveryNote": (order_date, order_time)=>`תעודת משלוח הופקה בתאריך ${order_date} בשעה ${order_time}`,
+    "print_date_invoice": (order_date, order_time)=>`חשבונית הופקה בתאריך ${order_date} בשעה ${order_time}`,
+    "diner": "אירוח",
+    "paid_by": "התקבל ב",
+    "refunded_by": "הוחזר ב",
+    "charge_account_name": "חשבון הקפה",
+    "company": "חברה",
+    "customer_id": "ח.פ / ת.ז",
+    "customer_name": "שם",
+    "card_number": "מספר כרטיס",
+    "order_search_comment": "חיפוש ההזמנה הינו לפי שעת סגירתה",
+    "from": "מ-",
+    "to": "עד",
+    "appliedSegmentation": "בקשה לתיוג",
+    "approvedSegmentation": "אישור תיוג",
+    "exclusive_tax": "מס שנוסף להזמנה",
+    "inclusive_tax": "מס כלול",
+    "inclusive_taxes": "מסים כלולים",
+    "total_sales_amount": "סה\"כ הזמנה",
+    "included": "כלול",
+    "Owner": "Owner",
+    "reversal": "ביטול",
+    "kickout": "Kickout",
+    "Kicked_out": "Kicked out"
+};
+
+// copied as is from office 4.X
+let Enums = {
+    ReturnTypes: {
+        TransactionBased: 'TRANSACTION BASED'
+    }
+};
+
+// copied as is from office 4.X
+let Utils = {
+    toFixedSafe: (value, num) => {
+        if (value !== undefined) {
+            return value.toFixed(num);
+        }
+        // console.log('missing value..');
+        return '--';
+    },
+    nl2br: (str) => {
+        if (!str) return '';
+        return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br />$2');
+    }
+};
+
+// copied as is from office 4.X
+let billService = {
+    resolveItems: function (variables, collections, isUS) {
+
+        let isReturnOrder = false;
+        if (variables.RETURN_TYPE === Enums.ReturnTypes.TransactionBased) {
+            isReturnOrder = true;
+        }
+
+        let offersList = collections.ORDERED_OFFERS_LIST;
+        if (isReturnOrder) {
+            offersList = collections.RETURNED_OFFERS_LIST;
+        }
+
+        let isTaxExempt = false;
+        if ((collections.EXEMPTED_TAXES && collections.EXEMPTED_TAXES.length > 0 && isUS)) {
+            isTaxExempt = true;
+        }
+
+        let items = [];
+        let oth = [];
+
+        offersList.forEach(offer => {
+
+            let offerQyt:any = 0;
+            if (offer.SPLIT_DENOMINATOR && offer.SPLIT_NUMERATOR && offer.SPLIT_DENOMINATOR !== 100 && offer.SPLIT_NUMERATOR !== 100) {
+                offerQyt = `${offer.SPLIT_NUMERATOR}/${offer.SPLIT_DENOMINATOR}`;
+            } else {
+                offerQyt = offer.OFFER_QTY;
+            }
+
+            if (offer.OFFER_TYPE === 'Simple') {
+                let item:any = {
+                    isOffer: true,
+                    name: offer.OFFER_NAME,
+                    qty: offerQyt
+                };
+
+                if (offer.ON_THE_HOUSE) {
+                    //item.amount = $translate.instant('ORDERS_VIEW.oth_print');
+                    item.amount = ORDERS_VIEW.oth_print;
+                    oth.push(item);
+                } else {
+                    item.amount = Utils.toFixedSafe(offer.OFFER_AMOUNT, 2);
+                    items.push(item);
+                }
+
+                if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
+                    _.each(offer.ORDERED_OFFER_DISCOUNTS, discount => {
+                        items.push({
+                            isOfferDiscount: true,
+                            //name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : $translate.instant('ORDERS_VIEW.manual_item_discount'),
+                            name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : ORDERS_VIEW.manual_item_discount,
+                            qty: null,
+                            amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                        });
+                    });
+                }
+            }
+
+            if (['Complex-One', 'Combo'].indexOf(offer.OFFER_TYPE) > -1) {
+
+                items.push({
+                    isOffer: true,
+                    name: offer.OFFER_NAME,
+                    qty: offerQyt,
+                    //amount: offer.ON_THE_HOUSE ? $translate.instant('ORDERS_VIEW.oth_print') : Utils.toFixedSafe(isReturnOrder ? offer.OFFER_AMOUNT : offer.OFFER_CALC_AMT, 2)
+                    amount: offer.ON_THE_HOUSE ? ORDERS_VIEW.oth_print : Utils.toFixedSafe(isReturnOrder ? offer.OFFER_AMOUNT : offer.OFFER_CALC_AMT, 2)
+                });
+
+                if (!isReturnOrder) {
+                    _.each(offer.ORDERED_ITEMS_LIST, item => {
+                        items.push({
+                            isItem: true,
+                            name: item.ITEM_NAME,
+                            qty: null,
+                            amount: null
+                        });
+                    });
+                }
+
+                if (!isReturnOrder) {
+                    _.each(offer.EXTRA_CHARGE_LIST, item => {
+                        if (item.EXTRA_CHARGE_MODIFIERS_LIST && item.EXTRA_CHARGE_MODIFIERS_LIST.length > 0) {
+                            _.each(item.EXTRA_CHARGE_MODIFIERS_LIST, modifier => {
+                                items.push({
+                                    isItem: true,
+                                    name: modifier.MODIFIER_NAME,
+                                    qty: null,
+                                    //amount: item.ON_THE_HOUSE ? $translate.instant('ORDERS_VIEW.oth_print') : Utils.toFixedSafe(item.ITEM_AMOUNT, 2)
+                                    amount: item.ON_THE_HOUSE ? ORDERS_VIEW.oth_print : Utils.toFixedSafe(item.ITEM_AMOUNT, 2)
+                                });
+                            });
+                        } else {
+                            items.push({
+                                isItem: true,
+                                name: item.ITEM_NAME,
+                                qty: null,
+                                //amount: item.ON_THE_HOUSE ? $translate.instant('ORDERS_VIEW.oth_print') : Utils.toFixedSafe(item.ITEM_AMOUNT, 2)
+                                amount: item.ON_THE_HOUSE ? ORDERS_VIEW.oth_print : Utils.toFixedSafe(item.ITEM_AMOUNT, 2)
+                            });
+                        }
+                    });
+                }
+            }
+        });
+
+        return {
+            items: items,
+            oth: oth,
+            isReturnOrder: isReturnOrder,
+            isTaxExempt: isTaxExempt
+        };
+
+    },
+    resolveTotals: function (order, collections, isCheck, isUS) {
+
+        let totals = [];
+
+        if (order.TOTAL_SALES_AMOUNT && ((collections.ORDER_DISCOUNTS_LIST && collections.ORDER_DISCOUNTS_LIST.length > 0) ||
+            order.TOTAL_TIPS ||
+            (isUS && collections.EXCLUSIVE_TAXES && collections.EXCLUSIVE_TAXES.length > 0))) {
+            totals.push({
+                //name: $translate.instant('ORDERS_VIEW.total_order'),
+                name: ORDERS_VIEW.total_order,
+                amount: Utils.toFixedSafe(order.TOTAL_SALES_AMOUNT, 2)
+            });
+        }
+
+        if (collections.ORDER_DISCOUNTS_LIST && collections.ORDER_DISCOUNTS_LIST.length > 0) {
+            _.each(collections.ORDER_DISCOUNTS_LIST, discount => {
+                totals.push({
+                    //name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : $translate.instant('ORDERS_VIEW.order_discount'),
+                    name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : ORDERS_VIEW.order_discount,
+                    amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                });
+            });
+        }
+
+        if (collections.EXCLUSIVE_TAXES && collections.EXCLUSIVE_TAXES.length > 0 && isUS) {
+            _.each(collections.EXCLUSIVE_TAXES, tax => {
+                totals.push({
+                    type: 'exclusive_tax',
+                    //name: tax.NAME ? tax.NAME : $translate.instant('ORDERS_VIEW.exclusive_tax'),
+                    name: tax.NAME ? tax.NAME : ORDERS_VIEW.exclusive_tax,
+                    amount: Utils.toFixedSafe(tax.AMOUNT, 2),
+                    rate: tax.RATE
+                });
+            });
+        }
+
+        if (order.TOTAL_TIPS) {
+            totals.push({
+                //name: $translate.instant('ORDERS_VIEW.tip'),
+                name: ORDERS_VIEW.tip,
+                amount: Utils.toFixedSafe(order.TOTAL_TIPS, 2)
+            });
+        }
+
+        if (order.TOTAL_IN_VAT && !isUS) {
+            totals.push({
+                //name: $translate.instant('ORDERS_VIEW.total_inc_vat'),
+                name: ORDERS_VIEW.total_inc_vat,
+                amount: Utils.toFixedSafe(order.TOTAL_IN_VAT, 2)
+            });
+        }
+
+        if (order.TOTAL_AFTER_EXCLUDED_TAX && isUS) {
+            totals.push({
+                //name: $translate.instant('ORDERS_VIEW.total_inc_vat'),
+                name: ORDERS_VIEW.total_inc_vat,
+                amount: Utils.toFixedSafe(order.TOTAL_AMOUNT, 2)
+            });
+        }
+
+        return totals;
+    },
+    resolvePayments: function (order, collections, isCheck) {
+        let payments = [];
+
+        _.each(collections.PAYMENT_LIST, payment => {
+            payments.push({
+                name: billService.resolvePaymentName(payment),
+                amount: payment.PAYMENT_TYPE ? Utils.toFixedSafe(payment.P_AMOUNT * -1, 2) : Utils.toFixedSafe(payment.P_AMOUNT, 2)
+            });
+        });
+
+        payments.push({
+            type: 'change',
+            //name: $translate.instant('ORDERS_VIEW.change'),
+            name: ORDERS_VIEW.change,
+            amount: Utils.toFixedSafe(order.CHANGE, 2)
+        });
+
+        return payments;
+    },
+    resolveTaxes: function (variables, collections, isCheck, isUS) {
+
+        let taxes = {
+            InclusiveTaxes: [],
+            ExemptedTaxes: [],
+            ExemptedTaxData: []
+        };
+
+        if (collections.INCLUSIVE_TAXES && collections.INCLUSIVE_TAXES.length > 0 && isUS) {
+
+            taxes.InclusiveTaxes.push({
+                type: 'title',
+                //name: `${$translate.instant('ORDERS_VIEW.inclusive_tax')}:`,
+                name: `${ORDERS_VIEW.inclusive_taxes}:`,
+                amount: undefined
+            });
+
+            _.each(collections.INCLUSIVE_TAXES, tax => {
+                taxes.InclusiveTaxes.push({
+                    type: 'inclusive_tax',
+                    //name: tax.NAME ? tax.NAME : $translate.instant('ORDERS_VIEW.inclusive_tax'),
+                    name: tax.NAME ? tax.NAME : ORDERS_VIEW.inclusive_tax,
+                    amount: Utils.toFixedSafe(tax.AMOUNT, 2)
+                });
+            });
+        }
+
+        if (collections.EXEMPTED_TAXES && collections.EXEMPTED_TAXES.length > 0 && isUS) {
+
+            taxes.ExemptedTaxes.push({
+                type: 'title',
+                //name: `${$translate.instant('ORDERS_VIEW.exempted_taxes')}:`,
+                name: ``,
+                amount: undefined
+            });
+
+            collections.EXEMPTED_TAXES.forEach(tax => {
+                taxes.ExemptedTaxes.push({
+                    type: 'exempted_tax',
+                    //name: tax.NAME ? tax.NAME : $translate.instant('ORDERS_VIEW.exempted_tax'),//? `${exemptedTax.NAME} (exempted tax)` : 'exempted tax',
+                    name: tax.NAME ? tax.NAME : '',
+                    amount: Utils.toFixedSafe(tax.AMOUNT, 2)
+                });
+            });
+        }
+
+        return taxes;
+
+    },
+    resolvePaymentName: function (payment) {
+        let refund = '';
+        let paymentName = '';
+
+        if (payment.PAYMENT_TYPE === 'REFUND') {
+
+            if (payment.TRANS_TYPE === 'Reversal') {
+                //refund = $translate.instant('ORDERS_VIEW.reversal');
+                refund = ORDERS_VIEW.reversal;
+            } else if (payment.TRANS_TYPE === 'Return') {
+                //refund = $translate.instant('ORDERS_VIEW.return');
+                refund = ORDERS_VIEW.return;
+            } else {
+                //refund = $translate.instant('ORDERS_VIEW.refund');
+                refund = ORDERS_VIEW.refund;
+            }
+
+        }
+
+        if (payment.P_TENDER_TYPE === 'creditCard') {
+            paymentName = refund !== '' ? `${refund} (${payment.CARD_TYPE} ${payment.LAST_4})` : `${payment.CARD_TYPE} ${payment.LAST_4}`;
+        } else {
+            paymentName = `${refund} ${payment.P_NAME}`;
+        }
+
+        return paymentName;
+
+    }
+};
 
 @Injectable()
 export class ClosedOrdersDataService {
@@ -197,7 +506,8 @@ export class ClosedOrdersDataService {
         { enriched = false }: { enriched?: boolean } = {}
     ): Promise<{
         order: Order,
-        orderOld?: any
+        orderOld?: any,
+        printDataOld?: any
     }> {
         return new Promise((resolve, reject)=>{
             this.getOrders(moment(businessDateStr))
@@ -305,7 +615,8 @@ export class ClosedOrdersDataService {
      */
     public enrichOrder(order_: Order): Promise<{
         order: Order,
-        orderOld: any
+        orderOld: any,
+        printDataOld: any
     }> {        
         const that = this;
 
@@ -1077,6 +1388,10 @@ export class ClosedOrdersDataService {
 
             order.timeline = _.sortBy(order.timeline, 'at');
 
+            if (order.member && order.member.printMessage) {
+                order.member.printMessage = Utils.nl2br(order.member.printMessage);
+            }
+
             return Promise.resolve(order);
 
             // TODO: US Stuff (Split Check):
@@ -1140,6 +1455,46 @@ export class ClosedOrdersDataService {
             // }
         }
 
+        /* the func is a copy of how office 4.X is preparing an object called 'print data' */
+        function setUpPrintData(data):Promise<any> {
+            return new Promise((resolve, reject)=>{
+                data = data[0];
+
+                //let isUS = Authentication.isUS();
+                const isUS = false;
+
+                const variables = data.printData.variables;
+                const collections = data.printData.collections;
+
+                //angular.merge(data.printData, billService.resolveItems(variables, collections));
+                _.merge(data.printData, billService.resolveItems(variables, collections, isUS));
+
+                data.printData.payments = billService.resolvePayments(variables, collections, isUS);
+                data.printData.totals = billService.resolveTotals(variables, collections, null, isUS);
+                data.printData.taxes = billService.resolveTaxes(variables, collections, null, isUS);
+                data.printData.isUS = isUS;
+
+                // data.printData.print_by_order = $translate.instant('ORDERS_VIEW.print_by_order', {
+                //     order_number: variables.ORDER_NO,
+                //     order_date: moment(variables.CREATED_AT).format('DD/MM/YYYY'),
+                //     order_time: moment(variables.CREATED_AT).format('HH:mm:ss')
+                // });
+                data.printData.print_by_order = ORDERS_VIEW.print_by_order(variables.ORDER_NO, moment(variables.CREATED_AT).format('DD/MM/YYYY'), moment(variables.CREATED_AT).format('HH:mm:ss'));
+
+                let server_name = "";
+                if (variables.F_NAME && variables.L_NAME) { server_name = variables.F_NAME + ' ' + _.first(variables.L_NAME); }
+
+                // data.printData.waiter_diners = $translate.instant('ORDERS_VIEW.waiter_diners', {
+                //     waiter: server_name,
+                //     diners: variables.NUMBER_OF_GUESTS,
+                //     table: variables.TABLE_NO
+                // });
+                data.printData.waiter_diners = ORDERS_VIEW.waiter_diners(server_name, variables.NUMBER_OF_GUESTS, variables.TABLE_NO);
+
+                resolve(data.printData);
+            });
+        }
+
         function getLookupData() {
             return new Promise((resolve, reject)=>{
                 zip(
@@ -1183,33 +1538,33 @@ export class ClosedOrdersDataService {
             return that.rosEp.get(`tlogs/${tlogId}/bill`, {});
         }
 
-        //return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])
-        return Promise.all([getTlog(order_), getLookupData()])
+        let printData;
+        return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])
             .then(data=>{
                 const tlog:any = data[0];
                 const lookupData: any = data[1];   
-                //const billD             
+                const billData: any = data[2];
 
-                return enrichOrder_(
-                    order_,
-                    tlog, 
-                    // lookupData.categoriesData.mainCategoriesRaw, 
-                    lookupData.offersData.bundlesRaw, 
-                    lookupData.modifierGroupsData.allModifiersRaw,
-                    lookupData.usersData.usersRaw,
-                    lookupData.itemsData.itemsRaw,
-                    lookupData.tablesData.tablesRaw,
-                    lookupData.promotionsData.promotionsRaw,
-                );
+                return Promise.all([
+                    enrichOrder_(
+                        order_,
+                        tlog,
+                        lookupData.offersData.bundlesRaw,
+                        lookupData.modifierGroupsData.allModifiersRaw,
+                        lookupData.usersData.usersRaw,
+                        lookupData.itemsData.itemsRaw,
+                        lookupData.tablesData.tablesRaw,
+                        lookupData.promotionsData.promotionsRaw,
+                    ),
+                    setUpPrintData(billData)
+                ]);
                 
-                //return order_;
             })
-            .then(orderOld=>{
-                return {
-                    order: order_,
-                    orderOld: orderOld
-                };
-                // $ctrl.taxRate = $ctrl.selectedOrder.tax.rate + '%';
+            .then(data=>{
+                const orderOld = data[0];
+                const printDataOld = data[1];
+
+                // $ctrl.taxRate = $ctrl.selectedOrder.tax.rate + '%';not in use
                 // $ctrl.orderOptions = [];
                 
                 // $ctrl.orderOptions.push({
@@ -1468,6 +1823,24 @@ export class ClosedOrdersDataService {
                 //     modalParams.onLoaded();
 
                 // return enrichedOrder;
+
+
+                order_.isReturnOrder = false;
+                if (printDataOld.isReturnOrder) {
+                    order_.isReturnOrder = printDataOld.isReturnOrder;
+                }
+
+                order_.isTaxExempt = false;
+                if (printDataOld.isTaxExempt) {
+                    order_.isTaxExempt = printDataOld.isTaxExempt;
+                } 
+                
+                return {
+                    order: order_,
+                    orderOld: orderOld,
+                    printDataOld: printDataOld
+                };
+
             });
     }
 

@@ -22,16 +22,7 @@ export class OrderViewComponent implements OnInit  {
 
   order: Order;  
   orderOld: any;
-
-  // dinersTable = {
-  //   show: false
-  // };
-  
-  // public dinersTableData$: BehaviorSubject<any> = new BehaviorSubject<any>({
-  //   loading: true,
-  //   shifts: undefined,
-  //   dinersAndPPAByShift: undefined
-  // });
+  printDataOld: any;
 
   constructor(
     private closedOrdersDataService: ClosedOrdersDataService,
@@ -39,33 +30,6 @@ export class OrderViewComponent implements OnInit  {
     private route: ActivatedRoute,
     private router: Router
   ) { }
-
-  private render() {
-    // const data$ = combineLatest(
-    //   this.dataService.shifts$.take(1), 
-    //   this.dataService.getDailyDataByShiftAndType(this.day), 
-    //   (shifts: any, dailyData: any) => Object.assign({}, { shifts: shifts }, dailyData)
-    // );
-    
-    // data$.subscribe(data=>{
-    //   this.dinersTableData$.next(data.dinersAndPPAByShift);
-      
-    //   const shiftWithDiners = data.dinersAndPPAByShift.find(i=>i.diners>0);
-    //   if (shiftWithDiners) {
-    //     this.dinersTable.show = true;
-    //   }
-      
-    //   this.dayPieChart.render(data.salesByOrderType);
-    //   this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
-    //   this.dayShifts.render(data.shifts);
-      
-    //   this.orders = undefined;
-    //   this.closedOrdersDataService.getOrders(this.day, {withPriceReductions: true})
-    //     .then((orders: Order[]) => {
-    //       this.orders = orders;
-    //     });
-    // });
-  } 
   
   ngOnInit() {
 
@@ -79,28 +43,14 @@ export class OrderViewComponent implements OnInit  {
         this.closedOrdersDataService.getOrder(dateStr, tlogIdStr, {enriched: true})
           .then((o:{
             order: Order,
-            orderOld: any
+            orderOld: any,
+            printDataOld: any
           })=>{
             this.order = o.order;
             this.orderOld = o.orderOld;
+            this.printDataOld = o.printDataOld;
           });
-
-        // if (dateStr) {
-        //   this.day = moment(dateStr);
-        // } else {
-        //   this.day = moment().subtract(1, 'day');   
-        // }
-        // this.render();
       });
   }
-
-  // onDateChanged(dateM: moment.Moment) {    
-  //   const date = dateM.format('YYYY-MM-DD');
-  //   this.router.navigate(['/owners-dashboard/day', date]);
-  // }
-
-  // onGoToOrders(filter, type) {    
-  //   this.router.navigate(['/owners-dashboard/orders', this.day.format('YYYY-MM-DD'), filter.id, '']);
-  // }
 
 }

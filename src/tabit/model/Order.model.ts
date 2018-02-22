@@ -23,6 +23,8 @@ export class Order {
         employees: number,
         promotions: number
     };
+    isReturnOrder: boolean;//copied from Office
+    isTaxExempt: boolean;//copied from Office
     enrichmentLevels: {
         orderDetails: boolean,
     };
