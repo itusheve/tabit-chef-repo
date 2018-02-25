@@ -491,9 +491,7 @@ export class ClosedOrdersDataService {
         private promotionsDataService: PromotionsDataService,
         private tablesDataService: TablesDataService,
         private dataService: DataService
-    ) {
-        this.enrichOrder(new Order());
-    }
+    ) {}
 
     /* 
         @caching(indirect)
