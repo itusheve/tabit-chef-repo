@@ -27,7 +27,7 @@ import { OrderClubComponent } from './order-view/slips/club/club.component';
 import { OrderInvoiceCreditComponent } from './order-view/slips/invoiceCredit/invoiceCredit.component';
 import { OrderInvoiceCashComponent } from './order-view/slips/invoiceCash/invoiceCash.component';
 import { OrderInvoiceCheckComponent } from './order-view/slips/invoiceCheck/invoiceCheck.component';
-import { OrderInvoiceGiftcardComponent } from './order-view/slips/invoiceGiftCard/invoiceGiftcard.component';
+import { OrderInvoiceGiftcardComponent } from './order-view/slips/invoiceGiftcard/invoiceGiftcard.component';
 
 import { CardComponent } from '../ui/card/card.component';
 
