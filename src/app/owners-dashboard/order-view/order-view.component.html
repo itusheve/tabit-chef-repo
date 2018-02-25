@@ -1,34 +1,57 @@
-<div class="row">
-  <div class="col-md-12">      
-    
-    <app-order-bill [order]="order" [orderOld]="orderOld" [printDataOld]="printDataOld"></app-order-bill>
-    <!-- order selector? -->
-    
-    <!-- order-bill -->
-    <!-- order-club-members -->
-    <!-- order-order-invoice -->
-    <!-- order-details -->
+<div class="flex d-col">
+  <button class="mb10" (click)="change(slip.id)" mat-raised-button *ngFor="let slip of slips">
+    <span>{{slip.caption}}</span>
+  </button>
+</div>
 
+<div class="flex d-col f-rtl order-ticket" *ngIf="slip!==undefined">
+  <div class="d-col flex order-ticket-body text-u-c">
+    
+    <!-- Common -->
+    <div class="ticket-box d-col common">
+      <div class="flex j-center">
+        <div>מלצר</div>
+        &nbsp;
+        <div>{{order.users.waiter.fullName}}</div>
+      </div>
+      <div class="flex j-center">
+        <div>אחראי</div>
+        &nbsp;
+        <div>{{order.users.owner.fullName}}</div>
+      </div>
+      <div class="flex j-center">
+        <div>שולחן</div>
+        &nbsp;
+        <div>{{orderOld.table}}</div>
+      </div>
+      <div class="flex j-center" *ngIf="!isCheck">
+        <div>מספר סועדים</div>
+        &nbsp;
+        <div>{{orderOld.dinersNum}}</div>
+      </div>
+      <!-- <h4 *ngIf="isCheck">
+                    <span class="inline m-far-xs">{{ 'CHECK_NUMBER' | translate }}</span>
+                    <span class="inline">{{$ctrl.selectedCheck.printData.variables.CHECK_NO}}</span>
+                </h4> -->
+      <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
+        <!-- <span class="inline m-far-xs returnOrder">{{ 'RETURN_TRANSACTION' | translate }}</span> -->
+      </div>
+      <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
+        <!-- <span class="inline m-far-xs fs-12">{{ $ctrl.selectedCheck.printData.variables.RETURN_COMMENT }}</span> -->
+      </div>
+      <div class="flex te" *ngIf="order.isTaxExempt && (showOrderDetails || isCheck)">
+        <!-- <div class="text-bold fs-24">{{ 'ORDERS_VIEW.exempted_tax' | translate }}</div>
+                    <div class="text-bold fs-16">{{ $ctrl.printData.variables.TAX_EXEMPTION_CODE }}</div>
+                    <div class="text">{{ $ctrl.printData.variables.TAX_EXEMPTION_COMMENT }}</div> -->
+      </div>
+    </div>
 
-    <!-- <app-day-selector class="widget noPadding" #daySelector [currentValue]="day" (onDateChanged)="onDateChanged($event)"></app-day-selector>
-    <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
-    <app-day-sales-type-table 
-      class="widget" 
-      #daySalesTypeTable
-      (onRowClicked)="onGoToOrders($event, 'orderType')"
-      >
-    </app-day-sales-type-table>
-    <app-day-diners-table 
-      class="widget" 
-      *ngIf="dinersTable.show"
-      [data$]="dinersTableData$"
-      ></app-day-diners-table>
-    <app-day-orders-table 
-      class="widget fullWidth"
-      *ngIf="orders"
-      [orders]="orders"
-      ></app-day-orders-table>
-    <app-day-shifts class="widget greyAccent" #dayShifts></app-day-shifts>       -->
+    <app-order-bill *ngIf="slip.class==='bill'" [order]="order" [orderOld]="orderOld" [printDataOld]="printDataOld"></app-order-bill>
+    <app-order-club *ngIf="slip.class==='club'" [order]="order" [orderOld]="orderOld" [printDataOld]="printDataOld"></app-order-club>
+    <app-order-invoice-credit *ngIf="slip.class==='invoice' && slip.subclass==='credit'" [data]="slip.data"></app-order-invoice-credit>
+    <app-order-invoice-cash *ngIf="slip.class==='invoice' && slip.subclass==='cash'" [data]="slip.data"></app-order-invoice-cash>
+    <app-order-invoice-check *ngIf="slip.class==='invoice' && slip.subclass==='cheque'" [data]="slip.data"></app-order-invoice-check>
+    <app-order-invoice-giftcard *ngIf="slip.class==='invoice' && slip.subclass==='giftcard'" [data]="slip.data"></app-order-invoice-giftcard>
 
   </div>
 </div>

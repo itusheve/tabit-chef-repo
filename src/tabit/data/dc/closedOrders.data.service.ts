@@ -157,6 +157,8 @@ let ORDERS_VIEW = {
     "Kicked_out": "Kicked out"
 };
 
+export default ORDERS_VIEW;
+
 // copied as is from office 4.X
 let Enums = {
     ReturnTypes: {
@@ -1528,14 +1530,12 @@ export class ClosedOrdersDataService {
             });
         }
 
-        function getTlog(order__: Order) {            
-            const tlogId = '5a8a17d08a22f42e009013ac';//bbb pt 19/02/2018 #340
-            return that.rosEp.get(`tlogs/${tlogId}`, {});
+        function getTlog(order: Order) {            
+            return that.rosEp.get(`tlogs/${order.tlogId}`, {});
         }
         
-        function getBillData(order__: Order) {
-            const tlogId = '5a8a17d08a22f42e009013ac';//bbb pt 19/02/2018 #340
-            return that.rosEp.get(`tlogs/${tlogId}/bill`, {});
+        function getBillData(order: Order) {
+            return that.rosEp.get(`tlogs/${order.tlogId}/bill`, {});
         }
 
         let printData;

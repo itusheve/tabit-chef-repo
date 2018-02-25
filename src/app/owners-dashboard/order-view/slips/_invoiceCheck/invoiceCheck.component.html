@@ -1,0 +1,47 @@
+<div class="ticket-box flex d-col">
+
+    <div class="flex j-sb">
+        <!-- <span>{{'BUSINESS_MEAL' | translate}}</span> -->
+        <span>ארוחה עסקית</span>
+        <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
+        <span *ngIf="!data.cashback">{{(data.amount/100) | number:'1.2-2'}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <!-- <span>{{'BEFORE_VAT' | translate}}</span> -->
+        <span>סה"כ לפני מע"מ</span>        
+        <span *ngIf="data.cashback">{{((data.amount/100)-(data.tax.amount/100)-(data.cashback/100)) |
+            number:'1.2-2'}}
+        </span>
+        <span *ngIf="!data.cashback">{{((data.amount/100)-(data.tax.amount/100)) | number:'1.2-2'}}</span>
+    </div>
+    <div class="flex j-sb">
+        <!-- <span>{{'VAT' | translate}}</span> -->
+        <span>מע"מ</span>        
+        <span>{{(data.tax.amount/100) | number:'1.2-2'}}</span>
+    </div>
+    <div class="flex j-sb">
+        <!-- <span>{{'INCLUDE_VAT' | translate}}</span> -->
+        <span>כולל מע"מ</span>
+        <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
+        <span *ngIf="!data.cashback">{{(data.amount/100) | number:'1.2-2'}}</span>
+    </div>
+
+    <hr />
+
+    <div class="flex j-sb" *ngIf="data.cashback">
+        <!-- <span>{{'PAID_CHEQUE' | translate}}</span> -->
+        <span>התקבל בהמחאה</span>
+        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+    </div>
+
+    <div class="flex j-sb" *ngIf="selectedInvoice.cashback">
+        <!-- <span>{{'TOTAL_CASHBACK' | translate}}</span> -->
+        <span>עודף</span>
+        <span>{{(data.cashback/100) | number:'1.2-2'}}</span>
+    </div>
+
+</div>
+
+
+

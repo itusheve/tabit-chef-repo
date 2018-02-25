@@ -1,4 +1,4 @@
-.order-ticket {
+/deep/.order-ticket {
 	hr {
 		border: 0;
     	border-top: 1px solid #eee;
@@ -20,7 +20,7 @@
 		width: 100%;
 	}
 
-	background: #fff url(/public/images/ticket-back.png) repeat-y top left;
+	background-color: #fff;// url(/public/images/ticket-back.png) repeat-y top left;
 	min-height: 200px;
 	font-family: "Courier New", Courier, monospace;
 	color: #000;

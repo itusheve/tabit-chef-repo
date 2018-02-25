@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { Order } from '../../../../tabit/model/Order.model';
+import { Order } from '../../../../../tabit/model/Order.model';
 
 @Component({
   selector: 'app-order-bill',
@@ -12,9 +12,6 @@ export class OrderBillComponent implements OnInit {
   @Input() order: Order;
   @Input() orderOld: any;
   @Input() printDataOld: any;
-  
-  isCheck = false;
-  showOrderDetails = true;
   
   constructor() {}
   

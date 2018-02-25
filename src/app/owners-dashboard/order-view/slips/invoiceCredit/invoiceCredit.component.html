@@ -1,0 +1,63 @@
+<div class="ticket-box flex d-col">
+
+    <div class="flex j-sb">
+        <!-- <span>{{'BUSINESS_MEAL' | translate}}</span> -->
+        <span>ארוחה עסקית</span>
+        <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
+        <span *ngIf="!data.cashback">{{(data.amount/100) | number:'1.2-2'}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <!-- <span>{{'BEFORE_VAT' | translate}}</span> -->
+        <span>סה"כ לפני מע"מ</span>
+        <span *ngIf="data.cashback">{{((data.amount/100)-(data.tax.amount/100)-(data.cashback/100)) |
+            number:'1.2-2'}}</span>
+        <span *ngIf="!data.cashback">{{((data.amount/100)-(data.tax.amount/100)) | number:'1.2-2'}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <!-- <span>{{'VAT' | translate}}</span> -->
+        <span>מע"מ</span>
+        <span >{{(data.tax.amount/100) | number:'1.2-2'}}</span>
+    </div>
+    
+    <div class="flex j-sb">
+        <!-- <span>{{'INCLUDE_VAT' | translate}}</span> -->
+        <span>כולל מע"מ</span>
+        <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
+        <span *ngIf="!data.cashback">{{(data.amount/100) | number:'1.2-2'}}</span>
+    </div>
+
+    <hr />
+
+    <div class="flex d-col">
+        <!-- <small>{{(data.amount/100) | number:'1.2-2'}} {{'PAID_IN_CREDIT_FROM' | translate}}</small> -->
+        <small class="flex as-center">{{(data.amount/100) | number:'1.2-2'}} שולם באשראי מ </small>
+        <h4 class="flex as-center">{{data.issuerName}}</h4>
+    </div>
+
+    <div class="flex j-sb" *ngIf="data.payments[0].last4">
+        <!-- <span>{{'ORDERS_VIEW.last_4' | translate}}</span> -->
+        <span>4 ספרות</span>
+        <span >{{data.payments[0].last4}}</span>
+    </div>
+
+    <div class="flex j-sb" *ngIf="data.payments[0].providerTransactionId">
+        <!-- <span>{{'TRANSACTION_NO' | translate}}</span> -->
+        <span>מספר עסקה</span>
+        <span >{{data.payments[0].providerTransactionId}}</span>
+    </div>
+
+    <div class="flex j-sb" *ngIf="data.payments[0].confirmationNum">
+        <!-- <span>{{'APPROVAL_NO' | translate}}</span> -->
+        <span>מספר אישור</span>
+        <span >{{data.payments[0].confirmationNum}}</span>
+    </div>
+
+    <div class="flex j-sb" *ngIf="data.cashback">
+        <!-- <span>{{'TOTAL_CASHBACK' | translate}}</span> -->
+        <span>עודף</span>
+        <span >{{(data.cashback/100) | number:'1.2-2'}}</span>
+    </div>
+
+</div>

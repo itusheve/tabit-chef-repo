@@ -1,0 +1,124 @@
+<div class="ticket-box d-col">                    
+    <div><!-- orderDetails.tplt.html -->
+        <h3 *ngIf="orderOld.onTheHouse">
+            <!-- {{ 'ORDERS_VIEW.all_order_oth' | translate }} -->
+        </h3>
+        
+        <div class="row offer-line" *ngFor="let item of printDataOld.items" [ngClass]="{'item-line': item.isItem || item.isOfferDiscount}">
+            <div class="col-1">{{item.qty}}</div>
+            <div class="col-7 item-name">{{item.name}}</div>
+            <div class="col-3">
+                <span class="negative">{{item.amount}}</span>
+            </div>
+        </div>
+        <br/>
+        <div class="row offer-line" *ngFor="let item of printDataOld.oth" [ngClass]="{'item-line': item.isItem || item.isOfferDiscount}">
+            <div class="col-1">{{item.qty}}</div>
+            <div class="col-5 item-name">{{item.name}}</div>
+            <div class="col-5">{{item.amount}}</div>
+        </div>
+        
+        <div *ngIf="orderOld.totalDiscounts">
+            <div *ngFor="let discount of orderOld.totalDiscounts">
+                <hr/>
+                <div class="row">
+                    <div class="col-8">{{discount.name}}</div>
+                    <div class="col-3">
+                        <span class="negative">{{(discount.amount/100) * -1 | number:'1.2-2'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div *ngIf="orderOld.tips.length">
+            <hr/>
+            <div class="row">
+                <!-- <div class="col-8">{{ 'TIP' | translate }}</div> -->
+                <div class="col-8">תשר</div>
+                <div class="col-3">
+                    <span class="negative">{{(orderOld.tips[0].amount/100) | number:'1.2-2'}}</span>
+                </div>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="row" *ngFor="let total of printDataOld.totals" [ngClass]="{'tax': total.type === 'exclusive_tax'}">
+            <div class="col-8" [ngClass]="{'title': total.type === 'exclusive_tax'}">{{ total.name }}
+                <span class="rate" *ngIf="total.rate">{{total.rate}}%</span>
+            </div>
+            <div class="col-3">
+                <span class="negative">{{total.amount | number:'1.2-2'}}</span>
+            </div>
+        </div>
+        
+        <hr/>
+        
+        <div>
+            <div *ngFor="let payment of printDataOld.payments">
+                <div class="row" [ngClass]="{'change': payment.type === 'change', 'tax': payment.type === 'inclusive_tax'}">
+                    <div class="col-8" [ngClass]="{'title': payment.type === 'inclusive_tax'}">{{payment.name}}</div>
+                    <div class="col-3">
+                        <span class="negative">{{payment.amount}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 
+        
+        
+        
+        <div *ngIf="printDataOld.taxes.InclusiveTaxes.length > 0 || printDataOld.taxes.ExemptedTaxes.length > 0">
+            <hr/>
+        
+            <div *ngIf="printDataOld.taxes.InclusiveTaxes.length > 0" class="row tax">
+                <div class="col-8">{{ 'ORDERS_VIEW.inclusive_taxes' | translate}}</div>
+            </div>
+        
+            <div ng-repeat="tax in printDataOld.taxes.InclusiveTaxes">
+        
+                <div *ngIf="tax.type !== 'title'" class="row" [ngClass]="{'tax': tax.type === 'inclusive_tax' || tax.type === 'exempted_tax'}">
+                    <div class="col-8" [ngClass]="{'title': tax.type === 'inclusive_tax' || tax.type === 'exempted_tax'}">{{tax.name}}</div>
+                    <div class="col-3">
+                        <span class="negative">{{tax.amount}}</span>
+                    </div>
+                </div>
+        
+            </div>
+            <div class="space-line"></div>
+        
+            <div *ngIf="printDataOld.taxes.ExemptedTaxes.length > 0" class="row tax">
+                <div class="col-8">{{ 'ORDERS_VIEW.exempted_taxes' | translate}}</div>
+            </div>
+        
+            <div ng-repeat="tax in printDataOld.taxes.ExemptedTaxes">
+        
+                <div *ngIf="tax.type !== 'title'" class="row" [ngClass]="{'tax': tax.type === 'inclusive_tax' || tax.type === 'exempted_tax'}">
+                    <div class="col-8" [ngClass]="{'title': tax.type === 'inclusive_tax' || tax.type === 'exempted_tax'}">{{tax.name}}</div>
+                    <div class="col-3">
+                        <span class="negative">{{tax.amount}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+            -->
+
+        <div *ngIf="orderOld.member && orderOld.member.printMessage">
+            <hr/>
+            <div class="clearfix">
+                <!-- <span ng-bind-html="$ctrl.orderOld.member.printMessage | nl2br"></span> -->
+                <span [innerHtml]="orderOld.member.printMessage"></span>
+            </div>
+        </div>
+        
+        <div class="row text-center">
+            <h4 *ngIf="order.isReturnOrder">
+                <!-- <span class="inline m-far-xs returnOrder">{{ 'RETURN_TRANSACTION' | translate }}</span> -->
+                <span class="inline m-far-xs returnOrder">החזרת עסקה</span>                                 
+            </h4>
+        </div>
+        
+    </div>
+
+</div>

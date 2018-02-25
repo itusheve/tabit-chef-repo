@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from '../../tabit/data/data.service';
 import { AuthService } from '../auth/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   templateUrl: './owners-dashboard.component.html',
@@ -17,7 +17,8 @@ export class OwnersDashboardComponent {
   constructor(
     private dataService: DataService, 
     private authService: AuthService, 
-    public router: Router
+    public router: Router,
+    public route: ActivatedRoute
   ) {
   
     dataService.vat$.subscribe((vat:boolean)=>{
@@ -44,6 +45,10 @@ export class OwnersDashboardComponent {
 
   changeRest() {
     //TODO hide the switch rest button if only one rest exists
+  }
+
+  goBack():void {
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   logout() {

@@ -21,7 +21,13 @@ import { DayOrdersTableHasSalesPipe } from './day-view/day-orders-table/pipes';
 import { DayShiftsComponent } from './day-view/day-shifts/day-shifts.component';
 
 import { OrderViewComponent } from './order-view/order-view.component';
-import { OrderBillComponent } from './order-view/bill/bill.component';
+import { SlipClassPipe } from './order-view/pipes';
+import { OrderBillComponent } from './order-view/slips/bill/bill.component';
+import { OrderClubComponent } from './order-view/slips/club/club.component';
+import { OrderInvoiceCreditComponent } from './order-view/slips/invoiceCredit/invoiceCredit.component';
+import { OrderInvoiceCashComponent } from './order-view/slips/_invoiceCash/invoiceCash.component';
+import { OrderInvoiceCheckComponent } from './order-view/slips/_invoiceCheck/invoiceCheck.component';
+import { OrderInvoiceGiftcardComponent } from './order-view/slips/_invoiceGiftCard/invoiceGiftcard.component';
 
 import { CardComponent } from '../ui/card/card.component';
 
@@ -37,8 +43,6 @@ import {
   MatExpansionModule
 } from '@angular/material';//material modules
 
-
-
 import { locale, loadMessages } from 'devextreme/localization'; //https://github.com/DevExpress/devextreme-examples/tree/17_2/intl-angular
 import { DxButtonModule } from 'devextreme-angular';
 import { DxCalendarModule } from 'devextreme-angular';
@@ -47,7 +51,6 @@ import { DxPieChartModule } from 'devextreme-angular';
 import { DxDataGridModule } from 'devextreme-angular';
 import { DxLoadIndicatorModule } from 'devextreme-angular';
 import 'devextreme-intl';
-
 
 //Load localized messages (English included by default)
 // let messagesDe = require("devextreme/localization/messages/de.json"),
@@ -58,9 +61,7 @@ import 'devextreme-intl';
 // loadMessages(messagesDe);
 // loadMessages(messagesJa);
 
-
 locale('he');
-
 
 @NgModule({
   imports: [
@@ -102,7 +103,13 @@ locale('he');
     DayShiftsComponent,
 
     OrderViewComponent,
-    OrderBillComponent
+    SlipClassPipe,
+    OrderBillComponent,
+    OrderClubComponent,
+    OrderInvoiceCreditComponent,
+    OrderInvoiceCashComponent,
+    OrderInvoiceCheckComponent,
+    OrderInvoiceGiftcardComponent
   ]
 })
 export class OwnersDashboardModule { }
