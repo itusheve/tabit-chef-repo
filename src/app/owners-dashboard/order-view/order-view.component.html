@@ -1,3 +1,7 @@
+<div *ngIf="!slip" class="flex aj-center" style="width:100%;height:100%;">
+  <dx-load-indicator rtlEnabled="true"></dx-load-indicator>
+</div>
+
 <div class="flex d-col">
   <button class="mb10" (click)="change(slip.id)" mat-raised-button *ngFor="let slip of slips">
     <span>{{slip.caption}}</span>

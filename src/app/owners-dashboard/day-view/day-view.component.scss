@@ -1,0 +1,20 @@
+.drill {
+    position:fixed;
+    bottom:0;
+    right:0;
+    left:0;
+    width:100%;
+    height:100%;    
+    background-color: #edf1f2;
+    overflow-y:auto;overflow-x:hidden;
+    .header {
+            background-color: #414e5f;
+            color: #d4d7dc;
+            font-size: 18px;
+            height: 65px;
+            padding: 0 15px;
+    }
+    .body {
+        padding: 15px;
+    }
+}

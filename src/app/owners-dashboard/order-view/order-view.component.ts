@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 // import { DataService } from '../../../tabit/data/data.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
@@ -30,6 +30,8 @@ export interface SlipVM {
 })
 export class OrderViewComponent implements OnInit  {
 
+  @Input() tlogId: string;
+
   order: Order;  
   orderOld: any;
   printDataOld: any;
@@ -50,14 +52,14 @@ export class OrderViewComponent implements OnInit  {
   
   ngOnInit() {
 
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
     
     this.route.paramMap
       .subscribe((params: ParamMap) => { 
         const dateStr = params.get('businessDate');
-        const tlogIdStr = params.get('tlogid');
+        // const tlogIdStr = params.get('tlogid');
         
-        this.closedOrdersDataService.getOrder(dateStr, tlogIdStr, {enriched: true})
+        this.closedOrdersDataService.getOrder(dateStr, this.tlogId, {enriched: true})
           .then((o:{
             order: Order,
             orderOld: any,

@@ -16,7 +16,7 @@ import { ClosedOrdersDataService } from '../../../tabit/data/dc/closedOrders.dat
 @Component({
   selector: 'app-day-view',
   templateUrl: './day-view.component.html',
-  styleUrls: ['./day-view.component.css']
+  styleUrls: ['./day-view.component.scss']
 })
 export class DayViewComponent implements OnInit  {
   @ViewChild('dayPieChart') dayPieChart;
@@ -28,7 +28,11 @@ export class DayViewComponent implements OnInit  {
   dinersTable = {
     show: false
   };
-  
+
+  drillTlogTime;
+  drillTlogId: string;
+  drill = false;
+
   /* the day's Orders */
   public orders: Order[];
 
@@ -100,9 +104,16 @@ export class DayViewComponent implements OnInit  {
   }
 
   /* called by day-orders-table */
-  onOrderClicked(tlogId: string) {
-    const bd = this.day.format('YYYY-MM-DD');
-    this.router.navigate([`/owners-dashboard/bd/${bd}/tlogid/${tlogId}`]);
+  onOrderClicked(order: Order) {
+    //const bd = this.day.format('YYYY-MM-DD');
+    //this.router.navigate([`/owners-dashboard/bd/${bd}/tlogid/${tlogId}`]);
+    this.drillTlogTime = order.openingTime;
+    this.drillTlogId = order.tlogId;
+    this.drill = true;
+  }
+
+  closeDrill() {
+    this.drill = false;
   }
 
 }

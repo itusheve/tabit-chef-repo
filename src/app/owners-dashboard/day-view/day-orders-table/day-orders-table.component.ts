@@ -50,7 +50,7 @@ export class DayOrdersTableComponent implements OnInit {
   }
 
   orderClicked(order:any) {
-    this.onOrderClicked.emit(order.tlogId);    
+    this.onOrderClicked.emit(order);    
   }
 
 }
