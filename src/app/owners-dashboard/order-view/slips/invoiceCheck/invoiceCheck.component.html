@@ -35,7 +35,7 @@
         <span>{{(data.amount/100) | number:'1.2-2'}}</span>
     </div>
 
-    <div class="flex j-sb" *ngIf="selectedInvoice.cashback">
+    <div class="flex j-sb" *ngIf="data.cashback">
         <!-- <span>{{'TOTAL_CASHBACK' | translate}}</span> -->
         <span>עודף</span>
         <span>{{(data.cashback/100) | number:'1.2-2'}}</span>
