@@ -600,6 +600,9 @@ export class ClosedOrdersDataService {
 
                     orders.push(order);
                 }
+
+                this.ordersCache.set(bdKey, orders);
+
                 return orders;
             });
     }
