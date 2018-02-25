@@ -8,7 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./invoiceCredit.component.scss']
 })
 export class OrderInvoiceCreditComponent implements OnInit {
-debugger;
+
   @Input() data: any;
   
   constructor() {}

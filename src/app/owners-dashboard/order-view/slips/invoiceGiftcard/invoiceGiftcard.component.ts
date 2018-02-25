@@ -8,7 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./invoiceGiftcard.component.scss']
 })
 export class OrderInvoiceGiftcardComponent implements OnInit {
-debugger;
+
   @Input() data: any;
   
   constructor() {}
