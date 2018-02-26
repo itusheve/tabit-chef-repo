@@ -1,28 +1,32 @@
 <div class="flex d-col aj-center dayPieChart">
-    <dx-pie-chart 
-        id="pie" 
-        (onInitialized)="onInitializedEventHandler($event)"
-        type="doughnut" 
-        innerRadius="0.95"
-        diameter="0.68" 
-        startAngle="90"
-        [palette]="pallete" 
-        [dataSource]="dataSource" 
-        [rtlEnabled]="true"
-        resolveLabelOverlapping="shift"             
-        >
-        <dxi-series argumentField="orderType">
-            <dxo-label [visible]="true" [customizeText]="customizeLabelText" format="percent">
-                <dxo-connector [visible]="true"></dxo-connector>
-            </dxo-label>
-        </dxi-series>
-        <dxo-export [enabled]="false"></dxo-export>
-        <!-- moved to custmo legend because of the negative returns figure (not supported by DX) -->
-        <dxo-legend [visible]="false"></dxo-legend>
-        <!-- <dxo-legend visible="false" [margin]="0" horizontalAlignment="center" verticalAlignment="bottom" columnCount="1" [customizeText]="customizeText" paddingTopBottom="80">
-            <dxo-font color="white" family="'Alef', 'Helvetica Neue', Helvetica, Arial" size="16"></dxo-font>
-        </dxo-legend> -->
-    </dx-pie-chart>
+    <div>
+        <dx-pie-chart 
+            id="pie" 
+            type="doughnut" 
+            innerRadius="0.95" 
+            diameter="0.68"
+            startAngle="90" 
+            [palette]="pallete" 
+            [dataSource]="dataSource" 
+            [rtlEnabled]="true" 
+            resolveLabelOverlapping="shift"
+            (onInitialized)="onInitializedEventHandler($event)" 
+            >
+            <dxi-series argumentField="orderType">
+                <dxo-label [visible]="true" [customizeText]="customizeLabelText" format="percent">
+                    <dxo-connector [visible]="true"></dxo-connector>
+                </dxo-label>
+            </dxi-series>
+            <dxo-size width="300"></dxo-size>
+            <dxo-export [enabled]="false"></dxo-export>
+            <!-- moved to custmo legend because of the negative returns figure (not supported by DX) -->
+            <dxo-legend [visible]="false"></dxo-legend>
+            <!-- <dxo-legend visible="false" [margin]="0" horizontalAlignment="center" verticalAlignment="bottom" columnCount="1" [customizeText]="customizeText" paddingTopBottom="80">
+                    <dxo-font color="white" family="'Alef', 'Helvetica Neue', Helvetica, Arial" size="16"></dxo-font>
+                </dxo-legend> -->
+        </dx-pie-chart>
+    </div>
+
     <div class="flex d-col customLegend" *ngIf="dataSource">
         <div class="flex a-center legendRow" *ngFor="let entry of dataSource">
             <div class="flex mh5 itemColor" [style.background-color]="entry.color"></div>

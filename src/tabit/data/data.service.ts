@@ -195,16 +195,20 @@ export class DataService {
         /* we get the diners and ppa measures from olap and the sales from ros */
         const that = this;
 
-        //function getTrend(): Observable<Trend
-
         function getDinersAndPPA(): Observable<any> {
             return Observable.create(sub => {
                 that.currentBd$
                     .subscribe(data => {
                         const dateFrom: moment.Moment = moment(data);
                         const dateTo: moment.Moment = moment(data);
-                        that.getDailyData(dateFrom, dateTo)
-                            .then(dailyData => {
+                        that.dailyData$
+                        // that.getDailyData(dateFrom, dateTo)
+                            .subscribe(dailyData => {
+                                dailyData = dailyData.filter(
+                                    dayData => 
+                                        dayData.date.isSameOrAfter(dateFrom, 'day') && 
+                                        dayData.date.isSameOrBefore(dateTo, 'day')
+                                );
                                 if (dailyData.length) {
                                     const dinersPPA = dailyData[0]['dinersPPA'];
                                     const salesPPA = dailyData[0]['salesPPA'];
@@ -300,8 +304,15 @@ export class DataService {
                         const pbd = vals[1];
                         const dateFrom: moment.Moment = moment(pbd);
                         const dateTo: moment.Moment = dateFrom;
-                        this.getDailyData(dateFrom, dateTo)
-                            .then(dailyData => {
+                        this.dailyData$
+                        // this.getDailyData(dateFrom, dateTo)
+                            .subscribe(dailyData => {
+                                dailyData = dailyData.filter(
+                                    dayData =>
+                                        dayData.date.isSameOrAfter(dateFrom, 'day') &&
+                                        dayData.date.isSameOrBefore(dateTo, 'day')
+                                );
+
                                 if (dailyData.length) {
                                     let sales = dailyData[0]['sales'];
                                     let dinersPPA = dailyData[0]['dinersPPA'];
@@ -341,8 +352,15 @@ export class DataService {
                     return Observable.create(obs => {
                         const dateFrom: moment.Moment = moment().startOf('month');
                         const dateTo: moment.Moment = moment().subtract(1, 'days');//TODO should be base on currentBd!
-                        this.getDailyData(dateFrom, dateTo)
-                            .then(dailyData => {
+                        this.dailyData$
+                        // this.getDailyData(dateFrom, dateTo)
+                            .subscribe(dailyData => {
+                                dailyData = dailyData.filter(
+                                    dayData =>
+                                        dayData.date.isSameOrAfter(dateFrom, 'day') &&
+                                        dayData.date.isSameOrBefore(dateTo, 'day')
+                                );
+
                                 let sales = _.sumBy(dailyData, 'sales');
                                 let diners = _.sumBy(dailyData, 'dinersPPA');
                                 let ppa = _.sumBy(dailyData, 'salesPPA') / diners;
@@ -386,9 +404,9 @@ export class DataService {
     }
 
     /* DEPRECATED USE dailyData$ instead! */
-    getDailyData(fromDate: moment.Moment, toDate?: moment.Moment):Promise<any> {
-        return this.olapEp.getDailyData(fromDate, toDate);
-    }
+    // getDailyData(fromDate: moment.Moment, toDate?: moment.Moment):Promise<any> {
+    //     return this.olapEp.getDailyData(fromDate, toDate);
+    // }
     
     getMonthlyData(month: moment.Moment): Promise<any> {//TODO now that olapDataByMonths is available, use it? or is it too slow?
         return new Promise((res, rej)=>{
@@ -435,8 +453,15 @@ export class DataService {
 
             return new Promise((resolve, reject)=>{
 
-                this.getDailyData(dateFrom, dateTo)
-                    .then(dailyData => {
+                this.dailyData$
+                // this.getDailyData(dateFrom, dateTo)
+                    .subscribe(dailyData => {
+                        dailyData = dailyData.filter(
+                            dayData =>
+                                dayData.date.isSameOrAfter(dateFrom, 'day') &&
+                                dayData.date.isSameOrBefore(dateTo, 'day')
+                        );
+
                         // bring only days that has sales
                         dailyData = dailyData.filter(r => r.sales > 0);
 

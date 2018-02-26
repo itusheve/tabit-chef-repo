@@ -25,33 +25,33 @@ export class TrendsDataService {
                 let timeFrom1, timeFrom2, timeTo1, timeTo2;
 
                 const currentBd: moment.Moment = data[0];
-                console.info(`Trends: Current: Last 4: Current Business Day is: ${currentBd.format('DD/MM/YYYY')}`);
+                //console.info(`Trends: Current: Last 4: Current Business Day is: ${currentBd.format('DD/MM/YYYY')}`);
 
                 const currentBusinessDaySales = data[2].sales;
-                console.info(`Trends: Current: Last 4: Current BD Total Sales (Open & Closed): ${currentBusinessDaySales}`);
+                //console.info(`Trends: Current: Last 4: Current BD Total Sales (Open & Closed): ${currentBusinessDaySales}`);
 
                 const tmpCurrentRestTime = moment();                
-                console.info(`Trends: Current: Last 4: Current Rest Time: ${tmpCurrentRestTime.format('HH:mm')}`);
+                //console.info(`Trends: Current: Last 4: Current Rest Time: ${tmpCurrentRestTime.format('HH:mm')}`);
                 
                 const firstShiftStartingTime = moment(data[1][0]['startTime'], 'H:mm');
-                console.info(`Trends: Current: Last 4: First Shift Starting Time: ${firstShiftStartingTime.format('HH:mm')}`);
+                //console.info(`Trends: Current: Last 4: First Shift Starting Time: ${firstShiftStartingTime.format('HH:mm')}`);
                 
                 if (tmpCurrentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
                     timeFrom1 = firstShiftStartingTime.format('HHmm');
-                    console.info(`Trends: Current: Last 4: Current Rest Time >= First Shift Starting Time`);
+                    //console.info(`Trends: Current: Last 4: Current Rest Time >= First Shift Starting Time`);
                 } else {
                     timeFrom1 = '0000';
                     timeFrom2 = firstShiftStartingTime.format('HHmm');
                     timeTo2 = '2359';
-                    console.info(`Trends: Current: Last 4: Current Rest Time < First Shift Starting Time`);
+                    //console.info(`Trends: Current: Last 4: Current Rest Time < First Shift Starting Time`);
                 }
                 timeTo1 = tmpCurrentRestTime.format('HHmm');
-                console.info(`Trends: Current: Last 4: query TimeFrom1: ${timeFrom1}`);
-                console.info(`Trends: Current: Last 4: query TimeTo1: ${timeTo1}`);
+                //console.info(`Trends: Current: Last 4: query TimeFrom1: ${timeFrom1}`);
+                //console.info(`Trends: Current: Last 4: query TimeTo1: ${timeTo1}`);
                 if (timeTo2) {
-                    console.info(`Trends: Current: Last 4: performing Query 1 + Query 2`);
+                    //console.info(`Trends: Current: Last 4: performing Query 1 + Query 2`);
                 } else {
-                    console.info(`Trends: Current: Last 4: performing only Query 1`);
+                    //console.info(`Trends: Current: Last 4: performing only Query 1`);
                 }
 
                 const dateFrom: moment.Moment = moment(currentBd).subtract(6, 'weeks');
@@ -88,7 +88,7 @@ export class TrendsDataService {
                                 found1++;
                             }
                         }
-                        console.info(`Trends: Current: Last 4: Sum Total Sales 1: ${sumTotalSales1}`);
+                        //console.info(`Trends: Current: Last 4: Sum Total Sales 1: ${sumTotalSales1}`);
 
                         let found2 = 0;
                         let sumTotalSales2 = 0;
@@ -103,14 +103,14 @@ export class TrendsDataService {
                                     found2++;
                                 }
                             }
-                            console.info(`Trends: Current: Last 4: Sum Total Sales 2: ${sumTotalSales2}`);
+                            //console.info(`Trends: Current: Last 4: Sum Total Sales 2: ${sumTotalSales2}`);
                         }                        
         
                         let sumTotalSales = sumTotalSales1 + sumTotalSales2;
-                        console.info(`Trends: Current: Last 4: Sum Total Sales (Total): ${sumTotalSales}`);
+                        //console.info(`Trends: Current: Last 4: Sum Total Sales (Total): ${sumTotalSales}`);
                         if (sumTotalSales) {
                             avgTotalSales = sumTotalSales / Math.max(found1, found2);
-                            console.info(`Trends: Current: Last 4: avg total sales of up to last 4: ${avgTotalSales}`);
+                            //console.info(`Trends: Current: Last 4: avg total sales of up to last 4: ${avgTotalSales}`);
                             
                             const changePct = (currentBusinessDaySales / avgTotalSales) - 1;
         
@@ -372,7 +372,7 @@ export class TrendsDataService {
         zip(this.dataService.currentBd$.take(1))
             .subscribe(data => {
                 const currentBd: moment.Moment = moment(data[0]);
-                console.info(`Trends: MTD: Last Year: Current Business Day is: ${currentBd.format('DD/MM/YYYY')}`);
+                //console.info(`Trends: MTD: Last Year: Current Business Day is: ${currentBd.format('DD/MM/YYYY')}`);
 
                 if (currentBd.date()===1) {
                     trend.status = 'nodata';
@@ -382,11 +382,11 @@ export class TrendsDataService {
 
                 const dateFrom1: moment.Moment = moment(currentBd).startOf('month');//TODO reuse the mtd card call
                 const dateTo1: moment.Moment = moment(currentBd.subtract(1, 'day'));
-                console.info(`Trends: MTD: Last Year: MTD: From ${dateFrom1.format('DD/MM/YYYY')} To ${dateTo1.format('DD/MM/YYYY')}`);
+                //console.info(`Trends: MTD: Last Year: MTD: From ${dateFrom1.format('DD/MM/YYYY')} To ${dateTo1.format('DD/MM/YYYY')}`);
 
                 const dateFrom2: moment.Moment = moment(currentBd).subtract(1, 'year').startOf('month');
                 const dateTo2: moment.Moment = moment(currentBd).subtract(1, 'year');
-                console.info(`Trends: MTD: Last Year: MTD Previous Year: From ${dateFrom2.format('DD/MM/YYYY')} To ${dateTo2.format('DD/MM/YYYY')}`);
+                //console.info(`Trends: MTD: Last Year: MTD Previous Year: From ${dateFrom2.format('DD/MM/YYYY')} To ${dateTo2.format('DD/MM/YYYY')}`);
 
                 const qAll = [];
                 qAll.push(this.olapEp.getDailyDataNew({ dateFrom: dateFrom1, dateTo: dateTo1 }));
@@ -403,14 +403,14 @@ export class TrendsDataService {
                             const dayData = dailyData1[i];
                             sumTotalSalesMTD += dayData.sales;
                         }
-                        console.info(`Trends: MTD: Last Year: Sum Total Sales MTD: ${sumTotalSalesMTD}`);
+                        //console.info(`Trends: MTD: Last Year: Sum Total Sales MTD: ${sumTotalSalesMTD}`);
 
                         let sumTotalSalesMTDpreviousYear = 0;
                         for (let i = 0; i < dailyData2.length; i++) {
                             const dayData = dailyData2[i];
                             sumTotalSalesMTDpreviousYear += dayData.sales;
                         }
-                        console.info(`Trends: MTD: Last Year: Sum Total Sales MTD Last Year: ${sumTotalSalesMTDpreviousYear}`);
+                        //console.info(`Trends: MTD: Last Year: Sum Total Sales MTD Last Year: ${sumTotalSalesMTDpreviousYear}`);
 
                         if (!sumTotalSalesMTDpreviousYear) {
                             trend.status = 'nodata';

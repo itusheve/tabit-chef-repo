@@ -98,7 +98,7 @@ export class OrderViewComponent implements OnInit  {
             // }
             // $ctrl.svg = {};
 
-            if (this.isUS) {
+            if (this.isUS) {//TODO! US is not treated nor tested!
               // if ($ctrl.selectedOrder.checks.length > 1) {
               //   //set check in split check to 'orderOptions' (the option btns on the PopupBill)
               //   $ctrl.selectedOrder.checks.forEach(check => {

@@ -8,7 +8,6 @@ import { CardData } from '../../ui/card/card.component';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { TrendsDataService } from '../../../tabit/data/dc/trends.data.service';
 import { TrendModel } from '../../../tabit/model/Trend.model';
-// import { isComponentView } from '@angular/core/src/view/util';
 
 interface DailyTrends {
   date: moment.Moment,
@@ -117,36 +116,43 @@ export class MonthViewComponent  {
 
       let dailyTrends: DailyTrends[];
       
-      Promise.all([
-        that.dataService.getDailyData(queryFrom, queryTo),
-        getDailyTrends(moment(queryFrom), moment(queryTo))
-      ])
-        .then(data => {
-          let rowset = data[0];
-          let dailyTrends = data[1];
+      getDailyTrends(moment(queryFrom), moment(queryTo))
+        .then(dailyTrends => {
           
-          rowset = rowset.map(r => {
-            const dateFormatted = that.datePipe.transform(r.date.valueOf(), 'dd-EEEEE');
-            let ppa = (vat ? r.ppa : r.ppa / 1.17);
-            let sales = (vat ? r.sales : r.sales / 1.17);
-            let salesPPA = (vat ? r.salesPPA : r.salesPPA / 1.17);
-            if (ppa === 0) ppa = null;
-            
-            const dailyTrends_ = dailyTrends.find(dt => dt.date.isSame(r.date, 'day'));
+          that.dataService.dailyData$
+            .subscribe(dailyData=>{
+              let rowset = dailyData.filter(
+                dayData =>
+                  dayData.date.isSameOrAfter(queryFrom, 'day') &&
+                  dayData.date.isSameOrBefore(queryTo, 'day')
+              );
 
-            return {
-              date: r.date,
-              dateFormatted: dateFormatted,
-              dinersPPA: r.dinersPPA,
-              ppa: ppa,
-              sales: sales,
-              salesPPA: salesPPA,
-              dailyTrends: dailyTrends_
-            };
-          });
+              rowset = rowset.map(r => {
+                const dateFormatted = that.datePipe.transform(r.date.valueOf(), 'dd-EEEEE');
+                let ppa = (vat ? r.ppa : r.ppa / 1.17);
+                let sales = (vat ? r.sales : r.sales / 1.17);
+                let salesPPA = (vat ? r.salesPPA : r.salesPPA / 1.17);
+                if (ppa === 0) ppa = null;
+                
+                const dailyTrends_ = dailyTrends.find(dt => dt.date.isSame(r.date, 'day'));
+    
+                return {
+                  date: r.date,
+                  dateFormatted: dateFormatted,
+                  dinersPPA: r.dinersPPA,
+                  ppa: ppa,
+                  sales: sales,
+                  salesPPA: salesPPA,
+                  dailyTrends: dailyTrends_
+                };
+              });
+    
+              that.monthChart.render(rowset);
+              that.monthGrid.render(rowset);
 
-          that.monthChart.render(rowset);
-          that.monthGrid.render(rowset);
+            });
+
+
         });
     }
 
