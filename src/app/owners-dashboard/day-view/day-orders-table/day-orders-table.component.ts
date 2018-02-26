@@ -18,7 +18,7 @@ export interface OrderTypeVM {
 @Component({
   selector: 'app-day-orders-table',
   templateUrl: './day-orders-table.component.html',
-  styleUrls: ['./day-orders-table.component.css']
+  styleUrls: ['./day-orders-table.component.scss']
 })
 export class DayOrdersTableComponent implements OnInit {
 

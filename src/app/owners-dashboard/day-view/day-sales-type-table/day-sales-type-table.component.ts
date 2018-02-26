@@ -65,6 +65,9 @@ export class DaySalesTypeTableComponent {
       if (columnWithSales) this.byTypeByShiftArr.push(byType);
     });
 
+    //if no shifts, dont display table
+    if (!this.byTypeByShiftArr.length) return;
+
     //remove empty columns:
     const columnsToRemove = [];
     for (let column = 0; column < this.byTypeByShiftArr[0].byShift.length; column++) {

@@ -58,9 +58,9 @@ export class TrendsDataService {
                 const dateTo: moment.Moment = moment(currentBd);
                 
                 const qAll = [];//TODO a high level dac should'nt call directly an EP. only data.service should.
-                qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime'}));
+                qAll.push(this.olapEp.getDailyData({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime'}));
                 if (timeFrom2) {
-                    qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom2, timeTo: timeTo2, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime'}));
+                    qAll.push(this.olapEp.getDailyData({ timeFrom: timeFrom2, timeTo: timeTo2, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime'}));
                 }
 
                 Promise.all(qAll)
@@ -167,9 +167,9 @@ export class TrendsDataService {
                 const dateTo: moment.Moment = moment(currentBd).subtract(1, 'year').add(1, 'month');
 
                 const qAll = [];
-                qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
+                qAll.push(this.olapEp.getDailyData({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
                 if (timeFrom2) {
-                    qAll.push(this.olapEp.getDailyDataNew({ timeFrom: timeFrom2, timeTo: timeTo2, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
+                    qAll.push(this.olapEp.getDailyData({ timeFrom: timeFrom2, timeTo: timeTo2, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
                 }
 
                 Promise.all(qAll)
@@ -389,8 +389,8 @@ export class TrendsDataService {
                 //console.info(`Trends: MTD: Last Year: MTD Previous Year: From ${dateFrom2.format('DD/MM/YYYY')} To ${dateTo2.format('DD/MM/YYYY')}`);
 
                 const qAll = [];
-                qAll.push(this.olapEp.getDailyDataNew({ dateFrom: dateFrom1, dateTo: dateTo1 }));
-                qAll.push(this.olapEp.getDailyDataNew({ dateFrom: dateFrom2, dateTo: dateTo2 }));
+                qAll.push(this.olapEp.getDailyData({ dateFrom: dateFrom1, dateTo: dateTo1 }));
+                qAll.push(this.olapEp.getDailyData({ dateFrom: dateFrom2, dateTo: dateTo2 }));
 
                 Promise.all(qAll)
                     .then(dailyDataArr => {

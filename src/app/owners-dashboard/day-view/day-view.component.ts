@@ -24,6 +24,10 @@ export class DayViewComponent implements OnInit  {
   @ViewChild('dayShifts') dayShifts;  
 
   day: moment.Moment;  
+  daySelectorOptions: {
+    minDate: moment.Moment,
+    maxDate: moment.Moment
+  };
 
   dinersTable = {
     show: false
@@ -53,10 +57,17 @@ export class DayViewComponent implements OnInit  {
     const data$ = combineLatest(
       this.dataService.shifts$.take(1), 
       this.dataService.getDailyDataByShiftAndType(this.day), 
-      (shifts: any, dailyData: any) => Object.assign({}, { shifts: shifts }, dailyData)
+      this.dataService.dailyDataLimits$,
+      this.dataService.previousBd$,
+      (shifts: any, dailyData: any, dailyDataLimits: any, previousBd: moment.Moment) => Object.assign({}, { shifts: shifts }, dailyData, { dailyDataLimits: dailyDataLimits }, { previousBd: previousBd})
     );
     
     data$.subscribe(data=>{
+      this.daySelectorOptions = {
+        minDate: moment(data.dailyDataLimits.minimum),
+        maxDate: moment(data.previousBd)
+      };
+
       this.dinersTableData$.next(data.dinersAndPPAByShift);
       
       const shiftWithDiners = data.dinersAndPPAByShift.find(i=>i.diners>0);

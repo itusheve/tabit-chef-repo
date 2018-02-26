@@ -10,12 +10,12 @@ import { TrendsDataService } from '../../../tabit/data/dc/trends.data.service';
 import { TrendModel } from '../../../tabit/model/Trend.model';
 
 interface DailyTrends {
-  date: moment.Moment,
+  date: moment.Moment;
   trends: { 
-    sales: TrendModel, 
-    diners: TrendModel, 
-    ppa: TrendModel 
-  }
+    sales: TrendModel;
+    diners: TrendModel;
+    ppa: TrendModel;
+  };
 }
 
 @Component({
@@ -31,6 +31,10 @@ export class MonthViewComponent  {
 
   month$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment().startOf('month'));
   month: moment.Moment;
+  monthSelectorOptions: {
+    minDate: moment.Moment,
+    maxDate: moment.Moment
+  };
 
   renderGridAndChart = true;
 
@@ -73,12 +77,12 @@ export class MonthViewComponent  {
   constructor(private dataService: DataService, private trendsDataService: TrendsDataService) {     
     let that = this;
     
-    combineLatest(this.month$, dataService.vat$, dataService.currentBd$)
+    combineLatest(this.month$, dataService.vat$, dataService.currentBd$, dataService.dailyDataLimits$)
       .subscribe(data=>{
-        update(data[0], data[1], data[2]);
+        update(data[0], data[1], data[2], data[3]);
       });
 
-    function updateGridAndChart(month, vat, currentBd: moment.Moment) {
+    function updateGridAndChart(month, vat, currentBd: moment.Moment, dailyDataLimits) {
       
       function getDailyTrends(queryFrom:moment.Moment, queryTo:moment.Moment):Promise<DailyTrends[]> {
         
@@ -88,7 +92,7 @@ export class MonthViewComponent  {
               return {
                 date: m,
                 trends: trends
-              }
+              };
             });
         }
 
@@ -124,7 +128,8 @@ export class MonthViewComponent  {
               let rowset = dailyData.filter(
                 dayData =>
                   dayData.date.isSameOrAfter(queryFrom, 'day') &&
-                  dayData.date.isSameOrBefore(queryTo, 'day')
+                  dayData.date.isSameOrBefore(queryTo, 'day') && 
+                  dayData.date.isSameOrAfter(dailyDataLimits.minimum, 'day')
               );
 
               rowset = rowset.map(r => {
@@ -216,15 +221,19 @@ export class MonthViewComponent  {
       }
     }
 
-    function update(month, vat, currentBd:moment.Moment) {
+    function update(month, vat, currentBd:moment.Moment, dailyDataLimits) {
       that.month = month;
+      that.monthSelectorOptions = {
+        minDate: moment(dailyDataLimits.minimum),
+        maxDate: moment()
+      };
       
       const isCurrentMonth = month.isSame(currentBd, 'month');
       if (isCurrentMonth && currentBd.date()===1) that.renderGridAndChart = false;
       else that.renderGridAndChart = true;
       
       if (that.renderGridAndChart) {
-        updateGridAndChart(month, vat, currentBd);
+        updateGridAndChart(month, vat, currentBd, dailyDataLimits);
       }
 
       updateForecastOrSummary(month, vat, currentBd);

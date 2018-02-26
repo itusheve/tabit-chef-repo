@@ -13,7 +13,6 @@ declare var Xmla4JWrapper: any;
 export class OlapEp {
     
     private BASE_URL = 'https://analytics.tabit.cloud/olapproxy/proxy.ashx';
-    //private url = '582ae49284574a1f00fc76e4';//nono
     private catalog = 'ssas_tabit_prod';
     private cube = 'tabit_sales';
     private url$: ReplaySubject<any>;
@@ -224,12 +223,8 @@ export class OlapEp {
     };
 
     private SHORTDAYOFWEEK_NAME_REGEX = / *\S* *(\S*)/;
-
-    /* DEPRECATED! use the stateless getDailyDataNew instead */
-    // private dailyData$: ReplaySubject<any>;
     
     private monthlyData$: ReplaySubject<any>;
-    // private MDX_sales_and_ppa_byOrderType_byService$: ReplaySubject<any>;
 
     // measure helpers
     private measure(measure: any) {
@@ -262,7 +257,6 @@ export class OlapEp {
     }
     // dim helpers
 
-
     private expoToNumer(input) {
         if (typeof input === 'number') return input;
         if (input.indexOf('E')===-1) return input * 1;
@@ -282,24 +276,6 @@ export class OlapEp {
             return -1;
         }
     }
-
-    // constructor() { }
-        
-    
-    /* DEPRECATED! use the stateless getDailyDataNew instead */
-    // public getDailyData(fromDate?: moment.Moment, toDate?: moment.Moment): Promise<any> {
-    //     let that = this;    
-    //     return new Promise((resolve, reject) => {
-    //         that.dailyData.subscribe(dailyData => {                                
-    //             const filtered = dailyData.filter(r => {//TODO EP should be stateless!
-    //                 const minValidate = fromDate ? r.date.isSameOrAfter(fromDate, 'day') : true;
-    //                 const maxValidate = toDate ? r.date.isSameOrBefore(toDate, 'day') : true;
-    //                 return minValidate && maxValidate;
-    //             });
-    //             resolve(filtered);
-    //         });
-    //     });
-    // }
 
     public get monthlyData(): ReplaySubject<any> {//TODO EP shouldnt hold data. its just plummings. data service should do it.
         if (this.monthlyData$) return this.monthlyData$;
@@ -383,89 +359,14 @@ export class OlapEp {
         return this.monthlyData$;
     }
 
-    /* DEPRECATED! use the stateless getDailyDataNew instead! */
-    // get dailyData(): ReplaySubject<any> {                
-    //     if (this.dailyData$) return this.dailyData$;
-    //     this.dailyData$ = new ReplaySubject<any>();
-        
-        //we buffer X years of data. //TODO bring from config (3 places of DRY). TODO: OPTIMIZATION: if query takes too long take smaller chunks and cache.        
-        // const dateFrom: moment.Moment = moment().subtract(2, 'year').startOf('month');
-        // const dateTo: moment.Moment = moment();
-
-        // PPA per date range === ppa.sales / ppa.diners. 
-        // we calc the PPA ourselve (not using the calc' PPA measure) 
-        // in order to be able to use only the daily data as our source for the entire app.
-        // const mdx = `
-        //     SELECT 
-        //     {
-        //         ${this.measures.sales},
-        //         ${this.measures.ppa.sales},
-        //         ${this.measures.ppa.diners}
-        //     } ON 0,
-        //     {
-        //         ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.dateAndWeekDay}.${this.dims.BusinessDate.dims.dateAndWeekDay}.members
-        //     } ON 1
-        //     FROM ${this.cube}
-        //     WHERE (
-        //         ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateFrom.format('YYYYMMDD')}]:${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${dateTo.format('YYYYMMDD')}]
-        //     )
-        // `;
-        
-    //     this.url
-    //         .subscribe(url=>{
-    //             const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
-        
-    //             xmla4j_w.execute(mdx)
-    //                 .then(rowset => {
-    //                     const treated = rowset.map(r => {
-    //                         // raw date looks like: " ש 01/10/2017"
-    //                         const rawDate = r[`${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.dateAndWeekDay}.${this.dims.BusinessDate.dims.dateAndWeekDay}.[MEMBER_CAPTION]`];
-    //                         let m;
-    //                         let dateAsString;
-    //                         if ((m = this.SHORTDAYOFWEEK_NAME_REGEX.exec(rawDate)) !== null && m.length > 1) {
-    //                             dateAsString = m[1];
-    //                         }
-    //                         let date = moment(dateAsString, 'DD-MM-YYYY');
-    //                         //let dateFormatted = date.format('dd') + '-' + date.format('DD');
-        
-    //                         let sales = r[this.measures.sales] || 0;
-    //                         let salesPPA = r[this.measures.ppa.sales] || 0;
-    //                         let dinersPPA = r[this.measures.ppa.diners] || 0;
-                            
-    //                         if (sales) sales = this.expoToNumer(sales);
-    //                         if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
-    //                         if (dinersPPA) dinersPPA = dinersPPA * 1;
-                            
-    //                         const ppa = (salesPPA ? salesPPA : 0) / (dinersPPA ? dinersPPA : 1);
-        
-    //                         return {
-    //                             date: date,
-    //                             // dateFormatted: dateFormatted,
-    //                             sales: sales,
-    //                             salesPPA: salesPPA,
-    //                             dinersPPA: dinersPPA,
-    //                             ppa: ppa
-    //                         };
-    //                     })
-    //                         //.filter(r => r.sales !== undefined)
-    //                         .sort(this.shortDayOfWeek_compareFunction);
-        
-    //                     this.dailyData$.next(treated);
-    //                 })
-    //                 .catch(e => {
-    //                 });
-    //         });
-        
-    //     return this.dailyData$;
-    // }
-
-    // replaces the statefull dailyData getter
-    /* if timeTo is supplied, then only orders that were closed up to timeTo will be be retreived, e.g. if timeTo is 1745 than only orders that were clsed untill 17:45 will be retreived  */
-    public getDailyDataNew(o: {dateFrom?:moment.Moment, dateTo?:moment.Moment, timeFrom?:string, timeTo?:string, timeType?:string}): Promise<any> {
+    /* 
+        if timeTo is supplied, then only orders that were closed up to timeTo will be be retreived, 
+        e.g. if timeTo is 1745 than only orders that were clsed untill 17:45 will be retreived  
+    */
+    public getDailyData(o: {dateFrom:moment.Moment, dateTo:moment.Moment, timeFrom?:string, timeTo?:string, timeType?:string}): Promise<any> {
         return new Promise<any>((res, rej)=>{
-            //we buffer X years of data. //TODO bring from config (3 places of DRY). TODO: OPTIMIZATION: if query takes too long take smaller chunks and cache.        
-            const dateFrom: moment.Moment = o.dateFrom || moment().subtract(2, 'year').startOf('month');
-            const dateTo: moment.Moment = o.dateTo || moment();
+            const dateFrom: moment.Moment = o.dateFrom;
+            const dateTo: moment.Moment = o.dateTo;
 
             const timeFrom = o.timeFrom || '0000';
             const timeTo = o.timeTo || '2359';
@@ -479,7 +380,6 @@ export class OlapEp {
                 timeHierarchy = this.dims.orderClosingTime.hierarchy;
                 timeDim = this.dims.orderClosingTime.dims.time;
             }
-
 
             let selectClause = `
                 SELECT
@@ -563,8 +463,6 @@ export class OlapEp {
                             })
                                 //.filter(r => r.sales !== undefined)
                                 .sort(this.shortDayOfWeek_compareFunction);
-
-                            //this.dailyData$.next(treated);
 
                             res(treated);
 
@@ -722,7 +620,7 @@ export class OlapEp {
         salesPPA: number,
         dinersPPA: number,
         ppa: number
-    }[]> {
+        }[]> {
         return new Promise((resolve, reject) => {
             if (!o.day) reject('day is missing');
             
@@ -832,7 +730,7 @@ export class OlapEp {
         operational: number,
         retention: number,
         organizational: number
-    }[]> {
+        }[]> {
         return new Promise((resolve, reject) => {
             if (!day) reject('day is missing');
 

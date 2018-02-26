@@ -3,8 +3,6 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
 
-
-
 @Component({
   selector: 'app-month-selector',
   templateUrl: './month-selector.component.html',
@@ -12,25 +10,27 @@ import { Observable } from 'rxjs/Observable';
 })
 export class MonthSelectorComponent implements OnInit {
   @Input() month$: Observable<moment.Moment>;
+  
+  @Input() options: {
+    minDate: moment.Moment,
+    maxDate: moment.Moment
+  };
+
   month: moment.Moment;
 
   @Output() onDateChanged = new EventEmitter();
-
-  // //month: Date = new Date();
-  minDateValue: moment.Moment = moment().subtract(2, 'year').startOf('month');//TODO bring from config
-  maxDateValue: moment.Moment = moment();
 
   disablePrevious = false;
   disableNext = false;
 
   private setDisable() {
-    if (this.month.isSame(this.minDateValue, 'month')) {
+    if (this.month.isSame(this.options.minDate, 'month')) {
       this.disablePrevious = true;
     } else {
       this.disablePrevious = false;
     }
 
-    if (this.month.isSame(this.maxDateValue, 'month')) {
+    if (this.month.isSame(this.options.maxDate, 'month')) {
       this.disableNext = true;
     } else {
       this.disableNext = false;
@@ -45,12 +45,12 @@ export class MonthSelectorComponent implements OnInit {
   }  
 
   prevMonth = ()=>{
-    if (this.month.isSame(this.minDateValue, 'month')) return;
+    if (this.month.isSame(this.options.minDate, 'month')) return;
     this.onDateChanged.emit(moment(this.month).subtract(1, 'months'));
   }
 
   nextMonth = ()=>{
-    if (this.month.isSame(this.maxDateValue, 'month')) return;
+    if (this.month.isSame(this.options.maxDate, 'month')) return;
     this.onDateChanged.emit(moment(this.month).add(1, 'months'));
   }
 

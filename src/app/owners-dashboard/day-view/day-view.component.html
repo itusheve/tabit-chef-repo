@@ -1,6 +1,15 @@
 <div class="row">
   <div class="col-md-12">        
-    <app-day-selector class="widget noPadding" #daySelector [currentValue]="day" (onDateChanged)="onDateChanged($event)"></app-day-selector>
+    
+    <app-day-selector 
+      *ngIf="daySelectorOptions"
+      class="widget noPadding" 
+      #daySelector 
+      [currentValue]="day" 
+      [options]="daySelectorOptions"
+      (onDateChanged)="onDateChanged($event)"
+    ></app-day-selector>
+    
     <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
     <app-day-sales-type-table 
       class="widget" 
@@ -15,6 +24,7 @@
       ></app-day-diners-table>
     <app-day-orders-table 
       class="widget fullWidth"
+      style="padding-bottom: 0px;"
       *ngIf="orders"
       [orders]="orders"
       (onOrderClicked)="onOrderClicked($event)"

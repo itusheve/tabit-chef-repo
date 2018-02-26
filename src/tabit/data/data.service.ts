@@ -43,14 +43,6 @@ export class DataService {
         { id: 'het', caption: 'החלפת אמצעי תשלום' }
     ];
 
-
-    // public businessDay$: Observable<any> = Observable.create(obs=>{
-    //     this.rosEp.get('businessdays/current', {})
-    //         .then(data => {
-    //             obs.next(data);
-    //         });        
-    // }).publishReplay(1).refCount();
-
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
         this.rosEp.get('businessdays/current', {})
             .then(data => {
@@ -147,15 +139,43 @@ export class DataService {
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
     /* 
-    replaces the depracated getDailyData which relies wrongly on the olapEp deprectaed statefull getDailyData
-    emits vat inclusive data of closed orders (from the Cube), up to two years ago
+        emits vat inclusive data of closed orders (from the Cube), up to two years ago
     */    
-    public dailyData$: Observable<any> = new Observable(obs=>{
-        this.olapEp.getDailyDataNew({})
+    public dailyData$: Observable<any> = Observable.create(obs=>{
+        const dateFrom: moment.Moment = moment().subtract(2, 'year').startOf('month');
+        const dateTo: moment.Moment = moment();//TODO use rest time..
+        this.olapEp.getDailyData({dateFrom: dateFrom, dateTo: dateTo})
             .then(dailyData=>{
                 obs.next(dailyData);
             });
     }).publishReplay(1).refCount();
+
+    /* 
+        emits the minimum and maximum business dates where there are recorded sales
+    */    
+    public dailyDataLimits$: Observable<{ minimum: moment.Moment, maximum: moment.Moment }> = Observable.create(obs=>{
+        this.dailyData$
+            .subscribe(dailyData=>{
+                let minimum, maximum;
+                for (let i=0;i<dailyData.length;i++) {
+                    if (dailyData[i].sales > 0) {
+                        maximum = moment(dailyData[i].date);
+                        break;
+                    }
+                }
+                for (let i = dailyData.length-1; i >= 0; i--) {
+                    if (dailyData[i].sales > 0) {
+                        minimum = moment(dailyData[i].date);
+                        break;
+                    }
+                }                
+                obs.next({
+                    minimum: minimum,
+                    maximum: maximum
+                });
+            });
+    }).publishReplay(1).refCount();
+
 
     /* 
         emits months and their sales from the Cube, up to two years ago.
@@ -202,7 +222,6 @@ export class DataService {
                         const dateFrom: moment.Moment = moment(data);
                         const dateTo: moment.Moment = moment(data);
                         that.dailyData$
-                        // that.getDailyData(dateFrom, dateTo)
                             .subscribe(dailyData => {
                                 dailyData = dailyData.filter(
                                     dayData => 
@@ -249,31 +268,9 @@ export class DataService {
 
     });
     
-    
-    
     public dailyDataByShiftAndType$: Observable<any>;
-    
 
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
-        // const sub1 = this.dashboardDataNg$.subscribe(data=>{
-        //     console.log('sub1: ' + data.today.totalSales);
-        // });
-        // const sub2 = this.dashboardDataNg$.subscribe(data => { 
-        //     console.log('sub2: ' + data.today.totalSales);
-        // });
-        // const sub3 = this.dashboardDataNg$.subscribe(data => { 
-        //     console.log('sub3: ' + data.today.totalSales);
-        // });
-    }
-
-    // get currentBd$(): Observable<moment.Moment> {
-    //     return this.dashboardData$
-    //         .map(data => {                
-    //             const bdStr = data.today.businessDate.substring(0, 10);
-    //             const bd: moment.Moment = moment(bdStr).startOf('day');
-    //             return bd;
-    //         });
-    // }
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {}
 
     get currentBdData$(): Observable<any> {
         return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
@@ -285,15 +282,6 @@ export class DataService {
             return data;
         });
     }
-
-    // get previousBd$(): Observable<moment.Moment> {
-    //     return this.currentBd$
-    //         .map(cbd=>{
-    //             debugger;
-    //             const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
-    //             return pbd;
-    //         });
-    // }
     
     get previousBdData$(): Observable<any> {
         return combineLatest(this.vat$, this.previousBd$)
@@ -305,7 +293,6 @@ export class DataService {
                         const dateFrom: moment.Moment = moment(pbd);
                         const dateTo: moment.Moment = dateFrom;
                         this.dailyData$
-                        // this.getDailyData(dateFrom, dateTo)
                             .subscribe(dailyData => {
                                 dailyData = dailyData.filter(
                                     dayData =>
@@ -353,7 +340,6 @@ export class DataService {
                         const dateFrom: moment.Moment = moment().startOf('month');
                         const dateTo: moment.Moment = moment().subtract(1, 'days');//TODO should be base on currentBd!
                         this.dailyData$
-                        // this.getDailyData(dateFrom, dateTo)
                             .subscribe(dailyData => {
                                 dailyData = dailyData.filter(
                                     dayData =>
