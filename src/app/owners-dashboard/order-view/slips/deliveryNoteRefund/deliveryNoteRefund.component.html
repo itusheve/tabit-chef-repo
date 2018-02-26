@@ -1,0 +1,66 @@
+<div class="ticket-box d-col">
+    
+    <div class="flex j-sb">
+        <!-- <span>{{'BUSINESS_MEAL' | translate}}</span> -->
+        <span>ארוחה עסקית</span>
+        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <!-- <span>{{'BEFORE_VAT' | translate}}</span> -->
+        <span>סה"כ לפני מע"מ</span>
+        <!-- <span>{{((data.amount/100)-($ctrl.selectedInvoice.tax.amount/100)) | number:'1.2-2'}}</span> -->
+        <span>{{data.amount/100 | number:'1.2-2'}}</span>
+
+    </div>
+
+    <div class="flex j-sb">
+        <!-- <span>{{'VAT' | translate}}</span> -->
+        <span>מע"מ</span>
+        <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <!-- <span>{{'INCLUDE_VAT' | translate}}</span> -->
+        <span>כולל מע"מ</span>
+        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+    </div>
+
+    <hr />
+
+    <div class="flex d-col a-center">
+        <!-- <small>{{'RETURND_IN_CHARCHACCOUNT_FROM' | translate}}</small> -->
+        <small>הוחזר בהקפה מ </small>
+        <h4>{{data.payments[0]?.accountName}}</h4>
+    </div>
+
+    <div class="flex j-sb" *ngIf="data.companyName.length>0">
+        <!-- <span>{{'COMPANY_NAME' | translate}}</span> -->
+        <span>שם חברה</span>
+        <span>{{data.companyName}}</span>
+    </div>
+
+    <div class="flex j-sb" *ngIf="data.cardNum.length>0">
+        <!-- <span>{{'CARD_NO' | translate}}</span> -->
+        <span>מספר כרטיס</span>
+        <span>{{data.cardNum}}</span>
+    </div>
+
+    <div class="flex j-sb" *ngIf="data.providerTransactionId.length>0">
+        <!-- <span>{{'TRANSACTION_NO' | translate}}</span> -->
+        <span class="text-upper">מספר עסקה</span>
+        <span>{{data.providerTransactionId}}</span>
+    </div>
+    
+    <div class="flex j-sb" *ngIf="data.confirmationNum.length>0">
+        <!-- <span>{{'APPROVAL_NO' | translate}}</span> -->
+        <span class="text-upper">מספר אישור</span>
+        <span>{{data.confirmationNum}}</span>
+    </div>
+
+</div>
+
+
+
+
+

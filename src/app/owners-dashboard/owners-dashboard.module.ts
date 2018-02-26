@@ -28,6 +28,8 @@ import { OrderInvoiceCreditComponent } from './order-view/slips/invoiceCredit/in
 import { OrderInvoiceCashComponent } from './order-view/slips/invoiceCash/invoiceCash.component';
 import { OrderInvoiceCheckComponent } from './order-view/slips/invoiceCheck/invoiceCheck.component';
 import { OrderInvoiceGiftcardComponent } from './order-view/slips/invoiceGiftcard/invoiceGiftcard.component';
+import { OrderDeliveryNoteComponent } from './order-view/slips/deliveryNote/deliveryNote.component';
+import { OrderDeliveryNoteRefundComponent } from './order-view/slips/deliveryNoteRefund/deliveryNoteRefund.component';
 
 import { CardComponent } from '../ui/card/card.component';
 
@@ -51,6 +53,9 @@ import { DxPieChartModule } from 'devextreme-angular';
 import { DxDataGridModule } from 'devextreme-angular';
 import { DxLoadIndicatorModule } from 'devextreme-angular';
 import 'devextreme-intl';
+import { OrderCashRefundComponent } from './order-view/slips/_cashRefund/cashRefund.component';
+import { OrderChequeRefundComponent } from './order-view/slips/_chequeRefund/chequeRefund.component';
+import { OrderCreditRefundComponent } from './order-view/slips/_creditRefund/creditRefund.component';
 
 //Load localized messages (English included by default)
 // let messagesDe = require("devextreme/localization/messages/de.json"),
@@ -109,7 +114,12 @@ locale('he');
     OrderInvoiceCreditComponent,
     OrderInvoiceCashComponent,
     OrderInvoiceCheckComponent,
-    OrderInvoiceGiftcardComponent
+    OrderInvoiceGiftcardComponent,
+    OrderDeliveryNoteComponent,
+    OrderDeliveryNoteRefundComponent,
+    OrderCreditRefundComponent,
+    OrderChequeRefundComponent,
+    OrderCashRefundComponent
   ]
 })
 export class OwnersDashboardModule { }

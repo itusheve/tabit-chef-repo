@@ -145,25 +145,26 @@ export class OrderViewComponent implements OnInit  {
 
               // })
             } else {
-              // _.each($ctrl.selectedOrder.deliveryNotes, function (dn) {
-              //   if (dn.payments[0]._type === 'ChargeAccountPayment') {
-              //     $ctrl.orderOptions.push(
-              //       {
-              //         view: 'ChargeAccountPayment',
-              //         data: dn,
-              //         text: ORDERS_VIEW.delivery_note_number + dn.number
-              //       });
-              //   } else if (dn.payments[0]._type === 'ChargeAccountRefund') {
-              //     $ctrl.orderOptions.push(
-              //       {
-              //         view: 'ChargeAccountRefund',
-              //         data: dn,
-              //         text: ORDERS_VIEW.refund_note_number + dn.number
-              //       });
-              //   }
-              // });
+              orderOld.deliveryNotes.forEach(dn=> {
+                if (dn.payments[0]._type === 'ChargeAccountPayment') {
+                  this.slips.push({
+                    id: i,
+                    class: 'deliveryNote',
+                    data: dn,
+                    caption: ORDERS_VIEW.delivery_note_number + dn.number
+                  });
+                  i++;
+                } else if (dn.payments[0]._type === 'ChargeAccountRefund') {
+                  this.slips.push({
+                    id: i,
+                    class: 'deliveryNoteRefund',
+                    data: dn,
+                    caption: ORDERS_VIEW.refund_note_number + dn.number
+                  });
+                  i++;
+                }
+              });
 
-              //_.each(orderOld.invoices, function (invoice) {
               orderOld.invoices.forEach(invoice=> {
                 switch (invoice.payments[0]._type) {
                   case 'CreditCardPayment':
@@ -179,8 +180,8 @@ export class OrderViewComponent implements OnInit  {
                   case 'CreditCardRefund':
                     this.slips.push({
                       id: i,
-                      class: 'invoice',
-                      subclass: 'creditRefund',
+                      class: 'refund',
+                      subclass: 'credit',
                       data: invoice,
                       caption: ORDERS_VIEW.credit_invoice_number + invoice.number
                     });
@@ -199,8 +200,8 @@ export class OrderViewComponent implements OnInit  {
                   case 'CashRefund':
                     this.slips.push({
                       id: i,
-                      class: 'invoice',
-                      subclass: 'cashRefund',
+                      class: 'refund',
+                      subclass: 'cash',
                       data: invoice,
                       caption: ORDERS_VIEW.credit_invoice_number + invoice.number
                     });
@@ -229,8 +230,8 @@ export class OrderViewComponent implements OnInit  {
                   case 'ChequeRefund':
                     this.slips.push({
                       id: i,
-                      class: 'invoice',
-                      subclass: 'chequeRefund',
+                      class: 'refund',
+                      subclass: 'cheque',
                       data: invoice,
                       caption: ORDERS_VIEW.credit_invoice_number + invoice.number
                     });
