@@ -120,8 +120,16 @@ export class MonthViewComponent  {
 
       let dailyTrends: DailyTrends[];
       
-      getDailyTrends(moment(queryFrom), moment(queryTo))
-        .then(dailyTrends => {
+      Promise.all([getDailyTrends(moment(queryFrom), moment(queryTo)), that.dataService.getMonthlyData(month)])
+        .then(data => {
+          const dailyTrends = data[0];
+          const monthlyData = data[1];
+          
+          if (monthlyData.sales===0) {
+            that.monthChart.render([]);
+            that.monthGrid.render([]);
+            return;
+          }
           
           that.dataService.dailyData$
             .subscribe(dailyData=>{

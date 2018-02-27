@@ -20,10 +20,8 @@ export class TrendsDataService {
         obs.next(trend);
 
         // zip(this.dataService.currentBd$.take(1), this.closedOrdersDataService.lastClosedOrderTime$.take(1), this.dataService.businessDay$, this.dataService.shifts$)
-        zip(this.dataService.currentBd$.take(1), this.dataService.shifts$, this.dataService.todayDataVatInclusive$.take(1), this.dataService.dailyDataLimits$)
+        zip(this.dataService.currentBd$.take(1), this.dataService.shifts$, this.dataService.todayDataVatInclusive$.take(1))
             .subscribe(data => {
-                const dailyDataLimits = data[3];
-
                 let timeFrom1, timeFrom2, timeTo1, timeTo2;
 
                 const currentBd: moment.Moment = data[0];
@@ -50,11 +48,11 @@ export class TrendsDataService {
                 timeTo1 = tmpCurrentRestTime.format('HHmm');
                 //console.info(`Trends: Current: Last 4: query TimeFrom1: ${timeFrom1}`);
                 //console.info(`Trends: Current: Last 4: query TimeTo1: ${timeTo1}`);
-                if (timeTo2) {
+                // if (timeTo2) {
                     //console.info(`Trends: Current: Last 4: performing Query 1 + Query 2`);
-                } else {
+                // } else {
                     //console.info(`Trends: Current: Last 4: performing only Query 1`);
-                }
+                // }
 
                 const dateFrom: moment.Moment = moment(currentBd).subtract(6, 'weeks');
                 const dateTo: moment.Moment = moment(currentBd);
@@ -84,9 +82,8 @@ export class TrendsDataService {
                             const dayData = dailyData1[i];
                             if (dayData.date.isSameOrAfter(currentBd, 'day')) continue;
                             if (dayData.date.isBefore(seekTill, 'day')) break;
-                            if (dayData.date.isBefore(dailyDataLimits.minimum)) break;
         
-                            if (dayData.date.day() === currentBdWeekDay) {
+                            if (dayData.date.day() === currentBdWeekDay && dayData.sales > 0) {
                                 sumTotalSales1 += dayData.sales;
                                 found1++;
                             }
@@ -100,9 +97,8 @@ export class TrendsDataService {
                                 const dayData = dailyData2[i];
                                 if (dayData.date.isSameOrAfter(currentBd, 'day')) continue;
                                 if (dayData.date.isBefore(seekTill, 'day')) break;
-                                if (dayData.date.isBefore(dailyDataLimits.minimum)) break;
 
-                                if (dayData.date.day() === currentBdWeekDay) {
+                                if (dayData.date.day() === currentBdWeekDay && dayData.sales > 0) {
                                     sumTotalSales2 += dayData.sales;
                                     found2++;
                                 }
@@ -189,24 +185,24 @@ export class TrendsDataService {
                         let avgTotalSales;
 
                         let sumTotalSales1 = 0;
-                        // for (let i = 0; i < dailyData1.length; i++) {
-                        //     const dayData = dailyData1[i];
-                        //     if (dayData.date.week() === currentBdWeekOfYear && dayData.date.day() === currentBdWeekDay && dayData.date.isSameOrAfter(dailtDataLimits.minimum)) {
-                        //         sumTotalSales1 = dayData.sales;
-                        //         break;
-                        //     }
-                        // }
+                        for (let i = 0; i < dailyData1.length; i++) {
+                            const dayData = dailyData1[i];
+                            if (dayData.date.week() === currentBdWeekOfYear && dayData.date.day() === currentBdWeekDay) {
+                                sumTotalSales1 = dayData.sales;
+                                break;
+                            }
+                        }
 
                         let sumTotalSales2 = 0;
-                        // if (dailyData2) {
-                        //     for (let i = 0; i < dailyData2.length; i++) {
-                        //         const dayData = dailyData2[i];
-                        //         if (dayData.date.week() === currentBdWeekOfYear && dayData.date.day() === currentBdWeekDay && dayData.date.isSameOrAfter(dailtDataLimits.minimum)) {
-                        //             sumTotalSales2 = dayData.sales;
-                        //             break;
-                        //         }
-                        //     }
-                        // }
+                        if (dailyData2) {
+                            for (let i = 0; i < dailyData2.length; i++) {
+                                const dayData = dailyData2[i];
+                                if (dayData.date.week() === currentBdWeekOfYear && dayData.date.day() === currentBdWeekDay) {
+                                    sumTotalSales2 = dayData.sales;
+                                    break;
+                                }
+                            }
+                        }
 
                         let sumTotalSales = sumTotalSales1 + sumTotalSales2;
 
@@ -241,62 +237,61 @@ export class TrendsDataService {
 
         obs.next(trend);
 
-        zip(this.dataService.dailyData$.take(1), this.dataService.previousBd$.take(1))
+        zip(this.dataService.dailyData$, this.dataService.previousBd$)
             .subscribe(data => {
-                // const dailyData = data[0];
-                // const previousBd: moment.Moment = data[1];                
+                const dailyData = data[0];
+                const previousBd: moment.Moment = data[1];                
 
-                // const previousBdData = dailyData.find(dayData => dayData.date.isSame(previousBd, 'day'));
-                // if (!previousBdData) {
-                //     trend.status = 'error';
-                //     obs.next(trend);
-                //     return;
-                // }
+                const previousBdData = dailyData.find(dayData => dayData.businessDay.isSame(previousBd, 'day'));
+                if (!previousBdData) {
+                    trend.status = 'error';
+                    obs.next(trend);
+                    return;
+                }
 
-                // const previousBdSales = previousBdData.sales;
+                const previousBdSales = previousBdData.kpi.sales;
                 
-                // const previousBdWeekDay = previousBd.day();
+                const previousBdWeekDay = previousBd.day();
 
-                // let found = 0;
-                // let sumTotalSales = 0;
-                // let avgTotalSales;
-                // const seekTill: moment.Moment = moment(previousBd).subtract(4, 'weeks');
-                // for (let i = 0; i < dailyData.length; i++) {
-                //     const dayData = dailyData[i];
-                //     if (dayData.date.isSameOrAfter(previousBd, 'day')) continue;
-                //     if (dayData.date.isBefore(seekTill, 'day')) break;
-                //     if (dayData.date.isBefore(dailyDataLimits.minimum)) break;
+                let found = 0;
+                let sumTotalSales = 0;
+                let avgTotalSales;
+                const seekTill: moment.Moment = moment(previousBd).subtract(4, 'weeks');
+                for (let i = 0; i < dailyData.length; i++) {
+                    const dayData = dailyData[i];
+                    if (dayData.businessDay.isSameOrAfter(previousBd, 'day')) continue;
+                    if (dayData.businessDay.isBefore(seekTill, 'day')) break;
 
-                //     if (dayData.date.day() === previousBdWeekDay) {
-                //         sumTotalSales += dayData.sales;
-                //         found++;
-                //     }
-                // }
+                    if (dayData.businessDay.day() === previousBdWeekDay && dayData.kpi.sales > 0) {
+                        sumTotalSales += dayData.kpi.sales;
+                        found++;
+                    }
+                }
 
-                // if (found) {
-                //     if (sumTotalSales===0) {
-                //         trend.status = 'nodata';
-                //         obs.next(trend);
-                //         return;                    
-                //     }
-                //     avgTotalSales = sumTotalSales / found;                                        
-                //     const changePct = (previousBdSales / avgTotalSales) - 1;
+                if (found) {
+                    if (sumTotalSales===0) {
+                        trend.status = 'nodata';
+                        obs.next(trend);
+                        return;                    
+                    }
+                    avgTotalSales = sumTotalSales / found;                                        
+                    const changePct = (previousBdSales / avgTotalSales) - 1;
 
-                //     if (changePct > 9) {
-                //         trend.status = 'nodata';
-                //         obs.next(trend);
-                //         return;
-                //     }
+                    if (changePct > 9) {
+                        trend.status = 'nodata';
+                        obs.next(trend);
+                        return;
+                    }
 
-                //     trend.val = changePct;
-                //     trend.status = 'ready';
-                //     obs.next(trend);
-                //     return;
-                // } else {
+                    trend.val = changePct;
+                    trend.status = 'ready';
+                    obs.next(trend);
+                    return;
+                } else {
                     trend.status = 'nodata';
                     obs.next(trend);
                     return;
-                // }
+                }
             });
     }).publishReplay(1).refCount();
 
@@ -310,55 +305,55 @@ export class TrendsDataService {
         
         zip(this.dataService.dailyData$.take(1), this.dataService.previousBd$.take(1))
             .subscribe(data => {
-                // const dailyData = data[0];
-                // const previousBd: moment.Moment = data[1];
+                const dailyData = data[0];
+                const previousBd: moment.Moment = data[1];
 
-                // const previousBdData = dailyData.find(dayData => dayData.date.isSame(previousBd, 'day'));
-                // if (!previousBdData) {
-                //     trend.status = 'error';
-                //     obs.next(trend);
-                //     return;
-                // }
+                const previousBdData = dailyData.find(dayData => dayData.businessDay.isSame(previousBd, 'day'));
+                if (!previousBdData) {
+                    trend.status = 'error';
+                    obs.next(trend);
+                    return;
+                }
 
-                // const previousBdSales = previousBdData.sales;
+                const previousBdSales = previousBdData.kpi.sales;
 
-                // const previousBdWeekDay = previousBd.day();
-                // const previousBdWeekOfYear = previousBd.week();
+                const previousBdWeekDay = previousBd.day();
+                const previousBdWeekOfYear = previousBd.week();
 
-                // let found = false;
-                // let lastYearSales = 0;
-                // for (let i = 0; i < dailyData.length; i++) {
-                //     const dayData = dailyData[i];
-                //     if (dayData.date.isBefore(previousBd, 'day') && dayData.date.week() === previousBdWeekOfYear && dayData.date.day() === previousBdWeekDay && dayData.date.isSameOrAfter(dailyDataLimits.minimum)) {
-                //         lastYearSales = dayData.sales;
-                //         found = true;
-                //         break;
-                //     }
-                // }
+                let found = false;
+                let lastYearSales = 0;
+                for (let i = 0; i < dailyData.length; i++) {
+                    const dayData = dailyData[i];
+                    if (dayData.businessDay.isBefore(previousBd, 'day') && dayData.businessDay.week() === previousBdWeekOfYear && dayData.businessDay.day() === previousBdWeekDay) {
+                        lastYearSales = dayData.kpi.sales;
+                        found = true;
+                        break;
+                    }
+                }
 
-                // if (found) {
-                //     if (lastYearSales === 0) {
-                //         trend.status = 'nodata';
-                //         obs.next(trend);
-                //         return;
-                //     }
-                //     const changePct = (previousBdSales / lastYearSales) - 1;
+                if (found) {
+                    if (lastYearSales === 0) {
+                        trend.status = 'nodata';
+                        obs.next(trend);
+                        return;
+                    }
+                    const changePct = (previousBdSales / lastYearSales) - 1;
 
-                //     if (changePct > 9) {
-                //         trend.status = 'nodata';
-                //         obs.next(trend);
-                //         return;
-                //     }
+                    if (changePct > 9) {
+                        trend.status = 'nodata';
+                        obs.next(trend);
+                        return;
+                    }
 
-                //     trend.val = changePct;
-                //     trend.status = 'ready';
-                //     obs.next(trend);
-                //     return;
-                // } else {
+                    trend.val = changePct;
+                    trend.status = 'ready';
+                    obs.next(trend);
+                    return;
+                } else {
                     trend.status = 'nodata';
                     obs.next(trend);
                     return;
-                // }
+                }
             });
 
 
@@ -372,8 +367,10 @@ export class TrendsDataService {
 
         obs.next(trend);
 
-        zip(this.dataService.currentBd$.take(1))
+        zip(this.dataService.currentBd$, this.dataService.dailyDataLimits$)
             .subscribe(data => {
+                const dailyDataLimits = data[1];
+
                 const currentBd: moment.Moment = moment(data[0]);
                 //console.info(`Trends: MTD: Last Year: Current Business Day is: ${currentBd.format('DD/MM/YYYY')}`);
 
@@ -391,11 +388,11 @@ export class TrendsDataService {
                 const dateTo2: moment.Moment = moment(currentBd).subtract(1, 'year');
                 //console.info(`Trends: MTD: Last Year: MTD Previous Year: From ${dateFrom2.format('DD/MM/YYYY')} To ${dateTo2.format('DD/MM/YYYY')}`);
 
-                // if (dateFrom2.isBefore(dailyDataLimits.minimum)) {
-                //     trend.status = 'nodata';
-                //     obs.next(trend);
-                //     return;      
-                // }
+                if (dateFrom2.isBefore(dailyDataLimits.minimum)) {
+                    trend.status = 'nodata';
+                    obs.next(trend);
+                    return;      
+                }
 
                 const qAll = [];
                 qAll.push(this.olapEp.getDailyData({ dateFrom: dateFrom1, dateTo: dateTo1 }));
@@ -493,15 +490,7 @@ export class TrendsDataService {
             });
         }).publishReplay(1).refCount();
 
-
-
-    
         constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService, private olapEp: OlapEp) { 
-
-        // this.month_lastYear_trend(moment().subtract(1, 'month'))
-        //     .then((trendModel:TrendModel)=>{
-        //         debugger;
-        //     });
     }
 
     /* 
@@ -514,16 +503,19 @@ export class TrendsDataService {
             trend.description = 'completeMonthLastYear description';
             trend.letter = 'ש';
             
-            const prevYearMonth = moment(month).subtract(1, 'year');
-            // if (prevYearMonth.isBefore(dailyDataLimits.minimum)) {
-            //     trend.status = 'nodata';
-            //     resolve(trend);
-            //     return;                    
-            // }
+            const prevYearMonth = moment(month).subtract(1, 'year').startOf('month');
 
+            zip(this.dataService.olapDataByMonths$, this.dataService.dailyDataLimits$)
+                .subscribe(data=>{
+                    const olapDataByMonths = data[0];
+                    const dailyDataLimits = data[1];
 
-            this.dataService.olapDataByMonths$
-                .subscribe(olapDataByMonths=>{
+                    if (prevYearMonth.isBefore(dailyDataLimits.minimum, 'day')) {
+                        trend.status = 'nodata';
+                        resolve(trend);
+                        return;
+                    }
+
                     const tuple = olapDataByMonths.find(monthData => monthData.month.isSame(month, 'month'));
                     const prevYearTuple = olapDataByMonths.find(monthData => monthData.month.isSame(prevYearMonth, 'month'));
                     if (!prevYearTuple || !prevYearTuple.sales) {
@@ -559,19 +551,20 @@ export class TrendsDataService {
             trend.description = 'month_forecast_to_last_year description';
             trend.letter = 'ש';
 
-            zip(this.dataService.olapDataByMonths$, this.dataService.currentMonthForecast$, this.dataService.currentBd$.take(1))
+            zip(this.dataService.olapDataByMonths$, this.dataService.currentMonthForecast$, this.dataService.currentBd$, this.dataService.dailyDataLimits$)
                 .subscribe(data => {
 
                     const olapDataByMonths = data[0];
                     const forecastData = data[1];
                     const cbd = moment(data[2]);
+                    const dailyDataLimits = data[3];
 
-                    const prevYearMonth = moment(cbd).subtract(1, 'year');
-                    // if (prevYearMonth.isBefore(dailyDataLimits.minimum)) {
-                    //     trend.status = 'nodata';
-                    //     resolve(trend);
-                    //     return;
-                    // }
+                    const prevYearMonth = moment(cbd).subtract(1, 'year').startOf('month');
+                    if (!forecastData || prevYearMonth.isBefore(dailyDataLimits.minimum)) {
+                        trend.status = 'nodata';
+                        resolve(trend);
+                        return;
+                    }
                     
                     const prevYearTuple = olapDataByMonths.find(monthData => monthData.month.isSame(prevYearMonth, 'month'));
 
@@ -608,16 +601,28 @@ export class TrendsDataService {
             trend.description = 'month_forecast_to_start_of_month_forecast description';
             trend.letter = 'מ';
 
-            zip(this.dataService.currentMonthForecast$, this.dataService.currentBd$.take(1))
+            zip(this.dataService.currentMonthForecast$, this.dataService.currentBd$)
                 .subscribe(data => {
 
                     const forecastData = data[0];
                     const cbd = moment(data[1]);
 
+                    if (!forecastData) {
+                        trend.status = 'nodata';
+                        resolve(trend);
+                        return;
+                    }
+
                     const startOfMonth = moment(cbd).startOf('month');
 
                     this.dataService.getMonthForecastData({ calculationBd: startOfMonth })
                         .then(startOfMonthForecastData=>{
+                            if (!startOfMonthForecastData) {
+                                trend.status = 'nodata';
+                                resolve(trend);
+                                return;
+                            }
+
                             if (!startOfMonthForecastData.sales) {
                                 trend.status = 'nodata';
                             } else {
@@ -665,7 +670,7 @@ export class TrendsDataService {
                 .then(data=>{
                     const monthData = data[0];
                     const forecastData = data[1];
-                    if (!forecastData.sales || !monthData.sales) {
+                    if (!forecastData || !forecastData.sales || !monthData.sales) {
                         trend.status = 'nodata';
                     } else {
                         const sales = monthData.sales;
@@ -712,7 +717,7 @@ export class TrendsDataService {
 
                     this.dataService.getMonthForecastData({ calculationBd: startOfMonth, upToBd: upToBd })
                         .then(startOfMonthForecastData => {
-                            if (!startOfMonthForecastData.sales) {
+                            if (!startOfMonthForecastData || !startOfMonthForecastData.sales) {
                                 trend.status = 'nodata';
                             } else {
                                 const sales = mtd.sales || 0;
@@ -772,25 +777,25 @@ export class TrendsDataService {
             
             this.dataService.dailyData$
                 .subscribe(dailyData => {
-                    // for (let i = 0; i < dailyData.length; i++) {
-                    //     const dayData = dailyData[i];
-                    //     if (dayData.date.isAfter(bd, 'day')) {
-                    //         continue;
-                    //     } else if (dayData.date.isSame(bd, 'day')) {
-                    //         bdSales = dayData.sales;
-                    //         bdDiners = dayData.dinersPPA;
-                    //         if (bdDiners) bdPPA = dayData.salesPPA / bdDiners;
-                    //     } else if (dayData.date.isBefore(seekTill, 'day')) {
-                    //         break;
-                    //     } else if (dayData.date.day() === bdWeekDay) {
-                    //         sumTotalSales += dayData.sales;
-                    //         sumTotalDiners += dayData.dinersPPA;
-                    //         sumTotalSalesPPA += dayData.salesPPA;
-                    //         found++;
-                    //     }        
-                    // }
+                    for (let i = 0; i < dailyData.length; i++) {
+                        const dayData = dailyData[i];
+                        if (dayData.businessDay.isAfter(bd, 'day')) {
+                            continue;
+                        } else if (dayData.businessDay.isSame(bd, 'day')) {
+                            bdSales = dayData.kpi.sales;
+                            bdDiners = dayData.kpi.diners.count;
+                            if (bdDiners) bdPPA = dayData.kpi.diners.sales / bdDiners;
+                        } else if (dayData.businessDay.isBefore(seekTill, 'day')) {
+                            break;
+                        } else if (dayData.businessDay.day() === bdWeekDay && dayData.kpi.sales > 0) {
+                            sumTotalSales += dayData.kpi.sales;
+                            sumTotalDiners += dayData.kpi.diners.count;
+                            sumTotalSalesPPA += dayData.kpi.diners.sales;
+                            found++;
+                        }        
+                    }
 
-                    if (!sumTotalSales || bdSales===undefined) {
+                    if (!sumTotalSales || !bdSales) {
                         trend_s.status = 'nodata';
                     } else {
                         avgTotalSales = sumTotalSales / found;
@@ -803,7 +808,7 @@ export class TrendsDataService {
                         }
                     }
 
-                    if (!sumTotalDiners || bdDiners === undefined) {
+                    if (!sumTotalDiners || !bdDiners) {
                         trend_d.status = 'nodata';
                     } else {
                         avgTotalDiners = sumTotalDiners / found;
@@ -816,7 +821,7 @@ export class TrendsDataService {
                         }
                     }
 
-                    if (!sumTotalSalesPPA || !sumTotalDiners || bdPPA === undefined) {
+                    if (!sumTotalSalesPPA || !sumTotalDiners || !bdPPA) {
                         trend_p.status = 'nodata';
                     } else {
                         avgPPA = sumTotalSalesPPA / sumTotalDiners;

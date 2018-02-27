@@ -197,27 +197,13 @@ export class DataService {
     */    
     public dailyDataLimits$: Observable<{ minimum: moment.Moment, maximum: moment.Moment }> = Observable.create(obs=>{
         this.dailyData$
-            .subscribe(dailyData=>{
-                let minimum, maximum;
-                for (let i=0;i<dailyData.length;i++) {
-                    if (dailyData[i].kpi.sales > 0) {
-                        maximum = moment(dailyData[i].businessDay);
-                        break;
-                    }
-                }
-                for (let i = dailyData.length-1; i >= 0; i--) {
-                    if (dailyData[i].kpi.sales > 0) {
-                        minimum = moment(dailyData[i].businessDay);
-                        break;
-                    }
-                }                
+            .subscribe(dailyData=>{               
                 obs.next({
-                    minimum: minimum,
-                    maximum: maximum
+                    minimum: moment(dailyData[dailyData.length-1].businessDay),
+                    maximum: moment(dailyData[0].businessDay)
                 });
             });
     }).publishReplay(1).refCount();
-
 
     /* 
         emits months and their sales from the Cube, up to two years ago.
@@ -260,9 +246,9 @@ export class DataService {
         function getDinersAndPPA(): Observable<any> {
             return Observable.create(sub => {
                 that.currentBd$
-                    .subscribe(data => {
-                        const dateFrom: moment.Moment = moment(data);
-                        const dateTo: moment.Moment = moment(data);
+                    .subscribe(cbd => {
+                        const dateFrom: moment.Moment = moment(cbd);
+                        const dateTo: moment.Moment = moment(cbd);
                         that.dailyData$
                             .subscribe(dailyData => {
                                 dailyData = dailyData.filter(
@@ -373,7 +359,7 @@ export class DataService {
             );
     }
 
-    /* excluding today! this is why we use getDailyData and not getMonthlyData  */
+    /* excluding today! */
     get mtdData$(): Observable<any> {
         let that = this;
         return this.vat$
@@ -437,16 +423,20 @@ export class DataService {
             this.olapEp.monthlyData
                 .subscribe(dataByMonth=>{
                     const monthlyData = dataByMonth.find(dataItem => dataItem.date.isSame(month, 'month'));
-                    if (!monthlyData) {
-                        throw new Error(`err 763: error extracting monthly data: ${month.format()}. please contact support.`);
+                    const result = {
+                        sales: 0,
+                        diners: 0,
+                        ppa: 0                        
+                    };
+                    if (monthlyData) {//months without sales wont be found.
+                        const diners = monthlyData.dinersPPA;
+                        const ppa = (monthlyData.salesPPA ? monthlyData.salesPPA : 0) / (diners ? diners : 1);
+
+                        result.sales = monthlyData.sales;
+                        result.diners = diners;
+                        result.ppa = ppa;
                     }
-                    const diners = monthlyData.dinersPPA;
-                    const ppa = (monthlyData.salesPPA ? monthlyData.salesPPA : 0) / (diners ? diners : 1);
-                    res({
-                        sales: monthlyData.sales,
-                        diners: diners,
-                        ppa: ppa
-                    });
+                    res(result);
                 });
         });
     }     
@@ -465,6 +455,8 @@ export class DataService {
             e.g., the forecast for 09/12/2017 which is Saturday, is the average of all the measures in the 8 Saturdays prior to 09/12/2017.
 
             a "source" bd with 0 sales is not used in the average calculation (to ignore special occasions e.g. holidays where the restaurant was closed).
+
+        if there's not enough data to compute the forecast, the promise resolves with undefined.
      */
     getMonthForecastData(o: { calculationBd: moment.Moment, upToBd?: moment.Moment }): 
         Promise<{
@@ -481,30 +473,35 @@ export class DataService {
 
                 this.dailyData$
                     .subscribe(dailyData => {
+                        
+                        //statsByWeekDay computation...
                         dailyData = dailyData.filter(
                             dayData =>
                                 dayData.businessDay.isSameOrAfter(dateFrom, 'day') &&
                                 dayData.businessDay.isSameOrBefore(dateTo, 'day')
                         );
 
-                        // bring only days that has sales
-                        dailyData = dailyData.filter(r => r.kpi.sales > 0);
-
                         if (dailyData.length < 7) {
-                            return new Error('not enough data for forecasting');
+                            //return new Error('not enough data for forecasting');
+                            resolve(undefined);
+                            return;
                         }
+
+                        //holidays filter - we want our stats to ignore days with 0 sales, as these may represent holidays etc.
+                        dailyData = dailyData.filter(r => r.kpi.sales > 0);
 
                         // group history days by weekday, sunday = 0, monday = 1...
                         const groupedByWeekDay = _.groupBy(dailyData, d => d.businessDay.weekday());
 
-                        if (_.keys(groupedByWeekDay).length < 7) { // don't have all week days
+                        //add 0 stats for missing week days. may happen, for example, if the above holidays filter removed all sundays, in case the rest don't work on sundays. in such cash we do wish to forecast sunday to be od 0 sales.
+                        if (_.keys(groupedByWeekDay).length < 7) {
                             const missingDays = _.difference(['0', '1', '2', '3', '4', '5', '6'], _.keys(groupedByWeekDay));
                             _.each(missingDays, function (day) {
                                 groupedByWeekDay[day] = [
                                     {
                                         sales: 0,
-                                        salesPPA: 0,
-                                        dinersPPA: 0
+                                        dinersSales: 0,
+                                        dinersCount: 0
                                     }
                                 ];
                             });
@@ -513,8 +510,8 @@ export class DataService {
                         const statsByWeekDay = _.map(groupedByWeekDay, function (d) {
                             return {
                                 sales: _.sumBy(d, 'kpi.sales') / d.length,
-                                salesPPA: _.sumBy(d, 'kpi.diners.sales') / d.length,
-                                dinersPPA: _.sumBy(d, 'kpi.diners.count') / d.length
+                                dinersSales: _.sumBy(d, 'kpi.diners.sales') / d.length,
+                                dinersCount: _.sumBy(d, 'kpi.diners.count') / d.length
                             };
                         });
 
@@ -534,14 +531,29 @@ export class DataService {
                         const monthStart: moment.Moment = moment(o.calculationBd).startOf('month');
                         dailyData = dailyData.filter(d => d.businessDay.isSameOrAfter(monthStart, 'day'));
 
-                        const salesSum = _.sumBy(dailyData, 'kpi.sales');
-                        const dinersPPAsum = _.sumBy(dailyData, 'kpi.diners.count');
-                        const salesPPAsum = _.sumBy(dailyData, 'kpi.diners.sales');
-                        const ppa = salesPPAsum / dinersPPAsum;
+                        // const salesSum = _.sumBy(dailyData, 'kpi.sales');
+                        const salesSum = dailyData.reduce((acc, curr)=>{
+                            const figure = _.get(curr, 'kpi.sales', _.get(curr, 'sales'));
+                            return acc + figure;
+                        },0);
+
+                        //const dinersPPAsum = _.sumBy(dailyData, 'kpi.diners.count');
+                        const dinersCountSum = dailyData.reduce((acc, curr) => {
+                            const figure = _.get(curr, 'kpi.diners.count', _.get(curr, 'dinersCount'));
+                            return acc + figure;
+                        }, 0);
+
+                        // const salesPPAsum = _.sumBy(dailyData, 'kpi.diners.sales');
+                        const dinersSalesSum = dailyData.reduce((acc, curr) => {
+                            const figure = _.get(curr, 'kpi.diners.sales', _.get(curr, 'dinersSales'));
+                            return acc + figure;
+                        }, 0);
+
+                        const ppa = dinersSalesSum / dinersCountSum;
 
                         const forecast = {
                             sales: salesSum,
-                            diners: dinersPPAsum,
+                            diners: dinersCountSum,
                             ppa: ppa
                         };
 
