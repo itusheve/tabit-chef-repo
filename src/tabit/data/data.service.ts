@@ -15,6 +15,13 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/share';
+import { KPI } from '../model/KPI.model';
+
+/* vat inclusive KPI per business day */
+export interface BusinessDayKPI {
+    businessDay: moment.Moment;
+    kpi: KPI;
+}
 
 @Injectable()
 export class DataService {
@@ -139,13 +146,48 @@ export class DataService {
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
     /* 
-        emits vat inclusive data of closed orders (from the Cube), up to two years ago
+        emits (vat inclusive) data by business days closed orders (from the Cube), up to two years ago. 
+        sorted by business date (descending).
     */    
-    public dailyData$: Observable<any> = Observable.create(obs=>{
+    public dailyData$: Observable<BusinessDayKPI[]> = Observable.create(obs=>{
+        
+        function sortByBusinessDayDesc(a: BusinessDayKPI, b: BusinessDayKPI): number {
+            const diff = a.businessDay.diff(b.businessDay);
+            if (diff !== undefined && diff < 0) {
+                // a date before b date
+                return 1;
+            } else {
+                // a date after b date
+                return -1;
+            }
+        }
+
         const dateFrom: moment.Moment = moment().subtract(2, 'year').startOf('month');
         const dateTo: moment.Moment = moment();//TODO use rest time..
         this.olapEp.getDailyData({dateFrom: dateFrom, dateTo: dateTo})
-            .then(dailyData=>{
+            .then(dailyDataRaw=>{
+                let minimum, maximum;
+                for (let i = 0; i < dailyDataRaw.length; i++) {
+                    if (dailyDataRaw[i].sales > 0) {
+                        maximum = moment(dailyDataRaw[i].date);
+                        break;
+                    }
+                }
+                for (let i = dailyDataRaw.length - 1; i >= 0; i--) {
+                    if (dailyDataRaw[i].sales > 0) {
+                        minimum = moment(dailyDataRaw[i].date);
+                        break;
+                    }
+                }
+                const dailyData = dailyDataRaw.filter(ddr=>{
+                    return ddr.date.isBetween(minimum, maximum, 'day', '[]');
+                }).map(ddr=>{
+                    return {
+                        businessDay: moment(ddr.date),
+                        kpi: new KPI(ddr.sales, ddr.dinersPPA, ddr.salesPPA)
+                    };
+                }).sort(sortByBusinessDayDesc);
+
                 obs.next(dailyData);
             });
     }).publishReplay(1).refCount();
@@ -158,14 +200,14 @@ export class DataService {
             .subscribe(dailyData=>{
                 let minimum, maximum;
                 for (let i=0;i<dailyData.length;i++) {
-                    if (dailyData[i].sales > 0) {
-                        maximum = moment(dailyData[i].date);
+                    if (dailyData[i].kpi.sales > 0) {
+                        maximum = moment(dailyData[i].businessDay);
                         break;
                     }
                 }
                 for (let i = dailyData.length-1; i >= 0; i--) {
-                    if (dailyData[i].sales > 0) {
-                        minimum = moment(dailyData[i].date);
+                    if (dailyData[i].kpi.sales > 0) {
+                        minimum = moment(dailyData[i].businessDay);
                         break;
                     }
                 }                
@@ -225,12 +267,12 @@ export class DataService {
                             .subscribe(dailyData => {
                                 dailyData = dailyData.filter(
                                     dayData => 
-                                        dayData.date.isSameOrAfter(dateFrom, 'day') && 
-                                        dayData.date.isSameOrBefore(dateTo, 'day')
+                                        dayData.businessDay.isSameOrAfter(dateFrom, 'day') && 
+                                        dayData.businessDay.isSameOrBefore(dateTo, 'day')
                                 );
                                 if (dailyData.length) {
-                                    const dinersPPA = dailyData[0]['dinersPPA'];
-                                    const salesPPA = dailyData[0]['salesPPA'];
+                                    const dinersPPA = dailyData[0].kpi.diners.count;
+                                    const salesPPA = dailyData[0].kpi.diners.sales;
                                     const ppa = (dinersPPA ? salesPPA / dinersPPA : undefined);
                                     sub.next({
                                         diners: dinersPPA,
@@ -296,15 +338,16 @@ export class DataService {
                             .subscribe(dailyData => {
                                 dailyData = dailyData.filter(
                                     dayData =>
-                                        dayData.date.isSameOrAfter(dateFrom, 'day') &&
-                                        dayData.date.isSameOrBefore(dateTo, 'day')
+                                        dayData.businessDay.isSameOrAfter(dateFrom, 'day') &&
+                                        dayData.businessDay.isSameOrBefore(dateTo, 'day')
                                 );
 
                                 if (dailyData.length) {
-                                    let sales = dailyData[0]['sales'];
-                                    let dinersPPA = dailyData[0]['dinersPPA'];
-                                    let salesPPA = dailyData[0]['salesPPA'];
-                                    let ppa = (dinersPPA ? salesPPA / dinersPPA : 0);
+                                    let sales = dailyData[0].kpi.sales;
+                                    let dinersPPA = dailyData[0].kpi.diners.count;
+                                    let salesPPA = dailyData[0].kpi.diners.sales;
+                                    //let ppa = (dinersPPA ? salesPPA / dinersPPA : 0);
+                                    let ppa = dailyData[0].kpi.diners.ppa;
 
                                     if (!vat) {
                                         ppa = ppa / 1.17;//TODO bring VAT per month from some api?
@@ -343,13 +386,13 @@ export class DataService {
                             .subscribe(dailyData => {
                                 dailyData = dailyData.filter(
                                     dayData =>
-                                        dayData.date.isSameOrAfter(dateFrom, 'day') &&
-                                        dayData.date.isSameOrBefore(dateTo, 'day')
+                                        dayData.businessDay.isSameOrAfter(dateFrom, 'day') &&
+                                        dayData.businessDay.isSameOrBefore(dateTo, 'day')
                                 );
 
-                                let sales = _.sumBy(dailyData, 'sales');
-                                let diners = _.sumBy(dailyData, 'dinersPPA');
-                                let ppa = _.sumBy(dailyData, 'salesPPA') / diners;
+                                let sales = _.sumBy(dailyData, 'kpi.sales');
+                                let diners = _.sumBy(dailyData, 'kpi.diners.count');
+                                let ppa = _.sumBy(dailyData, 'kpi.diners.sales') / diners;
 
                                 if (!vat) {
                                     ppa = ppa / 1.17;//TODO bring VAT per month from some api?
@@ -388,11 +431,6 @@ export class DataService {
     get organization(): Observable<any> {
         return this.localStorage.getItem<any>('org');
     }
-
-    /* DEPRECATED USE dailyData$ instead! */
-    // getDailyData(fromDate: moment.Moment, toDate?: moment.Moment):Promise<any> {
-    //     return this.olapEp.getDailyData(fromDate, toDate);
-    // }
     
     getMonthlyData(month: moment.Moment): Promise<any> {//TODO now that olapDataByMonths is available, use it? or is it too slow?
         return new Promise((res, rej)=>{
@@ -415,16 +453,18 @@ export class DataService {
 
     /* 
         The function returns a Promise that resolves with:
-        forecast data, which consists of the following measures: sales, diners and ppa
-        that are expected for the month of the provided calculationBd (calculation's Business Day) (e.g. for BD: 07/12/2017 the forecast is for December).
+        a monthly (or partial month, see upToBd) forecast data, which consists of the following measures: sales, diners and ppa
+        that are expected for the month of the provided calculationBd (calculation's Business Day), e.g., for calculationBd: 07/12/2017 the forecast is for December.
         the forecast is the sum (for ppa, the average) of data from two components:
         1. the closed orders that were recorded from the start of the forecast month up to 1 day before the calculationBd (e.g., for BD: 07/12/2017 this component will sum the orders from Dec' 1st till Dec' 6th)
-        2. the sum of daily forecasts for the days from:
+        2. the sum of "daily forecasts" for the days from:
             calculationBd (including), till
             the last day of the forecast month (including), or, if supplied, upToBd (including)
             
-            where each daily forecast is computed by calc the average measures for the specific week day over up to 8 weeks of data previous to the calculationBd, 
-            e.g., the forecast for the 09/12/2017 which is Saturday, is the average of all the measures in the last 8 Saturdays
+            where a "daily forecast" for a "target" business day is computed by calc' the average measures recorded for (up to) the previous 8 "source" business days with the same "week day" as the target business day.
+            e.g., the forecast for 09/12/2017 which is Saturday, is the average of all the measures in the 8 Saturdays prior to 09/12/2017.
+
+            a "source" bd with 0 sales is not used in the average calculation (to ignore special occasions e.g. holidays where the restaurant was closed).
      */
     getMonthForecastData(o: { calculationBd: moment.Moment, upToBd?: moment.Moment }): 
         Promise<{
@@ -432,31 +472,30 @@ export class DataService {
             diners: number,
             ppa: number
         }> {
-            const days = 56;//56 // we fetch past 56 days (exclusive of today).
-            const dateTo: moment.Moment = moment(o.calculationBd).subtract(1, 'days');//TODO should take cbd...
+            const days = 56;//8 weeks of data
+            const dateTo: moment.Moment = moment(o.calculationBd).subtract(1, 'days');
             const dateFrom: moment.Moment = moment(dateTo).subtract(days-1, 'days');                        
             const upToBd = o.upToBd ? moment(o.upToBd) : moment(o.calculationBd).endOf('month');
 
             return new Promise((resolve, reject)=>{
 
                 this.dailyData$
-                // this.getDailyData(dateFrom, dateTo)
                     .subscribe(dailyData => {
                         dailyData = dailyData.filter(
                             dayData =>
-                                dayData.date.isSameOrAfter(dateFrom, 'day') &&
-                                dayData.date.isSameOrBefore(dateTo, 'day')
+                                dayData.businessDay.isSameOrAfter(dateFrom, 'day') &&
+                                dayData.businessDay.isSameOrBefore(dateTo, 'day')
                         );
 
                         // bring only days that has sales
-                        dailyData = dailyData.filter(r => r.sales > 0);
+                        dailyData = dailyData.filter(r => r.kpi.sales > 0);
 
                         if (dailyData.length < 7) {
                             return new Error('not enough data for forecasting');
                         }
 
                         // group history days by weekday, sunday = 0, monday = 1...
-                        const groupedByWeekDay = _.groupBy(dailyData, d => d.date.weekday());
+                        const groupedByWeekDay = _.groupBy(dailyData, d => d.businessDay.weekday());
 
                         if (_.keys(groupedByWeekDay).length < 7) { // don't have all week days
                             const missingDays = _.difference(['0', '1', '2', '3', '4', '5', '6'], _.keys(groupedByWeekDay));
@@ -473,31 +512,31 @@ export class DataService {
 
                         const statsByWeekDay = _.map(groupedByWeekDay, function (d) {
                             return {
-                                sales: _.sumBy(d, 'sales') / d.length,
-                                salesPPA: _.sumBy(d, 'salesPPA') / d.length,
-                                dinersPPA: _.sumBy(d, 'dinersPPA') / d.length
+                                sales: _.sumBy(d, 'kpi.sales') / d.length,
+                                salesPPA: _.sumBy(d, 'kpi.diners.sales') / d.length,
+                                dinersPPA: _.sumBy(d, 'kpi.diners.count') / d.length
                             };
                         });
 
                         // calculate days left
-                        const lastHistoryDate = dailyData[0].date;
+                        const lastHistoryDate = dailyData[0].businessDay;
                         const daysLeftCount = upToBd.diff(lastHistoryDate, 'days');
 
                         // push each day his avg for the last 28 days by weekday
                         for (let i = 1; i <= daysLeftCount; i++) {
                             const date = lastHistoryDate.clone().add(i, 'days');
                             const dayOfWeek = date.weekday();
-                            const dayliForecast = Object.assign({}, statsByWeekDay[dayOfWeek], { date: date });
+                            const dayliForecast = Object.assign({}, statsByWeekDay[dayOfWeek], { businessDay: date });
                             dailyData.push(dayliForecast);
                         }
 
                         //remove previous months data:
                         const monthStart: moment.Moment = moment(o.calculationBd).startOf('month');
-                        dailyData = dailyData.filter(d => d.date.isSameOrAfter(monthStart, 'day'));
+                        dailyData = dailyData.filter(d => d.businessDay.isSameOrAfter(monthStart, 'day'));
 
-                        const salesSum = _.sumBy(dailyData, 'sales');
-                        const dinersPPAsum = _.sumBy(dailyData, 'dinersPPA');
-                        const salesPPAsum = _.sumBy(dailyData, 'salesPPA');
+                        const salesSum = _.sumBy(dailyData, 'kpi.sales');
+                        const dinersPPAsum = _.sumBy(dailyData, 'kpi.diners.count');
+                        const salesPPAsum = _.sumBy(dailyData, 'kpi.diners.sales');
                         const ppa = salesPPAsum / dinersPPAsum;
 
                         const forecast = {

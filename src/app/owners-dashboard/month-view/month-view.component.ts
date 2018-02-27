@@ -125,26 +125,26 @@ export class MonthViewComponent  {
           
           that.dataService.dailyData$
             .subscribe(dailyData=>{
-              let rowset = dailyData.filter(
+              let dailyDataFiltered = dailyData.filter(
                 dayData =>
-                  dayData.date.isSameOrAfter(queryFrom, 'day') &&
-                  dayData.date.isSameOrBefore(queryTo, 'day') && 
-                  dayData.date.isSameOrAfter(dailyDataLimits.minimum, 'day')
+                  dayData.businessDay.isSameOrAfter(queryFrom, 'day') &&
+                  dayData.businessDay.isSameOrBefore(queryTo, 'day') && 
+                  dayData.businessDay.isSameOrAfter(dailyDataLimits.minimum, 'day')
               );
 
-              rowset = rowset.map(r => {
-                const dateFormatted = that.datePipe.transform(r.date.valueOf(), 'dd-EEEEE');
-                let ppa = (vat ? r.ppa : r.ppa / 1.17);
-                let sales = (vat ? r.sales : r.sales / 1.17);
-                let salesPPA = (vat ? r.salesPPA : r.salesPPA / 1.17);
+              const rowset = dailyDataFiltered.map(r => {
+                const dateFormatted = that.datePipe.transform(r.businessDay.valueOf(), 'dd-EEEEE');
+                let ppa = (vat ? r.kpi.diners.ppa : r.kpi.diners.ppa / 1.17);
+                let sales = (vat ? r.kpi.sales : r.kpi.sales / 1.17);
+                let salesPPA = (vat ? r.kpi.diners.sales : r.kpi.diners.sales / 1.17);
                 if (ppa === 0) ppa = null;
                 
-                const dailyTrends_ = dailyTrends.find(dt => dt.date.isSame(r.date, 'day'));
+                const dailyTrends_ = dailyTrends.find(dt => dt.date.isSame(r.businessDay, 'day'));
     
-                return {
-                  date: r.date,
+                return {//TODO refactor to use the KPI lingo
+                  date: moment(r.businessDay),
                   dateFormatted: dateFormatted,
-                  dinersPPA: r.dinersPPA,
+                  dinersPPA: r.kpi.diners.count,
                   ppa: ppa,
                   sales: sales,
                   salesPPA: salesPPA,
