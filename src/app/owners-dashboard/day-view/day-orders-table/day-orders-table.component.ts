@@ -56,7 +56,11 @@ export class DayOrdersTableComponent implements OnInit {
     if (this.sortBy && this.sortBy===by) {
       this.sortDir = this.sortDir==='desc' ? 'asc' : 'desc';
     } else {
-      this.sortDir = 'asc';
+      if (by==='sales') {
+        this.sortDir = 'desc';
+      } else {
+        this.sortDir = 'asc';
+      }
       this.sortBy = by;
     }
     let field;
