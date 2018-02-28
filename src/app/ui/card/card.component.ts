@@ -15,6 +15,7 @@ export interface CardData {
   diners: number;
   ppa: number;
   trends?: any;
+  salesComment?: string;
 }
 
 @Component({

@@ -90,148 +90,18 @@ export class DataService {
         emits the Current Business Date ("cbd")
     */
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
-        const that = this;
-        
-        function handleMismatch(context):Promise<moment.Moment> {
-            function getRestOpeningTime():Promise<moment.Moment> {
-                return new Promise((resolve, reject) => {
-                    that.shifts$
-                        .subscribe(shifts=>{
-                            if (!shifts.length || !shifts[0].startTime) {
-                                reject(shifts);
-                            }
-                            resolve(shifts[0].startTime);
-                        });
-                });
-            }
-            
-            function getRestCurrentTime(): Promise<moment.Moment> {
-                return new Promise((resolve, reject) => {
-                    that.currentRestTime$
-                        .subscribe(currentRestTime => {
-                            resolve(currentRestTime);
-                        });
-                });
-            }
-
-            return new Promise((resolve, reject)=>{
-                console.info(`currentBd: ROS<=>CUBE mismatch`);
-                Promise.all([
-                    getRestOpeningTime(),
-                    getRestCurrentTime()
-                ])
-                    .then(data=>{
-                        const restCurrTime:moment.Moment = data[1];
-                        const restOpeningTimeAdjusted: moment.Moment = moment(data[0]).year(restCurrTime.year()).month(restCurrTime.month()).date(restCurrTime.date());
-
-                        context.restCurrTime = restCurrTime;
-                        context.restOpeningTime = restOpeningTimeAdjusted;
-                        
-                        console.info(`currentBd: restOpeningTime: ${context.restOpeningTime.format('HH:mm')}`);
-                        console.info(`currentBd: restCurrTime: ${context.restCurrTime.format('HH:mm')}`);
-                        
-                        // console.info(`currentBd: TMP!!! adjusting restCurrTime to be before restOpeningTime in order to check cvbd = pbd`);
-                        // context.restCurrTime = moment(context.restCurrTime).startOf('day').add(5, 'minute');
-
-                        return context;
-                    })
-                    .then(context=>{
-                        // if restCurrTime is before restOpeningTime
-                        //     cvbd = pbd
-                        // else
-                        //     cvbd = cbd                        
-                        if (context.restCurrTime.isBefore(context.restOpeningTime, 'minute')) {
-                            console.info(`currentBd: restCurrTime is before restOpeningTime => current virtual business date ("cvbd") = real previous business date ("rpbd") = ${context.pbd.format('YYYY-MM-DD')}`);
-                            resolve(context.pbd);
-                        } else {
-                            console.info(`currentBd: restCurrTime is after restOpeningTime => current virtual business date ("cvbd") = real current business date ("rcbd") = ${context.cbd.format('YYYY-MM-DD')}`);
-                            resolve(context.cbd);
-                        }
-                    });
-            });
-        }
-
-        const context = {
-            cbd: undefined,
-            pbd: undefined,
-            previousSalesROS: undefined,
-            previousSalesCube: undefined,
-            restOpeningTime: undefined,
-            restCurrTime: undefined
-        };
         this.rosEp.get('businessdays/current', {})
             .then(data => {
                 // const bdStr = data.businessDate.substring(0, 10);
                 //const bd: moment.Moment = moment.tz(data.businessDate, 'Etc/UCT');
                 const cbd: moment.Moment = moment(data.businessDate);
-                const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
-                console.info(`currentBd: real current business date is ${cbd.format('YYYY-MM-DD')}`);
-                console.info(`currentBd: real previous business date is ${pbd.format('YYYY-MM-DD')}`);
-                context.cbd = cbd;
-                context.pbd = pbd;
-            })
-            .then(()=>{
-                function getPreviousSalesROS():Promise<number> {
-                    return that.rosEp.get(`reports/daily-totals?businessDate=${context.pbd.format('YYYY-MM-DD')}`, {})
-                        .then(data => {
-                            const previousSalesROS: number = data.totalAmount ? data.totalAmount / 100 : 0;
-                            return previousSalesROS;
-                        });
-                }
-
-                function getPreviousSalesCube():Promise<number> {                    
-                    return new Promise((resolve, reject)=>{
-                        that.dailyData$
-                            .subscribe(dailyData=>{
-                                const pbdData = dailyData.find(dayData => dayData.businessDay.isSame(context.pbd, 'day'));
-                                if (!pbdData) {
-                                    reject();
-                                }
-                                resolve(pbdData.kpi.sales);
-                            });
-                    });
-                }
-
-                return Promise.all([
-                    getPreviousSalesROS()
-                        .then(previousSalesROS=>{
-                            console.info(`currentBd: previousSalesROS = ${previousSalesROS}`);
-                            context.previousSalesROS = previousSalesROS;
-                        })
-                        .catch(err=>{
-                            console.error(`currentBd: couldnt get ROS data for previous business date (${context.pbd.format()})`, err);
-                        }),
-                    getPreviousSalesCube()
-                        .then(previousSalesCube=>{
-                            console.info(`currentBd: previousSalesCube = ${previousSalesCube}`);
-                            context.previousSalesCube = previousSalesCube;
-                        })
-                        .catch(err => {
-                            console.error(`currentBd: couldnt get CUBE data for previous business date (${context.pbd.format()})`, err);
-                        })
-                ]);
-            })
-            .then(()=>{
-                //TMP!!!
-                // console.info(`currentBd: TEMPORARILY REDUCING THE CUBE SALES TO CREATE A MISMATCH!`);
-                // context.previousSalesCube--;
-                //TMP!!
-
-                if (context.previousSalesCube===context.previousSalesROS) {
-                    console.info(`currentBd: no ROS<=>CUBE mismatch, current virtual business date ("cvbd") = real current business date ("rcbd") = ${context.cbd.format('YYYY-MM-DD')}`);
-                    obs.next(context.cbd);
-                } else {
-                    return handleMismatch(context)
-                        .then(cvbd=>{
-                            obs.next(cvbd);
-                        });
-                }
+                obs.next(cbd);
             });
 
     }).publishReplay(1).refCount();
 
     /* 
-        emits the Previous Virtual Business Date ("pvbd") which is the day before the Current Virtual Business Day ("cvbd")
+        emits the Previous Business Date ("pbd") which is the day before the Current Business Day ("cbd")
     */
     public previousBd$: Observable<moment.Moment> = Observable.create(obs => {
         this.currentBd$
@@ -526,55 +396,6 @@ export class DataService {
             return data;
         });
     }
-    
-    get previousBdData$(): Observable<any> {
-        return combineLatest(this.vat$, this.previousBd$)
-            .concatMap(
-                vals=>{
-                    return Observable.create(obs=>{
-                        const vat = vals[0];
-                        const pbd = vals[1];
-                        const dateFrom: moment.Moment = moment(pbd);
-                        const dateTo: moment.Moment = dateFrom;
-                        this.dailyData$
-                            .subscribe(dailyData => {
-                                dailyData = dailyData.filter(
-                                    dayData =>
-                                        dayData.businessDay.isSameOrAfter(dateFrom, 'day') &&
-                                        dayData.businessDay.isSameOrBefore(dateTo, 'day')
-                                );
-
-                                if (dailyData.length) {
-                                    let sales = dailyData[0].kpi.sales;
-                                    let dinersPPA = dailyData[0].kpi.diners.count;
-                                    let salesPPA = dailyData[0].kpi.diners.sales;
-                                    //let ppa = (dinersPPA ? salesPPA / dinersPPA : 0);
-                                    let ppa = dailyData[0].kpi.diners.ppa;
-
-                                    if (!vat) {
-                                        ppa = ppa / 1.17;//TODO bring VAT per month from some api?
-                                        sales = sales / 1.17;
-                                    }
-                                    obs.next({
-                                        sales: sales,
-                                        diners: dinersPPA,
-                                        ppa: ppa
-                                    });
-                                } else {
-                                    obs.next({
-                                        sales: 0,
-                                        diners: 0,
-                                        ppa: 0
-                                    });
-                                }
-                                
-
-                            });
-                    }).take(1);
-                }
-            );
-    }
-
 
     get organizations(): ReplaySubject<any> {
         if (this.organizations$) return this.organizations$;

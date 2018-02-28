@@ -14,7 +14,10 @@
           <div class="figure">{{cardData.trends.right.val | percent:'1.1-1'}}</div>
         </div>
       </div>
-      <div style="width:60%" class="flex aj-center csales">{{cardData.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
+      <div style="width:60%" class="flex d-col aj-center">
+        <div class="flex aj-center csales">{{cardData.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
+        <div class="flex aj-center" *ngIf="cardData.salesComment" style="color: red;">{{cardData.salesComment}}</div>
+      </div>
       <div style="width:18%" class="s-0 flex a-center">
         <div           
           *ngIf="cardData.trends && cardData.trends.left && cardData.trends.left.status==='ready'"
