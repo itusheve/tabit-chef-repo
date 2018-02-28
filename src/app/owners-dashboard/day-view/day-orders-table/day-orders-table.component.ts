@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { Order } from '../../../../tabit/model/Order.model';
@@ -20,7 +20,7 @@ export interface OrderTypeVM {
   templateUrl: './day-orders-table.component.html',
   styleUrls: ['./day-orders-table.component.scss']
 })
-export class DayOrdersTableComponent implements OnInit {
+export class DayOrdersTableComponent implements OnChanges {
 
   @Input() orders: Order[];
   @Output() onOrderClicked = new EventEmitter();
@@ -34,18 +34,17 @@ export class DayOrdersTableComponent implements OnInit {
   public filters: {type: string, on: boolean}[] = [];
 
   constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService) {}
-  
-  ngOnInit() {
+
+  ngOnChanges() {
     const ordersCloned: Order[] = _.cloneDeep(this.orders);
 
     const orderTypes = _.cloneDeep(this.dataService.orderTypes);
 
-    orderTypes.forEach(ot=>{
-      ot.orders = ordersCloned.filter(o => o.orderTypeId === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);    
+    orderTypes.forEach(ot => {
+      ot.orders = ordersCloned.filter(o => o.orderTypeId === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);
       ot.sales = ot.orders.reduce((acc, curr) => acc + (curr.sales || 0), 0);
     });
     this.byOrderTypes = orderTypes;
-
   }
 
   orderClicked(order:any) {

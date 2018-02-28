@@ -1,9 +1,9 @@
 .app {
-	// padding-top: 70px;
-	// padding-bottom: 0;
-	
-	// padding-top: 20px;
-    // padding-bottom: 20px;
+	height: 100%;
+	overflow-y: auto;
+	max-width:990px;
+	background-color: #edf1f2;
+	margin: 0 auto;
 
 	app-card {
     	display: block;
