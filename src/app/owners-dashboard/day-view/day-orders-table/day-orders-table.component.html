@@ -16,15 +16,64 @@
                 </mat-expansion-panel-header>
 
                 <table class="fixedWidth">
-                    <tr>
-                        <td>שעת פתיחה</td>
-                        <td>הזמנה מס'</td>
-                        <td>מלצר</td>
-                        <td>סכום</td>
-                        <td></td>
+                    <tr style="background-color: #f2f2f2;">
+                        <td (click)="sort(orderType, 'time')" class="" style="width:50px;">
+                            <div class="flex">
+                                <div>שעת פתיחה</div>
+                                &nbsp;
+                                <mat-icon *ngIf="sortBy==='time' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                                <mat-icon *ngIf="sortBy==='time' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                            </div>
+                        </td>
+                        <td (click)="sort(orderType, 'number')" class="" style="width:50px;">
+                            <div class="flex">
+                                <div>הזמנה מס'</div>
+                                &nbsp;
+                                <mat-icon *ngIf="sortBy==='number' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                                <mat-icon *ngIf="sortBy==='number' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                            </div>
+                        </td>
+                        <td (click)="sort(orderType, 'waiter')" class="" style="width:55px;">
+                            <div class="flex">
+                                <div>מלצר</div>
+                                &nbsp;
+                                <mat-icon *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                                <mat-icon *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                            </div>
+                        </td>
+                        <td (click)="sort(orderType, 'sales')" class="" style="width:50px;">
+                            <div class="flex">
+                                <div>סכום</div>
+                                &nbsp;
+                                <mat-icon *ngIf="sortBy==='sales' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                                <mat-icon *ngIf="sortBy==='sales' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flex d-col">
+                                <div class="flex">
+                                    <div class="iconFilter cancellation flex ml5 mb5" [ngClass]="{'on': iconFilterOn('cancellation')}" (click)="filter(orderType, 'cancellation')">
+                                        <mat-icon>assignment_return</mat-icon>
+                                    </div>
+                                    <div class="iconFilter discountsAndOTH flex mb5" [ngClass]="{'on': iconFilterOn('discountsAndOTH')}" (click)="filter(orderType, 'discountsAndOTH')">
+                                        <mat-icon>cake</mat-icon>
+                                    </div>
+                                </div>
+                                <div class="flex">
+                                    <div class="iconFilter employees flex ml5" [ngClass]="{'on': iconFilterOn('employees')}" (click)="filter(orderType, 'employees')">
+                                        <mat-icon>local_dining</mat-icon>
+                                    </div>
+                                    <div class="iconFilter promotions flex" [ngClass]="{'on': iconFilterOn('promotions')}" (click)="filter(orderType, 'promotions')">
+                                        <mat-icon>star_border</mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
-                    <tr *ngFor="let order of orderType.orders" (click)="orderClicked(order)">
-                        <td>{{order.openingTime | date:'H:mm'}}</td>
+                    <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)">
+                        <td>
+                            {{order.openingTime | date:'H:mm'}}
+                        </td>
                         <td>{{order.number | number:'1.0-0'}}</td>
                         <td>{{order.waiter}}</td>
                         <td>{{order.sales | currency:'ILS':'symbol':'1.0-0'}}</td>

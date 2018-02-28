@@ -29,15 +29,14 @@ export class DayOrdersTableComponent implements OnInit {
 
   datePipe: DatePipe = new DatePipe('he-IL');
 
+  public sortBy: string;//time, number, waiter, sales
+  public sortDir = 'asc';//asc | desc  
+  public filters: {type: string, on: boolean}[] = [];
+
   constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService) {}
   
   ngOnInit() {
-    const ordersCloned = _.cloneDeep(this.orders);
-    ordersCloned.forEach((order:any)=>{
-      // order._hasReturns = (order.priceReductions.cancellation + order.priceReductions.operational) ? true : false;
-      // order._hasDiscounts = order.priceReductions.retention ? true : false;
-      // order._hasOrganizational = order.priceReductions.organizational ? true : false;      
-    });
+    const ordersCloned: Order[] = _.cloneDeep(this.orders);
 
     const orderTypes = _.cloneDeep(this.dataService.orderTypes);
 
@@ -51,6 +50,63 @@ export class DayOrdersTableComponent implements OnInit {
 
   orderClicked(order:any) {
     this.onOrderClicked.emit(order);    
+  }
+
+  sort(orderType: any, by: string) {
+    if (this.sortBy && this.sortBy===by) {
+      this.sortDir = this.sortDir==='desc' ? 'asc' : 'desc';
+    } else {
+      this.sortDir = 'asc';
+      this.sortBy = by;
+    }
+    let field;
+    switch(by) {
+      case 'time':
+      case 'number':
+        field = 'number';
+        break;
+      case 'waiter':
+        field = 'waiter';
+        break;
+      case 'sales':
+        field = 'sales';
+        break;
+    }
+    let dir = this.sortDir==='asc' ? -1 : 1;
+    this.byOrderTypes.find(o => o.id === orderType.id)
+      .orders
+      .sort((a, b) => (a[field] < b[field] ? dir : dir*-1));
+  }
+
+  filter(orderType: any, type: string) {
+    const existingFilter = this.filters.find(f=>f.type===type);
+    if (existingFilter) {
+      existingFilter.on = !existingFilter.on;
+    } else {
+      this.filters.push({
+        type: type,
+        on: true
+      });
+    }
+
+    this.byOrderTypes.forEach(o=>{
+      o.orders.forEach(ord=>{
+        let filter = false;
+        this.filters.forEach(f=>{
+          if (f.on) {
+            const reductionAmount = ord['priceReductions'][f.type];
+            if (!reductionAmount) filter = true;
+          }
+        });                
+        ord.filtered = filter;
+      });
+    });
+  }
+
+  iconFilterOn(type: string) {
+    const filter = this.filters.find(f=>f.type===type);
+    if (filter && filter.on) return true;
+    return false;
   }
 
 }

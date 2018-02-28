@@ -17,7 +17,7 @@ import { DayPieChartComponent } from './day-view/day-pie-chart/day-pie-chart.com
 import { DaySalesTypeTableComponent } from './day-view/day-sales-type-table/day-sales-type-table.component';
 import { DayDinersTableComponent } from './day-view/day-diners-table/day-diners-table.component';
 import { DayOrdersTableComponent } from './day-view/day-orders-table/day-orders-table.component';
-import { DayOrdersTableHasSalesPipe } from './day-view/day-orders-table/pipes';
+import { DayOrdersTableHasSalesPipe, DayOrdersTableFilterPipe } from './day-view/day-orders-table/pipes';
 import { DayShiftsComponent } from './day-view/day-shifts/day-shifts.component';
 
 import { OrderViewComponent } from './order-view/order-view.component';
@@ -105,6 +105,7 @@ locale('he');
     DayDinersTableComponent,
     DayOrdersTableComponent,
     DayOrdersTableHasSalesPipe,
+    DayOrdersTableFilterPipe,
     DayShiftsComponent,
 
     OrderViewComponent,

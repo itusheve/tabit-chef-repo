@@ -53,7 +53,7 @@ export class CardsDataService {
                         const previousBdData_Cube = data[1];
 
                         const previousBdSales_ROS = previousBdData_ROS.totalAmount ? previousBdData_ROS.totalAmount / 100 : 0;
-                        let previousBdSales_Cube = previousBdData_Cube.kpi.sales;
+                        const previousBdSales_Cube = previousBdData_Cube.kpi.sales;
 
                         console.info(`previousBdData: previousBdSales_ROS = ${previousBdSales_ROS}`);
                         console.info(`previousBdData: previousBdSales_Cube = ${previousBdSales_Cube}`);

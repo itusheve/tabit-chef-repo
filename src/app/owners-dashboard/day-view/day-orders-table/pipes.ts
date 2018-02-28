@@ -11,3 +11,14 @@ export class DayOrdersTableHasSalesPipe implements PipeTransform {
         return orderTypes.filter(i=>i.sales>0);
     }
 }
+
+
+@Pipe({
+    name: 'filterr',
+    pure: false
+})
+export class DayOrdersTableFilterPipe implements PipeTransform {
+    transform(orders: any[], filter: Object): any {
+        return orders.filter(o => !o.filtered);
+    }
+}
