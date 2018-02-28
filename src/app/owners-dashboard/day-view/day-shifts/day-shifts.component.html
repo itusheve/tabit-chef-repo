@@ -1,6 +1,6 @@
 <div class="flex" *ngIf="show">
     <div class="g-1 flex d-col aj-center" *ngFor="let shift of shifts">
         <div>{{shift.name}}</div>
-        <div>{{shift.startTime}}-{{shift.endTime}}</div>
+        <div>{{shift.startTime | amDateFormat:'HH:mm'}}-{{shift.endTime | amDateFormat:'HH:mm'}}</div>
     </div>
 </div>

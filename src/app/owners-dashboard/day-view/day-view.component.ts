@@ -12,6 +12,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Order } from '../../../tabit/model/Order.model';
 import { ClosedOrdersDataService } from '../../../tabit/data/dc/closedOrders.data.service';
+import { Shift } from '../../../tabit/model/Shift.model';
 
 @Component({
   selector: 'app-day-view',
@@ -55,11 +56,11 @@ export class DayViewComponent implements OnInit  {
 
   private render() {
     const data$ = combineLatest(
-      this.dataService.shifts$.take(1), 
+      this.dataService.shifts$, 
       this.dataService.getDailyDataByShiftAndType(this.day), 
       this.dataService.dailyDataLimits$,
       this.dataService.previousBd$,
-      (shifts: any, dailyData: any, dailyDataLimits: any, previousBd: moment.Moment) => Object.assign({}, { shifts: shifts }, dailyData, { dailyDataLimits: dailyDataLimits }, { previousBd: previousBd})
+      (shifts: Shift[], dailyData: any, dailyDataLimits: any, previousBd: moment.Moment) => Object.assign({}, { shifts: shifts }, dailyData, { dailyDataLimits: dailyDataLimits }, { previousBd: previousBd})
     );
     
     data$.subscribe(data=>{

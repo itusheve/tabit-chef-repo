@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Shift } from '../../../../tabit/model/Shift.model';
 
 @Component({
   selector: 'app-day-shifts',
@@ -7,12 +8,12 @@ import { Component } from '@angular/core';
 })
 export class DayShiftsComponent {
 
-  shifts: any;
+  shifts: Shift[];
   show = false;
 
   constructor() {}
 
-  render(shifts) {
+  render(shifts:Shift[]) {
     this.shifts = shifts;
     this.show = true;
   }

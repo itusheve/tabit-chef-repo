@@ -29,7 +29,8 @@
       ],
       "scripts": [
         "./js/vendor/rpbouman-xmla4j/xmla-min.js",
-        "./js/xmla4j-wrapper.class.js"
+        "./js/xmla4j-wrapper.class.js",
+        "../node_modules/moment-timezone/builds/moment-timezone-with-data-2012-2022.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

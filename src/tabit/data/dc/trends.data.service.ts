@@ -6,6 +6,7 @@ import { TrendModel } from '../../model/Trend.model';
 import { ClosedOrdersDataService } from '../dc/closedOrders.data.service';
 import { DataService } from '../data.service';
 import { OlapEp } from '../ep/olap.ep';
+import { Shift } from '../../model/Shift.model';
 
 
 @Injectable()
@@ -19,24 +20,24 @@ export class TrendsDataService {
 
         obs.next(trend);
 
-        // zip(this.dataService.currentBd$.take(1), this.closedOrdersDataService.lastClosedOrderTime$.take(1), this.dataService.businessDay$, this.dataService.shifts$)
-        zip(this.dataService.currentBd$.take(1), this.dataService.shifts$, this.dataService.todayDataVatInclusive$.take(1))
+        zip(this.dataService.currentBd$, this.dataService.shifts$, this.dataService.todayDataVatInclusive$, this.dataService.currentRestTime$)
             .subscribe(data => {
                 let timeFrom1, timeFrom2, timeTo1, timeTo2;
+
+                const shifts: Shift[] = data[1];
+                const currentRestTime: moment.Moment = moment(data[3]);
+                //console.info(`Trends: Current: Last 4: Current Rest Time: ${currentRestTime.format('HH:mm')}`);
 
                 const currentBd: moment.Moment = data[0];
                 //console.info(`Trends: Current: Last 4: Current Business Day is: ${currentBd.format('DD/MM/YYYY')}`);
 
                 const currentBusinessDaySales = data[2].sales;
                 //console.info(`Trends: Current: Last 4: Current BD Total Sales (Open & Closed): ${currentBusinessDaySales}`);
-
-                const tmpCurrentRestTime = moment();                
-                //console.info(`Trends: Current: Last 4: Current Rest Time: ${tmpCurrentRestTime.format('HH:mm')}`);
                 
-                const firstShiftStartingTime = moment(data[1][0]['startTime'], 'H:mm');
+                const firstShiftStartingTime = moment(shifts[0].startTime);
                 //console.info(`Trends: Current: Last 4: First Shift Starting Time: ${firstShiftStartingTime.format('HH:mm')}`);
                 
-                if (tmpCurrentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
+                if (currentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
                     timeFrom1 = firstShiftStartingTime.format('HHmm');
                     //console.info(`Trends: Current: Last 4: Current Rest Time >= First Shift Starting Time`);
                 } else {
@@ -45,7 +46,7 @@ export class TrendsDataService {
                     timeTo2 = '2359';
                     //console.info(`Trends: Current: Last 4: Current Rest Time < First Shift Starting Time`);
                 }
-                timeTo1 = tmpCurrentRestTime.format('HHmm');
+                timeTo1 = currentRestTime.format('HHmm');
                 //console.info(`Trends: Current: Last 4: query TimeFrom1: ${timeFrom1}`);
                 //console.info(`Trends: Current: Last 4: query TimeTo1: ${timeTo1}`);
                 // if (timeTo2) {
@@ -142,26 +143,25 @@ export class TrendsDataService {
 
         obs.next(trend);
 
-        zip(this.dataService.currentBd$.take(1), this.dataService.shifts$, this.dataService.todayDataVatInclusive$.take(1))
+        zip(this.dataService.currentBd$, this.dataService.shifts$, this.dataService.todayDataVatInclusive$, this.dataService.currentRestTime$)
             .subscribe(data => {
                 let timeFrom1, timeFrom2, timeTo1, timeTo2;
 
                 const currentBd: moment.Moment = data[0];
-
+                const shifts:Shift[] = data[1];
                 const currentBusinessDaySales = data[2].sales;
+                const currentRestTime:moment.Moment = moment(data[3]);
 
-                const tmpCurrentRestTime = moment();
+                const firstShiftStartingTime = moment(shifts[0].startTime);
 
-                const firstShiftStartingTime = moment(data[1][0]['startTime'], 'H:mm');
-
-                if (tmpCurrentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
+                if (currentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
                     timeFrom1 = firstShiftStartingTime.format('HHmm');
                 } else {
                     timeFrom1 = '0000';
                     timeFrom2 = firstShiftStartingTime.format('HHmm');
                     timeTo2 = '2359';
                 }
-                timeTo1 = tmpCurrentRestTime.format('HHmm');
+                timeTo1 = currentRestTime.format('HHmm');
 
                 const dateFrom: moment.Moment = moment(currentBd).subtract(1, 'year').subtract(1, 'month');
                 const dateTo: moment.Moment = moment(currentBd).subtract(1, 'year').add(1, 'month');
@@ -705,7 +705,7 @@ export class TrendsDataService {
             trend.description = 'partial_month_forecast_to_start_of_month_partial_month_forecast description';
             trend.letter = 'מ';
 
-            zip(this.dataService.currentBd$.take(1), this.dataService.mtdData$.take(1))
+            zip(this.dataService.currentBd$, this.dataService.mtdData$)
                 .subscribe(data => {
 
                     // const forecastData = data[0];

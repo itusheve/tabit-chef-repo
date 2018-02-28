@@ -1,11 +1,7 @@
+//angular
 import { Injectable } from '@angular/core';
-import { OlapEp } from './ep/olap.ep';
-import { ROSEp } from './ep/ros.ep';
 
-import { AsyncLocalStorage } from 'angular-async-local-storage';
-
-import * as moment from 'moment';
-import * as _ from 'lodash';
+//rxjs
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -15,7 +11,20 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/share';
+
+//tools
+import { AsyncLocalStorage } from 'angular-async-local-storage';
+import * as _ from 'lodash';
+import * as moment from 'moment';
+import 'moment-timezone';
+
+//models
 import { KPI } from '../model/KPI.model';
+import { Shift } from '../model/Shift.model';
+
+//end points
+import { OlapEp } from './ep/olap.ep';
+import { ROSEp } from './ep/ros.ep';
 
 /* vat inclusive KPI per business day */
 export interface BusinessDayKPI {
@@ -40,6 +49,8 @@ export class DataService {
     //     }, 5000);
     // }).publishReplay(1).refCount();
 
+    public region = 'Asia/Jerusalem';//TODO US..
+
     public orderTypes = [
         { id: 'seated', caption: 'בישיבה' },
         { id: 'counter', caption: 'דלפק' },
@@ -50,22 +61,178 @@ export class DataService {
         { id: 'het', caption: 'החלפת אמצעי תשלום' }
     ];
 
+    /* 
+        emits a moment with tz data, so using format() will provide the time of the restaurant, e.g. m.format() := 2018-02-27T18:57:13+02:00 
+        relies on the local machine time to be correct.
+    */
+    public currentRestTime$: Observable<moment.Moment> = Observable.create(obs => {
+        obs.next(moment.tz(this.region));
+    });
+
+    /* 
+        revision A: cancelled for revision B    
+        emits the Current Virtual Business Date ("cvbd") which is computed as follows:
+            a. get the real current bd from ROS ("cbd"), and compute the real previous bd ("pbd") => pbd = cbd minus 1 day.
+            b. get the sales for the pbd from two sources: 1. ROS ("previousSalesROS"), 2. Cube ("previousSalesCube")
+            c. get the rest's 1st shift start time ("restOpeningTime")
+            d. compute the current time in the restaurant ("restCurrTime")
+            
+            algorithm:
+            if (previousSalesROS equal to previousSalesCube) then 
+                cvbd = cbd.
+            else
+                if restCurrTime is before restOpeningTime
+                    cvbd = pbd
+                else
+                    cvbd = cbd
+
+        revision B: in use
+        emits the Current Business Date ("cbd")
+    */
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
+        const that = this;
+        
+        function handleMismatch(context):Promise<moment.Moment> {
+            function getRestOpeningTime():Promise<moment.Moment> {
+                return new Promise((resolve, reject) => {
+                    that.shifts$
+                        .subscribe(shifts=>{
+                            if (!shifts.length || !shifts[0].startTime) {
+                                reject(shifts);
+                            }
+                            resolve(shifts[0].startTime);
+                        });
+                });
+            }
+            
+            function getRestCurrentTime(): Promise<moment.Moment> {
+                return new Promise((resolve, reject) => {
+                    that.currentRestTime$
+                        .subscribe(currentRestTime => {
+                            resolve(currentRestTime);
+                        });
+                });
+            }
+
+            return new Promise((resolve, reject)=>{
+                console.info(`currentBd: ROS<=>CUBE mismatch`);
+                Promise.all([
+                    getRestOpeningTime(),
+                    getRestCurrentTime()
+                ])
+                    .then(data=>{
+                        const restCurrTime:moment.Moment = data[1];
+                        const restOpeningTimeAdjusted: moment.Moment = moment(data[0]).year(restCurrTime.year()).month(restCurrTime.month()).date(restCurrTime.date());
+
+                        context.restCurrTime = restCurrTime;
+                        context.restOpeningTime = restOpeningTimeAdjusted;
+                        
+                        console.info(`currentBd: restOpeningTime: ${context.restOpeningTime.format('HH:mm')}`);
+                        console.info(`currentBd: restCurrTime: ${context.restCurrTime.format('HH:mm')}`);
+                        
+                        // console.info(`currentBd: TMP!!! adjusting restCurrTime to be before restOpeningTime in order to check cvbd = pbd`);
+                        // context.restCurrTime = moment(context.restCurrTime).startOf('day').add(5, 'minute');
+
+                        return context;
+                    })
+                    .then(context=>{
+                        // if restCurrTime is before restOpeningTime
+                        //     cvbd = pbd
+                        // else
+                        //     cvbd = cbd                        
+                        if (context.restCurrTime.isBefore(context.restOpeningTime, 'minute')) {
+                            console.info(`currentBd: restCurrTime is before restOpeningTime => current virtual business date ("cvbd") = real previous business date ("rpbd") = ${context.pbd.format('YYYY-MM-DD')}`);
+                            resolve(context.pbd);
+                        } else {
+                            console.info(`currentBd: restCurrTime is after restOpeningTime => current virtual business date ("cvbd") = real current business date ("rcbd") = ${context.cbd.format('YYYY-MM-DD')}`);
+                            resolve(context.cbd);
+                        }
+                    });
+            });
+        }
+
+        const context = {
+            cbd: undefined,
+            pbd: undefined,
+            previousSalesROS: undefined,
+            previousSalesCube: undefined,
+            restOpeningTime: undefined,
+            restCurrTime: undefined
+        };
         this.rosEp.get('businessdays/current', {})
             .then(data => {
-                const bdStr = data.businessDate.substring(0, 10);
-                const bd: moment.Moment = moment(bdStr).startOf('day');
-                // return bd;
-                obs.next(bd);
-            });        
-        // return this.dashboardData$
-        //     .map(data => {
-        //         const bdStr = data.today.businessDate.substring(0, 10);
-        //         const bd: moment.Moment = moment(bdStr).startOf('day');
-        //         return bd;
-        //     });
+                // const bdStr = data.businessDate.substring(0, 10);
+                //const bd: moment.Moment = moment.tz(data.businessDate, 'Etc/UCT');
+                const cbd: moment.Moment = moment(data.businessDate);
+                const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
+                console.info(`currentBd: real current business date is ${cbd.format('YYYY-MM-DD')}`);
+                console.info(`currentBd: real previous business date is ${pbd.format('YYYY-MM-DD')}`);
+                context.cbd = cbd;
+                context.pbd = pbd;
+            })
+            .then(()=>{
+                function getPreviousSalesROS():Promise<number> {
+                    return that.rosEp.get(`reports/daily-totals?businessDate=${context.pbd.format('YYYY-MM-DD')}`, {})
+                        .then(data => {
+                            const previousSalesROS: number = data.totalAmount ? data.totalAmount / 100 : 0;
+                            return previousSalesROS;
+                        });
+                }
+
+                function getPreviousSalesCube():Promise<number> {                    
+                    return new Promise((resolve, reject)=>{
+                        that.dailyData$
+                            .subscribe(dailyData=>{
+                                const pbdData = dailyData.find(dayData => dayData.businessDay.isSame(context.pbd, 'day'));
+                                if (!pbdData) {
+                                    reject();
+                                }
+                                resolve(pbdData.kpi.sales);
+                            });
+                    });
+                }
+
+                return Promise.all([
+                    getPreviousSalesROS()
+                        .then(previousSalesROS=>{
+                            console.info(`currentBd: previousSalesROS = ${previousSalesROS}`);
+                            context.previousSalesROS = previousSalesROS;
+                        })
+                        .catch(err=>{
+                            console.error(`currentBd: couldnt get ROS data for previous business date (${context.pbd.format()})`, err);
+                        }),
+                    getPreviousSalesCube()
+                        .then(previousSalesCube=>{
+                            console.info(`currentBd: previousSalesCube = ${previousSalesCube}`);
+                            context.previousSalesCube = previousSalesCube;
+                        })
+                        .catch(err => {
+                            console.error(`currentBd: couldnt get CUBE data for previous business date (${context.pbd.format()})`, err);
+                        })
+                ]);
+            })
+            .then(()=>{
+                //TMP!!!
+                // console.info(`currentBd: TEMPORARILY REDUCING THE CUBE SALES TO CREATE A MISMATCH!`);
+                // context.previousSalesCube--;
+                //TMP!!
+
+                if (context.previousSalesCube===context.previousSalesROS) {
+                    console.info(`currentBd: no ROS<=>CUBE mismatch, current virtual business date ("cvbd") = real current business date ("rcbd") = ${context.cbd.format('YYYY-MM-DD')}`);
+                    obs.next(context.cbd);
+                } else {
+                    return handleMismatch(context)
+                        .then(cvbd=>{
+                            obs.next(cvbd);
+                        });
+                }
+            });
+
     }).publishReplay(1).refCount();
 
+    /* 
+        emits the Previous Virtual Business Date ("pvbd") which is the day before the Current Virtual Business Day ("cvbd")
+    */
     public previousBd$: Observable<moment.Moment> = Observable.create(obs => {
         this.currentBd$
             .subscribe(cbd=>{
@@ -89,12 +256,11 @@ export class DataService {
             });
     }).publishReplay(1).refCount();
 
-    public shifts$: Observable<any> = Observable.create(obs => {
+    public shifts$: Observable<Shift[]> = Observable.create(obs => {
         this.rosEp.get('configuration/regionalSettings', {})
             .then(data => {
                 const serverShiftsConfig = data[0].ownerDashboard;
                 if (!serverShiftsConfig) console.error('error 7727: missing configuration: regionalSettings.ownerDashboard config is missing. please contact support.');
-
                 const shiftsConfig = [
                     {
                         active: _.get(serverShiftsConfig, 'morningShiftActive', true),
@@ -123,20 +289,20 @@ export class DataService {
                     }
                 ];
 
-                const shifts = [];
+                const shifts:Shift[] = [];
 
                 for (let i=0;i<shiftsConfig.length;i++) {
                     if (shiftsConfig[i].active) {
-                        shifts.push({
-                            name: shiftsConfig[i].name,
-                            startTime: shiftsConfig[i].startTime
-                        });
+                        const name = shiftsConfig[i].name;
+                        const startTime = moment.tz(`2018-01-01T${shiftsConfig[i].startTime}`, this.region);
+                        const shift = new Shift(name, startTime);
+                        shifts.push(shift);
                     }
                 }
 
                 for (let i = 0; i < shifts.length; i++) {
                     const nextIndex = i===shifts.length-1 ? 0 : i+1;
-                    shifts[i].endTime = shifts[nextIndex].startTime;
+                    shifts[i].endTime = moment(shifts[nextIndex].startTime);
                 }
 
                 obs.next(shifts);
@@ -163,7 +329,7 @@ export class DataService {
         }
 
         const dateFrom: moment.Moment = moment().subtract(2, 'year').startOf('month');
-        const dateTo: moment.Moment = moment();//TODO use rest time..
+        const dateTo: moment.Moment = moment.tz(this.region);
         this.olapEp.getDailyData({dateFrom: dateFrom, dateTo: dateTo})
             .then(dailyDataRaw=>{
                 let minimum, maximum;
@@ -238,7 +404,6 @@ export class DataService {
     //TODO today data comes with data without tax. use it instead of dividing by 1.17 (which is incorrect).
     //TODO take cube "sales data excl. tax" instead of dividing by 1.17. 
     //TODO take cube "salesPPA excl. tax" (not implemented yet, talk with Ofer) instead of dividing by 1.17.
-    //TODO today sales data should get autorefreshed every X seconds..
     public todayDataVatInclusive$: Observable<{ sales: number, diners: number, ppa: number }> = Observable.create(obs=>{
         /* we get the diners and ppa measures from olap and the sales from ros */
         const that = this;
@@ -296,9 +461,60 @@ export class DataService {
 
     });
     
+    /* excluding today! */
+    public mtdData$: Observable<any> = new Observable(obs=>{
+        return zip(this.vat$, this.currentBd$, this.previousBd$)
+            .subscribe(data => {
+                const vat = data[0];
+                const cbd = data[1];
+                const pbd = data[2];
+                
+                if (cbd.date()===1) {
+                    const data = {
+                        sales: 0,
+                        diners: 0,
+                        ppa: 0
+                    };
+                    obs.next(data);
+                    return;
+                }
+                
+                const dateFrom: moment.Moment = moment(pbd).startOf('month');
+                const dateTo: moment.Moment = moment(pbd);
+                
+                this.dailyData$
+                    .subscribe(dailyData => {
+                        dailyData = dailyData.filter(
+                            dayData =>
+                                dayData.businessDay.isSameOrAfter(dateFrom, 'day') &&
+                                dayData.businessDay.isSameOrBefore(dateTo, 'day')
+                        );
+
+                        let sales = _.sumBy(dailyData, 'kpi.sales');
+                        let diners = _.sumBy(dailyData, 'kpi.diners.count');
+                        let ppa = _.sumBy(dailyData, 'kpi.diners.sales') / diners;
+
+                        if (!vat) {
+                            ppa = ppa / 1.17;//TODO bring VAT per month from some api?
+                            sales = sales / 1.17;
+                        }
+
+                        const data = {
+                            sales: sales,
+                            diners: diners,
+                            ppa: ppa
+                        };
+
+                        obs.next(data);
+                    });
+            });
+    }).publishReplay(1).refCount();
+
     public dailyDataByShiftAndType$: Observable<any>;
 
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {}
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
+        // moment.tz.setDefault('Asia/Jerusalem');
+    }
 
     get currentBdData$(): Observable<any> {
         return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
@@ -359,43 +575,6 @@ export class DataService {
             );
     }
 
-    /* excluding today! */
-    get mtdData$(): Observable<any> {
-        let that = this;
-        return this.vat$
-            .concatMap(
-                (vat:boolean) => {
-                    return Observable.create(obs => {
-                        const dateFrom: moment.Moment = moment().startOf('month');
-                        const dateTo: moment.Moment = moment().subtract(1, 'days');//TODO should be base on currentBd!
-                        this.dailyData$
-                            .subscribe(dailyData => {
-                                dailyData = dailyData.filter(
-                                    dayData =>
-                                        dayData.businessDay.isSameOrAfter(dateFrom, 'day') &&
-                                        dayData.businessDay.isSameOrBefore(dateTo, 'day')
-                                );
-
-                                let sales = _.sumBy(dailyData, 'kpi.sales');
-                                let diners = _.sumBy(dailyData, 'kpi.diners.count');
-                                let ppa = _.sumBy(dailyData, 'kpi.diners.sales') / diners;
-
-                                if (!vat) {
-                                    ppa = ppa / 1.17;//TODO bring VAT per month from some api?
-                                    sales = sales / 1.17;
-                                }
-
-                                const data = {
-                                    sales: sales,
-                                    diners: diners,
-                                    ppa: ppa
-                                };
-
-                                obs.next(data);
-                            });
-                    }).take(1);
-                });
-    }
 
     get organizations(): ReplaySubject<any> {
         if (this.organizations$) return this.organizations$;
@@ -572,7 +751,7 @@ export class DataService {
             this.vat$,
             this.shifts$,
             this.olapEp.get_sales_and_ppa_by_OrderType_by_Service(date).take(1),//TODO olapEp should be stateless!
-            (vat: boolean, shifts: any, daily_data_by_orderType_by_service: any) => Object.assign({}, { shifts: shifts }, { daily_data_by_orderType_by_service: daily_data_by_orderType_by_service }, {vat: vat})
+            (vat: boolean, shifts: Shift[], daily_data_by_orderType_by_service: any) => Object.assign({}, { shifts: shifts }, { daily_data_by_orderType_by_service: daily_data_by_orderType_by_service }, {vat: vat})
         );
 
         data$.subscribe(data => {

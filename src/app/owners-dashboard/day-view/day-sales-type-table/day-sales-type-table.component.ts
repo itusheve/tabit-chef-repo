@@ -3,6 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { PercentPipe } from '@angular/common';
 import * as _ from 'lodash';
 import { DataService } from '../../../../tabit/data/data.service';
+import { Shift } from '../../../../tabit/model/Shift.model';
 
 @Component({
   selector: 'app-day-sales-type-table',
@@ -29,7 +30,7 @@ export class DaySalesTypeTableComponent {
     private dataService: DataService
   ) {}
 
-  render(shifts, salesByOrderTypeAndService) {
+  render(shifts:Shift[], salesByOrderTypeAndService) {
     this.total = 0;
 
     this.byTypeByShiftArr = [];
