@@ -562,7 +562,6 @@ export class ClosedOrdersDataService {
                     order.tlogId = ordersRaw[i].tlogId;
                     order.openingTime = ordersRaw[i].openingTime;
                     order.number = ordersRaw[i].orderNumber;
-                    order.waiter = ordersRaw[i].waiter;
                     order.orderTypeId = this.dataService.orderTypes.find(ot => ot.caption === ordersRaw[i].orderTypeCaption)['id'];
                     order.sales = ordersRaw[i].sales;
                     order.diners = ordersRaw[i].dinersPPA;
@@ -833,7 +832,7 @@ export class ClosedOrdersDataService {
             // }
             //post:
             orderObj.users = {
-                waiter: resolveUser(order.openedBy),
+                openedBy: resolveUser(order.openedBy),
                 owner: resolveUser(order.owner),
                 opened: resolveUser(order.openedBy),
                 locked: resolveUser(order.lockedBy)
@@ -1394,6 +1393,51 @@ export class ClosedOrdersDataService {
             if (order.member && order.member.printMessage) {
                 order.member.printMessage = Utils.nl2br(order.member.printMessage);
             }
+
+            let courierId = order.courier;
+            if (users && users.length && courierId) {
+                let courier = users.find(c => c._id === courierId);
+                order.courier = courier;
+            }
+
+            //additions/changes for details view:
+            order.orderSummary.wasForceClosed = order.orderSummary.wasForceClosed === true;
+            order.orderSummary.wasKickout = false;
+            if (order.history && order.history.length > 0) {
+                order.orderSummary.wasKickout = true;
+            }
+            //$ctrl.courseActions = OrdersViewService.courseActions;not in use
+
+            //additions/changes for details view:
+            if (order.orderer && !order.orderer.unknown) {
+                let deliveryAddressSummary = '';
+                const orderer = order.orderer;
+                if (orderer.deliveryAddress) {
+                    if (orderer.deliveryAddress.city) {
+                        deliveryAddressSummary += orderer.deliveryAddress.city + ',';
+                    }
+
+                    if (orderer.deliveryAddress.street) {
+                        deliveryAddressSummary += ' ' + orderer.deliveryAddress.street;
+                    }
+
+                    if (orderer.deliveryAddress.house) {
+                        deliveryAddressSummary += ' ' + orderer.deliveryAddress.house;
+                    }
+
+                    if (orderer.deliveryAddress.floor) {
+                        //deliveryAddressSummary += ' ' + $translate.instant('ORDERS_VIEW.orderer_floor') + orderer.deliveryAddress.floor;
+                        deliveryAddressSummary += ' ' + ORDERS_VIEW.orderer_floor + orderer.deliveryAddress.floor;
+                    }
+
+                    if (orderer.deliveryAddress.apartment) {
+                        //deliveryAddressSummary += ' ' + $translate.instant('ORDERS_VIEW.orderer_apartment') + orderer.deliveryAddress.apartment;
+                        deliveryAddressSummary += ' ' + ORDERS_VIEW.orderer_apartment + orderer.deliveryAddress.apartment;
+                    }
+                }
+
+                order.orderer.deliveryAddressSummary = deliveryAddressSummary;
+            }          
 
             return Promise.resolve(order);
 

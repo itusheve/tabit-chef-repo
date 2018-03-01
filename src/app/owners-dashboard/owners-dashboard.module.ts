@@ -21,15 +21,16 @@ import { DayOrdersTableHasSalesPipe, DayOrdersTableFilterPipe } from './day-view
 import { DayShiftsComponent } from './day-view/day-shifts/day-shifts.component';
 
 import { OrderViewComponent } from './order-view/order-view.component';
-import { SlipClassPipe } from './order-view/pipes';
-import { OrderBillComponent } from './order-view/slips/bill/bill.component';
-import { OrderClubComponent } from './order-view/slips/club/club.component';
-import { OrderInvoiceCreditComponent } from './order-view/slips/invoiceCredit/invoiceCredit.component';
-import { OrderInvoiceCashComponent } from './order-view/slips/invoiceCash/invoiceCash.component';
-import { OrderInvoiceCheckComponent } from './order-view/slips/invoiceCheck/invoiceCheck.component';
-import { OrderInvoiceGiftcardComponent } from './order-view/slips/invoiceGiftcard/invoiceGiftcard.component';
-import { OrderDeliveryNoteComponent } from './order-view/slips/deliveryNote/deliveryNote.component';
-import { OrderDeliveryNoteRefundComponent } from './order-view/slips/deliveryNoteRefund/deliveryNoteRefund.component';
+  import { OrderSlipsComponent } from './order-view/slips/slips.component';
+    import { OrderBillComponent } from './order-view/slips/bill/bill.component';
+    import { OrderClubComponent } from './order-view/slips/club/club.component';
+    import { OrderInvoiceCreditComponent } from './order-view/slips/invoiceCredit/invoiceCredit.component';
+    import { OrderInvoiceCashComponent } from './order-view/slips/invoiceCash/invoiceCash.component';
+    import { OrderInvoiceCheckComponent } from './order-view/slips/invoiceCheck/invoiceCheck.component';
+    import { OrderInvoiceGiftcardComponent } from './order-view/slips/invoiceGiftcard/invoiceGiftcard.component';
+    import { OrderDeliveryNoteComponent } from './order-view/slips/deliveryNote/deliveryNote.component';
+    import { OrderDeliveryNoteRefundComponent } from './order-view/slips/deliveryNoteRefund/deliveryNoteRefund.component';
+  import { OrderDetailsComponent } from './order-view/details/details.component';
 
 import { CardComponent } from '../ui/card/card.component';
 
@@ -42,7 +43,8 @@ import {
   MatCardModule,
   MatSidenavModule,
   MatSlideToggleModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatTabsModule
 } from '@angular/material';//material modules
 
 import { locale, loadMessages } from 'devextreme/localization'; //https://github.com/DevExpress/devextreme-examples/tree/17_2/intl-angular
@@ -80,6 +82,7 @@ locale('he');
     MatSidenavModule,
     MatSlideToggleModule,
     MatExpansionModule,
+    MatTabsModule,
 
     DxButtonModule,
     DxCalendarModule,
@@ -99,28 +102,29 @@ locale('he');
     MonthChartComponent,
 
     DayViewComponent,
-    DaySelectorComponent,
-    DayPieChartComponent,
-    DaySalesTypeTableComponent,
-    DayDinersTableComponent,
-    DayOrdersTableComponent,
-    DayOrdersTableHasSalesPipe,
-    DayOrdersTableFilterPipe,
-    DayShiftsComponent,
+      DaySelectorComponent,
+      DayPieChartComponent,
+      DaySalesTypeTableComponent,
+      DayDinersTableComponent,
+      DayOrdersTableComponent,
+      DayOrdersTableHasSalesPipe,
+      DayOrdersTableFilterPipe,
+      DayShiftsComponent,
 
     OrderViewComponent,
-    SlipClassPipe,
-    OrderBillComponent,
-    OrderClubComponent,
-    OrderInvoiceCreditComponent,
-    OrderInvoiceCashComponent,
-    OrderInvoiceCheckComponent,
-    OrderInvoiceGiftcardComponent,
-    OrderDeliveryNoteComponent,
-    OrderDeliveryNoteRefundComponent,
-    OrderCreditRefundComponent,
-    OrderChequeRefundComponent,
-    OrderCashRefundComponent
+      OrderSlipsComponent,
+        OrderBillComponent,
+        OrderClubComponent,
+        OrderInvoiceCreditComponent,
+        OrderInvoiceCashComponent,
+        OrderInvoiceCheckComponent,
+        OrderInvoiceGiftcardComponent,
+        OrderDeliveryNoteComponent,
+        OrderDeliveryNoteRefundComponent,
+        OrderCreditRefundComponent,
+        OrderChequeRefundComponent,
+        OrderCashRefundComponent,
+      OrderDetailsComponent
   ]
 })
 export class OwnersDashboardModule { }

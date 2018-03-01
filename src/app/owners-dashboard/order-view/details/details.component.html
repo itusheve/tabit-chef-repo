@@ -1,0 +1,322 @@
+<!-- <div class="OrderPopup" ng-style="{'direction' : isUS 'ltr' : 'rtl'}"> -->
+<div class="flex f-rtl d-col">
+
+    <mat-card class="mb20" *ngIf="checkOrderer(orderOld)">
+        <mat-card-content>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ ORDERSVIEW.orderer_name }}</th>
+                        <th>{{ ORDERSVIEW.orderer_phone }}</th>
+                        <th>{{ ORDERSVIEW.orderer_delivery_summary }}</th>
+                        <th>{{ ORDERSVIEW.orderer_delivery_notes }}</th>
+                        <th>{{ ORDERSVIEW.orderer_courier }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{orderOld.orderer?.name}}</td>
+                        <td>{{orderOld.orderer?.phone}}</td>
+                        <td>{{orderOld.orderer?.deliveryAddressSummary}}</td>
+                        <td>{{orderOld.orderer?.deliveryAddress.notes}}</td>
+                        <td>{{orderOld.courier?.firstName}} {{orderOld.courier?.lastName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </mat-card-content>
+    </mat-card>
+
+    <!--start general 1 details start-->
+    <mat-card class="mb20">
+        <mat-card-content>
+            <table>
+                <thead>
+                    <tr>
+                        <!-- <th>{{ 'ORDER_NUMBER' | translate }}</th>
+                        <th>{{ 'ORDER_TYPE' | translate }}</th>
+                        <th>{{ 'WAITER' | translate }}</th> -->
+                        <th>מספר הזמנה</th>
+                        <th>סוג הזמנה</th>
+                        <th>מלצר</th>
+                        <th>אחראי</th>
+                        <!-- <th>{{ 'TABLE' | translate }}</th>
+                        <th>{{ 'NUM_OF_DINERS' | translate }}</th>
+                        <th>{{ 'DATE' | translate }}</th> -->
+                        <th>שולחן</th>
+                        <th>מספר סועדים</th>
+                        <th>תאריך</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{orderOld.number}}</td>
+                        <td>{{orderOld.orderType}}</td>
+                        <td>{{order.users.openedBy.fullName}}</td>
+                        <td>{{order.users.owner.fullName}}</td>
+                        <td>{{orderOld.table}}</td>
+                        <td>{{orderOld.dinersNum}}</td>
+                        <td *ngIf="!isUS">{{orderOld.created | date : 'dd/MM/yyyy HH:mm'}}</td>
+                        <td *ngIf="isUS">{{orderOld.created | date : 'MM/dd/yyyy HH:mm a'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </mat-card-content>
+    </mat-card>
+    <!--end general 1 details start-->
+
+    <!--start general 2 details start-->    
+    <mat-card class="mb20">                
+        <mat-card-title>
+            {{ ORDERSVIEW.general }}
+        </mat-card-title>
+        <mat-card-content>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ ORDERSVIEW.tip_behavior }}</th>
+                        <th>{{ ORDERSVIEW.amount }}</th>
+                        <th>{{ ORDERSVIEW.tip }}</th>
+                        <th>{{ ORDERSVIEW.discount }}</th>
+                        <th>{{ ORDERSVIEW.optimization }}</th>
+                        <th *ngIf="orderOld.orderSummary?.wasForceClosed">{{ ORDERSVIEW.forcedClosed }}</th>
+                        <th *ngIf="orderOld.orderSummary?.wasKickout">{{ ORDERSVIEW.Kicked_out }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{orderOld.settings?.tipBehavior}}</td>
+                        <td>{{orderOld.paymentSummary?.totalAmount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td>{{orderOld.totals?.totalTips | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td>{{orderOld.totalDiscounts?.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td>{{orderOld.pricingOptimization?.isOptimized}}</td>
+                        <td *ngIf="orderOld.orderSummary?.wasForceClosed">
+                            <mat-icon>done</mat-icon>
+                        </td>
+                        <th *ngIf="orderOld.orderSummary?.wasKickout">
+                            <mat-icon>done</mat-icon>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </mat-card-content>
+    </mat-card>
+   
+    <!--end general 2 details start-->
+
+    <!--start timeline-->
+    <mat-accordion class="mb20">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ ORDERSVIEW.time_line }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ ORDERSVIEW.at }}</th>
+                        <th>{{ ORDERSVIEW.action }}</th>
+                        <th>{{ ORDERSVIEW.data }}</th>
+                        <th>{{ ORDERSVIEW.by }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of orderOld.timeline">
+                        <td *ngIf="!isUS">{{ row.at | date : 'dd/MM/yyyy HH:mm:ss' }}</td>
+                        <td *ngIf="isUS">{{ row.at | date : 'MM/dd/yyyy HH:mm:ss a' }}</td>
+                        <td style="text-transform: capitalize;">{{ row.action }}</td>
+                        <td>{{ row.data }}</td>
+                        <td>{{ row.by?.fullName }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </mat-expansion-panel>            
+    </mat-accordion>
+
+    <!--start offers-->
+    <mat-accordion class="mb20">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ ORDERSVIEW.orders }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table *ngIf="orderOld.orderedOffers?.length">
+                <thead>
+                    <tr>
+                        <th>{{ ORDERSVIEW.item }}</th>
+                        <th>{{ ORDERSVIEW.price }}</th>
+                        <th>{{ ORDERSVIEW.amount }}</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let offer of orderOld.orderedOffers">
+                    <tr>
+                        <td>{{offer.name}}</td>
+                        <td>{{offer.price | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td>{{offer.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                    </tr>
+                    <tr *ngFor="let item of offer.items">
+                        <td class="item-row">{{item.name}}</td>
+                        <td>{{item.price | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td>{{item.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p *ngIf="!orderOld.orderedOffers || !orderOld.orderedOffers.length">{{ ORDERSVIEW.no_orders }}</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <!--start cancelations-->
+    <mat-accordion class="mb20">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ ORDERSVIEW.cancelled_items }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table *ngIf="orderOld.cencelledItems?.length">
+                <thead>
+                    <tr>
+                        <th>{{ ORDERSVIEW.item }}</th>
+                        <th>{{ ORDERSVIEW.return_type }}</th>
+                        <th>{{ ORDERSVIEW.reason }}</th>
+                        <th>{{ ORDERSVIEW.comment }}</th>
+                        <th>{{ ORDERSVIEW.applied }}</th>
+                        <th>{{ ORDERSVIEW.approved }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of orderOld.cencelledItems">
+                        <td>{{item.name}}</td>
+                        <td>{{item.returnType}}</td>
+                        <td>{{item.cancellation?.reason.name}}</td>
+                        <td>{{item.cancellation?.comment}}</td>
+                        <td>{{item.cancellation?.applied.user.fullName}}</td>
+                        <td>{{item.cancellation?.approved.user.fullName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p *ngIf="!orderOld.cencelledItems || !orderOld.cencelledItems.length">{{ ORDERSVIEW.no_cancelled_items }}</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+
+    <!--start items-->
+    <mat-accordion class="mb20">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ ORDERSVIEW.unassigned_items }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table *ngIf="orderOld.unasignedItems?.length">
+                <thead>
+                    <tr>
+                        <th>{{ ORDERSVIEW.item }}</th>
+                        <th>{{ ORDERSVIEW.price }}</th>
+                        <th>{{ ORDERSVIEW.amount }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of orderOld.unasignedItems">
+                        <td>{{item.name}}</td>
+                        <td>{{item.price | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td>{{item.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p *ngIf="!orderOld.unasignedItems || !orderOld.unasignedItems.length">{{ ORDERSVIEW.no_unassigned_items }}</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <!--start payments-->
+    <mat-accordion class="mb20">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ ORDERSVIEW.payments }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table *ngIf="orderOld.payments?.length">
+                <thead>
+                    <tr>
+                        <th>{{ ORDERSVIEW.tender_type }}</th>
+                        <th>{{ ORDERSVIEW.last_4 }}</th>
+                        <th>{{ ORDERSVIEW.amount }}</th>
+                        <th>{{ ORDERSVIEW.face_value }}</th>
+                        <th>{{ ORDERSVIEW.change }}</th>
+                        <th>{{ ORDERSVIEW.tip }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let payment of orderOld.payments">
+                        <td>{{payment.tenderType}} - {{payment.cardName}}</td>
+                        <td>{{payment.last4}}</td>
+                        <td>{{payment.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td>{{payment.faceValue | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td>{{payment.change?.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td>{{payment.auxIntent?.quantity | currency:'ILS':'symbol':'1.2-2'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p *ngIf="!orderOld.payments || !orderOld.payments.length">{{ ORDERSVIEW.no_payments }}</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <!--start discounts-->
+    <mat-accordion class="mb20">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ ORDERSVIEW.discounts }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table *ngIf="orderOld.orderedDiscounts?.length">
+                <thead>
+                    <tr>
+                        <th>{{ ORDERSVIEW.discount_type }}</th>
+                        <th>{{ ORDERSVIEW.amount }}</th>
+                        <th>{{ ORDERSVIEW.reason }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let discount of orderOld.orderedDiscounts">
+                        <td>{{discount.discountType}}</td>
+                        <td>{{discount.discountAmount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td>{{discount.reason?.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p *ngIf="!orderOld.orderedDiscounts || !orderOld.orderedDiscounts.length">{{ ORDERSVIEW.no_discounts }}</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <!--start promotions-->
+    <mat-accordion class="mb20">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ ORDERSVIEW.promotions }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table *ngIf="orderOld.orderedPromotionsData?.length">
+                <thead>
+                    <tr>
+                        <th>{{ ORDERSVIEW.promotion }}</th>
+                        <th>{{ ORDERSVIEW.amount }}</th>
+                        <th>{{ ORDERSVIEW.redeem_code }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let promotion of orderOld.orderedPromotionsData">
+                        <td>{{promotion.promotionData?.name}}</td>
+                        <td>{{promotion.discount?.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td>{{promotion.promotionData?.redeemCode}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p *ngIf="!orderOld.orderedPromotions || !orderOld.orderedPromotions.length">{{ ORDERSVIEW.no_promotions }}</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+</div>

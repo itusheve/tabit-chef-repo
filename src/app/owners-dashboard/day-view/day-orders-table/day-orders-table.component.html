@@ -2,8 +2,7 @@
     <div class="title">הזמנות</div>
     <div class="body mt5">
 
-        <mat-accordion class="example-headers-align" *ngIf="byOrderTypes">
-            <!-- <mat-expansion-panel expanded="false" (opened)="setStep(0)" hideToggle="true"> -->
+        <mat-accordion *ngIf="byOrderTypes">
             <mat-expansion-panel expanded="false" hideToggle="true" *ngFor="let orderType of byOrderTypes | hasSales">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -71,7 +70,7 @@
                             {{order.openingTime | date:'H:mm'}}
                         </td>
                         <td>{{order.number | number:'1.0-0'}}</td>
-                        <td>{{order.waiter}}</td>
+                        <td>{{order.openedBy}}</td>
                         <td>{{order.sales | currency:'ILS':'symbol':'1.0-0'}}</td>
                         <td>
                             <mat-icon *ngIf="order.priceReductions.cancellation > 0" style="color: red;">assignment_return</mat-icon>

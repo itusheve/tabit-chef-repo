@@ -6,9 +6,8 @@ export class Order {
     tlogId: string;
     openingTime: moment.Moment;
     number: number;
-    waiter: string;
     users: {
-        waiter: User;
+        openedBy: User;
         owner: User;
         opened: User;
         locked: User;
