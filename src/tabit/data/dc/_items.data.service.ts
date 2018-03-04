@@ -21,9 +21,10 @@ export class ItemsDataService {
         private rosEp: ROSEp
     ) {
 
-        // this.items$.subscribe(data => {
-        //     debugger;
-        // });
+        //lets cache!        
+        setTimeout(() => {
+            this.items$.subscribe(data => { });
+        }, Math.random() * 8000 + 2000);
     }
 
 }

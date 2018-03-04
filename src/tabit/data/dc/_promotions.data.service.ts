@@ -22,9 +22,10 @@ export class PromotionsDataService {
         private rosEp: ROSEp
     ) {
 
-        // this.promotions$.subscribe(data => {
-        //     debugger;
-        // });
+        //lets cache!        
+        setTimeout(() => {
+            this.promotions$.subscribe(data => { });
+        }, Math.random() * 8000 + 2000);
     }
 
 }

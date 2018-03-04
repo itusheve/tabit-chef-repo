@@ -30,9 +30,10 @@ export class ModifierGroupsDataService {
         private rosEp: ROSEp
     ) {
 
-        // this.modifierGroups$.subscribe(data => {
-        //     debugger;
-        // });
+        //lets cache!        
+        setTimeout(() => {
+            this.modifierGroups$.subscribe(data => { });
+        }, Math.random() * 8000 + 2000);
     }
 
 }

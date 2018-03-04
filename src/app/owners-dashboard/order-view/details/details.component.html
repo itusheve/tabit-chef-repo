@@ -85,9 +85,9 @@
                 <tbody>
                     <tr>
                         <td>{{orderOld.settings?.tipBehavior}}</td>
-                        <td>{{orderOld.paymentSummary?.totalAmount | currency:'ILS':'symbol':'1.2-2'}}</td>
-                        <td>{{orderOld.totals?.totalTips | currency:'ILS':'symbol':'1.2-2'}}</td>
-                        <td>{{orderOld.totalDiscounts?.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td class="curr2">{{orderOld.paymentSummary?.totalAmount | curr2:'cents'}}</td>
+                        <td class="curr2">{{orderOld.totals?.totalTips | curr2:'cents'}}</td>
+                        <td class="curr2">{{orderOld.totalDiscounts?.amount | curr2:'cents'}}</td>
                         <td>{{orderOld.pricingOptimization?.isOptimized}}</td>
                         <td *ngIf="orderOld.orderSummary?.wasForceClosed">
                             <mat-icon>done</mat-icon>
@@ -152,13 +152,13 @@
                 <tbody *ngFor="let offer of orderOld.orderedOffers">
                     <tr>
                         <td>{{offer.name}}</td>
-                        <td>{{offer.price | currency:'ILS':'symbol':'1.2-2'}}</td>
-                        <td>{{offer.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td class="curr2">{{offer.price | curr2:'cents'}}</td>
+                        <td class="curr2">{{offer.amount | curr2:'cents'}}</td>
                     </tr>
                     <tr *ngFor="let item of offer.items">
                         <td class="item-row">{{item.name}}</td>
-                        <td>{{item.price | currency:'ILS':'symbol':'1.2-2'}}</td>
-                        <td>{{item.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td class="curr2">{{item.price | curr2:'cents'}}</td>
+                        <td class="curr2">{{item.amount | curr2:'cents'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -220,8 +220,8 @@
                 <tbody>
                     <tr *ngFor="let item of orderOld.unasignedItems">
                         <td>{{item.name}}</td>
-                        <td>{{item.price | currency:'ILS':'symbol':'1.2-2'}}</td>
-                        <td>{{item.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td class="curr2">{{item.price | curr2:'cents'}}</td>
+                        <td class="curr2">{{item.amount | curr2:'cents'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -252,10 +252,10 @@
                     <tr *ngFor="let payment of orderOld.payments">
                         <td>{{payment.tenderType}} - {{payment.cardName}}</td>
                         <td>{{payment.last4}}</td>
-                        <td>{{payment.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
-                        <td>{{payment.faceValue | currency:'ILS':'symbol':'1.2-2'}}</td>
-                        <td>{{payment.change?.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
-                        <td>{{payment.auxIntent?.quantity | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td class="curr2">{{payment.amount | curr2:'cents'}}</td>
+                        <td class="curr2">{{payment.faceValue | curr2:'cents'}}</td>
+                        <td class="curr2">{{payment.change?.amount | curr2:'cents'}}</td>
+                        <td class="curr2">{{payment.auxIntent?.quantity | curr2:'cents'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -282,7 +282,7 @@
                 <tbody>
                     <tr *ngFor="let discount of orderOld.orderedDiscounts">
                         <td>{{discount.discountType}}</td>
-                        <td>{{discount.discountAmount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td class="curr2">{{discount.discountAmount | curr2:'cents'}}</td>
                         <td>{{discount.reason?.name}}</td>
                     </tr>
                 </tbody>
@@ -310,7 +310,7 @@
                 <tbody>
                     <tr *ngFor="let promotion of orderOld.orderedPromotionsData">
                         <td>{{promotion.promotionData?.name}}</td>
-                        <td>{{promotion.discount?.amount | currency:'ILS':'symbol':'1.2-2'}}</td>
+                        <td class="curr2">{{promotion.discount?.amount | curr2:'cents'}}</td>
                         <td>{{promotion.promotionData?.redeemCode}}</td>
                     </tr>
                 </tbody>

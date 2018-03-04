@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { OwnersDashboardComponent } from './owners-dashboard.component';
+import { OwnersDashboardCurrencyPipe } from './owners-dashboard.pipes';
+
 import { HomeComponent } from './home/home.component';
 
 import { MomentModule } from 'angular2-moment';
@@ -93,6 +95,8 @@ locale('he');
   ],
   declarations: [
     OwnersDashboardComponent,
+    OwnersDashboardCurrencyPipe,
+    
     HomeComponent,
     CardComponent,
 
