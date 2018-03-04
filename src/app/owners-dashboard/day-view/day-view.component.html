@@ -11,24 +11,29 @@
     ></app-day-selector>
     
     <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
+
     <app-day-sales-type-table 
       class="widget" 
       #daySalesTypeTable
       (onRowClicked)="onGoToOrders($event, 'orderType')"
       >
     </app-day-sales-type-table>
+
     <app-day-diners-table 
       class="widget" 
       *ngIf="dinersTable.show"
       [data$]="dinersTableData$"
       ></app-day-diners-table>
+
     <app-day-orders-table 
       class="widget fullWidth"
       style="padding-bottom: 0px;"
-      *ngIf="orders"
+      *ngIf="orders"      
+      [lastViewed]="drilledOrder"
       [orders]="orders"
       (onOrderClicked)="onOrderClicked($event)"
       ></app-day-orders-table>
+
     <app-day-shifts class="widget greyAccent" #dayShifts></app-day-shifts>      
 
   </div>

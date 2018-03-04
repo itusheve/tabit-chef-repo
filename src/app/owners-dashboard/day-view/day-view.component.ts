@@ -37,6 +37,7 @@ export class DayViewComponent implements OnInit  {
   drillTlogTime;
   drillTlogId: string;
   drill = false;
+  drilledOrder;
 
   /* the day's Orders */
   public orders: Order[];
@@ -122,6 +123,8 @@ export class DayViewComponent implements OnInit  {
     this.drillTlogTime = order.openingTime;
     this.drillTlogId = order.tlogId;
     this.drill = true;
+
+    this.drilledOrder = order;
   }
 
   closeDrill() {

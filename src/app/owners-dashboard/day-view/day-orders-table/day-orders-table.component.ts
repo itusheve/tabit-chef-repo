@@ -23,6 +23,8 @@ export interface OrderTypeVM {
 export class DayOrdersTableComponent implements OnChanges {
 
   @Input() orders: Order[];
+  @Input() lastViewed: Order;
+
   @Output() onOrderClicked = new EventEmitter();
 
   public byOrderTypes: OrderTypeVM[];
@@ -35,16 +37,20 @@ export class DayOrdersTableComponent implements OnChanges {
 
   constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService) {}
 
-  ngOnChanges() {
-    const ordersCloned: Order[] = _.cloneDeep(this.orders);
+  ngOnChanges(o) {
+     
+    if (o.hasOwnProperty('orders')) {
+      const ordersCloned: Order[] = _.cloneDeep(this.orders);
+  
+      const orderTypes = _.cloneDeep(this.dataService.orderTypes);
+  
+      orderTypes.forEach(ot => {
+        ot.orders = ordersCloned.filter(o => o.orderTypeId === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);
+        ot.sales = ot.orders.reduce((acc, curr) => acc + (curr.sales || 0), 0);
+      });
+      this.byOrderTypes = orderTypes;
+    }
 
-    const orderTypes = _.cloneDeep(this.dataService.orderTypes);
-
-    orderTypes.forEach(ot => {
-      ot.orders = ordersCloned.filter(o => o.orderTypeId === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);
-      ot.sales = ot.orders.reduce((acc, curr) => acc + (curr.sales || 0), 0);
-    });
-    this.byOrderTypes = orderTypes;
   }
 
   orderClicked(order:any) {

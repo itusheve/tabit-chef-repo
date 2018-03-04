@@ -65,7 +65,7 @@
                             </div>
                         </td>
                     </tr>
-                    <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)">
+                    <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)" [ngClass]="{'lastViewed': lastViewed===order}">
                         <td>
                             {{order.openingTime | date:'H:mm'}}
                         </td>
