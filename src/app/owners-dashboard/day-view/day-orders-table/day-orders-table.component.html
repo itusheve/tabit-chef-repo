@@ -9,7 +9,7 @@
                         {{orderType.caption}}
                     </mat-panel-title>
                     <mat-panel-description>
-                         {{orderType.sales | currency:'ILS':'symbol':'1.0-0'}}
+                         {{orderType.sales | curr:'0'}}
                         <!-- <mat-icon>account_circle</mat-icon> -->
                     </mat-panel-description>
                 </mat-expansion-panel-header>
@@ -66,12 +66,10 @@
                         </td>
                     </tr>
                     <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)" [ngClass]="{'lastViewed': lastViewed===order}">
-                        <td>
-                            {{order.openingTime | date:'H:mm'}}
-                        </td>
+                        <td>{{order.openingTime | date:'H:mm'}}</td>
                         <td>{{order.number | number:'1.0-0'}}</td>
                         <td>{{order.openedBy}}</td>
-                        <td>{{order.sales | currency:'ILS':'symbol':'1.0-0'}}</td>
+                        <td>{{order.sales | curr:'0'}}</td>
                         <td>
                             <mat-icon *ngIf="order.priceReductions.cancellation > 0" style="color: red;">assignment_return</mat-icon>
                             <mat-icon *ngIf="order.priceReductions.discountsAndOTH > 0" style="color: orange;">cake</mat-icon>

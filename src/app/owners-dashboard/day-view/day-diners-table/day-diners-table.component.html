@@ -9,8 +9,8 @@
             </tr>            
             <tr>
                 <td>מכירות סועדים</td>
-                <td>{{totalSalesPPA | number : '1.0-0'}}</td>
-                <td *ngFor="let shift of dataByShifts">{{shift.salesPPA | number : '1.0-0'}}</td>
+                <td>{{totalSalesPPA | curr:'0'}}</td>
+                <td *ngFor="let shift of dataByShifts">{{shift.salesPPA | curr:'0'}}</td>
             </tr>
             <tr>
                 <td>סועדים</td>
@@ -19,8 +19,8 @@
             </tr>
             <tr>
                 <td>PPA</td>
-                <td>{{totalPPA | currency:'ILS':'symbol':'1.2-2'}}</td>
-                <td *ngFor="let shift of dataByShifts">{{shift.ppa | currency:'ILS':'symbol':'1.2-2'}}</td>
+                <td>{{totalPPA | curr}}</td>
+                <td *ngFor="let shift of dataByShifts">{{shift.ppa | curr}}</td>
             </tr>
         </table>
     </div>

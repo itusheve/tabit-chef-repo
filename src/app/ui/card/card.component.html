@@ -15,7 +15,7 @@
         </div>
       </div>
       <div style="width:60%" class="flex d-col aj-center">
-        <div class="flex aj-center csales">{{cardData.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
+        <div class="flex aj-center csales">{{cardData.sales | curr:'0'}}</div>
         <div class="flex aj-center" *ngIf="cardData.salesComment" style="color: red;">{{cardData.salesComment}}</div>
       </div>
       <div style="width:18%" class="s-0 flex a-center">
@@ -32,7 +32,7 @@
     <div class="flex j-sb cfooter">
       <div class="flex a-baseline cperson"><div class="flex a-baseline" *ngIf="cardData && cardData.diners > 0"><i class="icomoon-man"></i>&nbsp;{{cardData?.diners | number:'1.0-0'}}</div></div>
       <div class="flex"></div>
-      <div class="flex"><div class="flex" *ngIf="cardData && cardData.diners > 0">PPA&nbsp;{{cardData?.ppa | currency:'ILS':'symbol':'1.2-2'}}</div></div>
+      <div class="flex"><div class="flex" *ngIf="cardData && cardData.diners > 0">PPA&nbsp;{{cardData?.ppa | curr}}</div></div>
     </div>
   </div>
 </div>

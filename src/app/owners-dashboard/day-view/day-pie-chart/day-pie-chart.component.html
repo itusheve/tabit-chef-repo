@@ -31,8 +31,7 @@
         <div class="flex a-center legendRow" *ngFor="let entry of dataSource">
             <div class="flex mh5 itemColor" [style.background-color]="entry.color"></div>
             <div class="flex mh5 itemName">{{entry.orderType}}</div>
-            <div class="flex mh5 itemVal">{{entry.valFormatted}}</div>
-            <div class="flex" [innerHTML]="currencySymbol"></div>
+            <div class="flex mh5 itemVal">{{entry.val | curr:'0'}}</div>
         </div>
     </div>
 </div>

@@ -37,8 +37,7 @@
                         <th>{{ 'WAITER' | translate }}</th> -->
                         <th>מספר הזמנה</th>
                         <th>סוג הזמנה</th>
-                        <th>מלצר</th>
-                        <th>אחראי</th>
+                        <th>מלצר / אחראי</th>
                         <!-- <th>{{ 'TABLE' | translate }}</th>
                         <th>{{ 'NUM_OF_DINERS' | translate }}</th>
                         <th>{{ 'DATE' | translate }}</th> -->
@@ -51,8 +50,10 @@
                     <tr>
                         <td>{{orderOld.number}}</td>
                         <td>{{orderOld.orderType}}</td>
-                        <td>{{order.users.openedBy.fullName}}</td>
-                        <td>{{order.users.owner.fullName}}</td>
+                        <td>
+                            <span>{{order.users.openedBy.fullName}}</span>
+                            <span *ngIf="order.users.openedBy.fullName!==order.users.owner.fullName"> / {{order.users.owner.fullName}}</span>
+                        </td>
                         <td>{{orderOld.table}}</td>
                         <td>{{orderOld.dinersNum}}</td>
                         <td *ngIf="!isUS">{{orderOld.created | date : 'dd/MM/yyyy HH:mm'}}</td>
@@ -85,9 +86,9 @@
                 <tbody>
                     <tr>
                         <td>{{orderOld.settings?.tipBehavior}}</td>
-                        <td class="curr2">{{orderOld.paymentSummary?.totalAmount | curr2:'cents'}}</td>
-                        <td class="curr2">{{orderOld.totals?.totalTips | curr2:'cents'}}</td>
-                        <td class="curr2">{{orderOld.totalDiscounts?.amount | curr2:'cents'}}</td>
+                        <td class="curr2">{{orderOld.paymentSummary?.totalAmount | curr:'2':'cents'}}</td>
+                        <td class="curr2">{{orderOld.totals?.totalTips | curr:'2':'cents'}}</td>
+                        <td class="curr2">{{orderOld.totalDiscounts?.amount | curr:'2':'cents'}}</td>
                         <td>{{orderOld.pricingOptimization?.isOptimized}}</td>
                         <td *ngIf="orderOld.orderSummary?.wasForceClosed">
                             <mat-icon>done</mat-icon>
@@ -152,13 +153,8 @@
                 <tbody *ngFor="let offer of orderOld.orderedOffers">
                     <tr>
                         <td>{{offer.name}}</td>
-                        <td class="curr2">{{offer.price | curr2:'cents'}}</td>
-                        <td class="curr2">{{offer.amount | curr2:'cents'}}</td>
-                    </tr>
-                    <tr *ngFor="let item of offer.items">
-                        <td class="item-row">{{item.name}}</td>
-                        <td class="curr2">{{item.price | curr2:'cents'}}</td>
-                        <td class="curr2">{{item.amount | curr2:'cents'}}</td>
+                        <td class="curr2">{{offer.price | curr:'2':'cents'}}</td>
+                        <td class="curr2">{{offer.amount | curr:'2':'cents'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -220,8 +216,8 @@
                 <tbody>
                     <tr *ngFor="let item of orderOld.unasignedItems">
                         <td>{{item.name}}</td>
-                        <td class="curr2">{{item.price | curr2:'cents'}}</td>
-                        <td class="curr2">{{item.amount | curr2:'cents'}}</td>
+                        <td class="curr2">{{item.price | curr:'2':'cents'}}</td>
+                        <td class="curr2">{{item.amount | curr:'2':'cents'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -252,10 +248,10 @@
                     <tr *ngFor="let payment of orderOld.payments">
                         <td>{{payment.tenderType}} - {{payment.cardName}}</td>
                         <td>{{payment.last4}}</td>
-                        <td class="curr2">{{payment.amount | curr2:'cents'}}</td>
-                        <td class="curr2">{{payment.faceValue | curr2:'cents'}}</td>
-                        <td class="curr2">{{payment.change?.amount | curr2:'cents'}}</td>
-                        <td class="curr2">{{payment.auxIntent?.quantity | curr2:'cents'}}</td>
+                        <td class="curr2">{{payment.amount | curr:'2':'cents'}}</td>
+                        <td class="curr2">{{payment.faceValue | curr:'2':'cents'}}</td>
+                        <td class="curr2">{{payment.change?.amount | curr:'2':'cents'}}</td>
+                        <td class="curr2">{{payment.auxIntent?.quantity | curr:'2':'cents'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -282,7 +278,7 @@
                 <tbody>
                     <tr *ngFor="let discount of orderOld.orderedDiscounts">
                         <td>{{discount.discountType}}</td>
-                        <td class="curr2">{{discount.discountAmount | curr2:'cents'}}</td>
+                        <td class="curr2">{{discount.discountAmount | curr:'2':'cents'}}</td>
                         <td>{{discount.reason?.name}}</td>
                     </tr>
                 </tbody>
@@ -310,8 +306,8 @@
                 <tbody>
                     <tr *ngFor="let promotion of orderOld.orderedPromotionsData">
                         <td>{{promotion.promotionData?.name}}</td>
-                        <td class="curr2">{{promotion.discount?.amount | curr2:'cents'}}</td>
-                        <td>{{promotion.promotionData?.redeemCode}}</td>
+                        <td class="curr2">{{promotion.discount?.amount | curr:'2':'cents'}}</td>
+                        <td style="word-break: break-all;">{{promotion.promotionData?.redeemCode}}</td>
                     </tr>
                 </tbody>
             </table>

@@ -93,13 +93,12 @@ export class DayPieChartComponent implements OnDestroy {
     Object.keys(data).forEach(orderType=>{
       this.total += data[orderType];
       
-      //const valFormatted = this.currPipe.transform(data[orderType], 'ILS', 'symbol', '1.0-0');
-      const valFormatted = this.decPipe.transform(data[orderType], '1.0-0');
+      //const valFormatted = this.decPipe.transform(data[orderType], '1.0-0');
       this.dataSource.push({
         color: this.pallete[i],
         orderType: this.orderTypesMap[orderType],
         val: data[orderType],
-        valFormatted: valFormatted
+        //valFormatted: valFormatted
       });
       i++;
     }); 

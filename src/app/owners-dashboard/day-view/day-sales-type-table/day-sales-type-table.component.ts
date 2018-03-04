@@ -110,10 +110,10 @@ export class DaySalesTypeTableComponent {
   }
 
   onRowClick(o) {
-    const orderType = this.dataService.orderTypes.find(ot=>ot.caption===o.orderType);
-    if (orderType) {
-      this.onRowClicked.emit(orderType);    
-    }
+    // const orderType = this.dataService.orderTypes.find(ot=>ot.caption===o.orderType);
+    // if (orderType) {
+      // this.onRowClicked.emit(orderType);    
+    // }
   }
 
 }

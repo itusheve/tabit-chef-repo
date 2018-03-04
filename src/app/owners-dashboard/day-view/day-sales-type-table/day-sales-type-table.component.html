@@ -10,23 +10,19 @@
             <tr *ngFor="let orderType of byTypeByShiftArr" (click)="onRowClick(orderType)">
                 <td>{{orderType.orderType}}</td>
                 <td>
-                    <span>{{orderType.total | number:'1.0-0'}}</span>
-                    <span [innerHTML]="currencySymbol"></span>
+                    <span>{{orderType.total | curr:'0'}}</span>
                 </td>
                 <td *ngFor="let shift of orderType.byShift">
-                    <span>{{shift.sales | number:'1.0-0'}}</span>&nbsp;
-                    <span [innerHTML]="currencySymbol"></span>
+                    <span>{{shift.sales | curr:'0'}}</span>
                 </td>
             </tr>
             <tr class="tblTotalRow">
                 <td>סה"כ</td>
                 <td>
-                    <span>{{total | number:'1.0-0'}}</span>
-                    <span [innerHTML]="currencySymbol"></span>
+                    <span>{{total | curr:'0'}}</span>
                 </td>
                 <td *ngFor="let sumVal of summary">
-                    <span>{{sumVal | number:'1.0-0'}}</span>&nbsp;
-                    <span [innerHTML]="currencySymbol"></span>
+                    <span>{{sumVal | curr:'0'}}</span>
                 </td>
             </tr>
         </table>

@@ -37,7 +37,7 @@
         <td style="text-align: right;">{{data.data.dateFormatted}}</td>
         <td style="text-align: right;">
           <div class="flex">
-            <div class="flex">{{data.data.sales | currency:'ILS':'symbol':'1.0-0'}}</div>
+            <div class="flex">{{data.data.sales | curr:'0'}}</div>
             <div 
               *ngIf="data.data.dailyTrends.trends.sales.status==='ready'" 
               class="flex d-col a-center trend"
@@ -66,7 +66,7 @@
         
         <td style="text-align: right;">        
           <div class="flex">
-            <div class="flex">{{data.data.ppa | currency:'ILS':'symbol':'1.2-2'}}</div>
+            <div class="flex">{{data.data.ppa | curr}}</div>
             <div 
               *ngIf="data.data.dailyTrends.trends.ppa.status==='ready'" 
               class="flex d-col a-center trend"
