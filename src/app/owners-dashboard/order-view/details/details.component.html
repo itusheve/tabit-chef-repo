@@ -208,6 +208,7 @@
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.tender_type }}</th>
+                        <th>{{ ORDERSVIEW.customer_name }}</th>
                         <th>{{ ORDERSVIEW.last_4 }}</th>
                         <th>{{ ORDERSVIEW.amount }}</th>
                         <th>{{ ORDERSVIEW.face_value }}</th>
@@ -217,7 +218,11 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let payment of orderOld.payments">
-                        <td>{{payment.tenderType}} - {{payment.cardName}}</td>
+                        <td>
+                            <span>{{payment.methodName}}</span>
+                            <span *ngIf="payment.creditCardBrand"> - {{payment.creditCardBrand}}</span>
+                        </td>
+                        <td>{{payment.customerDetails.name}}</td>
                         <td>{{payment.last4}}</td>
                         <td class="curr2">{{payment.amount | curr:'2':'cents'}}</td>
                         <td class="curr2">{{payment.faceValue | curr:'2':'cents'}}</td>
@@ -282,7 +287,7 @@
                     </tr>
                 </tbody>
             </table>
-            <p *ngIf="!orderOld.orderedPromotions || !orderOld.orderedPromotions.length">{{ ORDERSVIEW.no_promotions }}</p>
+            <p *ngIf="!orderOld.orderedPromotionsData || !orderOld.orderedPromotionsData.length">{{ ORDERSVIEW.no_promotions }}</p>
         </mat-expansion-panel>
     </mat-accordion>
 

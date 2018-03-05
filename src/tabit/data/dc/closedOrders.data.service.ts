@@ -120,18 +120,18 @@ let ORDERS_VIEW = {
     "bn-number": "ח.פ.",
     "phone": "טל'",
     "print_date": "הודפס בתאריך",
-    "print_by_order": (order_number, order_date, order_time)=>`לפי הזמנה מס' ${order_number} בתאריך ${order_date} בשעה ${order_time}`,
+    "print_by_order": (order_number, order_date, order_time) => `לפי הזמנה מס' ${order_number} בתאריך ${order_date} בשעה ${order_time}`,
     "copy": "העתק",
     "order_number": "הזמנה מס'",
     "table": "שולחן",
-    "waiter_diners": (waiter, diners, table)=>`מלצר ${waiter} סועדים ${diners} שולחן ${table}`,
+    "waiter_diners": (waiter, diners, table) => `מלצר ${waiter} סועדים ${diners} שולחן ${table}`,
     "oth_print": "על חשבון הבית",
     "all_order_oth": "הזמנה על חשבון הבית",
     "order_discount": "הנחת חשבון",
     "manual_item_discount": "הנחה יזומה",
-    "print_date_document": (document_type, order_date, order_time)=>`${document_type} הופקה בתאריך ${order_date} בשעה ${order_time}`,
-    "print_date_deliveryNote": (order_date, order_time)=>`תעודת משלוח הופקה בתאריך ${order_date} בשעה ${order_time}`,
-    "print_date_invoice": (order_date, order_time)=>`חשבונית הופקה בתאריך ${order_date} בשעה ${order_time}`,
+    "print_date_document": (document_type, order_date, order_time) => `${document_type} הופקה בתאריך ${order_date} בשעה ${order_time}`,
+    "print_date_deliveryNote": (order_date, order_time) => `תעודת משלוח הופקה בתאריך ${order_date} בשעה ${order_time}`,
+    "print_date_invoice": (order_date, order_time) => `חשבונית הופקה בתאריך ${order_date} בשעה ${order_time}`,
     "diner": "אירוח",
     "paid_by": "התקבל ב",
     "refunded_by": "הוחזר ב",
@@ -153,7 +153,8 @@ let ORDERS_VIEW = {
     "Owner": "Owner",
     "reversal": "ביטול",
     "kickout": "Kickout",
-    "Kicked_out": "Kicked out"
+    "Kicked_out": "Kicked out",
+    "card_type": "סוג כרטיס"
 };
 
 export default ORDERS_VIEW;
@@ -204,7 +205,7 @@ let billService = {
 
         offersList.forEach(offer => {
 
-            let offerQyt:any = 0;
+            let offerQyt: any = 0;
             if (offer.SPLIT_DENOMINATOR && offer.SPLIT_NUMERATOR && offer.SPLIT_DENOMINATOR !== 100 && offer.SPLIT_NUMERATOR !== 100) {
                 offerQyt = `${offer.SPLIT_NUMERATOR}/${offer.SPLIT_DENOMINATOR}`;
             } else {
@@ -212,7 +213,7 @@ let billService = {
             }
 
             if (offer.OFFER_TYPE === 'Simple') {
-                let item:any = {
+                let item: any = {
                     isOffer: true,
                     name: offer.OFFER_NAME,
                     qty: offerQyt,
@@ -298,6 +299,18 @@ let billService = {
                         }
                     });
                 }
+
+                if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
+                    _.each(offer.ORDERED_OFFER_DISCOUNTS, discount => {
+                        items.push({
+                            isOfferDiscount: true,
+                            name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : ORDERS_VIEW.manual_item_discount,
+                            qty: null,
+                            amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                        })
+                    })
+                }
+
             }
         });
 
@@ -477,20 +490,20 @@ export class ClosedOrdersDataService {
         the stream emits the currentBd's last closed order time, in the restaurant's timezone and in the format dddd
         e.g. 1426 means the last order was closed at 14:26, restaurnat time 
     */
-    public lastClosedOrderTime$:Observable<any> = new Observable(obs=>{
-        this.dataService.currentBd$.subscribe((cbd: moment.Moment)=>{
+    public lastClosedOrderTime$: Observable<any> = new Observable(obs => {
+        this.dataService.currentBd$.subscribe((cbd: moment.Moment) => {
             this.olapEp.getLastClosedOrderTime(cbd)
                 .then((lastClosedOrderTime: string) => {
                     obs.next(lastClosedOrderTime);
                 });
         });
     }).publishReplay(1).refCount();
-    
+
     /* cache of Orders by business date ('YYYY-MM-DD') */
     private ordersCache: Map<string, Order[]> = new Map<string, Order[]>();
 
     constructor(
-        private olapEp: OlapEp, 
+        private olapEp: OlapEp,
         private rosEp: ROSEp,
         private usersDataService: UsersDataService,
         // private categoriesDataService: CategoriesDataService,
@@ -501,7 +514,7 @@ export class ClosedOrdersDataService {
         private promotionsDataService: PromotionsDataService,
         private tablesDataService: TablesDataService,
         private dataService: DataService
-    ) {}
+    ) { }
 
     /* 
         @caching(indirect)
@@ -519,13 +532,13 @@ export class ClosedOrdersDataService {
         orderOld?: any,
         printDataOld?: any
     }> {
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
             this.getOrders(moment(businessDateStr))
-                .then(orders=>{
-                    const order = orders.find(o=>o.tlogId===tlogId);
+                .then(orders => {
+                    const order = orders.find(o => o.tlogId === tlogId);
                     if (enriched) {
                         if (order.enrichmentLevels.orderDetails) {
-                            resolve({order: order});
+                            resolve({ order: order });
                         } else {
                             return this.enrichOrder(order)
                                 .then(data => resolve(data));
@@ -534,25 +547,25 @@ export class ClosedOrdersDataService {
                 });
         });
     }
-       
-       /* 
-        @caching
-        @:promise
-        resolves with a collection of 'Order's for the provided businesDate.
-        //(canceled, now always bring price reductions) if withPriceReductions, each order will also be enriched with price reduction related data.
-    */
+
+    /* 
+     @caching
+     @:promise
+     resolves with a collection of 'Order's for the provided businesDate.
+     //(canceled, now always bring price reductions) if withPriceReductions, each order will also be enriched with price reduction related data.
+ */
     public getOrders(
         businessDate: moment.Moment
         // { withPriceReductions = false }: { withPriceReductions?: boolean } = {}
-    ): Promise<Order[]> {        
+    ): Promise<Order[]> {
         // cache check
         const bdKey = businessDate.format('YYYY-MM-DD');
         if (this.ordersCache.has(bdKey)) {
             return Promise.resolve(this.ordersCache.get(bdKey));
         }
-        
+
         //not cached:
-        const that = this;        
+        const that = this;
 
         const pAll: any = [
             this.olapEp.getOrders({ day: businessDate }),
@@ -561,10 +574,10 @@ export class ClosedOrdersDataService {
         //if (withPriceReductions) pAll.push(this.olapEp.getOrdersPriceReductionData(businessDate));
 
         return Promise.all(pAll)
-            .then((data: any[])=>{
-                const ordersRaw:any[] = data[0];
-                const priceReductionsRaw:any[] = data[1];
-                
+            .then((data: any[]) => {
+                const ordersRaw: any[] = data[0];
+                const priceReductionsRaw: any[] = data[1];
+
                 const orders: Order[] = [];
                 for (let i = 0; i < ordersRaw.length; i++) {
                     const order: Order = new Order();
@@ -576,7 +589,7 @@ export class ClosedOrdersDataService {
                     order.sales = ordersRaw[i].sales;
                     order.diners = ordersRaw[i].dinersPPA;
                     order.ppa = ordersRaw[i].ppa;
-                    
+
                     const orderPriceReductionsRaw_aggregated = {
                         cancellation: 0,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
                         discountsAndOTH: 0,//{dim:retention,measure:retention}  heb: שימור ושיווק
@@ -586,8 +599,8 @@ export class ClosedOrdersDataService {
 
                     priceReductionsRaw
                         .filter(pr => pr.orderNumber === order.number)
-                        .forEach(o=>{
-                            const dim = o.reductionReason;                            
+                        .forEach(o => {
+                            const dim = o.reductionReason;
                             switch (dim) {
                                 case 'cancellation':
                                 case 'compensation':
@@ -595,13 +608,13 @@ export class ClosedOrdersDataService {
                                     break;
                                 case 'retention':
                                     orderPriceReductionsRaw_aggregated.discountsAndOTH += o.retention;
-                                    break;                                    
+                                    break;
                                 case 'organizational':
                                     orderPriceReductionsRaw_aggregated.employees += o.organizational;
-                                    break;                                                                        
+                                    break;
                                 case 'promotions':
                                     orderPriceReductionsRaw_aggregated.promotions += o.retention;
-                                    break;                                                                        
+                                    break;
                             }
                         });
 
@@ -616,7 +629,7 @@ export class ClosedOrdersDataService {
             });
     }
 
-    
+
     //TODO the app was developed against ROS 3.7.0 (belongs to Product 4.X), but the enrich order code was copied from develop-il (Office 3.X, Product 3.X). TODO, bring newer code from latest Office 4.X (compare the relevant office files to detect what was changed).
 
     /* 
@@ -629,12 +642,12 @@ export class ClosedOrdersDataService {
         order: Order,
         orderOld: any,
         printDataOld: any
-    }> {        
+    }> {
         const that = this;
 
-        function enrichOrder_(orderObj:Order, tlog, bundles, allModifiers, users, items, tables, promotions): Promise<any> {
+        function enrichOrder_(orderObj: Order, tlog, bundles, allModifiers, users, items, tables, promotions): Promise<any> {
             const courseActions = ['notified', 'fired', 'served', 'prepared', 'taken'];
-            
+
             const userNone = new User('None', '');
 
             function resolveUser(userId): User {
@@ -668,6 +681,24 @@ export class ClosedOrdersDataService {
                         .value();
                 }
                 return clubMembers;
+            }
+
+            function getPaymentMethodName(key) {
+                let paymentsHash = {
+                    oth: ORDERS_VIEW.oth,
+                    ChargeAccountPayment: ORDERS_VIEW.charge_account,
+                    CashPayment: ORDERS_VIEW.cash,
+                    GiftCard: ORDERS_VIEW.giftCard,
+                    GiftCardLoad: ORDERS_VIEW.giftCardLoad,
+                    ChequePayment: ORDERS_VIEW.cheque,
+                    CreditCardPayment: ORDERS_VIEW.credit,
+                    ChargeAccountRefund: ORDERS_VIEW.charge_account_refund,
+                    CashRefund: ORDERS_VIEW.cash_refund,
+                    ChequeRefund: ORDERS_VIEW.cheque_refund,
+                    CreditCardRefund: ORDERS_VIEW.credit_refund
+                }
+
+                return paymentsHash[key];
             }
 
             function resolveOrderedOferModifiers(modifiers) {
@@ -754,7 +785,7 @@ export class ClosedOrdersDataService {
                 return _.find(tables, function (t) {
                     return t._id === tableId;
                 });
-            }        
+            }
 
             function resolveOffer(_order, reward) {
                 let offer = '';
@@ -787,7 +818,7 @@ export class ClosedOrdersDataService {
             order.totalCashback = totalCashback ? totalCashback / 100 : 0;
             order.tlogId = tlog.id;
             order.closed = tlog.closed;
-            
+
             order.allOffersItems = [];
             order.unasignedItems = [];
             order.cencelledItems = [];
@@ -926,7 +957,7 @@ export class ClosedOrdersDataService {
                 } else {
                     order.paymentName = [];
 
-                    _.each(order.payments, function (payment) {
+                    order.payments.forEach(payment => {
                         payment.name = '';
                         if (payment._type === 'ChargeAccountPayment') {
 
@@ -948,19 +979,19 @@ export class ClosedOrdersDataService {
                             payment.name = 'מזומן' + ' ';
                         } else if (payment._type === 'GiftCard') {
                             //if (order.paymentName.indexOf($translate.instant('ORDERS_VIEW.giftCard')) === -1) {
-                            if (order.paymentName.indexOf('כרטיס תשלום') === -1) {                           
+                            if (order.paymentName.indexOf('כרטיס תשלום') === -1) {
                                 order.paymentName.push('כרטיס תשלום');
                             }
                             payment.name = 'כרטיס תשלום' + ' ';
                         } else if (payment._type === 'GiftCardLoad') {
                             //if (order.paymentName.indexOf($translate.instant('ORDERS_VIEW.giftCardLoad')) === -1) {
-                            if (order.paymentName.indexOf('טעינת כרטיס תשלום') === -1) {                                
+                            if (order.paymentName.indexOf('טעינת כרטיס תשלום') === -1) {
                                 order.paymentName.push('טעינת כרטיס תשלום');
                             }
                             payment.name = 'טעינת כרטיס תשלום' + ' ';
                         } else if (payment._type === 'GiftCard') {
                             //if (order.paymentName.indexOf($translate.instant('ORDERS_VIEW.giftCard')) === -1) {
-                            if (order.paymentName.indexOf('כרטיס תשלום') === -1) {                                
+                            if (order.paymentName.indexOf('כרטיס תשלום') === -1) {
                                 order.paymentName.push('כרטיס תשלום');
                             }
                             payment.name = 'כרטיס תשלום' + ' ';
@@ -1005,6 +1036,9 @@ export class ClosedOrdersDataService {
                             }
                             payment.name += 'החזר אשראי' + ' ';
                         }
+
+                        payment.methodName = getPaymentMethodName(payment._type);
+
                     });
 
                     order.paymentName = order.paymentName.join('+');
@@ -1030,9 +1064,9 @@ export class ClosedOrdersDataService {
                 });
             }
 
-            if (order.orderedPromotions.length) {
+            if (order.orderedPromotions.length || order.rewards.length > 0) {
                 _.each(order.orderedPromotions, function (promotion) {
-                    let data =  (promotion.promotion);
+                    let data = resolvePromotion(promotion.promotion);
                     if (data) {
                         _.extend(promotion, data);
                     }
@@ -1042,14 +1076,33 @@ export class ClosedOrdersDataService {
                 _.each(order.rewards, reward => {
 
                     let _promotion = reward.promotion;
-                    let _orderedPromotion = order.orderedPromotions.find(c => c.promotion === _promotion);
+                    let _orderedPromotion = order.orderedPromotions.find(c => c.promotion == _promotion);
 
-                    let _item = {
-                        promotionData: _orderedPromotion,
-                        discount: reward.discount
-                    };
+                    if (_orderedPromotion) {
 
-                    orderedPromotionsData.push(_item);
+                        orderedPromotionsData.push({
+                            promotionData: _orderedPromotion,
+                            discount: reward.discount
+                        });
+
+                    } else {
+
+                        let hasValue = false;
+                        order.orderedDiscounts.forEach(item => {
+                            let orderedDiscount = reward.requiredResources.find(c => c.orderedDiscount && c.orderedDiscount === item._id);
+                            if (orderedDiscount) {
+                                hasValue = true;
+                            }
+                        });
+
+                        if (!hasValue) {
+                            orderedPromotionsData.push({
+                                promotionData: { name: reward.name },
+                                discount: reward.discount
+                            });
+                        }
+                    }
+
                 });
 
                 order.orderedPromotionsData = orderedPromotionsData;
@@ -1070,7 +1123,7 @@ export class ClosedOrdersDataService {
                     }
                 });
             }
-            
+
             if (order.courses.length) {
 
                 _.each(order.courses, function (course) {
@@ -1117,7 +1170,7 @@ export class ClosedOrdersDataService {
                         }
                     }
                 });
-            }            
+            }
 
             // Opened time line
             order.timeline.push({
@@ -1157,17 +1210,47 @@ export class ClosedOrdersDataService {
                 });
             });
 
+            function buildPaymentRow(payment) {
+
+                let result = [];
+                if (payment.creditCardBrand && payment.creditCardBrand !== "") {
+                    result.push({ key: ORDERS_VIEW.card_type, value: payment.creditCardBrand })
+                }
+
+                let holderName = "";
+                if (payment.customerDetails) {
+                    if (payment.customerDetails.name && payment.customerDetails.name !== "") {
+                        result.push({ key: ORDERS_VIEW.customer_name, value: payment.customerDetails.name });
+                    }
+                }
+
+                if (payment.last4 && payment.last4 !== "") {
+                    result.push({ key: ORDERS_VIEW.last_4, value: payment.last4 });
+                }
+
+                let amount = Utils.toFixedSafe(payment.amount / 100, 2);
+                result.push({ key: ORDERS_VIEW.amount, value: amount });
+
+                let text = "";
+                result.forEach((item, index) => {
+                    if (index > 0) { text += "  ,"; }
+                    text += `${item.key} : ${item.value}`;
+                });
+
+                return text;
+            }
+
             // add payments to time line
             _.each(order.payments, function (payment) {
                 order.timeline.push({
                     //action: $translate.instant('ORDERS_VIEW.payment'),
                     action: 'תשלום',
-                    data: payment.tenderType + ' - ' + payment.accountName + ': ' + that.currPipe.transform(payment.amount, that.currency, 'symbol', '1.0-0'),
+                    data: getPaymentMethodName(payment._type) + ' - ' + buildPaymentRow(payment),
                     at: payment.lastUpdated,
                     by: resolveUser(payment.user)
                 });
             });
-        
+
             // add cancellations and OTH
             if (order.orderedItems.length) {
                 let data;
@@ -1449,7 +1532,7 @@ export class ClosedOrdersDataService {
                 }
 
                 order.orderer.deliveryAddressSummary = deliveryAddressSummary;
-            }          
+            }
 
             return Promise.resolve(order);
 
@@ -1515,8 +1598,8 @@ export class ClosedOrdersDataService {
         }
 
         /* the func is a copy of how office 4.X is preparing an object called 'print data' */
-        function setUpPrintData(data):Promise<any> {
-            return new Promise((resolve, reject)=>{
+        function setUpPrintData(data): Promise<any> {
+            return new Promise((resolve, reject) => {
                 data = data[0];
 
                 //let isUS = Authentication.isUS();
@@ -1555,24 +1638,24 @@ export class ClosedOrdersDataService {
         }
 
         function getLookupData() {
-            return new Promise((resolve, reject)=>{
+            return new Promise((resolve, reject) => {
                 zip(
                     // that.categoriesDataService.categories$, 
-                    that.offersDataService.offers$, 
-                    that.modifierGroupsDataService.modifierGroups$, 
-                    that.usersDataService.users$, 
+                    that.offersDataService.offers$,
+                    that.modifierGroupsDataService.modifierGroups$,
+                    that.usersDataService.users$,
                     that.itemsDataService.items$,
                     that.tablesDataService.tables$,
                     that.promotionsDataService.promotions$,
                     (
                         // categoriesData: any, 
-                        offersData: any, 
+                        offersData: any,
                         modifierGroupsData: any,
                         usersData: any,
                         itemsData: any,
                         tablesData: any,
                         promotionsData: any
-                    ) => ({ 
+                    ) => ({
                         // categoriesData: categoriesData, 
                         offersData: offersData,
                         modifierGroupsData: modifierGroupsData,
@@ -1587,19 +1670,19 @@ export class ClosedOrdersDataService {
             });
         }
 
-        function getTlog(order: Order) {            
+        function getTlog(order: Order) {
             return that.rosEp.get(`tlogs/${order.tlogId}`, {});
         }
-        
+
         function getBillData(order: Order) {
             return that.rosEp.get(`tlogs/${order.tlogId}/bill`, {});
         }
 
         let printData;
         return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])
-            .then(data=>{
-                const tlog:any = data[0];
-                const lookupData: any = data[1];   
+            .then(data => {
+                const tlog: any = data[0];
+                const lookupData: any = data[1];
                 const billData: any = data[2];
                 debugger;
 
@@ -1616,15 +1699,15 @@ export class ClosedOrdersDataService {
                     ),
                     setUpPrintData(billData)
                 ]);
-                
+
             })
-            .then(data=>{
+            .then(data => {
                 const orderOld = data[0];
                 const printDataOld = data[1];
 
                 // $ctrl.taxRate = $ctrl.selectedOrder.tax.rate + '%';not in use
                 // $ctrl.orderOptions = [];
-                
+
                 // $ctrl.orderOptions.push({
                 //     view: 'orderDetails',
                 //     data: undefined,
@@ -1891,8 +1974,8 @@ export class ClosedOrdersDataService {
                 order_.isTaxExempt = false;
                 if (printDataOld.isTaxExempt) {
                     order_.isTaxExempt = printDataOld.isTaxExempt;
-                } 
-                
+                }
+
                 return {
                     order: order_,
                     orderOld: orderOld,
