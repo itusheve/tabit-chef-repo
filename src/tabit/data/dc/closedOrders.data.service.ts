@@ -689,7 +689,7 @@ export class ClosedOrdersDataService {
             }
 
             function resolveRewardResources(reward, _order) {
-                //debugger;
+                debugger;
                 let discount = reward.discount;
                 let item;
                 if (!discount) {
@@ -1280,7 +1280,7 @@ export class ClosedOrdersDataService {
             }
 
             // add discounts
-            //debugger;
+            debugger;
             if (order.orderedDiscounts.length) {
                 let rewardsHash = {};
                 _.each(order.rewards, function (reward) {
@@ -1601,7 +1601,7 @@ export class ClosedOrdersDataService {
                 const tlog:any = data[0];
                 const lookupData: any = data[1];   
                 const billData: any = data[2];
-                //debugger;
+                debugger;
 
                 return Promise.all([
                     enrichOrder_(

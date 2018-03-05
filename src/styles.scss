@@ -12,16 +12,7 @@ $greyText: #6e7482;
 
 $oldDashBG: #edf1f2;
 
-// https://stackoverflow.com/questions/2338102/override-browser-form-filling-and-input-highlighting-with-html-css
-input:-webkit-autofill {
-    -webkit-box-shadow:0 0 0 50px $oldDashBG inset!important; /* Change the color to your own background color */
-    -webkit-text-fill-color: $baseText!important;
-}
 
-input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 50px $oldDashBG inset!important;
-    -webkit-text-fill-color: $baseText!important;
-} 
 
 html, body {
     width: 100%;

@@ -1,15 +1,23 @@
 <!-- <div dir="rtl"> -->
+
+
 <div class="container" dir="rtl">
   <div class="row justify-content-center login">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <div class="row justify-content-center logo">
-        <div class="col-12"></div>
+      <div class="flex f-ltr d-col a-center logoBars" style="margin-top:60px;">
+        <div class="bars flex j-center a-end">
+          <div class="bar bar1" style="margin-right:13px;"></div>
+          <div class="bar bar2" style="margin-right:13px;"></div>
+          <div class="bar bar3" style="margin-right:13px;"></div>
+          <div class="bar bar4"></div>
+        </div>
+        <div class="logo"></div>
       </div>
       <div class="row justify-content-center">
         <div class="flex d-col col-12">
 
             <!-- reactive form + material design: -->
-            <form [formGroup]="loginForm" novalidate>
+            <form class="flex d-col" [formGroup]="loginForm" novalidate>
               <div class="flex d-col example-container">
                 <mat-form-field style="width:100%">
                   <input matInput type="email" placeholder="מייל" formControlName="email" required>
@@ -32,7 +40,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <button class="as-center mt10" mat-raised-button color="primary" (click)="login()">כניסה</button>
+              <button class="as-center" mat-raised-button color="primary" (click)="login()">כניסה</button>
             </form>
 
         </div>

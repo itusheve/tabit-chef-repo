@@ -1,15 +1,156 @@
-.login {
-  font-size: 20px;
-  .logo {
-    // height: 300px;
-    & > div {
-        // width: 386px;  
-        background: url(/assets/images/chef-logo.png);
+.container {
+  height: 100%;
+  background-color: black;
+  .login {
+    font-size: 20px;
+    .logoBars {
+      .logo {
+        width: 302px;  
+        height: 58px;
+        background: url(/assets/images/logo-orig-2.png);
         background-repeat: no-repeat;
         background-position-x: center;
-        height: 300px;
-        /* width: 200px; */
         background-size: contain;
+        margin-bottom: 50px;
+        margin-top: 20px;
+      }
     }
   }
+
+  $oldDashBG: #edf1f2;
+  $color: rgba(255, 255, 255, 0.7);
+
+  mat-icon {
+    color: $color;
+  }
+
+
+  // https://stackoverflow.com/questions/2338102/override-browser-form-filling-and-input-highlighting-with-html-css
+  /deep/input:-webkit-autofill, input:-webkit-autofill:focus {
+      //-webkit-box-shadow:0 0 0 50px $oldDashBG inset!important; /* Change the color to your own background color */
+      -webkit-box-shadow:0 0 0 50px black inset!important; /* Change the color to your own background color */
+      -webkit-text-fill-color: $color;
+  }
+
+  // input:-webkit-autofill:focus {
+  //     -webkit-box-shadow: 0 0 0 50px $oldDashBG inset!important;
+  //     //-webkit-text-fill-color: $baseText!important;
+  //     -webkit-text-fill-color: white;
+  // } 
+
+  /deep/mat-form-field {
+    .mat-form-field-wrapper.mat-input-wrapper {
+      .mat-input-flex.mat-form-field-flex {
+        .mat-input-infix.mat-form-field-infix {
+          input {
+            color: $color;
+          }
+          .mat-form-field-label-wrapper.mat-input-placeholder-wrapper.mat-form-field-placeholder-wrapper {
+            // background-color: rgba(0, 0, 0, 0.43);
+            background-color: rgba(0, 0, 0, 0);
+            .mat-form-field-label.mat-input-placeholder.mat-form-field-placeholder {
+              //"מייל"
+              color: $color;
+            }
+          }
+        }
+      }
+      .mat-input-underline.mat-form-field-underline {
+        background-color: rgba(255, 255, 255, 0.6);
+      }
+      .mat-input-subscript-wrapper.mat-form-field-subscript-wrapper {}
+    }
+  }
+
+  /deep/.mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {    
+    color: #282a2f;
+    width: 85%;
+    background: linear-gradient(to right, #62cab8 , #917dce);
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 25px!important;
+  }
+
 }
+
+
+  .bars {
+    height: 170px;
+    .bar {
+      width: 27px;
+      // position: absolute;
+      animation-duration: 3s;
+      animation-iteration-count: infinite;
+      // animation-direction: alternate;
+      // z-index: 9999;
+      // animation-timing-function: linear;
+      // bottom: 169px;
+      box-shadow: inset 0px 0px 1px 0px rgba(0, 0, 0, 0.5);
+      &.bar1 {
+        height: 89px;
+        animation-name: bar1;
+        background: linear-gradient(to bottom, #c291b2, #d27f9a);
+        animation-delay: 3s;
+      }
+      &.bar2 {
+        height: 65px;
+        animation-name: bar2;
+        background: linear-gradient(to bottom, #927ace, #8bbbcf);
+        animation-delay: 3.2s;
+      }
+      &.bar3 {
+        height: 119px;
+        animation-name: bar3;
+        background: linear-gradient(to bottom, #60cab9, #a1dd7e);
+        animation-delay: 3.4s;
+      }
+      &.bar4 {
+        height: 156px;
+        animation-name: bar4;
+        background: linear-gradient(to bottom, #df516b, #e6d9a3);
+        animation-delay: 3.6s;
+      }
+  
+    }
+  }
+
+
+  @keyframes bar1 {
+    0%   {height:89px;}
+    40%  {height:89px;}
+    45%  {height:95px;}
+    50%  {height:105px;}
+    55%  {height:95px;}
+    60%  {height:89px;}
+    100% {height:89px;}
+  }
+
+    @keyframes bar2 {
+    0%   {height:65px;}
+    40%  {height:65px;}
+    45%  {height:70px;}
+    50%  {height:80px;}
+    55%  {height:70px;}
+    60%  {height:65px;}
+    100% {height:65px;}
+  }
+
+    @keyframes bar3 {
+    0%   {height:119px;}
+    40%  {height:119px;}
+    45%  {height:125px;}
+    50%  {height:135px;}
+    55%  {height:125px;}
+    60%  {height:119px;}
+    100% {height:119px;}
+  }
+
+    @keyframes bar4 {
+    0%   {height:156px;}
+    40%  {height:156px;}
+    45%  {height:160px;}
+    50%  {height:170px;}
+    55%  {height:160px;}
+    60%  {height:156px;}
+    100% {height:156px;}
+  }
