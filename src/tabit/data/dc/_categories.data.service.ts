@@ -70,7 +70,6 @@ export class CategoriesDataService {
     ) {
 
         // this.categories$.subscribe(data => {
-        //     debugger;
         // });
     }
 

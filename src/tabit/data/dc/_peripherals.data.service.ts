@@ -22,7 +22,6 @@ export class PeripheralsDataService {
     ) {
 
         // this.peripherals$.subscribe(data => {
-        //     debugger;
         // });
     }
 

@@ -52,6 +52,8 @@ export class HomeComponent implements OnInit {
     ppa: 0
   };
   
+  private previousBdNotFinal = false;
+
   constructor(
     private cardsDataService: CardsDataService, 
     private trendsDataService: TrendsDataService, 
@@ -90,6 +92,7 @@ export class HomeComponent implements OnInit {
 
         if (data[0].hasOwnProperty('final') && !data[0].final) {
           this.previousBdCardData.salesComment = 'לא סופי';
+          this.previousBdNotFinal = true;
         } else {
           this.previousBdCardData.trends = {
             left: trends.previousBd.last4,
@@ -130,6 +133,9 @@ export class HomeComponent implements OnInit {
 
   onDayRequest(date: string) {
     if (date ==='previousBD') {
+      if (this.previousBdNotFinal) {
+        return;
+      }
       this.dataService.previousBd$.take(1).subscribe(pbd=>{
         date = pbd.format('YYYY-MM-DD');
         this.router.navigate(['/owners-dashboard/day', date]);

@@ -4,7 +4,11 @@
             <!-- {{ 'ORDERS_VIEW.all_order_oth' | translate }} -->
         </h3>
         
-        <div class="row offer-line" *ngFor="let item of printDataOld.items" [ngClass]="{'item-line': item.isItem || item.isOfferDiscount}">
+        <div 
+            class="row offer-line" 
+            *ngFor="let item of printDataOld.items" 
+            [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}"
+            >
             <div class="col-1">{{item.qty}}</div>
             <div class="col-7 item-name">{{item.name}}</div>
             <div class="col-3">
@@ -12,7 +16,11 @@
             </div>
         </div>
         <br/>
-        <div class="row offer-line" *ngFor="let item of printDataOld.oth" [ngClass]="{'item-line': item.isItem || item.isOfferDiscount}">
+        <div 
+            class="row offer-line" 
+            *ngFor="let item of printDataOld.oth" 
+            [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}"
+            >
             <div class="col-1">{{item.qty}}</div>
             <div class="col-5 item-name">{{item.name}}</div>
             <div class="col-5">{{item.amount}}</div>
@@ -43,8 +51,13 @@
 
         <hr/>
 
-        <div class="row" *ngFor="let total of printDataOld.totals" [ngClass]="{'tax': total.type === 'exclusive_tax'}">
-            <div class="col-8" [ngClass]="{'title': total.type === 'exclusive_tax'}">{{ total.name }}
+        <div 
+            class="row" 
+            *ngFor="let total of printDataOld.totals" 
+            [ngClass]="{'tax': total.type === 'exclusive_tax', 'pr_discountsAndOTH': total._priceReductions?.discountsAndOTH}"
+            >
+            <div 
+                class="col-8" [ngClass]="{'title': total.type === 'exclusive_tax'}">{{ total.name }}
                 <span class="rate" *ngIf="total.rate">{{total.rate}}%</span>
             </div>
             <div class="col-3">

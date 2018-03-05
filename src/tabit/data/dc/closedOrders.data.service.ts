@@ -8,7 +8,6 @@ import { zip } from 'rxjs/observable/zip';
 import { Order } from '../../model/Order.model';
 
 import { UsersDataService } from './_users.data.service';
-// import { CategoriesDataService } from './_categories.data.service';
 import { ItemsDataService } from './_items.data.service';
 import { ModifierGroupsDataService } from './_modifierGroups.data.service';
 import { OffersDataService } from './_offers.data.service';
@@ -216,12 +215,21 @@ let billService = {
                 let item:any = {
                     isOffer: true,
                     name: offer.OFFER_NAME,
-                    qty: offerQyt
+                    qty: offerQyt,
+                    // _priceReductions: {
+                    //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
+                    //     discountsAndOTH: false,//{dim:retention,measure:retention}  heb: שימור ושיווק
+                    //     employees: false,//{dim:organizational,measure:organizational}  heb: עובדים
+                    //     promotions: false,//{dim:promotions,measure:retention}  heb: מבצעים            
+                    // }
                 };
 
                 if (offer.ON_THE_HOUSE) {
                     //item.amount = $translate.instant('ORDERS_VIEW.oth_print');
                     item.amount = ORDERS_VIEW.oth_print;
+
+                    // item._priceReductions.discountsAndOTH = true;
+
                     oth.push(item);
                 } else {
                     item.amount = Utils.toFixedSafe(offer.OFFER_AMOUNT, 2);
@@ -235,7 +243,13 @@ let billService = {
                             //name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : $translate.instant('ORDERS_VIEW.manual_item_discount'),
                             name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : ORDERS_VIEW.manual_item_discount,
                             qty: null,
-                            amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                            amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2),
+                            // _priceReductions: {
+                            //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
+                            //     discountsAndOTH: true,//{dim:retention,measure:retention}  heb: שימור ושיווק
+                            //     employees: false,//{dim:organizational,measure:organizational}  heb: עובדים
+                            //     promotions: false,//{dim:promotions,measure:retention}  heb: מבצעים            
+                            // }
                         });
                     });
                 }
@@ -247,7 +261,6 @@ let billService = {
                     isOffer: true,
                     name: offer.OFFER_NAME,
                     qty: offerQyt,
-                    //amount: offer.ON_THE_HOUSE ? $translate.instant('ORDERS_VIEW.oth_print') : Utils.toFixedSafe(isReturnOrder ? offer.OFFER_AMOUNT : offer.OFFER_CALC_AMT, 2)
                     amount: offer.ON_THE_HOUSE ? ORDERS_VIEW.oth_print : Utils.toFixedSafe(isReturnOrder ? offer.OFFER_AMOUNT : offer.OFFER_CALC_AMT, 2)
                 });
 
@@ -304,7 +317,6 @@ let billService = {
             order.TOTAL_TIPS ||
             (isUS && collections.EXCLUSIVE_TAXES && collections.EXCLUSIVE_TAXES.length > 0))) {
             totals.push({
-                //name: $translate.instant('ORDERS_VIEW.total_order'),
                 name: ORDERS_VIEW.total_order,
                 amount: Utils.toFixedSafe(order.TOTAL_SALES_AMOUNT, 2)
             });
@@ -313,9 +325,14 @@ let billService = {
         if (collections.ORDER_DISCOUNTS_LIST && collections.ORDER_DISCOUNTS_LIST.length > 0) {
             _.each(collections.ORDER_DISCOUNTS_LIST, discount => {
                 totals.push({
-                    //name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : $translate.instant('ORDERS_VIEW.order_discount'),
                     name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : ORDERS_VIEW.order_discount,
-                    amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                    amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2),
+                    // _priceReductions: {
+                    //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
+                    //     discountsAndOTH: true,//{dim:retention,measure:retention}  heb: שימור ושיווק
+                    //     employees: false,//{dim:organizational,measure:organizational}  heb: עובדים
+                    //     promotions: false,//{dim:promotions,measure:retention}  heb: מבצעים            
+                    // }
                 });
             });
         }
@@ -324,7 +341,6 @@ let billService = {
             _.each(collections.EXCLUSIVE_TAXES, tax => {
                 totals.push({
                     type: 'exclusive_tax',
-                    //name: tax.NAME ? tax.NAME : $translate.instant('ORDERS_VIEW.exclusive_tax'),
                     name: tax.NAME ? tax.NAME : ORDERS_VIEW.exclusive_tax,
                     amount: Utils.toFixedSafe(tax.AMOUNT, 2),
                     rate: tax.RATE
@@ -334,7 +350,6 @@ let billService = {
 
         if (order.TOTAL_TIPS) {
             totals.push({
-                //name: $translate.instant('ORDERS_VIEW.tip'),
                 name: ORDERS_VIEW.tip,
                 amount: Utils.toFixedSafe(order.TOTAL_TIPS, 2)
             });
@@ -342,7 +357,6 @@ let billService = {
 
         if (order.TOTAL_IN_VAT && !isUS) {
             totals.push({
-                //name: $translate.instant('ORDERS_VIEW.total_inc_vat'),
                 name: ORDERS_VIEW.total_inc_vat,
                 amount: Utils.toFixedSafe(order.TOTAL_IN_VAT, 2)
             });
@@ -350,7 +364,6 @@ let billService = {
 
         if (order.TOTAL_AFTER_EXCLUDED_TAX && isUS) {
             totals.push({
-                //name: $translate.instant('ORDERS_VIEW.total_inc_vat'),
                 name: ORDERS_VIEW.total_inc_vat,
                 amount: Utils.toFixedSafe(order.TOTAL_AMOUNT, 2)
             });
@@ -370,7 +383,6 @@ let billService = {
 
         payments.push({
             type: 'change',
-            //name: $translate.instant('ORDERS_VIEW.change'),
             name: ORDERS_VIEW.change,
             amount: Utils.toFixedSafe(order.CHANGE, 2)
         });
@@ -389,7 +401,6 @@ let billService = {
 
             taxes.InclusiveTaxes.push({
                 type: 'title',
-                //name: `${$translate.instant('ORDERS_VIEW.inclusive_tax')}:`,
                 name: `${ORDERS_VIEW.inclusive_taxes}:`,
                 amount: undefined
             });
@@ -397,7 +408,6 @@ let billService = {
             _.each(collections.INCLUSIVE_TAXES, tax => {
                 taxes.InclusiveTaxes.push({
                     type: 'inclusive_tax',
-                    //name: tax.NAME ? tax.NAME : $translate.instant('ORDERS_VIEW.inclusive_tax'),
                     name: tax.NAME ? tax.NAME : ORDERS_VIEW.inclusive_tax,
                     amount: Utils.toFixedSafe(tax.AMOUNT, 2)
                 });
@@ -679,6 +689,7 @@ export class ClosedOrdersDataService {
             }
 
             function resolveRewardResources(reward, _order) {
+                //debugger;
                 let discount = reward.discount;
                 let item;
                 if (!discount) {
@@ -1269,6 +1280,7 @@ export class ClosedOrdersDataService {
             }
 
             // add discounts
+            //debugger;
             if (order.orderedDiscounts.length) {
                 let rewardsHash = {};
                 _.each(order.rewards, function (reward) {
@@ -1589,6 +1601,7 @@ export class ClosedOrdersDataService {
                 const tlog:any = data[0];
                 const lookupData: any = data[1];   
                 const billData: any = data[2];
+                //debugger;
 
                 return Promise.all([
                     enrichOrder_(

@@ -52,16 +52,14 @@ export class CardsDataService {
                         const previousBdData_ROS = data[0];
                         const previousBdData_Cube = data[1];
 
+                        
                         const previousBdSales_ROS = previousBdData_ROS.totalAmount ? previousBdData_ROS.totalAmount / 100 : 0;
                         const previousBdSales_Cube = previousBdData_Cube.kpi.sales;
-
+                        
                         console.info(`previousBdData: previousBdSales_ROS = ${previousBdSales_ROS}`);
                         console.info(`previousBdData: previousBdSales_Cube = ${previousBdSales_Cube}`);
-
-                        //TMPPMPMPMPM 
-                        // previousBdSales_Cube--;
-
-                        if (previousBdSales_Cube === previousBdSales_ROS) {
+                        
+                        if (Math.abs(previousBdSales_Cube-previousBdSales_ROS)<1) {
                             console.info(`previousBdData: no ROS<=>CUBE mismatch`);
                             let sales = previousBdData_Cube.kpi.sales;
                             let dinersPPA = previousBdData_Cube.kpi.diners.count;

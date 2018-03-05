@@ -196,35 +196,6 @@
         </mat-expansion-panel>
     </mat-accordion>
 
-
-    <!--start items-->
-    <mat-accordion class="mb20">
-        <mat-expansion-panel>
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    {{ ORDERSVIEW.unassigned_items }}
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <table *ngIf="orderOld.unasignedItems?.length">
-                <thead>
-                    <tr>
-                        <th>{{ ORDERSVIEW.item }}</th>
-                        <th>{{ ORDERSVIEW.price }}</th>
-                        <th>{{ ORDERSVIEW.amount }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let item of orderOld.unasignedItems">
-                        <td>{{item.name}}</td>
-                        <td class="curr2">{{item.price | curr:'2':'cents'}}</td>
-                        <td class="curr2">{{item.amount | curr:'2':'cents'}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p *ngIf="!orderOld.unasignedItems || !orderOld.unasignedItems.length">{{ ORDERSVIEW.no_unassigned_items }}</p>
-        </mat-expansion-panel>
-    </mat-accordion>
-
     <!--start payments-->
     <mat-accordion class="mb20">
         <mat-expansion-panel>
@@ -312,6 +283,34 @@
                 </tbody>
             </table>
             <p *ngIf="!orderOld.orderedPromotions || !orderOld.orderedPromotions.length">{{ ORDERSVIEW.no_promotions }}</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <!--start items-->
+    <mat-accordion class="mb20">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ ORDERSVIEW.unassigned_items }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table *ngIf="orderOld.unasignedItems?.length">
+                <thead>
+                    <tr>
+                        <th>{{ ORDERSVIEW.item }}</th>
+                        <th>{{ ORDERSVIEW.price }}</th>
+                        <th>{{ ORDERSVIEW.amount }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of orderOld.unasignedItems">
+                        <td>{{item.name}}</td>
+                        <td class="curr2">{{item.price | curr:'2':'cents'}}</td>
+                        <td class="curr2">{{item.amount | curr:'2':'cents'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p *ngIf="!orderOld.unasignedItems || !orderOld.unasignedItems.length">{{ ORDERSVIEW.no_unassigned_items }}</p>
         </mat-expansion-panel>
     </mat-accordion>
 
