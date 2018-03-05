@@ -499,9 +499,13 @@ export class DataService {
                             _.each(missingDays, function (day) {
                                 groupedByWeekDay[day] = [
                                     {
-                                        sales: 0,
-                                        dinersSales: 0,
-                                        dinersCount: 0
+                                        kpi: {
+                                            sales: 0,
+                                            diners: {
+                                                sales: 0,
+                                                count: 0
+                                            }
+                                        }
                                     }
                                 ];
                             });
