@@ -470,7 +470,11 @@ let billService = {
 
         if (payment.P_TENDER_TYPE === 'creditCard') {
             paymentName = refund !== '' ? `${refund} (${payment.CARD_TYPE} ${payment.LAST_4})` : `${payment.CARD_TYPE} ${payment.LAST_4}`;
-        } else {
+        }
+        else if (payment.P_TENDER_TYPE === 'chargeAccount') {
+            paymentName = `${refund} ${payment.P_NAME} ${payment.LAST_4 || ""}`;
+        }
+        else {
             paymentName = `${refund} ${payment.P_NAME}`;
         }
 
@@ -684,7 +688,7 @@ export class ClosedOrdersDataService {
                 return clubMembers;
             }
 
-            function getPaymentMethodName(key) {
+            function getPaymentMethodName(key, addSpace) {
                 let paymentsHash = {
                     oth: ORDERS_VIEW.oth,
                     ChargeAccountPayment: ORDERS_VIEW.charge_account,
@@ -699,7 +703,17 @@ export class ClosedOrdersDataService {
                     CreditCardRefund: ORDERS_VIEW.credit_refund
                 }
 
-                return paymentsHash[key];
+
+                let result = "";
+                if (key === "CreditCardPayment") {
+                    result = "";
+                }
+                else {
+                    result = paymentsHash[key] + " ";
+                    if (addSpace) { result += "- "; }
+                }
+
+                return result;
             }
 
             function resolveOrderedOferModifiers(modifiers) {
@@ -1038,8 +1052,10 @@ export class ClosedOrdersDataService {
                             payment.name += 'החזר אשראי' + ' ';
                         }
 
-                        payment.methodName = getPaymentMethodName(payment._type);
-
+                        payment.methodName = getPaymentMethodName(payment._type, false);
+                        if (payment._type === "ChargeAccountPayment") {
+                            payment.methodName += payment.accountName;
+                        }
                     });
 
                     order.paymentName = order.paymentName.join('+');
@@ -1211,34 +1227,53 @@ export class ClosedOrdersDataService {
                 });
             });
 
-            function buildPaymentRow(payment) {
+            function resolvePaymentData(payment) {
 
-                let result = [];
-                if (payment.creditCardBrand && payment.creditCardBrand !== "") {
-                    result.push({ key: ORDERS_VIEW.card_type, value: payment.creditCardBrand })
-                }
+                function buildPaymentRow(payment) {
 
-                let holderName = "";
-                if (payment.customerDetails) {
-                    if (payment.customerDetails.name && payment.customerDetails.name !== "") {
-                        result.push({ key: ORDERS_VIEW.customer_name, value: payment.customerDetails.name });
+                    let result = [];
+                    if (payment._type === "CreditCardPayment") {
+                        if (payment.creditCardBrand && payment.creditCardBrand !== "") {
+                            result.push({ value: payment.creditCardBrand })
+                        }
                     }
+                    else if (payment._type === "ChargeAccountPayment") {
+                        if (payment.accountName && payment.accountName !== "") {
+                            result.push({ value: payment.accountName })
+                        }
+                    }
+
+                    let holderName = "";
+                    if (payment.customerDetails) {
+                        if (payment.customerDetails.name && payment.customerDetails.name !== "") {
+                            result.push({ key: ORDERS_VIEW.customer_name, value: payment.customerDetails.name });
+                        }
+                    }
+
+                    if (payment.last4 && payment.last4 !== "") {
+                        result.push({ key: ORDERS_VIEW.last_4, value: payment.last4 });
+                    }
+
+                    let amount = payment.amount / 100;
+                    result.push({ key: ORDERS_VIEW.amount, value: amount });
+
+                    let text = "";
+                    result.forEach((item, index) => {
+                        if (index > 0) { text += "  ,"; }
+
+                        if (item.key) {
+                            text += `${item.key} : ${item.value}`;
+                        }
+                        else {
+                            text += `${item.value}`;
+                        }
+
+                    });
+
+                    return text;
                 }
 
-                if (payment.last4 && payment.last4 !== "") {
-                    result.push({ key: ORDERS_VIEW.last_4, value: payment.last4 });
-                }
-
-                let amount = Utils.toFixedSafe(payment.amount / 100, 2);
-                result.push({ key: ORDERS_VIEW.amount, value: amount });
-
-                let text = "";
-                result.forEach((item, index) => {
-                    if (index > 0) { text += "  ,"; }
-                    text += `${item.key} : ${item.value}`;
-                });
-
-                return text;
+                return getPaymentMethodName(payment._type, true) + buildPaymentRow(payment);
             }
 
             // add payments to time line
@@ -1246,7 +1281,7 @@ export class ClosedOrdersDataService {
                 order.timeline.push({
                     //action: $translate.instant('ORDERS_VIEW.payment'),
                     action: 'תשלום',
-                    data: getPaymentMethodName(payment._type) + ' - ' + buildPaymentRow(payment),
+                    data: resolvePaymentData(payment),
                     at: payment.lastUpdated,
                     by: resolveUser(payment.user)
                 });

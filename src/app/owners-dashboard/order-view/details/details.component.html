@@ -65,8 +65,8 @@
     </mat-card>
     <!--end general 1 details start-->
 
-    <!--start general 2 details start-->    
-    <mat-card class="mb20">                
+    <!--start general 2 details start-->
+    <mat-card class="mb20">
         <mat-card-title>
             {{ ORDERSVIEW.general }}
         </mat-card-title>
@@ -101,7 +101,7 @@
             </table>
         </mat-card-content>
     </mat-card>
-   
+
     <!--end general 2 details start-->
 
     <!--start timeline-->
@@ -131,7 +131,7 @@
                     </tr>
                 </tbody>
             </table>
-        </mat-expansion-panel>            
+        </mat-expansion-panel>
     </mat-accordion>
 
     <!--start offers-->
@@ -220,7 +220,7 @@
                     <tr *ngFor="let payment of orderOld.payments">
                         <td>
                             <span>{{payment.methodName}}</span>
-                            <span *ngIf="payment.creditCardBrand"> - {{payment.creditCardBrand}}</span>
+                            <span ng-if="payment.creditCardBrand">{{payment.creditCardBrand}}</span>
                         </td>
                         <td>{{payment.customerDetails.name}}</td>
                         <td>{{payment.last4}}</td>
