@@ -42,7 +42,7 @@
             <hr/>
             <div class="row">
                 <!-- <div class="col-8">{{ 'TIP' | translate }}</div> -->
-                <div class="col-8">תשר</div>
+                <div class="col-8" i18n="slips|תשר@@tip">Gratuity</div>
                 <div class="col-3">
                     <span class="negative">{{(orderOld.tips[0].amount/100) | number:'1.2-2'}}</span>
                 </div>
@@ -128,7 +128,7 @@
         <div class="row text-center">
             <h4 *ngIf="order.isReturnOrder">
                 <!-- <span class="inline m-far-xs returnOrder">{{ 'RETURN_TRANSACTION' | translate }}</span> -->
-                <span class="inline m-far-xs returnOrder">החזרת עסקה</span>                                 
+                <span class="inline m-far-xs returnOrder" i18n="slips|החזרת עסקה@@returnTransaction">Return Transaction</span>
             </h4>
         </div>
         

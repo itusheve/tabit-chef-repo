@@ -8,14 +8,12 @@
         <div>{{org?.name}}</div>
       </div>
       <div class="flex d-col buttons">
-        <mat-slide-toggle class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)">
-          מע"מ
-        </mat-slide-toggle>
+        <mat-slide-toggle class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)" i18n="owners-dashboard|maam@@vat">VAT</mat-slide-toggle>
         <button mat-raised-button [routerLink]="['/restaurants']" [queryParams]="{ m: 's'}">
-          <span>המסעדות שלי</span>
+          <span i18n="owners-dashboard|המסעדות שלי@@mySites">My Sites</span>
         </button>
         <button mat-raised-button (click)="logout()">
-          <span>התנתק</span>
+          <span i18n="owners-dashboard|התנתק@@logout">Logout</span>
         </button>    
       </div>
     </div>
@@ -28,7 +26,7 @@
       </div>      
       <div class="flex d-col aj-center" style="width:80%;">
         <div style="color:white">{{org?.name}}</div>
-        <div *ngIf="!vat" style="color:white;font-size:12px;">(הנתונים ללא מע"מ)</div>
+        <div *ngIf="!vat" style="color:white;font-size:12px;">(<span i18n="owners-dashboard|הנתונים ללא מעמ@@excludingVAT">Data excluding VAT</span>)</div>
       </div>
       <div class="flex j-end" style="width:20%;">
         <!-- <pre>{{router.routerState}}</pre> -->
@@ -43,6 +41,4 @@
     </div>
   </mat-sidenav-content>
 
-  <!-- </div> -->
-<!-- </div> -->
 </mat-sidenav-container>

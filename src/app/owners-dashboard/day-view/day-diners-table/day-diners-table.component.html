@@ -1,24 +1,24 @@
 <div class="f-rtl">
-    <div class="title">סועדים</div>
+    <div class="title" i18n="day-diners-table|סועדים@@diners">Diners</div>
     <div class="flex body">
         <table class="fixedWidth" [ngClass]="{'hLarge':hSize==='large', 'hxLarge':hSize==='xlarge'}">
             <tr>
                 <td></td>
-                <td>סה"כ</td>
+                <td i18n="day-diners-table|סהכ@@total">Total</td>
                 <td *ngFor="let shift of dataByShifts">{{shift.name}}</td>
             </tr>            
             <tr>
-                <td>מכירות סועדים</td>
+                <td i18n="day-diners-table|מכירות סועדים@@dinersSales">Diners Sales</td>
                 <td>{{totalSalesPPA | curr:'0'}}</td>
                 <td *ngFor="let shift of dataByShifts">{{shift.salesPPA | curr:'0'}}</td>
             </tr>
             <tr>
-                <td>סועדים</td>
+                <td i18n="day-diners-table|סועדים@@diners">Diners</td>
                 <td>{{totalDiners | number : '1.0-0'}}</td>
                 <td *ngFor="let shift of dataByShifts">{{shift.diners | number : '1.0-0'}}</td>
             </tr>
             <tr>
-                <td>PPA</td>
+                <td i18n="day-diners-table|PPA@@ppa">PPA</td>
                 <td>{{totalPPA | curr}}</td>
                 <td *ngFor="let shift of dataByShifts">{{shift.ppa | curr}}</td>
             </tr>

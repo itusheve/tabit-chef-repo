@@ -1,26 +1,26 @@
 <div class="ticket-box flex d-col">
 
     <!-- <h4>{{'ORDERS_VIEW.giftCard' | translate}}</h4> -->
-    <h4>כרטיס תשלום</h4>    
+    <h4 i18n="slips|כרטיס תשלום@@giftCard">Gift Card</h4>    
 
     <div class="flex j-sb">
         <!-- <span>{{'BUSINESS_MEAL' | translate}}</span> -->
-        <span>ארוחה עסקית</span>        
+        <span i18n="slips|ארוחה עסקית@@businessMeal">Business Meal></span>
         <span>{{(data.amount/100) | number:'1.2-2'}}</span>
     </div>
     <div class="flex j-sb">
         <!-- <span>{{'BEFORE_VAT' | translate}}</span> -->
-        <span>סה"כ לפני מע"מ</span>        
+        <span i18n="slips|סהכ לפני מעמ@@beforeVAT">Before VAT</span>
         <span>{{((data.amount/100)-(data.tax.amount/100)) | number:'1.2-2'}}</span>
     </div>
     <div class="flex j-sb">
         <!-- <span>{{'VAT' | translate}}</span> -->
-        <span>מע"מ</span>        
+        <span i18n="slips|מעמ@@vat">VAT</span>
         <span>{{(data.tax.amount/100) | number:'1.2-2'}}</span>
     </div>
     <div class="flex j-sb">
         <!-- <span>{{'INCLUDE_VAT' | translate}}</span> -->
-        <span>כולל מע"מ</span>        
+        <span i18n="slips|כולל מעמ@@includeVAT">Include VAT</span>
         <span>{{(data.amount/100) | number:'1.2-2'}}</span>
     </div>
 

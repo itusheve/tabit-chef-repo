@@ -20,18 +20,27 @@
             <form class="flex d-col" [formGroup]="loginForm" novalidate>
               <div class="flex d-col example-container">
                 <mat-form-field style="width:100%">
-                  <input matInput type="email" placeholder="מייל" formControlName="email" required>
+                  <input 
+                    matInput 
+                    type="email" 
+                    placeholder="Email" 
+                    i18n-placeholder="login|מייל@@email" 
+                    formControlName="email" 
+                    required
+                    >
                   <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
-                    <!-- <div *ngIf="email.errors.required"> -->
-                      
-                    <!-- </div> -->
-                    <div *ngIf="email.errors.email">
-                      מייל לא חוקי
-                    </div>
+                    <div *ngIf="email.errors.email" i18n="login|מייל לא חוקי@@illegalEmail">Illegal email</div>
                   </mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                  <input matInput placeholder="סיסמא" [type]="hidePass ? 'password' : 'text'" formControlName="password" required>
+                  <input 
+                    matInput 
+                    placeholder="Password" 
+                    i18n-placeholder="login|סיסמא@@password"
+                    [type]="hidePass ? 'password' : 'text'" 
+                    formControlName="password" 
+                    required
+                    >
                   <mat-icon matSuffix (click)="hidePass = !hidePass">{{hidePass ? 'visibility' : 'visibility_off'}}</mat-icon>
                   <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
                     <!-- <div *ngIf="password.errors.required"> -->
@@ -40,7 +49,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <button class="as-center" mat-raised-button color="primary" (click)="login()">כניסה</button>
+              <button class="as-center" mat-raised-button color="primary" (click)="login()" i18n="login|כניסה@@login">Login</button>
             </form>
 
         </div>

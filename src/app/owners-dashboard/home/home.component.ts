@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   currentBdCardData: CardData = {
     loading: true,
     title: '',
-    tag: 'היום',
+    tag: 'currentBd',
     sales: 0,
     diners: 0,
     ppa: 0
@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
   previousBdCardData: CardData = {
     loading: true,
     title: '',
-    tag: 'אתמול',
+    tag: 'previousBd',
     sales: 0,
     diners: 0,
     ppa: 0

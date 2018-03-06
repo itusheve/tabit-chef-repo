@@ -10,31 +10,35 @@
     <!-- Common -->
     <div class="ticket-box d-col common" style="border-bottom: 2px solid #000;">
       <div class="flex j-center">
-        <div>מלצר</div>
+        <div i18n="slips|מלצר@@waiter">Waiter</div>
         &nbsp;
         <div>{{order.users.owner.fullName}}</div>
       </div>
       <div class="flex j-center">
-        <div>שולחן</div>
+        <div i18n="slips|שולחן@@table">Table</div>
         &nbsp;
         <div>{{orderOld.table}}</div>
       </div>
       <div class="flex j-center" *ngIf="!isCheck">
-        <div>מספר סועדים</div>
+        <div i18n="slips|מספר סועדים@@diners">Guests</div>
         &nbsp;
         <div>{{orderOld.dinersNum}}</div>
       </div>
+      <!-- TODO... -->
       <!-- <h4 *ngIf="isCheck">
                     <span class="inline m-far-xs">{{ 'CHECK_NUMBER' | translate }}</span>
                     <span class="inline">{{$ctrl.selectedCheck.printData.variables.CHECK_NO}}</span>
                 </h4> -->
       <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
-        <!-- <span class="inline m-far-xs returnOrder">{{ 'RETURN_TRANSACTION' | translate }}</span> -->
+        <!-- TODO why is this commented? -->
+        <!-- <span class="inline m-far-xs returnOrder" i18n="slips|החזרת עסקה@@returnTransaction">Return Transaction</span> -->
       </div>
       <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
+        <!-- TODO why is this commented? -->
         <!-- <span class="inline m-far-xs fs-12">{{ $ctrl.selectedCheck.printData.variables.RETURN_COMMENT }}</span> -->
       </div>
       <div class="flex te" *ngIf="order.isTaxExempt && (showOrderDetails || isCheck)">
+        <!-- TODO... -->
         <!-- <div class="text-bold fs-24">{{ 'ORDERS_VIEW.exempted_tax' | translate }}</div>
                     <div class="text-bold fs-16">{{ $ctrl.printData.variables.TAX_EXEMPTION_CODE }}</div>
                     <div class="text">{{ $ctrl.printData.variables.TAX_EXEMPTION_COMMENT }}</div> -->

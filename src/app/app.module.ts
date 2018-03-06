@@ -103,10 +103,10 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
       useClass: TokenInterceptor,
       multi: true
     },
-    { 
-      provide: LOCALE_ID, 
-      useValue: 'he' 
-    },
+    // { 
+    //   provide: LOCALE_ID, 
+    //   useValue: 'en-US' 
+    // },
     AuthService, 
     UserGuard,
     OrgGuard,

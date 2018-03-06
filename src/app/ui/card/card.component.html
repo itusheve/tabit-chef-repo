@@ -1,6 +1,7 @@
 <div class="flex f-rtl d-col card">
   <div class="flex ctitle">
-    <div class="flex j-start ctag" style="width:25%">{{cardData?.tag}}</div>
+    <!-- <div class="flex j-start ctag" style="width:25%">{{cardData?.tag}}</div> -->
+    <div class="flex j-start ctag" style="width:25%"><span *ngIf="cardData" i18n>{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</span></div>
     <div class="flex j-center" style="width:75%">{{cardData?.title || '&nbsp;'}}</div>
     <div class="flex j-end" style="width:25%"></div>
   </div>
