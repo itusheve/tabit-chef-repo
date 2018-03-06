@@ -583,6 +583,7 @@ export class ClosedOrdersDataService {
                     const order: Order = new Order();
                     order.id = i;
                     order.tlogId = ordersRaw[i].tlogId;
+                    order.waiter = ordersRaw[i].waiter;
                     order.openingTime = ordersRaw[i].openingTime;
                     order.number = ordersRaw[i].orderNumber;
                     order.orderTypeId = this.dataService.orderTypes.find(ot => ot.caption === ordersRaw[i].orderTypeCaption)['id'];

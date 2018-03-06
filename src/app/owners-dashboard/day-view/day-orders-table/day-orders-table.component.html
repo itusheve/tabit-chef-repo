@@ -68,7 +68,7 @@
                     <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)" [ngClass]="{'lastViewed': lastViewed===order}">
                         <td>{{order.openingTime | date:'H:mm'}}</td>
                         <td>{{order.number | number:'1.0-0'}}</td>
-                        <td>{{order.openedBy}}</td>
+                        <td>{{order.waiter}}</td>
                         <td>{{order.sales | curr:'0'}}</td>
                         <td>
                             <mat-icon *ngIf="order.priceReductions.cancellation > 0" style="color: red;">assignment_return</mat-icon>

@@ -4,9 +4,7 @@ import { DatePipe } from '@angular/common';
 import { Order } from '../../../../tabit/model/Order.model';
 import { DataService } from '../../../../tabit/data/data.service';
 
-
 import * as _ from 'lodash';
-import { ClosedOrdersDataService } from '../../../../tabit/data/dc/closedOrders.data.service';
 
 export interface OrderTypeVM {
   id: string;
@@ -35,7 +33,7 @@ export class DayOrdersTableComponent implements OnChanges {
   public sortDir = 'asc';//asc | desc  
   public filters: {type: string, on: boolean}[] = [];
 
-  constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService) {}
+  constructor(private dataService: DataService) {}
 
   ngOnChanges(o) {
      
