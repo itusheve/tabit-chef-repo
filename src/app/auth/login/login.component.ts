@@ -5,6 +5,9 @@ import { MatSnackBar } from '@angular/material';
 
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { tmpTranslations } from '../../../tabit/data/data.service';
+
+// import tmpTranslations from 
 
 @Component({
   selector: 'app-login',
@@ -45,8 +48,8 @@ export class LoginComponent implements OnInit {
       })
       .catch(err=>{
         if (err.status===403) {
-          this.snackBar.open('שם משתמש ו/או סיסמא אינם נכונים', null, {
-            direction: 'rtl',
+          this.snackBar.open(tmpTranslations.get('login.userPassIncorrect'), null, {
+            direction: 'rtl',//TODO localization
             duration: 3000,
               });
         }

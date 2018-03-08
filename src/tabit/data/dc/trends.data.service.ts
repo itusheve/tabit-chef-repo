@@ -16,7 +16,7 @@ export class TrendsDataService {
         const trend = new TrendModel();
         trend.name = 'currentBdLast4';
         trend.description = 'currentBdLast4 description';
-        trend.letter = 'מ';
+        trend.letter = 'A';
 
         obs.next(trend);
 
@@ -139,7 +139,7 @@ export class TrendsDataService {
         const trend = new TrendModel();
         trend.name = 'currentBdLastYear';
         trend.description = 'currentBdLastYear description';
-        trend.letter = 'ש';
+        trend.letter = 'Y';
 
         obs.next(trend);
 
@@ -233,7 +233,7 @@ export class TrendsDataService {
         const trend = new TrendModel();
         trend.name = 'previousBdLast4';
         trend.description = 'previousBdLast4 description';
-        trend.letter = 'מ';
+        trend.letter = 'A';
 
         obs.next(trend);
 
@@ -299,7 +299,7 @@ export class TrendsDataService {
         const trend = new TrendModel();
         trend.name = 'previousBdLastYear';
         trend.description = 'previousBdLastYear description';
-        trend.letter = 'ש';
+        trend.letter = 'Y';
 
         obs.next(trend);
         
@@ -363,7 +363,7 @@ export class TrendsDataService {
         const trend = new TrendModel();
         trend.name = 'mtdBdLastYear';
         trend.description = 'mtdBdLastYear description';
-        trend.letter = 'ש';
+        trend.letter = 'Y';
 
         obs.next(trend);
 
@@ -501,7 +501,7 @@ export class TrendsDataService {
             const trend = new TrendModel();
             trend.name = 'completeMonthLastYear';
             trend.description = 'completeMonthLastYear description';
-            trend.letter = 'ש';
+            trend.letter = 'Y';
             
             const prevYearMonth = moment(month).subtract(1, 'year').startOf('month');
 
@@ -549,7 +549,7 @@ export class TrendsDataService {
             const trend = new TrendModel();
             trend.name = 'month_forecast_to_last_year';
             trend.description = 'month_forecast_to_last_year description';
-            trend.letter = 'ש';
+            trend.letter = 'Y';
 
             zip(this.dataService.olapDataByMonths$, this.dataService.currentMonthForecast$, this.dataService.currentBd$, this.dataService.dailyDataLimits$)
                 .subscribe(data => {
@@ -599,7 +599,7 @@ export class TrendsDataService {
             const trend = new TrendModel();
             trend.name = 'month_forecast_to_start_of_month_forecast';
             trend.description = 'month_forecast_to_start_of_month_forecast description';
-            trend.letter = 'מ';
+            trend.letter = 'A';
 
             zip(this.dataService.currentMonthForecast$, this.dataService.currentBd$)
                 .subscribe(data => {
@@ -657,7 +657,7 @@ export class TrendsDataService {
             const trend = new TrendModel();
             trend.name = 'month_sales_to_start_of_month_forecast';
             trend.description = 'month_sales_to_start_of_month_forecast description';
-            trend.letter = 'מ';
+            trend.letter = 'A';
 
             const startOfMonth = moment(month).startOf('month');
 
@@ -703,7 +703,7 @@ export class TrendsDataService {
             const trend = new TrendModel();
             trend.name = 'partial_month_forecast_to_start_of_month_partial_month_forecast';
             trend.description = 'partial_month_forecast_to_start_of_month_partial_month_forecast description';
-            trend.letter = 'מ';
+            trend.letter = 'A';
 
             zip(this.dataService.currentBd$, this.dataService.mtdData$)
                 .subscribe(data => {
@@ -761,9 +761,9 @@ export class TrendsDataService {
             trend_d.description = 'bd_sales_to_last_4_bd_diners description';
             trend_p.description = 'bd_sales_to_last_4_bd_ppa description';
 
-            trend_s.letter = 'מ';
-            trend_d.letter = 'מ';
-            trend_p.letter = 'מ';
+            trend_s.letter = 'A';
+            trend_d.letter = 'A';
+            trend_p.letter = 'A';
 
             const bdWeekDay = bd.day();
             

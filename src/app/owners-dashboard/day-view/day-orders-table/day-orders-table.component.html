@@ -1,5 +1,5 @@
 <div class="f-rtl">
-    <div class="title" i18n="day-orders-table|הזמנות@@orders">Orders</div>
+    <div class="title" i18n="day-orders-table@@orders">Orders</div>
     <div class="body mt5">
 
         <mat-accordion *ngIf="byOrderTypes">
@@ -18,28 +18,28 @@
                     <tr style="background-color: #f2f2f2;">
                         <td (click)="sort(orderType, 'time')" class="" style="width:50px;">
                             <div class="flex a-center">
-                                <div i18n="day-orders-table|שעת פתיחה@@opened">Opened</div>
+                                <div i18n="day-orders-table@@opened">Opened</div>
                                 <mat-icon *ngIf="sortBy==='time' && sortDir==='desc'">arrow_drop_down</mat-icon>
                                 <mat-icon *ngIf="sortBy==='time' && sortDir==='asc'">arrow_drop_up</mat-icon>
                             </div>
                         </td>
                         <td (click)="sort(orderType, 'number')" class="" style="width:50px;">
                             <div class="flex a-center">
-                                <div i18n="day-orders-table|הזמנה מס'@@orderNumber">Order #</div>
+                                <div i18n="day-orders-table'@@orderNumber">Order #</div>
                                 <mat-icon *ngIf="sortBy==='number' && sortDir==='desc'">arrow_drop_down</mat-icon>
                                 <mat-icon *ngIf="sortBy==='number' && sortDir==='asc'">arrow_drop_up</mat-icon>
                             </div>
                         </td>
                         <td (click)="sort(orderType, 'waiter')" class="" style="width:55px;">
                             <div class="flex a-center">
-                                <div i18n="day-orders-table|מלצר@@waiter">Waiter</div>
+                                <div i18n="day-orders-table@@waiter">Waiter</div>
                                 <mat-icon *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
                                 <mat-icon *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
                             </div>
                         </td>
                         <td (click)="sort(orderType, 'sales')" class="" style="width:50px;">
                             <div class="flex a-center">
-                                <div i18n="day-orders-table|סכום@@sales">Sales</div>
+                                <div i18n="day-orders-table@@sales">Sales</div>
                                 <mat-icon *ngIf="sortBy==='sales' && sortDir==='desc'">arrow_drop_down</mat-icon>
                                 <mat-icon *ngIf="sortBy==='sales' && sortDir==='asc'">arrow_drop_up</mat-icon>
                             </div>
@@ -71,7 +71,7 @@
                         <td>{{order.waiter}}</td>
                         <td>{{order.sales | curr:'0'}}</td>
                         <td>
-                            <mat-icon *ngIf="order.priceReductions.cancellation > 0" style="color: red;">assignment_return</mat-icon>
+                            <mat-icon *ngIf="order.priceReductions.cancellation > 0" style="color: red;">delete_forever</mat-icon>
                             <mat-icon *ngIf="order.priceReductions.discountsAndOTH > 0" style="color: orange;">cake</mat-icon>
                             <mat-icon *ngIf="order.priceReductions.employees > 0" style="color: blue;">local_dining</mat-icon>
                             <mat-icon *ngIf="order.priceReductions.promotions > 0" style="color: green;">star_border</mat-icon>

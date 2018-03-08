@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { Order } from '../../../../tabit/model/Order.model';
 
 import ORDERS_VIEW from '../../../../tabit/data/dc/closedOrders.data.service';
+import { tmpTranslations } from '../../../../tabit/data/data.service';
 
 export interface SlipVM {
   id: number;
@@ -40,7 +41,7 @@ export class OrderSlipsComponent implements OnInit  {
     this.slips.push({
       id: i,
       class: 'bill',
-      caption: `הזמנה ${this.orderOld.number}`
+      caption: `${tmpTranslations.get('order.slips.order')} ${this.orderOld.number}`
       // data: undefined,
       //caption: ORDERS_VIEW.order + ' ' + $ctrl.selectedOrder.number
     });
@@ -50,7 +51,7 @@ export class OrderSlipsComponent implements OnInit  {
       this.slips.push({
         id: i,
         class: 'club',
-        caption: 'חברי מועדון'
+        caption: tmpTranslations.get('order.slips.clubMembers')
         // data: undefined,
         //text: ORDERS_VIEW.clubMembers
       });

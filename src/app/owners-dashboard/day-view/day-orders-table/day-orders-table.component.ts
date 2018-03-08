@@ -2,7 +2,7 @@ import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core
 import { DatePipe } from '@angular/common';
 
 import { Order } from '../../../../tabit/model/Order.model';
-import { DataService } from '../../../../tabit/data/data.service';
+import { DataService, tmpTranslations } from '../../../../tabit/data/data.service';
 
 import * as _ from 'lodash';
 
@@ -40,13 +40,25 @@ export class DayOrdersTableComponent implements OnChanges {
     if (o.hasOwnProperty('orders')) {
       const ordersCloned: Order[] = _.cloneDeep(this.orders);
   
-      const orderTypes = _.cloneDeep(this.dataService.orderTypes);
+      const orderTypesObj = this.dataService.orderTypes;
+      let orderTypesArr = [];
+      Object.keys(orderTypesObj).forEach(key=>{
+        orderTypesArr.push({
+          id: key,
+          caption: tmpTranslations.get(`orderTypes.${key}`),
+          rank: orderTypesObj[key].rank
+        });
+      });
+      orderTypesArr = orderTypesArr.sort((a,b)=>{
+        if (a.rank<b.rank) return -1;
+        return 1;
+      });
   
-      orderTypes.forEach(ot => {
-        ot.orders = ordersCloned.filter(o => o.orderTypeId === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);
+      orderTypesArr.forEach(ot => {
+        ot.orders = ordersCloned.filter(o => o.orderType.id === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);
         ot.sales = ot.orders.reduce((acc, curr) => acc + (curr.sales || 0), 0);
       });
-      this.byOrderTypes = orderTypes;
+      this.byOrderTypes = orderTypesArr;
     }
 
   }

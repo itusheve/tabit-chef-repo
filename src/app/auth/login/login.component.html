@@ -24,19 +24,19 @@
                     matInput 
                     type="email" 
                     placeholder="Email" 
-                    i18n-placeholder="login|מייל@@email" 
+                    i18n-placeholder="login@@email" 
                     formControlName="email" 
                     required
                     >
                   <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
-                    <div *ngIf="email.errors.email" i18n="login|מייל לא חוקי@@illegalEmail">Illegal email</div>
+                    <div *ngIf="email.errors.email" i18n="login@@illegalEmail">Illegal email</div>
                   </mat-error>
                 </mat-form-field>
                 <mat-form-field>
                   <input 
                     matInput 
                     placeholder="Password" 
-                    i18n-placeholder="login|סיסמא@@password"
+                    i18n-placeholder="login@@password"
                     [type]="hidePass ? 'password' : 'text'" 
                     formControlName="password" 
                     required
@@ -49,7 +49,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <button class="as-center" mat-raised-button color="primary" (click)="login()" i18n="login|כניסה@@login">Login</button>
+              <button class="as-center" mat-raised-button color="primary" (click)="login()" i18n="login@@login">Login</button>
             </form>
 
         </div>

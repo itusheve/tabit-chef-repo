@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { PercentPipe } from '@angular/common';
 import * as _ from 'lodash';
-import { DataService } from '../../../../tabit/data/data.service';
+import { DataService, tmpTranslations } from '../../../../tabit/data/data.service';
 import { Shift } from '../../../../tabit/model/Shift.model';
 
 @Component({
@@ -36,16 +36,31 @@ export class DaySalesTypeTableComponent {
     this.byTypeByShiftArr = [];
     const byTypeByShiftArr_preFiltering = [];
 
-    for (let j = 0; j < this.dataService.orderTypes.length; j++) {    
-        const orderType = this.dataService.orderTypes[j]['caption'];
+    const orderTypesObj = this.dataService.orderTypes;
+    let orderTypesArr = [];
+    Object.keys(orderTypesObj).forEach(key => {
+      orderTypesArr.push({
+        //id: key,
+        orderType: orderTypesObj[key],
+        orderTypeCaption: tmpTranslations.get(`orderTypes.${key}`)
+        //rank: orderTypesObj[key].rank,        
+      });
+    });
+    orderTypesArr = orderTypesArr.sort((a, b) => {
+      if (a.orderType.rank < b.orderType.rank) return -1;
+      return 1;
+    });
+
+    for (let j = 0; j < orderTypesArr.length; j++) {    
+        //const orderType = this.dataService.orderTypes[j]['caption'];
         const byType = {
-          orderType: orderType,
+          orderType: orderTypesArr[j].orderTypeCaption,
           total: 0,
           byShift: []
         };
         for (let i = 0; i < shifts.length; i++) {
           const shiftName = shifts[i].name;
-          const tuple = salesByOrderTypeAndService.find(t => t.orderType === orderType && t.service === shiftName);
+          const tuple = salesByOrderTypeAndService.find(t => t.orderType === orderTypesArr[j].orderType && t.service === shiftName);
           
           const sales = _.get(tuple, 'sales', 0);
 

@@ -307,8 +307,8 @@ let billService = {
                             name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : ORDERS_VIEW.manual_item_discount,
                             qty: null,
                             amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
-                        })
-                    })
+                        });
+                    });
                 }
 
             }
@@ -499,9 +499,6 @@ export class ClosedOrdersDataService {
         });
     }).publishReplay(1).refCount();
 
-    /* cache of Orders by business date ('YYYY-MM-DD') */
-    private ordersCache: Map<string, Order[]> = new Map<string, Order[]>();
-
     constructor(
         private olapEp: OlapEp,
         private rosEp: ROSEp,
@@ -515,6 +512,17 @@ export class ClosedOrdersDataService {
         private tablesDataService: TablesDataService,
         private dataService: DataService
     ) { }
+
+    /* 
+     @:promise
+     resolves with a collection of 'Order's for the provided businesDate.
+ */
+    public getOrders(
+        businessDate: moment.Moment
+        // { withPriceReductions = false }: { withPriceReductions?: boolean } = {}
+    ): Promise<Order[]> {
+        return this.dataService.getOrders(businessDate);
+    }
 
     /* 
         @caching(indirect)
@@ -533,7 +541,7 @@ export class ClosedOrdersDataService {
         printDataOld?: any
     }> {
         return new Promise((resolve, reject) => {
-            this.getOrders(moment(businessDateStr))
+            this.dataService.getOrders(moment(businessDateStr))
                 .then(orders => {
                     const order = orders.find(o => o.tlogId === tlogId);
                     if (enriched) {
@@ -547,89 +555,6 @@ export class ClosedOrdersDataService {
                 });
         });
     }
-
-    /* 
-     @caching
-     @:promise
-     resolves with a collection of 'Order's for the provided businesDate.
-     //(canceled, now always bring price reductions) if withPriceReductions, each order will also be enriched with price reduction related data.
- */
-    public getOrders(
-        businessDate: moment.Moment
-        // { withPriceReductions = false }: { withPriceReductions?: boolean } = {}
-    ): Promise<Order[]> {
-        // cache check
-        const bdKey = businessDate.format('YYYY-MM-DD');
-        if (this.ordersCache.has(bdKey)) {
-            return Promise.resolve(this.ordersCache.get(bdKey));
-        }
-
-        //not cached:
-        const that = this;
-
-        const pAll: any = [
-            this.olapEp.getOrders({ day: businessDate }),
-            this.olapEp.getOrdersPriceReductionData(businessDate)
-        ];
-        //if (withPriceReductions) pAll.push(this.olapEp.getOrdersPriceReductionData(businessDate));
-
-        return Promise.all(pAll)
-            .then((data: any[]) => {
-                const ordersRaw: any[] = data[0];
-                const priceReductionsRaw: any[] = data[1];
-
-                const orders: Order[] = [];
-                for (let i = 0; i < ordersRaw.length; i++) {
-                    const order: Order = new Order();
-                    order.id = i;
-                    order.tlogId = ordersRaw[i].tlogId;
-                    order.waiter = ordersRaw[i].waiter;
-                    order.openingTime = ordersRaw[i].openingTime;
-                    order.number = ordersRaw[i].orderNumber;
-                    order.orderTypeId = this.dataService.orderTypes.find(ot => ot.caption === ordersRaw[i].orderTypeCaption)['id'];
-                    order.sales = ordersRaw[i].sales;
-                    order.diners = ordersRaw[i].dinersPPA;
-                    order.ppa = ordersRaw[i].ppa;
-
-                    const orderPriceReductionsRaw_aggregated = {
-                        cancellation: 0,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
-                        discountsAndOTH: 0,//{dim:retention,measure:retention}  heb: שימור ושיווק
-                        employees: 0,//{dim:organizational,measure:organizational}  heb: עובדים
-                        promotions: 0,//{dim:promotions,measure:retention}  heb: מבצעים
-                    };
-
-                    priceReductionsRaw
-                        .filter(pr => pr.orderNumber === order.number)
-                        .forEach(o => {
-                            const dim = o.reductionReason;
-                            switch (dim) {
-                                case 'cancellation':
-                                case 'compensation':
-                                    orderPriceReductionsRaw_aggregated.cancellation += (o.cancellation + o.operational);
-                                    break;
-                                case 'retention':
-                                    orderPriceReductionsRaw_aggregated.discountsAndOTH += o.retention;
-                                    break;
-                                case 'organizational':
-                                    orderPriceReductionsRaw_aggregated.employees += o.organizational;
-                                    break;
-                                case 'promotions':
-                                    orderPriceReductionsRaw_aggregated.promotions += o.retention;
-                                    break;
-                            }
-                        });
-
-                    order.priceReductions = orderPriceReductionsRaw_aggregated;
-
-                    orders.push(order);
-                }
-
-                this.ordersCache.set(bdKey, orders);
-
-                return orders;
-            });
-    }
-
 
     //TODO the app was developed against ROS 3.7.0 (belongs to Product 4.X), but the enrich order code was copied from develop-il (Office 3.X, Product 3.X). TODO, bring newer code from latest Office 4.X (compare the relevant office files to detect what was changed).
 
@@ -697,7 +622,7 @@ export class ClosedOrdersDataService {
                     CashRefund: ORDERS_VIEW.cash_refund,
                     ChequeRefund: ORDERS_VIEW.cheque_refund,
                     CreditCardRefund: ORDERS_VIEW.credit_refund
-                }
+                };
 
                 return paymentsHash[key];
             }
@@ -1077,7 +1002,7 @@ export class ClosedOrdersDataService {
                 _.each(order.rewards, reward => {
 
                     let _promotion = reward.promotion;
-                    let _orderedPromotion = order.orderedPromotions.find(c => c.promotion == _promotion);
+                    let _orderedPromotion = order.orderedPromotions.find(c => c.promotion === _promotion);
 
                     if (_orderedPromotion) {
 
@@ -1215,7 +1140,7 @@ export class ClosedOrdersDataService {
 
                 let result = [];
                 if (payment.creditCardBrand && payment.creditCardBrand !== "") {
-                    result.push({ key: ORDERS_VIEW.card_type, value: payment.creditCardBrand })
+                    result.push({ key: ORDERS_VIEW.card_type, value: payment.creditCardBrand });
                 }
 
                 let holderName = "";

@@ -13,7 +13,7 @@ import 'rxjs/add/operator/map';
 
 import { CardsDataService } from '../../../tabit/data/dc/cards.data.service';
 import { TrendsDataService } from '../../../tabit/data/dc/trends.data.service';
-import { DataService } from '../../../tabit/data/data.service';
+import { DataService, tmpTranslations } from '../../../tabit/data/data.service';
 
 import { CardData } from '../../ui/card/card.component';
 
@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit {
         this.previousBdCardData.title = title;
 
         if (data[0].hasOwnProperty('final') && !data[0].final) {
-          this.previousBdCardData.salesComment = 'לא סופי';
+          this.previousBdCardData.salesComment = 'NotFinal';
           this.previousBdNotFinal = true;
         } else {
           this.previousBdCardData.trends = {
@@ -107,7 +107,7 @@ export class HomeComponent implements OnInit {
       .subscribe(data => {
         const trends = data[2];
 
-        const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} עד כה`;
+        const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} ${tmpTranslations.get('home.mtd')}`;
         this.mtdCardData.diners = data[0].diners;
         this.mtdCardData.ppa = data[0].ppa;
         this.mtdCardData.sales = data[0].sales;

@@ -1,5 +1,5 @@
 import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
-import { DataService } from '../../../tabit/data/data.service';
+import { DataService, tmpTranslations } from '../../../tabit/data/data.service';
 import { DatePipe } from '@angular/common';
 
 import * as moment from 'moment';
@@ -178,7 +178,7 @@ export class MonthViewComponent  {
         
         that.dataService.currentMonthForecast$
           .subscribe(data => {
-            const title = `${that.datePipe.transform(month, 'MMMM')} צפוי`;
+            const title = `${that.datePipe.transform(month, 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
             that.forecastCardData.diners = data.diners;
             that.forecastCardData.ppa = vat ? data.ppa : data.ppa / 1.17;
             that.forecastCardData.sales = vat ? data.sales : data.sales / 1.17;
@@ -203,7 +203,7 @@ export class MonthViewComponent  {
         that.dataService.getMonthlyData(month)
           .then(monthlyData => {
 
-            const title = `${that.datePipe.transform(month, 'MMMM')} סופי`;
+            const title = `${that.datePipe.transform(month, 'MMMM')} ${tmpTranslations.get('home.month.final')}`;
             that.summaryCardData.diners = monthlyData.diners;
             that.summaryCardData.ppa = vat ? monthlyData.ppa : monthlyData.ppa / 1.17;
             that.summaryCardData.sales = vat ? monthlyData.sales : monthlyData.sales / 1.17;

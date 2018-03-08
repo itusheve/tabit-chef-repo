@@ -2,22 +2,22 @@
 
     <div class="flex j-sb">
         <!-- <span>{{'BUSINESS_MEAL' | translate}}</span> -->
-        <span i18n="slips|ארוחה עסקית@@businessMeal">Business Meal></span>
+        <span i18n="slips@@businessMeal">Business Meal></span>
         <span>{{(data.amount/100) | number:'1.2-2'}}</span>
     </div>
     <div class="flex j-sb">
         <!-- <span>{{'BEFORE_VAT' | translate}}</span> -->
-        <span i18n="slips|סהכ לפני מעמ@@beforeVAT">Before VAT</span>
+        <span i18n="slips@@beforeVAT">Before VAT</span>
         <span>{{((data.amount/100)-(data.tax.amount/100)) | number:'1.2-2'}}</span>
     </div>
     <div class="flex j-sb">
         <!-- <span>{{'VAT' | translate}}</span> -->
-        <span i18n="slips|מעמ@@vat">VAT</span>
+        <span i18n="slips@@vat">VAT</span>
         <span>{{(data.tax.amount/100) | number:'1.2-2'}}</span>
     </div>
     <div class="flex j-sb">
         <!-- <span>{{'INCLUDE_VAT' | translate}}</span> -->
-        <span i18n="slips|כולל מעמ@@includeVAT">Include VAT</span>
+        <span i18n="slips@@includeVAT">Include VAT</span>
         <span>{{(data.amount/100) | number:'1.2-2'}}</span>
     </div>
 
@@ -25,18 +25,14 @@
 
     <div class="flex j-sb" *ngIf="data.payments[0].faceValue">
         <!-- <span>{{'PAID_CACHE' | translate}}</span> -->
-        <span i18n="slips|התקבל במזומן@@paidInCash">Paid in cash</span>
+        <span i18n="slips@@paidInCash">Paid in cash</span>
         <span>{{(data.payments[0].faceValue/100) | number:'1.2-2'}}</span>
     </div>
 
     <div class="flex j-sb" *ngIf="data.payments[0].change && data.payments[0].change.amount">
         <!-- <span>{{'TOTAL_CASHBACK' | translate}}</span> -->
-        <span i18n="slips|עודף@@change">Change</span>
+        <span i18n="slips@@change">Change</span>
         <span>{{(data.payments[0].change.amount/100) | number:'1.2-2'}}</span>
     </div>
 
 </div>
-
-
-
-

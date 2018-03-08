@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import { User } from './User.model';
+import { OrderType } from './OrderType.model';
 
 export class Order {
     id: number;
@@ -13,7 +14,7 @@ export class Order {
         opened: User;
         locked: User;
     };
-    orderTypeId: string;
+    orderType: OrderType;
     sales: number;
     diners: number;
     ppa: number;

@@ -1,10 +1,10 @@
 <div class="f-rtl">
-    <div class="title" i18n="day-sales-type-table|הכנסות@@revenue">Revenue</div>
+    <div class="title" i18n="day-sales-type-table@@revenue">Revenue</div>
     <div class="flex body">
         <table class="fixedWidth" [ngClass]="{'hLarge':hSize==='large', 'hxLarge':hSize==='xlarge'}" *ngIf="show && byTypeByShiftArr.length">
             <tr>
                 <td></td>
-                <td i18n="day-sales-type-table|סהכ@@total">Total</td>
+                <td i18n="day-sales-type-table@@total">Total</td>
                 <td *ngFor="let shift of byTypeByShiftArr[0].byShift">{{shift.shiftName}}</td>
             </tr>
             <tr *ngFor="let orderType of byTypeByShiftArr" (click)="onRowClick(orderType)">
@@ -17,7 +17,7 @@
                 </td>
             </tr>
             <tr class="tblTotalRow">
-                <td i18n="day-sales-type-table|סהכ@@total">Total</td>
+                <td i18n="day-sales-type-table@@total">Total</td>
                 <td>
                     <span>{{total | curr:'0'}}</span>
                 </td>

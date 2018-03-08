@@ -7,28 +7,44 @@
     [columnAutoWidth]="true"
     [rtlEnabled]="true"
     [showColumnLines]="false"
-    noDataText="אין נתונים"
+    
+    noDataText="No Data"
+    i18n-noDataText="@@noData"
     
     rowTemplate="rowTemplateName"
 
     >
     <dxo-paging [enabled]="false"></dxo-paging>
-    <dxo-sorting ascendingText="סדר עולה" descendingText="סדר יורד" clearText="נקה מיון"></dxo-sorting>
+    <dxo-sorting 
+      ascendingText="Sort Ascending" 
+      i18n-ascendingText="@@sortAscending"
+
+      descendingText="Sort Descending" 
+      i18n-descendingText="@@sortDescending"
+
+      clearText="Clear Sort"
+      i18n-clearText="@@clearSort"    
+      >
+    </dxo-sorting>
     
     <dxi-column 
-      caption="יום" 
+      caption="Day" 
+      i18n-caption="@@day"
       dataField="dateFormatted"></dxi-column>
     <dxi-column   
-      caption='סה"כ' 
+      caption='Total' 
+      i18n-caption="@@total"      
       dataField="sales" 
       dataType="number"
       [format]="{ style: 'currency', currency: 'ILS', currencyDisplay: 'symbol', minimumFractionDigits: 0, maximumFractionDigits: 0 }"></dxi-column>    
     <dxi-column 
-      caption="סועדים" 
+      caption="Diners" 
+      i18n-caption="@@diners"
       dataField="dinersPPA" 
       format="#,###"></dxi-column>
     <dxi-column 
       caption="PPA" 
+      i18n-caption="@@ppa"      
       dataField="ppa" 
       [format]="{ style: 'currency', currency: 'ILS', minimumFractionDigits: 2, maximumFractionDigits: 2 }"></dxi-column>
 

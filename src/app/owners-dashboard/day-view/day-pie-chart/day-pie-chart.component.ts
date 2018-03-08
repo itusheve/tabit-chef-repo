@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { PopulationByRegion, Service } from './day-pie-chart.service';
 import { DecimalPipe, PercentPipe, CurrencyPipe } from '@angular/common';
+import { tmpTranslations } from '../../../../tabit/data/data.service';
 
 @Component({
   selector: 'app-day-pie-chart',
@@ -20,15 +21,6 @@ export class DayPieChartComponent implements OnDestroy {
   pallete = ['rgb(101, 166, 211)', 'rgb(84, 153, 140)', 'rgb(196, 205, 214)', 'rgb(75, 118, 155)', 'rgb(147, 173, 168)'];
 
   currencySymbol = '&#8362;';
-
-  private orderTypesMap = {
-    seated: 'בישיבה',
-    counter: 'דלפק',
-    ta: 'לקחת',
-    delivery: 'משלוח',
-    other: 'סוג הזמנה לא מוגדר',
-    returns: 'החזר'
-  };
 
   private total: number;
   private totalEl: Element;
@@ -96,7 +88,7 @@ export class DayPieChartComponent implements OnDestroy {
       //const valFormatted = this.decPipe.transform(data[orderType], '1.0-0');
       this.dataSource.push({
         color: this.pallete[i],
-        orderType: this.orderTypesMap[orderType],
+        orderType: tmpTranslations.get(`orderTypes.${orderType}`),
         val: data[orderType],
         //valFormatted: valFormatted
       });

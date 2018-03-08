@@ -25,6 +25,101 @@ import { Shift } from '../model/Shift.model';
 //end points
 import { OlapEp } from './ep/olap.ep';
 import { ROSEp } from './ep/ros.ep';
+import { OrderType } from '../model/OrderType.model';
+import { Order } from '../model/Order.model';
+
+/* 
+==tmpTranslations==
+https://github.com/angular/angular/issues/16477
+until angular comes up with the final i18n solution that includes in-component translations, here are some statically typed translations:  
+*/
+const locale = 'he';
+const tmpTranslations_ = {
+    'he': {
+        login: {
+            userPassIncorrect: 'שם משתמש ו/או סיסמא אינם נכונים'
+        },
+        orderTypes: {
+            seated: 'בישיבה',
+            counter: 'דלפק',
+            ta: 'לקחת',
+            delivery: 'משלוח',
+            other: 'סוג הזמנה לא מוגדר',
+            returns: 'החזר',
+            mediaExchange: 'החלפת אמצעי תשלום'
+        },
+        shifts: {
+            defaults: {
+                first: 'בוקר',
+                second: 'צהריים',
+                third: 'ערב',
+                fourth: 'רביעית',
+                fifth: 'חמישית'
+            }
+        },
+        home: {
+            mtd: 'עד כה',
+            month: {
+                expected: 'צפוי',
+                final: 'סופי'
+            }
+        },
+        order: {
+            slips: {
+                order: 'הזמנה',
+                clubMembers: 'חברי מועדון'
+            }
+        }
+    },
+    'en-US': {
+        login: {
+            userPassIncorrect: 'Incorrect User / Password'
+        },
+        orderTypes: {
+            seated: 'Seated',
+            counter: 'Counter',
+            ta: 'TA',
+            delivery: 'Delivery',
+            other: 'Other',
+            returns: 'Returns',
+            mediaExchange: 'Media Exchange'
+        },
+        shifts: {
+            defaults: {
+                first: 'First',
+                second: 'Second',
+                third: 'Third',
+                fourth: 'Fourth',
+                fifth: 'Fifth'
+            }
+        },
+        home: {
+            mtd: 'MTD',
+            month: {
+                expected: 'Forecasted',
+                final: 'Final'
+            }
+        },
+        order: {
+            slips: {
+                order: 'Order',
+                clubMembers: 'Club Members'
+            }
+        }
+    }
+};
+export const tmpTranslations = {
+    get(path: string):string {
+        const tokens = path.split('.');        
+        let translation: any = tmpTranslations_[locale];
+        for (let i=0;i<tokens.length;i++) {
+            translation = translation[tokens[i]];
+        }
+        return translation;
+    }
+};
+/* ==tmpTranslations== */
+
 
 /* vat inclusive KPI per business day */
 export interface BusinessDayKPI {
@@ -50,16 +145,6 @@ export class DataService {
     // }).publishReplay(1).refCount();
 
     public region = 'Asia/Jerusalem';//TODO US..
-
-    public orderTypes = [
-        { id: 'seated', caption: 'בישיבה' },
-        { id: 'counter', caption: 'דלפק' },
-        { id: 'ta', caption: 'לקחת' },
-        { id: 'delivery', caption: 'משלוח' },
-        { id: 'undefined', caption: 'סוג הזמנה לא מוגדר' },
-        { id: 'returns', caption: 'החזר' },
-        { id: 'het', caption: 'החלפת אמצעי תשלום' }
-    ];
 
     /* 
         emits a moment with tz data, so using format() will provide the time of the restaurant, e.g. m.format() := 2018-02-27T18:57:13+02:00 
@@ -134,27 +219,27 @@ export class DataService {
                 const shiftsConfig = [
                     {
                         active: _.get(serverShiftsConfig, 'morningShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'morningShiftName', 'בוקר'),
+                        name: _.get(serverShiftsConfig, 'morningShiftName', tmpTranslations.get('shifts.defaults.first')),
                         startTime: _.get(serverShiftsConfig, 'morningStartTime')
                     },
                     {
                         active: _.get(serverShiftsConfig, 'afternoonShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'afternoonShiftName', 'צהריים'),
+                        name: _.get(serverShiftsConfig, 'afternoonShiftName', tmpTranslations.get('shifts.defaults.second')),
                         startTime: _.get(serverShiftsConfig, 'afternoonStartTime')
                     },
                     {
                         active: _.get(serverShiftsConfig, 'eveningShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'eveningShiftName', 'ערב'),
+                        name: _.get(serverShiftsConfig, 'eveningShiftName', tmpTranslations.get('shifts.defaults.third')),
                         startTime: _.get(serverShiftsConfig, 'eveningStartTime')
                     },
                     {
                         active: _.get(serverShiftsConfig, 'fourthShiftActive', false),
-                        name: _.get(serverShiftsConfig, 'fourthShiftName', 'רביעית'),
+                        name: _.get(serverShiftsConfig, 'fourthShiftName', tmpTranslations.get('shifts.defaults.fourth')),
                         startTime: _.get(serverShiftsConfig, 'fourthStartTime')
                     },
                     {
                         active: _.get(serverShiftsConfig, 'fifthShiftActive', false),
-                        name: _.get(serverShiftsConfig, 'fifthShiftName', 'חמישית'),
+                        name: _.get(serverShiftsConfig, 'fifthShiftName', tmpTranslations.get('shifts.defaults.fifth')),
                         startTime: _.get(serverShiftsConfig, 'fifthStartTime')
                     }
                 ];
@@ -178,6 +263,68 @@ export class DataService {
                 obs.next(shifts);
             });
     }).publishReplay(1).refCount();
+
+    // public orderTypes = [
+    //     { id: 'seated', caption: 'בישיבה' },
+    //     { id: 'counter', caption: 'דלפק' },
+    //     { id: 'ta', caption: 'לקחת' },
+    //     { id: 'delivery', caption: 'משלוח' },
+    //     { id: 'undefined', caption: 'סוג הזמנה לא מוגדר' },
+    //     { id: 'returns', caption: 'החזר' },
+    //     { id: 'mediaExchange', caption: 'החלפת אמצעי תשלום' }
+    // ];
+
+    public orderTypes: { [index: string]: OrderType } = {
+        seated: new OrderType('seated', 0),
+        counter: new OrderType('counter', 1),
+        ta: new OrderType('ta', 2),
+        delivery: new OrderType('delivery', 3),
+        other: new OrderType('other', 4),
+        returns: new OrderType('returns', 5),
+        mediaExchange: new OrderType('mediaExchange', 6)
+    };
+
+    // public orderTypes = [        
+    //     new OrderType('seated'),
+    //     new OrderType('counter'),
+    //     new OrderType('ta'),
+    //     new OrderType('delivery'),
+    //     new OrderType('other'),
+    //     new OrderType('returns'),
+    //     new OrderType('mediaExchange'),
+    // ];
+
+    /* 
+        olapEp returns data with un-normalized tokens, e.g. hebrew Order Types such as 'בישיבה'  
+        olapNormalizationMaps provides way to normalize the data. 
+        this is NOT a translation service and has nothing to do with translations.
+        this is a mapping of tokens from different cubes to the DataService domain
+    */
+    private cubeCollection = 'israeliCubes';
+    private olapNormalizationMaps: any = {
+        israeliCubes: {
+            orderType: {
+                'בישיבה': this.orderTypes.seated,
+                'דלפק': this.orderTypes.counter,
+                'לקחת': this.orderTypes.ta,
+                'משלוח': this.orderTypes.delivery,
+                'סוג הזמנה לא מוגדר': this.orderTypes.other,
+                'החזר': this.orderTypes.returns,
+                'החלפת אמצעי תשלום': this.orderTypes.mediaExchange
+            }
+        },
+        usCubes: {
+            orderType: {
+                'a': this.orderTypes.seated,
+                'b': this.orderTypes.counter,
+                'c': this.orderTypes.ta,
+                'd': this.orderTypes.delivery,
+                'e': this.orderTypes.other,
+                'f': this.orderTypes.returns,
+                'g': this.orderTypes.mediaExchange
+            }
+        }
+    };
 
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
@@ -382,6 +529,9 @@ export class DataService {
 
     public dailyDataByShiftAndType$: Observable<any>;
 
+    /* cache of Orders by business date ('YYYY-MM-DD') */
+    private ordersCache: Map<string, Order[]> = new Map<string, Order[]>();
+
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
         // moment.tz.setDefault('Asia/Jerusalem');
     }
@@ -568,7 +718,6 @@ export class DataService {
             });
     }
 
-
     getDailyDataByShiftAndType(date: moment.Moment): Subject<any> {        
         const sub$ = new Subject<any>();
 
@@ -583,6 +732,13 @@ export class DataService {
 
             const daily_data_by_orderType_by_service = _.cloneDeep(data.daily_data_by_orderType_by_service);
             
+            // normalize olapData:
+            debugger;
+            daily_data_by_orderType_by_service.forEach(o=>{
+                o.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][o.orderType];
+            });            
+            // end of normalizeOlapData
+
             if (!data.vat) {
                 daily_data_by_orderType_by_service.forEach(tuple=>{
                     tuple.sales = tuple.sales/1.17;
@@ -590,29 +746,29 @@ export class DataService {
                 });
             }
 
-            const orderTypesMap = {
-                seated: 'בישיבה',
-                counter: 'דלפק',
-                ta: 'לקחת',
-                delivery: 'משלוח',
-                other: 'סוג הזמנה לא מוגדר',
-                returns: 'החזר'
-            };
+            // const salesByOrderType = _.groupBy(daily_data_by_orderType_by_service, item => {
+            //     switch (item.orderType) {
+            //         case 'בישיבה':
+            //             return 'seated';
+            //         case 'דלפק':
+            //             return 'counter';
+            //         case 'לקחת':
+            //             return 'ta';
+            //         case 'משלוח':
+            //             return 'delivery';
+            //         case 'החזר':
+            //             return 'returns';
+            //     }
+            // });
+            debugger;
+            const salesByOrderType: {//TODO use 'KPI' and 'Service' Models
+                dinersPPA: any,
+                salesPPA: any,
+                sales: any,
+                service: any,
+                orderTypeId: string
+            } = _.groupBy(daily_data_by_orderType_by_service, item => item.orderType.id);
 
-            const salesByOrderType = _.groupBy(daily_data_by_orderType_by_service, item => {
-                switch (item.orderType) {
-                    case 'בישיבה':
-                        return 'seated';
-                    case 'דלפק':
-                        return 'counter';
-                    case 'לקחת':
-                        return 'ta';
-                    case 'משלוח':
-                        return 'delivery';
-                    case 'החזר':
-                        return 'returns';
-                }
-            });
             Object.keys(salesByOrderType).forEach(service => {
                 salesByOrderType[service] = salesByOrderType[service].reduce((acc, curr) => {
                     return acc + curr.sales;
@@ -626,7 +782,7 @@ export class DataService {
                 });
             }
             dinersAndPPAByShift.forEach(i=>{
-                const datai = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === i.name && dataItem.orderType === orderTypesMap.seated);
+                const datai = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === i.name && dataItem.orderType === this.orderTypes.seated);
                 i.diners = _.get(datai, 'dinersPPA', 0);
                 i.sales = _.get(datai, 'sales', 0);
                 i.salesPPA = _.get(datai, 'salesPPA', 0);
@@ -647,6 +803,95 @@ export class DataService {
         });
 
         return sub$;
+    }
+    
+    /* 
+     @caching
+     @:promise
+     resolves with a collection of 'Order's for the provided businesDate.
+     //(canceled, now always bring price reductions) if withPriceReductions, each order will also be enriched with price reduction related data.
+ */
+    public getOrders(
+        businessDate: moment.Moment
+        // { withPriceReductions = false }: { withPriceReductions?: boolean } = {}
+    ): Promise<Order[]> {
+        // cache check
+        const bdKey = businessDate.format('YYYY-MM-DD');
+        if (this.ordersCache.has(bdKey)) {
+            return Promise.resolve(this.ordersCache.get(bdKey));
+        }
+
+        //not cached:
+        const that = this;
+
+        const pAll: any = [
+            this.olapEp.getOrders({ day: businessDate }),
+            this.olapEp.getOrdersPriceReductionData(businessDate)
+        ];
+        //if (withPriceReductions) pAll.push(this.olapEp.getOrdersPriceReductionData(businessDate));
+
+        return Promise.all(pAll)
+            .then((data: any[]) => {
+                const ordersRaw: any[] = data[0];
+                const priceReductionsRaw: any[] = data[1];
+
+                const orders: Order[] = [];
+                for (let i = 0; i < ordersRaw.length; i++) {
+                    const order: Order = new Order();
+                    order.id = i;
+                    order.tlogId = ordersRaw[i].tlogId;
+                    order.waiter = ordersRaw[i].waiter;
+                    order.openingTime = ordersRaw[i].openingTime;
+                    order.number = ordersRaw[i].orderNumber;
+
+                    // normalize olapData:
+                    // daily_data_by_orderType_by_service.forEach(o => {
+                    order.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][ordersRaw[i].orderTypeCaption];
+                    // });
+                    // end of normalizeOlapData
+
+                    // order.orderTypeId = '';//this.dataService.orderTypes.find(ot => ot.caption === ordersRaw[i].orderTypeCaption)['id'];
+                    order.sales = ordersRaw[i].sales;
+                    order.diners = ordersRaw[i].dinersPPA;
+                    order.ppa = ordersRaw[i].ppa;
+
+                    const orderPriceReductionsRaw_aggregated = {
+                        cancellation: 0,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
+                        discountsAndOTH: 0,//{dim:retention,measure:retention}  heb: שימור ושיווק
+                        employees: 0,//{dim:organizational,measure:organizational}  heb: עובדים
+                        promotions: 0,//{dim:promotions,measure:retention}  heb: מבצעים
+                    };
+
+                    priceReductionsRaw
+                        .filter(pr => pr.orderNumber === order.number)
+                        .forEach(o => {
+                            const dim = o.reductionReason;
+                            switch (dim) {
+                                case 'cancellation':
+                                case 'compensation':
+                                    orderPriceReductionsRaw_aggregated.cancellation += (o.cancellation + o.operational);
+                                    break;
+                                case 'retention':
+                                    orderPriceReductionsRaw_aggregated.discountsAndOTH += o.retention;
+                                    break;
+                                case 'organizational':
+                                    orderPriceReductionsRaw_aggregated.employees += o.organizational;
+                                    break;
+                                case 'promotions':
+                                    orderPriceReductionsRaw_aggregated.promotions += o.retention;
+                                    break;
+                            }
+                        });
+
+                    order.priceReductions = orderPriceReductionsRaw_aggregated;
+
+                    orders.push(order);
+                }
+
+                this.ordersCache.set(bdKey, orders);
+
+                return orders;
+            });
     }
 
 }

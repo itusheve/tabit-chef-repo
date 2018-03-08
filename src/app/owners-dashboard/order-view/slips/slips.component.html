@@ -10,17 +10,17 @@
     <!-- Common -->
     <div class="ticket-box d-col common" style="border-bottom: 2px solid #000;">
       <div class="flex j-center">
-        <div i18n="slips|מלצר@@waiter">Waiter</div>
+        <div i18n="slips@@waiter">Waiter</div>
         &nbsp;
         <div>{{order.users.owner.fullName}}</div>
       </div>
       <div class="flex j-center">
-        <div i18n="slips|שולחן@@table">Table</div>
+        <div i18n="slips@@table">Table</div>
         &nbsp;
         <div>{{orderOld.table}}</div>
       </div>
       <div class="flex j-center" *ngIf="!isCheck">
-        <div i18n="slips|מספר סועדים@@diners">Guests</div>
+        <div i18n="slips@@diners">Guests</div>
         &nbsp;
         <div>{{orderOld.dinersNum}}</div>
       </div>
@@ -31,7 +31,7 @@
                 </h4> -->
       <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
         <!-- TODO why is this commented? -->
-        <!-- <span class="inline m-far-xs returnOrder" i18n="slips|החזרת עסקה@@returnTransaction">Return Transaction</span> -->
+        <!-- <span class="inline m-far-xs returnOrder" i18n="slips@@returnTransaction">Return Transaction</span> -->
       </div>
       <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
         <!-- TODO why is this commented? -->
