@@ -109,6 +109,7 @@ const tmpTranslations_ = {
     }
 };
 export const tmpTranslations = {
+    local: locale,
     get(path: string):string {
         const tokens = path.split('.');        
         let translation: any = tmpTranslations_[locale];
@@ -264,16 +265,6 @@ export class DataService {
             });
     }).publishReplay(1).refCount();
 
-    // public orderTypes = [
-    //     { id: 'seated', caption: 'בישיבה' },
-    //     { id: 'counter', caption: 'דלפק' },
-    //     { id: 'ta', caption: 'לקחת' },
-    //     { id: 'delivery', caption: 'משלוח' },
-    //     { id: 'undefined', caption: 'סוג הזמנה לא מוגדר' },
-    //     { id: 'returns', caption: 'החזר' },
-    //     { id: 'mediaExchange', caption: 'החלפת אמצעי תשלום' }
-    // ];
-
     public orderTypes: { [index: string]: OrderType } = {
         seated: new OrderType('seated', 0),
         counter: new OrderType('counter', 1),
@@ -283,16 +274,6 @@ export class DataService {
         returns: new OrderType('returns', 5),
         mediaExchange: new OrderType('mediaExchange', 6)
     };
-
-    // public orderTypes = [        
-    //     new OrderType('seated'),
-    //     new OrderType('counter'),
-    //     new OrderType('ta'),
-    //     new OrderType('delivery'),
-    //     new OrderType('other'),
-    //     new OrderType('returns'),
-    //     new OrderType('mediaExchange'),
-    // ];
 
     /* 
         olapEp returns data with un-normalized tokens, e.g. hebrew Order Types such as 'בישיבה'  
@@ -733,7 +714,6 @@ export class DataService {
             const daily_data_by_orderType_by_service = _.cloneDeep(data.daily_data_by_orderType_by_service);
             
             // normalize olapData:
-            debugger;
             daily_data_by_orderType_by_service.forEach(o=>{
                 o.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][o.orderType];
             });            
@@ -746,21 +726,6 @@ export class DataService {
                 });
             }
 
-            // const salesByOrderType = _.groupBy(daily_data_by_orderType_by_service, item => {
-            //     switch (item.orderType) {
-            //         case 'בישיבה':
-            //             return 'seated';
-            //         case 'דלפק':
-            //             return 'counter';
-            //         case 'לקחת':
-            //             return 'ta';
-            //         case 'משלוח':
-            //             return 'delivery';
-            //         case 'החזר':
-            //             return 'returns';
-            //     }
-            // });
-            debugger;
             const salesByOrderType: {//TODO use 'KPI' and 'Service' Models
                 dinersPPA: any,
                 salesPPA: any,

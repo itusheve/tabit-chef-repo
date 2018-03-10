@@ -14,7 +14,7 @@ import { OffersDataService } from './_offers.data.service';
 import { PeripheralsDataService } from './_peripherals.data.service';
 import { PromotionsDataService } from './_promotions.data.service';
 import { TablesDataService } from './_tables.data.service';
-import { DataService } from '../data.service';
+import { DataService, tmpTranslations } from '../data.service';
 
 import { OlapEp } from '../ep/olap.ep';
 import { ROSEp } from '../ep/ros.ep';
@@ -22,9 +22,9 @@ import { CurrencyPipe } from '@angular/common';
 import { User } from '../../model/User.model';
 
 // copied as is from office 4.X
-//TODO establish propert translation service
+//TODO establish proper translation service
 // tslint:disable:quotemark
-let ORDERS_VIEW = {
+let ORDERS_VIEW_he = {
     "title": "איתור הזמנה",
     "orderState": "מצב הזמנה",
     "general": "כללי",
@@ -157,6 +157,145 @@ let ORDERS_VIEW = {
     "card_type": "סוג כרטיס"
 };
 
+let ORDERS_VIEW_en = {
+    "title": "Orders Viewer",
+    "orderState": "Order State",
+    "general": "General",
+    "tip_behavior": "Tip behavior",
+    "amount": "Amount",
+    "tip": "Tip",
+    "discount": "Discount",
+    "optimization": "Optimization",
+    "time_line": "Timeline",
+    "action": "Action",
+    "data": "Data",
+    "at": "At",
+    "by": "By",
+    "orders": "Items",
+    "item": "Item",
+    "price": "Price",
+    "no_orders": "No items",
+    "cancelled_items": "Returns & Cancellations",
+    "no_cancelled_items": "No Returns / Cancellations",
+    "unassigned_items": "Unassigned Items",
+    "no_unassigned_items": "No Unassigned Items",
+    "payments": "Payments",
+    "no_payments": "No Payments",
+    "tender_type": "Payment Type",
+    "last_4": "Last 4 Digits",
+    "face_value": "Face Value",
+    "change": "Change",
+    "no_changes": "No Change",
+    "discounts": "Discounts",
+    "discount_type": "Discount Type",
+    "reason": "Reason",
+    "no_discounts": "No Discounts",
+    "promotions": "Promotions",
+    "promotion": "Promotion",
+    "no_promotions": "No Promotions",
+    "redeem_code": "Code",
+    "return_type": "Return Type",
+    "return": "Return",
+    "comment": "Comment",
+    "applied": "Requested By",
+    "approved": "Approved",
+    "oth": "OTH",
+    "charge_account": "Charge Account",
+    "cash": "Cash",
+    "cheque": "Cheque",
+    "credit": "Credit",
+    "giftCard": "Gift Card",
+    "giftCardLoad": "Charge Gift Card",
+    "charge_account_refund": "Charge Account Refund",
+    "cash_refund": "Cash Refund",
+    "cheque_refund": "Cheque Refund",
+    "credit_refund": "Credit Refund",
+    "refund": "Refund",
+    "TA": "TA",
+    "delivery": "Delivery",
+    "order": "Order",
+    "delivery_note": "Delivery Note",
+    "refund_note": "Refund Note",
+    "invoice": "Invoice",
+    "refund_invoice": "Refund invoice",
+    "cancel": "Cancel",
+    "open": "Open",
+    "close": "Close",
+    "payment": "Payment",
+    "cancel_item_applied": "Cancel Item Requested",
+    "cancel_item_approved": "Cancel Item Approved",
+    "return_item_applied": "Return Item Requested",
+    "return_item_approved": "Return Item Approved",
+    "oth_item_applied": "Item OTH Requested",
+    "oth_item_approved": "Item OTH Approved",
+    "oth_order_applied": "Order OTH Requested",
+    "oth_order_approved": "Order OTH Approved",
+    "percent_off_order": "% Off Order",
+    "amount_off_order": " Off Order",
+    "percent_off_item": "% Off Item",
+    "amount_off_item": " Off Item",
+    "delivery_note_number": "Delivery Note ",
+    "refund_note_number": "Refund Note ",
+    "invoice_number": "Invoice ",
+    "credit_invoice_number": "Credit Invoice ",
+    "forcedClosed": "Forced Closed",
+    "clubMembers": "Club Members",
+    "orderer_name": "Name",
+    "orderer_phone": "Phone",
+    "orderer_delivery_summary": "Address",
+    "orderer_delivery_notes": "Notes",
+    "orderer_courier": "Delivery Person",
+    "orderer_floor": "FL",
+    "orderer_apartment": "A",
+    "total_inc_vat": "Check Total",
+    "total_order": "Subtotal",
+    "payments_print": "Payments",
+    "paid": "Paid",
+    "bn-number": "BN",
+    "phone": "Phone",
+    "print_date": "Printed on",
+    "print_by_order": (order_number, order_date, order_time) => `Order ${order_number} on ${order_date} ${order_time}`,
+    "copy": "Copy",
+    "order_number": "Order",
+    "table": "Table",
+    "waiter_diners": (waiter, diners, table) => `Server ${waiter} Diners ${diners} Table ${table}`,
+    "oth_print": "OTH",
+    "all_order_oth": "Order OTH",
+    "order_discount": "Order Discount",
+    "manual_item_discount": "Manual Discount",
+    "print_date_document": (document_type, order_date, order_time) => `${document_type} created on ${order_date} time ${order_time}`,
+    "print_date_deliveryNote": (order_date, order_time) => `Delivery note created on ${order_date} time ${order_time}`,
+    "print_date_invoice": (order_date, order_time) => `Invoice created on ${order_date} time ${order_time}`,
+    "diner": "Diner",
+    "paid_by": "Paid using",
+    "refunded_by": "Refund using",
+    "charge_account_name": "Charge account name",
+    "company": "Company",
+    "customer_id": "Customer ID",
+    "customer_name": "Name",
+    "card_number": "Card Number",
+    "order_search_comment": "Search is by order closing time",
+    "from": "From",
+    "to": "To",
+    "appliedSegmentation": "Tag Applied",
+    "approvedSegmentation": "Tag Approved",
+    "exclusive_tax": "Exclusive Tax",
+    "inclusive_tax": "Inclusive Tax",
+    "inclusive_taxes": "Inclusive Taxes",
+    "exempted_tax": "Tax Exempt",
+    "exempted_taxes": "Exempted Taxes",
+    "total_sales_amount": "Total Sales",
+    "included": "Included",
+    "Owner": "Owner",
+    "reversal": "Reversal",
+    "kickout": "Kickout",
+    "Kicked_out": "Kicked out",
+    "service_charge": "Service Charge",
+    "card_type": "Card Type"
+};
+
+const ORDERS_VIEW = tmpTranslations.local === 'he' ? ORDERS_VIEW_he : ORDERS_VIEW_en;
+
 export default ORDERS_VIEW;
 
 // copied as is from office 4.X
@@ -246,10 +385,10 @@ let billService = {
                             qty: null,
                             amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2),
                             // _priceReductions: {
-                            //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
-                            //     discountsAndOTH: true,//{dim:retention,measure:retention}  heb: שימור ושיווק
-                            //     employees: false,//{dim:organizational,measure:organizational}  heb: עובדים
-                            //     promotions: false,//{dim:promotions,measure:retention}  heb: מבצעים            
+                            //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational} 
+                            //     discountsAndOTH: true,//{dim:retention,measure:retention} 
+                            //     employees: false,//{dim:organizational,measure:organizational}  
+                            //     promotions: false,//{dim:promotions,measure:retention}          
                             // }
                         });
                     });
@@ -341,10 +480,10 @@ let billService = {
                     name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : ORDERS_VIEW.order_discount,
                     amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2),
                     // _priceReductions: {
-                    //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
-                    //     discountsAndOTH: true,//{dim:retention,measure:retention}  heb: שימור ושיווק
-                    //     employees: false,//{dim:organizational,measure:organizational}  heb: עובדים
-                    //     promotions: false,//{dim:promotions,measure:retention}  heb: מבצעים            
+                    //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational} 
+                    //     discountsAndOTH: true,//{dim:retention,measure:retention}  
+                    //     employees: false,//{dim:organizational,measure:organizational}
+                    //     promotions: false,//{dim:promotions,measure:retention}          
                     // }
                 });
             });
@@ -470,6 +609,8 @@ let billService = {
 
         if (payment.P_TENDER_TYPE === 'creditCard') {
             paymentName = refund !== '' ? `${refund} (${payment.CARD_TYPE} ${payment.LAST_4})` : `${payment.CARD_TYPE} ${payment.LAST_4}`;
+        } else if (payment.P_TENDER_TYPE === 'chargeAccount') {
+            paymentName = `${refund} ${payment.P_NAME} ${payment.LAST_4 || ""}`;
         } else {
             paymentName = `${refund} ${payment.P_NAME}`;
         }
@@ -609,7 +750,7 @@ export class ClosedOrdersDataService {
                 return clubMembers;
             }
 
-            function getPaymentMethodName(key) {
+            function getPaymentMethodName(key, addSpace) {
                 let paymentsHash = {
                     oth: ORDERS_VIEW.oth,
                     ChargeAccountPayment: ORDERS_VIEW.charge_account,
@@ -624,7 +765,16 @@ export class ClosedOrdersDataService {
                     CreditCardRefund: ORDERS_VIEW.credit_refund
                 };
 
-                return paymentsHash[key];
+
+                let result = "";
+                if (key === "CreditCardPayment") {
+                    result = "";
+                } else {
+                    result = paymentsHash[key] + " ";
+                    if (addSpace) { result += "- "; }
+                }
+
+                return result;
             }
 
             function resolveOrderedOferModifiers(modifiers) {
@@ -646,7 +796,6 @@ export class ClosedOrdersDataService {
             }
 
             function resolveRewardResources(reward, _order) {
-                debugger;
                 let discount = reward.discount;
                 let item;
                 if (!discount) {
@@ -654,8 +803,7 @@ export class ClosedOrdersDataService {
                 }
 
                 //C:\dev\tabit\porta\public\l10n\he-IL.json:
-                //"INITIATED_DISCOUNT": "הנחה יזומה",
-                const INITIATED_DISCOUNT = 'הנחה יזומה';
+                const INITIATED_DISCOUNT = tmpTranslations.local === 'he' ? 'הנחה יזומה' : 'Initiated.D';
 
                 if (discount && (!discount.rewardedResources)) {
                     //ticket discount
@@ -877,7 +1025,6 @@ export class ClosedOrdersDataService {
             if (order.payments) {
 
                 if (order.onTheHouse) {
-                    //order.paymentName = $translate.instant('ORDERS_VIEW.oth');
                     order.paymentName = 'OTH';
 
                 } else {
@@ -888,83 +1035,78 @@ export class ClosedOrdersDataService {
                         if (payment._type === 'ChargeAccountPayment') {
 
                             if (
-                                //order.paymentName.indexOf($translate.instant('ORDERS_VIEW.charge_account')) === -1
-                                order.paymentName.indexOf('הקפה') === -1
+                                order.paymentName.indexOf(ORDERS_VIEW.charge_account) === -1
                             ) {
-                                //order.paymentName.push($translate.instant('ORDERS_VIEW.charge_account'));
-                                order.paymentName.push('הקפה');
+                                order.paymentName.push(ORDERS_VIEW.charge_account);
                             }
-                            //payment.name = $translate.instant('ORDERS_VIEW.charge_account') + ' ';
-                            payment.name = 'הקפה' + ' ';
+                            payment.name = ORDERS_VIEW.charge_account + ' ';
                         } else if (payment._type === 'CashPayment') {
                             if (
-                                //order.paymentName.indexOf($translate.instant('ORDERS_VIEW.cash')) === -1) {
-                                order.paymentName.indexOf('מזומן') === -1) {
-                                order.paymentName.push('מזומן');
+                                order.paymentName.indexOf(ORDERS_VIEW.cash) === -1) {
+                                order.paymentName.push(ORDERS_VIEW.cash);
                             }
-                            payment.name = 'מזומן' + ' ';
+                            payment.name = ORDERS_VIEW.cash + ' ';
                         } else if (payment._type === 'GiftCard') {
-                            //if (order.paymentName.indexOf($translate.instant('ORDERS_VIEW.giftCard')) === -1) {
-                            if (order.paymentName.indexOf('כרטיס תשלום') === -1) {
-                                order.paymentName.push('כרטיס תשלום');
+                            if (order.paymentName.indexOf(ORDERS_VIEW.giftCard) === -1) {
+                                order.paymentName.push(ORDERS_VIEW.giftCard);
                             }
-                            payment.name = 'כרטיס תשלום' + ' ';
+                            payment.name = ORDERS_VIEW.giftCard + ' ';
                         } else if (payment._type === 'GiftCardLoad') {
-                            //if (order.paymentName.indexOf($translate.instant('ORDERS_VIEW.giftCardLoad')) === -1) {
-                            if (order.paymentName.indexOf('טעינת כרטיס תשלום') === -1) {
-                                order.paymentName.push('טעינת כרטיס תשלום');
+                            if (order.paymentName.indexOf(ORDERS_VIEW.giftCardLoad) === -1) {
+                                order.paymentName.push(ORDERS_VIEW.giftCardLoad);
                             }
-                            payment.name = 'טעינת כרטיס תשלום' + ' ';
+                            payment.name = ORDERS_VIEW.giftCardLoad + ' ';
                         } else if (payment._type === 'GiftCard') {
-                            //if (order.paymentName.indexOf($translate.instant('ORDERS_VIEW.giftCard')) === -1) {
-                            if (order.paymentName.indexOf('כרטיס תשלום') === -1) {
-                                order.paymentName.push('כרטיס תשלום');
+                            if (order.paymentName.indexOf(ORDERS_VIEW.giftCard) === -1) {
+                                order.paymentName.push(ORDERS_VIEW.giftCard);
                             }
-                            payment.name = 'כרטיס תשלום' + ' ';
+                            payment.name = ORDERS_VIEW.giftCard + ' ';
                         } else if (payment._type === 'GiftCardLoad') {
-                            if (order.paymentName.indexOf('טעינת כרטיס תשלום') === -1) {
-                                order.paymentName.push('טעינת כרטיס תשלום');
+                            if (order.paymentName.indexOf(ORDERS_VIEW.giftCardLoad) === -1) {
+                                order.paymentName.push(ORDERS_VIEW.giftCardLoad);
                             }
-                            payment.name = 'טעינת כרטיס תשלום' + ' ';
+                            payment.name = ORDERS_VIEW.giftCardLoad + ' ';
                         } else if (payment._type === 'ChequePayment') {
-                            if (order.paymentName.indexOf('המחאה') === -1) {
-                                order.paymentName.push('המחאה');
+                            if (order.paymentName.indexOf(ORDERS_VIEW.cheque) === -1) {
+                                order.paymentName.push(ORDERS_VIEW.cheque);
                             }
-                            payment.name = 'המחאה' + ' ';
+                            payment.name = ORDERS_VIEW.cheque + ' ';
                         } else if (payment._type === 'CreditCardPayment') {
-                            if (order.paymentName.indexOf('אשראי') === -1) {
-                                order.paymentName.push('אשראי');
+                            if (order.paymentName.indexOf(ORDERS_VIEW.credit) === -1) {
+                                order.paymentName.push(ORDERS_VIEW.credit);
                             }
-                            payment.name = 'אשראי' + ' ';
+                            payment.name = ORDERS_VIEW.credit + ' ';
                         } else if (payment._type === 'ChargeAccountRefund') {
                             payment.amount *= -1;
-                            if (order.paymentName.indexOf('החזר הקפה') === -1) {
-                                order.paymentName.push('החזר הקפה');
+                            if (order.paymentName.indexOf(ORDERS_VIEW.charge_account_refund) === -1) {
+                                order.paymentName.push(ORDERS_VIEW.charge_account_refund);
                             }
-                            payment.name += 'החזר הקפה' + ' ';
+                            payment.name += ORDERS_VIEW.charge_account_refund + ' ';
                         } else if (payment._type === 'CashRefund') {
                             payment.amount *= -1;
-                            if (order.paymentName.indexOf('החזר מזומן') === -1) {
-                                order.paymentName.push('החזר מזומן');
+                            if (order.paymentName.indexOf(ORDERS_VIEW.cash_refund) === -1) {
+                                order.paymentName.push(ORDERS_VIEW.cash_refund);
                             }
-                            payment.name += 'החזר מזומן' + ' ';
+                            payment.name += ORDERS_VIEW.cash_refund + ' ';
                         } else if (payment._type === 'ChequeRefund') {
                             payment.amount *= -1;
-                            if (order.paymentName.indexOf('החזר המחאה') === -1) {
-                                order.paymentName.push('החזר המחאה');
+                            if (order.paymentName.indexOf(ORDERS_VIEW.cheque_refund) === -1) {
+                                order.paymentName.push(ORDERS_VIEW.cheque_refund);
                             }
-                            payment.accountName = 'החזר המחאה';
-                            payment.name += 'החזר המחאה' + ' ';
+                            payment.accountName = ORDERS_VIEW.cheque_refund;
+                            payment.name += ORDERS_VIEW.cheque_refund + ' ';
                         } else if (payment._type === 'CreditCardRefund') {
                             payment.amount *= -1;
-                            if (order.paymentName.indexOf('החזר אשראי') === -1) {
-                                order.paymentName.push('החזר אשראי');
+                            if (order.paymentName.indexOf(ORDERS_VIEW.credit_refund) === -1) {
+                                order.paymentName.push(ORDERS_VIEW.credit_refund);
                             }
-                            payment.name += 'החזר אשראי' + ' ';
+                            payment.name += ORDERS_VIEW.credit_refund + ' ';
                         }
 
-                        payment.methodName = getPaymentMethodName(payment._type);
-
+                        payment.methodName = getPaymentMethodName(payment._type, false);
+                        if (payment._type === "ChargeAccountPayment") {
+                            payment.methodName += payment.accountName;
+                        }
                     });
 
                     order.paymentName = order.paymentName.join('+');
@@ -974,11 +1116,11 @@ export class ClosedOrdersDataService {
 
             if (order.orderType === 'Refund') {
                 //order.table = $translate.instant('ORDERS_VIEW.refund');
-                order.table = 'החזר';
+                order.table = ORDERS_VIEW.refund;
             } else if (order.orderType === 'TA') {
                 order.table = 'TA';
             } else if (order.orderType === 'Delivery') {
-                order.table = 'משלוח';
+                order.table = ORDERS_VIEW.delivery;
             } else {
                 const table = resolveTable(order.tableIds[0]);
                 order.table = table ? table.number : '';
@@ -1079,11 +1221,9 @@ export class ClosedOrdersDataService {
                         if (item.cancellation.approved) { item.cancellation.approved.user = resolveUser(item.cancellation.approved.by); }
                         if (item.cancellation.reason) {
                             if (item.cancellation.reason.returnType === 'cancellation') { // canceled items
-                                //item.returnType = $translate.instant('ORDERS_VIEW.cancel');
-                                item.returnType = 'ביטול';
+                                item.returnType = ORDERS_VIEW.cancel;
                             } else { // returned items
-                                //item.returnType = $translate.instant('ORDERS_VIEW.return');
-                                item.returnType = 'החזרה';
+                                item.returnType = ORDERS_VIEW.return;
                             }
                         } else {
                             console.log('missing reason obj');
@@ -1100,10 +1240,8 @@ export class ClosedOrdersDataService {
 
             // Opened time line
             order.timeline.push({
-                //action: $translate.instant('ORDERS_VIEW.open'),
-                action: 'פתיחה',
-                //data: $translate.instant('ORDERS_VIEW.order'),
-                data: 'הזמנה',
+                action: ORDERS_VIEW.open,
+                data: ORDERS_VIEW.order,
                 at: order.created,
                 by: order.waiter
             });
@@ -1111,10 +1249,8 @@ export class ClosedOrdersDataService {
             // Closed time line
             if (order.closed) {
                 order.timeline.push({
-                    //action: $translate.instant('ORDERS_VIEW.close'),
-                    action: 'סגירה',
-                    //data: $translate.instant('ORDERS_VIEW.order'),
-                    data: 'הזמנה',
+                    action: ORDERS_VIEW.close,
+                    data: ORDERS_VIEW.order,
                     at: order.closed,
                     by: '' // can't determine who closed order
                 });
@@ -1136,42 +1272,65 @@ export class ClosedOrdersDataService {
                 });
             });
 
-            function buildPaymentRow(payment) {
+            function resolvePaymentData(payment) {
 
-                let result = [];
-                if (payment.creditCardBrand && payment.creditCardBrand !== "") {
-                    result.push({ key: ORDERS_VIEW.card_type, value: payment.creditCardBrand });
-                }
+                // <<<<<<< HEAD
+                //                 let result = [];
+                //                 if (payment.creditCardBrand && payment.creditCardBrand !== "") {
+                //                     result.push({ key: ORDERS_VIEW.card_type, value: payment.creditCardBrand });
+                //                 }
+                // =======
+                function buildPaymentRow(payment) {
+                    // >>>>>>> origin/master
 
-                let holderName = "";
-                if (payment.customerDetails) {
-                    if (payment.customerDetails.name && payment.customerDetails.name !== "") {
-                        result.push({ key: ORDERS_VIEW.customer_name, value: payment.customerDetails.name });
+                    let result = [];
+                    if (payment._type === "CreditCardPayment") {
+                        if (payment.creditCardBrand && payment.creditCardBrand !== "") {
+                            result.push({ value: payment.creditCardBrand })
+                        }
+                    } else if (payment._type === "ChargeAccountPayment") {
+                        if (payment.accountName && payment.accountName !== "") {
+                            result.push({ value: payment.accountName })
+                        }
                     }
+
+                    let holderName = "";
+                    if (payment.customerDetails) {
+                        if (payment.customerDetails.name && payment.customerDetails.name !== "") {
+                            result.push({ key: ORDERS_VIEW.customer_name, value: payment.customerDetails.name });
+                        }
+                    }
+
+                    if (payment.last4 && payment.last4 !== "") {
+                        result.push({ key: ORDERS_VIEW.last_4, value: payment.last4 });
+                    }
+
+                    let amount = payment.amount / 100;
+                    result.push({ key: ORDERS_VIEW.amount, value: amount });
+
+                    let text = "";
+                    result.forEach((item, index) => {
+                        if (index > 0) { text += "  ,"; }
+
+                        if (item.key) {
+                            text += `${item.key} : ${item.value}`;
+                        } else {
+                            text += `${item.value}`;
+                        }
+
+                    });
+
+                    return text;
                 }
 
-                if (payment.last4 && payment.last4 !== "") {
-                    result.push({ key: ORDERS_VIEW.last_4, value: payment.last4 });
-                }
-
-                let amount = Utils.toFixedSafe(payment.amount / 100, 2);
-                result.push({ key: ORDERS_VIEW.amount, value: amount });
-
-                let text = "";
-                result.forEach((item, index) => {
-                    if (index > 0) { text += "  ,"; }
-                    text += `${item.key} : ${item.value}`;
-                });
-
-                return text;
+                return getPaymentMethodName(payment._type, true) + buildPaymentRow(payment);
             }
 
             // add payments to time line
             _.each(order.payments, function (payment) {
                 order.timeline.push({
-                    //action: $translate.instant('ORDERS_VIEW.payment'),
-                    action: 'תשלום',
-                    data: getPaymentMethodName(payment._type) + ' - ' + buildPaymentRow(payment),
+                    action: ORDERS_VIEW.payment,
+                    data: resolvePaymentData(payment),
                     at: payment.lastUpdated,
                     by: resolveUser(payment.user)
                 });
@@ -1195,8 +1354,7 @@ export class ClosedOrdersDataService {
                         if (item.cancellation.reason && item.cancellation.reason.returnType === 'cancellation') {
                             // cancellation request
                             order.timeline.push({
-                                //action: $translate.instant('ORDERS_VIEW.cancel_item_applied'),
-                                action: 'בקשה לביטול פריט',
+                                action: ORDERS_VIEW.cancel_item_applied,
                                 data: data,
                                 at: item.cancellation.applied.at,
                                 by: resolveUser(item.cancellation.applied.by)
@@ -1204,8 +1362,7 @@ export class ClosedOrdersDataService {
                             // cancellation approved
                             if (item.cancellation.approved) {
                                 order.timeline.push({
-                                    //action: $translate.instant('ORDERS_VIEW.cancel_item_approved'),
-                                    action: 'אישור ביטול פריט',
+                                    action: ORDERS_VIEW.cancel_item_approved,
                                     data: data,
                                     at: item.cancellation.approved.at,
                                     by: resolveUser(item.cancellation.approved.by)
@@ -1214,8 +1371,7 @@ export class ClosedOrdersDataService {
                         } else {
                             // return request
                             order.timeline.push({
-                                //action: $translate.instant('ORDERS_VIEW.  '),
-                                action: 'בקשה להחזרת פריט',
+                                action: ORDERS_VIEW.return_item_applied,
                                 data: data,
                                 at: item.cancellation.applied.at,
                                 by: resolveUser(item.cancellation.applied.by)
@@ -1223,8 +1379,7 @@ export class ClosedOrdersDataService {
                             // return approved
                             if (item.cancellation.approved) {
                                 order.timeline.push({
-                                    //action: $translate.instant('ORDERS_VIEW.return_item_approved'),
-                                    action: 'אישור החזרת פריט',
+                                    action: ORDERS_VIEW.return_item_approved,
                                     data: data,
                                     at: item.cancellation.approved.at,
                                     by: resolveUser(item.cancellation.approved.by)
@@ -1241,8 +1396,7 @@ export class ClosedOrdersDataService {
                         }
                         // OTH request
                         order.timeline.push({
-                            //action: $translate.instant('ORDERS_VIEW.oth_item_applied'),
-                            action: 'בקשה ל-OTH פריט',
+                            action: ORDERS_VIEW.oth_item_applied,
                             data: data,
                             at: item.onTheHouse.applied.at,
                             by: resolveUser(item.onTheHouse.applied.by)
@@ -1250,8 +1404,7 @@ export class ClosedOrdersDataService {
                         // OTH approved
                         if (item.onTheHouse.approved) {
                             order.timeline.push({
-                                //action: $translate.instant('ORDERS_VIEW.oth_item_approved'),
-                                action: 'אישור OTH פריט',
+                                action: ORDERS_VIEW.oth_item_approved,
                                 data: data,
                                 at: item.onTheHouse.approved.at,
                                 by: resolveUser(item.onTheHouse.approved.by)
@@ -1270,8 +1423,7 @@ export class ClosedOrdersDataService {
                 }
                 // OTH request
                 order.timeline.push({
-                    //action: $translate.instant('ORDERS_VIEW.oth_order_applied'),
-                    action: 'בקשה ל-OTH חשבון',
+                    action: ORDERS_VIEW.oth_order_applied,
                     data: data,
                     at: order.onTheHouse.applied.at,
                     by: resolveUser(order.onTheHouse.applied.by)
@@ -1279,8 +1431,7 @@ export class ClosedOrdersDataService {
                 // OTH approved
                 if (order.onTheHouse.approved) {
                     order.timeline.push({
-                        //action: $translate.instant('ORDERS_VIEW.oth_order_approved'),
-                        action: 'אישור OTH חשבון',
+                        action: ORDERS_VIEW.oth_order_approved,
                         data: data,
                         at: order.onTheHouse.applied.at,
                         by: resolveUser(order.onTheHouse.applied.by)
@@ -1289,7 +1440,6 @@ export class ClosedOrdersDataService {
             }
 
             // add discounts
-            debugger;
             if (order.orderedDiscounts.length) {
                 let rewardsHash = {};
                 _.each(order.rewards, function (reward) {
@@ -1315,26 +1465,22 @@ export class ClosedOrdersDataService {
                     if (reward && reward._type) {
                         switch (reward._type) {
                             case 'PercentOffOrder':
-                                //action = $translate.instant('ORDERS_VIEW.percent_off_order') + ' ' + reward.discount.percentage + '%';
-                                action = `% הנחת הזמנה ${reward.discount.percentage}%`;
+                                action = `${ORDERS_VIEW.percent_off_order} ${reward.discount.percentage}%`;
                                 __data = reasonName;
                                 break;
 
                             case 'AmountOffOrder':
-                                //action = $translate.instant('ORDERS_VIEW.amount_off_order') + ' ' + reward.discount.amount / 100;
-                                action = ` הנחת סכום הזמנה ${reward.discount.amount / 100}`;
+                                action = `${ORDERS_VIEW.amount_off_order} ${reward.discount.amount / 100}`;
                                 __data = reasonName;
                                 break;
 
                             case 'PercentOff':
-                                //action = $translate.instant('ORDERS_VIEW.percent_off_item') + ' ' + reward.discount.percentage + '%';
-                                action = `% הנחת פריט ${reward.discount.percentage}%`;
+                                action = `${ORDERS_VIEW.percent_off_item} ${reward.discount.percentage}%`;
                                 __data = offer.name + ' - ' + reasonName;
                                 break;
 
                             case 'AmountOff':
-                                //action = $translate.instant('ORDERS_VIEW.amount_off_order') + ' ' + reward.discount.amount / 100;
-                                action = ` הנחת סכום הזמנה ${reward.discount.amount / 100}`;
+                                action = `${ORDERS_VIEW.amount_off_order} ${reward.discount.amount / 100}`;
                                 __data = offer.name + ' - ' + reasonName;
                                 break;
                         }
@@ -1342,14 +1488,12 @@ export class ClosedOrdersDataService {
                         if (discount && discount.discountType) {
                             switch (discount.discountType) {
                                 case 'percent': {
-                                    // action = $translate.instant('ORDERS_VIEW.percent_off_order') + ' ' + discount.value + '%';
-                                    action = `% הנחת הזמנה  ${discount.value}%`;
+                                    action = `${ORDERS_VIEW.percent_off_order}  ${discount.value}%`;
                                     __data = reasonName;
                                     break;
                                 }
                                 case 'amount': {
-                                    //action = $translate.instant('ORDERS_VIEW.amount_off_order') + ' ' + discount.value / 100;
-                                    action = ` הנחת סכום הזמנה ${discount.value / 100}`;
+                                    action = `${ORDERS_VIEW.amount_off_order} ${discount.value / 100}`;
                                     __data = reasonName;
                                     break;
                                 }
@@ -1378,8 +1522,7 @@ export class ClosedOrdersDataService {
             if (order.segmentations.length > 0) {
                 _.each(order.segmentations, segment => {
                     order.timeline.push({
-                        //action: $translate.instant('ORDERS_VIEW.appliedSegmentation'),
-                        action: 'בקשה לתיוג',
+                        action: ORDERS_VIEW.appliedSegmentation,
                         data: segment.name,
                         at: segment.applied.at,
                         by: resolveUser(segment.applied.by)
@@ -1387,8 +1530,7 @@ export class ClosedOrdersDataService {
 
                     if (segment.approved) {
                         order.timeline.push({
-                            //action: $translate.instant('ORDERS_VIEW.approvedSegmentation'),
-                            action: 'אישור תיוג',
+                            action: ORDERS_VIEW.approvedSegmentation,
                             data: segment.name,
                             at: segment.approved.at,
                             by: resolveUser(segment.approved.by)
@@ -1400,7 +1542,6 @@ export class ClosedOrdersDataService {
             if (order.history && order.history.length > 0) {
                 order.history.forEach(historyItem => {
                     order.timeline.push({
-                        //action: $translate.instant(`ORDERS_VIEW.${historyItem.action}`),
                         action: ORDERS_VIEW[historyItem.action],
                         data: `Device name: ${historyItem.deviceName}`,
                         at: historyItem.at,
@@ -1447,12 +1588,10 @@ export class ClosedOrdersDataService {
                     }
 
                     if (orderer.deliveryAddress.floor) {
-                        //deliveryAddressSummary += ' ' + $translate.instant('ORDERS_VIEW.orderer_floor') + orderer.deliveryAddress.floor;
                         deliveryAddressSummary += ' ' + ORDERS_VIEW.orderer_floor + orderer.deliveryAddress.floor;
                     }
 
                     if (orderer.deliveryAddress.apartment) {
-                        //deliveryAddressSummary += ' ' + $translate.instant('ORDERS_VIEW.orderer_apartment') + orderer.deliveryAddress.apartment;
                         deliveryAddressSummary += ' ' + ORDERS_VIEW.orderer_apartment + orderer.deliveryAddress.apartment;
                     }
                 }
@@ -1610,7 +1749,6 @@ export class ClosedOrdersDataService {
                 const tlog: any = data[0];
                 const lookupData: any = data[1];
                 const billData: any = data[2];
-                debugger;
 
                 return Promise.all([
                     enrichOrder_(

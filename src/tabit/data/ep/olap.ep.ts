@@ -140,7 +140,7 @@ export class OlapEp {
             attr: {
                 orderNumber: {
                     path: 'Tlog Header Order Number',
-                    parse: raw => (raw.replace('הזמנה מס ', '') * 1)
+                    parse: raw => (raw.replace('הזמנה מס ', '') * 1)//TODO localization
                 }
             }
         },  
@@ -152,22 +152,22 @@ export class OlapEp {
                     path: 'Tlog Pricereductions Reason Type',
                     parse: raw => {
                         switch (raw) {
-                            case 'ביטולים':
+                            case 'ביטולים'://TODO localization
                                 return 'cancellation';
-                            case 'תפעול':
+                            case 'תפעול'://TODO localization
                                 return 'compensation';
-                            case 'שימור ושיווק':
+                            case 'שימור ושיווק'://TODO localization
                                 return 'retention';
-                            case 'ארגוני':
+                            case 'ארגוני'://TODO localization
                                 return 'organizational';
-                            case 'מבצעים':
+                            case 'מבצעים'://TODO localization
                                 return 'promotions';
                         }
                     },
                     members: {
                         cancellation: {
                             path: 'cancellation',
-                            caption: 'ביטולים'
+                            caption: 'ביטולים'//TODO localization
                         },
                         operational: {
                             path: 'compensation',
@@ -175,15 +175,15 @@ export class OlapEp {
                         },
                         retention: {
                             path: 'retention',
-                            caption: 'שימור ושיווק'
+                            caption: 'שימור ושיווק'//TODO localization
                         },
                         organizational: {
                             path: 'organizational',
-                            caption: 'ארגוני'
+                            caption: 'ארגוני'//TODO localization
                         },
                         promotions: {
                             path: '',
-                            caption: 'מבצעים'
+                            caption: 'מבצעים'//TODO localization
                         }
                     }
                 }
@@ -207,7 +207,7 @@ export class OlapEp {
     
     private monthsMap = {
         he: {
-            'ינואר': 1,
+            'ינואר': 1,//TODO localization
             'פברואר': 2,
             'מרץ': 3,
             'אפריל': 4,
@@ -664,7 +664,7 @@ export class OlapEp {
                                 // raw date looks like: " ש 01/10/2017"
                                 let rawOrderNumber = r[`${this.dims.orders.hierarchy}.${this.dims.orders.dims.orderNumber}.${this.dims.orders.dims.orderNumber}.[MEMBER_CAPTION]`];
                                 try {
-                                    rawOrderNumber = rawOrderNumber.replace('הזמנה מס ', '')*1;
+                                    rawOrderNumber = rawOrderNumber.replace('הזמנה מס ', '') * 1;//TODO localization
                                 } catch (e) {
                                     rawOrderNumber = 0;
                                 }
