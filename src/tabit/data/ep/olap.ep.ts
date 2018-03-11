@@ -319,7 +319,7 @@ export class OlapEp {
                                 if (!year || !month) {
                                     throw new Error(`err 761: error extracting monthly data: ${yearAndMonth}. please contact support.`);
                                 }
-                                monthInt = this.monthsMap['he'][month];
+                                monthInt = this.monthsMap['he'][month];//TODO localize
                                 if (!monthInt) {
                                     throw new Error(`err 762: error extracting monthly data: ${yearAndMonth}. please contact support.`);
                                 }
@@ -532,7 +532,7 @@ export class OlapEp {
                                         //throw new Error(`err 7618: error extracting monthly data: ${yearAndMonth}. please contact support.`);
                                         return false;
                                     }
-                                    monthInt = this.monthsMap['he'][month];
+                                    monthInt = this.monthsMap['he'][month];//TODO localize
                                     if (!monthInt) {
                                         //throw new Error(`err 7628: error extracting monthly data: ${yearAndMonth}. please contact support.`);
                                         return false;

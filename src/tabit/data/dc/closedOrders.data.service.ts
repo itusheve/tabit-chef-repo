@@ -20,6 +20,7 @@ import { OlapEp } from '../ep/olap.ep';
 import { ROSEp } from '../ep/ros.ep';
 import { CurrencyPipe } from '@angular/common';
 import { User } from '../../model/User.model';
+import { environment } from '../../../environments/environment';
 
 // copied as is from office 4.X
 //TODO establish proper translation service
@@ -294,7 +295,7 @@ let ORDERS_VIEW_en = {
     "card_type": "Card Type"
 };
 
-const ORDERS_VIEW = tmpTranslations.local === 'he' ? ORDERS_VIEW_he : ORDERS_VIEW_en;
+const ORDERS_VIEW = tmpTranslations.locale === 'he' ? ORDERS_VIEW_he : ORDERS_VIEW_en;
 
 export default ORDERS_VIEW;
 
@@ -803,7 +804,7 @@ export class ClosedOrdersDataService {
                 }
 
                 //C:\dev\tabit\porta\public\l10n\he-IL.json:
-                const INITIATED_DISCOUNT = tmpTranslations.local === 'he' ? 'הנחה יזומה' : 'Initiated.D';
+                const INITIATED_DISCOUNT = tmpTranslations.locale === 'he' ? 'הנחה יזומה' : 'Initiated.D';
 
                 if (discount && (!discount.rewardedResources)) {
                     //ticket discount

@@ -2,14 +2,11 @@ import { APP_INITIALIZER, NgModule, LOCALE_ID } from '@angular/core';//https://s
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-// import { ServiceWorkerModule } from '@angular/service-worker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';//required by some material components
-
 
 import { registerLocaleData } from '@angular/common';
 import localeHe from '@angular/common/locales/he';
-// the second parameter 'fr' is optional
-registerLocaleData(localeHe, 'he');//https://angular.io/guide/i18n
+import localeHeExtra from '@angular/common/locales/extra/he';
 
 import { environment } from '../environments/environment';
 
@@ -33,7 +30,6 @@ import { MomentModule } from 'angular2-moment';
 import { ROSEp } from '../tabit/data/ep/ros.ep';
 import { OlapEp } from '../tabit/data/ep/olap.ep';
 
-
 import { UsersDataService } from '../tabit/data/dc/_users.data.service';
 import { CategoriesDataService } from '../tabit/data/dc/_categories.data.service';
 import { ItemsDataService } from '../tabit/data/dc/_items.data.service';
@@ -52,7 +48,6 @@ import { AppComponent } from './app.component';
 
 import { LoginComponent } from './auth/login/login.component';
 
-
 import { AuthService } from './auth/auth.service';
 import { UserGuard } from './auth/user-guard.service';
 import { OrgGuard } from './auth/org-guard.service';
@@ -60,6 +55,14 @@ import { OrgGuard } from './auth/org-guard.service';
 //feature modules:
 import { OrgsModule } from './orgs/orgs.module';
 import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.module';
+
+// The CLI imports the locale data for you when you use the parameter --locale with ng serve and ng build.
+if (environment.locale==='he') {
+  registerLocaleData(localeHe, 'he', localeHeExtra);//https://angular.io/guide/i18n
+}
+
+//serve/build an hebrew version:
+// ng serve --aot--i18nFile = src / locale / messages.he.xlf--i18nFormat = xlf--locale = he
 
 @NgModule({
   declarations: [
@@ -105,7 +108,7 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
     },
     { 
       provide: LOCALE_ID, 
-      useValue: 'he' 
+      useValue: environment.locale==='he' ? 'he' : 'en-US'
     },
     AuthService, 
     UserGuard,

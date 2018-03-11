@@ -150,7 +150,7 @@
         <target>{VAR_SELECT, select, NotFinal {לא סופי} }</target>
       </trans-unit>
       <trans-unit id="cardLetter" datatype="html">
-        <source>{VAR_SELECT, select, A {letterAverage} M {letterYear} }</source>
+        <source>{VAR_SELECT, select, A {A} M {Y} }</source>
         <target>{VAR_SELECT, select, A {מ} Y {ש} }</target>
       </trans-unit>
       <trans-unit id="9593910bf4cbd24dc68f1b0f28357cedbad07c2e" datatype="html">

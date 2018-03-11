@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { OwnersDashboardComponent } from './owners-dashboard.component';
@@ -60,6 +60,8 @@ import 'devextreme-intl';
 import { OrderCashRefundComponent } from './order-view/slips/_cashRefund/cashRefund.component';
 import { OrderChequeRefundComponent } from './order-view/slips/_chequeRefund/chequeRefund.component';
 import { OrderCreditRefundComponent } from './order-view/slips/_creditRefund/creditRefund.component';
+import { environment } from '../../environments/environment';
+
 
 //Load localized messages (English included by default)
 // let messagesDe = require("devextreme/localization/messages/de.json"),
@@ -70,7 +72,9 @@ import { OrderCreditRefundComponent } from './order-view/slips/_creditRefund/cre
 // loadMessages(messagesDe);
 // loadMessages(messagesJa);
 
-locale('he');
+if (environment.locale==='he') {
+  locale('he');
+}
 
 @NgModule({
   imports: [

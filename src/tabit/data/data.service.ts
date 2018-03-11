@@ -27,13 +27,20 @@ import { OlapEp } from './ep/olap.ep';
 import { ROSEp } from './ep/ros.ep';
 import { OrderType } from '../model/OrderType.model';
 import { Order } from '../model/Order.model';
+import { environment } from '../../environments/environment';
 
 /* 
 ==tmpTranslations==
 https://github.com/angular/angular/issues/16477
 until angular comes up with the final i18n solution that includes in-component translations, here are some statically typed translations:  
 */
-const locale = 'he';
+
+let locale = 'en-US';
+if (environment.locale==='he') {
+    locale = 'he';
+}
+
+
 const tmpTranslations_ = {
     'he': {
         login: {
@@ -109,7 +116,7 @@ const tmpTranslations_ = {
     }
 };
 export const tmpTranslations = {
-    local: locale,
+    locale: locale,
     get(path: string):string {
         const tokens = path.split('.');        
         let translation: any = tmpTranslations_[locale];
