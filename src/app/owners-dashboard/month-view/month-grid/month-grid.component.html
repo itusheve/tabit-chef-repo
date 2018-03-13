@@ -72,7 +72,7 @@
             <div class="flex">{{data.data.dinersPPA | number : '1.0-0'}}</div>
             <div *ngIf="data.data.dailyTrends.trends.diners.status==='ready'" class="flex d-col a-center trend" [ngClass]="data.data.dailyTrends.trends.diners.val > 0 ? 'up' : 'down'">
               <div class="flex label">
-                <div class="flex letter">{{data.data.dailyTrends.trends.diners.letter}}</div>
+                <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.diners.letter, select, A {A} Y {Y} }</div>
                 <mat-icon>play_arrow</mat-icon>
               </div>
               <div class="figure">{{data.data.dailyTrends.trends.diners.val | percent:'1.1-1'}}</div>
@@ -88,7 +88,7 @@
               class="flex d-col a-center trend"
               [ngClass]="data.data.dailyTrends.trends.ppa.val > 0 ? 'up' : 'down'">
               <div class="flex label">
-                <div class="flex letter">{{data.data.dailyTrends.trends.ppa.letter}}</div>
+                <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.ppa.letter, select, A {A} Y {Y} }</div>
                 <mat-icon>play_arrow</mat-icon>
               </div>
               <div class="figure">{{data.data.dailyTrends.trends.ppa.val | percent:'1.1-1'}}</div>

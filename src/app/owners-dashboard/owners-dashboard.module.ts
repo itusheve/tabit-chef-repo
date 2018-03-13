@@ -2,7 +2,7 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { OwnersDashboardComponent } from './owners-dashboard.component';
-import { OwnersDashboardCurrencyPipe } from './owners-dashboard.pipes';
+import { OwnersDashboardCurrencyPipe, OwnersDashboardCountPipe } from './owners-dashboard.pipes';
 
 import { HomeComponent } from './home/home.component';
 
@@ -61,6 +61,7 @@ import { OrderCashRefundComponent } from './order-view/slips/_cashRefund/cashRef
 import { OrderChequeRefundComponent } from './order-view/slips/_chequeRefund/chequeRefund.component';
 import { OrderCreditRefundComponent } from './order-view/slips/_creditRefund/creditRefund.component';
 import { environment } from '../../environments/environment';
+import { DaySalesTableComponent } from './day-view/day-sales-table/day-sales-table.component';
 
 
 //Load localized messages (English included by default)
@@ -100,6 +101,7 @@ if (environment.locale==='he') {
   declarations: [
     OwnersDashboardComponent,
     OwnersDashboardCurrencyPipe,
+    OwnersDashboardCountPipe,
     
     HomeComponent,
     CardComponent,
@@ -113,6 +115,7 @@ if (environment.locale==='he') {
       DaySelectorComponent,
       DayPieChartComponent,
       DaySalesTypeTableComponent,
+      DaySalesTableComponent,
       DayDinersTableComponent,
       DayOrdersTableComponent,
       DayOrdersTableHasSalesPipe,

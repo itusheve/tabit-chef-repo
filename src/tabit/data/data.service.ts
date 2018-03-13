@@ -6,6 +6,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { zip } from 'rxjs/observable/zip';
+import { fromPromise } from 'rxjs/observable/fromPromise';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/concatMap';
@@ -128,11 +129,35 @@ export const tmpTranslations = {
 };
 /* ==tmpTranslations== */
 
-
-/* vat inclusive KPI per business day */
 export interface BusinessDayKPI {
     businessDay: moment.Moment;
     kpi: KPI;
+}
+
+export interface BusinessDayKPIs {
+    businessDay: moment.Moment;
+    
+    // for sikum yomi
+    totalSales: number;
+    /// maps OrderType to different figures
+    byOrderType: Map<OrderType, {
+        sales: number,
+        dinersOrOrders: number,
+        average: number
+    }>;
+
+    // maps by Shift then by OrderType to different figures
+    byShiftByOrderType: Map<
+        Shift,
+        {
+            totalSales: number,
+            byOrderType: Map<OrderType, {
+                sales: number,
+                dinersOrOrders: number,
+                average: number
+            }>
+        }
+    >;
 }
 
 @Injectable()
@@ -258,7 +283,7 @@ export class DataService {
                     if (shiftsConfig[i].active) {
                         const name = shiftsConfig[i].name;
                         const startTime = moment.tz(`2018-01-01T${shiftsConfig[i].startTime}`, this.region);
-                        const shift = new Shift(name, startTime);
+                        const shift = new Shift(name, i, startTime);
                         shifts.push(shift);
                     }
                 }
@@ -706,13 +731,14 @@ export class DataService {
             });
     }
 
+    /* deprectaed, use getBusinessDateKPIs instead */
     getDailyDataByShiftAndType(date: moment.Moment): Subject<any> {        
         const sub$ = new Subject<any>();
 
         const data$ = combineLatest(
             this.vat$,
             this.shifts$,
-            this.olapEp.get_sales_and_ppa_by_OrderType_by_Service(date).take(1),//TODO olapEp should be stateless!
+            fromPromise(this.olapEp.get_sales_and_ppa_by_OrderType_by_Service(date)),
             (vat: boolean, shifts: Shift[], daily_data_by_orderType_by_service: any) => Object.assign({}, { shifts: shifts }, { daily_data_by_orderType_by_service: daily_data_by_orderType_by_service }, {vat: vat})
         );
 
@@ -729,13 +755,13 @@ export class DataService {
             if (!data.vat) {
                 daily_data_by_orderType_by_service.forEach(tuple=>{
                     tuple.sales = tuple.sales/1.17;
-                    tuple.salesPPA = tuple.salesPPA/1.17;
+                    tuple.dinersSales = tuple.dinersSales/1.17;
                 });
             }
 
             const salesByOrderType: {//TODO use 'KPI' and 'Service' Models
-                dinersPPA: any,
-                salesPPA: any,
+                dinersCount: any,
+                dinersSales: any,
                 sales: any,
                 service: any,
                 orderTypeId: string
@@ -777,6 +803,237 @@ export class DataService {
         return sub$;
     }
     
+    /* 
+        returns VAT-aware KPIs for the business date (bd)
+     */
+    /* todo replace getDailyDataByShiftAndType with this */
+    getBusinessDateKPIs(bd: moment.Moment): Promise<BusinessDayKPIs> {
+        return new Promise((resolve, reject)=>{        
+
+            const that = this;
+
+            const data$ = combineLatest(
+                this.vat$,
+                this.shifts$,
+                fromPromise(this.olapEp.get_sales_and_ppa_by_OrderType_by_Service(bd)),
+                (vat, shifts, daily_data_by_orderType_by_service_raw) => Object.assign({}, { shifts: shifts }, { daily_data_by_orderType_by_service_raw: daily_data_by_orderType_by_service_raw }, { vat: vat })
+            );
+
+            data$.subscribe(data => {
+                
+                // data preparation
+                const daily_data_by_orderType_by_service: {
+                    orderType: OrderType,
+                    shift: Shift,
+                    sales: number,
+                    dinersSales: number,
+                    dinersCount: number,
+                    ordersCount: number   
+                }[] = (function(){
+                    // clone raw data
+                    const daily_data_by_orderType_by_service_raw: {
+                        orderType: string | OrderType,
+                        service: string,
+                        shift: Shift,
+                        sales: number,
+                        dinersSales: number,
+                        dinersCount: number,
+                        ordersCount: number    
+                    }[] = _.cloneDeep(data.daily_data_by_orderType_by_service_raw);
+    
+                    // normalize olapData:
+                    daily_data_by_orderType_by_service_raw.forEach(o => {
+                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType + ''];                        
+                        o.shift = data.shifts.find(s=>s.name===o.service);
+                    });            
+    
+                    // be VAT aware
+                    if (!data.vat) {
+                        daily_data_by_orderType_by_service_raw.forEach(tuple => {
+                            tuple.sales = tuple.sales / 1.17;
+                            tuple.dinersSales = tuple.dinersSales / 1.17;
+                        });
+                    }
+    
+                    // prepare final data
+                    const daily_data_by_orderType_by_service_: any = daily_data_by_orderType_by_service_raw.map(o=>({
+                        orderType: o.orderType,
+                        shift: o.shift,
+                        sales: o.sales,
+                        dinersSales: o.dinersSales,
+                        dinersCount: o.dinersCount,
+                        ordersCount: o.ordersCount
+                    }));
+
+                    return daily_data_by_orderType_by_service_;
+                }());
+
+                // byShiftByOrderType setup
+                const byShiftByOrderType: Map<
+                    Shift,
+                    {
+                        totalSales: number,
+                        byOrderType: Map<OrderType, {
+                            sales: number,
+                            dinersOrOrders: number,
+                            average: number
+                        }>
+                    }
+                    > = (function(){
+                        const byShiftByOrderType = new Map<
+                            Shift,
+                            {
+                                totalSales: number,
+                                byOrderType: Map<OrderType, {
+                                    sales: number,
+                                    dinersOrOrders: number,
+                                    average: number
+                                }>
+                            }
+                        >();
+        
+                        for (let i = 0; i < data.shifts.length; i++) {
+                            byShiftByOrderType.set(data.shifts[i], {
+                                totalSales: 0,
+                                byOrderType: new Map<OrderType, {
+                                    sales: number,
+                                    dinersOrOrders: number,
+                                    average: number
+                                }>()
+                            });
+                        }
+                            
+                        daily_data_by_orderType_by_service.forEach(o=>{
+                            const mapEntry = byShiftByOrderType.get(o.shift);
+                            let dinersOrOrders;
+                            let average;
+                            if (o.orderType.id === 'seated') {
+                                dinersOrOrders = o.dinersCount;
+                                average = o.dinersCount > 0 ? o.dinersSales / o.dinersCount : undefined;
+                            } else {
+                                dinersOrOrders = o.ordersCount;
+                                average = o.sales / o.ordersCount;
+                            }
+
+                            mapEntry.byOrderType.set(o.orderType, {
+                                sales: o.sales,
+                                dinersOrOrders: dinersOrOrders,
+                                average: average
+                            });
+
+                            mapEntry.totalSales+=o.sales;
+                        });
+
+                        //remove shifts with 0 sales
+                        byShiftByOrderType.forEach((val, key, map)=>{
+                            if (val.totalSales===0) {
+                                map.delete(key);
+                            }
+                        });
+
+                        return byShiftByOrderType;
+                }());
+
+                // byOrderType setup                
+                const byOrderType: Map<OrderType, {
+                    sales: number,
+                    dinersOrOrders: number,
+                    average: number
+                }> = (function(){
+                    const byOrderType = new Map<OrderType, {
+                        sales: number,
+                        dinersOrOrders: number,
+                        average: number
+                    }>();
+    
+                    const byOrderType_: {
+                        [index:string]: {
+                            orderType: OrderType,
+                            service: any,
+                            sales: number,
+                            dinersSales: number,
+                            dinersCount: number,
+                            ordersCount: number
+                        }[]
+                    } = _.groupBy(daily_data_by_orderType_by_service, item => item.orderType.id);
+    
+                    const byOrderType_reduced: {
+                        [index: string]: {
+                            orderType: OrderType,
+                            sales: number,
+                            dinersSales: number,
+                            dinersCount: number,
+                            ordersCount: number
+                        }
+                    } = {};
+    
+                    Object.keys(byOrderType_).forEach(orderTypeId => {
+                        const reduced = byOrderType_[orderTypeId].reduce((acc, curr) => {
+                            return {
+                                orderType: curr.orderType,
+                                sales: acc.sales + curr.sales,
+                                dinersSales: acc.dinersSales + curr.dinersSales,
+                                dinersCount: acc.dinersCount + curr.dinersCount,
+                                ordersCount: acc.ordersCount + curr.ordersCount
+                            };
+                        }, {
+                                orderType: undefined,
+                                sales: 0,
+                                dinersSales: 0,
+                                dinersCount: 0,
+                                ordersCount: 0
+                            });
+                        
+                        byOrderType_reduced[orderTypeId] = reduced;
+                    });
+                    
+                    Object.keys(byOrderType_reduced).forEach(orderTypeId => {
+                        const obj = byOrderType_reduced[orderTypeId];
+                        const orderType = obj.orderType;
+    
+                        let dinersOrOrders;
+                        let average;
+                        if (orderType.id==='seated') {
+                            dinersOrOrders = obj.dinersCount;
+                            average = obj.dinersCount > 0 ? obj.dinersSales / obj.dinersCount : undefined;
+                        } else {
+                            dinersOrOrders = obj.ordersCount;
+                            average = obj.sales / obj.ordersCount;
+                        }
+    
+                        byOrderType.set(orderType, {
+                            sales: obj.sales, 
+                            dinersOrOrders: dinersOrOrders,
+                            average: average
+                        });
+                    });
+
+                    return byOrderType;
+                }());
+
+                // totalSales setup
+                const totalSales: number = (function(){
+                    let totalSales = 0;
+                    
+                    byOrderType.forEach(o=>{
+                        totalSales += o.sales;
+                    });
+
+                    return totalSales;
+                }());
+
+                resolve({
+                    businessDay: moment(bd),
+                    totalSales: totalSales,                    
+                    byOrderType: byOrderType,
+                    byShiftByOrderType: byShiftByOrderType
+                });
+
+            });
+
+        });
+    }
+
     /* 
      @caching
      @:promise

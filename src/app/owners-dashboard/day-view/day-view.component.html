@@ -12,6 +12,24 @@
     
     <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
 
+    <app-day-sales-table 
+      class="widget"
+      title="Day Summary"
+      i18n-title="@@daySummary"
+      [totalSales]="KPIs?.totalSales"
+      [byOrderType]="KPIs?.byOrderType">
+    </app-day-sales-table>
+
+    <div *ngIf="KPIs">
+      <app-day-sales-table       
+        *ngFor="let key of getKeys(KPIs.byShiftByOrderType)"
+        class="widget" 
+        [title]="key.name" 
+        [totalSales]="KPIs.byShiftByOrderType.get(key).totalSales" 
+        [byOrderType]="KPIs.byShiftByOrderType.get(key).byOrderType">
+      </app-day-sales-table>
+    </div>
+
     <app-day-sales-type-table 
       class="widget" 
       #daySalesTypeTable

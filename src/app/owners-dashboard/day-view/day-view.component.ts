@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataService } from '../../../tabit/data/data.service';
+import { DataService, BusinessDayKPI, BusinessDayKPIs } from '../../../tabit/data/data.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import * as moment from 'moment';
@@ -48,6 +48,8 @@ export class DayViewComponent implements OnInit  {
     dinersAndPPAByShift: undefined
   });
 
+  public KPIs: BusinessDayKPIs;
+
   constructor(
     private closedOrdersDataService: ClosedOrdersDataService,
     private dataService: DataService,
@@ -86,6 +88,11 @@ export class DayViewComponent implements OnInit  {
       this.closedOrdersDataService.getOrders(this.day)
         .then((orders: Order[]) => {
           this.orders = orders;
+        });
+
+      this.dataService.getBusinessDateKPIs(this.day)
+        .then(KPIs=>{
+          this.KPIs = KPIs;
         });
     });
   } 
@@ -129,6 +136,10 @@ export class DayViewComponent implements OnInit  {
 
   closeDrill() {
     this.drill = false;
+  }
+
+  getKeys(map) {
+    return Array.from(map.keys());
   }
 
 }

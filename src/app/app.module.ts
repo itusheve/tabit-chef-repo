@@ -62,7 +62,8 @@ if (environment.locale==='he') {
 }
 
 //serve/build an hebrew version:
-// ng serve --aot--i18nFile = src / locale / messages.he.xlf--i18nFormat = xlf--locale = he
+// ng serve --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he
+// ng serve --aot --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he
 
 @NgModule({
   declarations: [

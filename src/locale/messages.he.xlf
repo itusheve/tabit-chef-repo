@@ -161,6 +161,26 @@
           <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
+
+      <trans-unit id="daySummary" datatype="html">
+        <target>סיכום יומי</target>
+      </trans-unit>      
+      <trans-unit id="orderType2" datatype="html">
+        <target>סוג הזמנה</target>
+      </trans-unit>  
+      <trans-unit id="sales2" datatype="html">
+        <target>מכירות</target>
+      </trans-unit>  
+      <trans-unit id="dinersOrders" datatype="html">
+        <target>סועדים / הזמנות</target>
+      </trans-unit>  
+      <trans-unit id="average" datatype="html">
+        <target>ממוצע</target>
+      </trans-unit>  
+      <trans-unit id="orderTypeSelect" datatype="html">
+        <target>{ key.id, select, seated {בישיבה} counter {דלפק} ta {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
+      </trans-unit>
+
       <trans-unit id="revenue" datatype="html">
         <source>Revenue</source>
         <target>הכנסות</target>

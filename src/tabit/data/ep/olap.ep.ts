@@ -40,7 +40,35 @@ export class OlapEp {
         }
     };
 
-    private measureGroups = {
+    private measureGroups = {//the structure is similar to the one in the CUBE, with the hebrew captions in comments as helpers
+        general: {//"כללי" and stuff in Measures' root
+            measures: {
+                ordersCount: {//"הזמנות"
+                    path: 'PPAOrders',
+                    type: 'number'
+                },
+                sales: {//"מכירות"
+                    path: 'Tlog Header Total Payment Amount',
+                    type: 'number'
+                },
+                dinersSales: {//"מכירות לסועד"
+                    path: 'PPANetAmountSeated',
+                    type: 'number'
+                },
+                dinersCount: {//"סועדים"
+                    path: 'PPADinersSeated',
+                    type: 'number'
+                }
+            }
+        },
+        items: {//"פריטים"
+            measures: {
+                itemsSales: {
+                    path: '[Measures].[Tlog Items Net Amount]',//"מכירות פריטים"
+                    type: 'number'
+                }
+            }
+        },
         priceReductions: {
             measures: {
                 cancellation: {
@@ -60,7 +88,7 @@ export class OlapEp {
                     type: 'number'
                 }
             }
-        }
+        }        
     };    
 
     private dims = {
@@ -804,15 +832,22 @@ export class OlapEp {
         });
     }
 
-    public get_sales_and_ppa_by_OrderType_by_Service(day: moment.Moment): Subject<any> {
-        const obs$ = new Subject<any>();
-
-        const mdx = `
+    public get_sales_and_ppa_by_OrderType_by_Service(day: moment.Moment): Promise<{
+        orderType: string,
+        service: string,
+        sales: number,
+        dinersSales: number,
+        dinersCount: number,
+        ordersCount: number
+    }[]> {
+        return new Promise((resolve, reject)=>{
+            const mdx = `
             SELECT
             {
-                ${this.measures.sales},
-                ${this.measures.ppa.sales},
-                ${this.measures.ppa.diners}
+                ${this.measure(this.measureGroups.general.measures.sales)},
+                ${this.measure(this.measureGroups.general.measures.dinersSales)},
+                ${this.measure(this.measureGroups.general.measures.dinersCount)},
+                ${this.measure(this.measureGroups.general.measures.ordersCount)}
             } ON 0,
             NON EMPTY {
                 (
@@ -833,9 +868,8 @@ export class OlapEp {
             )
         `;
 
-        
         this.url
-            .subscribe(url=>{
+            .subscribe(url => {
                 const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
 
                 xmla4j_w.executeNew(mdx)
@@ -843,30 +877,40 @@ export class OlapEp {
                         const treated = rowset.map(r => {
                             let orderType = r[`${this.dims.orderType.hierarchy}.${this.dims.orderType.dim}.${this.dims.orderType.dim}.[MEMBER_CAPTION]`];
                             let service = r[`${this.dims.service.hierarchy}.${this.dims.service.dim}.${this.dims.service.dim}.[MEMBER_CAPTION]`];
-                            let sales = r[this.measures.sales];
-                            let salesPPA = r[this.measures.ppa.sales];
-                            let dinersPPA = r[this.measures.ppa.diners];
+                            
+                            // let sales = r[this.measures.sales];
+                            // let salesPPA = r[this.measures.ppa.sales];
+                            // let dinersPPA = r[this.measures.ppa.diners];
 
-                            if (sales) sales = this.expoToNumer(sales);
-                            if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
-                            if (dinersPPA) dinersPPA = dinersPPA * 1;
+                            // if (sales) sales = this.expoToNumer(sales);
+                            // if (salesPPA) salesPPA = this.expoToNumer(salesPPA);
+                            // if (dinersPPA) dinersPPA = dinersPPA * 1;
+
+                            const sales = this.parseMeasure(r, this.measureGroups.general.measures.sales);
+                            const dinersSales = this.parseMeasure(r, this.measureGroups.general.measures.dinersSales);
+                            const dinersCount = this.parseMeasure(r, this.measureGroups.general.measures.dinersCount);
+                            const ordersCount = this.parseMeasure(r, this.measureGroups.general.measures.ordersCount);
 
                             return {
                                 orderType: orderType,
                                 service: service,
                                 sales: sales,
-                                salesPPA: salesPPA,
-                                dinersPPA: dinersPPA
+                                dinersSales: dinersSales,
+                                dinersCount: dinersCount,
+                                ordersCount: ordersCount
                             };
                         });
 
-                        obs$.next(treated);
+                        resolve(treated);
                     })
                     .catch(e => {
+                        reject(e);
                     });
             });
-    
-        return obs$;
+
+        });
+
+
 
     }
 

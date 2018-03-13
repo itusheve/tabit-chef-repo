@@ -30,3 +30,15 @@ export class OwnersDashboardCurrencyPipe implements PipeTransform {
         //return '';
     }
 }
+
+@Pipe({
+    name: 'count',
+    pure: false
+})
+export class OwnersDashboardCountPipe implements PipeTransform {
+    private decPipe: DecimalPipe = new DecimalPipe('he-IL');
+
+    transform(value: any): any {
+        return this.decPipe.transform(value, '1.0-0');
+    }
+}
