@@ -912,7 +912,7 @@ export class DataService {
                                 average = o.dinersCount > 0 ? o.dinersSales / o.dinersCount : undefined;
                             } else {
                                 dinersOrOrders = o.ordersCount;
-                                average = o.sales / o.ordersCount;
+                                average = o.ordersCount > 0 ? o.sales / o.ordersCount : undefined;
                             }
 
                             mapEntry.byOrderType.set(o.orderType, {
@@ -998,7 +998,7 @@ export class DataService {
                             average = obj.dinersCount > 0 ? obj.dinersSales / obj.dinersCount : undefined;
                         } else {
                             dinersOrOrders = obj.ordersCount;
-                            average = obj.sales / obj.ordersCount;
+                            average = obj.ordersCount > 0 ? obj.sales / obj.ordersCount : undefined;
                         }
     
                         byOrderType.set(orderType, {
