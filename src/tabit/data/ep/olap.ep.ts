@@ -63,22 +63,28 @@ export class OlapEp {
         },
         items: {//"פריטים"
             measures: {
-                itemsSales: {//"מכירות פריטים"
+                sales: {//"מכירות פריטים"
                     path: 'Tlog Items Net Amount',
                     type: 'number'
                 },
-                itemsSold: {//"נמכר"
+                sold: {//"נמכר"
                     path: 'Tlog Items Sold'
+                },
+                prepared: {//"הוכן"
+                    path: 'Tlog Items Prepared'
+                },
+                returned: {//"הוחזר"
+                    path: 'Tlog Items Return'
                 }
             }
         },
-        priceReductions: {
+        priceReductions: {//הנחות
             measures: {
                 cancellation: {
                     path: 'Tlog Pricereductions Cancellation Amount',
                     type: 'number'
                 },
-                operational: {
+                operational: {//"שווי תקלות תפעול"
                     path: 'Tlog Pricereductions Operational Discount Amount',
                     type: 'number'
                 },
@@ -940,7 +946,7 @@ export class OlapEp {
             const mdx = `
                 SELECT
                 {
-                    ${this.measure(this.measureGroups.items.measures.itemsSales)}
+                    ${this.measure(this.measureGroups.items.measures.sales)}
                 } ON 0,
                 NON EMPTY {
                     (
@@ -961,7 +967,7 @@ export class OlapEp {
                         .then(rowset => {
                             const treated = rowset.map(r => {
                                 const subDepartment = this.parseDim(r, this.dims.items.attr.subDepartment);
-                                const sales = this.parseMeasure(r, this.measureGroups.items.measures.itemsSales);
+                                const sales = this.parseMeasure(r, this.measureGroups.items.measures.sales);
 
                                 return {
                                     subDepartment: subDepartment,
@@ -979,18 +985,24 @@ export class OlapEp {
         });
     }
 
-    public get_Items_data_by_Item(day: moment.Moment): Promise<{
-        department: string,
-        itemName: string,
-        itemSales: number,
-        itemSold: number
+    public get_Items_data_by_BusinessDay(day: moment.Moment): Promise<{
+        department: string;
+        itemName: string;
+        itemSales: number;
+        itemSold: number;
+        itemPrepared: number;
+        itemReturned: number;
+        itemReturnValue: number;
     }[]> {
         return new Promise((resolve, reject) => {
             const mdx = `
                 SELECT
                 {
-                    ${this.measure(this.measureGroups.items.measures.itemsSales)},
-                    ${this.measure(this.measureGroups.items.measures.itemsSold)}
+                    ${this.measure(this.measureGroups.items.measures.sales)},
+                    ${this.measure(this.measureGroups.items.measures.sold)},
+                    ${this.measure(this.measureGroups.items.measures.prepared)},
+                    ${this.measure(this.measureGroups.items.measures.returned)},
+                    ${this.measure(this.measureGroups.priceReductions.measures.operational)}
                 } ON 0,
                 NonEmpty(
                     CrossJoin(
@@ -1002,7 +1014,7 @@ export class OlapEp {
                         }
                     ), 
                     {
-                        ${this.measure(this.measureGroups.items.measures.itemsSales)}
+                        ${this.measure(this.measureGroups.items.measures.sales)}
                     }
                 )
                 ON 1 
@@ -1021,14 +1033,20 @@ export class OlapEp {
                             const treated = rowset.map(r => {
                                 const department = this.parseDim(r, this.dims.items.attr.department);
                                 const item = this.parseDim(r, this.dims.items.attr.item);
-                                const itemSales = this.parseMeasure(r, this.measureGroups.items.measures.itemsSales);
-                                const itemSold = this.parseMeasure(r, this.measureGroups.items.measures.itemsSold);
+                                const itemSales = this.parseMeasure(r, this.measureGroups.items.measures.sales);
+                                const itemSold = this.parseMeasure(r, this.measureGroups.items.measures.sold);
+                                const itemPrepared = this.parseMeasure(r, this.measureGroups.items.measures.prepared);
+                                const itemReturned = this.parseMeasure(r, this.measureGroups.items.measures.returned);
+                                const itemReturnValue = this.parseMeasure(r, this.measureGroups.priceReductions.measures.operational);
 
                                 return {
                                     department: department,
                                     item: item,
                                     itemSales: itemSales,
-                                    itemSold: itemSold
+                                    itemSold: itemSold,
+                                    itemPrepared: itemPrepared,
+                                    itemReturned: itemReturned,
+                                    itemReturnValue: itemReturnValue
                                 };
                             });
 

@@ -26,10 +26,26 @@
         <source>Most Sold Items</source>
         <target>הפריטים הנמכרים ביותר</target>
       </trans-unit>
+      <trans-unit id="mostReturnedItems" datatype="html">
+        <source>Most Returned Items</source>
+        <target>הפריטים המוחזרים ביותר</target>
+      </trans-unit>   
       <trans-unit id="sold" datatype="html">
         <source>Sold</source>
         <target>נמכר</target>
-      </trans-unit>      
+      </trans-unit>   
+      <trans-unit id="prepared" datatype="html">
+        <source>Prepared</source>
+        <target>הוכן</target>
+      </trans-unit>  
+      <trans-unit id="returned" datatype="html">
+        <source>Returned</source>
+        <target>הוחזר</target>
+      </trans-unit>  
+      <trans-unit id="operationalReductionsValue" datatype="html">
+        <source>Operational Reductions Value</source>
+        <target>שווי תקלות תפעול</target>
+      </trans-unit>        
       <trans-unit id="noData" datatype="html">
         <source>No Data</source>
         <target>אין נתונים</target>

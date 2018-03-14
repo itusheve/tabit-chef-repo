@@ -4,11 +4,11 @@ import * as _ from 'lodash';
 import { tmpTranslations } from '../../../../tabit/data/data.service';
 
 @Component({
-  selector: 'app-most-sold-items-table',
-  templateUrl: './day-most-sold-items-table.component.html',
-  styleUrls: ['./day-most-sold-items-table.component.scss']
+  selector: 'app-most-returned-items-table',
+  templateUrl: './day-most-returned-items-table.component.html',
+  styleUrls: ['./day-most-returned-items-table.component.scss']
 })
-export class DayMostSoldItemsTableComponent implements OnChanges {
+export class DayMostReturnedItemsTableComponent implements OnChanges {
   @Input() itemsData: {
     byItem: {
       department: string;
@@ -27,8 +27,10 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
     department?: string,
     topItems?: {
       itemName?: string;
-      itemSales?: number;
-      itemSold?: number;
+      itemPrepared?: number;
+      itemReturned?: number;
+      itemReturnedPct?: number;
+      itemReturnValue?: number;
     }[]
   }[];
 
@@ -44,22 +46,12 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
         department?: string,
         topItems?: {
           itemName?: string;
-          itemSales ?: number;
-          itemSold ?: number;
+          itemPrepared?: number;
+          itemReturned?: number;
+          itemReturnedPct?: number;
+          itemReturnValue?: number;
         }[]
       }[] = [];
-
-      // Object.keys(this.dataService.departments).forEach((key, indx, arr)=>{
-      //   data.push({
-      //     department: this.dataService.departments[key],
-      //     topItems: []
-      //   });
-      // });
-
-      // sort by department ranks
-      // data = data.sort((a, b)=>{
-      //   return a.department.rank < b.department.rank ? -1 : 1;
-      // });
 
       const clone: {
         byItem: {
@@ -67,15 +59,13 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
           item: string;
           itemSales: number;
           itemSold: number;
+          itemPrepared: number;
+          itemReturned: number;
+          itemReturnValue: number;
         }[]
       } = _.cloneDeep(this.itemsData);
 
       // unfortunately departments from the OLAP are not as the departments from the ROS, and for now we dynamicaly get the departments from the results.
-      // const departments: { name: string }[] = [];
-      
-      // clone.byItem.forEach(tuple => {
-
-      // });
 
       clone.byItem.forEach(tuple=>{
         
@@ -91,8 +81,9 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
 
         dataObj.topItems.push({
           itemName: tuple.item,
-          itemSales: tuple.itemSales,
-          itemSold: tuple.itemSold
+          itemPrepared: tuple.itemPrepared,
+          itemReturned: tuple.itemReturned,
+          itemReturnValue: tuple.itemReturnValue
         });
       });
 
@@ -106,8 +97,14 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
 
       data.forEach(dataObj=>{
         dataObj.topItems = dataObj.topItems
-          .sort((a, b)=>(a.itemSales < b.itemSales ? 1 : -1))
-          .slice(0, this.maxItemsPerDepartment);
+          .filter(dataObj=>dataObj.itemReturned>0)
+          .sort((a, b) => {
+            if (a.itemReturned < b.itemReturned) return 1;
+            if (a.itemReturned > b.itemReturned) return -1; 
+            return a.itemReturnValue<b.itemReturnValue ? 1 : -1;            
+          })
+          .slice(0, this.maxItemsPerDepartment)
+          .map(dataObj=>(dataObj.itemReturnedPct=dataObj.itemReturned/dataObj.itemPrepared,dataObj));
       });
 
       this.data = data;

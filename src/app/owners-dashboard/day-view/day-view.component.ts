@@ -65,6 +65,9 @@ export class DayViewComponent implements OnInit  {
       itemName: string;
       itemSales: number;
       itemSold: number;
+      itemPrepared: number;
+      itemReturned: number;
+      itemReturnValue: number;
     }[]
   };
 

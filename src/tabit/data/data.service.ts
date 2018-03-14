@@ -1093,6 +1093,13 @@ export class DataService {
                         sales: number
                     }[] = _.cloneDeep(data.salesBySubDepartmentRaw);
 
+                    // be VAT aware
+                    if (!data.vat) {
+                        bySubDepartment.forEach(tuple => {
+                            tuple.sales = tuple.sales / 1.17;
+                        });
+                    }
+
                     return bySubDepartment;
                 }());
 
@@ -1126,6 +1133,9 @@ export class DataService {
             itemName: string;
             itemSales: number;
             itemSold: number;
+            itemPrepared: number;
+            itemReturned: number;
+            itemReturnValue: number;
         }[]
     }> {
         return new Promise((resolve, reject) => {
@@ -1134,7 +1144,7 @@ export class DataService {
 
             const data$ = combineLatest(
                 this.vat$,
-                fromPromise(this.olapEp.get_Items_data_by_Item(bd)),
+                fromPromise(this.olapEp.get_Items_data_by_BusinessDay(bd)),
                 (vat, itemsDataRaw) => Object.assign({}, { itemsDataRaw: itemsDataRaw }, { vat: vat })
             );
 
@@ -1146,6 +1156,9 @@ export class DataService {
                     itemName: string;
                     itemSales: number;
                     itemSold: number;
+                    itemPrepared: number;
+                    itemReturned: number;
+                    itemReturnValue: number;
                 }[] = (function () {
                     // clone raw data
                     const byItem: {
@@ -1153,7 +1166,18 @@ export class DataService {
                         itemName: string;
                         itemSales: number;
                         itemSold: number;
+                        itemPrepared: number;
+                        itemReturned: number;
+                        itemReturnValue: number;
                     }[] = _.cloneDeep(data.itemsDataRaw);
+
+                    // be VAT aware
+                    if (!data.vat) {
+                        byItem.forEach(tuple => {
+                            tuple.itemSales = tuple.itemSales / 1.17;
+                            tuple.itemReturnValue = tuple.itemReturnValue / 1.17;
+                        });
+                    }
 
                     return byItem;
                 }());
