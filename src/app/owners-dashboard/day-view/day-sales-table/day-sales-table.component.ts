@@ -1,11 +1,11 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { OrderType } from '../../../../tabit/model/OrderType.model';
 
-// @Component({
-//   selector: 'app-day-sales-table',
-//   templateUrl: './day-sales-table.component.html',
-//   styleUrls: ['./day-sales-table.component.scss']
-// })
+@Component({
+  selector: 'app-day-sales-table',
+  templateUrl: './day-sales-table.component.html',
+  styleUrls: ['./day-sales-table.component.scss']
+})
 export class DaySalesTableComponent implements OnChanges {
   @Input() title: string;
   @Input() totalSales: number;

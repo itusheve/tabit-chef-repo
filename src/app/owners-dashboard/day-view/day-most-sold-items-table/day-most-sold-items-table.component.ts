@@ -62,7 +62,7 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
       const clone: {
         byItem: {
           department: Department;
-          itemName: String;
+          item: String;
           itemSales: number;
           itemSold: number;
         }[]
@@ -71,7 +71,7 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
       clone.byItem.forEach(tuple=>{
         const dataObj = data.find(o=>o.department.id===tuple.department.id);
         dataObj.topItems.push({
-          itemName: tuple.itemName,
+          itemName: tuple.item,
           itemSales: tuple.itemSales,
           itemSold: tuple.itemSold
         });

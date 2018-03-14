@@ -5,11 +5,11 @@ import * as _ from 'lodash';
 import { DataService, tmpTranslations } from '../../../../tabit/data/data.service';
 import { Shift } from '../../../../tabit/model/Shift.model';
 
-@Component({
-  selector: 'app-day-sales-type-table',
-  templateUrl: './day-sales-type-table.component.html',
-  styleUrls: ['./day-sales-type-table.component.css']
-})
+// @Component({
+//   selector: 'app-day-sales-type-table',
+//   templateUrl: './day-sales-type-table.component.html',
+//   styleUrls: ['./day-sales-type-table.component.css']
+// })
 export class DaySalesTypeTableComponent {
 
   @Output() onRowClicked = new EventEmitter();
