@@ -64,7 +64,7 @@ export class OlapEp {
         items: {//"פריטים"
             measures: {
                 itemsSales: {
-                    path: '[Measures].[Tlog Items Net Amount]',//"מכירות פריטים"
+                    path: 'Tlog Items Net Amount',//"מכירות פריטים"
                     type: 'number'
                 }
             }
@@ -214,6 +214,15 @@ export class OlapEp {
                             caption: 'מבצעים'//TODO localization
                         }
                     }
+                }
+            }
+        },
+        items: {//פריטים
+            v: 2,
+            path: 'Items',
+            attr: {
+                subDepartment: {
+                    path: 'Sub Department'
                 }
             }
         },
@@ -907,6 +916,56 @@ export class OlapEp {
                         reject(e);
                     });
             });
+
+        });
+
+
+
+    }
+
+    public get_Sales_by_Sub_Departmernt(day: moment.Moment): Promise<{
+        subDepartment: string,
+        sales: number
+    }[]> {
+        return new Promise((resolve, reject) => {
+            const mdx = `
+                SELECT
+                {
+                    ${this.measure(this.measureGroups.items.measures.itemsSales)}
+                } ON 0,
+                NON EMPTY {
+                    (
+                        ${this.members(this.dims.items.attr.subDepartment)}
+                    )
+                } ON 1
+                FROM ${this.cube}
+                WHERE (
+                    ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${day.format('YYYYMMDD')}]
+                )
+            `;
+
+            this.url
+                .subscribe(url => {
+                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+
+                    xmla4j_w.executeNew(mdx)
+                        .then(rowset => {
+                            const treated = rowset.map(r => {
+                                const subDepartment = this.parseDim(r, this.dims.items.attr.subDepartment);
+                                const sales = this.parseMeasure(r, this.measureGroups.items.measures.itemsSales);
+
+                                return {
+                                    subDepartment: subDepartment,
+                                    sales: sales
+                                };
+                            });
+
+                            resolve(treated);
+                        })
+                        .catch(e => {
+                            reject(e);
+                        });
+                });
 
         });
 

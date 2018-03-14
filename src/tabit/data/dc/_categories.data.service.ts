@@ -43,7 +43,7 @@ export class CategoriesDataService {
 
         this.rosEp.get('menu/categories', {})
             .then((categoriesRaw: {}[]) => {
-                
+                debugger;
                 //public\l10n\he - IL.json
                 const ALLITEMS = 'כל הפריטים';
                 //sortCategoryTree({ name: $translate.instant('ALLITEMS'), children: result.data })
@@ -70,6 +70,7 @@ export class CategoriesDataService {
     ) {
 
         // this.categories$.subscribe(data => {
+        //     debugger;
         // });
     }
 

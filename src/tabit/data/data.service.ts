@@ -29,6 +29,7 @@ import { ROSEp } from './ep/ros.ep';
 import { OrderType } from '../model/OrderType.model';
 import { Order } from '../model/Order.model';
 import { environment } from '../../environments/environment';
+//import { CategoriesDataService } from './dc/_categories.data.service';
 
 /* 
 ==tmpTranslations==
@@ -804,7 +805,7 @@ export class DataService {
     }
     
     /* 
-        returns VAT-aware KPIs for the business date (bd)
+        returns (VAT-aware) KPIs for the BusinessDate (bd)
      */
     /* todo replace getDailyDataByShiftAndType with this */
     getBusinessDateKPIs(bd: moment.Moment): Promise<BusinessDayKPIs> {
@@ -1027,6 +1028,63 @@ export class DataService {
                     totalSales: totalSales,                    
                     byOrderType: byOrderType,
                     byShiftByOrderType: byShiftByOrderType
+                });
+
+            });
+
+        });
+    }
+
+    /* 
+        returns (VAT-aware) Sales by SubDepartment for the BusinessDate (bd)
+     */
+    get_Sales_by_SubDepartment_for_BusinessDate(bd: moment.Moment): Promise<{
+        totalSales: number;
+        bySubDepartment: {
+            subDepartment: String;
+            sales: number
+        }[]
+    }> {
+        return new Promise((resolve, reject) => {
+
+            const that = this;
+
+            const data$ = combineLatest(
+                this.vat$,
+                fromPromise(this.olapEp.get_Sales_by_Sub_Departmernt(bd)),
+                (vat, salesBySubDepartmentRaw) => Object.assign({}, { salesBySubDepartmentRaw: salesBySubDepartmentRaw }, { vat: vat })
+            );
+
+            data$.subscribe(data => {
+                
+                // data preparation
+                const bySubDepartment: {
+                    subDepartment: string,
+                    sales: number
+                }[] = (function () {
+                    // clone raw data
+                    const bySubDepartment: {
+                        subDepartment: string,
+                        sales: number
+                    }[] = _.cloneDeep(data.salesBySubDepartmentRaw);
+
+                    return bySubDepartment;
+                }());
+
+                // totalSales setup
+                const totalSales: number = (function () {
+                    let totalSales = 0;
+
+                    bySubDepartment.forEach(o => {
+                        totalSales += o.sales;
+                    });
+
+                    return totalSales;
+                }());
+
+                resolve({
+                    totalSales: totalSales,
+                    bySubDepartment: bySubDepartment
                 });
 
             });

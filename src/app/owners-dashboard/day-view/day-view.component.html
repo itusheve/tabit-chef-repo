@@ -12,6 +12,9 @@
     
     <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
 
+    <app-day-orders-table class="widget fullWidth" style="padding-bottom: 0px;" *ngIf="orders" [lastViewed]="drilledOrder" [orders]="orders"
+      (onOrderClicked)="onOrderClicked($event)"></app-day-orders-table>
+
     <app-day-sales-table 
       class="widget"
       title="Day Summary"
@@ -30,7 +33,12 @@
       </app-day-sales-table>
     </div>
 
-    <app-day-sales-type-table 
+    <app-day-sales-by-sub-department-table
+      class="widget"
+      [salesBySubDepartment]="salesBySubDepartment">
+    </app-day-sales-by-sub-department-table>
+
+    <!-- <app-day-sales-type-table 
       class="widget" 
       #daySalesTypeTable
       (onRowClicked)="onGoToOrders($event, 'orderType')"
@@ -41,18 +49,9 @@
       class="widget" 
       *ngIf="dinersTable.show"
       [data$]="dinersTableData$"
-      ></app-day-diners-table>
+      ></app-day-diners-table> -->
 
-    <app-day-orders-table 
-      class="widget fullWidth"
-      style="padding-bottom: 0px;"
-      *ngIf="orders"      
-      [lastViewed]="drilledOrder"
-      [orders]="orders"
-      (onOrderClicked)="onOrderClicked($event)"
-      ></app-day-orders-table>
-
-    <app-day-shifts class="widget greyAccent" #dayShifts></app-day-shifts>      
+    <!-- <app-day-shifts class="widget greyAccent" #dayShifts></app-day-shifts>       -->
 
   </div>
 </div>

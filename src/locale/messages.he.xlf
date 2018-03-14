@@ -2,6 +2,14 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="categories" datatype="html">
+        <source>Categories</source>
+        <target>קטגוריות</target>
+      </trans-unit>
+      <trans-unit id="category" datatype="html">
+        <source>Category</source>
+        <target>קטגוריה</target>
+      </trans-unit>      
       <trans-unit id="noData" datatype="html">
         <source>No Data</source>
         <target>אין נתונים</target>

@@ -16,11 +16,11 @@ import { MonthChartComponent } from './month-view/month-chart/month-chart.compon
 import { DayViewComponent } from './day-view/day-view.component';
 import { DaySelectorComponent } from './day-view/day-selector/day-selector.component';
 import { DayPieChartComponent } from './day-view/day-pie-chart/day-pie-chart.component';
-import { DaySalesTypeTableComponent } from './day-view/day-sales-type-table/day-sales-type-table.component';
-import { DayDinersTableComponent } from './day-view/day-diners-table/day-diners-table.component';
 import { DayOrdersTableComponent } from './day-view/day-orders-table/day-orders-table.component';
 import { DayOrdersTableHasSalesPipe, DayOrdersTableFilterPipe } from './day-view/day-orders-table/pipes';
-import { DayShiftsComponent } from './day-view/day-shifts/day-shifts.component';
+// import { DaySalesTypeTableComponent } from './day-view/day-sales-type-table/day-sales-type-table.component';
+// import { DayDinersTableComponent } from './day-view/day-diners-table/day-diners-table.component';
+// import { DayShiftsComponent } from './day-view/day-shifts/day-shifts.component';
 
 import { OrderViewComponent } from './order-view/order-view.component';
   import { OrderSlipsComponent } from './order-view/slips/slips.component';
@@ -62,6 +62,7 @@ import { OrderChequeRefundComponent } from './order-view/slips/_chequeRefund/che
 import { OrderCreditRefundComponent } from './order-view/slips/_creditRefund/creditRefund.component';
 import { environment } from '../../environments/environment';
 import { DaySalesTableComponent } from './day-view/day-sales-table/day-sales-table.component';
+import { DaySalesBySubDepartmentTableComponent } from './day-view/day-sales-by-sub-department-table/day-sales-by-sub-department-table.component';
 
 
 //Load localized messages (English included by default)
@@ -114,13 +115,14 @@ if (environment.locale==='he') {
     DayViewComponent,
       DaySelectorComponent,
       DayPieChartComponent,
-      DaySalesTypeTableComponent,
       DaySalesTableComponent,
-      DayDinersTableComponent,
+      DaySalesBySubDepartmentTableComponent,
       DayOrdersTableComponent,
       DayOrdersTableHasSalesPipe,
       DayOrdersTableFilterPipe,
-      DayShiftsComponent,
+      // DaySalesTypeTableComponent,
+      // DayDinersTableComponent,
+      // DayShiftsComponent,
 
     OrderViewComponent,
       OrderSlipsComponent,

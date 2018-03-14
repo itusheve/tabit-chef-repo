@@ -21,8 +21,8 @@ import { Shift } from '../../../tabit/model/Shift.model';
 })
 export class DayViewComponent implements OnInit  {
   @ViewChild('dayPieChart') dayPieChart;
-  @ViewChild('daySalesTypeTable') daySalesTypeTable;
-  @ViewChild('dayShifts') dayShifts;  
+  // @ViewChild('daySalesTypeTable') daySalesTypeTable;
+  // @ViewChild('dayShifts') dayShifts;  
 
   day: moment.Moment;  
   daySelectorOptions: {
@@ -49,6 +49,13 @@ export class DayViewComponent implements OnInit  {
   });
 
   public KPIs: BusinessDayKPIs;
+  public salesBySubDepartment: {
+    totalSales: number;
+    bySubDepartment: {
+      subDepartment: String;
+      sales: number
+    }[]
+  };
 
   constructor(
     private closedOrdersDataService: ClosedOrdersDataService,
@@ -72,16 +79,16 @@ export class DayViewComponent implements OnInit  {
         maxDate: moment(data.previousBd)
       };
 
-      this.dinersTableData$.next(data.dinersAndPPAByShift);
+      // this.dinersTableData$.next(data.dinersAndPPAByShift);
       
-      const shiftWithDiners = data.dinersAndPPAByShift.find(i=>i.diners>0);
-      if (shiftWithDiners) {
-        this.dinersTable.show = true;
-      }
+      // const shiftWithDiners = data.dinersAndPPAByShift.find(i=>i.diners>0);
+      // if (shiftWithDiners) {
+      //   this.dinersTable.show = true;
+      // }
       
       this.dayPieChart.render(data.salesByOrderType);
-      this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
-      this.dayShifts.render(data.shifts);
+      //this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
+      // this.dayShifts.render(data.shifts);
       
       this.orders = undefined;
       //this.closedOrdersDataService.getOrders(this.day, {withPriceReductions: true})
@@ -93,6 +100,11 @@ export class DayViewComponent implements OnInit  {
       this.dataService.getBusinessDateKPIs(this.day)
         .then(KPIs=>{
           this.KPIs = KPIs;
+        });
+
+      this.dataService.get_Sales_by_SubDepartment_for_BusinessDate(this.day)
+        .then(data=>{
+          this.salesBySubDepartment = data;
         });
     });
   } 
