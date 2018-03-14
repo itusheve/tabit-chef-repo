@@ -10,8 +10,7 @@ import { User } from '../../tabit/model/User.model';
 import { Subject } from 'rxjs/Subject';
 import { zip } from 'rxjs/observable/zip';
 
-const ROS_base_url: String = 'https://ros-office-beta.herokuapp.com/';//TODO DRY, get from config
-// const ROS_base_url: String = 'https://ros-report-prd.herokuapp.com/';//TMP, work with beta as it holds Product 4.X
+const ROS_base_url = 'https://ros-office-beta.herokuapp.com/';//TODO DRY, get from config
 
 const loginUrl = 'oauth2/token';
 const meUrl = 'account/me';

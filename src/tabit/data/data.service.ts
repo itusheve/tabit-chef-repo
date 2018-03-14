@@ -79,6 +79,10 @@ const tmpTranslations_ = {
                 order: 'הזמנה',
                 clubMembers: 'חברי מועדון'
             }
+        },
+        departments: {
+            food: 'מזון',
+            beverages: 'משקאות'
         }
     },
     'en-US': {
@@ -115,6 +119,10 @@ const tmpTranslations_ = {
                 order: 'Order',
                 clubMembers: 'Club Members'
             }
+        },
+        departments: {
+            food: '?',//TODO local
+            beverages: '?'//TODO local
         }
     }
 };
@@ -299,11 +307,11 @@ export class DataService {
             });
     }).publishReplay(1).refCount();
 
-    public departments: { [index: string]: Department } = {
-        food: new Department('food', 0),
-        beverages: new Department('beverages', 1),
-        other: new Department('other', 2)
-    };
+    // public departments: { [index: string]: Department } = {
+    //     food: new Department('food', 0),
+    //     beverages: new Department('beverages', 1),
+    //     other: new Department('other', 2)
+    // };
 
     public orderTypes: { [index: string]: OrderType } = {
         seated: new OrderType('seated', 0),
@@ -333,11 +341,11 @@ export class DataService {
                 'החזר': this.orderTypes.returns,
                 'החלפת אמצעי תשלום': this.orderTypes.mediaExchange
             },
-            department: {
-                'מזון': this.departments.food,
-                'משקאות': this.departments.beverages,
-                'אחר': this.departments.other
-            }
+            // department: {
+            //     'מזון': this.departments.food,
+            //     'משקאות': this.departments.beverages,
+            //     'אחר': this.departments.other
+            // }
         },
         usCubes: {
             orderType: {
@@ -349,11 +357,11 @@ export class DataService {
                 'f': this.orderTypes.returns,
                 'g': this.orderTypes.mediaExchange
             },
-            department: {
-                'a': this.departments[0],
-                'b': this.departments[1],
-                'c': this.departments[2]
-            }
+            // department: {
+            //     'a': this.departments[0],
+            //     'b': this.departments[1],
+            //     'c': this.departments[2]
+            // }
         }
     };
 
@@ -1058,7 +1066,7 @@ export class DataService {
     get_Sales_by_SubDepartment_for_BusinessDate(bd: moment.Moment): Promise<{
         totalSales: number;
         bySubDepartment: {
-            subDepartment: String;
+            subDepartment: string;
             sales: number
         }[]
     }> {
@@ -1114,8 +1122,8 @@ export class DataService {
      */
     get_Items_data_for_BusinessDate(bd: moment.Moment): Promise<{
         byItem: {
-            department: Department;
-            itemName: String;
+            department: string;
+            itemName: string;
             itemSales: number;
             itemSold: number;
         }[]
@@ -1132,23 +1140,17 @@ export class DataService {
 
             data$.subscribe(data => {
 
-                // normalize olapData:
-                data.itemsDataRaw.forEach(o=>{
-                    o.department = this.olapNormalizationMaps[this.cubeCollection]['department'][o.department];
-                });
-                // end of normalizeOlapData
-
                 // data preparation
                 const byItem: {
-                    department: Department;
-                    itemName: String;
+                    department: string;
+                    itemName: string;
                     itemSales: number;
                     itemSold: number;
                 }[] = (function () {
                     // clone raw data
                     const byItem: {
-                        department: Department;
-                        itemName: String;
+                        department: string;
+                        itemName: string;
                         itemSales: number;
                         itemSold: number;
                     }[] = _.cloneDeep(data.itemsDataRaw);

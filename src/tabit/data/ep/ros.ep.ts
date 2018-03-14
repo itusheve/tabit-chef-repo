@@ -5,8 +5,7 @@ import { AuthService } from '../../../app/auth/auth.service';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-const ROS_base_url: String = 'https://ros-office-beta.herokuapp.com/';//TODO get from config
-// const ROS_base_url: String = 'https://ros-report-prd.herokuapp.com/';//TMP, work with beta as it holds Product 4.X
+const ROS_base_url = 'https://ros-office-beta.herokuapp.com/';//TODO get from config
 
 @Injectable()
 export class ROSEp {

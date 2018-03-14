@@ -13,7 +13,8 @@
             </table>
             <table class="fixedWidth" *ngFor="let departmentData of data">
                 <tr *ngFor="let dataObj of departmentData.topItems">
-                    <td i18n="@@departments">{ departmentData.department.id, select, food {Food} beverages {Beverages} other {Other} }</td>
+                    <!-- <td i18n="@@departments">{ departmentData.department.id, select, food {Food} beverages {Beverages} other {Other} }</td> -->
+                    <td>{{departmentData.department}}</td>
                     <td>{{dataObj.itemName}}</td>
                     <td>{{dataObj.itemSales | curr:'0'}}</td>
                     <td>{{dataObj.itemSold | count}}</td>

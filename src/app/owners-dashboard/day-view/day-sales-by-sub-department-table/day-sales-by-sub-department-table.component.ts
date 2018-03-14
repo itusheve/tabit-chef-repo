@@ -11,7 +11,7 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
   @Input() salesBySubDepartment: {
     totalSales: number;
     bySubDepartment: {
-      subDepartment: String;
+      subDepartment: string;
       sales: number
     }[]
   };
@@ -19,7 +19,7 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
   data: {
     totalSales: number;
     bySubDepartment: {
-      subDepartment: String;
+      subDepartment: string;
       sales: number;
       pct: number;
     }[]

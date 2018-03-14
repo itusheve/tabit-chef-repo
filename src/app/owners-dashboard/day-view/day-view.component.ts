@@ -54,15 +54,15 @@ export class DayViewComponent implements OnInit  {
   public salesBySubDepartment: {
     totalSales: number;
     bySubDepartment: {
-      subDepartment: String;
+      subDepartment: string;
       sales: number
     }[]
   };
   
   public itemsData: {
     byItem: {
-      department: Department;
-      itemName: String;
+      department: string;
+      itemName: string;
       itemSales: number;
       itemSold: number;
     }[]

@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 import * as _ from 'lodash';
-import { DataService } from '../../../../tabit/data/data.service';
+import { DataService, tmpTranslations } from '../../../../tabit/data/data.service';
 import { Department } from '../../../../tabit/model/Department.model';
 
 @Component({
@@ -12,8 +12,8 @@ import { Department } from '../../../../tabit/model/Department.model';
 export class DayMostSoldItemsTableComponent implements OnChanges {
   @Input() itemsData: {
     byItem: {
-      department: String;
-      itemName: String;
+      department: string;
+      itemName: string;
       itemSales: number;
       itemSold: number;
     }[]
@@ -22,9 +22,9 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
   maxItemsPerDepartment = 5;
 
   data: {
-    department?: Department,
+    department?: string,
     topItems?: {
-      itemName?: String;
+      itemName?: string;
       itemSales?: number;
       itemSold?: number;
     }[]
@@ -36,45 +36,70 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
   constructor(private dataService: DataService) {}
 
   ngOnChanges(o: SimpleChanges) {
-    if (o.itemsData.currentValue) {      
-      
+    if (o.itemsData.currentValue) {                  
+
       let data: {
-        department?: Department,
+        department?: string,
         topItems?: {
-          itemName?: String;
+          itemName?: string;
           itemSales ?: number;
           itemSold ?: number;
         }[]
       }[] = [];
 
-      Object.keys(this.dataService.departments).forEach((key, indx, arr)=>{
-        data.push({
-          department: this.dataService.departments[key],
-          topItems: []
-        });
-      });
+      // Object.keys(this.dataService.departments).forEach((key, indx, arr)=>{
+      //   data.push({
+      //     department: this.dataService.departments[key],
+      //     topItems: []
+      //   });
+      // });
 
       // sort by department ranks
-      data = data.sort((a, b)=>{
-        return a.department.rank < b.department.rank ? -1 : 1;
-      });
+      // data = data.sort((a, b)=>{
+      //   return a.department.rank < b.department.rank ? -1 : 1;
+      // });
 
       const clone: {
         byItem: {
-          department: Department;
-          item: String;
+          department: string;
+          item: string;
           itemSales: number;
           itemSold: number;
         }[]
       } = _.cloneDeep(this.itemsData);
 
+      // unfortunately departments from the OLAP are not as the departments from the ROS, and for now we dynamicaly get the departments from the results.
+      // const departments: { name: string }[] = [];
+      
+      // clone.byItem.forEach(tuple => {
+
+      // });
+
       clone.byItem.forEach(tuple=>{
-        const dataObj = data.find(o=>o.department.id===tuple.department.id);
+        
+        let dataObj = data.find(o=>o.department===tuple.department);
+        
+        if (!dataObj) {
+          dataObj = {
+            department: tuple.department,
+            topItems: []
+          };
+          data.push(dataObj);
+        }
+
         dataObj.topItems.push({
           itemName: tuple.item,
           itemSales: tuple.itemSales,
           itemSold: tuple.itemSold
         });
+      });
+
+      //make sure food is first and then beverages:
+      data.sort((a, b)=>{        
+        if (a.department===tmpTranslations.get('departments.food')) return -1;
+        if (b.department === tmpTranslations.get('departments.food')) return 1;
+        if (a.department === tmpTranslations.get('departments.beverages')) return -1;
+        if (b.department === tmpTranslations.get('departments.beverages')) return 1;      
       });
 
       data.forEach(dataObj=>{
