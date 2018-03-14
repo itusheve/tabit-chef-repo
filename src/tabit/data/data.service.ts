@@ -29,6 +29,7 @@ import { ROSEp } from './ep/ros.ep';
 import { OrderType } from '../model/OrderType.model';
 import { Order } from '../model/Order.model';
 import { environment } from '../../environments/environment';
+import { Department } from '../model/Department.model';
 //import { CategoriesDataService } from './dc/_categories.data.service';
 
 /* 
@@ -298,6 +299,12 @@ export class DataService {
             });
     }).publishReplay(1).refCount();
 
+    public departments: { [index: string]: Department } = {
+        food: new Department('food', 0),
+        beverages: new Department('beverages', 1),
+        other: new Department('other', 2)
+    };
+
     public orderTypes: { [index: string]: OrderType } = {
         seated: new OrderType('seated', 0),
         counter: new OrderType('counter', 1),
@@ -325,6 +332,11 @@ export class DataService {
                 'סוג הזמנה לא מוגדר': this.orderTypes.other,
                 'החזר': this.orderTypes.returns,
                 'החלפת אמצעי תשלום': this.orderTypes.mediaExchange
+            },
+            department: {
+                'מזון': this.departments.food,
+                'משקאות': this.departments.beverages,
+                'אחר': this.departments.other
             }
         },
         usCubes: {
@@ -336,6 +348,11 @@ export class DataService {
                 'e': this.orderTypes.other,
                 'f': this.orderTypes.returns,
                 'g': this.orderTypes.mediaExchange
+            },
+            department: {
+                'a': this.departments[0],
+                'b': this.departments[1],
+                'c': this.departments[2]
             }
         }
     };
@@ -1085,6 +1102,62 @@ export class DataService {
                 resolve({
                     totalSales: totalSales,
                     bySubDepartment: bySubDepartment
+                });
+
+            });
+
+        });
+    }
+
+    /* 
+        returns (VAT-aware) Items Sales and Sold by Item for the BusinessDate (bd)
+     */
+    get_Items_data_for_BusinessDate(bd: moment.Moment): Promise<{
+        byItem: {
+            department: Department;
+            itemName: String;
+            itemSales: number;
+            itemSold: number;
+        }[]
+    }> {
+        return new Promise((resolve, reject) => {
+
+            const that = this;
+
+            const data$ = combineLatest(
+                this.vat$,
+                fromPromise(this.olapEp.get_Items_data_by_Item(bd)),
+                (vat, itemsDataRaw) => Object.assign({}, { itemsDataRaw: itemsDataRaw }, { vat: vat })
+            );
+
+            data$.subscribe(data => {
+
+                // normalize olapData:
+                data.itemsDataRaw.forEach(o=>{
+                    o.department = this.olapNormalizationMaps[this.cubeCollection]['department'][o.department];
+                });
+                // end of normalizeOlapData
+
+                // data preparation
+                const byItem: {
+                    department: Department;
+                    itemName: String;
+                    itemSales: number;
+                    itemSold: number;
+                }[] = (function () {
+                    // clone raw data
+                    const byItem: {
+                        department: Department;
+                        itemName: String;
+                        itemSales: number;
+                        itemSold: number;
+                    }[] = _.cloneDeep(data.itemsDataRaw);
+
+                    return byItem;
+                }());
+
+                resolve({
+                    byItem: byItem
                 });
 
             });

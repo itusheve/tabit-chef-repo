@@ -2,6 +2,14 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="department" datatype="html">
+        <source>Department</source>
+        <target>מחלקה</target>
+      </trans-unit>
+      <trans-unit id="departments" datatype="html">
+        <source>{VAR_SELECT, select, food {Food} beverages {Beverages} other {Other} }</source>
+        <target>{VAR_SELECT, select, food {מזון} beverages {משקאות} other {אחר} }</target>
+      </trans-unit>      
       <trans-unit id="categories" datatype="html">
         <source>Categories</source>
         <target>קטגוריות</target>
@@ -9,6 +17,18 @@
       <trans-unit id="category" datatype="html">
         <source>Category</source>
         <target>קטגוריה</target>
+      </trans-unit>
+      <trans-unit id="item" datatype="html">
+        <source>Item</source>
+        <target>פריט</target>
+      </trans-unit>
+      <trans-unit id="mostSoldItems" datatype="html">
+        <source>Most Sold Items</source>
+        <target>הפריטים הנמכרים ביותר</target>
+      </trans-unit>
+      <trans-unit id="sold" datatype="html">
+        <source>Sold</source>
+        <target>נמכר</target>
       </trans-unit>      
       <trans-unit id="noData" datatype="html">
         <source>No Data</source>

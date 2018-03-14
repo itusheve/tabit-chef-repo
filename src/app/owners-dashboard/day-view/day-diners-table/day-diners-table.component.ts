@@ -3,11 +3,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 
-@Component({
-  selector: 'app-day-diners-table',
-  templateUrl: './day-diners-table.component.html',
-  styleUrls: ['./day-diners-table.component.css']
-})
+// @Component({
+//   selector: 'app-day-diners-table',
+//   templateUrl: './day-diners-table.component.html',
+//   styleUrls: ['./day-diners-table.component.css']
+// })
 export class DayDinersTableComponent implements OnInit {
 
   @Input() data$: Observable<any>;

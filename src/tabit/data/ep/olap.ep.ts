@@ -63,9 +63,12 @@ export class OlapEp {
         },
         items: {//"פריטים"
             measures: {
-                itemsSales: {
-                    path: 'Tlog Items Net Amount',//"מכירות פריטים"
+                itemsSales: {//"מכירות פריטים"
+                    path: 'Tlog Items Net Amount',
                     type: 'number'
+                },
+                itemsSold: {//"נמכר"
+                    path: 'Tlog Items Sold'
                 }
             }
         },
@@ -221,8 +224,14 @@ export class OlapEp {
             v: 2,
             path: 'Items',
             attr: {
-                subDepartment: {
+                department: {//מחלקה
+                    path: 'Department Id'
+                },
+                subDepartment: {//תת מחלקה
                     path: 'Sub Department'
+                },
+                item: {//פריט
+                    path: 'Item Group Id'
                 }
             }
         },
@@ -968,9 +977,69 @@ export class OlapEp {
                 });
 
         });
+    }
 
+    public get_Items_data_by_Item(day: moment.Moment): Promise<{
+        department: string,
+        itemName: string,
+        itemSales: number,
+        itemSold: number
+    }[]> {
+        return new Promise((resolve, reject) => {
+            const mdx = `
+                SELECT
+                {
+                    ${this.measure(this.measureGroups.items.measures.itemsSales)},
+                    ${this.measure(this.measureGroups.items.measures.itemsSold)}
+                } ON 0,
+                NonEmpty(
+                    CrossJoin(
+                        {
+                            ${this.members(this.dims.items.attr.department)}
+                        },
+                        {
+                            ${this.members(this.dims.items.attr.item)}
+                        }
+                    ), 
+                    {
+                        ${this.measure(this.measureGroups.items.measures.itemsSales)}
+                    }
+                )
+                ON 1 
+                FROM ${this.cube}
+                WHERE (
+                    ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${day.format('YYYYMMDD')}]
+                )
+            `;
 
+            this.url
+                .subscribe(url => {
+                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
 
+                    xmla4j_w.executeNew(mdx)
+                        .then(rowset => {
+                            const treated = rowset.map(r => {
+                                const department = this.parseDim(r, this.dims.items.attr.department);
+                                const item = this.parseDim(r, this.dims.items.attr.item);
+                                const itemSales = this.parseMeasure(r, this.measureGroups.items.measures.itemsSales);
+                                const itemSold = this.parseMeasure(r, this.measureGroups.items.measures.itemsSold);
+
+                                return {
+                                    department: department,
+                                    item: item,
+                                    itemSales: itemSales,
+                                    itemSold: itemSold
+                                };
+                            });
+
+                            resolve(treated);
+                        })
+                        .catch(e => {
+                            reject(e);
+                        });
+                });
+
+        });
     }
 
 }

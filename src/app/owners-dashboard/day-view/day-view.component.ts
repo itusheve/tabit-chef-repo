@@ -13,6 +13,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Order } from '../../../tabit/model/Order.model';
 import { ClosedOrdersDataService } from '../../../tabit/data/dc/closedOrders.data.service';
 import { Shift } from '../../../tabit/model/Shift.model';
+import { Department } from '../../../tabit/model/Department.model';
 
 @Component({
   selector: 'app-day-view',
@@ -49,11 +50,21 @@ export class DayViewComponent implements OnInit  {
   });
 
   public KPIs: BusinessDayKPIs;
+  
   public salesBySubDepartment: {
     totalSales: number;
     bySubDepartment: {
       subDepartment: String;
       sales: number
+    }[]
+  };
+  
+  public itemsData: {
+    byItem: {
+      department: Department;
+      itemName: String;
+      itemSales: number;
+      itemSold: number;
     }[]
   };
 
@@ -105,6 +116,11 @@ export class DayViewComponent implements OnInit  {
       this.dataService.get_Sales_by_SubDepartment_for_BusinessDate(this.day)
         .then(data=>{
           this.salesBySubDepartment = data;
+        });
+
+      this.dataService.get_Items_data_for_BusinessDate(this.day)
+        .then(data=>{
+          this.itemsData = data;
         });
     });
   } 

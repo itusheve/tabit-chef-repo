@@ -63,6 +63,7 @@ import { OrderCreditRefundComponent } from './order-view/slips/_creditRefund/cre
 import { environment } from '../../environments/environment';
 import { DaySalesTableComponent } from './day-view/day-sales-table/day-sales-table.component';
 import { DaySalesBySubDepartmentTableComponent } from './day-view/day-sales-by-sub-department-table/day-sales-by-sub-department-table.component';
+import { DayMostSoldItemsTableComponent } from './day-view/day-most-sold-items-table/day-most-sold-items-table.component';
 
 
 //Load localized messages (English included by default)
@@ -117,6 +118,7 @@ if (environment.locale==='he') {
       DayPieChartComponent,
       DaySalesTableComponent,
       DaySalesBySubDepartmentTableComponent,
+      DayMostSoldItemsTableComponent,
       DayOrdersTableComponent,
       DayOrdersTableHasSalesPipe,
       DayOrdersTableFilterPipe,
