@@ -23,3 +23,33 @@
 /deep/table {
     font-size: 14px;
 }
+
+/deep/.widget {
+    padding: 0;
+    .title {
+        padding: 10px;
+        background-color: #3a5675;
+        color: #c9d5dd;
+        box-shadow: 0 0px 8px 2px rgba(0, 0, 0, 0.2);
+    }
+    .body {
+        padding: 0px;
+        & > table {
+            tr {
+                td {
+                    padding: 8px 3px;
+                    &:first-child {
+                        padding-right: 12px;//TODO localize
+                    }
+                    &:last-child {
+                        padding-left: 12px;//TODO localize
+                    }
+                }
+                &.header {
+                    font-weight: bold;
+                    background-color: #eaecee;
+                }
+            }
+        }
+    }
+}

@@ -12,7 +12,7 @@
     
     <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
 
-    <app-day-orders-table class="widget fullWidth" style="padding-bottom: 0px;" *ngIf="orders" [lastViewed]="drilledOrder" [orders]="orders"
+    <app-day-orders-table class="widget" style="padding-bottom: 0px;" *ngIf="orders" [lastViewed]="drilledOrder" [orders]="orders"
       (onOrderClicked)="onOrderClicked($event)"></app-day-orders-table>
 
     <app-day-sales-table 
