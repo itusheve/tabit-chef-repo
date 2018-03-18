@@ -571,6 +571,14 @@ export class DataService {
     /* cache of Orders by business date ('YYYY-MM-DD') */
     private ordersCache: Map<string, Order[]> = new Map<string, Order[]>();
 
+    /* cache of PaymentData by business date ('YYYY-MM-DD') */
+    private paymentDataCache: {[index:string]: {
+        account: string;
+        accountType: string;
+        date: moment.Moment;
+        grossPayments: number;
+    }[]} = {};
+
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
         // moment.tz.setDefault('Asia/Jerusalem');
     }
@@ -1279,5 +1287,66 @@ export class DataService {
                 return orders;
             });
     }
+
+
+    /* 
+     @caching
+     @:promise
+     resolves with paymentsData per businessDate for the requested businessDate range
+ */
+    public getPaymentsData(
+        fromBusinessDate: moment.Moment,
+        toBusinessDate: moment.Moment
+    ): Promise<{
+        [index: string]: {//index is date in the format YYYY-MM-DD
+            account: string;
+            accountType: string;
+            date: moment.Moment;
+            grossPayments: number;
+        }[]
+    }> {
+        
+        const qAll = [];
+        const monthsFetched: moment.Moment[] = [];
+        for (let bd = moment(fromBusinessDate); bd.isSameOrBefore(toBusinessDate, 'day'); bd.add(1, 'day')) {
+            const bdKey = bd.format('YYYY-MM-DD');            
+            if (!this.paymentDataCache[bdKey]) {
+                const monthToFetch = moment(bd);
+                const monthFetched = monthsFetched.find(m => m.isSame(monthToFetch, 'month'))
+                if (!monthFetched) {
+                    monthsFetched.push(moment(bd));
+                    qAll.push(this.olapEp.get_daily_payments_data_per_month(bd));
+                }
+            }
+        }
+
+        return Promise.all(qAll)
+            .then(data=>{
+                // populate cache
+                data.forEach(obj => {
+                    Object.keys(obj).forEach(k => {
+                        this.paymentDataCache[k] = obj[k];
+                    });
+                });
+
+                const returnObj: {
+                    [index: string]: {//index is date in the format YYYY-MM-DD
+                        account: string;
+                        accountType: string;
+                        date: moment.Moment;
+                        grossPayments: number;
+                    }[]
+                } = {};
+
+                for (let bd = moment(fromBusinessDate); bd.isSameOrBefore(toBusinessDate, 'day'); bd.add(1, 'day')) {
+                    const bdKey = bd.format('YYYY-MM-DD');
+                    returnObj[bdKey] = this.paymentDataCache[bdKey];
+                }
+
+                return returnObj;
+
+            });
+    }
+
 
 }

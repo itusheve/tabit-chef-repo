@@ -96,10 +96,11 @@ html, body {
             }
 
             tr {
-                border-top: 1px solid #eaeff0;
-                &:first-child {
-                    border-top: none;
-                }                
+                // border-top: 1px solid #eaeff0;
+                border-bottom: 1px solid #eaeff0;
+                // &:first-child {
+                //     border-top: none;
+                // }                
                 
                 &.tblTotalRow {
                     font-weight: bold;
@@ -120,10 +121,11 @@ html, body {
             color: $greyText;
             .tblRow {
                 padding: 8px 0px;
-                border-top: 1px solid #eaeff0;
-                &:first-child {
-                    border-top: none;
-                }
+                // border-top: 1px solid #eaeff0;
+                border-bottom: 1px solid #eaeff0;
+                // &:first-child {
+                    // border-top: none;
+                // }
 
                 &.tblTotalRow {
                     font-weight: bold;

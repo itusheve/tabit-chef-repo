@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, PercentPipe } from '@angular/common';
 // import { SlipVM } from '../order-view.component';
 
 @Pipe({
@@ -10,24 +10,49 @@ export class OwnersDashboardCurrencyPipe implements PipeTransform {
     private decPipe: DecimalPipe = new DecimalPipe('he-IL');
     private currencySymbol = '₪';
 
-    transform(value: any, decimal?: string, cents?: string): any {
-        //return values.filter(s=>s.class===class_);
-        //let int = parseInt(value, 10);
-        //if (!isNaN(int)) {
+    transform(value: any, decimal?: string, cents?: string, nullify?: string): any {
+        decimal = decimal || '2';
 
-            decimal = decimal || '2';
+        if (value===undefined || value===null) {
+            return '';
+        }
+        if (value===0 && nullify==='nullify') {
+            return '';
+        }
 
-            if (value && cents && cents === 'cents') {
-                value = value / 100;
-            }        
-            //let tmp = this.decPipe.transform(value, 'ILS', 'symbol', '1.2-2');
-            let result = this.decPipe.transform(value, `1.${decimal}-${decimal}`);
-            if (result) {
-                result = `${this.currencySymbol}${result}`;
-            }
+        if (cents === 'cents') {
+            value = value / 100;
+        }        
+        let result = this.decPipe.transform(value, `1.${decimal}-${decimal}`);
+        if (result) {
+            result = `${this.currencySymbol}${result}`;
+        }
+
         return result;
-        //}
-        //return '';
+    }
+}
+
+@Pipe({
+    name: 'pct',
+    pure: false
+})
+export class OwnersDashboardPercentPipe implements PipeTransform {
+    private pctPipe: PercentPipe = new PercentPipe('he-IL');
+
+    transform(value: any, decimal?: string, nullify?: string): any {
+        decimal = decimal || '2';
+
+        if (value === undefined || value === null) {
+            return '';
+        }
+
+        if (value === 0 && nullify === 'nullify') {
+            return '';
+        }
+
+        let result = this.pctPipe.transform(value, `1.${decimal}-${decimal}`);
+
+        return result;
     }
 }
 

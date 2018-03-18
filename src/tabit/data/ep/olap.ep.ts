@@ -17,7 +17,7 @@ export class OlapEp {
     private cube = 'tabit_sales';
     private url$: ReplaySubject<any>;
 
-    constructor(protected localStorage: AsyncLocalStorage) { }
+    constructor(protected localStorage: AsyncLocalStorage) {}
 
     get url(): ReplaySubject<any> {
         if (this.url$) return this.url$;
@@ -97,8 +97,31 @@ export class OlapEp {
                     type: 'number'
                 }
             }
-        }        
-    };    
+        },
+        payments: {//"תקבולים"
+            measures: {
+                grossPayments: {
+                    path: 'Tlog Payments Actual Amount',
+                    type: 'number'
+                }
+            }
+        },
+        init: function () {
+            function recursFun(obj) {
+                Object.keys(obj).forEach(k => {
+                    if (k!=='init') {
+                        if (typeof obj[k] === 'object') {
+                            recursFun(obj[k]);
+                            obj[k].parent = obj;
+                        }
+                    }
+                });
+            }
+            recursFun(this);
+            delete this.init;
+            return this;
+        }
+    }.init();
 
     private dims = {
         orderType: {//v1, deprecated
@@ -168,6 +191,19 @@ export class OlapEp {
                 id: {
                     path: 'Tlog Header Tlog Id',
                     parse: raw => raw
+                }
+            }
+        },
+        businessDateV2: {//"תאריך יום עסקים" 
+            v: 2,
+            path: 'BusinessDate',
+            attr: {
+                date: {//"תאריך"                    
+                    path: 'Date Key',
+                    parse: raw => moment(raw, 'DD/MM/YYYY')
+                },
+                yearMonth: {//"שנה חודש"   e.g. 201803, 201812
+                    path: 'Year Month Key'
                 }
             }
         },
@@ -241,17 +277,40 @@ export class OlapEp {
                 }
             }
         },
-        init: function() {
-            const that = this;
-            Object.keys(this).forEach(k=>{                
-                if (k!=='init') {
-                    if (that[k].hasOwnProperty('v') && that[k]['v']===2) {
-                        Object.keys(that[k]['attr']).forEach(k2 => {
-                            that[k]['attr'][k2]['parent'] = that[k];
-                        });
-                    }
+        accounts: {//"אמצעי תשלום"
+            v: 2,
+            path: 'Accounts',
+            attr: {
+                accountType: {//"Typeid"  e.g. "אשראי", "הקפה", "מזומן"
+                    path: 'Typeid'
+                },
+                account: {//"HQ Name"  e.g. "דינרס", "ישראכרט", "סיבוס", "מזומן", "עודף מאשראי"
+                    path: 'HQ Name'
                 }
-            });
+            }
+        },
+        init: function() {
+            function recursFun(obj) {
+                Object.keys(obj).forEach(k => {
+                    if (k !== 'init') {
+                        if (typeof obj[k] === 'object') {
+                            recursFun(obj[k]);
+                            obj[k].parent = obj;
+                        }
+                    }
+                });              
+            }
+            // const that = this;
+            recursFun(this);
+            // Object.keys(this).forEach(k=>{                
+            //     if (k!=='init') {
+            //         if (that[k].hasOwnProperty('v') && that[k]['v']===2) {
+            //             Object.keys(that[k]['attr']).forEach(k2 => {
+            //                 that[k]['attr'][k2]['parent'] = that[k];
+            //             });
+            //         }
+            //     }
+            // });
             delete this.init;
             return this;
         }
@@ -278,6 +337,81 @@ export class OlapEp {
     
     private monthlyData$: ReplaySubject<any>;
 
+    // query helpers
+    // private smartQuery(measures: any[], crossJoinDimAttr: any[], sliceDimAttr: {dimAttr: any, member: any}[]): Promise<any> {
+    private smartQuery({ measures, crossJoinDimAttr, sliceDimAttr }: { measures?: any[], crossJoinDimAttr?: any[], sliceDimAttr?: { dimAttr: any, member: any }[] } = {}): Promise<any> { 
+        return new Promise((resolve, reject) => {
+            const measuresClause = measures.map(measure => `
+                        ${this.measure(measure)}
+                    `).join(',').slice(0, -1);
+            
+            const crossJoinClause = crossJoinDimAttr.map(dimAttr=>`
+                {
+                    ${this.members(dimAttr)}
+                }
+            `).join(',').slice(0, -1);
+
+            const whereClause = sliceDimAttr.map(dimAttr=>`
+                ${this.member(dimAttr.dimAttr, dimAttr.member)}
+            `).join(',').slice(0, -1);
+
+            const mdx = `
+                SELECT
+                {
+                    ${measuresClause}
+                }
+                ON 0,
+                NonEmpty(
+                    CrossJoin(
+                        ${crossJoinClause}
+                    ),
+                    {
+                        ${measuresClause}
+                    }
+                )
+                ON 1
+                FROM ${this.cube}
+                WHERE(
+                    {
+                        ${whereClause}
+                    }
+                )
+            `;
+
+            this.url
+                .subscribe(url => {
+                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+
+                    xmla4j_w.executeNew(mdx)
+                        .then(rowset => {
+                            const treated = rowset.map(r => {
+                                const row = {};
+
+                                crossJoinDimAttr.forEach(dimAttr=>{
+                                    const key = Object.keys(dimAttr.parent).find(k => dimAttr.parent[k]===dimAttr);
+                                    const val = this.parseDim(r, dimAttr);
+                                    row[key] = val;
+                                });
+
+                                measures.forEach(measure=>{
+                                    const key = Object.keys(measure.parent).find(k => measure.parent[k] === measure);
+                                    const val = this.parseMeasure(r, measure);
+                                    row[key] = val;
+                                });
+
+                                return row;
+                            });
+
+                            resolve(treated);
+                        })
+                        .catch(e => {
+                            reject(e);
+                        });
+                });
+
+        });
+    }
+
     // measure helpers
     private measure(measure: any) {
         return `[Measures].[${measure.path}]`;
@@ -299,11 +433,15 @@ export class OlapEp {
 
     // dim helpers
     private members(dimAttr: any) {
-        return `[${dimAttr.parent.path}].[${dimAttr.path}].[${dimAttr.path}].MEMBERS`;
+        return `[${dimAttr.parent.parent.path}].[${dimAttr.path}].[${dimAttr.path}].MEMBERS`;
+    }
+
+    private member(dimAttr: any, member: any) {
+        return `[${dimAttr.parent.parent.path}].[${dimAttr.path}].&[${member}]`;
     }
 
     private parseDim(row: any, dimAttr: any) {
-        const path = `[${dimAttr.parent.path}].[${dimAttr.path}].[${dimAttr.path}].[MEMBER_CAPTION]`;
+        const path = `[${dimAttr.parent.parent.path}].[${dimAttr.path}].[${dimAttr.path}].[MEMBER_CAPTION]`;
         const raw = row[path];
         return dimAttr.hasOwnProperty('parse') ? dimAttr.parse(raw) : raw;
     }
@@ -1060,8 +1198,46 @@ export class OlapEp {
         });
     }
 
-}
+    public get_daily_payments_data_per_month(month: moment.Moment): Promise<{
+        [index: string]: {
+            account: string; //"דינרס", "ישראכרט", "סיבוס", "מזומן", "עודף מאשראי"
+            accountType: string; //e.g. "אשראי", "הקפה", "מזומן"
+            date: moment.Moment;
+            grossPayments: number;
+        }[]
+    }> {        
+        return this.smartQuery({
+            measures: [
+                this.measureGroups.payments.measures.grossPayments
+            ],
+            crossJoinDimAttr: [
+                this.dims.businessDateV2.attr.date,
+                this.dims.accounts.attr.accountType,
+                this.dims.accounts.attr.account
+            ],
+            sliceDimAttr: [
+                {
+                    dimAttr: this.dims.businessDateV2.attr.yearMonth, 
+                    member: month.format('YYYYMM') //'201803'
+                }
+            ]
+        })
+            .then((rowset: {
+                account: string;
+                accountType: string;
+                date: moment.Moment;
+                grossPayments: number;
+            }[])=>{
+                return rowset.reduce((acc, curr)=>{
+                    const key = curr.date.format('YYYY-MM-DD');
+                    (acc[key] = acc[key] || []).push(curr);
+                    return acc;
+                }, {});
+            });
+    }
 
+
+}
 
 
 // WEBPACK FOOTER //

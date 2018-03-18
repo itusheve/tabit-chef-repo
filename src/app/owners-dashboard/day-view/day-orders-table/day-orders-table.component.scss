@@ -4,6 +4,10 @@ mat-expansion-panel-header {
     font-size: 16px!important;
     font-weight: bold!important;
     padding: 0 12px!important;
+    background-color: #ffffff;
+    &:first-child {
+        border-bottom: 1px solid #eaeff0;
+    } 
     mat-panel-title {
         color: #6e7482!important;
     }

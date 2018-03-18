@@ -1,0 +1,19 @@
+.totalRow {
+    font-weight: bold;
+}
+
+.accountTypeRow {
+    font-weight: bold;
+}
+.accountRow td:first-child {
+    // text-indent: 10px;
+    font-weight: normal;
+}
+
+td {
+    word-wrap: break-word;
+}
+
+.pctCell{
+    width: 60px;
+}

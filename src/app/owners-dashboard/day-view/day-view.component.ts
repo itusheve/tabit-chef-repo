@@ -71,6 +71,15 @@ export class DayViewComponent implements OnInit  {
     }[]
   };
 
+  public paymentsData: {
+    [index: string]: {
+      account: string;
+      accountType: string;
+      date: moment.Moment;
+      grossPayments: number;
+    }[]
+  };
+
   constructor(
     private closedOrdersDataService: ClosedOrdersDataService,
     private dataService: DataService,
@@ -124,6 +133,11 @@ export class DayViewComponent implements OnInit  {
       this.dataService.get_Items_data_for_BusinessDate(this.day)
         .then(data=>{
           this.itemsData = data;
+        });
+
+      this.dataService.getPaymentsData(moment(this.day).startOf('month'), moment(this.day))
+        .then(paymentsData=>{
+          this.paymentsData = paymentsData;
         });
     });
   } 

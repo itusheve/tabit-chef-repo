@@ -2,7 +2,7 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { OwnersDashboardComponent } from './owners-dashboard.component';
-import { OwnersDashboardCurrencyPipe, OwnersDashboardCountPipe } from './owners-dashboard.pipes';
+import { OwnersDashboardCurrencyPipe, OwnersDashboardCountPipe, OwnersDashboardPercentPipe } from './owners-dashboard.pipes';
 
 import { HomeComponent } from './home/home.component';
 
@@ -65,6 +65,7 @@ import { DaySalesTableComponent } from './day-view/day-sales-table/day-sales-tab
 import { DaySalesBySubDepartmentTableComponent } from './day-view/day-sales-by-sub-department-table/day-sales-by-sub-department-table.component';
 import { DayMostSoldItemsTableComponent } from './day-view/day-most-sold-items-table/day-most-sold-items-table.component';
 import { DayMostReturnedItemsTableComponent } from './day-view/day-most-returned-items-table/day-most-returned-items-table.component';
+import { DayPaymentsTableComponent } from './day-view/day-payments-table/day-payments-table.component';
 
 
 //Load localized messages (English included by default)
@@ -104,6 +105,7 @@ if (environment.locale==='he') {
   declarations: [
     OwnersDashboardComponent,
     OwnersDashboardCurrencyPipe,
+    OwnersDashboardPercentPipe,
     OwnersDashboardCountPipe,
     
     HomeComponent,
@@ -124,6 +126,7 @@ if (environment.locale==='he') {
       DaySalesBySubDepartmentTableComponent,
       DayMostSoldItemsTableComponent,
       DayMostReturnedItemsTableComponent,
+      DayPaymentsTableComponent,
       // DaySalesTypeTableComponent,
       // DayDinersTableComponent,
       // DayShiftsComponent,

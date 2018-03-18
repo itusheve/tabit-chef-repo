@@ -30,6 +30,22 @@
         <source>Most Returned Items</source>
         <target>הפריטים המוחזרים ביותר</target>
       </trans-unit>   
+      <trans-unit id="payments" datatype="html">
+        <source>Payments</source>
+      <target>תשלומים</target>
+      </trans-unit>   
+      <trans-unit id="payment" datatype="html">
+        <source>Payment</source>
+        <target>תקבול</target>
+      </trans-unit>    
+      <trans-unit id="totalPayments" datatype="html">
+        <source>Total Payments</source>
+        <target>סה"כ תשלומים</target>
+      </trans-unit>    
+      <trans-unit id="monthlyTotal" datatype="html">
+        <source>Monthly Total</source>
+      <target>סכום חודשי</target>
+      </trans-unit>        
       <trans-unit id="sold" datatype="html">
         <source>Sold</source>
         <target>נמכר</target>
