@@ -262,6 +262,18 @@ export class OlapEp {
                 }
             }
         },
+        priceReductionsReasons: {//סיבות הנחה
+            v: 2,
+            path: 'Pricereductionreasons',
+            attr: {
+                subType: {//תת קבוצת החלטה
+                    path: 'Tlog Pricereductions Reason Sub Type'
+                },
+                reasonId: {//סיבות הנחה
+                    path: 'Tlog Pricereductions Reason Id'
+                }
+            }
+        },
         items: {//פריטים
             v: 2,
             path: 'Items',
@@ -286,6 +298,42 @@ export class OlapEp {
                 },
                 account: {//"HQ Name"  e.g. "דינרס", "ישראכרט", "סיבוס", "מזומן", "עודף מאשראי"
                     path: 'HQ Name'
+                }
+            }
+        },
+        orderTypeV2: {//סוג הזמנה
+            v: 2,
+            path: 'Ordertype',
+            attr: {
+                orderType: {//סוג הזמנה
+                    path: 'Tlog Header Ordertype'
+                }
+            }
+        },
+        source: {//מקור
+            v: 2,
+            path: 'Source',
+            attr: {
+                source: {//מקור
+                    path: 'Tlog Header Source'
+                }
+            }
+        },
+        waitersV2: {//מלצרים
+            v: 2,
+            path: 'Owners',
+            attr: {
+                waiter: {//מלצר
+                    path: 'Tlog Header Owner Id'
+                }
+            }
+        },
+        tables: {//"שולחנות"
+            v: 2,
+            path: 'Tables',
+            attr: {
+                tableId: {//מס שולחן
+                    path: 'Table Id'
                 }
             }
         },
@@ -346,14 +394,40 @@ export class OlapEp {
                     `).join(',').slice(0, -1);
             
             const crossJoinClause = crossJoinDimAttr.map(dimAttr=>`
-                {
-                    ${this.members(dimAttr)}
-                }
+                ${this.members(dimAttr)}
             `).join(',').slice(0, -1);
+            // const crossJoinClause = crossJoinDimAttr.map(dimAttr=>`
+            //     {
+            //         ${this.members(dimAttr)}
+            //     }
+            // `).join(',').slice(0, -1);
 
             const whereClause = sliceDimAttr.map(dimAttr=>`
                 ${this.member(dimAttr.dimAttr, dimAttr.member)}
             `).join(',').slice(0, -1);
+
+            // const mdx = `
+            //     SELECT
+            //     {
+            //         ${measuresClause}
+            //     }
+            //     ON 0,
+            //     NonEmpty(
+            //         CrossJoin(
+            //             ${crossJoinClause}
+            //         ),
+            //         {
+            //             ${measuresClause}
+            //         }
+            //     )
+            //     ON 1
+            //     FROM ${this.cube}
+            //     WHERE(
+            //         {
+            //             ${whereClause}
+            //         }
+            //     )
+            // `;
 
             const mdx = `
                 SELECT
@@ -361,13 +435,8 @@ export class OlapEp {
                     ${measuresClause}
                 }
                 ON 0,
-                NonEmpty(
-                    CrossJoin(
-                        ${crossJoinClause}
-                    ),
-                    {
-                        ${measuresClause}
-                    }
+                Non Empty(
+                    ${crossJoinClause}
                 )
                 ON 1
                 FROM ${this.cube}
@@ -1236,9 +1305,101 @@ export class OlapEp {
             });
     }
 
+    public get_operational_errors_by_BusinessDay(bd: moment.Moment): Promise<{
+        department: string;
+        itemName: string;
+        itemSales: number;
+        itemSold: number;
+        itemPrepared: number;
+        itemReturned: number;
+        itemReturnValue: number;
+    }[]> {
+        return new Promise((resolve, reject) => {//TODO use smartQuery...
+            return this.smartQuery({
+                measures: [
+                    this.measureGroups.priceReductions.measures.operational
+                ],
+                crossJoinDimAttr: [
+                    this.dims.orderTypeV2.attr.orderType,
+                    this.dims.waitersV2.attr.waiter,
+                    this.dims.ordersV2.attr.orderNumber,
+                    this.dims.tables.attr.tableId,
+                    this.dims.items.attr.item,
+                    this.dims.priceReductionsReasons.attr.subType,
+                    this.dims.priceReductionsReasons.attr.reasonId
+                ],
+                sliceDimAttr: [
+                    {
+                        dimAttr: this.dims.businessDateV2.attr.date,
+                        member: bd.format('YYYYMMDD')
+                    }
+                ]
+            })
+                .then((rowset: {
+                    account: string;
+                    accountType: string;
+                    date: moment.Moment;
+                    grossPayments: number;
+                }[]) => {
+                    return rowset.reduce((acc, curr) => {
+                        const key = curr.date.format('YYYY-MM-DD');
+                        (acc[key] = acc[key] || []).push(curr);
+                        return acc;
+                    }, {});
+                });
+        });
+    }
+
 
 }
 
 
 // WEBPACK FOOTER //
 // C:/dev/tabit/dashboard/src/tabit/data/ep/olap.ep.ts
+
+
+
+// תקלות תפעול - החזר פריטים, OTH והנחות לפי מלצר
+// select
+// [Measures].[Tlog Pricereductions Operational Discount Amount]on 0,
+//     non empty
+//         (
+//         [Ordertype].[Tlog Header Ordertype].[Tlog Header Ordertype].members,
+//         [Owners].[Tlog Header Owner Id].[Tlog Header Owner Id].members,
+//         [Ordernumber].[Tlog Header Order Number].[Tlog Header Order Number].members,
+//         [Tables].[Table Id].[Table Id].members,
+//         [Items].[Item Group Id].[Item Group Id].members,
+//         [Pricereductionreasons].[Tlog Pricereductions Reason Sub Type].[Tlog Pricereductions Reason Sub Type].members,
+//         [Pricereductionreasons].[Tlog Pricereductions Reason Id].[Tlog Pricereductions Reason Id].members
+//         ) on 1
+// from[tabit_sales]
+// where(
+//     [Sites].[Site Id].& [58440e3963247b1f00d97b1e],
+//     [BusinessDate].[Date Key].& [20180303],
+//     [Pricereductionreasons].[Tlog Pricereductions Reason Type].& [compensation]
+// )
+
+
+// שימור ושיווק – פעולות ידניות לפי מלצר
+// select
+// { [Measures].[Tlog Pricereductions Retention Discount Amount] } on 0,
+//     non empty(
+//         [Ordertype].[Tlog Header Ordertype].[Tlog Header Ordertype].members,
+//         [Source].[Tlog Header Source].[Tlog Header Source].members,
+//         [Owners].[Tlog Header Owner Id].[Tlog Header Owner Id].members,
+//         [Ordernumber].[Tlog Header Order Number].[Tlog Header Order Number].members,
+//         [Tables].[Table Id].[Table Id].members,
+//         [Items].[Item Group Id].[Item Group Id].members,
+//         {
+//             [Pricereductionreasons].[Tlog Pricereductions Reason Type].& [retention],
+//         [Pricereductionreasons].[Tlog Pricereductions Reason Type].& [compensation]
+// 	},
+//         [Pricereductionreasons].[Tlog Pricereductions Reason Id].[Tlog Pricereductions Reason Id].members,
+//         [Pricereductionreasons].[Tlog Pricereductions Reason Sub Type].[Tlog Pricereductions Reason Sub Type].members
+//     ) on 1
+// from[tabit_sales]
+// where(
+//     [Sites].[Site Id].& [58440e3963247b1f00d97b1e],
+//     [BusinessDate].[Date Key].& [20180303]
+// )
+

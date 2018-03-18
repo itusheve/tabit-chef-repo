@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const app = express();
+const compress = require('compression');
 
 // If an incoming request uses
 // a protocol other than HTTPS,
@@ -19,6 +20,14 @@ const forceSSL = function () {
 // to use the forceSSL
 // middleware
 app.use(forceSSL());
+
+// Should be placed before express.static
+app.use(compress({
+    filter: function (req, res) {
+        return (/json|text|javascript|css|font|svg/).test(res.getHeader('Content-Type'));
+    },
+    level: 9
+}));
 
 // Run the app by serving the static files
 // in the dist directory
