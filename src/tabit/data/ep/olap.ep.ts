@@ -9,6 +9,12 @@ import { Subject } from 'rxjs/Subject';
 
 declare var Xmla4JWrapper: any;
 
+interface Slicer {
+    member?: any;
+    dimAttr?: any;
+    memberPath?: any;
+}
+
 @Injectable()
 export class OlapEp {
     
@@ -217,10 +223,16 @@ export class OlapEp {
                 }
             }
         },  
-        priceReductions: {//v2
+        priceReductions: {//סיבות הנחה
             v: 2,//for BC
             path: 'Pricereductionreasons',
             attr: {
+                subType: {//תת קבוצת החלטה
+                    path: 'Tlog Pricereductions Reason Sub Type'
+                },
+                reasonId: {//סיבות הנחה
+                    path: 'Tlog Pricereductions Reason Id'
+                },
                 reasons: {
                     path: 'Tlog Pricereductions Reason Type',
                     parse: raw => {
@@ -259,18 +271,6 @@ export class OlapEp {
                             caption: 'מבצעים'//TODO localization
                         }
                     }
-                }
-            }
-        },
-        priceReductionsReasons: {//סיבות הנחה
-            v: 2,
-            path: 'Pricereductionreasons',
-            attr: {
-                subType: {//תת קבוצת החלטה
-                    path: 'Tlog Pricereductions Reason Sub Type'
-                },
-                reasonId: {//סיבות הנחה
-                    path: 'Tlog Pricereductions Reason Id'
                 }
             }
         },
@@ -333,7 +333,11 @@ export class OlapEp {
             path: 'Tables',
             attr: {
                 tableId: {//מס שולחן
-                    path: 'Table Id'
+                    path: 'Table Id',
+                    parse: raw => {//TODO localization
+                        if (raw.indexOf('ללא שולחן') > -1) return '';
+                        return raw.replace('שולחן ', '');
+                    }
                 }
             }
         },
@@ -348,17 +352,7 @@ export class OlapEp {
                     }
                 });              
             }
-            // const that = this;
             recursFun(this);
-            // Object.keys(this).forEach(k=>{                
-            //     if (k!=='init') {
-            //         if (that[k].hasOwnProperty('v') && that[k]['v']===2) {
-            //             Object.keys(that[k]['attr']).forEach(k2 => {
-            //                 that[k]['attr'][k2]['parent'] = that[k];
-            //             });
-            //         }
-            //     }
-            // });
             delete this.init;
             return this;
         }
@@ -386,8 +380,7 @@ export class OlapEp {
     private monthlyData$: ReplaySubject<any>;
 
     // query helpers
-    // private smartQuery(measures: any[], crossJoinDimAttr: any[], sliceDimAttr: {dimAttr: any, member: any}[]): Promise<any> {
-    private smartQuery({ measures, crossJoinDimAttr, sliceDimAttr }: { measures?: any[], crossJoinDimAttr?: any[], sliceDimAttr?: { dimAttr: any, member: any }[] } = {}): Promise<any> { 
+    private smartQuery({ measures, crossJoinDimAttr, slicers }: { measures?: any[], crossJoinDimAttr?: any[], slicers?: Slicer[] } = {}): Promise<any> { 
         return new Promise((resolve, reject) => {
             const measuresClause = measures.map(measure => `
                         ${this.measure(measure)}
@@ -402,8 +395,8 @@ export class OlapEp {
             //     }
             // `).join(',').slice(0, -1);
 
-            const whereClause = sliceDimAttr.map(dimAttr=>`
-                ${this.member(dimAttr.dimAttr, dimAttr.member)}
+            const whereClause = slicers.map(slicer=>`
+                ${this.memberNew(slicer)}
             `).join(',').slice(0, -1);
 
             // const mdx = `
@@ -441,9 +434,7 @@ export class OlapEp {
                 ON 1
                 FROM ${this.cube}
                 WHERE(
-                    {
-                        ${whereClause}
-                    }
+                    ${whereClause}
                 )
             `;
 
@@ -504,9 +495,18 @@ export class OlapEp {
     private members(dimAttr: any) {
         return `[${dimAttr.parent.parent.path}].[${dimAttr.path}].[${dimAttr.path}].MEMBERS`;
     }
-
-    private member(dimAttr: any, member: any) {
+    
+    // deprecated, use memberNew
+    private member(dimAttr: any, member?: any) {
         return `[${dimAttr.parent.parent.path}].[${dimAttr.path}].&[${member}]`;
+    }
+
+    /* memberNew enables slicing directly on a mamber, or b y manually passing the path */
+    private memberNew(slicer: Slicer) {
+        if (slicer.dimAttr) {
+            return `[${slicer.dimAttr.parent.parent.path}].[${slicer.dimAttr.path}].&[${slicer.memberPath}]`;
+        }
+        return `[${slicer.member.parent.parent.parent.parent.path}].[${slicer.member.parent.parent.path}].&[${slicer.member.path}]`;
     }
 
     private parseDim(row: any, dimAttr: any) {
@@ -1284,10 +1284,10 @@ export class OlapEp {
                 this.dims.accounts.attr.accountType,
                 this.dims.accounts.attr.account
             ],
-            sliceDimAttr: [
+            slicers: [
                 {
                     dimAttr: this.dims.businessDateV2.attr.yearMonth, 
-                    member: month.format('YYYYMM') //'201803'
+                    memberPath: month.format('YYYYMM') //'201803'
                 }
             ]
         })
@@ -1306,47 +1306,37 @@ export class OlapEp {
     }
 
     public get_operational_errors_by_BusinessDay(bd: moment.Moment): Promise<{
-        department: string;
-        itemName: string;
-        itemSales: number;
-        itemSold: number;
-        itemPrepared: number;
-        itemReturned: number;
-        itemReturnValue: number;
+        orderType: string;
+        waiter: string;
+        orderNumber: number;
+        tableId: string;
+        item: string;
+        subType: string;
+        reasonId: string;
+        operational: number;
     }[]> {
-        return new Promise((resolve, reject) => {//TODO use smartQuery...
-            return this.smartQuery({
-                measures: [
-                    this.measureGroups.priceReductions.measures.operational
-                ],
-                crossJoinDimAttr: [
-                    this.dims.orderTypeV2.attr.orderType,
-                    this.dims.waitersV2.attr.waiter,
-                    this.dims.ordersV2.attr.orderNumber,
-                    this.dims.tables.attr.tableId,
-                    this.dims.items.attr.item,
-                    this.dims.priceReductionsReasons.attr.subType,
-                    this.dims.priceReductionsReasons.attr.reasonId
-                ],
-                sliceDimAttr: [
-                    {
-                        dimAttr: this.dims.businessDateV2.attr.date,
-                        member: bd.format('YYYYMMDD')
-                    }
-                ]
-            })
-                .then((rowset: {
-                    account: string;
-                    accountType: string;
-                    date: moment.Moment;
-                    grossPayments: number;
-                }[]) => {
-                    return rowset.reduce((acc, curr) => {
-                        const key = curr.date.format('YYYY-MM-DD');
-                        (acc[key] = acc[key] || []).push(curr);
-                        return acc;
-                    }, {});
-                });
+        return this.smartQuery({
+            measures: [
+                this.measureGroups.priceReductions.measures.operational
+            ],
+            crossJoinDimAttr: [
+                this.dims.orderTypeV2.attr.orderType,
+                this.dims.waitersV2.attr.waiter,
+                this.dims.ordersV2.attr.orderNumber,
+                this.dims.tables.attr.tableId,
+                this.dims.items.attr.item,
+                this.dims.priceReductions.attr.subType,
+                this.dims.priceReductions.attr.reasonId
+            ],
+            slicers: [
+                {
+                    member: this.dims.priceReductions.attr.reasons.members.operational
+                },
+                {
+                    dimAttr: this.dims.businessDateV2.attr.date,
+                    memberPath: bd.format('YYYYMMDD')
+                }
+            ]
         });
     }
 
