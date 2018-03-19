@@ -117,6 +117,7 @@ export class DayViewComponent implements OnInit  {
       //this.closedOrdersDataService.getOrders(this.day, {withPriceReductions: true})
       this.closedOrdersDataService.getOrders(this.day)
         .then((orders: Order[]) => {
+          debugger;
           this.orders = orders;
         });
 

@@ -22,6 +22,15 @@ import { CurrencyPipe } from '@angular/common';
 import { User } from '../../model/User.model';
 import { environment } from '../../../environments/environment';
 
+//declare var OrdersViewService: any;
+
+declare var OrderViewService: any;
+
+
+//import * as OrdersViewService from '../../../js/lib/OrderView/OrderView_v1/OrderView';
+
+//import OrdersViewService from '../../../lib/OrderView_v1/OrderView/OrderView';
+
 // copied as is from office 4.X
 //TODO establish proper translation service
 // tslint:disable:quotemark
@@ -322,6 +331,9 @@ let Utils = {
 };
 
 // copied as is from office 4.X
+
+
+
 let billService = {
     resolveItems: function (variables, collections, isUS) {
 
@@ -621,12 +633,16 @@ let billService = {
     }
 };
 
+
+
 @Injectable()
 export class ClosedOrdersDataService {
 
     currPipe: CurrencyPipe = new CurrencyPipe('he-IL');
 
     currency = 'ILS';
+
+    orderViewService: any;
 
     /* 
         the stream emits the currentBd's last closed order time, in the restaurant's timezone and in the format dddd
@@ -653,7 +669,15 @@ export class ClosedOrdersDataService {
         private promotionsDataService: PromotionsDataService,
         private tablesDataService: TablesDataService,
         private dataService: DataService
-    ) { }
+    ) {
+
+        this.orderViewService = new OrderViewService({
+            local: 'he-IL',
+            isUS: false,
+            moment: moment
+        });
+
+    }
 
     /* 
      @:promise
@@ -691,7 +715,9 @@ export class ClosedOrdersDataService {
                             resolve({ order: order });
                         } else {
                             return this.enrichOrder(order)
-                                .then(data => resolve(data));
+                                .then(data => {
+                                    resolve(data)
+                                });
                         }
                     }
                 });
@@ -1663,43 +1689,40 @@ export class ClosedOrdersDataService {
             // }
         }
 
+
         /* the func is a copy of how office 4.X is preparing an object called 'print data' */
         function setUpPrintData(data): Promise<any> {
             return new Promise((resolve, reject) => {
                 data = data[0];
-
-                //let isUS = Authentication.isUS();
                 const isUS = false;
 
-                const variables = data.printData.variables;
-                const collections = data.printData.collections;
 
-                //angular.merge(data.printData, billService.resolveItems(variables, collections));
-                _.merge(data.printData, billService.resolveItems(variables, collections, isUS));
+                let resolveBill = that.orderViewService.Bill.resolveBillData(data, isUS);
+                resolve(resolveBill);
 
-                data.printData.payments = billService.resolvePayments(variables, collections, isUS);
-                data.printData.totals = billService.resolveTotals(variables, collections, null, isUS);
-                data.printData.taxes = billService.resolveTaxes(variables, collections, null, isUS);
-                data.printData.isUS = isUS;
 
-                // data.printData.print_by_order = $translate.instant('ORDERS_VIEW.print_by_order', {
-                //     order_number: variables.ORDER_NO,
-                //     order_date: moment(variables.CREATED_AT).format('DD/MM/YYYY'),
-                //     order_time: moment(variables.CREATED_AT).format('HH:mm:ss')
-                // });
-                data.printData.print_by_order = ORDERS_VIEW.print_by_order(variables.ORDER_NO, moment(variables.CREATED_AT).format('DD/MM/YYYY'), moment(variables.CREATED_AT).format('HH:mm:ss'));
 
-                let server_name = "";
-                if (variables.F_NAME && variables.L_NAME) { server_name = variables.F_NAME + ' ' + _.first(variables.L_NAME); }
 
-                // data.printData.waiter_diners = $translate.instant('ORDERS_VIEW.waiter_diners', {
-                //     waiter: server_name,
-                //     diners: variables.NUMBER_OF_GUESTS,
-                //     table: variables.TABLE_NO
-                // });
-                data.printData.waiter_diners = ORDERS_VIEW.waiter_diners(server_name, variables.NUMBER_OF_GUESTS, variables.TABLE_NO);
+                // const variables = data.printData.variables;
+                // const collections = data.printData.collections;
 
-                resolve(data.printData);
+                // _.merge(data.printData, billService.resolveItems(variables, collections, isUS));
+
+                // data.printData.payments = billService.resolvePayments(variables, collections, isUS);
+                // data.printData.totals = billService.resolveTotals(variables, collections, null, isUS);
+                // data.printData.taxes = billService.resolveTaxes(variables, collections, null, isUS);
+                // data.printData.isUS = isUS;
+
+
+                // data.printData.print_by_order = ORDERS_VIEW.print_by_order(variables.ORDER_NO, moment(variables.CREATED_AT).format('DD/MM/YYYY'), moment(variables.CREATED_AT).format('HH:mm:ss'));
+
+                // let server_name = "";
+                // if (variables.F_NAME && variables.L_NAME) { server_name = variables.F_NAME + ' ' + _.first(variables.L_NAME); }
+
+
+                // data.printData.waiter_diners = ORDERS_VIEW.waiter_diners(server_name, variables.NUMBER_OF_GUESTS, variables.TABLE_NO);
+
+                // resolve(data.printData);
             });
         }
 
@@ -1751,24 +1774,105 @@ export class ClosedOrdersDataService {
                 const lookupData: any = data[1];
                 const billData: any = data[2];
 
-                return Promise.all([
-                    enrichOrder_(
-                        order_,
+
+                let _status = "closed"; // order status, dashboard show only closed orders.
+
+                // let orederResult = this.orderViewService.TimeLine.enrichOrder(
+                //     tlog,
+                //     lookupData.tablesData.tablesRaw,
+                //     lookupData.itemsData.itemsRaw,
+                //     lookupData.usersData.usersRaw,
+                //     lookupData.promotionsData.promotionsRaw,
+                //     lookupData.modifierGroupsData.allModifiersRaw,
+                //     tlog.id,
+                //     _status
+                // );
+
+                // debugger;
+
+                // if (_status === "closed" && orederResult.checks !== undefined && orederResult.checks.length > 0) {
+
+                // }
+
+                // this function return Promise obj with enrich order form 3td party serivce.
+                function getResolveOrder(
+                    tlog,
+                    tablesRaw,
+                    itemsRaw,
+                    usersRaw,
+                    promotionsRaw,
+                    allModifiersRaw,
+                    tloId,
+                    _status
+                ): Promise<any> {
+
+                    let resultOrder = that.orderViewService.TimeLine.enrichOrder(
                         tlog,
-                        lookupData.offersData.bundlesRaw,
-                        lookupData.modifierGroupsData.allModifiersRaw,
-                        lookupData.usersData.usersRaw,
-                        lookupData.itemsData.itemsRaw,
+                        tablesRaw,
+                        itemsRaw,
+                        usersRaw,
+                        promotionsRaw,
+                        allModifiersRaw,
+                        tloId,
+                        _status
+                    );
+
+                    function resolveUser(userId): User {
+                        const userNone = new User('None', '');
+                        const user = usersRaw.find(u => u._id === userId._id);
+                        if (user) {
+                            return new User(user.firstName, user.lastName);
+                        }
+                        return userNone;
+                    }
+
+
+                    let OrderUsers = {
+                        openedBy: resolveUser(resultOrder.openedBy),
+                        owner: resolveUser(resultOrder.owner),
+                        opened: resolveUser(resultOrder.openedBy),
+                        locked: resolveUser(resultOrder.lockedBy)
+                    };
+
+                    resultOrder.OrderUsers = OrderUsers;
+
+
+                    return new Promise((resolve, reject) => resolve(resultOrder));
+                }
+
+                return Promise.all([
+                    getResolveOrder(tlog,
                         lookupData.tablesData.tablesRaw,
+                        lookupData.itemsData.itemsRaw,
+                        lookupData.usersData.usersRaw,
                         lookupData.promotionsData.promotionsRaw,
-                    ),
+                        lookupData.modifierGroupsData.allModifiersRaw,
+                        tlog.id,
+                        _status),
                     setUpPrintData(billData)
                 ]);
+
+
+                // return Promise.all([
+                //     enrichOrder_(
+                //         order_,
+                //         tlog,
+                //         lookupData.offersData.bundlesRaw,
+                //         lookupData.modifierGroupsData.allModifiersRaw,
+                //         lookupData.usersData.usersRaw,
+                //         lookupData.itemsData.itemsRaw,
+                //         lookupData.tablesData.tablesRaw,
+                //         lookupData.promotionsData.promotionsRaw,
+                //     ),
+                //     setUpPrintData(billData)
+                // ]);
 
             })
             .then(data => {
                 const orderOld = data[0];
                 const printDataOld = data[1];
+
+
 
                 // $ctrl.taxRate = $ctrl.selectedOrder.tax.rate + '%';not in use
                 // $ctrl.orderOptions = [];
@@ -2040,6 +2144,9 @@ export class ClosedOrdersDataService {
                 if (printDataOld.isTaxExempt) {
                     order_.isTaxExempt = printDataOld.isTaxExempt;
                 }
+
+                debugger;
+                order_.users = orderOld.OrderUsers;
 
                 return {
                     order: order_,
