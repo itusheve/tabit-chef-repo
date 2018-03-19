@@ -5,18 +5,18 @@
         <div class="flex d-col body" *ngIf="data">
             <table class="fixedWidth">
                 <tr class="header">
-                    <td i18n="@@department">Department</td>
+                    <td style="width:60px;" i18n="@@department">Department</td>
                     <td i18n="@@item">Item</td>
-                    <td i18n="@@sales2">Sales</td>
-                    <td i18n="@@sold">Sold</td>
+                    <td style="width:60px;" i18n="@@sales2">Sales</td>
+                    <td style="width:42px;" i18n="@@sold">Sold</td>
                 </tr>
             </table>
             <table class="fixedWidth" *ngFor="let departmentData of data">
                 <tr *ngFor="let dataObj of departmentData.topItems">
-                    <td>{{departmentData.department}}</td>
+                    <td style="width:60px;">{{departmentData.department}}</td>
                     <td>{{dataObj.itemName}}</td>
-                    <td>{{dataObj.itemSales | curr:'0'}}</td>
-                    <td>{{dataObj.itemSold | count}}</td>
+                    <td style="width:60px;">{{dataObj.itemSales | curr:'0'}}</td>
+                    <td style="width:42px;">{{dataObj.itemSold | count}}</td>
                 </tr>
             </table>
         </div>

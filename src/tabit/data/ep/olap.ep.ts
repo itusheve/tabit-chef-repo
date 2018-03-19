@@ -389,38 +389,10 @@ export class OlapEp {
             const crossJoinClause = crossJoinDimAttr.map(dimAttr=>`
                 ${this.members(dimAttr)}
             `).join(',').slice(0, -1);
-            // const crossJoinClause = crossJoinDimAttr.map(dimAttr=>`
-            //     {
-            //         ${this.members(dimAttr)}
-            //     }
-            // `).join(',').slice(0, -1);
 
             const whereClause = slicers.map(slicer=>`
                 ${this.memberNew(slicer)}
             `).join(',').slice(0, -1);
-
-            // const mdx = `
-            //     SELECT
-            //     {
-            //         ${measuresClause}
-            //     }
-            //     ON 0,
-            //     NonEmpty(
-            //         CrossJoin(
-            //             ${crossJoinClause}
-            //         ),
-            //         {
-            //             ${measuresClause}
-            //         }
-            //     )
-            //     ON 1
-            //     FROM ${this.cube}
-            //     WHERE(
-            //         {
-            //             ${whereClause}
-            //         }
-            //     )
-            // `;
 
             const mdx = `
                 SELECT
@@ -1340,6 +1312,40 @@ export class OlapEp {
         });
     }
 
+    // public get_manual_retentions_by_BusinessDay(bd: moment.Moment): Promise<{
+    //     orderType: string;
+    //     source: string;
+    //     orderNumber: number;
+    //     tableId: string;
+    //     item: string;
+    //     subType: string;
+    //     reasonId: string;
+    //     retention: number;
+    // }[]> {
+    //     return this.smartQuery({
+    //         measures: [
+    //             this.measureGroups.priceReductions.measures.retention
+    //         ],
+    //         crossJoinDimAttr: [
+    //             this.dims.orderTypeV2.attr.orderType,
+    //             this.dims.waitersV2.attr.waiter,
+    //             this.dims.ordersV2.attr.orderNumber,
+    //             this.dims.tables.attr.tableId,
+    //             this.dims.items.attr.item,
+    //             this.dims.priceReductions.attr.subType,
+    //             this.dims.priceReductions.attr.reasonId
+    //         ],
+    //         slicers: [
+    //             {
+    //                 member: this.dims.priceReductions.attr.reasons.members.operational
+    //             },
+    //             {
+    //                 dimAttr: this.dims.businessDateV2.attr.date,
+    //                 memberPath: bd.format('YYYYMMDD')
+    //             }
+    //         ]
+    //     });
+    // }
 
 }
 

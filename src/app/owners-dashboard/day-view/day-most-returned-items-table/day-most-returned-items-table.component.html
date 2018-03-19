@@ -5,20 +5,20 @@
         <div class="flex d-col body" *ngIf="data">
             <table class="fixedWidth">
                 <tr class="header">
-                    <td i18n="@@department">Department</td>
+                    <td style="width:60px;" i18n="@@department">Department</td>
                     <td i18n="@@item">Item</td>
-                    <td i18n="@@prepared">Prepared</td>
-                    <td i18n="@@returned">Returned</td>
-                    <td i18n="@@operationalReductionsValue">Operational Reductions Value</td>
+                    <td style="width:42px;" i18n="@@prepared">Prepared</td>
+                    <td style="width:70px;" i18n="@@returned">Returned</td>
+                    <td style="width:50px;" i18n="@@operationalReductionsValue">Operational Reductions Value</td>
                 </tr>
             </table>
             <table class="fixedWidth" *ngFor="let departmentData of data">
                 <tr *ngFor="let dataObj of departmentData.topItems">
-                    <td>{{departmentData.department}}</td>
+                    <td style="width:60px;">{{departmentData.department}}</td>
                     <td>{{dataObj.itemName}}</td>
-                    <td>{{dataObj.itemPrepared | count}}</td>
-                    <td>{{dataObj.itemReturned | count}} ({{dataObj.itemReturnedPct | percent:'1.2-2'}})</td>
-                    <td>{{dataObj.itemReturnValue | curr:'0'}}</td>
+                    <td style="width:42px;">{{dataObj.itemPrepared | count}}</td>
+                    <td style="width:70px;">{{dataObj.itemReturned | count}} ({{dataObj.itemReturnedPct | percent:'1.2-2'}})</td>
+                    <td style="width:50px;">{{dataObj.itemReturnValue | curr:'0'}}</td>
                 </tr>
             </table>
         </div>

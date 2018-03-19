@@ -15,25 +15,25 @@
             <table class="fixedWidth">
                 <tr class="totalRow">
                     <td i18n="@@totalPayments">Total Payments</td>
-                    <td>{{data.totalPayments.today | curr:'1':'':'nullify'}}</td>
+                    <td>{{data.totalPayments.today | curr:'0':'':'nullify'}}</td>
                     <td class="pctCell">{{data.totalPayments.todayPct | pct:'1':'nullify'}}</td>
-                    <td>{{data.totalPayments.mtd | curr:'1':'':'nullify'}}</td>
+                    <td>{{data.totalPayments.mtd | curr:'0':'':'nullify'}}</td>
                     <td class="pctCell">{{data.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
                 </tr>
             </table>
             <table class="fixedWidth" *ngFor="let accountTypeData of data.byAccountType">
                 <tr class="accountTypeRow">
                     <td>{{accountTypeData.accountType}}</td>
-                    <td>{{accountTypeData.totalPayments.today | curr:'1':'':'nullify'}}</td>
+                    <td>{{accountTypeData.totalPayments.today | curr:'0':'':'nullify'}}</td>
                     <td class="pctCell">{{accountTypeData.totalPayments.todayPct | pct:'1':'nullify'}}</td>
-                    <td>{{accountTypeData.totalPayments.mtd | curr:'1':'':'nullify'}}</td>
+                    <td>{{accountTypeData.totalPayments.mtd | curr:'0':'':'nullify'}}</td>
                     <td class="pctCell">{{accountTypeData.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
                 </tr>
                 <tr *ngFor="let accountData of accountTypeData.byAccount" class="accountRow">
                     <td>{{accountData.account}}</td>
-                    <td>{{accountData.totalPayments.today | curr:'1':'':'nullify'}}</td>
+                    <td>{{accountData.totalPayments.today | curr:'0':'':'nullify'}}</td>
                     <td class="pctCell">{{accountData.totalPayments.todayPct | pct:'1':'nullify'}}</td>
-                    <td>{{accountData.totalPayments.mtd | curr:'1':'':'nullify'}}</td>
+                    <td>{{accountData.totalPayments.mtd | curr:'0':'':'nullify'}}</td>
                     <td class="pctCell">{{accountData.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
                 </tr>
             </table>
