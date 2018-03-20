@@ -77,6 +77,14 @@
       <trans-unit id="operationalReductionsValue" datatype="html">
         <source>Operational Reductions Value</source>
         <target>שווי תקלות תפעול</target>
+      </trans-unit>      
+      <trans-unit id="retention" datatype="html">
+        <source>Retention</source>
+        <target>שימור ושיווק</target>
+      </trans-unit>
+      <trans-unit id="retentionByWaiter" datatype="html">
+        <source>Manual Operations by Waiter</source>
+        <target>פעולות ידניות לפי מלצר</target>
       </trans-unit>        
       <trans-unit id="noData" datatype="html">
         <source>No Data</source>

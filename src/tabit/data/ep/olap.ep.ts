@@ -9,10 +9,14 @@ import { Subject } from 'rxjs/Subject';
 
 declare var Xmla4JWrapper: any;
 
-interface Slicer {
+interface MemberConfig {
     member?: any;
     dimAttr?: any;
     memberPath?: any;
+}
+
+interface MembersConfig {
+    dimAttr: any;
 }
 
 @Injectable()
@@ -380,15 +384,32 @@ export class OlapEp {
     private monthlyData$: ReplaySubject<any>;
 
     // query helpers
-    private smartQuery({ measures, crossJoinDimAttr, slicers }: { measures?: any[], crossJoinDimAttr?: any[], slicers?: Slicer[] } = {}): Promise<any> { 
+    private smartQuery({ measures, dimensions, slicers }: { measures?: any[], dimensions?: {membersConfigArr?: MembersConfig[], memberConfigArr?: MemberConfig[][]}, slicers?: MemberConfig[] } = {}): Promise<any> { 
         return new Promise((resolve, reject) => {
             const measuresClause = measures.map(measure => `
                         ${this.measure(measure)}
                     `).join(',').slice(0, -1);
-            
-            const crossJoinClause = crossJoinDimAttr.map(dimAttr=>`
-                ${this.members(dimAttr)}
-            `).join(',').slice(0, -1);
+
+            let dimensionsClause = '';
+            if (dimensions.membersConfigArr && dimensions.membersConfigArr.length) {
+                dimensionsClause += dimensions.membersConfigArr.map(memberConfig=>`
+                    ${this.membersNew(memberConfig)}
+                `).join(',');
+                dimensionsClause += ',';
+            }
+            if (dimensions.memberConfigArr && dimensions.memberConfigArr.length) {
+                dimensions.memberConfigArr.forEach(memberSetConfig=>{
+                    dimensionsClause += `
+                    {
+                        ${memberSetConfig.map(memberConfig=>`
+                            ${this.memberNew(memberConfig)}
+                        `).join(',')}
+                    }
+                    `;
+                    dimensionsClause += ',';
+                });
+            }
+            dimensionsClause = dimensionsClause.slice(0, -1);
 
             const whereClause = slicers.map(slicer=>`
                 ${this.memberNew(slicer)}
@@ -401,7 +422,7 @@ export class OlapEp {
                 }
                 ON 0,
                 Non Empty(
-                    ${crossJoinClause}
+                    ${dimensionsClause}
                 )
                 ON 1
                 FROM ${this.cube}
@@ -419,11 +440,27 @@ export class OlapEp {
                             const treated = rowset.map(r => {
                                 const row = {};
 
-                                crossJoinDimAttr.forEach(dimAttr=>{
-                                    const key = Object.keys(dimAttr.parent).find(k => dimAttr.parent[k]===dimAttr);
-                                    const val = this.parseDim(r, dimAttr);
-                                    row[key] = val;
-                                });
+                                if (dimensions.membersConfigArr) {
+                                    dimensions.membersConfigArr.forEach(membersConfig=>{                                    
+                                        const key = Object.keys(membersConfig.dimAttr.parent).find(k => membersConfig.dimAttr.parent[k]===membersConfig.dimAttr);
+                                        const val = this.parseDim(r, membersConfig.dimAttr);
+                                        row[key] = val;
+                                    });
+                                }
+
+                                if (dimensions.memberConfigArr) {
+                                    dimensions.memberConfigArr.forEach(memberSetConfig=>{
+                                        const sampleMemberConfig = memberSetConfig[0];
+                                        let key, val;
+                                        if (sampleMemberConfig.dimAttr) {
+                                            key = Object.keys(sampleMemberConfig.dimAttr.parent).find(k => sampleMemberConfig.dimAttr.parent[k] === sampleMemberConfig.dimAttr);
+                                            val = this.parseDim(r, sampleMemberConfig.dimAttr);                                        
+                                        } else {
+                                            key = Object.keys(sampleMemberConfig.member.parent.parent.parent).find(k => sampleMemberConfig.member.parent.parent.parent[k] === sampleMemberConfig.member.parent.parent);
+                                            val = this.parseDim(r, sampleMemberConfig.member.parent.parent);
+                                        }
+                                    });
+                                }
 
                                 measures.forEach(measure=>{
                                     const key = Object.keys(measure.parent).find(k => measure.parent[k] === measure);
@@ -464,6 +501,7 @@ export class OlapEp {
     // measure helpers
 
     // dim helpers
+    // deprecated, use membersNew
     private members(dimAttr: any) {
         return `[${dimAttr.parent.parent.path}].[${dimAttr.path}].[${dimAttr.path}].MEMBERS`;
     }
@@ -473,12 +511,17 @@ export class OlapEp {
         return `[${dimAttr.parent.parent.path}].[${dimAttr.path}].&[${member}]`;
     }
 
-    /* memberNew enables slicing directly on a mamber, or b y manually passing the path */
-    private memberNew(slicer: Slicer) {
-        if (slicer.dimAttr) {
-            return `[${slicer.dimAttr.parent.parent.path}].[${slicer.dimAttr.path}].&[${slicer.memberPath}]`;
+    /* membersNew gets a MembersConfig and returns the full members path */
+    private membersNew(membersConfig: MembersConfig) {
+        return `[${membersConfig.dimAttr.parent.parent.path}].[${membersConfig.dimAttr.path}].[${membersConfig.dimAttr.path}].MEMBERS`;
+    }
+
+    /* memberNew gets a MemberConfig and returns the full member path */
+    private memberNew(memberConfig: MemberConfig) {
+        if (memberConfig.dimAttr) {
+            return `[${memberConfig.dimAttr.parent.parent.path}].[${memberConfig.dimAttr.path}].&[${memberConfig.memberPath}]`;
         }
-        return `[${slicer.member.parent.parent.parent.parent.path}].[${slicer.member.parent.parent.path}].&[${slicer.member.path}]`;
+        return `[${memberConfig.member.parent.parent.parent.parent.path}].[${memberConfig.member.parent.parent.path}].&[${memberConfig.member.path}]`;
     }
 
     private parseDim(row: any, dimAttr: any) {
@@ -1246,16 +1289,18 @@ export class OlapEp {
             date: moment.Moment;
             grossPayments: number;
         }[]
-    }> {        
+    }> {
         return this.smartQuery({
             measures: [
                 this.measureGroups.payments.measures.grossPayments
             ],
-            crossJoinDimAttr: [
-                this.dims.businessDateV2.attr.date,
-                this.dims.accounts.attr.accountType,
-                this.dims.accounts.attr.account
-            ],
+            dimensions: {
+                membersConfigArr: [
+                    { dimAttr: this.dims.businessDateV2.attr.date },
+                    { dimAttr: this.dims.accounts.attr.accountType },
+                    { dimAttr: this.dims.accounts.attr.account }
+                ]
+            },
             slicers: [
                 {
                     dimAttr: this.dims.businessDateV2.attr.yearMonth, 
@@ -1291,19 +1336,64 @@ export class OlapEp {
             measures: [
                 this.measureGroups.priceReductions.measures.operational
             ],
-            crossJoinDimAttr: [
-                this.dims.orderTypeV2.attr.orderType,
-                this.dims.waitersV2.attr.waiter,
-                this.dims.ordersV2.attr.orderNumber,
-                this.dims.tables.attr.tableId,
-                this.dims.items.attr.item,
-                this.dims.priceReductions.attr.subType,
-                this.dims.priceReductions.attr.reasonId
-            ],
+            dimensions: {
+                membersConfigArr: [
+                    { dimAttr: this.dims.orderTypeV2.attr.orderType },
+                    { dimAttr: this.dims.waitersV2.attr.waiter },
+                    { dimAttr: this.dims.ordersV2.attr.orderNumber },
+                    { dimAttr: this.dims.tables.attr.tableId },
+                    { dimAttr: this.dims.items.attr.item },
+                    { dimAttr: this.dims.priceReductions.attr.subType },
+                    { dimAttr: this.dims.priceReductions.attr.reasonId }
+                ]
+            },
             slicers: [
                 {
-                    member: this.dims.priceReductions.attr.reasons.members.operational
+                    dimAttr: this.dims.businessDateV2.attr.date,
+                    memberPath: bd.format('YYYYMMDD')
                 },
+                {
+                    member: this.dims.priceReductions.attr.reasons.members.operational
+                }
+            ]
+        });
+    }
+
+    public get_retention_data_by_BusinessDay(bd: moment.Moment): Promise<{
+        orderType: string;
+        source: string;
+        waiter: string;
+        orderNumber: number;
+        tableId: string;
+        item: string;
+        subType: string;
+        reasonId: string;
+        reasons: string;
+        retention: number;
+    }[]> {
+        return this.smartQuery({
+            measures: [
+                this.measureGroups.priceReductions.measures.retention
+            ],
+            dimensions: {
+                membersConfigArr: [
+                    { dimAttr: this.dims.orderTypeV2.attr.orderType },
+                    { dimAttr: this.dims.source.attr.source },
+                    { dimAttr: this.dims.waitersV2.attr.waiter },
+                    { dimAttr: this.dims.ordersV2.attr.orderNumber },
+                    { dimAttr: this.dims.tables.attr.tableId },
+                    { dimAttr: this.dims.items.attr.item },
+                    { dimAttr: this.dims.priceReductions.attr.subType },
+                    { dimAttr: this.dims.priceReductions.attr.reasonId }
+                ],
+                memberConfigArr: [
+                    [
+                        { member: this.dims.priceReductions.attr.reasons.members.retention },
+                        { member: this.dims.priceReductions.attr.reasons.members.operational }
+                    ]
+                ]
+            },
+            slicers: [
                 {
                     dimAttr: this.dims.businessDateV2.attr.date,
                     memberPath: bd.format('YYYYMMDD')
@@ -1311,41 +1401,6 @@ export class OlapEp {
             ]
         });
     }
-
-    // public get_manual_retentions_by_BusinessDay(bd: moment.Moment): Promise<{
-    //     orderType: string;
-    //     source: string;
-    //     orderNumber: number;
-    //     tableId: string;
-    //     item: string;
-    //     subType: string;
-    //     reasonId: string;
-    //     retention: number;
-    // }[]> {
-    //     return this.smartQuery({
-    //         measures: [
-    //             this.measureGroups.priceReductions.measures.retention
-    //         ],
-    //         crossJoinDimAttr: [
-    //             this.dims.orderTypeV2.attr.orderType,
-    //             this.dims.waitersV2.attr.waiter,
-    //             this.dims.ordersV2.attr.orderNumber,
-    //             this.dims.tables.attr.tableId,
-    //             this.dims.items.attr.item,
-    //             this.dims.priceReductions.attr.subType,
-    //             this.dims.priceReductions.attr.reasonId
-    //         ],
-    //         slicers: [
-    //             {
-    //                 member: this.dims.priceReductions.attr.reasons.members.operational
-    //             },
-    //             {
-    //                 dimAttr: this.dims.businessDateV2.attr.date,
-    //                 memberPath: bd.format('YYYYMMDD')
-    //             }
-    //         ]
-    //     });
-    // }
 
 }
 

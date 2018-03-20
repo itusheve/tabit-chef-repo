@@ -5,21 +5,23 @@ import * as _ from 'lodash';
 import { OrderType } from '../../../../tabit/model/OrderType.model';
 
 @Component({
-  selector: 'app-operational-errors-table',
-  templateUrl: './day-operational-errors-table.component.html',
-  styleUrls: ['./day-operational-errors-table.component.scss']
+  selector: 'app-retention-table',
+  templateUrl: './day-retention-table.component.html',
+  styleUrls: ['./day-retention-table.component.scss']
 })
-export class DayOperationalErrorsTableComponent implements OnChanges {
+export class DayRetentionTableComponent implements OnChanges {
   
-  @Input() operationalErrorsData: {
+  @Input() retentionData: {
     orderType: OrderType;
+    source: string;
     waiter: string;
     orderNumber: number;
     tableId: string;
     item: string;
     subType: string;
     reasonId: string;
-    operational: number;
+    reasons: string;
+    retention: number;
   }[];
 
   totalValue: number;
@@ -30,9 +32,9 @@ export class DayOperationalErrorsTableComponent implements OnChanges {
   constructor() {}
 
   ngOnChanges(o: SimpleChanges) {
-    if (o.operationalErrorsData && o.operationalErrorsData.currentValue) {
+    if (o.retentionData && o.retentionData.currentValue) {
 
-      this.totalValue = this.operationalErrorsData.reduce((acc, curr)=>(acc+curr.operational), 0);
+      this.totalValue = this.retentionData.reduce((acc, curr)=>(acc+curr.retention), 0);
 
       this.loading = false;
     }

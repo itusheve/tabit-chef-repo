@@ -23,8 +23,6 @@ import { OrderType } from '../../../tabit/model/OrderType.model';
 })
 export class DayViewComponent implements OnInit  {
   @ViewChild('dayPieChart') dayPieChart;
-  // @ViewChild('daySalesTypeTable') daySalesTypeTable;
-  // @ViewChild('dayShifts') dayShifts;  
 
   day: moment.Moment;  
   daySelectorOptions: {
@@ -92,6 +90,19 @@ export class DayViewComponent implements OnInit  {
     operational: number;
   }[];
 
+  public retentionData: {
+    orderType: OrderType;
+    source: string;
+    waiter: string;
+    orderNumber: number;
+    tableId: string;
+    item: string;
+    subType: string;
+    reasonId: string;
+    reasons: string;
+    retention: number;
+  }[];
+
   constructor(
     private closedOrdersDataService: ClosedOrdersDataService,
     private dataService: DataService,
@@ -156,6 +167,11 @@ export class DayViewComponent implements OnInit  {
         .then(operationalErrorsData=>{
           this.operationalErrorsData = operationalErrorsData;
         });
+
+      this.dataService.get_retention_data_by_BusinessDay(this.day)
+        .then(retentionData => {
+          this.retentionData = retentionData;
+        });        
     });
   } 
 

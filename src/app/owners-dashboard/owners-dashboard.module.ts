@@ -67,6 +67,7 @@ import { DayMostSoldItemsTableComponent } from './day-view/day-most-sold-items-t
 import { DayMostReturnedItemsTableComponent } from './day-view/day-most-returned-items-table/day-most-returned-items-table.component';
 import { DayPaymentsTableComponent } from './day-view/day-payments-table/day-payments-table.component';
 import { DayOperationalErrorsTableComponent } from './day-view/day-operational-errors-table/day-operational-errors-table.component';
+import { DayRetentionTableComponent } from './day-view/day-retention-table/day-retention-table.component';
 
 
 //Load localized messages (English included by default)
@@ -129,6 +130,7 @@ if (environment.locale==='he') {
       DayMostReturnedItemsTableComponent,
       DayPaymentsTableComponent,
       DayOperationalErrorsTableComponent,
+      DayRetentionTableComponent,
       // DaySalesTypeTableComponent,
       // DayDinersTableComponent,
       // DayShiftsComponent,

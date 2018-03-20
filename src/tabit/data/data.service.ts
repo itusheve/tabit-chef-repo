@@ -1416,4 +1416,78 @@ export class DataService {
         });
     }
 
+    /* 
+        returns (VAT-aware) items' retention operations for the BusinessDate (bd)
+    */
+    get_retention_data_by_BusinessDay(bd: moment.Moment): Promise<{
+        orderType: OrderType;
+        source: string;
+        waiter: string;
+        orderNumber: number;
+        tableId: string;
+        item: string;
+        subType: string;
+        reasonId: string;
+        reasons: string;
+        retention: number;
+    }[]> {
+        return new Promise((resolve, reject) => {
+
+            const that = this;
+
+            const data$ = combineLatest(
+                this.vat$,
+                fromPromise(this.olapEp.get_retention_data_by_BusinessDay(bd)),
+                (vat, retentionDataRaw) => Object.assign({}, { retentionDataRaw: retentionDataRaw }, { vat: vat })
+            );
+
+            data$.subscribe(data => {
+
+                // data preparation
+                const retentionData: {
+                    orderType: OrderType;
+                    source: string;
+                    waiter: string;
+                    orderNumber: number;
+                    tableId: string;
+                    item: string;
+                    subType: string;
+                    reasonId: string;
+                    reasons: string;
+                    retention: number;
+                }[] = (function () {
+
+                    // clone raw data
+                    const retentionData: {
+                        orderType: OrderType;
+                        source: string;
+                        waiter: string;
+                        orderNumber: number;
+                        tableId: string;
+                        item: string;
+                        subType: string;
+                        reasonId: string;
+                        reasons: string;
+                        retention: number;
+                    }[] = _.cloneDeep(data.retentionDataRaw).map(o => {
+                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType];
+                        return o;
+                    });
+
+                    // be VAT aware
+                    if (!data.vat) {
+                        retentionData.forEach(tuple => {
+                            tuple.retention = tuple.retention / 1.17;
+                        });
+                    }
+
+                    return retentionData;
+                }());
+
+                resolve(retentionData);
+            });
+
+        });
+    }
+
 }
