@@ -1,0 +1,64 @@
+<div class="flex f-rtl d-col">
+    <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+    <div class="flex d-col" *ngIf="!loading">
+        <div class="title">
+            <ng-container i18n="@@operationalErrors">Operational Errors</ng-container>&nbsp;-&nbsp;<ng-container i18n="@@operationalErrorsByWaiter">Item Returns, OTH and Discounts by Waiter</ng-container>
+        </div>
+        <div class="title">
+            {{operationalErrorsData.length}}&nbsp;<ng-container i18n="@@actionsWorth">Actions worth</ng-container>&nbsp;{{totalValue | curr:'0'}}
+        </div>
+        <div class="flex d-col body">
+            <table class="fixedWidth">
+                <tr class="header">
+                    <td i18n="@@waiter">Waiter</td>
+                    <td style="width:42px" i18n="@@table">Table</td>
+                    <td style="width:42px" i18n="@@order">Order</td>
+                    <td i18n="@@item">Item</td>
+                    <td style="width:42px" i18n="@@amount">Amount</td>
+                    <td i18n="@@type">Type</td>
+                    <td i18n="@@reason">Reason</td>
+                </tr>
+                <tr class="" *ngFor="let tuple of operationalErrorsData">
+                    <td>{{tuple.waiter}}</td>
+                    <td 
+                        *ngIf="tuple.tableId!==''">{{tuple.tableId}}</td>
+                    <td 
+                        *ngIf="tuple.tableId==='' && tuple.orderType && tuple.orderType.id" 
+                        i18n="@@orderTypeSelect2">{ tuple.orderType.id, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange
+                        {Media Exchange} }</td>
+                    <td>{{tuple.orderNumber}}</td>
+                    <td>{{tuple.item}}</td>
+                    <td>{{tuple.operational | curr:'0'}}</td>
+                    <td>{{tuple.subType}}</td>
+                    <td>{{tuple.reasonId}}</td>
+                </tr>
+            </table>
+            <!-- 
+            <table class="fixedWidth">
+                <tr class="totalRow">
+                    <td i18n="@@totalPayments">Total Payments</td>
+                    <td>{{data.totalPayments.today | curr:'1':'':'nullify'}}</td>
+                    <td class="pctCell">{{data.totalPayments.todayPct | pct:'1':'nullify'}}</td>
+                    <td>{{data.totalPayments.mtd | curr:'1':'':'nullify'}}</td>
+                    <td class="pctCell">{{data.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
+                </tr>
+            </table>
+            <table class="fixedWidth" *ngFor="let accountTypeData of data.byAccountType">
+                <tr class="accountTypeRow">
+                    <td>{{accountTypeData.accountType}}</td>
+                    <td>{{accountTypeData.totalPayments.today | curr:'1':'':'nullify'}}</td>
+                    <td class="pctCell">{{accountTypeData.totalPayments.todayPct | pct:'1':'nullify'}}</td>
+                    <td>{{accountTypeData.totalPayments.mtd | curr:'1':'':'nullify'}}</td>
+                    <td class="pctCell">{{accountTypeData.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
+                </tr>
+                <tr *ngFor="let accountData of accountTypeData.byAccount" class="accountRow">
+                    <td>{{accountData.account}}</td>
+                    <td>{{accountData.totalPayments.today | curr:'1':'':'nullify'}}</td>
+                    <td class="pctCell">{{accountData.totalPayments.todayPct | pct:'1':'nullify'}}</td>
+                    <td>{{accountData.totalPayments.mtd | curr:'1':'':'nullify'}}</td>
+                    <td class="pctCell">{{accountData.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
+                </tr>
+            </table> -->
+        </div>
+    </div>
+</div>

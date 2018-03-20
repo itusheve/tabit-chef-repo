@@ -32,7 +32,7 @@
       </trans-unit>   
       <trans-unit id="payments" datatype="html">
         <source>Payments</source>
-      <target>תשלומים</target>
+        <target>תשלומים</target>
       </trans-unit>   
       <trans-unit id="payment" datatype="html">
         <source>Payment</source>
@@ -44,11 +44,19 @@
       </trans-unit>    
       <trans-unit id="monthlyTotal" datatype="html">
         <source>Monthly Total</source>
-      <target>סכום חודשי</target>
+        <target>סכום חודשי</target>
+      </trans-unit>
+      <trans-unit id="amount" datatype="html">
+        <source>Amount</source>
+        <target>סכום</target>
       </trans-unit>        
       <trans-unit id="sold" datatype="html">
         <source>Sold</source>
         <target>נמכר</target>
+      </trans-unit>   
+      <trans-unit id="actionsWorth" datatype="html">
+        <source>Actions worth</source>
+        <target>פעולות בשווי</target>
       </trans-unit>   
       <trans-unit id="prepared" datatype="html">
         <source>Prepared</source>
@@ -58,6 +66,14 @@
         <source>Returned</source>
         <target>הוחזר</target>
       </trans-unit>  
+      <trans-unit id="operationalErrors" datatype="html">
+        <source>Operational Errors</source>
+        <target>תקלות תפעול</target>
+      </trans-unit>
+      <trans-unit id="operationalErrorsByWaiter" datatype="html">
+        <source>Item Returns, OTH and Discounts by Waiter</source>
+        <target>החזר פריטים, OTH והנחות לפי מלצר</target>
+      </trans-unit>
       <trans-unit id="operationalReductionsValue" datatype="html">
         <source>Operational Reductions Value</source>
         <target>שווי תקלות תפעול</target>
@@ -240,7 +256,9 @@
       <trans-unit id="orderTypeSelect" datatype="html">
         <target>{ key.id, select, seated {בישיבה} counter {דלפק} ta {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
       </trans-unit>
-
+      <trans-unit id="orderTypeSelect2" datatype="html">
+        <target>{ tuple.orderType.id, select, seated {בישיבה} counter {דלפק} ta {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
+      </trans-unit>
       <trans-unit id="revenue" datatype="html">
         <source>Revenue</source>
         <target>הכנסות</target>
@@ -345,6 +363,10 @@
         <note priority="1" from="description">הזמנה מס'</note>
         <note priority="1" from="meaning">day-orders-table</note>
       </trans-unit>
+      <trans-unit id="order" datatype="html">
+        <source>Order</source>
+        <target>הזמנה</target>
+      </trans-unit>      
       <trans-unit id="waiter" datatype="html">
         <source>Waiter</source>
         <target>מלצר</target>
@@ -361,7 +383,7 @@
       </trans-unit>
       <trans-unit id="sales" datatype="html">
         <source>סכום</source>
-        <target></target>
+        <target>סכום</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/owners-dashboard/day-view/day-orders-table/day-orders-table.component.ts</context>
           <context context-type="linenumber">42</context>
@@ -755,6 +777,14 @@
         <note priority="1" from="description">סוג</note>
         <note priority="1" from="meaning">details</note>
       </trans-unit>
+      <trans-unit id="type" datatype="html">
+        <source>Type</source>
+        <target>סוג</target>
+      </trans-unit>      
+      <trans-unit id="reason" datatype="html">
+        <source>Reason</source>
+        <target>סיבה</target>
+      </trans-unit>      
       <trans-unit id="waiterOwner" datatype="html">
         <source>Waiter / Owner</source>
         <target>מלצר / אחראי</target>

@@ -14,6 +14,7 @@ import { Order } from '../../../tabit/model/Order.model';
 import { ClosedOrdersDataService } from '../../../tabit/data/dc/closedOrders.data.service';
 import { Shift } from '../../../tabit/model/Shift.model';
 import { Department } from '../../../tabit/model/Department.model';
+import { OrderType } from '../../../tabit/model/OrderType.model';
 
 @Component({
   selector: 'app-day-view',
@@ -80,6 +81,17 @@ export class DayViewComponent implements OnInit  {
     }[]
   };
 
+  public operationalErrorsData: {
+    orderType: OrderType;
+    waiter: string;
+    orderNumber: number;
+    tableId: string;
+    item: string;
+    subType: string;
+    reasonId: string;
+    operational: number;
+  }[];
+
   constructor(
     private closedOrdersDataService: ClosedOrdersDataService,
     private dataService: DataService,
@@ -139,6 +151,11 @@ export class DayViewComponent implements OnInit  {
       this.dataService.getPaymentsData(moment(this.day).startOf('month'), moment(this.day))
         .then(paymentsData=>{
           this.paymentsData = paymentsData;
+        });
+        
+      this.dataService.get_operational_errors_by_BusinessDay(this.day)
+        .then(operationalErrorsData=>{
+          this.operationalErrorsData = operationalErrorsData;
         });
     });
   } 

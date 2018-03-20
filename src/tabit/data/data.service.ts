@@ -1348,5 +1348,72 @@ export class DataService {
             });
     }
 
+    /* 
+        returns (VAT-aware) items' operational errors for the BusinessDate (bd)
+    */
+    get_operational_errors_by_BusinessDay(bd: moment.Moment): Promise<{
+        orderType: OrderType;
+        waiter: string;
+        orderNumber: number;
+        tableId: string;
+        item: string;
+        subType: string;
+        reasonId: string;
+        operational: number;
+    }[]> {
+        return new Promise((resolve, reject) => {
+
+            const that = this;
+
+            const data$ = combineLatest(
+                this.vat$,
+                fromPromise(this.olapEp.get_operational_errors_by_BusinessDay(bd)),
+                (vat, operationalErrorsDataRaw) => Object.assign({}, { operationalErrorsDataRaw: operationalErrorsDataRaw }, { vat: vat })
+            );
+
+            data$.subscribe(data => {
+                
+                // data preparation
+                const operationalErrorsData: {
+                    orderType: OrderType;
+                    waiter: string;
+                    orderNumber: number;
+                    tableId: string;
+                    item: string;
+                    subType: string;
+                    reasonId: string;
+                    operational: number;                    
+                }[] = (function () {
+                    
+                    // clone raw data
+                    const operationalErrorsData: {
+                        orderType: OrderType;
+                        waiter: string;
+                        orderNumber: number;
+                        tableId: string;
+                        item: string;
+                        subType: string;
+                        reasonId: string;
+                        operational: number;
+                    }[] = _.cloneDeep(data.operationalErrorsDataRaw).map(o => {
+                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType];
+                        return o;
+                    });
+
+                    // be VAT aware
+                    if (!data.vat) {
+                        operationalErrorsData.forEach(tuple => {
+                            tuple.operational = tuple.operational / 1.17;
+                        });
+                    }
+
+                    return operationalErrorsData;
+                }());
+
+                resolve(operationalErrorsData);
+            });
+
+        });
+    }
 
 }
