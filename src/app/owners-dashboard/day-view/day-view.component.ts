@@ -51,11 +51,34 @@ export class DayViewComponent implements OnInit  {
   public KPIs: BusinessDayKPIs;
   
   public salesBySubDepartment: {
-    totalSales: number;
-    bySubDepartment: {
-      subDepartment: string;
-      sales: number
-    }[]
+    thisBd: {
+      totalSales: number;
+      bySubDepartment: {
+        subDepartment: string;
+        sales: number
+      }[]
+    },
+    thisWeek: {
+      totalSales: number;
+      bySubDepartment: {
+        subDepartment: string;
+        sales: number
+      }[]
+    },
+    thisMonth: {
+      totalSales: number;
+      bySubDepartment: {
+        subDepartment: string;
+        sales: number
+      }[]
+    },
+    thisYear: {
+      totalSales: number;
+      bySubDepartment: {
+        subDepartment: string;
+        sales: number
+      }[]
+    }
   };
   
   public itemsData: {
@@ -140,7 +163,6 @@ export class DayViewComponent implements OnInit  {
       //this.closedOrdersDataService.getOrders(this.day, {withPriceReductions: true})
       this.closedOrdersDataService.getOrders(this.day)
         .then((orders: Order[]) => {
-          debugger;
           this.orders = orders;
         });
 
@@ -149,9 +171,19 @@ export class DayViewComponent implements OnInit  {
           this.KPIs = KPIs;
         });
 
-      this.dataService.get_Sales_by_SubDepartment_for_BusinessDate(this.day)
+      Promise.all([
+        this.dataService.get_Sales_by_SubDepartment_for_BusinessDate(this.day, this.day),
+        this.dataService.get_Sales_by_SubDepartment_for_BusinessDate(moment(this.day).startOf('week'), this.day),
+        this.dataService.get_Sales_by_SubDepartment_for_BusinessDate(moment(this.day).startOf('month'), this.day),
+        this.dataService.get_Sales_by_SubDepartment_for_BusinessDate(moment(this.day).startOf('year'), this.day)
+      ])
         .then(data=>{
-          this.salesBySubDepartment = data;
+          this.salesBySubDepartment = {
+            thisBd: data[0],
+            thisWeek: data[1],
+            thisMonth: data[2],
+            thisYear: data[3]
+          };
         });
 
       this.dataService.get_Items_data_for_BusinessDate(this.day)

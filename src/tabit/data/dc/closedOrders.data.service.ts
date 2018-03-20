@@ -1788,7 +1788,6 @@ export class ClosedOrdersDataService {
                 //     _status
                 // );
 
-                // debugger;
 
                 // if (_status === "closed" && orederResult.checks !== undefined && orederResult.checks.length > 0) {
 
@@ -2145,9 +2144,8 @@ export class ClosedOrdersDataService {
                     order_.isTaxExempt = printDataOld.isTaxExempt;
                 }
 
-                debugger;
                 order_.users = orderOld.OrderUsers;
-
+                
                 return {
                     order: order_,
                     orderOld: orderOld,

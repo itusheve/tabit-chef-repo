@@ -1071,7 +1071,10 @@ export class DataService {
     /* 
         returns (VAT-aware) Sales by SubDepartment for the BusinessDate (bd)
      */
-    get_Sales_by_SubDepartment_for_BusinessDate(bd: moment.Moment): Promise<{
+    get_Sales_by_SubDepartment_for_BusinessDate(
+        fromBusinessDate: moment.Moment,
+        toBusinessDate: moment.Moment
+    ): Promise<{
         totalSales: number;
         bySubDepartment: {
             subDepartment: string;
@@ -1084,7 +1087,7 @@ export class DataService {
 
             const data$ = combineLatest(
                 this.vat$,
-                fromPromise(this.olapEp.get_Sales_by_Sub_Departmernt(bd)),
+                fromPromise(this.olapEp.get_Sales_by_Sub_Departmernt(fromBusinessDate, toBusinessDate)),
                 (vat, salesBySubDepartmentRaw) => Object.assign({}, { salesBySubDepartmentRaw: salesBySubDepartmentRaw }, { vat: vat })
             );
 

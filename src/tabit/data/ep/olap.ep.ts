@@ -1160,7 +1160,7 @@ export class OlapEp {
 
     }
 
-    public get_Sales_by_Sub_Departmernt(day: moment.Moment): Promise<{
+    public get_Sales_by_Sub_Departmernt(fromBusinessDate: moment.Moment, toBusinessDate): Promise<{
         subDepartment: string,
         sales: number
     }[]> {
@@ -1177,7 +1177,7 @@ export class OlapEp {
                 } ON 1
                 FROM ${this.cube}
                 WHERE (
-                    ${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${day.format('YYYYMMDD')}]
+                    {${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${fromBusinessDate.format('YYYYMMDD')}]:${this.dims.BusinessDate.hierarchy}.${this.dims.BusinessDate.dims.date}.&[${toBusinessDate.format('YYYYMMDD')}]}
                 )
             `;
 

@@ -6,18 +6,43 @@
             <table class="fixedWidth" *ngIf="data">
                 
                 <tr class="header">
-                    <td i18n="@@category">Category</td>
-                    <td i18n="@@sales2">Sales</td>
+                    <td style="width:60px;" i18n="@@category">Category</td>
+                    <td>{{bd | date:'dd/MM/yyyy'}}</td>
+                    <td i18n="@@thisWeek">This Week</td>
+                    <td i18n="@@thisMonth">This Month</td>
+                    <td i18n="@@thisYear">This Year</td>
                 </tr>
                 
                 <tr>
-                    <td i18n="@@total">Total</td>
-                    <td>{{data.totalSales | curr:'0'}} ({{1 | percent:'1.2-2'}})</td>
+                    <td style="width:60px;" i18n="@@total">Total</td>
+                    <td>{{data.totalSales.thisBdSales | curr:'0'}} ({{1 | percent:'1.2-2'}})</td>
+                    <td>{{data.totalSales.thisWeekSales | curr:'0'}} ({{1 | percent:'1.2-2'}})</td>
+                    <td>{{data.totalSales.thisMonthSales | curr:'0'}} ({{1 | percent:'1.2-2'}})</td>
+                    <td>{{data.totalSales.thisYearSales | curr:'0'}} ({{1 | percent:'1.2-2'}})</td>
                 </tr>
     
-                <tr *ngFor="let tuple of data.bySubDepartment">
-                    <td>{{tuple.subDepartment}}</td>
-                    <td>{{tuple.sales | curr:'0'}} <span style="font-size:smaller">({{tuple.pct | percent:'1.2-2'}})</span></td>
+                <tr *ngFor="let o of data.bySubDepartment">
+                    <td style="width:60px;">{{o.subDepartment}}</td>
+                    <td>
+                        <span *ngIf="o['data']['thisBd']">{{o['data']['thisBd']['sales'] | curr:'0'}} 
+                            <span style="font-size:smaller">({{o['data']['thisBd']['pct'] | percent:'1.2-2'}})</span>
+                        </span>
+                    </td>
+                    <td>
+                        <span *ngIf="o['data']['thisWeek']">{{o['data']['thisWeek']['sales'] | curr:'0'}}
+                            <span style="font-size:smaller">({{o['data']['thisWeek']['pct'] | percent:'1.2-2'}})</span>
+                        </span>
+                    </td>
+                    <td>
+                        <span *ngIf="o['data']['thisMonth']">{{o['data']['thisMonth']['sales'] | curr:'0'}}
+                            <span style="font-size:smaller">({{o['data']['thisMonth']['pct'] | percent:'1.2-2'}})</span>
+                        </span>
+                    </td>
+                    <td>
+                        <span *ngIf="o['data']['thisYear']">{{o['data']['thisYear']['sales'] | curr:'0'}}
+                            <span style="font-size:smaller">({{o['data']['thisYear']['pct'] | percent:'1.2-2'}})</span>
+                        </span>
+                    </td>
                 </tr>
     
             </table>

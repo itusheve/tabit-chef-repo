@@ -2,6 +2,18 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="thisWeek" datatype="html">
+        <source>This Week</source>
+        <target>השבוע</target>
+      </trans-unit>
+      <trans-unit id="thisMonth" datatype="html">
+        <source>This Month</source>
+        <target>החודש</target>
+      </trans-unit>
+      <trans-unit id="thisYear" datatype="html">
+        <source>This Year</source>
+        <target>השנה</target>
+      </trans-unit>    
       <trans-unit id="department" datatype="html">
         <source>Department</source>
         <target>מחלקה</target>
