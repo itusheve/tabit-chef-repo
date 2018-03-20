@@ -20,18 +20,18 @@ export interface SlipVM {
   templateUrl: './order-view.component.html',
   styleUrls: ['./order-view.component.scss']
 })
-export class OrderViewComponent implements OnInit  {
+export class OrderViewComponent implements OnInit {
 
   @Input() tlogId: string;
 
   show = false;
 
-  order: Order;  
+  order: Order;
   orderOld: any;
   printDataOld: any;
   ORDERS_VIEW: any;
 
-  
+
   //<!-- https://github.com/angular/material2/issues/5269 -->
   // selectedTabIndex;
 
@@ -41,20 +41,19 @@ export class OrderViewComponent implements OnInit  {
   ) {
     this.ORDERS_VIEW = ORDERS_VIEW;
   }
-  
+
   ngOnInit() {
 
     this.route.paramMap
-      .subscribe((params: ParamMap) => { 
+      .subscribe((params: ParamMap) => {
         const dateStr = params.get('businessDate');
-        
-        this.closedOrdersDataService.getOrder(dateStr, this.tlogId, {enriched: true})
-          .then((o:{
+
+        this.closedOrdersDataService.getOrder(dateStr, this.tlogId, { enriched: true })
+          .then((o: {
             order: Order,
             orderOld: any,
             printDataOld: any
-          })=>{
-
+          }) => {
             const order = o.order;
             const orderOld = o.orderOld;
             const printDataOld = o.printDataOld;

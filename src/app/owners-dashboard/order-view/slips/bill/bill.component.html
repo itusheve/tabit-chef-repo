@@ -6,7 +6,7 @@
         
         <div 
             class="row offer-line" 
-            *ngFor="let item of printDataOld.items" 
+            *ngFor="let item of printDataOld.data.items" 
             [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}"
             >
             <div class="col-1">{{item.qty}}</div>
@@ -18,7 +18,7 @@
         <br/>
         <div 
             class="row offer-line" 
-            *ngFor="let item of printDataOld.oth" 
+            *ngFor="let item of printDataOld.data.oth" 
             [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}"
             >
             <div class="col-1">{{item.qty}}</div>
@@ -53,7 +53,7 @@
 
         <div 
             class="row" 
-            *ngFor="let total of printDataOld.totals" 
+            *ngFor="let total of printDataOld.data.totals" 
             [ngClass]="{'tax': total.type === 'exclusive_tax', 'pr_discountsAndOTH': total._priceReductions?.discountsAndOTH}"
             >
             <div 
@@ -68,7 +68,7 @@
         <hr/>
         
         <div>
-            <div *ngFor="let payment of printDataOld.payments">
+            <div *ngFor="let payment of printDataOld.data.payments">
                 <div class="row" [ngClass]="{'change': payment.type === 'change', 'tax': payment.type === 'inclusive_tax'}">
                     <div class="col-8" [ngClass]="{'title': payment.type === 'inclusive_tax'}">{{payment.name}}</div>
                     <div class="col-3">

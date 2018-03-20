@@ -28,6 +28,9 @@
         "styles.scss"
       ],
       "scripts": [
+        "./js/lib/OrderView_v1/OrderView.js",
+        "./js/lib/OrderView_v1/Translate.js",
+        "./js/lib/OrderView_v1/Utils.js",
         "./js/vendor/rpbouman-xmla4j/xmla-min.js",
         "./js/xmla4j-wrapper.class.js",
         "../node_modules/moment-timezone/builds/moment-timezone-with-data-2012-2022.min.js"
@@ -65,7 +68,6 @@
   },
   "defaults": {
     "styleExt": "scss",
-    "component": {
-    }
+    "component": {}
   }
 }

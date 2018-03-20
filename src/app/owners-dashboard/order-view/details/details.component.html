@@ -104,6 +104,8 @@
 
     <!--end general 2 details start-->
 
+
+
     <!--start timeline-->
     <mat-accordion class="mb20">
         <mat-expansion-panel>
@@ -127,7 +129,7 @@
                         <td *ngIf="isUS">{{ row.at | date : 'MM/dd/yyyy HH:mm:ss a' }}</td>
                         <td style="text-transform: capitalize;">{{ row.action }}</td>
                         <td>{{ row.data }}</td>
-                        <td>{{ row.by?.fullName }}</td>
+                        <td>{{ row.by }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -243,7 +245,7 @@
                     {{ ORDERSVIEW.discounts }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table *ngIf="orderOld.orderedDiscounts?.length">
+            <table *ngIf="orderOld.PaymentsTimeLine?.length">
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.discount_type }}</th>
@@ -252,14 +254,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let discount of orderOld.orderedDiscounts">
+                    <tr *ngFor="let discount of orderOld.PaymentsTimeLine">
                         <td>{{discount.discountType}}</td>
                         <td class="curr2">{{discount.discountAmount | curr:'2':'cents'}}</td>
                         <td>{{discount.reason?.name}}</td>
                     </tr>
                 </tbody>
             </table>
-            <p *ngIf="!orderOld.orderedDiscounts || !orderOld.orderedDiscounts.length">{{ ORDERSVIEW.no_discounts }}</p>
+            <p *ngIf="!orderOld.PaymentsTimeLine || !orderOld.PaymentsTimeLine.length">{{ ORDERSVIEW.no_discounts }}</p>
         </mat-expansion-panel>
     </mat-accordion>
 
