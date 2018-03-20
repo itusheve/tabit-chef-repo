@@ -68,6 +68,9 @@ const OrderViewService = (function () {
         TransTypes: {
             Reversal: "Reversal",
             Return: "Return"
+        },
+        Sources: {
+            TabitPay: "tabitPay"
         }
     }
 
@@ -497,16 +500,22 @@ const OrderViewService = (function () {
         function _resolveUserName(user) {
             let _result = 'None';
 
-            let _user = _users.find(c => c._id === user);
-            if (_user) {
-                return `${_user.firstName} ${_user.lastName}`;
+            if (_users && _users.length > 0) {
+                let _user = _users.find(c => c._id === user);
+                if (_user) {
+                    return `${_user.firstName} ${_user.lastName}`;
+                }
             }
 
             return _result;
         }
 
         function _resolveUser(user) {
-            return _users.find(c => c._id === user);
+            if (_users && _users.length > 0) {
+                return _users.find(c => c._id === user);
+            }
+            console.log("missing users");
+            return undefined;
         }
 
         function _resolveClubMembers(order) {
@@ -964,6 +973,9 @@ const OrderViewService = (function () {
                         if (payment.creditCardBrand === 'tabit') {
                             value = "TabitPay";
                         }
+                        if (payment.source === Enums.Sources.TabitPay) {
+                            value += " (Tabit Pay)";
+                        }
                         result.push({ value: value });
                     }
                 }
@@ -1420,6 +1432,10 @@ const OrderViewService = (function () {
                 this.faceValue = payment.faceValue;
                 this.tipAmount = payment.change ? payment.change.amount : '';
                 this.quantity = payment.auxIntent ? payment.auxIntent.quantity : ''; //auxIntent.quantity
+
+                if (payment.source === Enums.Sources.TabitPay) {
+                    this.methodName += " (Tabit Pay)";
+                }
             }
 
             let result = [];
