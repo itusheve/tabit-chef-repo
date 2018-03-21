@@ -98,6 +98,40 @@
         <source>Manual Operations by Waiter</source>
         <target>פעולות ידניות לפי מלצר</target>
       </trans-unit>        
+      <trans-unit id="monthlyReport" datatype="html">
+        <source>Monthly Report</source>
+        <target>דו"ח חודשי</target>
+      </trans-unit>
+
+      <trans-unit id="businessDay" datatype="html">
+        <source>Business Day</source>
+        <target>יום עסקים</target>
+      </trans-unit>        
+      <trans-unit id="netSales" datatype="html">
+        <source>Net Sales</source>
+        <target>מכירות נטו</target>
+      </trans-unit>        
+      <trans-unit id="ppd" datatype="html">
+        <source>Pay Per Diner</source>
+        <target>ממוצע לסועד</target>
+      </trans-unit>        
+      <trans-unit id="cancellationsValue" datatype="html">
+        <source>Cancellations Value</source>
+        <target>שווי ביטולים</target>
+      </trans-unit>        
+      <trans-unit id="operationalErrorsValue" datatype="html">
+        <source>Operational Errors Value</source>
+        <target>שווי תקלות תפעול</target>
+      </trans-unit>   
+      <trans-unit id="retentionValue" datatype="html">
+        <source>Retention Value</source>
+        <target>שווי שימור ושיווק</target>
+      </trans-unit>        
+      <trans-unit id="organizationalValue" datatype="html">
+        <source>Employees &amp; Owners</source>
+        <target>עובדים ובעלים</target>
+      </trans-unit>
+
       <trans-unit id="noData" datatype="html">
         <source>No Data</source>
         <target>אין נתונים</target>
@@ -292,42 +326,10 @@
       <trans-unit id="total" datatype="html">
         <source>Total</source>
         <target>סה"כ</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/day-view/day-sales-type-table/day-sales-type-table.component.ts</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/day-view/day-sales-type-table/day-sales-type-table.component.ts</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/day-view/day-diners-table/day-diners-table.component.ts</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-        <note priority="1" from="description">סה"כ</note>
-        <note priority="1" from="meaning">day-sales-type-table</note>
       </trans-unit>
       <trans-unit id="diners" datatype="html">
         <source>Diners</source>
         <target>סועדים</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/day-view/day-diners-table/day-diners-table.component.ts</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/day-view/day-diners-table/day-diners-table.component.ts</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/slips.component.ts</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/details/details.component.ts</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-        <note priority="1" from="description">סועדים</note>
-        <note priority="1" from="meaning">day-diners-table</note>
       </trans-unit>
       <trans-unit id="dinersSales" datatype="html">
         <source>Diners Sales</source>

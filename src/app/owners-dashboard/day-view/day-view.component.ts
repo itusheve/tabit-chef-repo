@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataService, BusinessDayKPI, BusinessDayKPIs } from '../../../tabit/data/data.service';
+import { DataService, BusinessDayKPI, BusinessDayKPIs, CustomRangeKPI } from '../../../tabit/data/data.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import * as moment from 'moment';
@@ -126,6 +126,12 @@ export class DayViewComponent implements OnInit  {
     retention: number;
   }[];
 
+  public mtdBusinessDaysKPIs: {
+    [index: string]: BusinessDayKPI
+  };
+
+  public mtdKPIs: CustomRangeKPI;
+
   constructor(
     private closedOrdersDataService: ClosedOrdersDataService,
     private dataService: DataService,
@@ -204,7 +210,17 @@ export class DayViewComponent implements OnInit  {
       this.dataService.get_retention_data_by_BusinessDay(this.day)
         .then(retentionData => {
           this.retentionData = retentionData;
+        });     
+              
+      Promise.all([
+        this.dataService.getBusinessDaysKPIs(moment(this.day).startOf('month'), moment(this.day)),
+        this.dataService.getCustomRangeKPI(moment(this.day).startOf('month'), moment(this.day))
+      ])
+        .then(data => {
+          this.mtdBusinessDaysKPIs = data[0];
+          this.mtdKPIs = data[1];
         });        
+
     });
   } 
 

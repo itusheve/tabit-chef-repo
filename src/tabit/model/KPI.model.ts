@@ -9,7 +9,34 @@ export class KPI {
         ppa: number;//calc', :=diners sales / diners count
     };
 
-    constructor(sales:number, dinersCount:number, dinersSales:number) {
+    //FYI! the difference between the order model pricereduction calculation and the KPI ones - 
+    // looks like Order model's "cancellation" :== KPIs "cancellation" + "operational"
+    
+    //from order model:
+    // _priceReductions: {
+    //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
+    //     discountsAndOTH: false,//{dim:retention,measure:retention}  heb: שימור ושיווק
+    //     employees: false,//{dim:organizational,measure:organizational}  heb: עובדים
+    //     promotions: false,//{dim:promotions,measure:retention}  heb: מבצעים            
+    // }
+
+    //nest all under reductions?
+    reductions?: {
+        cancellation?: number;//"שווי ביטולים" {measure: Tlog Pricereductions Cancellation Amount}
+        cancellation_pct?: number;
+        
+        retention?: number;//"שווי שימור ושיווק" {measure: Tlog Pricereductions Retention Discount Amount}
+        retention_pct?: number;
+        
+        operational?: number;//"שווי תקלות תפעול" {measure: Tlog Pricereductions Operational Discount Amount}
+        operational_pct?: number;
+    
+        organizational?: number;//"עובדים ובעלים", {measure: Tlog Pricereductions Organizational Discount Amount}
+        organizational_pct?: number;
+    };
+
+    // auto ppa calculation is performed iff dinersCount & dinersSales are provided
+    constructor(sales?:number, dinersCount?:number, dinersSales?:number) {
         this.sales = sales;
         const ppa = dinersCount ? dinersSales / dinersCount : undefined;
         this.diners = {

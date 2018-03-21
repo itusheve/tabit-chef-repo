@@ -73,7 +73,7 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
   constructor( ) {}
 
   ngOnChanges(o: SimpleChanges) {
-    if (o.salesBySubDepartment.currentValue) {      
+    if (o.salesBySubDepartment && o.salesBySubDepartment.currentValue) {      
       const clone: {
         thisBd: {
           totalSales: number;

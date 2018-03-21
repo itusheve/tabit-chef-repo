@@ -13,6 +13,10 @@ interface MemberConfig {
     member?: any;
     dimAttr?: any;
     memberPath?: any;
+    range?: {
+        from: string;
+        to: string;
+    };
 }
 
 interface MembersConfig {
@@ -68,6 +72,10 @@ export class OlapEp {
                 dinersCount: {//"סועדים"
                     path: 'PPADinersSeated',
                     type: 'number'
+                },
+                dinersPPA: {//"ממוצע לסועד"
+                    path: 'PPA Seated',
+                    type: 'number'
                 }
             }
         },
@@ -85,6 +93,18 @@ export class OlapEp {
                 },
                 returned: {//"הוחזר"
                     path: 'Tlog Items Return'
+                },
+                takalotTiful_value_pct: {//"% תקלות תפעול"
+                    path: '%ShoviTakalotTiful'                    
+                },
+                shimurShivuk_value_pct: {//"% שימור ושיווק"
+                    path: '%ShoviShimurShivuk'
+                },
+                shoviIrguni_value_pct: {//"% ארוחות עובדים"
+                    path: '%ShoviIrguni'
+                },
+                cancelled_value_pct: {//"% ביטול כספי"
+                    path: '%CancelledAmount'
                 }
             }
         },
@@ -94,12 +114,12 @@ export class OlapEp {
                     path: 'Tlog Pricereductions Cancellation Amount',
                     type: 'number'
                 },
-                operational: {//"שווי תקלות תפעול"
-                    path: 'Tlog Pricereductions Operational Discount Amount',
-                    type: 'number'
-                },
                 retention: {
                     path: 'Tlog Pricereductions Retention Discount Amount',
+                    type: 'number'
+                },
+                operational: {//"שווי תקלות תפעול"
+                    path: 'Tlog Pricereductions Operational Discount Amount',
                     type: 'number'
                 },
                 organizational: {
@@ -214,6 +234,9 @@ export class OlapEp {
                 },
                 yearMonth: {//"שנה חודש"   e.g. 201803, 201812
                     path: 'Year Month Key'
+                },
+                dayOfWeek: {//יום בשבוע e.g. ראשון
+                    path: 'Dayofweek Key'
                 }
             }
         },
@@ -420,11 +443,14 @@ export class OlapEp {
                 {
                     ${measuresClause}
                 }
-                ON 0,
+                ON 0
+                ${dimensionsClause!=='' ? `
+                ,
                 Non Empty(
                     ${dimensionsClause}
                 )
                 ON 1
+                ` : ''}
                 FROM ${this.cube}
                 WHERE(
                     ${whereClause}
@@ -519,7 +545,15 @@ export class OlapEp {
     /* memberNew gets a MemberConfig and returns the full member path */
     private memberNew(memberConfig: MemberConfig) {
         if (memberConfig.dimAttr) {
-            return `[${memberConfig.dimAttr.parent.parent.path}].[${memberConfig.dimAttr.path}].&[${memberConfig.memberPath}]`;
+            if (memberConfig.range) {
+                return `
+                    [${memberConfig.dimAttr.parent.parent.path}].[${memberConfig.dimAttr.path}].&[${memberConfig.range.from}]
+                    :
+                    [${memberConfig.dimAttr.parent.parent.path}].[${memberConfig.dimAttr.path}].&[${memberConfig.range.to}]
+                `;
+            } else {
+                return `[${memberConfig.dimAttr.parent.parent.path}].[${memberConfig.dimAttr.path}].&[${memberConfig.memberPath}]`;
+            }
         }
         return `[${memberConfig.member.parent.parent.parent.parent.path}].[${memberConfig.member.parent.parent.path}].&[${memberConfig.member.path}]`;
     }
@@ -551,6 +585,7 @@ export class OlapEp {
         }
     }
 
+    // DEPRECATED, use get_monthly_summary_data_per_month instead
     public get monthlyData(): ReplaySubject<any> {//TODO EP shouldnt hold data. its just plummings. data service should do it.
         if (this.monthlyData$) return this.monthlyData$;
         this.monthlyData$ = new ReplaySubject<any>();
@@ -1402,55 +1437,137 @@ export class OlapEp {
         });
     }
 
+    public get_kpi_data_business_day_resolution(month: moment.Moment): Promise<{
+        [index: string]: {
+            date: moment.Moment;
+            dayOfWeek: string;
+            
+            sales: number;
+            dinersCount: number;
+            dinersPPA: number;
+
+            cancellation: number;
+            cancelled_value_pct: number;
+
+            retention: number;
+            shimurShivuk_value_pct: number;
+
+            operational: number;
+            takalotTiful_value_pct: number;
+
+            organizational: number;
+            shoviIrguni_value_pct: number;
+        }
+    }> {
+        return this.smartQuery({
+            measures: [
+                this.measureGroups.general.measures.sales,
+                this.measureGroups.general.measures.dinersCount,
+                this.measureGroups.general.measures.dinersPPA,
+                
+                this.measureGroups.priceReductions.measures.operational,                
+                this.measureGroups.items.measures.takalotTiful_value_pct,
+                
+                this.measureGroups.priceReductions.measures.retention,
+                this.measureGroups.items.measures.shimurShivuk_value_pct,
+                
+                this.measureGroups.priceReductions.measures.organizational,
+                this.measureGroups.items.measures.shoviIrguni_value_pct,
+                
+                this.measureGroups.priceReductions.measures.cancellation,
+                this.measureGroups.items.measures.cancelled_value_pct
+            ],
+            dimensions: {
+                membersConfigArr: [
+                    { dimAttr: this.dims.businessDateV2.attr.date },
+                    { dimAttr: this.dims.businessDateV2.attr.dayOfWeek }
+                ]
+            },
+            slicers: [
+                {
+                    dimAttr: this.dims.businessDateV2.attr.yearMonth,
+                    memberPath: month.format('YYYYMM') //'201803'
+                }
+            ]
+        })
+            .then((rowset: {
+                date: moment.Moment;
+                dayOfWeek: string;
+                
+                sales: number;
+                dinersCount: number;
+                dinersPPA: number;
+
+                cancellation: number;
+                cancelled_value_pct: number;
+
+                retention: number;
+                shimurShivuk_value_pct: number;
+
+                operational: number;
+                takalotTiful_value_pct: number;
+
+                organizational: number;
+                shoviIrguni_value_pct: number;
+            }[]) => {
+                return rowset.reduce((acc, curr) => {
+                    const key = curr.date.format('YYYY-MM-DD');
+                    acc[key] = curr;
+                    return acc;
+                }, {});
+            });
+    }
+
+    public get_kpi_data(bdFrom: moment.Moment, bdTo: moment.Moment): Promise<{
+        sales: number;
+        dinersCount: number;
+        dinersPPA: number;
+
+        cancellation: number;
+        cancelled_value_pct: number;
+
+        retention: number;
+        shimurShivuk_value_pct: number;
+
+        operational: number;
+        takalotTiful_value_pct: number;
+                    
+        organizational: number;
+        shoviIrguni_value_pct: number;
+    }> {
+        return this.smartQuery({
+            measures: [
+                this.measureGroups.general.measures.sales,
+                this.measureGroups.general.measures.dinersCount,
+                this.measureGroups.general.measures.dinersPPA,
+
+                this.measureGroups.priceReductions.measures.operational,
+                this.measureGroups.items.measures.takalotTiful_value_pct,
+
+                this.measureGroups.priceReductions.measures.retention,
+                this.measureGroups.items.measures.shimurShivuk_value_pct,
+
+                this.measureGroups.priceReductions.measures.organizational,
+                this.measureGroups.items.measures.shoviIrguni_value_pct,
+
+                this.measureGroups.priceReductions.measures.cancellation,
+                this.measureGroups.items.measures.cancelled_value_pct
+            ],
+            dimensions: {},
+            slicers: [
+                {
+                    dimAttr: this.dims.businessDateV2.attr.date,
+                    range: {
+                        from: bdFrom.format('YYYYMMDD'),
+                        to: bdTo.format('YYYYMMDD')
+                    }
+                }
+            ]
+        });
+    }
+
 }
 
 
 // WEBPACK FOOTER //
 // C:/dev/tabit/dashboard/src/tabit/data/ep/olap.ep.ts
-
-
-
-// תקלות תפעול - החזר פריטים, OTH והנחות לפי מלצר
-// select
-// [Measures].[Tlog Pricereductions Operational Discount Amount]on 0,
-//     non empty
-//         (
-//         [Ordertype].[Tlog Header Ordertype].[Tlog Header Ordertype].members,
-//         [Owners].[Tlog Header Owner Id].[Tlog Header Owner Id].members,
-//         [Ordernumber].[Tlog Header Order Number].[Tlog Header Order Number].members,
-//         [Tables].[Table Id].[Table Id].members,
-//         [Items].[Item Group Id].[Item Group Id].members,
-//         [Pricereductionreasons].[Tlog Pricereductions Reason Sub Type].[Tlog Pricereductions Reason Sub Type].members,
-//         [Pricereductionreasons].[Tlog Pricereductions Reason Id].[Tlog Pricereductions Reason Id].members
-//         ) on 1
-// from[tabit_sales]
-// where(
-//     [Sites].[Site Id].& [58440e3963247b1f00d97b1e],
-//     [BusinessDate].[Date Key].& [20180303],
-//     [Pricereductionreasons].[Tlog Pricereductions Reason Type].& [compensation]
-// )
-
-
-// שימור ושיווק – פעולות ידניות לפי מלצר
-// select
-// { [Measures].[Tlog Pricereductions Retention Discount Amount] } on 0,
-//     non empty(
-//         [Ordertype].[Tlog Header Ordertype].[Tlog Header Ordertype].members,
-//         [Source].[Tlog Header Source].[Tlog Header Source].members,
-//         [Owners].[Tlog Header Owner Id].[Tlog Header Owner Id].members,
-//         [Ordernumber].[Tlog Header Order Number].[Tlog Header Order Number].members,
-//         [Tables].[Table Id].[Table Id].members,
-//         [Items].[Item Group Id].[Item Group Id].members,
-//         {
-//             [Pricereductionreasons].[Tlog Pricereductions Reason Type].& [retention],
-//         [Pricereductionreasons].[Tlog Pricereductions Reason Type].& [compensation]
-// 	},
-//         [Pricereductionreasons].[Tlog Pricereductions Reason Id].[Tlog Pricereductions Reason Id].members,
-//         [Pricereductionreasons].[Tlog Pricereductions Reason Sub Type].[Tlog Pricereductions Reason Sub Type].members
-//     ) on 1
-// from[tabit_sales]
-// where(
-//     [Sites].[Site Id].& [58440e3963247b1f00d97b1e],
-//     [BusinessDate].[Date Key].& [20180303]
-// )
-

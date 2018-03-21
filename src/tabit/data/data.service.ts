@@ -141,6 +141,13 @@ export const tmpTranslations = {
 
 export interface BusinessDayKPI {
     businessDay: moment.Moment;
+    dayOfWeek?: string;
+    kpi: KPI;
+}
+
+export interface CustomRangeKPI {
+    bdFrom: moment.Moment;
+    bdTo: moment.Moment;
     kpi: KPI;
 }
 
@@ -578,6 +585,12 @@ export class DataService {
         date: moment.Moment;
         grossPayments: number;
     }[]} = {};
+
+    /* cache of BusinessDayKPI by business date ('YYYY-MM-DD') */
+    private businessDayKPI_cache: { [index: string]: BusinessDayKPI } = {};
+
+    /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
+    // private businessMonthKPI_cache: { [index: string]: BusinessMonthKPI } = {};
 
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
         // moment.tz.setDefault('Asia/Jerusalem');
@@ -1296,7 +1309,7 @@ export class DataService {
      @caching
      @:promise
      resolves with paymentsData per businessDate for the requested businessDate range
- */
+     */
     public getPaymentsData(
         fromBusinessDate: moment.Moment,
         toBusinessDate: moment.Moment
@@ -1315,7 +1328,7 @@ export class DataService {
             const bdKey = bd.format('YYYY-MM-DD');            
             if (!this.paymentDataCache[bdKey]) {
                 const monthToFetch = moment(bd);
-                const monthFetched = monthsFetched.find(m => m.isSame(monthToFetch, 'month'))
+                const monthFetched = monthsFetched.find(m => m.isSame(monthToFetch, 'month'));
                 if (!monthFetched) {
                     monthsFetched.push(moment(bd));
                     qAll.push(this.olapEp.get_daily_payments_data_per_month(bd));
@@ -1491,6 +1504,164 @@ export class DataService {
             });
 
         });
+    }
+
+    /* 
+     @caching
+     @:promise
+     resolves with BusinessDayKPI per businessDate for the requested businessDate range
+     */
+    public getBusinessDaysKPIs(
+        fromBusinessDate: moment.Moment,
+        toBusinessDate: moment.Moment
+    ): Promise<{
+        [index: string]: BusinessDayKPI//index is date in the format YYYY-MM-DD
+    }> {
+        const qAll = [];
+        const monthsFetched: moment.Moment[] = [];
+        for (let bd = moment(fromBusinessDate); bd.isSameOrBefore(toBusinessDate, 'day'); bd.add(1, 'day')) {
+            const bdKey = bd.format('YYYY-MM-DD');
+            if (!this.businessDayKPI_cache[bdKey]) {
+                const monthToFetch = moment(bd);
+                const monthFetched = monthsFetched.find(m => m.isSame(monthToFetch, 'month'));
+                if (!monthFetched) {
+                    monthsFetched.push(moment(bd));
+                    qAll.push(this.olapEp.get_kpi_data_business_day_resolution(bd));
+                }
+            }
+        }
+
+        return Promise.all(qAll)
+            .then((data: {
+                [index: string]: {
+                    date: moment.Moment;
+                    dayOfWeek: string;
+                    sales: number;
+                    dinersCount: number;
+                    dinersPPA: number;
+                    operational: number;
+                    takalotTiful_value_pct: number;
+                    retention: number;
+                    shimurShivuk_value_pct: number;
+                    organizational: number;
+                    shoviIrguni_value_pct: number;
+                    cancellation: number;
+                    cancelled_value_pct: number;
+                }
+            }[]) => {
+                const monthsData: {[index: string]: BusinessDayKPI}[] = []; 
+
+                data.forEach(monthObj => {
+                    const monthData: { [index: string]: BusinessDayKPI } = {};
+                    Object.keys(monthObj).forEach(bdKey => {
+                        const rawData = monthObj[bdKey];
+                        
+                        const kpi = new KPI();
+                        kpi.sales = rawData.sales;
+                        kpi.diners = {
+                            count: rawData.dinersCount,
+                            sales: 0,
+                            ppa: rawData.dinersPPA
+                        };
+                        kpi.reductions = {
+                            cancellation: rawData.cancellation,
+                            cancellation_pct: rawData.cancelled_value_pct,
+
+                            retention: rawData.retention,
+                            retention_pct: rawData.shimurShivuk_value_pct,
+
+                            operational: rawData.operational,
+                            operational_pct: rawData.takalotTiful_value_pct,
+
+                            organizational: rawData.organizational,
+                            organizational_pct: rawData.shoviIrguni_value_pct,
+                        };
+                        const businessDayKPI: BusinessDayKPI = {
+                            businessDay: rawData.date,
+                            dayOfWeek: rawData.dayOfWeek,
+                            kpi: kpi
+                        };
+                        monthData[bdKey] = businessDayKPI;
+                    });
+                    monthsData.push(monthData);
+                });
+
+                return monthsData;
+            }).then((monthsData: { [index: string]: BusinessDayKPI }[]) => {        
+                    // populate cache
+                    monthsData.forEach(monthObj => {
+                        Object.keys(monthObj).forEach(bdKey => {
+                            this.businessDayKPI_cache[bdKey] = monthObj[bdKey];
+                        });
+                    });
+
+                    const returnObj: {
+                        [index: string]: BusinessDayKPI
+                    } = {};
+
+                    for (let bd = moment(fromBusinessDate); bd.isSameOrBefore(toBusinessDate, 'day'); bd.add(1, 'day')) {
+                        const bdKey = bd.format('YYYY-MM-DD');
+                        returnObj[bdKey] = this.businessDayKPI_cache[bdKey];
+                    }
+
+                    return returnObj;
+            });
+    }
+
+    /* 
+    @:promise
+    resolves with CustomRangeKPI
+    */
+    public getCustomRangeKPI(
+        fromBusinessMonth: moment.Moment,
+        toBusinessMonth: moment.Moment
+    ): Promise<CustomRangeKPI> {
+        return this.olapEp.get_kpi_data(moment(fromBusinessMonth), moment(toBusinessMonth))
+            .then((dataSet: {
+                sales: number;
+                dinersCount: number;
+                dinersPPA: number;
+
+                cancellation: number;
+                cancelled_value_pct: number;
+
+                retention: number;
+                shimurShivuk_value_pct: number;
+
+                operational: number;
+                takalotTiful_value_pct: number;
+
+                organizational: number;
+                shoviIrguni_value_pct: number;
+            }) => {
+                const data = dataSet[0];
+                const kpi = new KPI();
+                kpi.sales = data.sales;
+                kpi.diners = {
+                    count: data.dinersCount,
+                    sales: 0,
+                    ppa: data.dinersPPA
+                };
+                kpi.reductions = {
+                    cancellation: data.cancellation,
+                    cancellation_pct: data.cancelled_value_pct,
+
+                    retention: data.retention,
+                    retention_pct: data.shimurShivuk_value_pct,
+
+                    operational: data.operational,
+                    operational_pct: data.takalotTiful_value_pct,
+
+                    organizational: data.organizational,
+                    organizational_pct: data.shoviIrguni_value_pct,
+                };
+                const customRangeKPI: CustomRangeKPI = {
+                    bdFrom: moment(fromBusinessMonth),
+                    bdTo: moment(toBusinessMonth),
+                    kpi: kpi
+                };
+                return customRangeKPI;
+            });
     }
 
 }
