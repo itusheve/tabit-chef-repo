@@ -12,8 +12,14 @@
     
     <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
 
-    <app-day-orders-table class="widget" style="padding-bottom: 0px;" *ngIf="orders" [lastViewed]="drilledOrder" [orders]="orders"
-      (onOrderClicked)="onOrderClicked($event)"></app-day-orders-table>
+    <app-day-orders-table 
+      class="widget" 
+      style="padding-bottom: 0px;" 
+      *ngIf="orders" 
+      [lastViewed]="drilledOrder" 
+      [orders]="orders"
+      (onOrderClicked)="onOrderClicked($event)"
+    ></app-day-orders-table>
 
     <app-day-sales-table 
       class="widget"
@@ -58,11 +64,15 @@
     <app-operational-errors-table
       class="widget"
       [operationalErrorsData]="operationalErrorsData"
+      [lastViewed]="drilledOrderNumber" 
+      (onOrderClicked)="onOrderClicked_orderNumber($event)"
     ></app-operational-errors-table>
 
     <app-retention-table
       class="widget"
       [retentionData]="retentionData"
+      [lastViewed]="drilledOrderNumber" 
+      (onOrderClicked)="onOrderClicked_orderNumber($event)"
     ></app-retention-table>
 
     <app-month-summary-table

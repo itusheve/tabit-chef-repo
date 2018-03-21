@@ -37,7 +37,8 @@ export class DayViewComponent implements OnInit  {
   drillTlogTime;
   drillTlogId: string;
   drill = false;
-  drilledOrder;
+  drilledOrder: Order;
+  drilledOrderNumber: number;
 
   /* the day's Orders */
   public orders: Order[];
@@ -250,15 +251,22 @@ export class DayViewComponent implements OnInit  {
     this.router.navigate(['/owners-dashboard/orders', this.day.format('YYYY-MM-DD'), filter.id, '']);
   }
 
-  /* called by day-orders-table */
+  /* called directly by different tables with order number */
+  onOrderClicked_orderNumber(orderNumber: number) {
+    const order = this.orders.find(o=>o.number===orderNumber);
+    if (order) {
+      this.onOrderClicked(order);
+    }
+  }
+
+  /* called directly by day-orders-table */
   onOrderClicked(order: Order) {
-    //const bd = this.day.format('YYYY-MM-DD');
-    //this.router.navigate([`/owners-dashboard/bd/${bd}/tlogid/${tlogId}`]);
     this.drillTlogTime = order.openingTime;
     this.drillTlogId = order.tlogId;
     this.drill = true;
 
     this.drilledOrder = order;
+    this.drilledOrderNumber = order.number;
   }
 
   closeDrill() {

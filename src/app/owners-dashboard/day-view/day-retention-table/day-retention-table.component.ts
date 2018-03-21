@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -23,6 +23,9 @@ export class DayRetentionTableComponent implements OnChanges {
     reasons: string;
     retention: number;
   }[];
+  @Input() lastViewed: number;//last viewed order number
+
+  @Output() onOrderClicked = new EventEmitter();
 
   totalValue: number;
 
@@ -38,5 +41,9 @@ export class DayRetentionTableComponent implements OnChanges {
 
       this.loading = false;
     }
+  }
+
+  orderClicked(orderNumber: number) {
+    this.onOrderClicked.emit(orderNumber);
   }
 }

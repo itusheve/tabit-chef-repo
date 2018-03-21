@@ -1610,58 +1610,81 @@ export class DataService {
 
     /* 
     @:promise
-    resolves with CustomRangeKPI
+        resolves with (VAT-aware) CustomRangeKPI
     */
     public getCustomRangeKPI(
         fromBusinessMonth: moment.Moment,
         toBusinessMonth: moment.Moment
     ): Promise<CustomRangeKPI> {
-        return this.olapEp.get_kpi_data(moment(fromBusinessMonth), moment(toBusinessMonth))
-            .then((dataSet: {
-                sales: number;
-                dinersCount: number;
-                dinersPPA: number;
+        return new Promise((resolve, reject) => {        
+            const data$ = combineLatest(//TODO this does not work because we return a promise and not an observable!
+                this.vat$,
+                fromPromise(this.olapEp.get_kpi_data(moment(fromBusinessMonth), moment(toBusinessMonth))),
+                (vat, dataSet) => Object.assign({}, { dataSet: dataSet }, { vat: vat })
+            );
+    
+            data$.subscribe(data => {
+                const dataSet = _.cloneDeep(data.dataSet);
 
-                cancellation: number;
-                cancelled_value_pct: number;
+                if (!data.vat) {
+                    dataSet.forEach(tuple => {
+                        tuple.sales = tuple.sales / 1.17;
+                        tuple.dinersPPA = tuple.dinersPPA / 1.17;
+                        tuple.cancellation = tuple.cancellation / 1.17;
+                        tuple.retention = tuple.retention / 1.17;
+                        tuple.operational = tuple.operational / 1.17;
+                        tuple.organizational = tuple.organizational / 1.17;
+                    });
+                }
 
-                retention: number;
-                shimurShivuk_value_pct: number;
-
-                operational: number;
-                takalotTiful_value_pct: number;
-
-                organizational: number;
-                shoviIrguni_value_pct: number;
-            }) => {
-                const data = dataSet[0];
-                const kpi = new KPI();
-                kpi.sales = data.sales;
-                kpi.diners = {
-                    count: data.dinersCount,
-                    sales: 0,
-                    ppa: data.dinersPPA
-                };
-                kpi.reductions = {
-                    cancellation: data.cancellation,
-                    cancellation_pct: data.cancelled_value_pct,
-
-                    retention: data.retention,
-                    retention_pct: data.shimurShivuk_value_pct,
-
-                    operational: data.operational,
-                    operational_pct: data.takalotTiful_value_pct,
-
-                    organizational: data.organizational,
-                    organizational_pct: data.shoviIrguni_value_pct,
-                };
-                const customRangeKPI: CustomRangeKPI = {
-                    bdFrom: moment(fromBusinessMonth),
-                    bdTo: moment(toBusinessMonth),
-                    kpi: kpi
-                };
-                return customRangeKPI;
+                resolve(dataSet);
             });
+        })
+        .then((dataSet: {
+            sales: number;
+            dinersCount: number;
+            dinersPPA: number;
+
+            cancellation: number;
+            cancelled_value_pct: number;
+
+            retention: number;
+            shimurShivuk_value_pct: number;
+
+            operational: number;
+            takalotTiful_value_pct: number;
+
+            organizational: number;
+            shoviIrguni_value_pct: number;
+        }) => {
+            const data = dataSet[0];
+            const kpi = new KPI();
+            kpi.sales = data.sales;
+            kpi.diners = {
+                count: data.dinersCount,
+                sales: 0,
+                ppa: data.dinersPPA
+            };
+            kpi.reductions = {
+                cancellation: data.cancellation,
+                cancellation_pct: data.cancelled_value_pct,
+
+                retention: data.retention,
+                retention_pct: data.shimurShivuk_value_pct,
+
+                operational: data.operational,
+                operational_pct: data.takalotTiful_value_pct,
+
+                organizational: data.organizational,
+                organizational_pct: data.shoviIrguni_value_pct,
+            };
+            const customRangeKPI: CustomRangeKPI = {
+                bdFrom: moment(fromBusinessMonth),
+                bdTo: moment(toBusinessMonth),
+                kpi: kpi
+            };
+            return customRangeKPI;
+        });
     }
 
 }

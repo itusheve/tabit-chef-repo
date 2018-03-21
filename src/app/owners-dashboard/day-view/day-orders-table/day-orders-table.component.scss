@@ -23,11 +23,11 @@ mat-expansion-panel-header {
 table {
     table-layout: auto;
 
-    tr {
-        &.lastViewed {
-            background-color: #b8cbdf;
-        }
-    }
+    // tr {
+    //     &.lastViewed {
+    //         background-color: #b8cbdf;
+    //     }
+    // }
 }
 
 table tr td {

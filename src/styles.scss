@@ -12,8 +12,6 @@ $greyText: #6e7482;
 
 $oldDashBG: #edf1f2;
 
-
-
 html, body {
     width: 100%;
     height: 100%;
@@ -23,7 +21,6 @@ html, body {
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     color: $baseText;
-    //background-color: $oldDashBG;
     background-color: black;
 
 }
@@ -44,8 +41,6 @@ html, body {
 ::-webkit-scrollbar-corner {
     background: #000;
 }
-
-
 
 .widget {
     display: block;
@@ -83,7 +78,6 @@ html, body {
         font-size: 20px;
         color: white;
         background-color: #3a5675;
-        // font-weight: bold;
         text-align: center;        
         padding: 10px;
         box-shadow: 0 0px 8px 2px rgba(0, 0, 0, 0.2);
@@ -100,12 +94,13 @@ html, body {
             }
 
             tr {
-                // border-top: 1px solid #eaeff0;
-                border-bottom: 1px solid #eaeff0;
-                // &:first-child {
-                //     border-top: none;
-                // }                
+                border-bottom: 1px solid #eaeff0;            
                 
+                &.lastViewed {
+                    background-color: #b8cbdf;
+                }
+
+
                 &.tblTotalRow {
                     font-weight: bold;
                 }
@@ -113,8 +108,6 @@ html, body {
                 td {
                     padding: 8px 0px;
                     &:first-child {
-                        // background: linear-gradient(90deg, white,white 20%, rgba(143, 193, 220, 0.25) 20%,rgba(143, 193, 220, 0.25) 20%);
-                        // padding: 8px 5px!important;
                         font-weight: bold;
                     }
                 }
@@ -125,11 +118,7 @@ html, body {
             color: $greyText;
             .tblRow {
                 padding: 8px 0px;
-                // border-top: 1px solid #eaeff0;
                 border-bottom: 1px solid #eaeff0;
-                // &:first-child {
-                    // border-top: none;
-                // }
 
                 &.tblTotalRow {
                     font-weight: bold;

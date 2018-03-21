@@ -18,7 +18,12 @@
                     <td i18n="@@type">Type</td>
                     <td i18n="@@reason">Reason</td>
                 </tr>
-                <tr class="" *ngFor="let tuple of operationalErrorsData">
+                <tr 
+                    class="" 
+                    *ngFor="let tuple of operationalErrorsData"
+                    (click)="orderClicked(tuple.orderNumber)" 
+                    [ngClass]="{'lastViewed': lastViewed===tuple.orderNumber}"
+                    >
                     <td>{{tuple.waiter}}</td>
                     <td 
                         *ngIf="tuple.tableId!==''">{{tuple.tableId}}</td>
