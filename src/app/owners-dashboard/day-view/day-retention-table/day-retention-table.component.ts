@@ -32,12 +32,19 @@ export class DayRetentionTableComponent implements OnChanges {
   show = true;
   loading = true;
 
+  public sortBy: string;//waiter, orderNumber, tableId, item, subType, reasonId, retention
+  public sortDir = 'desc';//asc | desc  
+
   constructor() {}
 
   ngOnChanges(o: SimpleChanges) {
     if (o.retentionData && o.retentionData.currentValue) {
-
       this.totalValue = this.retentionData.reduce((acc, curr)=>(acc+curr.retention), 0);
+
+      // we wish sorting to occur automatically only on component init, not on further changes:
+      if (!this.sortBy) {
+        this.sort('retention');
+      }
 
       this.loading = false;
     }
@@ -46,4 +53,21 @@ export class DayRetentionTableComponent implements OnChanges {
   orderClicked(orderNumber: number) {
     this.onOrderClicked.emit(orderNumber);
   }
+
+  sort(by: string) {
+    if (this.sortBy && this.sortBy === by) {
+      this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
+    } else {
+      if (by === 'retention') {
+        this.sortDir = 'desc';
+      } else {
+        this.sortDir = 'asc';
+      }
+      this.sortBy = by;
+    }
+    let dir = this.sortDir === 'asc' ? -1 : 1;
+    this.retentionData
+      .sort((a, b) => (a[this.sortBy] < b[this.sortBy] ? dir : dir * -1));
+  }
+
 }

@@ -14,7 +14,7 @@ export class KPI {
     
     //from order model:
     // _priceReductions: {
-    //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
+    //     operationalNegativeTransactions (THIS IS SUM OF CANCELLATIONS AND OPERATRIONAL!): false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
     //     discountsAndOTH: false,//{dim:retention,measure:retention}  heb: שימור ושיווק
     //     employees: false,//{dim:organizational,measure:organizational}  heb: עובדים
     //     promotions: false,//{dim:promotions,measure:retention}  heb: מבצעים            

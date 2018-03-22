@@ -10,28 +10,92 @@
         <div class="flex d-col body">
             <table class="fixedWidth">
                 <tr class="header">
-                    <td i18n="@@waiter">Waiter</td>
-                    <td style="width:42px" i18n="@@table">Table</td>
-                    <td style="width:42px" i18n="@@order">Order</td>
-                    <td i18n="@@item">Item</td>
-                    <td style="width:42px" i18n="@@amount">Amount</td>
-                    <td i18n="@@type">Type</td>
-                    <td i18n="@@reason">Reason</td>
+                    <td (click)="sort('waiter')">
+                        <div class="flex a-center">
+                            <div i18n="@@waiter">Waiter</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>                        
+                    </td>
+                    <td (click)="sort('tableId')"  style="width:60px">
+                        <div class="flex a-center">
+                            <div>
+                                <ng-container i18n="@@table">Table</ng-container>
+                                (<ng-container i18n="@@order">Order</ng-container>)
+                            </div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                    <!-- <td (click)="sort('orderNumber')" style="width:42px">
+                        <div class="flex a-center">
+                            <div i18n="@@order">Order</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='orderNumber' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='orderNumber' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td> -->
+                    <td (click)="sort('item')">
+                        <div class="flex a-center">
+                            <div i18n="@@item">Item</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='item' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='item' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                    <td (click)="sort('operational')" style="width:42px">
+                        <div class="flex a-center">
+                            <div i18n="@@amount">Amount</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='operational' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='operational' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>                        
+                    </td>
+                    <td (click)="sort('subType')">
+                        <div class="flex a-center">
+                            <div i18n="@@type">Type</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='subType' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='subType' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                    <td (click)="sort('reasonId')">
+                        <div class="flex a-center">
+                            <div i18n="@@reason">Reason</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='reasonId' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='reasonId' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>                        
+                    </td>
                 </tr>
                 <tr 
-                    class="" 
                     *ngFor="let tuple of operationalErrorsData"
                     (click)="orderClicked(tuple.orderNumber)" 
                     [ngClass]="{'lastViewed': lastViewed===tuple.orderNumber}"
                     >
                     <td>{{tuple.waiter}}</td>
-                    <td 
-                        *ngIf="tuple.tableId!==''">{{tuple.tableId}}</td>
+                    <td>
+                        <span *ngIf="tuple.tableId!==''">
+                             {{tuple.tableId}}
+                        </span>
+                        <span *ngIf="tuple.tableId===''" i18n="@@orderTypeSelect2">
+                            { 
+                                tuple.orderType.id, 
+                                select,                                 
+                                seated {Seated} 
+                                counter {Counter} 
+                                ta {TA} 
+                                delivery {Delivery} 
+                                other {Other} 
+                                returns {Returns} 
+                                mediaExchange {Media Exchange} 
+                            }
+                        </span>
+                        <span>
+                            &nbsp;({{tuple.orderNumber}})
+                        </span>
+                    </td>
+                    <!-- <td *ngIf="tuple.tableId!==''">{{tuple.tableId}}</td>
                     <td 
                         *ngIf="tuple.tableId==='' && tuple.orderType && tuple.orderType.id" 
                         i18n="@@orderTypeSelect2">{ tuple.orderType.id, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange
                         {Media Exchange} }</td>
-                    <td>{{tuple.orderNumber}}</td>
+                    <td>{{tuple.orderNumber}}</td> -->
                     <td>{{tuple.item}}</td>
                     <td>{{tuple.operational | curr:'0'}}</td>
                     <td>{{tuple.subType}}</td>
