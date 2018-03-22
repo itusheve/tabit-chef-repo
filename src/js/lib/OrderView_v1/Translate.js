@@ -58,6 +58,11 @@ let TranslateService = (function () {
             "PERCENT_OFF_ITEM": "% Off Item",
             "APPLIED_SEGMENTATION": "Tag Applied",
             "APPROVED_SEGMENTATION": "Tag Approved",
+            "ORDER_TYPES_SEATED": "Seated",
+            "ORDER_TYPES_TA": "TA",
+            "ORDER_TYPES_DELIVERY": "Delivery",
+            "ORDER_TYPES_REFUND": "Refund",
+            "ORDER_TYPES_OTC": "OTC"
         },
         "he-IL": {
             "OTH": "על חשבון הבית",
@@ -111,6 +116,11 @@ let TranslateService = (function () {
             "PERCENT_OFF_ITEM": "% הנחת פריט",
             "APPLIED_SEGMENTATION": "בקשה לתיוג",
             "APPROVED_SEGMENTATION": "אישור תיוג",
+            "ORDER_TYPES_SEATED": "ישיבה בלבד",
+            "ORDER_TYPES_TA": "טייק אווי",
+            "ORDER_TYPES_DELIVERY": "משלוח",
+            "ORDER_TYPES_REFUND": "החזר",
+            "ORDER_TYPES_OTC": "דלפק (OTC)"
         }
     }
 

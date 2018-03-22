@@ -47,6 +47,8 @@ export class OrderSlipsComponent implements OnInit  {
     });
     i++;
 
+    console.log(this.orderOld);
+    
     if (this.orderOld.clubMembers.length) {
       this.slips.push({
         id: i,
