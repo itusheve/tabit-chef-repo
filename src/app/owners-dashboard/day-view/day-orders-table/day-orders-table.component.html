@@ -48,18 +48,22 @@
                             <div class="flex d-col">
                                 <div class="flex">
                                     <div class="iconFilter cancellation flex ml5 mb5" [ngClass]="{'on': iconFilterOn('cancellation')}" (click)="filter(orderType, 'cancellation')">
-                                        <mat-icon>delete_forever</mat-icon>
+                                        <i *ngIf="iconFilterOn('cancellation')" class="icon iconOperationalAndCancellations"></i>
+                                        <i *ngIf="!iconFilterOn('cancellation')" class="icon iconOperationalAndCancellations_off"></i>
                                     </div>
                                     <div class="iconFilter discountsAndOTH flex mb5" [ngClass]="{'on': iconFilterOn('discountsAndOTH')}" (click)="filter(orderType, 'discountsAndOTH')">
-                                        <mat-icon>cake</mat-icon>
+                                        <i *ngIf="iconFilterOn('discountsAndOTH')" class="icon iconRetention"></i>
+                                        <i *ngIf="!iconFilterOn('discountsAndOTH')" class="icon iconRetention_off"></i>
                                     </div>
                                 </div>
                                 <div class="flex">
                                     <div class="iconFilter employees flex ml5" [ngClass]="{'on': iconFilterOn('employees')}" (click)="filter(orderType, 'employees')">
-                                        <mat-icon>local_dining</mat-icon>
+                                        <i *ngIf="iconFilterOn('employees')" class="icon iconOrganizational"></i>
+                                        <i *ngIf="!iconFilterOn('employees')" class="icon iconOrganizational_off"></i>
                                     </div>
                                     <div class="iconFilter promotions flex" [ngClass]="{'on': iconFilterOn('promotions')}" (click)="filter(orderType, 'promotions')">
-                                        <mat-icon>star_border</mat-icon>
+                                        <i *ngIf="iconFilterOn('promotions')" class="icon iconPromotions"></i>
+                                        <i *ngIf="!iconFilterOn('promotions')" class="icon iconPromotions_off"></i>
                                     </div>
                                 </div>
                             </div>
@@ -71,10 +75,12 @@
                         <td>{{order.waiter}}</td>
                         <td>{{order.sales | curr:'0'}}</td>
                         <td>
-                            <mat-icon *ngIf="order.priceReductions.cancellation > 0" style="color: red;">delete_forever</mat-icon>
-                            <mat-icon *ngIf="order.priceReductions.discountsAndOTH > 0" style="color: orange;">cake</mat-icon>
-                            <mat-icon *ngIf="order.priceReductions.employees > 0" style="color: blue;">local_dining</mat-icon>
-                            <mat-icon *ngIf="order.priceReductions.promotions > 0" style="color: green;">star_border</mat-icon>
+                            <div class="flex a-center" style="height:100%;">
+                                <i class="mh3 icon iconOperationalAndCancellations" *ngIf="order.priceReductions.cancellation > 0"></i>
+                                <i class="mh3 icon iconRetention" *ngIf="order.priceReductions.discountsAndOTH > 0"></i>
+                                <i class="mh3 icon iconOrganizational" *ngIf="order.priceReductions.employees > 0"></i>
+                                <i class="mh3 icon iconPromotions" *ngIf="order.priceReductions.promotions > 0"></i>
+                            </div>
                         </td>
                     </tr>
                 </table>

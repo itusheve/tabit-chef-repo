@@ -716,7 +716,7 @@ export class ClosedOrdersDataService {
                         } else {
                             return this.enrichOrder(order)
                                 .then(data => {
-                                    resolve(data)
+                                    resolve(data);
                                 });
                         }
                     }
@@ -1300,24 +1300,16 @@ export class ClosedOrdersDataService {
             });
 
             function resolvePaymentData(payment) {
-
-                // <<<<<<< HEAD
-                //                 let result = [];
-                //                 if (payment.creditCardBrand && payment.creditCardBrand !== "") {
-                //                     result.push({ key: ORDERS_VIEW.card_type, value: payment.creditCardBrand });
-                //                 }
-                // =======
                 function buildPaymentRow(payment) {
-                    // >>>>>>> origin/master
 
                     let result = [];
                     if (payment._type === "CreditCardPayment") {
                         if (payment.creditCardBrand && payment.creditCardBrand !== "") {
-                            result.push({ value: payment.creditCardBrand })
+                            result.push({ value: payment.creditCardBrand });
                         }
                     } else if (payment._type === "ChargeAccountPayment") {
                         if (payment.accountName && payment.accountName !== "") {
-                            result.push({ value: payment.accountName })
+                            result.push({ value: payment.accountName });
                         }
                     }
 

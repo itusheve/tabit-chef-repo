@@ -7,7 +7,7 @@ mat-expansion-panel-header {
     background-color: #ffffff;
     &:first-child {
         border-bottom: 1px solid #eaeff0;
-    } 
+    }
     mat-panel-title {
         color: #6e7482!important;
     }
@@ -22,53 +22,21 @@ mat-expansion-panel-header {
 
 table {
     table-layout: auto;
-
-    // tr {
-    //     &.lastViewed {
-    //         background-color: #b8cbdf;
-    //     }
-    // }
 }
 
 table tr td {
     padding-right: 3px!important;
-    padding-left: 3px!important;         
+    padding-left: 3px!important;
 }
 table tr td:first-child {
     padding-right: 8px!important;
-    padding-left: 8px!important;     
+    padding-left: 8px!important;
 }
 
 .iconFilter {
     cursor: pointer;
-    padding: 4px;
+    padding: 6px;
     border: 1px solid #b3b6ca;
     border-radius: 25px;
     color: #b3b6ca;
-    &.on {
-        &.cancellation {
-            mat-icon {
-                color: red;
-                border-color: red;
-            }
-        }
-        &.discountsAndOTH {
-            mat-icon {
-                color: orange;
-                border-color: orange;
-            }
-        }
-        &.employees {
-            mat-icon {
-                color: blue;
-                border-color: blue;
-            }
-        }
-        &.promotions {
-            mat-icon {
-                color: green;
-                border-color: green;
-            }
-        }
-    }
 }
