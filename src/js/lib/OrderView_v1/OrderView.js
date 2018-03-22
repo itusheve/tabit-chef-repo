@@ -52,7 +52,9 @@ const OrderViewService = (function () {
         OrderTypes: {
             Refund: "Refund",
             TA: "TA",
-            Delivery: "Delivery"
+            Delivery: "Delivery",
+            Seated: "Seated",
+            OTC: "OTC"
         },
         ReturnTypes: {
             Cancellation: 'cancellation'
@@ -1182,6 +1184,10 @@ const OrderViewService = (function () {
             return result;
         }
 
+        function _resolveOrderTypeDisplayText(orderType) {
+            return translateService.getText('ORDER_TYPES_' + orderType.toUpperCase());
+        }
+
         function _resolveCancellationsAndOTHToTimeLine(order) {
 
             let result = [];
@@ -1459,6 +1465,7 @@ const OrderViewService = (function () {
         ResultOrder.owner = _resolveUser(ResultOrder.owner);
         ResultOrder.clubMembers = _resolveClubMembers(ResultOrder);
         ResultOrder.lockedBy = _resolveUser(ResultOrder.lockedBy);
+        ResultOrder.orderTypeDisplayText = _resolveOrderTypeDisplayText(ResultOrder.orderType);
 
         let ItemsByOrderedOffersResult = _resolveItemsByOrderedOffers(ResultOrder);  // merge function #1
         ResultOrder.orderedOffers = ItemsByOrderedOffersResult.orderedOffers;

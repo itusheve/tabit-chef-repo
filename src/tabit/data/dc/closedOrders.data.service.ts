@@ -1766,7 +1766,6 @@ export class ClosedOrdersDataService {
                 const lookupData: any = data[1];
                 const billData: any = data[2];
 
-
                 let _status = "closed"; // order status, dashboard show only closed orders.
 
                 // let orederResult = this.orderViewService.TimeLine.enrichOrder(
