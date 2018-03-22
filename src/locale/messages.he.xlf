@@ -13,7 +13,7 @@
       <trans-unit id="thisYear" datatype="html">
         <source>This Year</source>
         <target>השנה</target>
-      </trans-unit>    
+      </trans-unit>
       <trans-unit id="department" datatype="html">
         <source>Department</source>
         <target>מחלקה</target>
@@ -21,7 +21,7 @@
       <trans-unit id="departments" datatype="html">
         <source>{VAR_SELECT, select, food {Food} beverages {Beverages} other {Other} }</source>
         <target>{VAR_SELECT, select, food {מזון} beverages {משקאות} other {אחר} }</target>
-      </trans-unit>      
+      </trans-unit>
       <trans-unit id="categories" datatype="html">
         <source>Categories</source>
         <target>קטגוריות</target>
@@ -41,19 +41,19 @@
       <trans-unit id="mostReturnedItems" datatype="html">
         <source>Most Returned Items</source>
         <target>הפריטים המוחזרים ביותר</target>
-      </trans-unit>   
+      </trans-unit>
       <trans-unit id="payments" datatype="html">
         <source>Payments</source>
         <target>תשלומים</target>
-      </trans-unit>   
+      </trans-unit>
       <trans-unit id="payment" datatype="html">
         <source>Payment</source>
         <target>תקבול</target>
-      </trans-unit>    
+      </trans-unit>
       <trans-unit id="totalPayments" datatype="html">
         <source>Total Payments</source>
         <target>סה"כ תשלומים</target>
-      </trans-unit>    
+      </trans-unit>
       <trans-unit id="monthlyTotal" datatype="html">
         <source>Monthly Total</source>
         <target>סכום חודשי</target>
@@ -61,23 +61,23 @@
       <trans-unit id="amount" datatype="html">
         <source>Amount</source>
         <target>סכום</target>
-      </trans-unit>        
+      </trans-unit>
       <trans-unit id="sold" datatype="html">
         <source>Sold</source>
         <target>נמכר</target>
-      </trans-unit>   
+      </trans-unit>
       <trans-unit id="actionsWorth" datatype="html">
         <source>Actions worth</source>
         <target>פעולות בשווי</target>
-      </trans-unit>   
+      </trans-unit>
       <trans-unit id="prepared" datatype="html">
         <source>Prepared</source>
         <target>הוכן</target>
-      </trans-unit>  
+      </trans-unit>
       <trans-unit id="returned" datatype="html">
         <source>Returned</source>
         <target>הוחזר</target>
-      </trans-unit>  
+      </trans-unit>
       <trans-unit id="operationalErrors" datatype="html">
         <source>Operational Errors</source>
         <target>תקלות תפעול</target>
@@ -89,7 +89,7 @@
       <trans-unit id="operationalReductionsValue" datatype="html">
         <source>Operational Reductions Value</source>
         <target>שווי תקלות תפעול</target>
-      </trans-unit>      
+      </trans-unit>
       <trans-unit id="retention" datatype="html">
         <source>Retention</source>
         <target>שימור ושיווק</target>
@@ -97,7 +97,7 @@
       <trans-unit id="retentionByWaiter" datatype="html">
         <source>Manual Operations by Waiter</source>
         <target>פעולות ידניות לפי מלצר</target>
-      </trans-unit>        
+      </trans-unit>
       <trans-unit id="monthlyReport" datatype="html">
         <source>Monthly Report</source>
         <target>דו"ח חודשי</target>
@@ -106,27 +106,27 @@
       <trans-unit id="businessDay" datatype="html">
         <source>Business Day</source>
         <target>יום עסקים</target>
-      </trans-unit>        
+      </trans-unit>
       <trans-unit id="netSales" datatype="html">
         <source>Net Sales</source>
         <target>מכירות נטו</target>
-      </trans-unit>        
+      </trans-unit>
       <trans-unit id="ppd" datatype="html">
         <source>Pay Per Diner</source>
         <target>ממוצע לסועד</target>
-      </trans-unit>        
+      </trans-unit>
       <trans-unit id="cancellationsValue" datatype="html">
         <source>Cancellations Value</source>
         <target>שווי ביטולים</target>
-      </trans-unit>        
+      </trans-unit>
       <trans-unit id="operationalErrorsValue" datatype="html">
         <source>Operational Errors Value</source>
         <target>שווי תקלות תפעול</target>
-      </trans-unit>   
+      </trans-unit>
       <trans-unit id="retentionValue" datatype="html">
         <source>Retention Value</source>
         <target>שווי שימור ושיווק</target>
-      </trans-unit>        
+      </trans-unit>
       <trans-unit id="organizationalValue" datatype="html">
         <source>Employees &amp; Owners</source>
         <target>עובדים ובעלים</target>
@@ -294,19 +294,19 @@
 
       <trans-unit id="daySummary" datatype="html">
         <target>סיכום יומי</target>
-      </trans-unit>      
+      </trans-unit>
       <trans-unit id="orderType2" datatype="html">
         <target>סוג הזמנה</target>
-      </trans-unit>  
+      </trans-unit>
       <trans-unit id="sales2" datatype="html">
         <target>מכירות</target>
-      </trans-unit>  
+      </trans-unit>
       <trans-unit id="dinersOrders" datatype="html">
         <target>סועדים / הזמנות</target>
-      </trans-unit>  
+      </trans-unit>
       <trans-unit id="average" datatype="html">
         <target>ממוצע</target>
-      </trans-unit>  
+      </trans-unit>
       <trans-unit id="orderTypeSelect" datatype="html">
         <target>{ key.id, select, seated {בישיבה} counter {דלפק} ta {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
       </trans-unit>
@@ -354,12 +354,6 @@
       <trans-unit id="orders" datatype="html">
         <source>Orders</source>
         <target>הזמנות</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/day-view/day-orders-table/day-orders-table.component.ts</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <note priority="1" from="description">הזמנות</note>
-        <note priority="1" from="meaning">day-orders-table</note>
       </trans-unit>
       <trans-unit id="opened" datatype="html">
         <source>Opened</source>
@@ -388,7 +382,7 @@
       <trans-unit id="order" datatype="html">
         <source>Order</source>
         <target>הזמנה</target>
-      </trans-unit>      
+      </trans-unit>
       <trans-unit id="waiter" datatype="html">
         <source>Waiter</source>
         <target>מלצר</target>
@@ -802,11 +796,11 @@
       <trans-unit id="type" datatype="html">
         <source>Type</source>
         <target>סוג</target>
-      </trans-unit>      
+      </trans-unit>
       <trans-unit id="reason" datatype="html">
         <source>Reason</source>
         <target>סיבה</target>
-      </trans-unit>      
+      </trans-unit>
       <trans-unit id="waiterOwner" datatype="html">
         <source>Waiter / Owner</source>
         <target>מלצר / אחראי</target>

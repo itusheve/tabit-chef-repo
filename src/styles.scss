@@ -197,6 +197,7 @@ i.icon {
     width: $iconSize;
     height: $iconSize;
     display: block;
+    background-repeat: no-repeat;
     &.iconOperationalAndCancellations {
         background: url(/assets/icons/OperationalAndCancellation.svg);
     }

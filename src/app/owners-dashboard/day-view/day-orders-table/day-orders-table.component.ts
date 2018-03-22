@@ -30,16 +30,16 @@ export class DayOrdersTableComponent implements OnChanges {
   datePipe: DatePipe = new DatePipe('he-IL');
 
   public sortBy: string;//time, number, waiter, sales
-  public sortDir = 'asc';//asc | desc  
+  public sortDir = 'asc';//asc | desc
   public filters: {type: string, on: boolean}[] = [];
 
   constructor(private dataService: DataService) {}
 
   ngOnChanges(o) {
-     
+
     if (o.hasOwnProperty('orders')) {
       const ordersCloned: Order[] = _.cloneDeep(this.orders);
-  
+
       const orderTypesObj = this.dataService.orderTypes;
       let orderTypesArr = [];
       Object.keys(orderTypesObj).forEach(key=>{
@@ -53,10 +53,11 @@ export class DayOrdersTableComponent implements OnChanges {
         if (a.rank<b.rank) return -1;
         return 1;
       });
-  
+
       orderTypesArr.forEach(ot => {
         ot.orders = ordersCloned.filter(o => o.orderType.id === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);
         ot.sales = ot.orders.reduce((acc, curr) => acc + (curr.sales || 0), 0);
+        ot.ordersCount = ot.orders.reduce((acc, curr) => acc++, 0);
       });
       this.byOrderTypes = orderTypesArr;
     }
@@ -64,7 +65,7 @@ export class DayOrdersTableComponent implements OnChanges {
   }
 
   orderClicked(order:any) {
-    this.onOrderClicked.emit(order);    
+    this.onOrderClicked.emit(order);
   }
 
   sort(orderType: any, by: string) {
@@ -116,7 +117,7 @@ export class DayOrdersTableComponent implements OnChanges {
             const reductionAmount = ord['priceReductions'][f.type];
             if (!reductionAmount) filter = true;
           }
-        });                
+        });
         ord.filtered = filter;
       });
     });

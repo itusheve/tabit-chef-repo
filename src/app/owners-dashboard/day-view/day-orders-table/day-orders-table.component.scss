@@ -10,6 +10,8 @@ mat-expansion-panel-header {
     }
     mat-panel-title {
         color: #6e7482!important;
+        flex-grow: 0!important;
+        width: 50px!important;
     }
     mat-panel-description {
         font-weight: normal!important;
