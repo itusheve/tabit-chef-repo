@@ -5,7 +5,7 @@
     font-size: 20px;
     .logoBars {
       .logo {
-        width: 302px;  
+        width: 302px;
         height: 58px;
         background: url(/assets/images/logo-orig-2.png);
         background-repeat: no-repeat;
@@ -28,15 +28,17 @@
   // https://stackoverflow.com/questions/2338102/override-browser-form-filling-and-input-highlighting-with-html-css
   /deep/input:-webkit-autofill, input:-webkit-autofill:focus {
       //-webkit-box-shadow:0 0 0 50px $oldDashBG inset!important; /* Change the color to your own background color */
-      -webkit-box-shadow:0 0 0 50px black inset!important; /* Change the color to your own background color */
+      box-shadow:0 0 0 50px black inset!important; /* Change the color to your own background color */
       -webkit-text-fill-color: $color;
+      // box-shadow:0 0 0 50px black inset!important; /* Change the color to your own background color */
+      // -webkit-text-fill-color: $color;
   }
 
   // input:-webkit-autofill:focus {
   //     -webkit-box-shadow: 0 0 0 50px $oldDashBG inset!important;
   //     //-webkit-text-fill-color: $baseText!important;
   //     -webkit-text-fill-color: white;
-  // } 
+  // }
 
   /deep/mat-form-field {
     .mat-form-field-wrapper.mat-input-wrapper {
@@ -57,11 +59,11 @@
       .mat-input-underline.mat-form-field-underline {
         background-color: rgba(255, 255, 255, 0.6);
       }
-      .mat-input-subscript-wrapper.mat-form-field-subscript-wrapper {}
+      //.mat-input-subscript-wrapper.mat-form-field-subscript-wrapper {}
     }
   }
 
-  /deep/.mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {    
+  /deep/.mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {
     color: #282a2f;
     width: 85%;
     background: linear-gradient(to right, #62cab8 , #917dce);
@@ -109,7 +111,7 @@
         background: linear-gradient(to bottom, #df516b, #e6d9a3);
         animation-delay: 3.6s;
       }
-  
+
     }
   }
 
