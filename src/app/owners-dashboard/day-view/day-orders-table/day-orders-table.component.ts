@@ -57,7 +57,7 @@ export class DayOrdersTableComponent implements OnChanges {
       orderTypesArr.forEach(ot => {
         ot.orders = ordersCloned.filter(o => o.orderType.id === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);
         ot.sales = ot.orders.reduce((acc, curr) => acc + (curr.sales || 0), 0);
-        ot.ordersCount = ot.orders.reduce((acc, curr) => acc++, 0);
+        ot.ordersCount = ot.orders.reduce((acc, curr) => (acc+1), 0);
       });
       this.byOrderTypes = orderTypesArr;
     }

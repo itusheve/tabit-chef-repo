@@ -9,10 +9,13 @@
                         {{orderType.caption}}
                     </mat-panel-title>
                     <mat-panel-description>
-                         {{orderType.sales | curr:'0'}}
-                         &nbsp;{{orderType.ordersCount | count}}
-                         &nbsp;<ng-container i18n="@@orders">Orders</ng-container>
-                        <!-- <mat-icon>account_circle</mat-icon> -->
+                        <div class="flex a-center">
+                            <div style="width:70px;">{{orderType.sales | curr:'0'}}</div>
+                            <div>
+                                {{orderType.ordersCount | count}}
+                                &nbsp;<ng-container i18n="@@orders">Orders</ng-container>
+                            </div>
+                        </div>
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 

@@ -116,7 +116,7 @@ let TranslateService = (function () {
             "PERCENT_OFF_ITEM": "% הנחת פריט",
             "APPLIED_SEGMENTATION": "בקשה לתיוג",
             "APPROVED_SEGMENTATION": "אישור תיוג",
-            "ORDER_TYPES_SEATED": "ישיבה בלבד",
+            "ORDER_TYPES_SEATED": "ישיבה",
             "ORDER_TYPES_TA": "טייק אווי",
             "ORDER_TYPES_DELIVERY": "משלוח",
             "ORDER_TYPES_REFUND": "החזר",

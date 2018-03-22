@@ -1,23 +1,24 @@
 <div class="flex d-col aj-center dayPieChart">
     <div>
-        <dx-pie-chart 
-            id="pie" 
-            type="doughnut" 
-            innerRadius="0.95" 
-            diameter="0.68"
-            startAngle="90" 
-            [palette]="pallete" 
-            [dataSource]="dataSource" 
-            [rtlEnabled]="true" 
+        <dx-pie-chart
+            id="pie"
+            type="doughnut"
+            innerRadius="0.95"
+            diameter="0.55"
+            startAngle="90"
+            [palette]="pallete"
+            [dataSource]="dataSource"
+            [rtlEnabled]="true"
             resolveLabelOverlapping="shift"
-            (onInitialized)="onInitializedEventHandler($event)" 
+            (onInitialized)="onInitializedEventHandler($event)"
+            style="height:270px;"
             >
             <dxi-series argumentField="orderType">
                 <dxo-label [visible]="true" [customizeText]="customizeLabelText" format="percent">
                     <dxo-connector [visible]="true"></dxo-connector>
                 </dxo-label>
             </dxi-series>
-            <dxo-size width="300"></dxo-size>
+            <dxo-size width="300" height="270"></dxo-size>
             <dxo-export [enabled]="false"></dxo-export>
             <!-- moved to custmo legend because of the negative returns figure (not supported by DX) -->
             <dxo-legend [visible]="false"></dxo-legend>
