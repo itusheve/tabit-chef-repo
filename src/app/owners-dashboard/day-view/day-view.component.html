@@ -1,27 +1,31 @@
+<!-- <div *ngIf="!daySelectorVisible" class="stickyDay">{{day | date:'fullDate'}}</div> -->
 <div class="row">
-  <div class="col-md-12">        
-    
-    <app-day-selector 
+  <div class="col-md-12">
+
+    <!-- <div class="roomForStickyDay" [ngClass]="{'stickyDayVisible': !daySelectorVisible}"></div> -->
+
+    <app-day-selector
       *ngIf="daySelectorOptions"
-      class="widget noPadding" 
-      #daySelector 
-      [currentValue]="day" 
+      class="widget noPadding"
+      #daySelector
+      style="display:block;position:sticky;top:0;z-index: 1000000;"
+      [currentValue]="day"
       [options]="daySelectorOptions"
       (onDateChanged)="onDateChanged($event)"
     ></app-day-selector>
-    
+
     <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
 
-    <app-day-orders-table 
-      class="widget" 
-      style="padding-bottom: 0px;" 
-      *ngIf="orders" 
-      [lastViewed]="drilledOrder" 
+    <app-day-orders-table
+      class="widget"
+      style="padding-bottom: 0px;"
+      *ngIf="orders"
+      [lastViewed]="drilledOrder"
       [orders]="orders"
       (onOrderClicked)="onOrderClicked($event)"
     ></app-day-orders-table>
 
-    <app-day-sales-table 
+    <app-day-sales-table
       class="widget"
       title="Day Summary"
       i18n-title="@@daySummary"
@@ -30,11 +34,11 @@
     </app-day-sales-table>
 
     <div *ngIf="KPIs">
-      <app-day-sales-table       
+      <app-day-sales-table
         *ngFor="let key of getKeys(KPIs.byShiftByOrderType)"
-        class="widget" 
-        [title]="key.name" 
-        [totalSales]="KPIs.byShiftByOrderType.get(key).totalSales" 
+        class="widget"
+        [title]="key.name"
+        [totalSales]="KPIs.byShiftByOrderType.get(key).totalSales"
         [byOrderType]="KPIs.byShiftByOrderType.get(key).byOrderType">
       </app-day-sales-table>
     </div>
@@ -46,7 +50,7 @@
     ></app-day-sales-by-sub-department-table>
 
     <app-most-sold-items-table
-       class="widget" 
+       class="widget"
        [itemsData]="itemsData"
     ></app-most-sold-items-table>
 
@@ -64,14 +68,14 @@
     <app-operational-errors-table
       class="widget"
       [operationalErrorsData]="operationalErrorsData"
-      [lastViewed]="drilledOrderNumber" 
+      [lastViewed]="drilledOrderNumber"
       (onOrderClicked)="onOrderClicked_orderNumber($event)"
     ></app-operational-errors-table>
 
     <app-retention-table
       class="widget"
       [retentionData]="retentionData"
-      [lastViewed]="drilledOrderNumber" 
+      [lastViewed]="drilledOrderNumber"
       (onOrderClicked)="onOrderClicked_orderNumber($event)"
     ></app-retention-table>
 
@@ -81,15 +85,15 @@
       [mtdKPIs]="mtdKPIs"
     ></app-month-summary-table>
 
-    <!-- <app-day-sales-type-table 
-      class="widget" 
+    <!-- <app-day-sales-type-table
+      class="widget"
       #daySalesTypeTable
       (onRowClicked)="onGoToOrders($event, 'orderType')"
       >
     </app-day-sales-type-table>
 
-    <app-day-diners-table 
-      class="widget" 
+    <app-day-diners-table
+      class="widget"
       *ngIf="dinersTable.show"
       [data$]="dinersTableData$"
       ></app-day-diners-table> -->
@@ -112,7 +116,7 @@
       </button>
     </div>
   </div>
-  <div class="flex g-1 body">    
+  <div class="flex g-1 body">
     <app-order-view style="width:100%;" [tlogId]="drillTlogId"></app-order-view>
   </div>
 </div>

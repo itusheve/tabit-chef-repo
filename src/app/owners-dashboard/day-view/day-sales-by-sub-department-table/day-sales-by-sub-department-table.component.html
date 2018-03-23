@@ -4,15 +4,16 @@
         <div class="title" i18n="@@categories">Categories</div>
         <div class="flex body">
             <table class="fixedWidth" *ngIf="data">
-                
+
                 <tr class="header">
                     <td style="width:60px;" i18n="@@category">Category</td>
-                    <td>{{bd | date:'dd/MM/yyyy'}}</td>
+                    <!-- <td>{{bd | date:'dd/MM/yyyy'}}</td> -->
+                    <td i18n="@@daily">Daily</td>
                     <td i18n="@@thisWeek">This Week</td>
                     <td i18n="@@thisMonth">This Month</td>
                     <td i18n="@@thisYear">This Year</td>
                 </tr>
-                
+
                 <tr>
                     <td style="width:60px;" i18n="@@total">Total</td>
                     <td>{{data.totalSales.thisBdSales | curr:'0'}} ({{1 | percent:'1.2-2'}})</td>
@@ -20,11 +21,11 @@
                     <td>{{data.totalSales.thisMonthSales | curr:'0'}} ({{1 | percent:'1.2-2'}})</td>
                     <td>{{data.totalSales.thisYearSales | curr:'0'}} ({{1 | percent:'1.2-2'}})</td>
                 </tr>
-    
+
                 <tr *ngFor="let o of data.bySubDepartment">
                     <td style="width:60px;">{{o.subDepartment}}</td>
                     <td>
-                        <span *ngIf="o['data']['thisBd']">{{o['data']['thisBd']['sales'] | curr:'0'}} 
+                        <span *ngIf="o['data']['thisBd']">{{o['data']['thisBd']['sales'] | curr:'0'}}
                             <span style="font-size:smaller">({{o['data']['thisBd']['pct'] | percent:'1.2-2'}})</span>
                         </span>
                     </td>
@@ -44,7 +45,7 @@
                         </span>
                     </td>
                 </tr>
-    
+
             </table>
         </div>
     </div>

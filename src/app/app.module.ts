@@ -14,11 +14,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { TokenInterceptor } from './auth/token.interceptor';
 import { AsyncLocalStorageModule } from 'angular-async-local-storage';
 
-import { 
+import {
   MatFormFieldModule,
   MatInputModule,
-  MatButtonModule, 
-  MatIconModule, 
+  MatButtonModule,
+  MatIconModule,
   MatCardModule,
   MatSnackBarModule,
   MatButtonToggleModule,
@@ -55,6 +55,7 @@ import { OrgGuard } from './auth/org-guard.service';
 //feature modules:
 import { OrgsModule } from './orgs/orgs.module';
 import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.module';
+import { VisibilityService } from '../tabit/utils/visibility.service';
 
 // The CLI imports the locale data for you when you use the parameter --locale with ng serve and ng build.
 if (environment.locale==='he') {
@@ -79,11 +80,11 @@ if (environment.locale==='he') {
     MomentModule,
     BrowserAnimationsModule,
     AsyncLocalStorageModule,
-    
+
     //feature modules:
     OrgsModule,
     OwnersDashboardModule,
-    
+
     AppRoutingModule,//must be after the feature modules: "Each routing module augments the route configuration in the order of import."
 
     MatFormFieldModule,
@@ -107,15 +108,19 @@ if (environment.locale==='he') {
       useClass: TokenInterceptor,
       multi: true
     },
-    { 
-      provide: LOCALE_ID, 
+    {
+      provide: LOCALE_ID,
       useValue: environment.locale==='he' ? 'he' : 'en-US'
     },
-    AuthService, 
+    AuthService,
     UserGuard,
     OrgGuard,
-    DataService, 
-    
+
+    // Utils:
+    VisibilityService,
+
+    DataService,
+
     UsersDataService,
     CategoriesDataService,
     ItemsDataService,
@@ -128,7 +133,7 @@ if (environment.locale==='he') {
     CardsDataService,
     ClosedOrdersDataService,
     TrendsDataService,
-    ROSEp, 
+    ROSEp,
     OlapEp
   ],
   bootstrap: [AppComponent]

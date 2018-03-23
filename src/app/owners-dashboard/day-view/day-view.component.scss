@@ -1,3 +1,20 @@
+$stickyDayHeight: 30px;
+
+.stickyDay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 300px;
+    height: $stickyDayHeight;
+    z-index: 100;
+}
+
+.stickyDayVisible {
+    height: $stickyDayHeight;
+}
+
 .drill {
     position:fixed;
     bottom:0;
@@ -5,7 +22,7 @@
     left:0;
     max-width: 990px;
     margin: 0 auto;
-    height:100%;    
+    height:100%;
     background-color: #edf1f2;
     overflow-y:auto;overflow-x:hidden;
     .header {
