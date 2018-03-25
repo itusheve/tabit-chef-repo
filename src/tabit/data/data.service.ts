@@ -621,6 +621,8 @@ export class DataService {
             const filtered = data.orgs
                 .filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT')
                 .filter(o=>{
+                    if (data.user.isStaff) return true;
+
                     let membership = data.user.memberships.find(m => {
                         return m.organization === o.id && m.active;
                     });
