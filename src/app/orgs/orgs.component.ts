@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../tabit/data/data.service';
+import { DataService, tmpTranslations } from '../../tabit/data/data.service';
 import { AuthService } from '../auth/auth.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-orgs',
@@ -12,16 +13,17 @@ import { Subject } from 'rxjs/Subject';
 export class OrgsComponent implements OnInit {
 
   mode: string;// normal (selecting org and continuing to app), switch (changing an org, restart should occur)
-  
+
   orgs: any;
   keyUp = new Subject<string>();
   orgsFiltered: any;
 
   constructor(
-    private dataService: DataService, 
-    private authService: AuthService, 
+    private dataService: DataService,
+    private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public snackBar: MatSnackBar
   ) {
     this.keyUp.subscribe((filter: string)=>{
       if (filter==='') this.orgsFiltered = this.orgs;
@@ -31,7 +33,7 @@ export class OrgsComponent implements OnInit {
       }
     });
   }
-  
+
   private render() {
 
     this.dataService.organizations.take(1)
@@ -51,28 +53,40 @@ export class OrgsComponent implements OnInit {
       this.authService.selectOrg(org)
         .then(() => {
           this.router.navigate(['owners-dashboard/home']);
+        })
+        .catch(e=>{
+          this.snackBar.open('unauthorized', null, {
+            direction: 'rtl',//TODO localization
+            duration: 3000,
+          });
         });
     } else {
-      this.authService.switchOrg(org)
+      this.authService.selectOrg(org)
         .then(()=>{
             this.router.navigate([''])
               .then(()=>{
                   location.reload();
               });
+        })
+        .catch(e=>{
+          this.snackBar.open('unauthorized', null, {
+            direction: 'rtl',//TODO localization
+            duration: 3000,
+          });
         });
     }
   }
 
   ngOnInit() {
-    
+
     this.route.queryParams
       //  .filter(params => params.m)
-      .subscribe(params => { 
+      .subscribe(params => {
         const mode = params.m;
         this.mode = (mode && mode==='s') ? 'switch' : 'normal';
       });
-    
-      this.render();  
+
+      this.render();
   }
 
 }

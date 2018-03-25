@@ -2,9 +2,9 @@
   <div *ngIf="orgs && orgs.length>9" class="row" style="padding-top:15px;">
     <div class="col-12">
       <mat-form-field style="width:100%;">
-        <input 
-          matInput 
-          placeholder="Filter" 
+        <input
+          matInput
+          placeholder="Filter"
           i18n-placeholder="orgs@@filter"
           (keyup)='keyUp.next($event.target.value)'
           >
@@ -17,5 +17,6 @@
         <mat-card-content>{{org.name}}</mat-card-content>
       </mat-card>
     </div>
+    <div *ngIf="orgsFiltered?.length===0" i18n="@@noOrgs">Your user is not authorized to any Restaurants. Please contact support.</div>
   </div>
 </div>

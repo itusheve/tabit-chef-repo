@@ -151,13 +151,34 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
           };
         });
 
-        // this.data.bySubDepartment.sort((a, b)=>{//TODO create a department/sub-department tree in dataservice with ranks/sorting order
-        //   switch (a.subDepartment) {
-        //     case 'מנות עיקריות':
-        //       return -1;
-
-        //   }
-        // });
+        this.data.bySubDepartment.sort((a, b)=>{//TODO create a department/sub-department tree in dataservice with ranks/sorting order
+          switch (a.subDepartment) {
+            case 'מנות עיקריות':
+              return -1;
+            case 'מנות ראשונות':
+              return -1;
+            case 'קינוחים':
+              return -1;
+            case 'תוספות':
+              return -1;
+            case 'אלכוהול':
+              return -1;
+            case 'חמה':
+              return -1;
+            case 'יינות':
+              return -1;
+            case 'קלה':
+              return -1;
+            case 'אחר':
+              return -1;
+            case 'החזרים':
+              return -1;
+            case 'פריט כללי':
+              return -1;
+            case 'כלים':
+              return -1;
+          }
+        });
 
       });
 
