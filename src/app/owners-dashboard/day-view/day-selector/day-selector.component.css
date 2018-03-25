@@ -1,7 +1,8 @@
-/* #daySelector {
-    position: sticky;
-    top: 0;
-} */
+#daySelector {
+    z-index: 100000000;
+    /* position: sticky; */
+    /* top: 0; */
+}
 
 .dx-calendar-navigator a.disable i {
     color: rgba(128, 128, 128, 0.5);

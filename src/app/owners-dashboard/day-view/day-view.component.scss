@@ -1,5 +1,16 @@
 $stickyDayHeight: 30px;
 
+.widget {
+    z-index: 1;
+}
+
+app-day-selector {
+    display:block;
+    position:sticky;
+    top:0;
+    z-index: 1000000;
+}
+
 .stickyDay {
     position: fixed;
     top: 0;
