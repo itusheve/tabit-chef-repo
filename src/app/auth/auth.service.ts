@@ -41,13 +41,14 @@ export class AuthService {
                 this.localStorage.getItem<any>('user')
                     .subscribe(user=>{
 
-                        let membership = user.memberships.find(m => {
-                            return m.organization === org.id && m.active;
-                        });
-                        if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1) {
-                        // if (!user.isStaff && membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1) {
-                            // not allowed
-                            reject('');
+                        if (!user.isStaff) {
+                            let membership = user.memberships.find(m => {
+                                return m.organization === org.id && m.active;
+                            });
+                            if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1) {
+                                // not allowed
+                                reject('');
+                            }
                         }
 
                         this.httpClient.post(`${ROS_base_url}Organizations/${org.id}/change`, {})
