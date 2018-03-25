@@ -373,7 +373,7 @@ let billService = {
                     //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
                     //     discountsAndOTH: false,//{dim:retention,measure:retention}  heb: שימור ושיווק
                     //     employees: false,//{dim:organizational,measure:organizational}  heb: עובדים
-                    //     promotions: false,//{dim:promotions,measure:retention}  heb: מבצעים            
+                    //     promotions: false,//{dim:promotions,measure:retention}  heb: מבצעים
                     // }
                 };
 
@@ -398,10 +398,10 @@ let billService = {
                             qty: null,
                             amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2),
                             // _priceReductions: {
-                            //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational} 
-                            //     discountsAndOTH: true,//{dim:retention,measure:retention} 
-                            //     employees: false,//{dim:organizational,measure:organizational}  
-                            //     promotions: false,//{dim:promotions,measure:retention}          
+                            //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}
+                            //     discountsAndOTH: true,//{dim:retention,measure:retention}
+                            //     employees: false,//{dim:organizational,measure:organizational}
+                            //     promotions: false,//{dim:promotions,measure:retention}
                             // }
                         });
                     });
@@ -493,10 +493,10 @@ let billService = {
                     name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : ORDERS_VIEW.order_discount,
                     amount: Utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2),
                     // _priceReductions: {
-                    //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational} 
-                    //     discountsAndOTH: true,//{dim:retention,measure:retention}  
+                    //     cancellation: false,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}
+                    //     discountsAndOTH: true,//{dim:retention,measure:retention}
                     //     employees: false,//{dim:organizational,measure:organizational}
-                    //     promotions: false,//{dim:promotions,measure:retention}          
+                    //     promotions: false,//{dim:promotions,measure:retention}
                     // }
                 });
             });
@@ -644,9 +644,9 @@ export class ClosedOrdersDataService {
 
     orderViewService: any;
 
-    /* 
+    /*
         the stream emits the currentBd's last closed order time, in the restaurant's timezone and in the format dddd
-        e.g. 1426 means the last order was closed at 14:26, restaurnat time 
+        e.g. 1426 means the last order was closed at 14:26, restaurnat time
     */
     public lastClosedOrderTime$: Observable<any> = new Observable(obs => {
         this.dataService.currentBd$.subscribe((cbd: moment.Moment) => {
@@ -679,7 +679,7 @@ export class ClosedOrdersDataService {
 
     }
 
-    /* 
+    /*
      @:promise
      resolves with a collection of 'Order's for the provided businesDate.
  */
@@ -690,7 +690,7 @@ export class ClosedOrdersDataService {
         return this.dataService.getOrders(businessDate);
     }
 
-    /* 
+    /*
         @caching(indirect)
         @:promise
         resolves with the Order with the provided tlogId (and orderOld as copied from Office).
@@ -710,7 +710,7 @@ export class ClosedOrdersDataService {
             this.dataService.getOrders(moment(businessDateStr))
                 .then(orders => {
                     const order = orders.find(o => o.tlogId === tlogId);
-                    if (enriched) {
+                    if (order && enriched) {
                         if (order.enrichmentLevels.orderDetails) {
                             resolve({ order: order });
                         } else {
@@ -726,10 +726,10 @@ export class ClosedOrdersDataService {
 
     //TODO the app was developed against ROS 3.7.0 (belongs to Product 4.X), but the enrich order code was copied from develop-il (Office 3.X, Product 3.X). TODO, bring newer code from latest Office 4.X (compare the relevant office files to detect what was changed).
 
-    /* 
+    /*
         enriches the provided Order with the following info:
-            a. 
-            b. 
+            a.
+            b.
             ...
      */
     public enrichOrder(order_: Order): Promise<{
@@ -1721,7 +1721,7 @@ export class ClosedOrdersDataService {
         function getLookupData() {
             return new Promise((resolve, reject) => {
                 zip(
-                    // that.categoriesDataService.categories$, 
+                    // that.categoriesDataService.categories$,
                     that.offersDataService.offers$,
                     that.modifierGroupsDataService.modifierGroups$,
                     that.usersDataService.users$,
@@ -1729,7 +1729,7 @@ export class ClosedOrdersDataService {
                     that.tablesDataService.tables$,
                     that.promotionsDataService.promotions$,
                     (
-                        // categoriesData: any, 
+                        // categoriesData: any,
                         offersData: any,
                         modifierGroupsData: any,
                         usersData: any,
@@ -1737,7 +1737,7 @@ export class ClosedOrdersDataService {
                         tablesData: any,
                         promotionsData: any
                     ) => ({
-                        // categoriesData: categoriesData, 
+                        // categoriesData: categoriesData,
                         offersData: offersData,
                         modifierGroupsData: modifierGroupsData,
                         usersData: usersData,
@@ -2136,7 +2136,7 @@ export class ClosedOrdersDataService {
                 }
 
                 order_.users = orderOld.OrderUsers;
-                
+
                 return {
                     order: order_,
                     orderOld: orderOld,

@@ -134,7 +134,7 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
 
   public mtdKPIs: CustomRangeKPI;
 
-  public daySelectorVisible: boolean;
+  public daySelectorVisible = true;
 
   constructor(
     private closedOrdersDataService: ClosedOrdersDataService,
@@ -229,6 +229,12 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
     });
   }
 
+
+  tmp(e) {
+    console.info('gotcha!');
+    e.stopPropagation();
+  }
+
   //TODO on iOS when touching the circle it disappears
 
   ngOnInit() {
@@ -248,11 +254,11 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
 
   ngAfterViewInit() {
     // setTimeout(() => {
-    //   this.visibilityService.monitorVisibility(<any>document.getElementById('daySelector'), <any>document.getElementsByTagName('mat-sidenav-content')[0])
-    //     .subscribe(visible => {
-    //       console.info(`visible: ${visible}`);
-    //       this.daySelectorVisible = visible;
-    //     });
+      this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByTagName('mat-sidenav-content')[0])
+        .subscribe(visible => {
+          console.info(`visible: ${visible}`);
+          this.daySelectorVisible = visible;
+        });
     // }, 6000);
 
   }

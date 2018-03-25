@@ -1,18 +1,36 @@
 <!-- <div *ngIf="!daySelectorVisible" class="stickyDay">{{day | date:'fullDate'}}</div> -->
 <div class="row">
-  <div class="col-md-12" style="z-index:1">
+  <div class="col-md-12">
+  <!-- <div class="col-md-12" style="z-index:1"> -->
 
     <!-- <div class="roomForStickyDay" [ngClass]="{'stickyDayVisible': !daySelectorVisible}"></div> -->
 
+    <!-- [hidden]="!daySelectorVisible && drill" -->
+    <!-- *ngIf="daySelectorOptions" -->
+    <!-- #daySelector -->
     <app-day-selector
-      *ngIf="daySelectorOptions"
-      class="widget noPadding"
-      #daySelector
-      style=""
+      class="widget noPadding daySelectorNotFixed"
+      [style.visibility]="daySelectorVisible ? 'visible' : 'hidden'"
       [currentValue]="day"
       [options]="daySelectorOptions"
       (onDateChanged)="onDateChanged($event)"
     ></app-day-selector>
+
+    <!-- [hidden]="daySelectorVisible && drill" -->
+    <app-day-selector
+      class="widget noPadding daySelectorFixed"
+      [style.visibility]="!daySelectorVisible ? 'visible' : 'hidden'"
+      [currentValue]="day"
+      [options]="daySelectorOptions"
+      (onDateChanged)="onDateChanged($event)"></app-day-selector>
+
+    <!-- <div class="app-day-selector" (click)="tmp($event)"> -->
+    <!-- <div class="app-day-selector"> -->
+      <!-- DUE TO UNKNOWN CHROME BUG, IT SEEMS THAT A STICKY CONTAINER WITH AN ANGULAR COMPONENT DOESNT WORK GOOD - THE CLICK EVENTS IN THE COMPONENT DOESNT GET CALLED -->
+      <!-- <app-day-selector *ngIf="daySelectorOptions" class="widget noPadding" #daySelector [hidden]="drill" [currentValue]="day"
+        [options]="daySelectorOptions" (onDateChanged)="tmp($event)"></app-day-selector> -->
+      <!-- <div class="" id="" style="height:50px;" (click)="tmp($event)"></div> -->
+    <!-- </div> -->
 
     <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
 
@@ -105,7 +123,7 @@
 
 
 
-<div class="flex d-col drill" *ngIf="drill">
+<div class="flex d-col drill" *ngIf="drill" style="z-index:10000">
   <div class="flex s-0 j-sb a-center header">
     <div class="flex j-start" style="width:80%;">
       <div style="color:white">{{drillTlogTime | date:'d/M/yy H:mm'}}</div>

@@ -58,9 +58,9 @@
         <source>Total Payments</source>
         <target>סה"כ תשלומים</target>
       </trans-unit>
-      <trans-unit id="monthlyTotal" datatype="html">
-        <source>Monthly Total</source>
-        <target>סכום חודשי</target>
+      <trans-unit id="monthly" datatype="html">
+        <source>Monthly</source>
+        <target>חודשי</target>
       </trans-unit>
       <trans-unit id="amount" datatype="html">
         <source>Amount</source>

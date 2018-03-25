@@ -51,7 +51,7 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
       thisMonthSales?: number,
       thisMonthPct?: number,
       thisYearSales?: number,
-      thisYearPct?: number      
+      thisYearPct?: number
     };
     bySubDepartment: {
       subDepartment: string;
@@ -73,7 +73,7 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
   constructor( ) {}
 
   ngOnChanges(o: SimpleChanges) {
-    if (o.salesBySubDepartment && o.salesBySubDepartment.currentValue) {      
+    if (o.salesBySubDepartment && o.salesBySubDepartment.currentValue) {
       const clone: {
         thisBd: {
           totalSales: number;
@@ -108,7 +108,7 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
           }[]
         }
       } = _.cloneDeep(this.salesBySubDepartment);
-      
+
       clone.thisBd.bySubDepartment.forEach(element => {
         element.pct = element.sales / clone.thisBd.totalSales;
       });
@@ -150,6 +150,14 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
             pct: subDepartmentObj.pct
           };
         });
+
+        // this.data.bySubDepartment.sort((a, b)=>{//TODO create a department/sub-department tree in dataservice with ranks/sorting order
+        //   switch (a.subDepartment) {
+        //     case 'מנות עיקריות':
+        //       return -1;
+
+        //   }
+        // });
 
       });
 
