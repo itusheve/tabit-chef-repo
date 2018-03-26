@@ -20,47 +20,66 @@ const meUrl = 'account/me';
 export class AuthService {
 
     constructor(
-            private httpClient: HttpClient, 
+            private httpClient: HttpClient,
             protected localStorage: AsyncLocalStorage
             // private router: Router
     ) {}
 
     private authState = 0;//0: anon, 1: user mode, 2: org mode
-    
+
     public authToken: string;
 
-    login(credentials): Promise<any> {        
+    login(credentials): Promise<any> {
         return this.authenticate(credentials);
     }
-    
+
     selectOrg(org: any): Promise<any> {
         return new Promise((resolve, reject)=>{
             if (this.authState >= 1) {
-                this.httpClient.post(`${ROS_base_url}Organizations/${org.id}/change`, {})
-                    .subscribe(org_=>{
-                        this.localStorage.setItem('org', org_).subscribe(() => { 
-                            this.authState = 2;
-                            resolve();
-                        });
+
+
+                this.localStorage.getItem<any>('user')
+                    .subscribe(user=>{
+
+                        if (!user.isStaff) {
+                            let membership = user.memberships.find(m => {
+                                return m.organization === org.id && m.active;
+                            });
+                            if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1) {
+                                // not allowed
+                                reject('');
+                            }
+                        }
+
+                        this.httpClient.post(`${ROS_base_url}Organizations/${org.id}/change`, {})
+                            .subscribe(org_=>{
+                                this.localStorage.setItem('org', org_).subscribe(() => {
+                                    this.authState = 2;
+                                    resolve();
+                                });
+                            });
                     });
+
+
+
             } else {
                 reject();
             }
         });
     }
 
-    switchOrg(org:any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            if (this.authState >= 1) {
-                this.httpClient.post(`${ROS_base_url}Organizations/${org.id}/change`, {})
-                    .subscribe(org_ => {
-                        this.localStorage.setItem('org', org_).subscribe(() => {
-                            resolve();
-                        });
-                    });
-            }
-        });
-    }
+    // switchOrg(org:any): Promise<any> {
+    //     return new Promise((resolve, reject) => {
+    //         if (this.authState >= 1) {
+    //             this.httpClient.post(`${ROS_base_url}Organizations/${org.id}/change`, {})
+    //                 .subscribe(org_ => {
+    //                     this.localStorage.setItem('org', org_).subscribe(() => {
+    //                         resolve();
+    //                     });
+    //                 });
+    //         }
+    //     });
+    // }
 
     logout() {
         return this.unauthenticate();
@@ -90,15 +109,15 @@ export class AuthService {
                         }
                     ) => {
                         this.authToken = token.access_token;
-                        this.localStorage.setItem('token', token).subscribe(() => { 
+                        this.localStorage.setItem('token', token).subscribe(() => {
                             this.httpClient.get(`${ROS_base_url}${meUrl}`)
                                 .subscribe(
                                     user=>{
-                                        this.localStorage.setItem('user', user).subscribe(() => { 
+                                        this.localStorage.setItem('user', user).subscribe(() => {
                                             this.authState = 1;
                                             resolve();
                                         });
-                                    }, 
+                                    },
                                     e=>{
                                         //reverse process upon error
                                         this.authToken = undefined;
@@ -110,7 +129,7 @@ export class AuthService {
                                     }
                                 );
                         });
-                        
+
                     },
                     err => {
                         reject(err);
@@ -144,7 +163,7 @@ export class AuthService {
         });
     }
 
-    /* 
+    /*
     try to authenticate with the refresh token.
     on success resolve with new token obj (access+refresh)
      */
@@ -205,7 +224,7 @@ export class AuthService {
             }, (error) => {
                 // Called if data is invalid
                 throw Observable.throw({});
-            });                        
+            });
         // });
         return subject;
     }
@@ -217,7 +236,7 @@ export class AuthService {
                         //this.localStorage.clear().subscribe(() => {});
                         // this.localStorage.getItem<User>('user').subscribe((user) => {
                         //     user.firstName; // should be 'Henri'
-                        // });                        
+                        // });
                         // const schema: JSONSchema = {
                         //     properties: {
                         //         firstName: { type: 'string' },
@@ -230,4 +249,4 @@ export class AuthService {
                         //     // Called if data is valid or null
                         // }, (error) => {
                         //     // Called if data is invalid
-                        // }); 
+                        // });

@@ -84,10 +84,12 @@ app-day-selector {
     font-size: 14px;
 }
 
-/deep/.widget {
+.widget {
     padding: 0;
-    .title {
+}
 
+/deep/.widget {
+    .title {
     }
     .body {
         padding: 0px;
