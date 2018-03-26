@@ -1,8 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-
 @import "fonts";
-
-
 // @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 // @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "./tabit-material-theme.scss";
@@ -13,216 +10,218 @@ $greyText: #6e7482;
 $oldDashBG: #edf1f2;
 
 html, body {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    font-family: 'Assistant', sans-serif;
-    font-size: 16px;
-    -webkit-font-smoothing: antialiased;
-    color: $baseText;
-    background-color: black;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: 'Assistant', sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  color: $baseText;
+  background-color: black;
 
 }
 
 ::-webkit-scrollbar {
-    height: 10px;
-    width: 0px;
-    background: #ddd;
+  height: 10px;
+  width: 0px;
+  background: #ddd;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 0;
-    -webkit-border-radius: 0;
-    box-shadow: none;
-    -webkit-box-shadow: none;
+  background: #888;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  box-shadow: none;
+  -webkit-box-shadow: none;
 }
+
 ::-webkit-scrollbar-corner {
-    background: #000;
+  background: #000;
 }
 
 .widget {
-    display: block;
-    padding: 15px 12px;
-    margin-bottom: 10px;
-    background-color: #fff;
-    color: #343E56;
-    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+  display: block;
+  padding: 15px 12px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  color: #343E56;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
 
-    &.fullWidth {
-        padding: 15px 0;
+  &.fullWidth {
+    padding: 15px 0;
+  }
+
+  &.blueAccent {
+    background-color: #3A5675;
+    color: #fff;
+
+    dx-load-indicator {
+      .dx-loadindicator-segment {
+        background-color: #fff;
+      }
     }
+  }
+  &.greyAccent {
+    background-color: #6e7482;
+    color: #fff;
+  }
 
-    &.blueAccent {
-        background-color: #3A5675;
-        color: #fff;
+  &.noPadding {
+    padding: 0;
+    background-color: transparent;
+  }
 
-        dx-load-indicator {
-            .dx-loadindicator-segment {
-                background-color: #fff;
-            }
-        }
-    }
-    &.greyAccent {
-        background-color: #6e7482;
-        color: #fff;
-    }
+  .title {
+    font-size: 20px;
+    color: white;
+    background-color: #3a5675;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 0px 8px 2px rgba(0, 0, 0, 0.2);
+  }
 
-    &.noPadding {
-        padding: 0;
-        background-color: transparent;
-    }
+  .body {
 
-    .title {
-        font-size: 20px;
-        color: white;
-        background-color: #3a5675;
-        text-align: center;
-        padding: 10px;
-        box-shadow: 0 0px 8px 2px rgba(0, 0, 0, 0.2);
-    }
+    table {
+      color: $greyText;
 
-    .body {
+      &.fixedWidth {
+        table-layout: fixed;
+        width: 100%;
+      }
 
-        table {
-            color: $greyText;
+      tr {
+        border-bottom: 1px solid #eaeff0;
 
-            &.fixedWidth {
-                table-layout: fixed;
-                width: 100%;
-            }
-
-            tr {
-                border-bottom: 1px solid #eaeff0;
-
-                &.lastViewed {
-                    background-color: #b8cbdf;
-                }
-
-
-                &.tblTotalRow {
-                    font-weight: bold;
-                }
-
-                td {
-                    padding: 8px 0px;
-                    &:first-child {
-                        font-weight: bold;
-                    }
-                }
-            }
+        &.lastViewed {
+          background-color: #b8cbdf;
         }
 
-        .table {
-            color: $greyText;
-            .tblRow {
-                padding: 8px 0px;
-                border-bottom: 1px solid #eaeff0;
-
-                &.tblTotalRow {
-                    font-weight: bold;
-                }
-            }
+        &.tblTotalRow {
+          font-weight: bold;
         }
+
+        td {
+          padding: 8px 0px;
+          &:first-child {
+            font-weight: bold;
+          }
+        }
+      }
     }
+
+    .table {
+      color: $greyText;
+      .tblRow {
+        padding: 8px 0px;
+        border-bottom: 1px solid #eaeff0;
+
+        &.tblTotalRow {
+          font-weight: bold;
+        }
+      }
+    }
+  }
 }
 
 table {
-    font-family: 'Assistant', sans-serif;
+  font-family: 'Assistant', sans-serif;
 }
 
 html[dir=rtl] {
-    mat-card-content {
-        text-align: start;
-    }
+  mat-card-content {
+    text-align: start;
+  }
 }
 
 .dx-widget, dx-datagrid, dx-pie-chart, dx-chart {
-    font-family: 'Assistant', sans-serif!important;
+  font-family: 'Assistant', sans-serif !important;
 }
+
 dx-chart svg text {
-    font-family: 'Assistant', sans-serif!important;
+  font-family: 'Assistant', sans-serif !important;
 }
+
 dx-pie-chart svg text {
-    font-family: 'Assistant', sans-serif!important;
+  font-family: 'Assistant', sans-serif !important;
 }
 
 $navigatorHeight: 50px;
 $navigatorBtnWidth: 50px;
 .dx-calendar-navigator {
-    height: $navigatorHeight;
-    .dx-calendar-caption-button {
-        right: $navigatorBtnWidth;
-        left: $navigatorBtnWidth;
-    }
-    .dx-calendar-navigator-next-view, .dx-calendar-navigator-previous-view {
-        width: $navigatorBtnWidth;
-    }
+  height: $navigatorHeight;
+  .dx-calendar-caption-button {
+    right: $navigatorBtnWidth;
+    left: $navigatorBtnWidth;
+  }
+  .dx-calendar-navigator-next-view, .dx-calendar-navigator-previous-view {
+    width: $navigatorBtnWidth;
+  }
 }
 
 .dx-datagrid {
-    .dx-datagrid-headers {
-        border: none;
-    }
-    .dx-row {
-        border-top: none!important;
-        border-bottom: none!important;
-        &.dx-header-row > td, &.dx-data-row > td {
-            padding: 8px 1px;//was 8px 5px
-            font-size: 15px;//was 16px
-            font-weight: normal;
+  .dx-datagrid-headers {
+    border: none;
+  }
+  .dx-row {
+    border-top: none !important;
+    border-bottom: none !important;
+    &.dx-header-row > td, &.dx-data-row > td {
+      padding: 8px 1px; //was 8px 5px
+      font-size: 15px; //was 16px
+      font-weight: normal;
 
-        }
-        &.dx-header-row > td {
-            line-height: 40px;
-            color: #aaa;
-            border-bottom: 1px solid #aaa;
-        }
-        &.dx-data-row > td {
-            line-height: 30px;
-            color: #6E7482;
-            border-top: 1px solid #eaeff0;
-        }
-        &:first-child {
-            &.dx-data-row > td {
-                border-top: none;
-            }
-        }
     }
+    &.dx-header-row > td {
+      line-height: 40px;
+      color: #aaa;
+      border-bottom: 1px solid #aaa;
+    }
+    &.dx-data-row > td {
+      line-height: 30px;
+      color: #6E7482;
+      border-top: 1px solid #eaeff0;
+    }
+    &:first-child {
+      &.dx-data-row > td {
+        border-top: none;
+      }
+    }
+  }
 }
 
-$iconSize:20px;
+$iconSize: 20px;
 i.icon {
-    width: $iconSize;
-    height: $iconSize;
-    display: block;
-    background-repeat: no-repeat;
-    &.iconOperationalAndCancellations {
-        background: url(/assets/icons/OperationalAndCancellation.svg);
-    }
-    &.iconRetention {
-        background: url(/assets/icons/Retention.svg);
-    }
-    &.iconOrganizational {
-        background: url(/assets/icons/Organizational.svg);
-    }
-    &.iconPromotions {
-        background: url(/assets/icons/Promotion.svg);
-    }
+  width: $iconSize;
+  height: $iconSize;
+  display: block;
+  background-repeat: no-repeat;
+  &.iconOperationalAndCancellations {
+    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/OperationalAndCancellation.svg);
+  }
+  &.iconRetention {
+    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Retention.svg);
+  }
+  &.iconOrganizational {
+    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Organizational.svg);
+  }
+  &.iconPromotions {
+    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Promotion.svg);
+  }
 
-    &.iconOperationalAndCancellations_off {
-        background: url(/assets/icons/OperationalAndCancellation_off.svg);
-    }
-    &.iconRetention_off {
-        background: url(/assets/icons/Retention_off.svg);
-    }
-    &.iconOrganizational_off {
-        background: url(/assets/icons/Organizational_off.svg);
-    }
-    &.iconPromotions_off {
-        background: url(/assets/icons/Promotion_off.svg);
-    }
+  &.iconOperationalAndCancellations_off {
+    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/OperationalAndCancellation_off.svg);
+  }
+  &.iconRetention_off {
+    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Retention_off.svg);
+  }
+  &.iconOrganizational_off {
+    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Organizational_off.svg);
+  }
+  &.iconPromotions_off {
+    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Promotion_off.svg);
+  }
 }
 
 @import 'tabit/styles/util';
