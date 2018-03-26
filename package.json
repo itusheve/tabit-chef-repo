@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "postinstall": "ng build --aot -prod --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he",
+    "postinstall": "ng build -prod --output-hashing none --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he",
     "ng": "ng",
     "start": "node server.js",
     "build": "ng build",
