@@ -57,7 +57,8 @@ const OrderViewService = (function () {
             OTC: "OTC"
         },
         ReturnTypes: {
-            Cancellation: 'cancellation'
+            Cancellation: 'cancellation',
+            TransactionBased: "TRANSACTION BASED"
         },
         DiscountTypes: {
             OTH: "OTH",
@@ -969,7 +970,7 @@ const OrderViewService = (function () {
             function buildPaymentRow(payment) {
 
                 let result = [];
-                if (payment._type === "CreditCardPayment") {
+                if (payment._type === Enums.PaymentTypes.CreditCardPayment || payment._type === Enums.PaymentTypes.CreditCardRefund) {
                     if (payment.creditCardBrand && payment.creditCardBrand !== "") {
                         let value = payment.creditCardBrand;
                         if (payment.creditCardBrand === 'tabit') {
@@ -981,7 +982,7 @@ const OrderViewService = (function () {
                         result.push({ value: value });
                     }
                 }
-                else if (payment._type === "ChargeAccountPayment") {
+                else if (payment._type === Enums.PaymentTypes.ChargeAccountPayment || payment._type === Enums.PaymentTypes.ChargeAccountRefund) {
                     if (payment.accountName && payment.accountName !== "") {
                         result.push({ value: payment.accountName })
                     }
@@ -999,21 +1000,13 @@ const OrderViewService = (function () {
 
                 }
 
-                let amount = utils.currencyFraction(payment.amount);
+                let amount = utils.toFixedSafe(utils.currencyFraction(payment.amount), 2);
                 result.push({ key: translateService.getText('AMOUNT'), value: amount });
-
 
                 let text = "";
                 result.forEach((item, index) => {
-                    if (index > 0) { text += "  ,"; }
-
-                    if (item.key) {
-                        text += `${item.key} : ${item.value}`;
-                    }
-                    else {
-                        text += `${item.value}`;
-                    }
-
+                    if (index > 0) { text += "  "; }
+                    text += `${item.value}`;
                 });
 
                 return text;
