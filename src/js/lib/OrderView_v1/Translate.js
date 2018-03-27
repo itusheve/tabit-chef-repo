@@ -62,7 +62,11 @@ let TranslateService = (function () {
             "ORDER_TYPES_TA": "TA",
             "ORDER_TYPES_DELIVERY": "Delivery",
             "ORDER_TYPES_REFUND": "Refund",
-            "ORDER_TYPES_OTC": "OTC"
+            "ORDER_TYPES_OTC": "OTC",
+            "ORDER_TYPES_MEDIAEXCHANGE": "Media Exchange",
+            "OTH_TYPE_COMPENSATION": "Compensation",
+            "OTH_TYPE_CONSERVATION": "Conservation",
+            "OTH_TYPE_ORGANIZATIONAL": "Staff"
         },
         "he-IL": {
             "OTH": "על חשבון הבית",
@@ -120,7 +124,11 @@ let TranslateService = (function () {
             "ORDER_TYPES_TA": " TA",
             "ORDER_TYPES_DELIVERY": "משלוח",
             "ORDER_TYPES_REFUND": "החזר",
-            "ORDER_TYPES_OTC": "דלפק (OTC)"
+            "ORDER_TYPES_OTC": "דלפק (OTC)",
+            "ORDER_TYPES_MEDIAEXCHANGE": "טעינת כרטיס",
+            "OTH_TYPE_COMPENSATION": "פיצוי לקוחות",
+            "OTH_TYPE_CONSERVATION": "שימור לקוחות",
+            "OTH_TYPE_ORGANIZATIONAL": "עובדים"
         }
     }
 

@@ -1131,6 +1131,7 @@ const OrderViewService = (function () {
         }
 
         function _resolveOTHByOrderdItem(order, item, timeline) {
+
             let result = [];
             let data;
             data = item.name + ' - ' + item.onTheHouse.reason.name;
@@ -1149,7 +1150,8 @@ const OrderViewService = (function () {
                         discountAmount: _offer ? _offer.amount : 0,
                         reason: {
                             name: data,
-                        }
+                            othType: item.onTheHouse.reason && item.onTheHouse.reason.othType ? translateService.getText('OTH_TYPE_' + item.onTheHouse.reason.othType.toUpperCase()) : ''
+                        },
                     });
                 }
             }
@@ -1253,7 +1255,6 @@ const OrderViewService = (function () {
             let rewards = order.rewards;
 
             let result = [];
-
             if (orderedDiscounts.length) {
                 let rewardsHash = {};
                 rewards.forEach(reward => {
@@ -1405,17 +1406,37 @@ const OrderViewService = (function () {
             let result = [];
 
             order.orderedDiscounts.forEach(item => {
+                item.reason.othType = item.reason && item.reason.othType ? translateService.getText('OTH_TYPE_' + item.reason.othType.toUpperCase()) : ''
                 result.push(item);
             });
 
             let data;
-            order.orderedItems.forEach(item => {
-                data = "";
-                if (item.onTheHouse && !order.onTheHouse) {
-                    let OTHByOrderdItem = _resolveOTHByOrderdItem(order, item, true);
-                    OTHByOrderdItem.forEach(c => result.push(c));
+            if (!order.onTheHouse) {
+                order.orderedItems.forEach(item => {
+                    data = "";
+                    if (item.onTheHouse && !order.onTheHouse) {
+                        let OTHByOrderdItem = _resolveOTHByOrderdItem(order, item, true);
+                        OTHByOrderdItem.forEach(c => result.push(c));
+                    }
+                });
+            }
+            else {
+
+                data = order.onTheHouse.reason.name;
+                if (order.onTheHouse.comment) {
+                    data += ': ' + order.onTheHouse.comment;
                 }
-            });
+
+                result.push({
+                    discountType: Enums.DiscountTypes.OTH,
+                    discountAmount: "",
+                    reason: {
+                        name: data,
+                        othType: order.onTheHouse.reason && order.onTheHouse.reason.othType ? translateService.getText('OTH_TYPE_' + order.onTheHouse.reason.othType.toUpperCase()) : ''
+                    },
+
+                });
+            }
 
             return result;
         }

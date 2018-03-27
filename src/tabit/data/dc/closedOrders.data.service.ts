@@ -164,7 +164,8 @@ let ORDERS_VIEW_he = {
     "reversal": "ביטול",
     "kickout": "Kickout",
     "Kicked_out": "Kicked out",
-    "card_type": "סוג כרטיס"
+    "card_type": "סוג כרטיס",
+    "type": "סוג"
 };
 
 let ORDERS_VIEW_en = {
@@ -301,7 +302,8 @@ let ORDERS_VIEW_en = {
     "kickout": "Kickout",
     "Kicked_out": "Kicked out",
     "service_charge": "Service Charge",
-    "card_type": "Card Type"
+    "card_type": "Card Type",
+    "type": "Type"
 };
 
 const ORDERS_VIEW = tmpTranslations.locale === 'he' ? ORDERS_VIEW_he : ORDERS_VIEW_en;
