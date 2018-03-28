@@ -7,8 +7,8 @@ import * as _ from 'lodash';
 @Injectable()
 export class OffersDataService {
 
-    /* 
-        
+    /*
+
     */
     public offers$: Observable<any> = new Observable(obs => {
         this.rosEp.get('offers', {})
@@ -35,10 +35,10 @@ export class OffersDataService {
         private rosEp: ROSEp
     ) {
 
-        //lets cache!        
+        //lets cache!
         setTimeout(() => {
-            this.offers$.subscribe(data => {});            
-        }, Math.random() * 8000 + 2000);
+            this.offers$.subscribe(data => {});
+        }, Math.random() * 8000 + 5000);
     }
 
 }

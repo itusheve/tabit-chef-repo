@@ -5,8 +5,8 @@ import { ROSEp } from '../ep/ros.ep';
 @Injectable()
 export class TablesDataService {
 
-    /* 
-        
+    /*
+
     */
     public tables$: Observable<any> = new Observable(obs => {
         this.rosEp.get('tables', {})
@@ -21,10 +21,10 @@ export class TablesDataService {
         private rosEp: ROSEp
     ) {
 
-        //lets cache!        
+        //lets cache!
         setTimeout(() => {
             this.tables$.subscribe(data => { });
-        }, Math.random() * 8000 + 2000);
+        }, Math.random() * 8000 + 5000);
     }
 
 }

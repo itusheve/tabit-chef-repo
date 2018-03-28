@@ -86,12 +86,12 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
   public itemsData: {
     byItem: {
       department: string;
-      itemName: string;
-      itemSales: number;
-      itemSold: number;
-      itemPrepared: number;
-      itemReturned: number;
-      itemReturnValue: number;
+      item: string;
+      sales: number;
+      sold: number;
+      prepared: number;
+      returned: number;
+      operational: number;
     }[]
   };
 

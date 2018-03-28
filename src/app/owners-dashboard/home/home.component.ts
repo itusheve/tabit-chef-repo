@@ -4,12 +4,7 @@ import { DecimalPipe, PercentPipe, DatePipe } from '@angular/common';
 
 import * as moment from 'moment';
 
-import { zip } from 'rxjs/observable/zip';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import 'rxjs/add/operator/map';
 
 import { CardsDataService } from '../../../tabit/data/dc/cards.data.service';
 import { TrendsDataService } from '../../../tabit/data/dc/trends.data.service';
@@ -24,7 +19,9 @@ import { CardData } from '../../ui/card/card.component';
   providers: [DatePipe]
 })
 export class HomeComponent implements OnInit {
-  
+
+  renderMonthView = false;//we postpone this a bit
+
   currentBdCardData: CardData = {
     loading: true,
     title: '',
@@ -51,16 +48,16 @@ export class HomeComponent implements OnInit {
     diners: 0,
     ppa: 0
   };
-  
+
   private previousBdNotFinal = false;
 
   constructor(
-    private cardsDataService: CardsDataService, 
-    private trendsDataService: TrendsDataService, 
-    private dataService: DataService, 
-    private router: Router, 
+    private cardsDataService: CardsDataService,
+    private trendsDataService: TrendsDataService,
+    private dataService: DataService,
+    private router: Router,
     private datePipe: DatePipe
-  ) { 
+  ) {
 
     combineLatest(this.dataService.currentBdData$, this.dataService.currentBd$, this.trendsDataService.trends$)
       .subscribe(data=>{
@@ -71,7 +68,7 @@ export class HomeComponent implements OnInit {
         this.currentBdCardData.ppa = data[0].ppa;
         this.currentBdCardData.sales = data[0].sales;
         this.currentBdCardData.title = title;
-        
+
         this.currentBdCardData.trends = {
           left: trends.currentBd.last4,
           right: trends.currentBd.lastYear
@@ -103,31 +100,37 @@ export class HomeComponent implements OnInit {
         this.previousBdCardData.loading = false;
       });
 
-    combineLatest(this.dataService.mtdData$, this.dataService.currentBd$, this.trendsDataService.trends$)
-      .subscribe(data => {
-        const trends = data[2];
 
-        const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} ${tmpTranslations.get('home.mtd')}`;
-        this.mtdCardData.diners = data[0].diners;
-        this.mtdCardData.ppa = data[0].ppa;
-        this.mtdCardData.sales = data[0].sales;
-        this.mtdCardData.title = title;
+    setTimeout(() => {
+      combineLatest(this.dataService.mtdData$, this.dataService.currentBd$, this.trendsDataService.trends$)
+        .subscribe(data => {
+          const trends = data[2];
 
-        this.mtdCardData.trends = {
-          // left: ,
-          right: trends.mtd.lastYear
-        };
+          const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} ${tmpTranslations.get('home.mtd')}`;
+          this.mtdCardData.diners = data[0].diners;
+          this.mtdCardData.ppa = data[0].ppa;
+          this.mtdCardData.sales = data[0].sales;
+          this.mtdCardData.title = title;
 
-        this.mtdCardData.loading = false;
+          this.mtdCardData.trends = {
+            // left: ,
+            right: trends.mtd.lastYear
+          };
 
-        this.trendsDataService.partial_month_forecast_to_start_of_month_partial_month_forecast()
-          .then(partial_month_forecast_to_start_of_month_partial_month_forecast=>{
-            this.mtdCardData.trends.left = partial_month_forecast_to_start_of_month_partial_month_forecast;
-          });
-      });
+          this.mtdCardData.loading = false;
+
+          this.trendsDataService.partial_month_forecast_to_start_of_month_partial_month_forecast()
+            .then(partial_month_forecast_to_start_of_month_partial_month_forecast=>{
+              this.mtdCardData.trends.left = partial_month_forecast_to_start_of_month_partial_month_forecast;
+            });
+        });
+
+        this.renderMonthView = true;
+
+    }, 3500);
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     window.scrollTo(0, 0);
   }
 

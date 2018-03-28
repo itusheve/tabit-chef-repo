@@ -7,8 +7,8 @@ import * as _ from 'lodash';
 @Injectable()
 export class ModifierGroupsDataService {
 
-    /* 
-        
+    /*
+
     */
     public modifierGroups$: Observable<any> = new Observable(obs => {
         this.rosEp.get('modifierGroups', {})
@@ -30,10 +30,10 @@ export class ModifierGroupsDataService {
         private rosEp: ROSEp
     ) {
 
-        //lets cache!        
+        //lets cache!
         setTimeout(() => {
             this.modifierGroups$.subscribe(data => { });
-        }, Math.random() * 8000 + 2000);
+        }, Math.random() * 8000 + 5000);
     }
 
 }

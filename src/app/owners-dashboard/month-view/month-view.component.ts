@@ -8,10 +8,11 @@ import { CardData } from '../../ui/card/card.component';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { TrendsDataService } from '../../../tabit/data/dc/trends.data.service';
 import { TrendModel } from '../../../tabit/model/Trend.model';
+import { environment } from '../../../environments/environment';
 
 interface DailyTrends {
   date: moment.Moment;
-  trends: { 
+  trends: {
     sales: TrendModel;
     diners: TrendModel;
     ppa: TrendModel;
@@ -69,23 +70,25 @@ export class MonthViewComponent  {
         dataSource: undefined
       }
     }
-  };   
+  };
 
-  datePipe: DatePipe = new DatePipe('he-IL');
+  datePipe: DatePipe = new DatePipe(environment.tbtLocale);
 
 //TODO dont forget to unsubscribe from streams when component dies!! cross system!
-  constructor(private dataService: DataService, private trendsDataService: TrendsDataService) {     
+  constructor(private dataService: DataService, private trendsDataService: TrendsDataService) {
     let that = this;
-    
-    combineLatest(this.month$, dataService.vat$, dataService.currentBd$, dataService.dailyDataLimits$)
-      .subscribe(data=>{
-        update(data[0], data[1], data[2], data[3]);
-      });
+
+    setTimeout(() => {
+      combineLatest(this.month$, dataService.vat$, dataService.currentBd$, dataService.dailyDataLimits$)
+        .subscribe(data=>{
+          update(data[0], data[1], data[2], data[3]);
+        });
+    }, 2500);
 
     function updateGridAndChart(month, vat, currentBd: moment.Moment, dailyDataLimits) {
-      
+
       function getDailyTrends(queryFrom:moment.Moment, queryTo:moment.Moment):Promise<DailyTrends[]> {
-        
+
         function getDailyTrend(m: moment.Moment): Promise<DailyTrends> {
           return that.trendsDataService.bd_to_last_4_bd(m)
             .then((trends: { sales: TrendModel, diners: TrendModel, ppa: TrendModel })=>{
@@ -119,24 +122,24 @@ export class MonthViewComponent  {
       }
 
       let dailyTrends: DailyTrends[];
-      
+
       Promise.all([getDailyTrends(moment(queryFrom), moment(queryTo)), that.dataService.getMonthlyData(month)])
         .then(data => {
           const dailyTrends = data[0];
           const monthlyData = data[1];
-          
+
           if (monthlyData.sales===0) {
             that.monthChart.render([]);
             that.monthGrid.render([]);
             return;
           }
-          
+
           that.dataService.dailyData$
             .subscribe(dailyData=>{
               let dailyDataFiltered = dailyData.filter(
                 dayData =>
                   dayData.businessDay.isSameOrAfter(queryFrom, 'day') &&
-                  dayData.businessDay.isSameOrBefore(queryTo, 'day') && 
+                  dayData.businessDay.isSameOrBefore(queryTo, 'day') &&
                   dayData.businessDay.isSameOrAfter(dailyDataLimits.minimum, 'day')
               );
 
@@ -146,9 +149,9 @@ export class MonthViewComponent  {
                 let sales = (vat ? r.kpi.sales : r.kpi.sales / 1.17);
                 let salesPPA = (vat ? r.kpi.diners.sales : r.kpi.diners.sales / 1.17);
                 if (ppa === 0) ppa = null;
-                
+
                 const dailyTrends_ = dailyTrends.find(dt => dt.date.isSame(r.businessDay, 'day'));
-    
+
                 return {//TODO refactor to use the KPI lingo
                   date: moment(r.businessDay),
                   dateFormatted: dateFormatted,
@@ -159,7 +162,7 @@ export class MonthViewComponent  {
                   dailyTrends: dailyTrends_
                 };
               });
-    
+
               that.monthChart.render(rowset);
               that.monthGrid.render(rowset);
 
@@ -169,13 +172,13 @@ export class MonthViewComponent  {
         });
     }
 
-    function updateForecastOrSummary(month, vat, currentBd: moment.Moment) {      
+    function updateForecastOrSummary(month, vat, currentBd: moment.Moment) {
       const isCurrentMonth = month.isSame(currentBd, 'month');
 
       if (isCurrentMonth) {
         that.showForecast = true;
         that.showSummary = false;
-        
+
         that.dataService.currentMonthForecast$
           .subscribe(data => {
             const title = `${that.datePipe.transform(month, 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
@@ -194,12 +197,12 @@ export class MonthViewComponent  {
             that.trendsDataService.month_forecast_to_start_of_month_forecast()
               .then((month_forecast_to_start_of_month_forecast: TrendModel) => {
                 that.forecastCardData.trends.left = month_forecast_to_start_of_month_forecast;
-              });              
+              });
           });
       } else {
         that.showForecast = false;
         that.showSummary = true;
-        
+
         that.dataService.getMonthlyData(month)
           .then(monthlyData => {
 
@@ -208,7 +211,7 @@ export class MonthViewComponent  {
             that.summaryCardData.ppa = vat ? monthlyData.ppa : monthlyData.ppa / 1.17;
             that.summaryCardData.sales = vat ? monthlyData.sales : monthlyData.sales / 1.17;
             that.summaryCardData.title = title;
-            
+
             that.summaryCardData.trends = {};
 
             that.summaryCardData.loading = false;
@@ -235,11 +238,11 @@ export class MonthViewComponent  {
         minDate: moment(dailyDataLimits.minimum),
         maxDate: moment()
       };
-      
+
       const isCurrentMonth = month.isSame(currentBd, 'month');
       if (isCurrentMonth && currentBd.date()===1) that.renderGridAndChart = false;
       else that.renderGridAndChart = true;
-      
+
       if (that.renderGridAndChart) {
         updateGridAndChart(month, vat, currentBd, dailyDataLimits);
       }
@@ -260,7 +263,7 @@ export class MonthViewComponent  {
   }
 
   onDateChanged(mom: moment.Moment) {
-    const month = moment(mom).startOf('month');    
+    const month = moment(mom).startOf('month');
     this.month$.next(month);
   }
 

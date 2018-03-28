@@ -12,12 +12,12 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
   @Input() itemsData: {
     byItem: {
       department: string;
-      itemName: string;
-      itemSales: number;
-      itemSold: number;
-      itemPrepared: number;
-      itemReturned: number;
-      itemReturnValue: number;
+      item: string;
+      sales: number;
+      sold: number;
+      prepared: number;
+      returned: number;
+      operational: number;
     }[]
   };
 
@@ -38,7 +38,7 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
   constructor() {}
 
   ngOnChanges(o: SimpleChanges) {
-    if (o.itemsData.currentValue) {                  
+    if (o.itemsData.currentValue) {
 
       let data: {
         department?: string,
@@ -65,22 +65,22 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
         byItem: {
           department: string;
           item: string;
-          itemSales: number;
-          itemSold: number;
+          sales: number;
+          sold: number;
         }[]
       } = _.cloneDeep(this.itemsData);
 
       // unfortunately departments from the OLAP are not as the departments from the ROS, and for now we dynamicaly get the departments from the results.
       // const departments: { name: string }[] = [];
-      
+
       // clone.byItem.forEach(tuple => {
 
       // });
 
       clone.byItem.forEach(tuple=>{
-        
+
         let dataObj = data.find(o=>o.department===tuple.department);
-        
+
         if (!dataObj) {
           dataObj = {
             department: tuple.department,
@@ -91,17 +91,17 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
 
         dataObj.topItems.push({
           itemName: tuple.item,
-          itemSales: tuple.itemSales,
-          itemSold: tuple.itemSold
+          itemSales: tuple.sales,
+          itemSold: tuple.sold
         });
       });
 
       //make sure food is first and then beverages:
-      data.sort((a, b)=>{        
+      data.sort((a, b)=>{
         if (a.department===tmpTranslations.get('departments.food')) return -1;
         if (b.department === tmpTranslations.get('departments.food')) return 1;
         if (a.department === tmpTranslations.get('departments.beverages')) return -1;
-        if (b.department === tmpTranslations.get('departments.beverages')) return 1;      
+        if (b.department === tmpTranslations.get('departments.beverages')) return 1;
       });
 
       data.forEach(dataObj=>{

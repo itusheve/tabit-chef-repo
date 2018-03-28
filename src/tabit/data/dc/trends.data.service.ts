@@ -33,10 +33,10 @@ export class TrendsDataService {
 
                 const currentBusinessDaySales = data[2].sales;
                 //console.info(`Trends: Current: Last 4: Current BD Total Sales (Open & Closed): ${currentBusinessDaySales}`);
-                
+
                 const firstShiftStartingTime = moment(shifts[0].startTime);
                 //console.info(`Trends: Current: Last 4: First Shift Starting Time: ${firstShiftStartingTime.format('HH:mm')}`);
-                
+
                 if (currentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
                     timeFrom1 = firstShiftStartingTime.format('HHmm');
                     //console.info(`Trends: Current: Last 4: Current Rest Time >= First Shift Starting Time`);
@@ -57,7 +57,7 @@ export class TrendsDataService {
 
                 const dateFrom: moment.Moment = moment(currentBd).subtract(6, 'weeks');
                 const dateTo: moment.Moment = moment(currentBd);
-                
+
                 const qAll = [];//TODO a high level dac should'nt call directly an EP. only data.service should.
                 qAll.push(this.olapEp.getDailyData({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime'}));
                 if (timeFrom2) {
@@ -66,24 +66,24 @@ export class TrendsDataService {
 
                 Promise.all(qAll)
                     .then(dailyDataArr=>{
-                        
+
                         let dailyData1 = dailyDataArr[0];
                         let dailyData2;
                         if (dailyDataArr.length === 2) dailyData2 = dailyDataArr[1];
-                              
+
                         const currentBdWeekDay = currentBd.day();
-                        
+
                         let avgTotalSales;
-                        
+
                         const seekTill: moment.Moment = moment(currentBd).subtract(4, 'weeks');
-                        
+
                         let found1 = 0;
                         let sumTotalSales1 = 0;
                         for (let i = 0; i < dailyData1.length; i++) {
                             const dayData = dailyData1[i];
                             if (dayData.date.isSameOrAfter(currentBd, 'day')) continue;
                             if (dayData.date.isBefore(seekTill, 'day')) break;
-        
+
                             if (dayData.date.day() === currentBdWeekDay && dayData.sales > 0) {
                                 sumTotalSales1 += dayData.sales;
                                 found1++;
@@ -105,16 +105,16 @@ export class TrendsDataService {
                                 }
                             }
                             //console.info(`Trends: Current: Last 4: Sum Total Sales 2: ${sumTotalSales2}`);
-                        }                        
-        
+                        }
+
                         let sumTotalSales = sumTotalSales1 + sumTotalSales2;
                         //console.info(`Trends: Current: Last 4: Sum Total Sales (Total): ${sumTotalSales}`);
                         if (sumTotalSales) {
                             avgTotalSales = sumTotalSales / Math.max(found1, found2);
                             //console.info(`Trends: Current: Last 4: avg total sales of up to last 4: ${avgTotalSales}`);
-                            
+
                             const changePct = (currentBusinessDaySales / avgTotalSales) - 1;
-        
+
                             if (changePct > 9) {
                                 trend.status = 'nodata';
                                 obs.next(trend);
@@ -240,7 +240,7 @@ export class TrendsDataService {
         zip(this.dataService.dailyData$, this.dataService.previousBd$)
             .subscribe(data => {
                 const dailyData = data[0];
-                const previousBd: moment.Moment = data[1];                
+                const previousBd: moment.Moment = data[1];
 
                 const previousBdData = dailyData.find(dayData => dayData.businessDay.isSame(previousBd, 'day'));
                 if (!previousBdData) {
@@ -250,7 +250,7 @@ export class TrendsDataService {
                 }
 
                 const previousBdSales = previousBdData.kpi.sales;
-                
+
                 const previousBdWeekDay = previousBd.day();
 
                 let found = 0;
@@ -272,9 +272,9 @@ export class TrendsDataService {
                     if (sumTotalSales===0) {
                         trend.status = 'nodata';
                         obs.next(trend);
-                        return;                    
+                        return;
                     }
-                    avgTotalSales = sumTotalSales / found;                                        
+                    avgTotalSales = sumTotalSales / found;
                     const changePct = (previousBdSales / avgTotalSales) - 1;
 
                     if (changePct > 9) {
@@ -302,7 +302,7 @@ export class TrendsDataService {
         trend.letter = 'Y';
 
         obs.next(trend);
-        
+
         zip(this.dataService.dailyData$.take(1), this.dataService.previousBd$.take(1))
             .subscribe(data => {
                 const dailyData = data[0];
@@ -377,7 +377,7 @@ export class TrendsDataService {
                 if (currentBd.date()===1) {
                     trend.status = 'nodata';
                     obs.next(trend);
-                    return;                    
+                    return;
                 }
 
                 const dateFrom1: moment.Moment = moment(currentBd).startOf('month');//TODO reuse the mtd card call
@@ -391,7 +391,7 @@ export class TrendsDataService {
                 if (dateFrom2.isBefore(dailyDataLimits.minimum)) {
                     trend.status = 'nodata';
                     obs.next(trend);
-                    return;      
+                    return;
                 }
 
                 const qAll = [];
@@ -403,7 +403,7 @@ export class TrendsDataService {
 
                         let dailyData1 = dailyDataArr[0];
                         let dailyData2 = dailyDataArr[1];
-                        
+
                         let sumTotalSalesMTD = 0;
                         for (let i = 0; i < dailyData1.length; i++) {
                             const dayData = dailyData1[i];
@@ -421,7 +421,7 @@ export class TrendsDataService {
                         if (!sumTotalSalesMTDpreviousYear) {
                             trend.status = 'nodata';
                             obs.next(trend);
-                            return;                            
+                            return;
                         }
 
                         const changePct = (sumTotalSalesMTD / sumTotalSalesMTDpreviousYear) - 1;
@@ -472,29 +472,32 @@ export class TrendsDataService {
             }
         };
 
-            zip(
-                this.currentBd_last4_trend$, 
-                this.previousBd_last4_trend$, 
-                this.currentBd_lastYear_trend$, 
-                this.previousBd_lastYear_trend$,
-                this.mtd_lastYear_trend$,
-            )
-            .subscribe(trendsArr=>{
-                trends.currentBd.last4 = trendsArr[0];
-                trends.previousBd.last4 = trendsArr[1];
-                trends.currentBd.lastYear = trendsArr[2];
-                trends.previousBd.lastYear = trendsArr[3];
-                trends.mtd.lastYear = trendsArr[4];
 
-                obs.next(trends);
-            });
+            //postponing the trends calculation as they are too heavy on start up
+            setTimeout(() => {
+                zip(
+                    this.currentBd_last4_trend$,
+                    this.previousBd_last4_trend$,
+                    this.currentBd_lastYear_trend$,
+                    this.previousBd_lastYear_trend$,
+                    this.mtd_lastYear_trend$,
+                )
+                .subscribe(trendsArr=>{
+                    trends.currentBd.last4 = trendsArr[0];
+                    trends.previousBd.last4 = trendsArr[1];
+                    trends.currentBd.lastYear = trendsArr[2];
+                    trends.previousBd.lastYear = trendsArr[3];
+                    trends.mtd.lastYear = trendsArr[4];
+
+                    obs.next(trends);
+                });
+            }, 4500);
         }).publishReplay(1).refCount();
 
-        constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService, private olapEp: OlapEp) { 
-    }
+        constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService, private olapEp: OlapEp) {}
 
-    /* 
-        the func returns a TrendModel that compares the sales of the month to the sales of the same month in previous year.        
+    /*
+        the func returns a TrendModel that compares the sales of the month to the sales of the same month in previous year.
     */
     public month_lastYear_trend(month: moment.Moment): Promise<TrendModel> {
         return new Promise((resolve, reject)=>{
@@ -502,7 +505,7 @@ export class TrendsDataService {
             trend.name = 'completeMonthLastYear';
             trend.description = 'completeMonthLastYear description';
             trend.letter = 'Y';
-            
+
             const prevYearMonth = moment(month).subtract(1, 'year').startOf('month');
 
             zip(this.dataService.olapDataByMonths$, this.dataService.dailyDataLimits$)
@@ -533,16 +536,16 @@ export class TrendsDataService {
                         }
 
                         trend.val = changePct;
-                        trend.status = 'ready';                        
+                        trend.status = 'ready';
                     }
                     resolve(trend);
                 });
 
         });
     }
-    
-    /* 
-        the func returns a TrendModel that compares the current month's forecast to the sales of the same month in previous year.        
+
+    /*
+        the func returns a TrendModel that compares the current month's forecast to the sales of the same month in previous year.
     */
     public month_forecast_to_last_year_trend(): Promise<TrendModel> {
         return new Promise((resolve, reject) => {
@@ -565,7 +568,7 @@ export class TrendsDataService {
                         resolve(trend);
                         return;
                     }
-                    
+
                     const prevYearTuple = olapDataByMonths.find(monthData => monthData.month.isSame(prevYearMonth, 'month'));
 
                     if (!prevYearTuple || !prevYearTuple.sales) {
@@ -591,7 +594,7 @@ export class TrendsDataService {
         });
     }
 
-    /* 
+    /*
         the func returns a TrendModel that compares the current monthly forecast to the monthly forecast as if it was calculated on the first day of the month.
     */
     public month_forecast_to_start_of_month_forecast(): Promise<TrendModel> {
@@ -628,7 +631,7 @@ export class TrendsDataService {
                             } else {
                                 const sales = forecastData.sales || 0;
                                 const startOfMonthSales = startOfMonthForecastData.sales;
-        
+
                                 const changePct = (sales / startOfMonthSales) - 1;
 
                                 if (changePct > 9) {
@@ -645,11 +648,10 @@ export class TrendsDataService {
 
 
                 });
-
         });
     }
 
-    /* 
+    /*
         the func returns a TrendModel that compares 'month's sales with a monthly forecast for 'month' as if it was calculated on the first day of 'month'.
     */
     public month_sales_to_start_of_month_forecast(month: moment.Moment): Promise<TrendModel> {
@@ -687,14 +689,14 @@ export class TrendsDataService {
                         trend.val = changePct;
                         trend.status = 'ready';
                     }
-                    resolve(trend);                    
+                    resolve(trend);
                 });
         });
     }
 
-    /* 
+    /*
         the func returns a TrendModel that compares:
-            the MTD sales (closed sales up to previous BD, including) 
+            the MTD sales (closed sales up to previous BD, including)
             with
             a partial forecast up to the previous BD (including), as if it was calculated on the first day of the month.
     */
@@ -740,12 +742,13 @@ export class TrendsDataService {
 
                 });
 
-        });
+
+            });
     }
 
-    /* 
+    /*
         the func returns a Promise that resolves with an object consisting of 3 TrendModels for 3 measures: sales, diners and ppa.
-        for each measure, its corresponding TrendModel compares the business day's ('bd') measure against the average measure from up to 4 previous business days with the same week day.        
+        for each measure, its corresponding TrendModel compares the business day's ('bd') measure against the average measure from up to 4 previous business days with the same week day.
     */
     public bd_to_last_4_bd(bd: moment.Moment): Promise<{sales: TrendModel, diners: TrendModel, ppa: TrendModel}> {
         return new Promise((resolve, reject) => {
@@ -766,15 +769,15 @@ export class TrendsDataService {
             trend_p.letter = 'A';
 
             const bdWeekDay = bd.day();
-            
+
             const seekTill: moment.Moment = moment(bd).subtract(4, 'weeks');
-            
+
             let bdSales, bdDiners, bdPPA;
 
             let avgTotalSales, avgTotalDiners, avgPPA;
             let sumTotalSales = 0, sumTotalDiners = 0, sumTotalSalesPPA = 0;
             let found = 0;
-            
+
             this.dataService.dailyData$
                 .subscribe(dailyData => {
                     for (let i = 0; i < dailyData.length; i++) {
@@ -792,7 +795,7 @@ export class TrendsDataService {
                             sumTotalDiners += dayData.kpi.diners.count;
                             sumTotalSalesPPA += dayData.kpi.diners.sales;
                             found++;
-                        }        
+                        }
                     }
 
                     if (!sumTotalSales || !bdSales) {

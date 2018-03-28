@@ -1,11 +1,11 @@
 export const environment = {
   production: false,
-  region: 'il',//controls logic (BL, currency sign etc). supported: 'il'/'us'
-  tbtLocale: 'he-IL',//controls localization (directions, translations, formattings, plurals etc.) supported: 'he-IL'/'en-US'
-  rosConfig: {
+  region: 'il',
+  tbtLocale: 'he-IL',//
+  rosConfig: {//IL 'BETA' 'REPORTS'
     baseUrl: 'https://ros-office-beta.herokuapp.com/'
   },
-  olapConfig: {
+  olapConfig: {//IL PROD CUBE
     baseUrl: 'https://analytics.tabit.cloud/olapproxy/proxy.ashx',
     catalog: 'ssas_tabit_prod',
     cube: 'tabit_sales',

@@ -38,14 +38,8 @@ https://github.com/angular/angular/issues/16477
 until angular comes up with the final i18n solution that includes in-component translations, here are some statically typed translations:
 */
 
-let locale = 'en-US';
-if (environment.locale==='he') {
-    locale = 'he';
-}
-
-
 const tmpTranslations_ = {
-    'he': {
+    'he-IL': {
         login: {
             userPassIncorrect: 'שם משתמש ו/או סיסמא אינם נכונים'
         },
@@ -127,10 +121,9 @@ const tmpTranslations_ = {
     }
 };
 export const tmpTranslations = {
-    locale: locale,
     get(path: string):string {
         const tokens = path.split('.');
-        let translation: any = tmpTranslations_[locale];
+        let translation: any = tmpTranslations_[environment.tbtLocale];
         for (let i=0;i<tokens.length;i++) {
             translation = translation[tokens[i]];
         }
@@ -194,7 +187,7 @@ export class DataService {
     //     }, 5000);
     // }).publishReplay(1).refCount();
 
-    public region = 'Asia/Jerusalem';//TODO US..
+    public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';//'America/Chicago' / 'Asia/Jerusalem'
 
     /*
         emits a moment with tz data, so using format() will provide the time of the restaurant, e.g. m.format() := 2018-02-27T18:57:13+02:00
@@ -227,8 +220,6 @@ export class DataService {
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
         this.rosEp.get('businessdays/current', {})
             .then(data => {
-                // const bdStr = data.businessDate.substring(0, 10);
-                //const bd: moment.Moment = moment.tz(data.businessDate, 'Etc/UCT');
                 const cbd: moment.Moment = moment(data.businessDate);
                 obs.next(cbd);
             });
@@ -314,12 +305,6 @@ export class DataService {
             });
     }).publishReplay(1).refCount();
 
-    // public departments: { [index: string]: Department } = {
-    //     food: new Department('food', 0),
-    //     beverages: new Department('beverages', 1),
-    //     other: new Department('other', 2)
-    // };
-
     public orderTypes: { [index: string]: OrderType } = {
         seated: new OrderType('seated', 0),
         counter: new OrderType('counter', 1),
@@ -374,6 +359,8 @@ export class DataService {
 
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
+    //TODO optimize this, getting two years of data once is costly (is it?)
+    //maybe cache data for closed business dates?
     /*
         emits (vat inclusive) data by business days closed orders (from the Cube), up to two years ago.
         sorted by business date (descending).
@@ -590,11 +577,7 @@ export class DataService {
     private businessDayKPI_cache: { [index: string]: BusinessDayKPI } = {};
 
     /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
-    // private businessMonthKPI_cache: { [index: string]: BusinessMonthKPI } = {};
-
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
-        // moment.tz.setDefault('Asia/Jerusalem');
-    }
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {}
 
     get currentBdData$(): Observable<any> {
         return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
@@ -634,11 +617,6 @@ export class DataService {
 
             this.organizations$.next(filtered);
         });
-
-            // .then(orgs => {
-            //     const filtered = orgs.filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT');
-            //     this.organizations$.next(filtered);
-            // });
 
         return this.organizations$;
     }
@@ -1177,12 +1155,12 @@ export class DataService {
     get_Items_data_for_BusinessDate(bd: moment.Moment): Promise<{
         byItem: {
             department: string;
-            itemName: string;
-            itemSales: number;
-            itemSold: number;
-            itemPrepared: number;
-            itemReturned: number;
-            itemReturnValue: number;
+            item: string;
+            sales: number;
+            sold: number;
+            prepared: number;
+            returned: number;
+            operational: number;
         }[]
     }> {
         return new Promise((resolve, reject) => {
@@ -1200,29 +1178,43 @@ export class DataService {
                 // data preparation
                 const byItem: {
                     department: string;
-                    itemName: string;
-                    itemSales: number;
-                    itemSold: number;
-                    itemPrepared: number;
-                    itemReturned: number;
-                    itemReturnValue: number;
+                    item: string;
+                    sales: number;
+                    sold: number;
+                    prepared: number;
+                    returned: number;
+                    operational: number;
+                    // department: string;
+                    // itemName: string;
+                    // itemSales: number;
+                    // itemSold: number;
+                    // itemPrepared: number;
+                    // itemReturned: number;
+                    // itemReturnValue: number;
                 }[] = (function () {
                     // clone raw data
                     const byItem: {
                         department: string;
-                        itemName: string;
-                        itemSales: number;
-                        itemSold: number;
-                        itemPrepared: number;
-                        itemReturned: number;
-                        itemReturnValue: number;
+                        item: string;
+                        sales: number;
+                        sold: number;
+                        prepared: number;
+                        returned: number;
+                        operational: number;
+                        // department: string;
+                        // itemName: string;
+                        // itemSales: number;
+                        // itemSold: number;
+                        // itemPrepared: number;
+                        // itemReturned: number;
+                        // itemReturnValue: number;
                     }[] = _.cloneDeep(data.itemsDataRaw);
 
                     // be VAT aware
                     if (!data.vat) {
                         byItem.forEach(tuple => {
-                            tuple.itemSales = tuple.itemSales / 1.17;
-                            tuple.itemReturnValue = tuple.itemReturnValue / 1.17;
+                            tuple.sales = tuple.sales / 1.17;
+                            tuple.operational = tuple.operational / 1.17;
                         });
                     }
 

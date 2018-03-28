@@ -5,6 +5,7 @@ import { Order } from '../../../../tabit/model/Order.model';
 import { DataService, tmpTranslations } from '../../../../tabit/data/data.service';
 
 import * as _ from 'lodash';
+import { environment } from '../../../../environments/environment';
 
 export interface OrderTypeVM {
   id: string;
@@ -27,7 +28,7 @@ export class DayOrdersTableComponent implements OnChanges {
 
   public byOrderTypes: OrderTypeVM[];
 
-  datePipe: DatePipe = new DatePipe('he-IL');
+  datePipe: DatePipe = new DatePipe(environment.tbtLocale);
 
   public sortBy: string;//time, number, waiter, sales
   public sortDir = 'asc';//asc | desc

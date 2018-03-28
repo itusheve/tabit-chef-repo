@@ -11,4 +11,9 @@ mat-card {
         font-size: 18px;
         word-wrap: break-word;
     }
+
+    &.selected {
+        background-color: #3A5675;
+        color: white;
+    }
 }

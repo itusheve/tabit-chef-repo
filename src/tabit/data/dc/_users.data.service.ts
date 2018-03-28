@@ -8,8 +8,8 @@ import { zip } from 'rxjs/observable/zip';
 @Injectable()
 export class UsersDataService {
 
-    /* 
-        
+    /*
+
     */
     public users$: Observable<any> = new Observable(obs => {
 
@@ -35,10 +35,10 @@ export class UsersDataService {
         private rosEp: ROSEp
     ) {
 
-        //lets cache!        
+        //lets cache!
         setTimeout(() => {
             this.users$.subscribe(data => { });
-        }, Math.random() * 8000 + 2000);
+        }, Math.random() * 8000 + 5000);
     }
 
 }

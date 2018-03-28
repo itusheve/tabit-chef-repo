@@ -1,4 +1,5 @@
-import { NgModule, LOCALE_ID } from '@angular/core';
+// import { NgModule, LOCALE_ID } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { OwnersDashboardComponent } from './owners-dashboard.component';
@@ -38,10 +39,10 @@ import { CardComponent } from '../ui/card/card.component';
 
 import { OwnersDashboardRoutingModule } from './owners-dashboard-routing.module';
 
-import { 
-  MatButtonModule, 
-  MatIconModule, 
-  MatMenuModule, 
+import {
+  MatButtonModule,
+  MatIconModule,
+  MatMenuModule,
   MatCardModule,
   MatSidenavModule,
   MatSlideToggleModule,
@@ -49,7 +50,7 @@ import {
   MatTabsModule
 } from '@angular/material';//material modules
 
-import { locale, loadMessages } from 'devextreme/localization'; //https://github.com/DevExpress/devextreme-examples/tree/17_2/intl-angular
+// import { locale, loadMessages } from 'devextreme/localization'; //https://github.com/DevExpress/devextreme-examples/tree/17_2/intl-angular
 import { DxButtonModule } from 'devextreme-angular';
 import { DxCalendarModule } from 'devextreme-angular';
 import { DxChartModule } from 'devextreme-angular';
@@ -80,9 +81,9 @@ import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-tabl
 // loadMessages(messagesDe);
 // loadMessages(messagesJa);
 
-if (environment.locale==='he') {
-  locale('he');
-}
+// if (environment.tbtLocale==='he-IL') {
+//   locale('he');
+// }
 
 @NgModule({
   imports: [
@@ -110,7 +111,7 @@ if (environment.locale==='he') {
     OwnersDashboardCurrencyPipe,
     OwnersDashboardPercentPipe,
     OwnersDashboardCountPipe,
-    
+
     HomeComponent,
     CardComponent,
 
