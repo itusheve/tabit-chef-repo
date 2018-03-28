@@ -1058,7 +1058,7 @@ const OrderViewService = (function () {
                 if (payment._type === Enums.PaymentTypes.CreditCardPayment || payment._type === Enums.PaymentTypes.CreditCardRefund) {
 
                     if (payment.source === Enums.Sources.TabitPay) {
-                        value = "(Tabit Pay)";
+                        let value = "(Tabit Pay)";
                         result.push({ key: 'source', value: value });
                     }
                 }
