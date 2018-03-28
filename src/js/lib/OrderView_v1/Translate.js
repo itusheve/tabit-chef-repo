@@ -23,7 +23,8 @@ let TranslateService = (function () {
             "RETURN": "Return",
             "REFUND": "Refund",
             "PRINT_BY_ORDER": "Order {{order_number}} on {{order_date}} {{order_time}}",
-            "WAITER_DINERS": "Server {{waiter}} Diners {{diners}} Table {{table}}",
+            "WAITER_DINERS": "Server {{waiter}} Diners {{diners}}",
+            "TABLE_NUM": "Table {{table}}",
             "TA": "TA",
             "DELIVERY": "Delivery",
             "INITIATED_DISCOUNT": "Initiated.D",
@@ -62,7 +63,11 @@ let TranslateService = (function () {
             "ORDER_TYPES_TA": "TA",
             "ORDER_TYPES_DELIVERY": "Delivery",
             "ORDER_TYPES_REFUND": "Refund",
-            "ORDER_TYPES_OTC": "OTC"
+            "ORDER_TYPES_OTC": "OTC",
+            "ORDER_TYPES_MEDIAEXCHANGE": "Media Exchange",
+            "OTH_TYPE_COMPENSATION": "Compensation",
+            "OTH_TYPE_CONSERVATION": "Conservation",
+            "OTH_TYPE_ORGANIZATIONAL": "Staff"
         },
         "he-IL": {
             "OTH": "על חשבון הבית",
@@ -81,7 +86,8 @@ let TranslateService = (function () {
             "RETURN": "החזרה",
             "REFUND": "החזר",
             "PRINT_BY_ORDER": "לפי הזמנה מס' {{order_number}} בתאריך {{order_date}} בשעה {{order_time}}",
-            "WAITER_DINERS": "מלצר {{waiter}} סועדים {{diners}} שולחן {{table}}",
+            "WAITER_DINERS": "מלצר {{waiter}} סועדים {{diners}}",
+            "TABLE_NUM": "שולחן {{table}}",
             "TA": "TA",
             "DELIVERY": "משלוחים",
             "INITIATED_DISCOUNT": "הנחה יזומה",
@@ -117,10 +123,14 @@ let TranslateService = (function () {
             "APPLIED_SEGMENTATION": "בקשה לתיוג",
             "APPROVED_SEGMENTATION": "אישור תיוג",
             "ORDER_TYPES_SEATED": "ישיבה",
-            "ORDER_TYPES_TA": "טייק אווי",
+            "ORDER_TYPES_TA": " TA",
             "ORDER_TYPES_DELIVERY": "משלוח",
             "ORDER_TYPES_REFUND": "החזר",
-            "ORDER_TYPES_OTC": "דלפק (OTC)"
+            "ORDER_TYPES_OTC": "דלפק (OTC)",
+            "ORDER_TYPES_MEDIAEXCHANGE": "טעינת כרטיס",
+            "OTH_TYPE_COMPENSATION": "פיצוי לקוחות",
+            "OTH_TYPE_CONSERVATION": "שימור לקוחות",
+            "OTH_TYPE_ORGANIZATIONAL": "עובדים"
         }
     }
 

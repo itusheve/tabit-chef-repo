@@ -128,7 +128,14 @@
                         <td *ngIf="!isUS">{{ row.at | date : 'dd/MM/yyyy HH:mm:ss' }}</td>
                         <td *ngIf="isUS">{{ row.at | date : 'MM/dd/yyyy HH:mm:ss a' }}</td>
                         <td style="text-transform: capitalize;">{{ row.action }}</td>
-                        <td>{{ row.data }}</td>
+                        <td>
+                            <div *ngIf="row.recordType!=='payment'">{{row.data}}</div>
+                            <div class="flex d-row" *ngIf="row.recordType==='payment'">
+                                <div *ngFor="let item of row.data">
+                                    <div *ngIf="item.value">{{item.value}}&nbsp;&nbsp;&nbsp;</div>
+                                </div>
+                            </div>
+                        </td>
                         <td>{{ row.by }}</td>
                     </tr>
                 </tbody>
@@ -222,7 +229,7 @@
                     <tr *ngFor="let payment of orderOld.PaymentsTimeLine">
                         <td>
                             <span>{{payment.methodName}}</span>
-                            <span ng-if="payment.creditCardBrand">{{payment.creditCardBrand}}</span>
+                            <span ng-if="payment.creditCardBrand">{{payment.creditCardBrand}} {{payment.source}}</span>
                         </td>
                         <td>{{payment.customerName}}</td>
                         <td>{{payment.last4}}</td>
@@ -245,23 +252,25 @@
                     {{ ORDERSVIEW.discounts }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table *ngIf="orderOld.orderedDiscounts?.length">
+            <table *ngIf="orderOld.discountsTimeLine?.length">
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.discount_type }}</th>
                         <th>{{ ORDERSVIEW.amount }}</th>
                         <th>{{ ORDERSVIEW.reason }}</th>
+                        <th>{{ ORDERSVIEW.type }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let discount of orderOld.orderedDiscounts">
+                    <tr *ngFor="let discount of orderOld.discountsTimeLine">
                         <td>{{discount.discountType}}</td>
                         <td class="curr2">{{discount.discountAmount | curr:'2':'cents'}}</td>
                         <td>{{discount.reason?.name}}</td>
+                        <td>{{discount.reason?.othType}}</td>
                     </tr>
                 </tbody>
             </table>
-            <p *ngIf="!orderOld.orderedDiscounts || !orderOld.orderedDiscounts.length">{{ ORDERSVIEW.no_discounts }}</p>
+            <p *ngIf="!orderOld.discountsTimeLine || !orderOld.discountsTimeLine.length">{{ ORDERSVIEW.no_discounts }}</p>
         </mat-expansion-panel>
     </mat-accordion>
 
