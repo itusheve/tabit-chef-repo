@@ -294,7 +294,8 @@ const OrderViewService = (function () {
             collections.PAYMENT_LIST.forEach(payment => {
                 payments.push({
                     name: billService.resolvePaymentName(payment),
-                    amount: payment.PAYMENT_TYPE ? utils.toFixedSafe(payment.P_AMOUNT * -1, 2) : utils.toFixedSafe(payment.P_AMOUNT, 2)
+                    amount: payment.PAYMENT_TYPE ? utils.toFixedSafe(payment.P_AMOUNT * -1, 2) : utils.toFixedSafe(payment.P_AMOUNT, 2),
+                    holderName: payment.CUSTOMER_NAME !== undefined ? payment.CUSTOMER_NAME : ''
                 });
             });
 
@@ -410,14 +411,14 @@ const OrderViewService = (function () {
 
             RESULT_TEXT += _TEXT_WAITER_N_DINERS;
 
-            if (TABLE_NO !== "") {
-                let _TEXT_TABLE = translateService.getText('WAITER_DINERS',
-                    ["table"],
-                    [TABLE_NO]
-                );
+            // if (TABLE_NO !== "") {
+            //     let _TEXT_TABLE = translateService.getText('TABLE_NUM',
+            //         ["table"],
+            //         [TABLE_NO]
+            //     );
 
-                RESULT_TEXT += ` ${_TEXT_TABLE}`;
-            }
+            //     RESULT_TEXT += ` ${_TEXT_TABLE}`;
+            // }
 
             return RESULT_TEXT;
         }
@@ -759,7 +760,12 @@ const OrderViewService = (function () {
         function _resolvePaymentsAmount(payments) {
 
             payments.forEach(payment => {
+
                 payment.name = payment._type;
+
+                if (payment.customerDetails !== undefined) {
+                    payment.holderName = payment.customerDetails.name !== undefined ? payment.customerDetails.name : ''
+                }
 
                 if (payment._type === Enums.PaymentTypes.CreditCardRefund ||
                     payment._type === Enums.PaymentTypes.ChargeAccountRefund ||
@@ -769,7 +775,7 @@ const OrderViewService = (function () {
                     payment.amount *= -1;
                 }
 
-                payment.methodName = _resolvePaymentMethodName(payment._type, false);
+                payment.methodName = _resolvePaymentMethodName(payment._type, false) + " ";
                 if (payment._type === Enums.PaymentTypes.ChargeAccountPayment) {
                     payment.methodName += payment.accountName;
                 }
@@ -1030,17 +1036,12 @@ const OrderViewService = (function () {
 
             function buildPaymentRow(payment) {
 
+                // 1. Payment : Credit Card Brand / Account Name
                 let result = [];
                 if (payment._type === Enums.PaymentTypes.CreditCardPayment || payment._type === Enums.PaymentTypes.CreditCardRefund) {
 
                     if (payment.creditCardBrand && payment.creditCardBrand !== "") {
                         let value = payment.creditCardBrand;
-                        // if (payment.creditCardBrand === 'tabit') {
-                        //     value = "TabitPay";
-                        // }
-                        // if (payment.source === Enums.Sources.TabitPay) {
-                        //     value += " (Tabit Pay)";
-                        // }
                         result.push({ value: value });
                     }
 
@@ -1051,10 +1052,24 @@ const OrderViewService = (function () {
                     }
                 }
 
-                if (payment.last4 && payment.last4 !== "") {
+                // 2. Last 4 Number.
+                if (payment.last4 && payment.last4 !== "" && payment.last4 !== "xxxx") {
                     result.push({ key: translateService.getText('LAST_4'), value: payment.last4 });
                 }
 
+                // 3. Amount.
+                let amount = utils.toFixedSafe(utils.currencyFraction(payment.amount), 2);
+                result.push({ key: translateService.getText('AMOUNT'), value: amount });
+
+                // 4. Customer Holder Name.
+                let holderName = "";
+                if (payment.customerDetails) {
+                    if (payment.customerDetails.name && payment.customerDetails.name !== "") {
+                        result.push({ key: translateService.getText('CUSTOMER_NAME'), value: payment.customerDetails.name });
+                    }
+                }
+
+                // 5. Source TabitPay.
                 if (payment._type === Enums.PaymentTypes.CreditCardPayment || payment._type === Enums.PaymentTypes.CreditCardRefund) {
 
                     if (payment.source === Enums.Sources.TabitPay) {
@@ -1063,24 +1078,13 @@ const OrderViewService = (function () {
                     }
                 }
 
-                let holderName = "";
-                if (payment.customerDetails) {
-                    if (payment.customerDetails.name && payment.customerDetails.name !== "") {
-                        result.push({ key: translateService.getText('CUSTOMER_NAME'), value: payment.customerDetails.name });
-                    }
-                }
-
-                let amount = utils.toFixedSafe(utils.currencyFraction(payment.amount), 2);
-                result.push({ key: translateService.getText('AMOUNT'), value: amount });
-
-
                 return result;
             }
 
             let data = [];
             let paymentMethodName = _resolvePaymentMethodName(payment._type, false)
             if (paymentMethodName !== "") {
-                data.push(paymentMethodName)
+                data.push({ value: paymentMethodName });
             }
             let paymentDetails = buildPaymentRow(payment);
             paymentDetails.forEach(c => data.push(c));
@@ -1108,8 +1112,8 @@ const OrderViewService = (function () {
                 result = "";
             }
             else {
-                result = paymentsHash[key] + " ";
-                if (addSpace) { result += "- "; }
+                result = paymentsHash[key];
+                if (addSpace) { result += " - "; }
             }
 
             return result;
@@ -1517,7 +1521,7 @@ const OrderViewService = (function () {
                 this.methodName = payment.methodName;
                 this.creditCardBrand = payment.creditCardBrand;
                 this.customerName = payment.customerDetails ? payment.customerDetails.name : '';
-                this.last4 = payment.last4;
+                this.last4 = payment.last4 !== 'xxxx' ? payment.last4 : ''
                 this.amount = payment.amount;
                 this.faceValue = payment.faceValue;
                 this.tipAmount = payment.change ? payment.change.amount : '';
