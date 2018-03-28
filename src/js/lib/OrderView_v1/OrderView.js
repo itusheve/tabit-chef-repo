@@ -387,10 +387,39 @@ const OrderViewService = (function () {
         },
         resolveWaiterDiners: function (variables) {
 
-            return translateService.getText('WAITER_DINERS',
-                ["waiter", "diners", "table"],
-                [`${variables.F_NAME} ${variables.L_NAME}`, variables.NUMBER_OF_GUESTS, variables.TABLE_NO]
+            let DISPLAY_NAME = "";
+            if (variables.F_NAME !== undefined) {
+                DISPLAY_NAME += variables.F_NAME;
+            }
+
+            if (variables.L_NAME !== undefined) {
+                DISPLAY_NAME += ` ${variables.L_NAME[0]}`;
+            }
+
+            let TABLE_NO = "";
+            if (variables.TABLE_NO !== undefined) {
+                TABLE_NO = variables.TABLE_NO;
+            }
+
+            let RESULT_TEXT = "";
+
+            let _TEXT_WAITER_N_DINERS = translateService.getText('WAITER_DINERS',
+                ["waiter", "diners"],
+                [`${DISPLAY_NAME}`, variables.NUMBER_OF_GUESTS]
             );
+
+            RESULT_TEXT += _TEXT_WAITER_N_DINERS;
+
+            if (TABLE_NO !== "") {
+                let _TEXT_TABLE = translateService.getText('WAITER_DINERS',
+                    ["table"],
+                    [TABLE_NO]
+                );
+
+                RESULT_TEXT += ` ${_TEXT_TABLE}`;
+            }
+
+            return RESULT_TEXT;
         }
     }
 
@@ -514,11 +543,41 @@ const OrderViewService = (function () {
         }
 
         function _resolveUser(user) {
+
+            let _user;
             if (_users && _users.length > 0) {
-                return _users.find(c => c._id === user);
+                _user = _users.find(c => c._id === user);
             }
-            console.log("missing users");
-            return undefined;
+
+            if (_user) {
+                _user.displayName = _resolveServerName(_user);
+            }
+            else {
+                console.log("missing users");
+            }
+
+            return _user;
+        }
+
+        function _resolveServerName(user) {
+            let _user;
+            if (typeof user === "string") {
+                _user = _resolveUser(user);
+            } else {
+                _user = user;
+            }
+
+            let result = "";
+            if (_user.firstName !== undefined) {
+                result += _user.firstName;
+            }
+
+            if (_user.lastName !== undefined) {
+                result += ` ${_user.lastName[0]}`;
+            }
+
+            return result;
+
         }
 
         function _resolveClubMembers(order) {
@@ -739,8 +798,10 @@ const OrderViewService = (function () {
                 table = translateService.getText('DELIVERY');
             }
             else {
-                let _table = _tables.find(c => c._id === tableIds[0]);
-                table = _table ? _table.number : '';
+                if (_tables && _tables.length > 0) {
+                    let _table = _tables.find(c => c._id === tableIds[0]);
+                    table = _table ? _table.number : '';
+                }
             }
 
             return table;
@@ -971,20 +1032,34 @@ const OrderViewService = (function () {
 
                 let result = [];
                 if (payment._type === Enums.PaymentTypes.CreditCardPayment || payment._type === Enums.PaymentTypes.CreditCardRefund) {
+
                     if (payment.creditCardBrand && payment.creditCardBrand !== "") {
                         let value = payment.creditCardBrand;
-                        if (payment.creditCardBrand === 'tabit') {
-                            value = "TabitPay";
-                        }
-                        if (payment.source === Enums.Sources.TabitPay) {
-                            value += " (Tabit Pay)";
-                        }
+                        // if (payment.creditCardBrand === 'tabit') {
+                        //     value = "TabitPay";
+                        // }
+                        // if (payment.source === Enums.Sources.TabitPay) {
+                        //     value += " (Tabit Pay)";
+                        // }
                         result.push({ value: value });
                     }
+
                 }
                 else if (payment._type === Enums.PaymentTypes.ChargeAccountPayment || payment._type === Enums.PaymentTypes.ChargeAccountRefund) {
                     if (payment.accountName && payment.accountName !== "") {
                         result.push({ value: payment.accountName })
+                    }
+                }
+
+                if (payment.last4 && payment.last4 !== "") {
+                    result.push({ key: translateService.getText('LAST_4'), value: payment.last4 });
+                }
+
+                if (payment._type === Enums.PaymentTypes.CreditCardPayment || payment._type === Enums.PaymentTypes.CreditCardRefund) {
+
+                    if (payment.source === Enums.Sources.TabitPay) {
+                        value = "(Tabit Pay)";
+                        result.push({ key: 'source', value: value });
                     }
                 }
 
@@ -995,30 +1070,24 @@ const OrderViewService = (function () {
                     }
                 }
 
-                if (payment.last4 && payment.last4 !== "") {
-                    result.push({ key: translateService.getText('LAST_4'), value: payment.last4 });
-
-                }
-
                 let amount = utils.toFixedSafe(utils.currencyFraction(payment.amount), 2);
                 result.push({ key: translateService.getText('AMOUNT'), value: amount });
 
-                let text = "";
-                result.forEach((item, index) => {
-                    if (index > 0) { text += "  "; }
-                    text += `${item.value}`;
-                });
 
-                return text;
+                return result;
             }
 
-            return _resolvePaymentMethodName(payment._type, true) + buildPaymentRow(payment);
-
+            let data = [];
+            let paymentMethodName = _resolvePaymentMethodName(payment._type, false)
+            if (paymentMethodName !== "") {
+                data.push(paymentMethodName)
+            }
+            let paymentDetails = buildPaymentRow(payment);
+            paymentDetails.forEach(c => data.push(c));
+            return data;
         }
 
         function _resolvePaymentMethodName(key, addSpace) {
-
-
 
             let paymentsHash = {
                 oth: translateService.getText('OTH'),
@@ -1087,9 +1156,10 @@ const OrderViewService = (function () {
             order.payments.forEach(payment => {
                 result.push({
                     action: translateService.getText('PAYMENT'),
-                    data: _resolvePaymentData(payment),
+                    data: _resolvePaymentData(payment), // Return array of values.
                     at: payment.lastUpdated,
-                    by: _resolveUserName(payment.user)
+                    by: _resolveUserName(payment.user),
+                    recordType: "payment" //only for the payments record in the time line.
                 });
             });
             return result;
@@ -1454,7 +1524,7 @@ const OrderViewService = (function () {
                 this.quantity = payment.auxIntent ? payment.auxIntent.quantity : ''; //auxIntent.quantity
 
                 if (payment.source === Enums.Sources.TabitPay) {
-                    this.methodName += " (Tabit Pay)";
+                    this.source = "(Tabit Pay)";
                 }
             }
 
