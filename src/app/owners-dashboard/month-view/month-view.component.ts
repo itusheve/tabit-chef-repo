@@ -78,12 +78,12 @@ export class MonthViewComponent  {
   constructor(private dataService: DataService, private trendsDataService: TrendsDataService) {
     let that = this;
 
-    setTimeout(() => {
+    // setTimeout(() => {
       combineLatest(this.month$, dataService.vat$, dataService.currentBd$, dataService.dailyDataLimits$)
         .subscribe(data=>{
           update(data[0], data[1], data[2], data[3]);
         });
-    }, 2500);
+    // }, 1500);
 
     function updateGridAndChart(month, vat, currentBd: moment.Moment, dailyDataLimits) {
 

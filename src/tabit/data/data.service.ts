@@ -217,6 +217,7 @@ export class DataService {
         revision B: in use
         emits the Current Business Date ("cbd")
     */
+    // TODO possible optimization - guess the currentBd, and only if its wrong emit fixed, so later op could happen quicker, e.g. dashboardData$ that brings today's sales (the most important data to show)
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
         this.rosEp.get('businessdays/current', {})
             .then(data => {
@@ -455,11 +456,19 @@ export class DataService {
     //TODO today data comes with data without tax. use it instead of dividing by 1.17 (which is incorrect).
     //TODO take cube "sales data excl. tax" instead of dividing by 1.17.
     //TODO take cube "salesPPA excl. tax" (not implemented yet, talk with Ofer) instead of dividing by 1.17.
-    public todayDataVatInclusive$: Observable<{ sales: number, diners: number, ppa: number }> = Observable.create(obs=>{
+    public todayDataVatInclusive$: Observable<KPI> = Observable.create(obs => {
         /* we get the diners and ppa measures from olap and the sales from ros */
+        const kpi = new KPI();
+
+        obs.next(kpi);
+
         const that = this;
 
-        function getDinersAndPPA(): Observable<any> {
+        //from Cube
+        function getDinersAndPPA(): Observable<{
+            diners: number,
+            ppa: number
+        }> {
             return Observable.create(sub => {
                 that.currentBd$
                     .subscribe(cbd => {
@@ -488,10 +497,13 @@ export class DataService {
                                 }
                             });
                     });
-            });
+            }).publishReplay(1).refCount();
         }
 
-        function getSales(): Observable<any> {
+        //from ROS
+        function getSales(): Observable<{
+            sales: number
+        }> {
             return Observable.create(sub => {
                 that.dashboardData$
                     .subscribe(data => {
@@ -500,14 +512,20 @@ export class DataService {
                             sales: sales
                         });
                     });
-            });
+            }).publishReplay(1).refCount();
         }
 
-        const dinersAndPPA$: Observable<any> = getDinersAndPPA();
-        const sales$: Observable<any> = getSales();
-        zip(dinersAndPPA$, sales$, (dinersAndPPA: any, sales: any) => Object.assign({}, dinersAndPPA, sales))
+        getSales()
             .subscribe(data=>{
-                obs.next(data);
+                kpi.sales = data.sales;
+                obs.next(kpi);
+            });
+
+        getDinersAndPPA()
+            .subscribe(data=>{
+                kpi.diners.count = data.diners;
+                kpi.diners.ppa = data.ppa;
+                obs.next(kpi);
             });
 
     });
@@ -580,11 +598,11 @@ export class DataService {
     /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {}
 
-    get currentBdData$(): Observable<any> {
+    get currentBdData$(): Observable<KPI> {
         return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
-            data = _.merge({}, data);
+            data = _.cloneDeep(data);
             if (!vat) {
-                data.ppa = data.ppa / 1.17;//TODO bring VAT per month from some api?
+                data.diners.ppa = data.diners.ppa / 1.17;//TODO bring VAT per month from some api?
                 data.sales = data.sales / 1.17;
             }
             return data;
@@ -1185,13 +1203,6 @@ export class DataService {
                     prepared: number;
                     returned: number;
                     operational: number;
-                    // department: string;
-                    // itemName: string;
-                    // itemSales: number;
-                    // itemSold: number;
-                    // itemPrepared: number;
-                    // itemReturned: number;
-                    // itemReturnValue: number;
                 }[] = (function () {
                     // clone raw data
                     const byItem: {
@@ -1202,13 +1213,6 @@ export class DataService {
                         prepared: number;
                         returned: number;
                         operational: number;
-                        // department: string;
-                        // itemName: string;
-                        // itemSales: number;
-                        // itemSold: number;
-                        // itemPrepared: number;
-                        // itemReturned: number;
-                        // itemReturnValue: number;
                     }[] = _.cloneDeep(data.itemsDataRaw);
 
                     // be VAT aware
