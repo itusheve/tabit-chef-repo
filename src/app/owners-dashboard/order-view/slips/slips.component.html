@@ -13,17 +13,20 @@
         <div>{{orderOld.created | date : 'dd/MM/yyyy HH:mm'}}</div>
       </div>
       <div class="flex j-center">
-        <div>{{orderOld.orderTypeDisplayText}}</div>
-      </div>
-      <div class="flex j-center">
-        <div i18n="slips@@waiter">Waiter</div>
+        <div i18n="slips@@orderType">Order Type</div>
         &nbsp;
-        <div>{{order.users.owner.fullName}}</div>
+        <div>{{ orderOld.orderTypeDisplayText }}</div>
+        <div>#{{ printDataOld.ORDER_NO}} </div>
       </div>
       <div *ngIf="orderOld.orderType==='Seated'" class="flex j-center">
         <div i18n="slips@@table">Table</div>
         &nbsp;
         <div>{{orderOld.table}}</div>
+      </div>
+      <div class="flex j-center">
+        <div i18n="slips@@server">Server</div>
+        &nbsp;
+        <div>{{order.users.owner.fullName}}</div>
       </div>
       <div class="flex j-center" *ngIf="!isCheck">
         <div i18n="slips@@diners">Guests</div>

@@ -5,10 +5,10 @@ import { ROSEp } from '../ep/ros.ep';
 @Injectable()
 export class PromotionsDataService {
 
-    /* 
-        
+    /*
+
     */
-   
+
     public promotions$: Observable<any> = new Observable(obs => {
         this.rosEp.get('promotions', {})
             .then((promotionsRaw: {}[]) => {
@@ -22,10 +22,10 @@ export class PromotionsDataService {
         private rosEp: ROSEp
     ) {
 
-        //lets cache!        
+        //lets cache!
         setTimeout(() => {
             this.promotions$.subscribe(data => { });
-        }, Math.random() * 8000 + 2000);
+        }, Math.random() * 8000 + 5000);
     }
 
 }

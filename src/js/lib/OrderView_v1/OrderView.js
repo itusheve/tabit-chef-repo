@@ -57,7 +57,8 @@ const OrderViewService = (function () {
             OTC: "OTC"
         },
         ReturnTypes: {
-            Cancellation: 'cancellation'
+            Cancellation: 'cancellation',
+            TransactionBased: "TRANSACTION BASED"
         },
         DiscountTypes: {
             OTH: "OTH",
@@ -293,7 +294,8 @@ const OrderViewService = (function () {
             collections.PAYMENT_LIST.forEach(payment => {
                 payments.push({
                     name: billService.resolvePaymentName(payment),
-                    amount: payment.PAYMENT_TYPE ? utils.toFixedSafe(payment.P_AMOUNT * -1, 2) : utils.toFixedSafe(payment.P_AMOUNT, 2)
+                    amount: payment.PAYMENT_TYPE ? utils.toFixedSafe(payment.P_AMOUNT * -1, 2) : utils.toFixedSafe(payment.P_AMOUNT, 2),
+                    holderName: payment.CUSTOMER_NAME !== undefined ? payment.CUSTOMER_NAME : ''
                 });
             });
 
@@ -386,10 +388,39 @@ const OrderViewService = (function () {
         },
         resolveWaiterDiners: function (variables) {
 
-            return translateService.getText('WAITER_DINERS',
-                ["waiter", "diners", "table"],
-                [`${variables.F_NAME} ${variables.L_NAME}`, variables.NUMBER_OF_GUESTS, variables.TABLE_NO]
+            let DISPLAY_NAME = "";
+            if (variables.F_NAME !== undefined) {
+                DISPLAY_NAME += variables.F_NAME;
+            }
+
+            if (variables.L_NAME !== undefined) {
+                DISPLAY_NAME += ` ${variables.L_NAME[0]}`;
+            }
+
+            let TABLE_NO = "";
+            if (variables.TABLE_NO !== undefined) {
+                TABLE_NO = variables.TABLE_NO;
+            }
+
+            let RESULT_TEXT = "";
+
+            let _TEXT_WAITER_N_DINERS = translateService.getText('WAITER_DINERS',
+                ["waiter", "diners"],
+                [`${DISPLAY_NAME}`, variables.NUMBER_OF_GUESTS]
             );
+
+            RESULT_TEXT += _TEXT_WAITER_N_DINERS;
+
+            // if (TABLE_NO !== "") {
+            //     let _TEXT_TABLE = translateService.getText('TABLE_NUM',
+            //         ["table"],
+            //         [TABLE_NO]
+            //     );
+
+            //     RESULT_TEXT += ` ${_TEXT_TABLE}`;
+            // }
+
+            return RESULT_TEXT;
         }
     }
 
@@ -513,11 +544,41 @@ const OrderViewService = (function () {
         }
 
         function _resolveUser(user) {
+
+            let _user;
             if (_users && _users.length > 0) {
-                return _users.find(c => c._id === user);
+                _user = _users.find(c => c._id === user);
             }
-            console.log("missing users");
-            return undefined;
+
+            if (_user) {
+                _user.displayName = _resolveServerName(_user);
+            }
+            else {
+                console.log("missing users");
+            }
+
+            return _user;
+        }
+
+        function _resolveServerName(user) {
+            let _user;
+            if (typeof user === "string") {
+                _user = _resolveUser(user);
+            } else {
+                _user = user;
+            }
+
+            let result = "";
+            if (_user.firstName !== undefined) {
+                result += _user.firstName;
+            }
+
+            if (_user.lastName !== undefined) {
+                result += ` ${_user.lastName[0]}`;
+            }
+
+            return result;
+
         }
 
         function _resolveClubMembers(order) {
@@ -699,7 +760,12 @@ const OrderViewService = (function () {
         function _resolvePaymentsAmount(payments) {
 
             payments.forEach(payment => {
+
                 payment.name = payment._type;
+
+                if (payment.customerDetails !== undefined) {
+                    payment.holderName = payment.customerDetails.name !== undefined ? payment.customerDetails.name : ''
+                }
 
                 if (payment._type === Enums.PaymentTypes.CreditCardRefund ||
                     payment._type === Enums.PaymentTypes.ChargeAccountRefund ||
@@ -709,7 +775,7 @@ const OrderViewService = (function () {
                     payment.amount *= -1;
                 }
 
-                payment.methodName = _resolvePaymentMethodName(payment._type, false);
+                payment.methodName = _resolvePaymentMethodName(payment._type, false) + " ";
                 if (payment._type === Enums.PaymentTypes.ChargeAccountPayment) {
                     payment.methodName += payment.accountName;
                 }
@@ -738,8 +804,10 @@ const OrderViewService = (function () {
                 table = translateService.getText('DELIVERY');
             }
             else {
-                let _table = _tables.find(c => c._id === tableIds[0]);
-                table = _table ? _table.number : '';
+                if (_tables && _tables.length > 0) {
+                    let _table = _tables.find(c => c._id === tableIds[0]);
+                    table = _table ? _table.number : '';
+                }
             }
 
             return table;
@@ -966,27 +1034,54 @@ const OrderViewService = (function () {
 
         function _resolvePaymentData(payment) {
 
+
             function buildPaymentRow(payment) {
 
                 let result = [];
-                if (payment._type === "CreditCardPayment") {
+                let _paymentDetailsText = "";
+
+                let arr = [];
+                // 1. Payment Method Name.
+                let paymentMethodName = _resolvePaymentMethodName(payment._type, true, ":");
+                if (paymentMethodName !== "") {
+                    arr.push(paymentMethodName);
+                    _paymentDetailsText += paymentMethodName;
+                }
+
+                // 2. Payment : Credit Card Brand / Account Name
+                if (payment._type === Enums.PaymentTypes.CreditCardPayment || payment._type === Enums.PaymentTypes.CreditCardRefund) {
                     if (payment.creditCardBrand && payment.creditCardBrand !== "") {
                         let value = payment.creditCardBrand;
-                        if (payment.creditCardBrand === 'tabit') {
-                            value = "TabitPay";
-                        }
-                        if (payment.source === Enums.Sources.TabitPay) {
-                            value += " (Tabit Pay)";
-                        }
-                        result.push({ value: value });
+                        arr.push(value);
+                        _paymentDetailsText += `  ${value}`;
                     }
+
                 }
-                else if (payment._type === "ChargeAccountPayment") {
+                else if (payment._type === Enums.PaymentTypes.ChargeAccountPayment || payment._type === Enums.PaymentTypes.ChargeAccountRefund) {
                     if (payment.accountName && payment.accountName !== "") {
-                        result.push({ value: payment.accountName })
+                        arr.push(payment.accountName);
+                        _paymentDetailsText += payment.accountName;
                     }
                 }
 
+                // 3. Last 4 Number.
+                if (payment.last4 && payment.last4 !== "" && payment.last4 !== "xxxx") {
+                    arr.push(payment.last4);
+                    _paymentDetailsText += `  ${payment.last4}`;
+                }
+
+                // Add array texts of 1, 2 & 3.
+                if (arr.length > 0) {
+                    let _text = "";
+                    arr.forEach(c => _text += "  " + c);
+                    result.push({ value: _text });
+                }
+
+                // 4. Amount.
+                let amount = utils.toFixedSafe(utils.currencyFraction(payment.amount), 2);
+                result.push({ key: translateService.getText('AMOUNT'), value: amount });
+
+                // 5. Customer Holder Name.
                 let holderName = "";
                 if (payment.customerDetails) {
                     if (payment.customerDetails.name && payment.customerDetails.name !== "") {
@@ -994,38 +1089,29 @@ const OrderViewService = (function () {
                     }
                 }
 
-                if (payment.last4 && payment.last4 !== "") {
-                    result.push({ key: translateService.getText('LAST_4'), value: payment.last4 });
+                // 6. Source TabitPay.
+                if (payment._type === Enums.PaymentTypes.CreditCardPayment || payment._type === Enums.PaymentTypes.CreditCardRefund) {
 
+                    if (payment.source === Enums.Sources.TabitPay) {
+                        let value = "(Tabit Pay)";
+                        result.push({ key: 'source', value: value });
+                    }
                 }
 
-                let amount = utils.currencyFraction(payment.amount);
-                result.push({ key: translateService.getText('AMOUNT'), value: amount });
-
-
-                let text = "";
-                result.forEach((item, index) => {
-                    if (index > 0) { text += "  ,"; }
-
-                    if (item.key) {
-                        text += `${item.key} : ${item.value}`;
-                    }
-                    else {
-                        text += `${item.value}`;
-                    }
-
-                });
-
-                return text;
+                return result;
             }
 
-            return _resolvePaymentMethodName(payment._type, true) + buildPaymentRow(payment);
-
+            let data = [];
+            // let paymentMethodName = _resolvePaymentMethodName(payment._type, false)
+            // if (paymentMethodName !== "") {
+            //     data.push({ value: paymentMethodName });
+            // }
+            let paymentDetails = buildPaymentRow(payment);
+            paymentDetails.forEach(c => data.push(c));
+            return data;
         }
 
-        function _resolvePaymentMethodName(key, addSpace) {
-
-
+        function _resolvePaymentMethodName(key, addSpace, addChar) {
 
             let paymentsHash = {
                 oth: translateService.getText('OTH'),
@@ -1046,8 +1132,9 @@ const OrderViewService = (function () {
                 result = "";
             }
             else {
-                result = paymentsHash[key] + " ";
-                if (addSpace) { result += "- "; }
+                result = paymentsHash[key];
+                if (addChar === undefined) { addChar = "-" }
+                if (addSpace) { result += " " + addChar + " "; }
             }
 
             return result;
@@ -1094,9 +1181,10 @@ const OrderViewService = (function () {
             order.payments.forEach(payment => {
                 result.push({
                     action: translateService.getText('PAYMENT'),
-                    data: _resolvePaymentData(payment),
+                    data: _resolvePaymentData(payment), // Return array of values.
                     at: payment.lastUpdated,
-                    by: _resolveUserName(payment.user)
+                    by: _resolveUserName(payment.user),
+                    recordType: "payment" //only for the payments record in the time line.
                 });
             });
             return result;
@@ -1138,11 +1226,20 @@ const OrderViewService = (function () {
         }
 
         function _resolveOTHByOrderdItem(order, item, timeline) {
+
             let result = [];
-            let data;
-            data = item.name + ' - ' + item.onTheHouse.reason.name;
+            let data = "";
+
+            if (item.onTheHouse.reason.name) {
+                data += item.onTheHouse.reason.name;
+            }
+
             if (item.onTheHouse.comment) {
-                data += ': ' + item.onTheHouse.comment;
+                data += " : " + item.onTheHouse.comment;
+            }
+
+            if (item.name) {
+                data += " - " + item.name;
             }
 
             if (timeline) { //add to discount time line
@@ -1156,7 +1253,8 @@ const OrderViewService = (function () {
                         discountAmount: _offer ? _offer.amount : 0,
                         reason: {
                             name: data,
-                        }
+                            othType: item.onTheHouse.reason && item.onTheHouse.reason.othType ? translateService.getText('OTH_TYPE_' + item.onTheHouse.reason.othType.toUpperCase()) : ''
+                        },
                     });
                 }
             }
@@ -1260,7 +1358,6 @@ const OrderViewService = (function () {
             let rewards = order.rewards;
 
             let result = [];
-
             if (orderedDiscounts.length) {
                 let rewardsHash = {};
                 rewards.forEach(reward => {
@@ -1412,17 +1509,37 @@ const OrderViewService = (function () {
             let result = [];
 
             order.orderedDiscounts.forEach(item => {
+                item.reason.othType = item.reason && item.reason.othType ? translateService.getText('OTH_TYPE_' + item.reason.othType.toUpperCase()) : ''
                 result.push(item);
             });
 
             let data;
-            order.orderedItems.forEach(item => {
-                data = "";
-                if (item.onTheHouse && !order.onTheHouse) {
-                    let OTHByOrderdItem = _resolveOTHByOrderdItem(order, item, true);
-                    OTHByOrderdItem.forEach(c => result.push(c));
+            if (!order.onTheHouse) {
+                order.orderedItems.forEach(item => {
+                    data = "";
+                    if (item.onTheHouse && !order.onTheHouse) {
+                        let OTHByOrderdItem = _resolveOTHByOrderdItem(order, item, true);
+                        OTHByOrderdItem.forEach(c => result.push(c));
+                    }
+                });
+            }
+            else {
+
+                data = order.onTheHouse.reason.name;
+                if (order.onTheHouse.comment) {
+                    data += ': ' + order.onTheHouse.comment;
                 }
-            });
+
+                result.push({
+                    discountType: Enums.DiscountTypes.OTH,
+                    discountAmount: "",
+                    reason: {
+                        name: data,
+                        othType: order.onTheHouse.reason && order.onTheHouse.reason.othType ? translateService.getText('OTH_TYPE_' + order.onTheHouse.reason.othType.toUpperCase()) : ''
+                    },
+
+                });
+            }
 
             return result;
         }
@@ -1433,14 +1550,14 @@ const OrderViewService = (function () {
                 this.methodName = payment.methodName;
                 this.creditCardBrand = payment.creditCardBrand;
                 this.customerName = payment.customerDetails ? payment.customerDetails.name : '';
-                this.last4 = payment.last4;
+                this.last4 = payment.last4 !== 'xxxx' ? payment.last4 : ''
                 this.amount = payment.amount;
                 this.faceValue = payment.faceValue;
                 this.tipAmount = payment.change ? payment.change.amount : '';
                 this.quantity = payment.auxIntent ? payment.auxIntent.quantity : ''; //auxIntent.quantity
 
                 if (payment.source === Enums.Sources.TabitPay) {
-                    this.methodName += " (Tabit Pay)";
+                    this.source = "(Tabit Pay)";
                 }
             }
 

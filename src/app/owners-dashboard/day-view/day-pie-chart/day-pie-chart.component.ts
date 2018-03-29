@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { PopulationByRegion, Service } from './day-pie-chart.service';
 import { DecimalPipe, PercentPipe, CurrencyPipe } from '@angular/common';
 import { tmpTranslations } from '../../../../tabit/data/data.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-day-pie-chart',
@@ -11,9 +12,9 @@ import { tmpTranslations } from '../../../../tabit/data/data.service';
 })
 export class DayPieChartComponent implements OnDestroy {
 
-  decPipe: any = new DecimalPipe('he-IL');
-  pctPipe: any = new PercentPipe('he-IL');
-  currPipe: CurrencyPipe = new CurrencyPipe('he-IL');
+  decPipe: any = new DecimalPipe(environment.tbtLocale);
+  pctPipe: any = new PercentPipe(environment.tbtLocale);
+  currPipe: CurrencyPipe = new CurrencyPipe(environment.tbtLocale);
 
   dataSource = [];
   show = false;
@@ -53,11 +54,11 @@ export class DayPieChartComponent implements OnDestroy {
 
       this.totalEl = document.createElement('div');
       const txtNode = document.createTextNode(this.currPipe.transform(this.total, 'ILS', 'symbol', '1.0-0'));
-      
+
       const containerEl = document.getElementsByTagName('dx-pie-chart')[0];
-      
+
       const circleEl = document.querySelectorAll('.dxc-series-group')[0];
-      
+
       const containerTop = containerEl.getBoundingClientRect().top;
       const circleTop = circleEl.getBoundingClientRect().top;
       const diff = circleTop - containerTop;
@@ -73,18 +74,18 @@ export class DayPieChartComponent implements OnDestroy {
       const class_ = document.createAttribute('class');
       class_.value = `dayPieChartTotal`;
       this.totalEl.setAttributeNode(style);
-  
+
       containerEl.appendChild(this.totalEl);
     }, 100);
 
     this.dataSource = [];
     this.total = 0;
-    
-    let i=0;    
+
+    let i=0;
 
     Object.keys(data).forEach(orderType=>{
       this.total += data[orderType];
-      
+
       //const valFormatted = this.decPipe.transform(data[orderType], '1.0-0');
       this.dataSource.push({
         color: this.pallete[i],
@@ -93,7 +94,7 @@ export class DayPieChartComponent implements OnDestroy {
         //valFormatted: valFormatted
       });
       i++;
-    }); 
+    });
   }
 
 

@@ -4,9 +4,9 @@ import { OrderType } from './OrderType.model';
 export class KPI {
     sales?: number;//total order(s) sales
     diners?: {
-        count: number;//count of diners ("seated")
-        sales: number;//diners sales ("seated sales")
-        ppa: number;//calc', :=diners sales / diners count
+        count?: number;//count of diners ("seated")
+        sales?: number;//diners sales ("seated sales")
+        ppa?: number;//calc', :=diners sales / diners count
     };
 
     //FYI! the difference between the order model pricereduction calculation and the KPI ones -

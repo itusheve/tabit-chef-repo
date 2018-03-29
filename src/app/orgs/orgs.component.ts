@@ -18,6 +18,8 @@ export class OrgsComponent implements OnInit {
   keyUp = new Subject<string>();
   orgsFiltered: any;
 
+  selectedOrg: any;
+
   constructor(
     private dataService: DataService,
     private authService: AuthService,
@@ -25,6 +27,8 @@ export class OrgsComponent implements OnInit {
     private router: Router,
     public snackBar: MatSnackBar
   ) {
+    this.selectedOrg = undefined;
+
     this.keyUp.subscribe((filter: string)=>{
       if (filter==='') this.orgsFiltered = this.orgs;
       else {
@@ -49,6 +53,7 @@ export class OrgsComponent implements OnInit {
   }
 
   selectOrg(org:any) {
+    this.selectedOrg = org;
     if (this.mode==='normal') {
       this.authService.selectOrg(org)
         .then(() => {
@@ -65,7 +70,7 @@ export class OrgsComponent implements OnInit {
         .then(()=>{
             this.router.navigate([''])
               .then(()=>{
-                  location.reload();
+                  // location.reload();
               });
         })
         .catch(e=>{

@@ -164,7 +164,8 @@ let ORDERS_VIEW_he = {
     "reversal": "ביטול",
     "kickout": "Kickout",
     "Kicked_out": "Kicked out",
-    "card_type": "סוג כרטיס"
+    "card_type": "סוג כרטיס",
+    "type": "סוג"
 };
 
 let ORDERS_VIEW_en = {
@@ -301,10 +302,11 @@ let ORDERS_VIEW_en = {
     "kickout": "Kickout",
     "Kicked_out": "Kicked out",
     "service_charge": "Service Charge",
-    "card_type": "Card Type"
+    "card_type": "Card Type",
+    "type": "Type"
 };
 
-const ORDERS_VIEW = tmpTranslations.locale === 'he' ? ORDERS_VIEW_he : ORDERS_VIEW_en;
+const ORDERS_VIEW = environment.tbtLocale === 'he-IL' ? ORDERS_VIEW_he : ORDERS_VIEW_en;
 
 export default ORDERS_VIEW;
 
@@ -638,7 +640,7 @@ let billService = {
 @Injectable()
 export class ClosedOrdersDataService {
 
-    currPipe: CurrencyPipe = new CurrencyPipe('he-IL');
+    currPipe: CurrencyPipe = new CurrencyPipe(environment.tbtLocale);
 
     currency = 'ILS';
 
@@ -648,14 +650,14 @@ export class ClosedOrdersDataService {
         the stream emits the currentBd's last closed order time, in the restaurant's timezone and in the format dddd
         e.g. 1426 means the last order was closed at 14:26, restaurnat time
     */
-    public lastClosedOrderTime$: Observable<any> = new Observable(obs => {
-        this.dataService.currentBd$.subscribe((cbd: moment.Moment) => {
-            this.olapEp.getLastClosedOrderTime(cbd)
-                .then((lastClosedOrderTime: string) => {
-                    obs.next(lastClosedOrderTime);
-                });
-        });
-    }).publishReplay(1).refCount();
+    // public lastClosedOrderTime$: Observable<any> = new Observable(obs => {
+    //     this.dataService.currentBd$.subscribe((cbd: moment.Moment) => {
+    //         this.olapEp.getLastClosedOrderTime(cbd)
+    //             .then((lastClosedOrderTime: string) => {
+    //                 obs.next(lastClosedOrderTime);
+    //             });
+    //     });
+    // }).publishReplay(1).refCount();
 
     constructor(
         private olapEp: OlapEp,
@@ -672,9 +674,9 @@ export class ClosedOrdersDataService {
     ) {
 
         this.orderViewService = new OrderViewService({
-            local: 'he-IL',
-            isUS: false,
-            moment: moment
+            local: environment.tbtLocale,//controls translations, accepts 'he-IL' / 'en-US'
+            isUS: environment.region === 'us' ? true : false,//controls behaviour
+            moment: moment //the lib requires moment
         });
 
     }
@@ -830,7 +832,7 @@ export class ClosedOrdersDataService {
                 }
 
                 //C:\dev\tabit\porta\public\l10n\he-IL.json:
-                const INITIATED_DISCOUNT = tmpTranslations.locale === 'he' ? 'הנחה יזומה' : 'Initiated.D';
+                const INITIATED_DISCOUNT = environment.tbtLocale === 'he-IL' ? 'הנחה יזומה' : 'Initiated.D';
 
                 if (discount && (!discount.rewardedResources)) {
                     //ticket discount
@@ -1620,65 +1622,7 @@ export class ClosedOrdersDataService {
 
             return Promise.resolve(order);
 
-            // TODO: US Stuff (Split Check):
-            //resolve check data.
-            // if (order.checks !== undefined && order.checks.length > 0) {
-            //     CheckDAC.get(tlogId)
-            //         .then(result => {
-
-            //             result.forEach(printCheck => {
-
-            //                 let _order = order;
-            //                 let collections = printCheck.printData.collections;
-            //                 let variables = printCheck.printData.variables;
-
-            //                 printCheck.printData.collections.PAYMENT_LIST.forEach(payment => {
-
-            //                     order.checks.forEach(check => {
-            //                         if (check.payments.length === 0) {
-            //                             return;
-            //                         }
-
-            //                         if (check.payments[0].paymentId === payment.P_ID) {
-
-            //                             check.printData = {
-            //                                 collections: collections,
-            //                                 variables: variables,
-            //                                 data: {}
-            //                             };
-
-            //                             angular.merge(check.printData.data, billService.resolveItems(variables, collections));
-
-            //                             check.printData.data.totals = billService.resolveTotals(variables, collections, true);
-            //                             check.printData.data.payments = billService.resolvePayments(variables, collections, true);
-            //                             check.printData.data.taxes = billService.resolveTaxes(variables, collections, true);
-
-            //                             check.printData.print_by_order = $translate.instant('ORDERS_VIEW.print_by_order', {
-            //                                 order_number: variables.ORDER_NO,
-            //                                 order_date: moment(variables.CREATED_AT).format('DD/MM/YYYY'),
-            //                                 order_time: moment(variables.CREATED_AT).format('HH:mm:ss')
-            //                             });
-
-            //                             check.printData.waiter_diners = $translate.instant('ORDERS_VIEW.waiter_diners', {
-            //                                 waiter: variables.F_NAME + ' ' + _.first(variables.L_NAME),
-            //                                 diners: variables.NUMBER_OF_GUESTS,
-            //                                 table: variables.TABLE_NO
-            //                             });
-
-            //                         }
-
-            //                     });
-
-            //                 });
-
-            //             });
-
-            //             deferred.resolve(order);
-            //         })
-            // }
-            // else {
-            //     deferred.resolve(order);
-            // }
+            // TODO: US Stuff (Split Check, more?)
         }
 
 
@@ -1686,35 +1630,10 @@ export class ClosedOrdersDataService {
         function setUpPrintData(data): Promise<any> {
             return new Promise((resolve, reject) => {
                 data = data[0];
-                const isUS = false;
-
+                const isUS = environment.region==='us' ? true : false;
 
                 let resolveBill = that.orderViewService.Bill.resolveBillData(data, isUS);
                 resolve(resolveBill);
-
-
-
-
-                // const variables = data.printData.variables;
-                // const collections = data.printData.collections;
-
-                // _.merge(data.printData, billService.resolveItems(variables, collections, isUS));
-
-                // data.printData.payments = billService.resolvePayments(variables, collections, isUS);
-                // data.printData.totals = billService.resolveTotals(variables, collections, null, isUS);
-                // data.printData.taxes = billService.resolveTaxes(variables, collections, null, isUS);
-                // data.printData.isUS = isUS;
-
-
-                // data.printData.print_by_order = ORDERS_VIEW.print_by_order(variables.ORDER_NO, moment(variables.CREATED_AT).format('DD/MM/YYYY'), moment(variables.CREATED_AT).format('HH:mm:ss'));
-
-                // let server_name = "";
-                // if (variables.F_NAME && variables.L_NAME) { server_name = variables.F_NAME + ' ' + _.first(variables.L_NAME); }
-
-
-                // data.printData.waiter_diners = ORDERS_VIEW.waiter_diners(server_name, variables.NUMBER_OF_GUESTS, variables.TABLE_NO);
-
-                // resolve(data.printData);
             });
         }
 
@@ -1767,22 +1686,6 @@ export class ClosedOrdersDataService {
                 const billData: any = data[2];
 
                 let _status = "closed"; // order status, dashboard show only closed orders.
-
-                // let orederResult = this.orderViewService.TimeLine.enrichOrder(
-                //     tlog,
-                //     lookupData.tablesData.tablesRaw,
-                //     lookupData.itemsData.itemsRaw,
-                //     lookupData.usersData.usersRaw,
-                //     lookupData.promotionsData.promotionsRaw,
-                //     lookupData.modifierGroupsData.allModifiersRaw,
-                //     tlog.id,
-                //     _status
-                // );
-
-
-                // if (_status === "closed" && orederResult.checks !== undefined && orederResult.checks.length > 0) {
-
-                // }
 
                 // this function return Promise obj with enrich order form 3td party serivce.
                 function getResolveOrder(
@@ -1842,288 +1745,10 @@ export class ClosedOrdersDataService {
                     setUpPrintData(billData)
                 ]);
 
-
-                // return Promise.all([
-                //     enrichOrder_(
-                //         order_,
-                //         tlog,
-                //         lookupData.offersData.bundlesRaw,
-                //         lookupData.modifierGroupsData.allModifiersRaw,
-                //         lookupData.usersData.usersRaw,
-                //         lookupData.itemsData.itemsRaw,
-                //         lookupData.tablesData.tablesRaw,
-                //         lookupData.promotionsData.promotionsRaw,
-                //     ),
-                //     setUpPrintData(billData)
-                // ]);
-
             })
             .then(data => {
                 const orderOld = data[0];
                 const printDataOld = data[1];
-
-
-
-                // $ctrl.taxRate = $ctrl.selectedOrder.tax.rate + '%';not in use
-                // $ctrl.orderOptions = [];
-
-                // $ctrl.orderOptions.push({
-                //     view: 'orderDetails',
-                //     data: undefined,
-                //     text: $translate.instant('ORDERS_VIEW.order') + ' ' + $ctrl.selectedOrder.number
-                // });
-
-
-                // if ($ctrl.selectedOrder.clubMembers.length) {
-                //     $ctrl.orderOptions.push({
-                //         view: 'clubMembers',
-                //         data: undefined,
-                //         text: $translate.instant('ORDERS_VIEW.clubMembers')
-                //     });
-                // }
-                // _.each($ctrl.selectedOrder.deliveryNotes, function (dn) {
-                //     if (dn.payments[0]._type === 'ChargeAccountPayment') {
-                //         $ctrl.orderOptions.push(
-                //             {
-                //                 view: 'ChargeAccountPayment',
-                //                 data: dn,
-                //                 text: $translate.instant('ORDERS_VIEW.delivery_note_number') + dn.number
-                //             });
-                //     } else if (dn.payments[0]._type === 'ChargeAccountRefund') {
-                //         $ctrl.orderOptions.push(
-                //             {
-                //                 view: 'ChargeAccountRefund',
-                //                 data: dn,
-                //                 text: $translate.instant('ORDERS_VIEW.refund_note_number') + dn.number
-                //             });
-                //     }
-                // });
-
-                // _.each($ctrl.selectedOrder.invoices, function (invoice) {
-                //     switch (invoice.payments[0]._type) {
-                //         case 'CreditCardPayment':
-                //             $ctrl.orderOptions.push({
-                //                 view: 'CreditInvoice',
-                //                 data: invoice,
-                //                 text: $translate.instant('ORDERS_VIEW.invoice_number') + invoice.number
-                //             });
-                //             break;
-
-                //         case 'CreditCardRefund':
-                //             $ctrl.orderOptions.push({
-                //                 view: 'CreditCardRefund',
-                //                 data: invoice,
-                //                 text: $translate.instant('ORDERS_VIEW.credit_invoice_number') + invoice.number
-                //             });
-                //             break;
-
-                //         case 'CashPayment':
-                //             $ctrl.orderOptions.push({
-                //                 view: 'CashInvoice',
-                //                 data: invoice,
-                //                 text: $translate.instant('ORDERS_VIEW.invoice_number') + invoice.number
-                //             });
-                //             break;
-
-                //         case 'GiftCard':
-                //             $ctrl.orderOptions.push({
-                //                 view: 'GiftCard',
-                //                 data: invoice,
-                //                 text: $translate.instant('ORDERS_VIEW.invoice_number') + invoice.number
-                //             });
-                //             break;
-
-                //         case 'CashRefund':
-                //             $ctrl.orderOptions.push({
-                //                 view: 'CashRefund',
-                //                 data: invoice,
-                //                 text: $translate.instant('ORDERS_VIEW.credit_invoice_number') + invoice.number
-                //             });
-                //             break;
-
-                //         case 'ChequePayment':
-                //             $ctrl.orderOptions.push({
-                //                 view: 'ChequeInvoice',
-                //                 data: invoice,
-                //                 text: $translate.instant('ORDERS_VIEW.invoice_number') + invoice.number
-                //             });
-                //             break;
-
-                //         case 'ChequeRefund':
-                //             $ctrl.orderOptions.push({
-                //                 view: 'ChequeRefund',
-                //                 data: invoice,
-                //                 text: $translate.instant('ORDERS_VIEW.credit_invoice_number') + invoice.number
-                //             });
-                //             break;
-
-
-                //     }
-                // });
-
-                // $ctrl.setOrderOption = function (orderOption) {
-                //     $ctrl.orderOptions.forEach(function (oo) {
-                //         oo.active = false;
-                //     });
-                //     $ctrl.orderOption = orderOption;
-                //     orderOption.active = true;
-                //     setOrderView(orderOption);
-                // };
-
-                // var setOrderView = function (viewObject) {
-                //     $ctrl.showDeliveryNote = false;
-                //     $ctrl.showOrderDetails = false;
-                //     $ctrl.showCash = false;
-                //     $ctrl.showCheque = false;
-                //     $ctrl.showCredit = false;
-                //     $ctrl.showDeliveryNoteRefund = false;
-                //     $ctrl.showCashRefund = false;
-                //     $ctrl.showCreditRefund = false;
-                //     $ctrl.showClubMembers = false;
-                //     $ctrl.showChequeRefund = false;
-                //     $ctrl.showGiftCard = false;
-
-                //     if (viewObject.view === 'orderDetails') {
-
-                //         $ctrl.showOrderDetails = true;
-                //     }
-                //     else if (viewObject.view === 'ChargeAccountPayment') {
-                //         setSelectedDeliveryNote(viewObject.data);
-                //     }
-                //     else if (viewObject.view === 'CashInvoice') {
-                //         setSelectedCasheInvoice(viewObject.data);
-                //     }
-                //     else if (viewObject.view === 'ChequeInvoice') {
-                //         setSelectedChequeInvoice(viewObject.data);
-                //     }
-                //     else if (viewObject.view === 'CreditInvoice') {
-                //         setSelectedCreditInvoice(viewObject.data);
-                //     }
-                //     else if (viewObject.view === 'CashRefund') {
-                //         setSelectedCashRefund(viewObject.data);
-                //     }
-                //     else if (viewObject.view === 'ChequeRefund') {
-                //         setSelectedChequeRefund(viewObject.data);
-                //     }
-                //     else if (viewObject.view === 'CreditCardRefund') {
-                //         setSelectedCreditCardRefund(viewObject.data);
-                //     }
-                //     else if (viewObject.view === 'ChargeAccountRefund') {
-                //         setSelectedChargeAccountRefund(viewObject.data);
-                //     }
-                //     else if (viewObject.view === 'GiftCard') {
-                //         setSelectedGiftCardInvoice(viewObject.data);
-                //     }
-                //     else if (viewObject.view === 'clubMembers') {
-                //         $ctrl.showClubMembers = true;
-                //     }
-                // };
-
-                // var setSelectedDeliveryNote = function (deliveryNote) {
-                //     $ctrl.selectedDeliveryNote = deliveryNote;
-                //     $ctrl.showDeliveryNote = true;
-                // };
-
-                // var setSelectedCreditInvoice = function (invoice) {
-                //     $ctrl.selectedInvoice = invoice;
-                //     $ctrl.showCredit = true;
-                // };
-
-                // var setSelectedCasheInvoice = function (invoice) {
-                //     $ctrl.selectedInvoice = invoice;
-                //     $ctrl.showCash = true;
-
-                // };
-
-                // var setSelectedGiftCardInvoice = function (invoice) {
-                //     $ctrl.selectedInvoice = invoice;
-                //     $ctrl.showGiftCard = true;
-
-                // };
-                // var setSelectedChequeInvoice = function (invoice) {
-                //     $ctrl.selectedInvoice = invoice;
-                //     $ctrl.showCheque = true;
-
-                // };
-
-                // var setSelectedChargeAccountRefund = function (deliveryNote) {
-                //     $ctrl.selectedDeliveryNote = deliveryNote;
-                //     $ctrl.showDeliveryNoteRefund = true;
-                // };
-
-                // var setSelectedCreditCardRefund = function (invoice) {
-                //     $ctrl.selectedInvoice = invoice;
-                //     $ctrl.showCreditRefund = true;
-                // };
-
-                // var setSelectedCashRefund = function (invoice) {
-                //     $ctrl.selectedInvoice = invoice;
-                //     $ctrl.showCashRefund = true;
-
-                // };
-
-                // var setSelectedChequeRefund = function (invoice) {
-                //     $ctrl.selectedInvoice = invoice;
-                //     $ctrl.showChequeRefund = true;
-
-                // };
-
-                // $ctrl.setOrderOption($ctrl.orderOptions[0]);
-
-                // $ctrl.printBillCopy = function () {
-                //     let id = $ctrl.selectedOrder.tlogId;
-
-                //     return EntityService.Orders.getBill(id)
-                //         .then(response => EntityService.Orders.resolveBill(response[0]))
-                //         .catch(() => $ctrl.PDialog.error({ text: 'Error getting data for order bill' }))
-                // };
-
-                // $ctrl.printDeliveryNoteCopy = function () {
-                //     let id = $ctrl.selectedDeliveryNote._id;
-
-                //     return EntityService.Orders.getDocument(id)
-                //         .then(response => {
-                //             return EntityService.Orders.resolveDocument(response[0]);
-                //         })
-                //         .catch(() => $ctrl.PDialog.error({ text: 'Error getting data for delivery note' }))
-                // };
-
-                // $ctrl.printInvoiceCopy = function () {
-                //     let id = $ctrl.selectedInvoice._id;
-
-                //     return EntityService.Orders.getDocument(id)
-                //         .then(response => {
-                //             return EntityService.Orders.resolveDocument(response[0]);
-                //         })
-                //         .catch(() => $ctrl.PDialog.error({ text: 'Error getting data for delivery note' }))
-                // };
-
-                // $ctrl.getDate = function (date) {
-                //     return moment(date).format('DD/MM/YYYY');
-                // };
-
-                // $ctrl.getTime = function (date) {
-                //     return moment(date).format('HH:mm');
-                // };
-
-                // $ctrl.uiArgs = {};
-
-                // $ctrl.showOrderDrill = function () {
-                //     $uibModalInstance.close({
-                //         action: 'drill',
-                //         order: $ctrl.selectedOrder
-                //     });
-                // }
-
-                // $ctrl.cancel = function () {
-                //     $uibModalInstance.dismiss('cancel');
-                // };
-
-                // if (modalParams.onLoaded)
-                //     modalParams.onLoaded();
-
-                // return enrichedOrder;
-
 
                 order_.isReturnOrder = false;
                 if (printDataOld.isReturnOrder) {

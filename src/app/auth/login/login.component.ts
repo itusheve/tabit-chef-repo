@@ -7,8 +7,6 @@ import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { tmpTranslations } from '../../../tabit/data/data.service';
 
-// import tmpTranslations from 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -17,7 +15,7 @@ import { tmpTranslations } from '../../../tabit/data/data.service';
 export class LoginComponent implements OnInit {
 
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private router:Router,
     public snackBar: MatSnackBar
   ) { }
@@ -25,7 +23,7 @@ export class LoginComponent implements OnInit {
   //TODO: side menu add X and enable sliding off
 
   hidePass = true;
-  
+
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(1)])
@@ -37,9 +35,9 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  login() {    
+  login() {
     if (this.email.invalid || this.password.invalid) return;
-    this.authService.login({      
+    this.authService.login({
       email: this.email.value,
       password: this.password.value
     })

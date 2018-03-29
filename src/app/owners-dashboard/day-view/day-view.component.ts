@@ -86,12 +86,12 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
   public itemsData: {
     byItem: {
       department: string;
-      itemName: string;
-      itemSales: number;
-      itemSold: number;
-      itemPrepared: number;
-      itemReturned: number;
-      itemReturnValue: number;
+      item: string;
+      sales: number;
+      sold: number;
+      prepared: number;
+      returned: number;
+      operational: number;
     }[]
   };
 
@@ -253,19 +253,14 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
   }
 
   ngAfterViewInit() {
-    // setTimeout(() => {
-      this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByTagName('mat-sidenav-content')[0])
-        .subscribe(visible => {
-          console.info(`visible: ${visible}`);
-          this.daySelectorVisible = visible;
-        });
-    // }, 6000);
-
+    this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByTagName('mat-sidenav-content')[0])
+      .subscribe(visible => {
+        console.info(`visible: ${visible}`);
+        this.daySelectorVisible = visible;
+      });
   }
 
-  ngAfterContentInit() {
-    // debugger;
-  }
+  ngAfterContentInit() {}
 
   onDateChanged(dateM: moment.Moment) {
     const date = dateM.format('YYYY-MM-DD');

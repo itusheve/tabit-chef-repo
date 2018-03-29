@@ -38,14 +38,8 @@ https://github.com/angular/angular/issues/16477
 until angular comes up with the final i18n solution that includes in-component translations, here are some statically typed translations:
 */
 
-let locale = 'en-US';
-if (environment.locale==='he') {
-    locale = 'he';
-}
-
-
 const tmpTranslations_ = {
-    'he': {
+    'he-IL': {
         login: {
             userPassIncorrect: 'שם משתמש ו/או סיסמא אינם נכונים'
         },
@@ -127,10 +121,9 @@ const tmpTranslations_ = {
     }
 };
 export const tmpTranslations = {
-    locale: locale,
     get(path: string):string {
         const tokens = path.split('.');
-        let translation: any = tmpTranslations_[locale];
+        let translation: any = tmpTranslations_[environment.tbtLocale];
         for (let i=0;i<tokens.length;i++) {
             translation = translation[tokens[i]];
         }
@@ -194,7 +187,7 @@ export class DataService {
     //     }, 5000);
     // }).publishReplay(1).refCount();
 
-    public region = 'Asia/Jerusalem';//TODO US..
+    public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';//'America/Chicago' / 'Asia/Jerusalem'
 
     /*
         emits a moment with tz data, so using format() will provide the time of the restaurant, e.g. m.format() := 2018-02-27T18:57:13+02:00
@@ -224,11 +217,10 @@ export class DataService {
         revision B: in use
         emits the Current Business Date ("cbd")
     */
+    // TODO possible optimization - guess the currentBd, and only if its wrong emit fixed, so later op could happen quicker, e.g. dashboardData$ that brings today's sales (the most important data to show)
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
         this.rosEp.get('businessdays/current', {})
             .then(data => {
-                // const bdStr = data.businessDate.substring(0, 10);
-                //const bd: moment.Moment = moment.tz(data.businessDate, 'Etc/UCT');
                 const cbd: moment.Moment = moment(data.businessDate);
                 obs.next(cbd);
             });
@@ -251,7 +243,8 @@ export class DataService {
             .subscribe(cbd => {
                 cbd = moment(cbd);
                 const params = {
-                    daysOfHistory: 1,//0 returns everything...
+                    //daysOfHistory: 1,//0 returns everything...
+                    today: 1,//Johnny said to use this
                     to: cbd.format('YYYY-MM-DD')
                 };
                 this.rosEp.get('reports/owner-dashboard', params)
@@ -314,12 +307,6 @@ export class DataService {
             });
     }).publishReplay(1).refCount();
 
-    // public departments: { [index: string]: Department } = {
-    //     food: new Department('food', 0),
-    //     beverages: new Department('beverages', 1),
-    //     other: new Department('other', 2)
-    // };
-
     public orderTypes: { [index: string]: OrderType } = {
         seated: new OrderType('seated', 0),
         counter: new OrderType('counter', 1),
@@ -374,6 +361,8 @@ export class DataService {
 
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
+    //TODO optimize this, getting two years of data once is costly (is it?)
+    //maybe cache data for closed business dates?
     /*
         emits (vat inclusive) data by business days closed orders (from the Cube), up to two years ago.
         sorted by business date (descending).
@@ -467,11 +456,19 @@ export class DataService {
     //TODO today data comes with data without tax. use it instead of dividing by 1.17 (which is incorrect).
     //TODO take cube "sales data excl. tax" instead of dividing by 1.17.
     //TODO take cube "salesPPA excl. tax" (not implemented yet, talk with Ofer) instead of dividing by 1.17.
-    public todayDataVatInclusive$: Observable<{ sales: number, diners: number, ppa: number }> = Observable.create(obs=>{
+    public todayDataVatInclusive$: Observable<KPI> = Observable.create(obs => {
         /* we get the diners and ppa measures from olap and the sales from ros */
+        const kpi = new KPI();
+
+        obs.next(kpi);
+
         const that = this;
 
-        function getDinersAndPPA(): Observable<any> {
+        //from Cube
+        function getDinersAndPPA(): Observable<{
+            diners: number,
+            ppa: number
+        }> {
             return Observable.create(sub => {
                 that.currentBd$
                     .subscribe(cbd => {
@@ -500,10 +497,13 @@ export class DataService {
                                 }
                             });
                     });
-            });
+            }).publishReplay(1).refCount();
         }
 
-        function getSales(): Observable<any> {
+        //from ROS
+        function getSales(): Observable<{
+            sales: number
+        }> {
             return Observable.create(sub => {
                 that.dashboardData$
                     .subscribe(data => {
@@ -512,14 +512,20 @@ export class DataService {
                             sales: sales
                         });
                     });
-            });
+            }).publishReplay(1).refCount();
         }
 
-        const dinersAndPPA$: Observable<any> = getDinersAndPPA();
-        const sales$: Observable<any> = getSales();
-        zip(dinersAndPPA$, sales$, (dinersAndPPA: any, sales: any) => Object.assign({}, dinersAndPPA, sales))
+        getSales()
             .subscribe(data=>{
-                obs.next(data);
+                kpi.sales = data.sales;
+                obs.next(kpi);
+            });
+
+        getDinersAndPPA()
+            .subscribe(data=>{
+                kpi.diners.count = data.diners;
+                kpi.diners.ppa = data.ppa;
+                obs.next(kpi);
             });
 
     });
@@ -590,17 +596,13 @@ export class DataService {
     private businessDayKPI_cache: { [index: string]: BusinessDayKPI } = {};
 
     /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
-    // private businessMonthKPI_cache: { [index: string]: BusinessMonthKPI } = {};
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {}
 
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {
-        // moment.tz.setDefault('Asia/Jerusalem');
-    }
-
-    get currentBdData$(): Observable<any> {
+    get currentBdData$(): Observable<KPI> {
         return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
-            data = _.merge({}, data);
+            data = _.cloneDeep(data);
             if (!vat) {
-                data.ppa = data.ppa / 1.17;//TODO bring VAT per month from some api?
+                data.diners.ppa = data.diners.ppa / 1.17;//TODO bring VAT per month from some api?
                 data.sales = data.sales / 1.17;
             }
             return data;
@@ -634,11 +636,6 @@ export class DataService {
 
             this.organizations$.next(filtered);
         });
-
-            // .then(orgs => {
-            //     const filtered = orgs.filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT');
-            //     this.organizations$.next(filtered);
-            // });
 
         return this.organizations$;
     }
@@ -1177,12 +1174,12 @@ export class DataService {
     get_Items_data_for_BusinessDate(bd: moment.Moment): Promise<{
         byItem: {
             department: string;
-            itemName: string;
-            itemSales: number;
-            itemSold: number;
-            itemPrepared: number;
-            itemReturned: number;
-            itemReturnValue: number;
+            item: string;
+            sales: number;
+            sold: number;
+            prepared: number;
+            returned: number;
+            operational: number;
         }[]
     }> {
         return new Promise((resolve, reject) => {
@@ -1200,29 +1197,29 @@ export class DataService {
                 // data preparation
                 const byItem: {
                     department: string;
-                    itemName: string;
-                    itemSales: number;
-                    itemSold: number;
-                    itemPrepared: number;
-                    itemReturned: number;
-                    itemReturnValue: number;
+                    item: string;
+                    sales: number;
+                    sold: number;
+                    prepared: number;
+                    returned: number;
+                    operational: number;
                 }[] = (function () {
                     // clone raw data
                     const byItem: {
                         department: string;
-                        itemName: string;
-                        itemSales: number;
-                        itemSold: number;
-                        itemPrepared: number;
-                        itemReturned: number;
-                        itemReturnValue: number;
+                        item: string;
+                        sales: number;
+                        sold: number;
+                        prepared: number;
+                        returned: number;
+                        operational: number;
                     }[] = _.cloneDeep(data.itemsDataRaw);
 
                     // be VAT aware
                     if (!data.vat) {
                         byItem.forEach(tuple => {
-                            tuple.itemSales = tuple.itemSales / 1.17;
-                            tuple.itemReturnValue = tuple.itemReturnValue / 1.17;
+                            tuple.sales = tuple.sales / 1.17;
+                            tuple.operational = tuple.operational / 1.17;
                         });
                     }
 

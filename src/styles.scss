@@ -224,5 +224,15 @@ i.icon {
   }
 }
 
+
+.daySelectorFixed {
+    #daySelector {
+        justify-content: center;
+        .dx-widget.dx-calendar-navigator {
+            max-width: 990px;
+        }
+    }
+}
+
 @import 'tabit/styles/util';
 @import 'tabit/styles/flex';

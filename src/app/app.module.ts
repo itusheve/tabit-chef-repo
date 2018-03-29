@@ -56,9 +56,10 @@ import { OrgGuard } from './auth/org-guard.service';
 import { OrgsModule } from './orgs/orgs.module';
 import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.module';
 import { VisibilityService } from '../tabit/utils/visibility.service';
+import { OlapMappings } from '../tabit/data/ep/olap.mappings';
 
 // The CLI imports the locale data for you when you use the parameter --locale with ng serve and ng build.
-if (environment.locale==='he') {
+if (environment.tbtLocale==='he-IL') {
   registerLocaleData(localeHe, 'he', localeHeExtra);//https://angular.io/guide/i18n
 }
 
@@ -108,9 +109,9 @@ if (environment.locale==='he') {
       useClass: TokenInterceptor,
       multi: true
     },
-    {
+    {//If you use JIT, you also need to define the LOCALE_ID provider in your main module:
       provide: LOCALE_ID,
-      useValue: environment.locale==='he' ? 'he' : 'en-US'
+      useValue: environment.tbtLocale === 'he-IL' ? 'he' : 'en-US'
     },
     AuthService,
     UserGuard,
@@ -134,7 +135,8 @@ if (environment.locale==='he') {
     ClosedOrdersDataService,
     TrendsDataService,
     ROSEp,
-    OlapEp
+    OlapEp,
+    OlapMappings
   ],
   bootstrap: [AppComponent]
 })

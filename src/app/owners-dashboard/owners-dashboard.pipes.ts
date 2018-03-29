@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DecimalPipe, PercentPipe } from '@angular/common';
+import { environment } from '../../environments/environment';
 // import { SlipVM } from '../order-view.component';
 
 @Pipe({
@@ -7,7 +8,7 @@ import { DecimalPipe, PercentPipe } from '@angular/common';
     pure: false
 })
 export class OwnersDashboardCurrencyPipe implements PipeTransform {
-    private decPipe: DecimalPipe = new DecimalPipe('he-IL');
+    private decPipe: DecimalPipe = new DecimalPipe(environment.tbtLocale);
     private currencySymbol = '₪';
 
     transform(value: any, decimal?: string, cents?: string, nullify?: string): any {
@@ -22,7 +23,7 @@ export class OwnersDashboardCurrencyPipe implements PipeTransform {
 
         if (cents === 'cents') {
             value = value / 100;
-        }        
+        }
         let result = this.decPipe.transform(value, `1.${decimal}-${decimal}`);
         if (result) {
             result = `${this.currencySymbol}${result}`;
@@ -37,7 +38,7 @@ export class OwnersDashboardCurrencyPipe implements PipeTransform {
     pure: false
 })
 export class OwnersDashboardPercentPipe implements PipeTransform {
-    private pctPipe: PercentPipe = new PercentPipe('he-IL');
+    private pctPipe: PercentPipe = new PercentPipe(environment.tbtLocale);
 
     transform(value: any, decimal?: string, nullify?: string): any {
         decimal = decimal || '2';
@@ -61,7 +62,7 @@ export class OwnersDashboardPercentPipe implements PipeTransform {
     pure: false
 })
 export class OwnersDashboardCountPipe implements PipeTransform {
-    private decPipe: DecimalPipe = new DecimalPipe('he-IL');
+    private decPipe: DecimalPipe = new DecimalPipe(environment.tbtLocale);
 
     transform(value: any): any {
         return this.decPipe.transform(value, '1.0-0');
