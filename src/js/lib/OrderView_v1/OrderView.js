@@ -1228,10 +1228,18 @@ const OrderViewService = (function () {
         function _resolveOTHByOrderdItem(order, item, timeline) {
 
             let result = [];
-            let data;
-            data = item.name + ' - ' + item.onTheHouse.reason.name;
+            let data = "";
+
+            if (item.onTheHouse.reason.name) {
+                data += item.onTheHouse.reason.name;
+            }
+
             if (item.onTheHouse.comment) {
-                data += ': ' + item.onTheHouse.comment;
+                data += " : " + item.onTheHouse.comment;
+            }
+
+            if (item.name) {
+                data += " - " + item.name;
             }
 
             if (timeline) { //add to discount time line
