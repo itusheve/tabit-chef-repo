@@ -1034,34 +1034,54 @@ const OrderViewService = (function () {
 
         function _resolvePaymentData(payment) {
 
+
             function buildPaymentRow(payment) {
 
-                // 1. Payment : Credit Card Brand / Account Name
                 let result = [];
-                if (payment._type === Enums.PaymentTypes.CreditCardPayment || payment._type === Enums.PaymentTypes.CreditCardRefund) {
+                let _paymentDetailsText = "";
 
+                let arr = [];
+                // 1. Payment Method Name.
+                let paymentMethodName = _resolvePaymentMethodName(payment._type, true, ":");
+                if (paymentMethodName !== "") {
+                    arr.push(paymentMethodName);
+                    _paymentDetailsText += paymentMethodName;
+                }
+
+                // 2. Payment : Credit Card Brand / Account Name
+                if (payment._type === Enums.PaymentTypes.CreditCardPayment || payment._type === Enums.PaymentTypes.CreditCardRefund) {
                     if (payment.creditCardBrand && payment.creditCardBrand !== "") {
                         let value = payment.creditCardBrand;
-                        result.push({ value: value });
+                        arr.push(value);
+                        _paymentDetailsText += `  ${value}`;
                     }
 
                 }
                 else if (payment._type === Enums.PaymentTypes.ChargeAccountPayment || payment._type === Enums.PaymentTypes.ChargeAccountRefund) {
                     if (payment.accountName && payment.accountName !== "") {
-                        result.push({ value: payment.accountName })
+                        arr.push(payment.accountName);
+                        _paymentDetailsText += payment.accountName;
                     }
                 }
 
-                // 2. Last 4 Number.
+                // 3. Last 4 Number.
                 if (payment.last4 && payment.last4 !== "" && payment.last4 !== "xxxx") {
-                    result.push({ key: translateService.getText('LAST_4'), value: payment.last4 });
+                    arr.push(payment.last4);
+                    _paymentDetailsText += `  ${payment.last4}`;
                 }
 
-                // 3. Amount.
+                // Add array texts of 1, 2 & 3.
+                if (arr.length > 0) {
+                    let _text = "";
+                    arr.forEach(c => _text += "  " + c);
+                    result.push({ value: _text });
+                }
+
+                // 4. Amount.
                 let amount = utils.toFixedSafe(utils.currencyFraction(payment.amount), 2);
                 result.push({ key: translateService.getText('AMOUNT'), value: amount });
 
-                // 4. Customer Holder Name.
+                // 5. Customer Holder Name.
                 let holderName = "";
                 if (payment.customerDetails) {
                     if (payment.customerDetails.name && payment.customerDetails.name !== "") {
@@ -1069,7 +1089,7 @@ const OrderViewService = (function () {
                     }
                 }
 
-                // 5. Source TabitPay.
+                // 6. Source TabitPay.
                 if (payment._type === Enums.PaymentTypes.CreditCardPayment || payment._type === Enums.PaymentTypes.CreditCardRefund) {
 
                     if (payment.source === Enums.Sources.TabitPay) {
@@ -1082,16 +1102,16 @@ const OrderViewService = (function () {
             }
 
             let data = [];
-            let paymentMethodName = _resolvePaymentMethodName(payment._type, false)
-            if (paymentMethodName !== "") {
-                data.push({ value: paymentMethodName });
-            }
+            // let paymentMethodName = _resolvePaymentMethodName(payment._type, false)
+            // if (paymentMethodName !== "") {
+            //     data.push({ value: paymentMethodName });
+            // }
             let paymentDetails = buildPaymentRow(payment);
             paymentDetails.forEach(c => data.push(c));
             return data;
         }
 
-        function _resolvePaymentMethodName(key, addSpace) {
+        function _resolvePaymentMethodName(key, addSpace, addChar) {
 
             let paymentsHash = {
                 oth: translateService.getText('OTH'),
@@ -1113,7 +1133,8 @@ const OrderViewService = (function () {
             }
             else {
                 result = paymentsHash[key];
-                if (addSpace) { result += " - "; }
+                if (addChar === undefined) { addChar = "-" }
+                if (addSpace) { result += " " + addChar + " "; }
             }
 
             return result;
