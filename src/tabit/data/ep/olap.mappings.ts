@@ -97,43 +97,43 @@ export class OlapMappings {
                 sold: {//"נמכר"
                     path: {
                         il: 'Tlog Items Sold',
-                        us: 'salesNetAmount'
+                        us: 'salesSold'
                     }
                 },
                 prepared: {//"הוכן"
                     path: {
                         il: 'Tlog Items Prepared',
-                        us: 'salesNetAmount'
+                        us: 'salesPrepared'
                     }
                 },
                 returned: {//"הוחזר"
                     path: {
                         il: 'Tlog Items Return',
-                        us: 'salesNetAmount'
+                        us: 'salesReturn'
                     }
                 },
-                takalotTiful_value_pct: {//"% תקלות תפעול"
+                takalotTiful_value_pct: {//"% תקלות תפעול" TODO
                     path: {
                         il: '%ShoviTakalotTiful',
-                        us: 'salesNetAmount'
+                        us: 'TBD'
                     }
                 },
-                shimurShivuk_value_pct: {//"% שימור ושיווק"
+                shimurShivuk_value_pct: {//"% שימור ושיווק"  TODO
                     path: {
                         il: '%ShoviShimurShivuk',
-                        us: 'salesNetAmount'
+                        us: 'TBD'
                     }
                 },
-                shoviIrguni_value_pct: {//"% ארוחות עובדים"
+                shoviIrguni_value_pct: {//"% ארוחות עובדים"   TODO
                     path: {
                         il: '%ShoviIrguni',
-                        us: 'salesNetAmount'
+                        us: 'TBD'
                     }
                 },
-                cancelled_value_pct: {//"% ביטול כספי"
+                cancelled_value_pct: {//"% ביטול כספי"  TODO
                     path: {
                         il: '%CancelledAmount',
-                        us: 'salesNetAmount'
+                        us: 'TBD'
                     }
                 }
             }
@@ -143,28 +143,28 @@ export class OlapMappings {
                 cancellation: {
                     path: {
                         il: 'Tlog Pricereductions Cancellation Amount',
-                        us: 'salesNetAMount'
+                        us: 'TBD'
                     },
                     type: 'number'
                 },
                 retention: {
                     path: {
                         il: 'Tlog Pricereductions Retention Discount Amount',
-                        us: 'salesNetAMount'
+                        us: 'salesReductionsRetentionDiscountAmount'
                     },
                     type: 'number'
                 },
                 operational: {//"שווי תקלות תפעול"
                     path: {
                         il: 'Tlog Pricereductions Operational Discount Amount',
-                        us: 'salesNetAMount'
+                        us: 'salesReductionsOperationalDiscountAmount'
                     },
                     type: 'number'
                 },
                 organizational: {
                     path: {
                         il: 'Tlog Pricereductions Organizational Discount Amount',
-                        us: 'salesNetAMount'
+                        us: 'salesReductionsOrganizationalDiscountAmount'
                     },
                     type: 'number'
                 }
@@ -175,7 +175,7 @@ export class OlapMappings {
                 grossPayments: {
                     path: {
                         il: 'Tlog Payments Actual Amount',
-                        us: 'salesNetAMount'
+                        us: 'paymentsActualAmount'
                     },
                     type: 'number'
                 }
@@ -257,11 +257,11 @@ export class OlapMappings {
                 },
                 dateAndWeekDay: {       //TODO NON EXISTING IN US!
                     il: '[Shortdayofweek Name]',
-                    us: ''
+                    us: 'TBD'
                 },
                 yearAndMonth: {
                     il: '[Year Month Key]',  //TODO whats the difference between 'Month Year' and 'MMYYYY'
-                    us: ''
+                    us: 'TBD'
                 }
             }
         },
@@ -304,12 +304,12 @@ export class OlapMappings {
         firingTime: {//v1, deprecated    TODO
             hierarchy: {
                 il: '[FireTime]',
-                us: ''
+                us: 'TBD'
             },
             dims: {
                 time: {
                     il: '[Time Id]',
-                    us: ''
+                    us: 'TBD'
                 }
             }
         },
@@ -360,7 +360,7 @@ export class OlapMappings {
                 yearMonth: {//"שנה חודש"
                     path: {
                         il: 'Year Month Key',//'201803', '201812'
-                        us: 'Month Year'//'Aug2017'
+                        us: 'TBD'//'Aug2017'
                     }
                 },
                 dayOfWeek: {//יום בשבוע
@@ -406,76 +406,89 @@ export class OlapMappings {
             v: 2,
             path: {
                 il: 'Pricereductionreasons',
-                us: ''
+                us: 'Reasons'
             },
             attr: {
                 subType: {//תת קבוצת החלטה
                     path: {
                         il: 'Tlog Pricereductions Reason Sub Type',
-                        us: ''
+                        us: 'Reason Sub Type Key'
                     }
                 },
                 reasonId: {//סיבות הנחה
                     path: {
                         il: 'Tlog Pricereductions Reason Id',
-                        us: ''
+                        us: 'Reason Id Key'
                     }
                 },
                 reasons: {
                     path: {
                         il: 'Tlog Pricereductions Reason Type',
-                        us: ''
+                        us: 'Reason Type'
                     },
                     parse: {
                         il: raw => {
                             switch (raw) {
-                                case 'ביטולים'://TODO localization
+                                case 'ביטולים':
                                     return 'cancellation';
-                                case 'תפעול'://TODO localization
+                                case 'תפעול':
                                     return 'compensation';
-                                case 'שימור ושיווק'://TODO localization
+                                case 'שימור ושיווק':
                                     return 'retention';
-                                case 'ארגוני'://TODO localization
+                                case 'ארגוני':
                                     return 'organizational';
-                                case 'מבצעים'://TODO localization
+                                case 'מבצעים':
                                     return 'promotions';
                             }
                         },
-                        us: raw => raw //TODO
+                        us: raw => {
+                            switch (raw) {
+                                case 'Viods Actions':
+                                    return 'cancellation';
+                                case 'Compensation Actions':
+                                    return 'compensation';
+                                case 'Retention Actions':
+                                    return 'retention';
+                                case 'TBD':
+                                    return 'organizational';
+                                case 'TBD':
+                                    return 'promotions';
+                            }
+                        }
                     },
                     members: {
                         cancellation: {
                             path: {
                                 il: 'cancellation',
-                                us: ''
+                                us: 'Viods Actions'
                             },
                             caption: 'ביטולים'//TODO localization
                         },
                         operational: {
                             path: {
                                 il: 'compensation',
-                                us: ''
+                                us: 'Compensation Actions'
                             },
                             caption: 'תפעול'
                         },
                         retention: {
                             path: {
                                 il: 'retention',
-                                us: ''
+                                us: 'Retention Actions'
                             },
                             caption: 'שימור ושיווק'//TODO localization
                         },
                         organizational: {
                             path: {
                                 il: 'organizational',
-                                us: ''
+                                us: 'TBD'
                             },
                             caption: 'ארגוני'//TODO localization
                         },
                         promotions: {
                             path: {
                                 il: '',
-                                us: ''
+                                us: 'TBD'
                             },
                             caption: 'מבצעים'//TODO localization
                         }
@@ -493,13 +506,13 @@ export class OlapMappings {
                 department: {//מחלקה
                     path: {
                         il: 'Department Id',
-                        us: 'Department Name'
+                        us: 'Department Id'
                     }
                 },
                 subDepartment: {//תת מחלקה
                     path: {
                         il: 'Sub Department',
-                        us: 'Sub Departmen Name'
+                        us: 'Sub Department Id'
                     }
                 },
                 item: {//פריט
@@ -520,13 +533,13 @@ export class OlapMappings {
                 accountType: {//"Typeid"  e.g. "אשראי", "הקפה", "מזומן"
                     path: {
                         il: 'Typeid',
-                        us: 'Type'
+                        us: 'Type Id'//offer need to fix
                     }
                 },
                 account: {//"HQ Name"  e.g. "דינרס", "ישראכרט", "סיבוס", "מזומן", "עודף מאשראי"
                     path: {
                         il: 'HQ Name',
-                        us: 'Name'
+                        us: 'TBD'
                     }
                 }
             }
@@ -576,17 +589,62 @@ export class OlapMappings {
                 }
             }
         },
+        owner: {//waitersV2 is actually OWNER, but in US we have Owner, FiredBy and ApprovedBy
+            v: 2,
+            path: {
+                il: 'Owners',
+                us: 'WaiterOwner'
+            },
+            attr: {
+                waiter: {//מלצר
+                    path: {
+                        il: 'Tlog Header Owner Id',
+                        us: 'Full Name'
+                    }
+                }
+            }
+        },
+        firedBy: {//waitersV2 is actually OWNER, but in US we have Owner, FiredBy and ApprovedBy
+            v: 2,
+            path: {
+                il: 'NON EXISTING',
+                us: 'WaiterFiredBy'
+            },
+            attr: {
+                waiter: {//מלצר
+                    path: {
+                        il: 'NON EXISTING',
+                        us: 'User Id'
+                    }
+                }
+            }
+        },
+        approvedBy: {//waitersV2 is actually OWNER, but in US we have Owner, FiredBy and ApprovedBy
+            v: 2,
+            path: {
+                il: 'NON EXISTING',
+                us: 'WaiterPRapprovedBy'
+            },
+            attr: {
+                waiter: {//מלצר
+                    path: {
+                        il: 'NON EXISTING',
+                        us: 'User Id'
+                    }
+                }
+            }
+        },
         tables: {//"שולחנות"    //TODO
             v: 2,
             path: {
                 il: 'Tables',
-                us: ''
+                us: 'TBD'
             },
             attr: {
                 tableId: {//מס שולחן
                     path: {
                         il: 'Table Id',
-                        us: ''
+                        us: 'TBD'
                     },
                     parse: {
                         il: raw => {

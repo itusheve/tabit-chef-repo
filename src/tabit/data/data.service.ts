@@ -242,7 +242,8 @@ export class DataService {
             .subscribe(cbd => {
                 cbd = moment(cbd);
                 const params = {
-                    daysOfHistory: 1,//0 returns everything...
+                    //daysOfHistory: 1,//0 returns everything...
+                    today: 1,//Johnny said to use this
                     to: cbd.format('YYYY-MM-DD')
                 };
                 this.rosEp.get('reports/owner-dashboard', params)
