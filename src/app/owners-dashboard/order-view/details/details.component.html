@@ -132,7 +132,7 @@
                             <div *ngIf="row.recordType!=='payment'">{{row.data}}</div>
                             <div class="flex d-row" *ngIf="row.recordType==='payment'">
                                 <div *ngFor="let item of row.data">
-                                    <div *ngIf="item.value">{{item.value}}&nbsp;&nbsp;&nbsp;</div>
+                                    <div *ngIf="item.value">{{item.value}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                 </div>
                             </div>
                         </td>
