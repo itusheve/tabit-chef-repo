@@ -90,8 +90,8 @@
         <source>Operational Errors</source>
         <target>תקלות תפעול</target>
       </trans-unit>
-      <trans-unit id="operationalErrorsByWaiter" datatype="html">
-        <source>Item Returns, OTH and Discounts by Waiter</source>
+      <trans-unit id="operationalErrorsByServer" datatype="html">
+        <source>Item Returns, OTH and Discounts by Server</source>
         <target>החזר פריטים, OTH והנחות לפי מלצר</target>
       </trans-unit>
       <trans-unit id="operationalReductionsValue" datatype="html">
@@ -102,8 +102,8 @@
         <source>Retention</source>
         <target>שימור ושיווק</target>
       </trans-unit>
-      <trans-unit id="retentionByWaiter" datatype="html">
-        <source>Manual Operations by Waiter</source>
+      <trans-unit id="retentionByServer" datatype="html">
+        <source>Manual Operations by Server</source>
         <target>פעולות ידניות לפי מלצר</target>
       </trans-unit>
       <trans-unit id="monthlyReport" datatype="html">
@@ -391,19 +391,9 @@
         <source>Order</source>
         <target>הזמנה</target>
       </trans-unit>
-      <trans-unit id="waiter" datatype="html">
-        <source>Waiter</source>
+      <trans-unit id="server" datatype="html">
+        <source>Server</source>
         <target>מלצר</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/day-view/day-orders-table/day-orders-table.component.ts</context>
-          <context context-type="linenumber">35</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/slips.component.ts</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <note priority="1" from="description">מלצר</note>
-        <note priority="1" from="meaning">day-orders-table</note>
       </trans-unit>
       <trans-unit id="sales" datatype="html">
         <source>סכום</source>
@@ -809,8 +799,8 @@
         <source>Reason</source>
         <target>סיבה</target>
       </trans-unit>
-      <trans-unit id="waiterOwner" datatype="html">
-        <source>Waiter / Owner</source>
+      <trans-unit id="serverOwner" datatype="html">
+        <source>Server / Owner</source>
         <target>מלצר / אחראי</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/owners-dashboard/order-view/details/details.component.ts</context>
