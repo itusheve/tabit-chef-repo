@@ -50,7 +50,7 @@ export class OlapEp {
         return this.url$;
     }
 
-    private monthsMap = {
+    private monthsMap = {//TODO deprecated - use the one in olapMappings
         he: {
             'ינואר': 1,//TODO localization
             'פברואר': 2,
@@ -260,62 +260,41 @@ export class OlapEp {
         const mdx = `
             SELECT
             {
-                ${this.olapMappings.measures.sales[environment.region]},
-                ${this.olapMappings.measures.ppa.sales[environment.region]},
-                ${this.olapMappings.measures.ppa.diners[environment.region]}
-            } ON 0,
+                ${this.measure(this.olapMappings.measureGroups.general.measures.sales)},
+                ${this.measure(this.olapMappings.measureGroups.general.measures.dinersSales)},
+                ${this.measure(this.olapMappings.measureGroups.general.measures.dinersCount)}
+            }
+            ON 0,
             NON EMPTY {
-                ${this.olapMappings.dims.BusinessDate.hierarchy[environment.region]}.${this.olapMappings.dims.BusinessDate.dims.yearAndMonth[environment.region]}.members
-            } ON 1
+                ${this.membersNew({ dimAttr: this.olapMappings.dims.businessDateV2.attr.yearMonth })}
+            }
+            ON 1
             FROM ${this.cube}
         `;
-
-        const regex = /(\d+) (\D+)/;
 
         this.url
             .subscribe(url=>{
                 const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+
                 xmla4j_w.executeNew(mdx)
                     .then(rowset => {
+
                         const filtered = rowset.filter(r => {
-                            let yearAndMonth = r[`${that.olapMappings.dims.BusinessDate.hierarchy[environment.region]}.${that.olapMappings.dims.BusinessDate.dims.yearAndMonth[environment.region]}.${that.olapMappings.dims.BusinessDate.dims.yearAndMonth[environment.region]}.[MEMBER_CAPTION]`];
-                            if (!yearAndMonth) return false;
-                            //data looks like: 2017 ינואר
-
-                            let m;
-                            let year;
-                            let month;
-                            let monthInt;
-                            try {
-                                m = regex.exec(yearAndMonth);
-                                year = m[1];
-                                month = m[2];
-                                if (!year || !month) {
-                                    throw new Error(`err 761: error extracting monthly data: ${yearAndMonth}. please contact support.`);
-                                }
-                                monthInt = this.monthsMap['he'][month];//TODO localize
-                                if (!monthInt) {
-                                    throw new Error(`err 762: error extracting monthly data: ${yearAndMonth}. please contact support.`);
-                                }
-                            } catch (e) {
-                                throw new Error(`err 760: error extracting monthly data: ${yearAndMonth}. please contact support.`);
+                            const yearMonth = this.parseDim(r, this.olapMappings.dims.businessDateV2.attr.yearMonth);
+                            if (yearMonth !== null) {
+                                r.month = yearMonth;
+                                return true;
                             }
-
-                            r.date = moment().year(year).month(monthInt - 1).date(1);
-                            return true;
-
+                            return false;
                         });
-                        const treated = filtered.map(r => {
-                            let sales = r[that.olapMappings.measures.sales[environment.region]];
-                            let salesPPA = r[that.olapMappings.measures.ppa.sales[environment.region]];
-                            let dinersPPA = r[that.olapMappings.measures.ppa.diners[environment.region]];
 
-                            if (sales) sales = that.expoToNumer(sales);
-                            if (salesPPA) salesPPA = that.expoToNumer(salesPPA);
-                            if (dinersPPA) dinersPPA = dinersPPA * 1;
+                        const treated = filtered.map(r => {
+                            const sales = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.sales);
+                            const salesPPA = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.dinersSales);
+                            const dinersPPA = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.dinersCount);
 
                             return {
-                                date: r.date,
+                                date: r.month,
                                 sales: sales,
                                 salesPPA: salesPPA,
                                 dinersPPA: dinersPPA
@@ -379,49 +358,34 @@ export class OlapEp {
                 `;
             }
 
-            // PPA per date range === ppa.sales / ppa.diners.
-            // we calc the PPA ourselve (not using the calc' PPA measure)
-            // in order to be able to use only the daily data as our source for the entire app.
-
-            let whereClause = `
+            let subSelectClause = `
                 [${this.olapMappings.dims.businessDateV2.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.date.path[environment.region]}].&[${dateFrom.format('YYYYMMDD')}]:[${this.olapMappings.dims.businessDateV2.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.date.path[environment.region]}].&[${dateTo.format('YYYYMMDD')}]
             `;
             if (o.timeFrom || o.timeTo) {
-                whereClause = `
-                    ${whereClause},
+                subSelectClause = `
+                    ${subSelectClause} *
                     ${timeHierarchy}.${timeDim}.&[${timeFrom}]:${timeHierarchy}.${timeDim}.&[${timeTo}]
                 `;
             }
-            whereClause = `
-                WHERE (
-                    ${whereClause}
-                )
-            `;
-
-            // const mdx = `
-            //     ${selectClause}
-            //     {
-            //         [${this.olapMappings.dims.businessDateV2.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.date.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.date.path[environment.region]}].members
-            //     }
-            //      ON 1
-            //     FROM ${this.cube}
-            //     ${whereClause}
-            // `;
 
             // using sub select since we need the Date Key Dim both in Slicer And Axis:
             const mdx = `
-                    ${selectClause}
-                    ON 0,
-                    {
-                        [${this.olapMappings.dims.businessDateV2.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.date.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.date.path[environment.region]}].members
-                    }
-                    ON 1
-                FROM(
-                    SELECT
-                    FROM ${this.cube}
-                    ${whereClause}
-                )
+            ${selectClause}
+            ON 0,
+                non empty{
+                    [${this.olapMappings.dims.businessDateV2.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.date.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.date.path[environment.region]}].members
+                }
+            ON 1
+            FROM(
+                SELECT
+                    (
+                        ${subSelectClause}
+                    )
+                ON 0
+                FROM ${ this.cube }
+            )
             `;
+
 
             this.url.take(1)
                 .subscribe(url => {
@@ -430,15 +394,6 @@ export class OlapEp {
                     xmla4j_w.execute(mdx)
                         .then(rowset => {
                             const treated = rowset.map(r => {
-                                // raw date looks like: " ש 01/10/2017"
-                                // const rawDate = r[`${this.olapMappings.dims.BusinessDate.hierarchy[environment.region]}.${this.olapMappings.dims.BusinessDate.dims.dateAndWeekDay[environment.region]}.${this.olapMappings.dims.BusinessDate.dims.dateAndWeekDay[environment.region]}.[MEMBER_CAPTION]`];
-                                // let m;
-                                // let dateAsString;
-                                // if ((m = this.SHORTDAYOFWEEK_NAME_REGEX.exec(rawDate)) !== null && m.length > 1) {
-                                //     dateAsString = m[1];
-                                // }
-                                // let date = moment(dateAsString, 'DD-MM-YYYY');
-
                                 const date = this.parseDim(r, this.olapMappings.dims.businessDateV2.attr.date);
 
                                 const headerSales = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.sales);
@@ -476,23 +431,18 @@ export class OlapEp {
     public getDataByMonths(o: { monthFrom: moment.Moment, monthTo: moment.Moment }): Promise<any> {
         return new Promise<any>((resolve, reject) => {
 
-            let selectClause = `
+            const mdx = `
                 SELECT
                 {
-                    ${this.olapMappings.measures.sales[environment.region]}
-                } ON 0,
-                {
-                    ${this.olapMappings.dims.BusinessDate.hierarchy[environment.region]}.${this.olapMappings.dims.BusinessDate.dims.yearAndMonth[environment.region]}.members
-                } ON 1
-            `;
-
-            const mdx = `
-                ${selectClause}
+                    ${this.measure(this.olapMappings.measureGroups.general.measures.sales)}
+                }
+                ON 0,
+                NON EMPTY {
+                    ${this.membersNew({ dimAttr: this.olapMappings.dims.businessDateV2.attr.yearMonth })}
+                }
+                ON 1
                 FROM ${this.cube}
             `;
-                // ${whereClause}
-
-            const regex = /(\d+) (\D+)/;
 
             this.url.take(1)
                 .subscribe(url => {
@@ -502,51 +452,23 @@ export class OlapEp {
                         .then(rowset => {
 
                             const filtered = rowset.filter(r => {
-                                let yearAndMonth = r[`${<string>this.olapMappings.dims.BusinessDate.hierarchy[environment.region]}.${<string>this.olapMappings.dims.BusinessDate.dims.yearAndMonth[environment.region]}.${<string>this.olapMappings.dims.BusinessDate.dims.yearAndMonth[environment.region]}.[MEMBER_CAPTION]`];
-                                if (!yearAndMonth) return false;
-                                //data looks like: 2017 ינואר
-
-                                let m;
-                                let year;
-                                let month;
-                                let monthInt;
-                                try {
-                                    m = regex.exec(yearAndMonth);
-                                    year = m[1];
-                                    month = m[2];
-                                    if (!year || !month) {
-                                        //throw new Error(`err 7618: error extracting monthly data: ${yearAndMonth}. please contact support.`);
-                                        return false;
-                                    }
-                                    monthInt = this.monthsMap['he'][month];//TODO localize
-                                    if (!monthInt) {
-                                        //throw new Error(`err 7628: error extracting monthly data: ${yearAndMonth}. please contact support.`);
-                                        return false;
-                                    }
-                                } catch (e) {
-                                    // throw new Error(`err 7608: error extracting monthly data: ${yearAndMonth}. please contact support.`);
-                                    return false;
+                                const yearMonth = this.parseDim(r, this.olapMappings.dims.businessDateV2.attr.yearMonth);
+                                if (yearMonth!==null) {
+                                    r.month = yearMonth;
+                                    return true;
                                 }
-
-                                r.month = moment().year(year).month(monthInt - 1).date(1);
-                                return true;
-
+                                return false;
                             });
 
-
                             const treated = filtered.map(r => {
-                                let sales = r[this.olapMappings.measures.sales[environment.region]];
-
-                                if (sales) sales = this.expoToNumer(sales);
+                                const sales = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.sales);
 
                                 return {
                                     month: r.month,
                                     sales: sales
                                 };
                             });
-
                             resolve(treated);
-
                         })
                         .catch(e => {
                         });
@@ -659,7 +581,7 @@ export class OlapEp {
 
                                 const orderWaiter = r[`${this.olapMappings.dims.waiters.hierarchy[environment.region]}.${this.olapMappings.dims.waiters.dims.waiter[environment.region]}.${this.olapMappings.dims.waiters.dims.waiter[environment.region]}.[MEMBER_CAPTION]`];
 
-                                const openingTime: moment.Moment = moment(`${rawOrderDate} ${rawOrderTime}`, 'DD/MM/YYYY Hmm');
+                                const openingTime: moment.Moment = moment(`${rawOrderDate} ${rawOrderTime}`, environment.region==='il' ? 'DD/MM/YYYY Hmm' : 'MM/DD/YYYY Hmm');
 
                                 let sales = r[this.olapMappings.measures.sales[environment.region]] || 0;
                                 let salesPPA = r[this.olapMappings.measures.ppa.sales[environment.region]] || 0;

@@ -61,85 +61,85 @@ export class HomeComponent implements OnInit {
 
     // we don't want to delay the card on the trends so we split into two calls:
     // A:
-    combineLatest(this.dataService.currentBdData$, this.dataService.currentBd$)
-      .subscribe(data => {
-        const title = this.datePipe.transform(moment(data[1]).valueOf(), 'fullDate');
-        this.currentBdCardData.sales = data[0].sales;
-        this.currentBdCardData.diners = data[0].diners.count;
-        this.currentBdCardData.ppa = data[0].diners.ppa;
-        this.currentBdCardData.title = title;
+    // combineLatest(this.dataService.currentBdData$, this.dataService.currentBd$)
+    //   .subscribe(data => {
+    //     const title = this.datePipe.transform(moment(data[1]).valueOf(), 'fullDate');
+    //     this.currentBdCardData.sales = data[0].sales;
+    //     this.currentBdCardData.diners = data[0].diners.count;
+    //     this.currentBdCardData.ppa = data[0].diners.ppa;
+    //     this.currentBdCardData.title = title;
 
-        if (typeof this.currentBdCardData.sales==='number') {
-          this.currentBdCardData.loading = false;
-        }
-      });
+    //     if (typeof this.currentBdCardData.sales==='number') {
+    //       this.currentBdCardData.loading = false;
+    //     }
+    //   });
     // B:
-    combineLatest(this.trendsDataService.trends$)
-      .subscribe(data => {
-        const trends = data[0];
-        this.currentBdCardData.trends = {
-          left: trends.currentBd.last4,
-          right: trends.currentBd.lastYear
-        };
-      });
+    // combineLatest(this.trendsDataService.trends$)
+    //   .subscribe(data => {
+    //     const trends = data[0];
+    //     this.currentBdCardData.trends = {
+    //       left: trends.currentBd.last4,
+    //       right: trends.currentBd.lastYear
+    //     };
+    //   });
 
     // we don't want to delay the card on the trends so we split into two calls:
     // A:
-    combineLatest(this.cardsDataService.previousBdData$, this.dataService.previousBd$)
-      .subscribe(data => {
-        const title = this.datePipe.transform(data[1].valueOf(), 'fullDate');
-        this.previousBdCardData.diners = data[0].diners;
-        this.previousBdCardData.ppa = data[0].ppa;
-        this.previousBdCardData.sales = data[0].sales;
-        this.previousBdCardData.title = title;
+    // combineLatest(this.cardsDataService.previousBdData$, this.dataService.previousBd$)
+    //   .subscribe(data => {
+    //     const title = this.datePipe.transform(data[1].valueOf(), 'fullDate');
+    //     this.previousBdCardData.diners = data[0].diners;
+    //     this.previousBdCardData.ppa = data[0].ppa;
+    //     this.previousBdCardData.sales = data[0].sales;
+    //     this.previousBdCardData.title = title;
 
-        if (data[0].hasOwnProperty('final') && !data[0].final) {
-          this.previousBdCardData.salesComment = 'NotFinal';
-          this.previousBdNotFinal = true;
-        }
+    //     if (data[0].hasOwnProperty('final') && !data[0].final) {
+    //       this.previousBdCardData.salesComment = 'NotFinal';
+    //       this.previousBdNotFinal = true;
+    //     }
 
-        this.previousBdCardData.loading = false;
-      });
+    //     this.previousBdCardData.loading = false;
+    //   });
     //B: (we must get the previousBdData here also to determine if data is final or not. if not, dont show trends)
-    combineLatest(this.cardsDataService.previousBdData$, this.trendsDataService.trends$)
-      .subscribe(data => {
-        const trends = data[1];
-        if (!data[0].hasOwnProperty('final') || data[0].final) {
-          this.previousBdCardData.trends = {
-            left: trends.previousBd.last4,
-            right: trends.previousBd.lastYear
-          };
-        }
-      });
+    // combineLatest(this.cardsDataService.previousBdData$, this.trendsDataService.trends$)
+    //   .subscribe(data => {
+    //     const trends = data[1];
+    //     if (!data[0].hasOwnProperty('final') || data[0].final) {
+    //       this.previousBdCardData.trends = {
+    //         left: trends.previousBd.last4,
+    //         right: trends.previousBd.lastYear
+    //       };
+    //     }
+    //   });
 
 
-    setTimeout(() => {
-      combineLatest(this.dataService.mtdData$, this.dataService.currentBd$, this.trendsDataService.trends$)
-        .subscribe(data => {
-          const trends = data[2];
+    // setTimeout(() => {
+    //   combineLatest(this.dataService.mtdData$, this.dataService.currentBd$, this.trendsDataService.trends$)
+    //     .subscribe(data => {
+    //       const trends = data[2];
 
-          const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} ${tmpTranslations.get('home.mtd')}`;
-          this.mtdCardData.diners = data[0].diners;
-          this.mtdCardData.ppa = data[0].ppa;
-          this.mtdCardData.sales = data[0].sales;
-          this.mtdCardData.title = title;
+    //       const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} ${tmpTranslations.get('home.mtd')}`;
+    //       this.mtdCardData.diners = data[0].diners;
+    //       this.mtdCardData.ppa = data[0].ppa;
+    //       this.mtdCardData.sales = data[0].sales;
+    //       this.mtdCardData.title = title;
 
-          this.mtdCardData.trends = {
-            // left: ,
-            right: trends.mtd.lastYear
-          };
+    //       this.mtdCardData.trends = {
+    //         // left: ,
+    //         right: trends.mtd.lastYear
+    //       };
 
-          this.mtdCardData.loading = false;
+    //       this.mtdCardData.loading = false;
 
-          this.trendsDataService.partial_month_forecast_to_start_of_month_partial_month_forecast()
-            .then(partial_month_forecast_to_start_of_month_partial_month_forecast=>{
-              this.mtdCardData.trends.left = partial_month_forecast_to_start_of_month_partial_month_forecast;
-            });
-        });
+    //       this.trendsDataService.partial_month_forecast_to_start_of_month_partial_month_forecast()
+    //         .then(partial_month_forecast_to_start_of_month_partial_month_forecast=>{
+    //           this.mtdCardData.trends.left = partial_month_forecast_to_start_of_month_partial_month_forecast;
+    //         });
+    //     });
 
-        // this.renderMonthView = true;
+    //     // this.renderMonthView = true;
 
-    }, 2500);
+    // }, 2500);
   }
 
   ngOnInit() {

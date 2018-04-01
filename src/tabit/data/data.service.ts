@@ -323,7 +323,7 @@ export class DataService {
         this is NOT a translation service and has nothing to do with translations.
         this is a mapping of tokens from different cubes to the DataService domain
     */
-    private cubeCollection = 'israeliCubes';
+    private cubeCollection = environment.region==='il' ? 'israeliCubes' : 'usCubes';
     private olapNormalizationMaps: any = {
         israeliCubes: {
             orderType: {
@@ -331,9 +331,9 @@ export class DataService {
                 'דלפק': this.orderTypes.counter,
                 'לקחת': this.orderTypes.ta,
                 'משלוח': this.orderTypes.delivery,
-                'סוג הזמנה לא מוגדר': this.orderTypes.other,
                 'החזר': this.orderTypes.returns,
-                'החלפת אמצעי תשלום': this.orderTypes.mediaExchange
+                'החלפת אמצעי תשלום': this.orderTypes.mediaExchange,
+                'סוג הזמנה לא מוגדר': this.orderTypes.other
             },
             // department: {
             //     'מזון': this.departments.food,
@@ -343,13 +343,13 @@ export class DataService {
         },
         usCubes: {
             orderType: {
-                'a': this.orderTypes.seated,
-                'b': this.orderTypes.counter,
-                'c': this.orderTypes.ta,
-                'd': this.orderTypes.delivery,
-                'e': this.orderTypes.other,
-                'f': this.orderTypes.returns,
-                'g': this.orderTypes.mediaExchange
+                'SEATED': this.orderTypes.seated,
+                'OTC': this.orderTypes.counter,
+                'TAKEAWAY': this.orderTypes.ta,
+                'DELIVERY': this.orderTypes.delivery,
+                'REFUND': this.orderTypes.returns,
+                'MEDIAEXCHANGE': this.orderTypes.mediaExchange,
+                'UNKNOWN': this.orderTypes.other
             },
             // department: {
             //     'a': this.departments[0],
@@ -815,7 +815,7 @@ export class DataService {
 
             // normalize olapData:
             daily_data_by_orderType_by_service.forEach(o=>{
-                o.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][o.orderType];
+                o.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][o.orderType.toUpperCase()];
             });
             // end of normalizeOlapData
 
@@ -910,7 +910,7 @@ export class DataService {
 
                     // normalize olapData:
                     daily_data_by_orderType_by_service_raw.forEach(o => {
-                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType + ''];
+                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][(o.orderType + '').toUpperCase()];
                         o.shift = data.shifts.find(s=>s.name===o.service);
                     });
 
@@ -1276,7 +1276,7 @@ export class DataService {
 
                     // normalize olapData:
                     // daily_data_by_orderType_by_service.forEach(o => {
-                    order.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][ordersRaw[i].orderTypeCaption];
+                    order.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][ordersRaw[i].orderTypeCaption.toUpperCase()];
                     // });
                     // end of normalizeOlapData
 
@@ -1432,7 +1432,7 @@ export class DataService {
                         reasonId: string;
                         operational: number;
                     }[] = _.cloneDeep(data.operationalErrorsDataRaw).map(o => {
-                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType];
+                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType.toUpperCase()];
                         return o;
                     });
 
@@ -1506,7 +1506,7 @@ export class DataService {
                         reasons: string;
                         retention: number;
                     }[] = _.cloneDeep(data.retentionDataRaw).map(o => {
-                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType];
+                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType.toUpperCase()];
                         return o;
                     });
 

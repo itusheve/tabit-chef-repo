@@ -5,6 +5,37 @@ import * as moment from 'moment';
 @Injectable()
 export class OlapMappings {
 
+    private monthsMap = {
+        il: {
+            'ינואר': 1,
+            'פברואר': 2,
+            'מרץ': 3,
+            'אפריל': 4,
+            'מאי': 5,
+            'יוני': 6,
+            'יולי': 7,
+            'אוגוסט': 8,
+            'ספטמבר': 9,
+            'אוקטובר': 10,
+            'נובמבר': 11,
+            'דצמבר': 12
+        },
+        us: {
+            'JAN': 1,
+            'FEB': 2,
+            'MAR': 3,
+            'APR': 4,
+            'MAY': 5,
+            'JUN': 6,
+            'JUL': 7,
+            'AUG': 8,
+            'SEP': 9,
+            'OCT': 10,
+            'NOV': 11,
+            'DEC': 12
+        }
+    };
+
 //     select
 // 	{
 //     //Order Summary:
@@ -143,7 +174,7 @@ export class OlapMappings {
                 cancellation: {
                     path: {
                         il: 'Tlog Pricereductions Cancellation Amount',
-                        us: 'TBD'
+                        us: 'salesReductionsCancellationAmount'//Voids$
                     },
                     type: 'number'
                 },
@@ -255,13 +286,13 @@ export class OlapMappings {
                     il: '[Date Key]',
                     us: '[Date Key]'
                 },
-                dateAndWeekDay: {       //TODO NON EXISTING IN US!
+                dateAndWeekDay: {
                     il: '[Shortdayofweek Name]',
-                    us: 'TBD'
+                    us: '[Date With Dow]'
                 },
                 yearAndMonth: {
-                    il: '[Year Month Key]',  //TODO whats the difference between 'Month Year' and 'MMYYYY'
-                    us: 'TBD'
+                    il: '[Year Month Key]',
+                    us: '[YYYYMM]'//YYYYMM
                 }
             }
         },
@@ -301,15 +332,15 @@ export class OlapMappings {
                 }
             }
         },
-        firingTime: {//v1, deprecated    TODO
+        firingTime: {//v1, deprecated
             hierarchy: {
                 il: '[FireTime]',
-                us: 'TBD'
+                us: '[FireOn Time]'
             },
             dims: {
                 time: {
                     il: '[Time Id]',
-                    us: 'TBD'
+                    us: '[HHMM Key]'
                 }
             }
         },
@@ -354,13 +385,61 @@ export class OlapMappings {
                     },
                     parse: {
                         il: raw => moment(raw, 'DD/MM/YYYY'),
-                        us: raw => moment(raw, 'YYYY-MM-DD')//'20170108'
+                        us: raw => moment(raw, 'MM/DD/YYYY')//'12/27/2017'
                     }
                 },
                 yearMonth: {//"שנה חודש"
                     path: {
-                        il: 'Year Month Key',//'201803', '201812'
-                        us: 'TBD'//'Aug2017'
+                        il: 'Year Month Key',
+                        us: 'YYYYMM'
+                    },
+                    parse: {
+                        il: raw => {//'201803', '201812'
+                            if (!raw) return null;
+                            const regex = /(\d+) (\D+)/;
+                            let m;
+                            let year;
+                            let month;
+                            let monthInt;
+                            try {
+                                m = regex.exec(raw);
+                                year = m[1];
+                                month = m[2];
+                                if (!year || !month) {
+                                    return null;
+                                }
+                                monthInt = this.monthsMap['il'][month];
+                                if (!monthInt) {
+                                    return null;
+                                }
+                            } catch (e) {
+                                return null;
+                            }
+                            return moment().year(year).month(monthInt - 1).date(1);
+                        },
+                        us: raw => {//'Aug2017'
+                            if (!raw) return null;
+                            const regex = /(\D+)(\d+)/;
+                            let m;
+                            let year;
+                            let month;
+                            let monthInt;
+                            try {
+                                m = regex.exec(raw);
+                                month = m[1];
+                                year = m[2];
+                                if (!year || !month) {
+                                    return null;
+                                }
+                                monthInt = this.monthsMap['us'][month.toUpperCase()];
+                                if (!monthInt) {
+                                    return null;
+                                }
+                            } catch (e) {
+                                return null;
+                            }
+                            return moment().year(year).month(monthInt - 1).date(1);
+                        }
                     }
                 },
                 dayOfWeek: {//יום בשבוע
@@ -423,7 +502,7 @@ export class OlapMappings {
                 },
                 reasons: {
                     path: {
-                        il: 'Tlog Pricereductions Reason Type',
+                        il: 'Tlog Pricereductions Reason Type',//קבוצת הנחה
                         us: 'Reason Type'
                     },
                     parse: {
@@ -443,7 +522,7 @@ export class OlapMappings {
                         },
                         us: raw => {
                             switch (raw) {
-                                case 'Viods Actions':
+                                case 'Voids Actions':
                                     return 'cancellation';
                                 case 'Compensation Actions':
                                     return 'compensation';
@@ -460,7 +539,7 @@ export class OlapMappings {
                         cancellation: {
                             path: {
                                 il: 'cancellation',
-                                us: 'Viods Actions'
+                                us: 'Voids Actions'
                             },
                             caption: 'ביטולים'//TODO localization
                         },
@@ -638,20 +717,23 @@ export class OlapMappings {
             v: 2,
             path: {
                 il: 'Tables',
-                us: 'TBD'
+                us: 'tables'
             },
             attr: {
-                tableId: {//מס שולחן
+                tableId: {
                     path: {
-                        il: 'Table Id',
-                        us: 'TBD'
+                        il: 'Table Id',//מס שולחן
+                        us: 'Tablenumber'//Tablenumber
                     },
                     parse: {
                         il: raw => {
                             if (raw.indexOf('ללא שולחן') > -1) return '';
                             return raw.replace('שולחן ', '');
                         },
-                        us: raw => raw
+                        us: raw => {//"Table #<int>"
+                            if (raw.toUpperCase().indexOf('UNKNOWN') > -1) return '';
+                            return raw.replace('Table #', '');
+                        }
                     }
 
                 }

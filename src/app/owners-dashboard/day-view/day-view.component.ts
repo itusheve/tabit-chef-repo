@@ -159,19 +159,10 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
         maxDate: moment(data.previousBd)
       };
 
-      // this.dinersTableData$.next(data.dinersAndPPAByShift);
-
-      // const shiftWithDiners = data.dinersAndPPAByShift.find(i=>i.diners>0);
-      // if (shiftWithDiners) {
-      //   this.dinersTable.show = true;
-      // }
-
       this.dayPieChart.render(data.salesByOrderType);
-      //this.daySalesTypeTable.render(data.shifts, data.byOrderTypeAndService);
-      // this.dayShifts.render(data.shifts);
 
       this.orders = undefined;
-      //this.closedOrdersDataService.getOrders(this.day, {withPriceReductions: true})
+
       this.closedOrdersDataService.getOrders(this.day)
         .then((orders: Order[]) => {
           this.orders = orders;
@@ -202,10 +193,10 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
           this.itemsData = data;
         });
 
-      this.dataService.getPaymentsData(moment(this.day).startOf('month'), moment(this.day))
-        .then(paymentsData=>{
-          this.paymentsData = paymentsData;
-        });
+      // this.dataService.getPaymentsData(moment(this.day).startOf('month'), moment(this.day))
+      //   .then(paymentsData=>{
+      //     this.paymentsData = paymentsData;
+      //   });
 
       this.dataService.get_operational_errors_by_BusinessDay(this.day)
         .then(operationalErrorsData=>{
@@ -217,14 +208,14 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
           this.retentionData = retentionData;
         });
 
-      Promise.all([
-        this.dataService.getBusinessDaysKPIs(moment(this.day).startOf('month'), moment(this.day)),
-        this.dataService.getCustomRangeKPI(moment(this.day).startOf('month'), moment(this.day))
-      ])
-        .then(data => {
-          this.mtdBusinessDaysKPIs = data[0];
-          this.mtdKPIs = data[1];
-        });
+      // Promise.all([
+        // this.dataService.getBusinessDaysKPIs(moment(this.day).startOf('month'), moment(this.day)),
+        // this.dataService.getCustomRangeKPI(moment(this.day).startOf('month'), moment(this.day))
+      // ])
+        // .then(data => {
+          // this.mtdBusinessDaysKPIs = data[0];
+          // this.mtdKPIs = data[1];
+        // });
 
     });
   }
