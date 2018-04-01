@@ -70,7 +70,7 @@ export class OrgsComponent implements OnInit {
         .then(()=>{
             this.router.navigate([''])
               .then(()=>{
-                  // location.reload();
+                  location.reload();
               });
         })
         .catch(e=>{
