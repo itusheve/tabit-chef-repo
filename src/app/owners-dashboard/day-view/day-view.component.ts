@@ -234,11 +234,12 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
     this.route.paramMap
       .subscribe((params: ParamMap) => {
         const dateStr = params.get('businessDate');
-        if (dateStr) {
+        // if (dateStr) {
           this.day = moment(dateStr);
-        } else {
-          this.day = moment().subtract(1, 'day');
-        }
+        // }
+        //  else {
+        //   this.day = moment().subtract(1, 'day');
+        // }
         this.render();
       });
   }
