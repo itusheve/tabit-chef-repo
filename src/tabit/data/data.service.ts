@@ -231,7 +231,7 @@ export class DataService {
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
         this.rosEp.get('businessdays/current', {})
             .then(data => {
-                const cbd: moment.Moment = moment(data.businessDate);
+                const cbd: moment.Moment = moment(`${data.businessDate.substring(0, 10)}T00:00:00`);
                 obs.next(cbd);
             });
 
@@ -307,7 +307,7 @@ export class DataService {
                             startTime = moment.tz(`2018-01-01T${shiftsConfig[i].startTime}`, this.region);
                         } catch (e) {
                             console.error(e, 'startTime = moment.tz(`2018-01-01T${shiftsConfig[i].startTime}`, this.region);', shiftsConfig, this.region);
-                            startTime = moment();
+                            startTime = moment('2018-01-01T10:00');
                         }
                         const shift = new Shift(name, i, startTime);
                         shifts.push(shift);
