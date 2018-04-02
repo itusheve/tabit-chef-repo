@@ -2,7 +2,7 @@
     <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
     <div class="flex d-col" *ngIf="!loading">
         <div class="title">
-            <ng-container i18n="@@retention">retention</ng-container>&nbsp;-&nbsp;<ng-container i18n="@@retentionByServer">bla bla</ng-container>
+            <ng-container i18n="@@retention">retention</ng-container>&nbsp;-&nbsp;<ng-container i18n="@@retentionByServer">Manual Operations by Server</ng-container>
         </div>
         <div class="title">
             {{retentionData.length}}&nbsp;<ng-container i18n="@@actionsWorth">Actions worth</ng-container>&nbsp;{{totalValue | curr:'0'}}

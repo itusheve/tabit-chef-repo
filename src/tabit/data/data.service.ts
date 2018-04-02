@@ -170,6 +170,9 @@ export interface BusinessDayKPIs {
     >;
 }
 
+//export const currencySymbol = environment.region === 'il' ? '&#8362;' : '$';
+export const currencySymbol = environment.region === 'il' ? '₪' : '$';
+
 @Injectable()
 export class DataService {
 
