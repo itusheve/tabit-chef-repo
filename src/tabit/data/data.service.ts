@@ -170,6 +170,9 @@ export interface BusinessDayKPIs {
     >;
 }
 
+//export const currencySymbol = environment.region === 'il' ? '&#8362;' : '$';
+export const currencySymbol = environment.region === 'il' ? '₪' : '$';
+
 @Injectable()
 export class DataService {
 
@@ -194,7 +197,14 @@ export class DataService {
         relies on the local machine time to be correct.
     */
     public currentRestTime$: Observable<moment.Moment> = Observable.create(obs => {
-        obs.next(moment.tz(this.region));
+        let tmp;
+        try {
+            tmp = moment.tz(this.region);
+        } catch (e) {
+            console.error(e, 'tmp = moment.tz(this.region);', this.region);
+            tmp = moment();
+        }
+        obs.next(tmp);
     });
 
     /*
@@ -221,7 +231,7 @@ export class DataService {
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
         this.rosEp.get('businessdays/current', {})
             .then(data => {
-                const cbd: moment.Moment = moment(data.businessDate);
+                const cbd: moment.Moment = moment(`${data.businessDate.substring(0, 10)}T00:00:00`);
                 obs.next(cbd);
             });
 
@@ -292,7 +302,13 @@ export class DataService {
                 for (let i=0;i<shiftsConfig.length;i++) {
                     if (shiftsConfig[i].active) {
                         const name = shiftsConfig[i].name;
-                        const startTime = moment.tz(`2018-01-01T${shiftsConfig[i].startTime}`, this.region);
+                        let startTime;
+                        try {
+                            startTime = moment.tz(`2018-01-01T${shiftsConfig[i].startTime}`, this.region);
+                        } catch (e) {
+                            console.error(e, 'startTime = moment.tz(`2018-01-01T${shiftsConfig[i].startTime}`, this.region);', shiftsConfig, this.region);
+                            startTime = moment('2018-01-01T10:00');
+                        }
                         const shift = new Shift(name, i, startTime);
                         shifts.push(shift);
                     }
@@ -323,7 +339,7 @@ export class DataService {
         this is NOT a translation service and has nothing to do with translations.
         this is a mapping of tokens from different cubes to the DataService domain
     */
-    private cubeCollection = 'israeliCubes';
+    private cubeCollection = environment.region==='il' ? 'israeliCubes' : 'usCubes';
     private olapNormalizationMaps: any = {
         israeliCubes: {
             orderType: {
@@ -331,9 +347,9 @@ export class DataService {
                 'דלפק': this.orderTypes.counter,
                 'לקחת': this.orderTypes.ta,
                 'משלוח': this.orderTypes.delivery,
-                'סוג הזמנה לא מוגדר': this.orderTypes.other,
                 'החזר': this.orderTypes.returns,
-                'החלפת אמצעי תשלום': this.orderTypes.mediaExchange
+                'החלפת אמצעי תשלום': this.orderTypes.mediaExchange,
+                'סוג הזמנה לא מוגדר': this.orderTypes.other
             },
             // department: {
             //     'מזון': this.departments.food,
@@ -343,13 +359,13 @@ export class DataService {
         },
         usCubes: {
             orderType: {
-                'a': this.orderTypes.seated,
-                'b': this.orderTypes.counter,
-                'c': this.orderTypes.ta,
-                'd': this.orderTypes.delivery,
-                'e': this.orderTypes.other,
-                'f': this.orderTypes.returns,
-                'g': this.orderTypes.mediaExchange
+                'SEATED': this.orderTypes.seated,
+                'OTC': this.orderTypes.counter,
+                'TAKEAWAY': this.orderTypes.ta,
+                'DELIVERY': this.orderTypes.delivery,
+                'REFUND': this.orderTypes.returns,
+                'MEDIAEXCHANGE': this.orderTypes.mediaExchange,
+                'UNKNOWN': this.orderTypes.other
             },
             // department: {
             //     'a': this.departments[0],
@@ -381,7 +397,14 @@ export class DataService {
         }
 
         const dateFrom: moment.Moment = moment().subtract(2, 'year').startOf('month');
-        const dateTo: moment.Moment = moment.tz(this.region);
+        let tmp;
+        try {
+            tmp = moment.tz(this.region);
+        } catch (e) {
+            console.error(e, 'tmp = moment.tz(this.region);', this.region);
+            tmp = moment();
+        }
+        const dateTo: moment.Moment = tmp;
         this.olapEp.getDailyData({dateFrom: dateFrom, dateTo: dateTo})
             .then(dailyDataRaw=>{
                 let minimum, maximum;
@@ -815,7 +838,7 @@ export class DataService {
 
             // normalize olapData:
             daily_data_by_orderType_by_service.forEach(o=>{
-                o.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][o.orderType];
+                o.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][o.orderType.toUpperCase()];
             });
             // end of normalizeOlapData
 
@@ -910,7 +933,7 @@ export class DataService {
 
                     // normalize olapData:
                     daily_data_by_orderType_by_service_raw.forEach(o => {
-                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType + ''];
+                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][(o.orderType + '').toUpperCase()];
                         o.shift = data.shifts.find(s=>s.name===o.service);
                     });
 
@@ -1276,7 +1299,7 @@ export class DataService {
 
                     // normalize olapData:
                     // daily_data_by_orderType_by_service.forEach(o => {
-                    order.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][ordersRaw[i].orderTypeCaption];
+                    order.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][ordersRaw[i].orderTypeCaption.toUpperCase()];
                     // });
                     // end of normalizeOlapData
 
@@ -1432,7 +1455,7 @@ export class DataService {
                         reasonId: string;
                         operational: number;
                     }[] = _.cloneDeep(data.operationalErrorsDataRaw).map(o => {
-                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType];
+                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType.toUpperCase()];
                         return o;
                     });
 
@@ -1506,7 +1529,7 @@ export class DataService {
                         reasons: string;
                         retention: number;
                     }[] = _.cloneDeep(data.retentionDataRaw).map(o => {
-                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType];
+                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType.toUpperCase()];
                         return o;
                     });
 

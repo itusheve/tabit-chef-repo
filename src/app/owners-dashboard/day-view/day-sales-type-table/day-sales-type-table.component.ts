@@ -4,6 +4,7 @@ import { PercentPipe } from '@angular/common';
 import * as _ from 'lodash';
 import { DataService, tmpTranslations } from '../../../../tabit/data/data.service';
 import { Shift } from '../../../../tabit/model/Shift.model';
+import { environment } from '../../../../environments/environment';
 
 // @Component({
 //   selector: 'app-day-sales-type-table',
@@ -14,7 +15,7 @@ export class DaySalesTypeTableComponent {
 
   @Output() onRowClicked = new EventEmitter();
 
-  currencySymbol = '&#8362;';
+  // currencySymbol = environment.region === 'il' ? '&#8362;' : '$';
 
   public show = false;
 
@@ -43,7 +44,7 @@ export class DaySalesTypeTableComponent {
         //id: key,
         orderType: orderTypesObj[key],
         orderTypeCaption: tmpTranslations.get(`orderTypes.${key}`)
-        //rank: orderTypesObj[key].rank,        
+        //rank: orderTypesObj[key].rank,
       });
     });
     orderTypesArr = orderTypesArr.sort((a, b) => {
@@ -51,7 +52,7 @@ export class DaySalesTypeTableComponent {
       return 1;
     });
 
-    for (let j = 0; j < orderTypesArr.length; j++) {    
+    for (let j = 0; j < orderTypesArr.length; j++) {
         //const orderType = this.dataService.orderTypes[j]['caption'];
         const byType = {
           orderType: orderTypesArr[j].orderTypeCaption,
@@ -61,7 +62,7 @@ export class DaySalesTypeTableComponent {
         for (let i = 0; i < shifts.length; i++) {
           const shiftName = shifts[i].name;
           const tuple = salesByOrderTypeAndService.find(t => t.orderType === orderTypesArr[j].orderType && t.service === shiftName);
-          
+
           const sales = _.get(tuple, 'sales', 0);
 
           const byShift = {
@@ -94,7 +95,7 @@ export class DaySalesTypeTableComponent {
       if (colAccSales===0) {
         columnsToRemove.push(column);
       }
-    }    
+    }
 
     if (columnsToRemove.length) {
       for (let c=columnsToRemove.length-1;c>=0;c--) {
@@ -103,7 +104,7 @@ export class DaySalesTypeTableComponent {
         });
       }
     }
-    
+
     if (this.byTypeByShiftArr[0].byShift.length === 4) {
       this.hSize = 'large';
     }
@@ -127,7 +128,7 @@ export class DaySalesTypeTableComponent {
   onRowClick(o) {
     // const orderType = this.dataService.orderTypes.find(ot=>ot.caption===o.orderType);
     // if (orderType) {
-      // this.onRowClicked.emit(orderType);    
+      // this.onRowClicked.emit(orderType);
     // }
   }
 

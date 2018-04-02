@@ -2,7 +2,7 @@
     <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
     <div class="flex d-col" *ngIf="!loading">
         <div class="title">
-            <ng-container i18n="@@operationalErrors">Operational Errors</ng-container>&nbsp;-&nbsp;<ng-container i18n="@@operationalErrorsByWaiter">Item Returns, OTH and Discounts by Waiter</ng-container>
+            <ng-container i18n="@@operationalErrors">Operational Errors</ng-container>&nbsp;-&nbsp;<ng-container i18n="@@operationalErrorsByServer">Item Returns, OTH and Discounts by Server</ng-container>
         </div>
         <div class="title">
             {{operationalErrorsData.length}}&nbsp;<ng-container i18n="@@actionsWorth">Actions worth</ng-container>&nbsp;{{totalValue | curr:'0'}}
@@ -12,10 +12,10 @@
                 <tr class="header">
                     <td (click)="sort('waiter')">
                         <div class="flex a-center">
-                            <div i18n="@@waiter">Waiter</div>
+                            <div i18n="@@server">Server</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
-                        </div>                        
+                        </div>
                     </td>
                     <td (click)="sort('tableId')"  style="width:60px">
                         <div class="flex a-center">
@@ -46,7 +46,7 @@
                             <div i18n="@@amount">Amount</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='operational' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='operational' && sortDir==='asc'">arrow_drop_up</mat-icon>
-                        </div>                        
+                        </div>
                     </td>
                     <td (click)="sort('subType')">
                         <div class="flex a-center">
@@ -60,12 +60,12 @@
                             <div i18n="@@reason">Reason</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='reasonId' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='reasonId' && sortDir==='asc'">arrow_drop_up</mat-icon>
-                        </div>                        
+                        </div>
                     </td>
                 </tr>
-                <tr 
+                <tr
                     *ngFor="let tuple of operationalErrorsData"
-                    (click)="orderClicked(tuple.orderNumber)" 
+                    (click)="orderClicked(tuple.orderNumber)"
                     [ngClass]="{'lastViewed': lastViewed===tuple.orderNumber}"
                     >
                     <td>{{tuple.waiter}}</td>
@@ -74,16 +74,16 @@
                              {{tuple.tableId}}
                         </span>
                         <span *ngIf="tuple.tableId===''" i18n="@@orderTypeSelect2">
-                            { 
-                                tuple.orderType.id, 
-                                select,                                 
-                                seated {Seated} 
-                                counter {Counter} 
-                                ta {TA} 
-                                delivery {Delivery} 
-                                other {Other} 
-                                returns {Returns} 
-                                mediaExchange {Media Exchange} 
+                            {
+                                tuple.orderType.id,
+                                select,
+                                seated {Seated}
+                                counter {Counter}
+                                ta {TA}
+                                delivery {Delivery}
+                                other {Other}
+                                returns {Returns}
+                                mediaExchange {Media Exchange}
                             }
                         </span>
                         <span>
@@ -91,8 +91,8 @@
                         </span>
                     </td>
                     <!-- <td *ngIf="tuple.tableId!==''">{{tuple.tableId}}</td>
-                    <td 
-                        *ngIf="tuple.tableId==='' && tuple.orderType && tuple.orderType.id" 
+                    <td
+                        *ngIf="tuple.tableId==='' && tuple.orderType && tuple.orderType.id"
                         i18n="@@orderTypeSelect2">{ tuple.orderType.id, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange
                         {Media Exchange} }</td>
                     <td>{{tuple.orderNumber}}</td> -->

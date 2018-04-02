@@ -3,6 +3,7 @@ import { PopulationByRegion, Service } from './day-pie-chart.service';
 import { DecimalPipe, PercentPipe, CurrencyPipe } from '@angular/common';
 import { tmpTranslations } from '../../../../tabit/data/data.service';
 import { environment } from '../../../../environments/environment';
+import { OwnersDashboardCurrencyPipe } from '../../owners-dashboard.pipes';
 
 @Component({
   selector: 'app-day-pie-chart',
@@ -14,14 +15,14 @@ export class DayPieChartComponent implements OnDestroy {
 
   decPipe: any = new DecimalPipe(environment.tbtLocale);
   pctPipe: any = new PercentPipe(environment.tbtLocale);
-  currPipe: CurrencyPipe = new CurrencyPipe(environment.tbtLocale);
+  odCurrPipe: OwnersDashboardCurrencyPipe = new OwnersDashboardCurrencyPipe();
 
   dataSource = [];
   show = false;
 
   pallete = ['rgb(101, 166, 211)', 'rgb(84, 153, 140)', 'rgb(196, 205, 214)', 'rgb(75, 118, 155)', 'rgb(147, 173, 168)'];
 
-  currencySymbol = '&#8362;';
+  // currencySymbol = environment.region==='il' ? '&#8362;' : '$';
 
   private total: number;
   private totalEl: Element;
@@ -42,7 +43,7 @@ export class DayPieChartComponent implements OnDestroy {
   customizeText = (pointInfo: any) => {
     const orderType = pointInfo.pointName;
     const val = this.dataSource.find(i => i.orderType === orderType).val;
-    return `${orderType}` + '\t' + `${this.currPipe.transform(val, 'ILS', 'symbol', '1.0-0')}`;
+    return `${orderType}` + '\t' + `${this.odCurrPipe.transform(val, '0')}`;
   }
 
   render(data) {
@@ -53,7 +54,7 @@ export class DayPieChartComponent implements OnDestroy {
       } catch (e) { }
 
       this.totalEl = document.createElement('div');
-      const txtNode = document.createTextNode(this.currPipe.transform(this.total, 'ILS', 'symbol', '1.0-0'));
+      const txtNode = document.createTextNode(this.odCurrPipe.transform(this.total, '0'));
 
       const containerEl = document.getElementsByTagName('dx-pie-chart')[0];
 
@@ -86,12 +87,10 @@ export class DayPieChartComponent implements OnDestroy {
     Object.keys(data).forEach(orderType=>{
       this.total += data[orderType];
 
-      //const valFormatted = this.decPipe.transform(data[orderType], '1.0-0');
       this.dataSource.push({
         color: this.pallete[i],
         orderType: tmpTranslations.get(`orderTypes.${orderType}`),
         val: data[orderType],
-        //valFormatted: valFormatted
       });
       i++;
     });

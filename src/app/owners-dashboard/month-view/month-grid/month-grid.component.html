@@ -36,7 +36,8 @@
       i18n-caption="@@total"
       dataField="sales"
       dataType="number"
-      [format]="{ style: 'currency', currency: 'ILS', currencyDisplay: 'symbol', minimumFractionDigits: 0, maximumFractionDigits: 0 }"></dxi-column>
+      ></dxi-column>
+      <!-- [format]="{ style: 'currency', currency: 'ILS', currencyDisplay: 'symbol', minimumFractionDigits: 0, maximumFractionDigits: 0 }" -->
     <dxi-column
       caption="Diners"
       i18n-caption="@@diners"
@@ -46,7 +47,8 @@
       caption="PPA"
       i18n-caption="@@ppa"
       dataField="ppa"
-      [format]="{ style: 'currency', currency: 'ILS', minimumFractionDigits: 2, maximumFractionDigits: 2 }"></dxi-column>
+      ></dxi-column>
+      <!-- [format]="{ style: 'currency', currency: 'ILS', minimumFractionDigits: 2, maximumFractionDigits: 2 }" -->
 
     <tbody *dxTemplate="let data of 'rowTemplateName'">
       <tr class="dx-row dx-data-row dx-row-lines">

@@ -2,7 +2,7 @@
     <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
     <div class="flex d-col" *ngIf="!loading">
         <div class="title">
-            <ng-container i18n="@@retention">retention</ng-container>&nbsp;-&nbsp;<ng-container i18n="@@retentionByWaiter">bla bla</ng-container>
+            <ng-container i18n="@@retention">retention</ng-container>&nbsp;-&nbsp;<ng-container i18n="@@retentionByServer">Manual Operations by Server</ng-container>
         </div>
         <div class="title">
             {{retentionData.length}}&nbsp;<ng-container i18n="@@actionsWorth">Actions worth</ng-container>&nbsp;{{totalValue | curr:'0'}}
@@ -12,7 +12,7 @@
                 <tr class="header">
                     <td (click)="sort('waiter')">
                         <div class="flex a-center">
-                            <div i18n="@@waiter">Waiter</div>
+                            <div i18n="@@server">Server</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
@@ -63,7 +63,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr 
+                <tr
                     *ngFor="let tuple of retentionData"
                     (click)="orderClicked(tuple.orderNumber)"
                      [ngClass]="{'lastViewed': lastViewed===tuple.orderNumber}"
@@ -74,26 +74,26 @@
                             {{tuple.tableId}}
                         </span>
                         <span *ngIf="tuple.tableId===''" i18n="@@orderTypeSelect2">
-                            { 
-                                tuple.orderType.id, 
-                                select, 
-                                seated {Seated} 
-                                counter {Counter} 
-                                ta {TA} 
-                                delivery {Delivery} 
-                                other {Other} 
+                            {
+                                tuple.orderType.id,
+                                select,
+                                seated {Seated}
+                                counter {Counter}
+                                ta {TA}
+                                delivery {Delivery}
+                                other {Other}
                                 returns {Returns}
-                                mediaExchange {Media Exchange} 
+                                mediaExchange {Media Exchange}
                             }
                         </span>
                         <span>
                             &nbsp;({{tuple.orderNumber}})
                         </span>
                     </td>
-                    <!-- <td 
+                    <!-- <td
                         *ngIf="tuple.tableId!==''">{{tuple.tableId}}</td>
-                    <td 
-                        *ngIf="tuple.tableId==='' && tuple.orderType && tuple.orderType.id" 
+                    <td
+                        *ngIf="tuple.tableId==='' && tuple.orderType && tuple.orderType.id"
                         i18n="@@orderTypeSelect2">{ tuple.orderType.id, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange
                         {Media Exchange} }</td>
                     <td>{{tuple.orderNumber}}</td> -->

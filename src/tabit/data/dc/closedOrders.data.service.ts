@@ -18,7 +18,7 @@ import { DataService, tmpTranslations } from '../data.service';
 
 import { OlapEp } from '../ep/olap.ep';
 import { ROSEp } from '../ep/ros.ep';
-import { CurrencyPipe } from '@angular/common';
+// import { CurrencyPipe } from '@angular/common';
 import { User } from '../../model/User.model';
 import { environment } from '../../../environments/environment';
 
@@ -640,9 +640,9 @@ let billService = {
 @Injectable()
 export class ClosedOrdersDataService {
 
-    currPipe: CurrencyPipe = new CurrencyPipe(environment.tbtLocale);
+    // currPipe: CurrencyPipe = new CurrencyPipe(environment.tbtLocale);
 
-    currency = 'ILS';
+    // currency = 'ILS';
 
     orderViewService: any;
 

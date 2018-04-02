@@ -1,13 +1,6 @@
-<!-- <div *ngIf="!daySelectorVisible" class="stickyDay">{{day | date:'fullDate'}}</div> -->
 <div class="row">
   <div class="col-md-12">
-  <!-- <div class="col-md-12" style="z-index:1"> -->
 
-    <!-- <div class="roomForStickyDay" [ngClass]="{'stickyDayVisible': !daySelectorVisible}"></div> -->
-
-    <!-- [hidden]="!daySelectorVisible && drill" -->
-    <!-- *ngIf="daySelectorOptions" -->
-    <!-- #daySelector -->
     <app-day-selector
       class="widget noPadding daySelectorNotFixed"
       [style.visibility]="daySelectorVisible ? 'visible' : 'hidden'"
@@ -16,21 +9,12 @@
       (onDateChanged)="onDateChanged($event)"
     ></app-day-selector>
 
-    <!-- [hidden]="daySelectorVisible && drill" -->
     <app-day-selector
       class="widget noPadding daySelectorFixed"
       [style.visibility]="!daySelectorVisible ? 'visible' : 'hidden'"
       [currentValue]="day"
       [options]="daySelectorOptions"
       (onDateChanged)="onDateChanged($event)"></app-day-selector>
-
-    <!-- <div class="app-day-selector" (click)="tmp($event)"> -->
-    <!-- <div class="app-day-selector"> -->
-      <!-- DUE TO UNKNOWN CHROME BUG, IT SEEMS THAT A STICKY CONTAINER WITH AN ANGULAR COMPONENT DOESNT WORK GOOD - THE CLICK EVENTS IN THE COMPONENT DOESNT GET CALLED -->
-      <!-- <app-day-selector *ngIf="daySelectorOptions" class="widget noPadding" #daySelector [hidden]="drill" [currentValue]="day"
-        [options]="daySelectorOptions" (onDateChanged)="tmp($event)"></app-day-selector> -->
-      <!-- <div class="" id="" style="height:50px;" (click)="tmp($event)"></div> -->
-    <!-- </div> -->
 
     <app-day-pie-chart class="widget blueAccent" #dayPieChart></app-day-pie-chart>
 
@@ -77,11 +61,11 @@
       [itemsData]="itemsData"
     ></app-most-returned-items-table>
 
-    <app-payments-table
+    <!-- <app-payments-table
       class="widget"
       [bd]="day"
       [paymentsData]="paymentsData"
-    ></app-payments-table>
+    ></app-payments-table> -->
 
     <app-operational-errors-table
       class="widget"
@@ -97,30 +81,14 @@
       (onOrderClicked)="onOrderClicked_orderNumber($event)"
     ></app-retention-table>
 
-    <app-month-summary-table
+    <!-- <app-month-summary-table
       class="widget"
       [mtdBusinessDaysKPIs]="mtdBusinessDaysKPIs"
       [mtdKPIs]="mtdKPIs"
-    ></app-month-summary-table>
-
-    <!-- <app-day-sales-type-table
-      class="widget"
-      #daySalesTypeTable
-      (onRowClicked)="onGoToOrders($event, 'orderType')"
-      >
-    </app-day-sales-type-table>
-
-    <app-day-diners-table
-      class="widget"
-      *ngIf="dinersTable.show"
-      [data$]="dinersTableData$"
-      ></app-day-diners-table> -->
-
-    <!-- <app-day-shifts class="widget greyAccent" #dayShifts></app-day-shifts>       -->
+    ></app-month-summary-table> -->
 
   </div>
 </div>
-
 
 
 <div class="flex d-col drill" *ngIf="drill" style="z-index:10000">

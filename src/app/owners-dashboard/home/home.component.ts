@@ -20,7 +20,7 @@ import { CardData } from '../../ui/card/card.component';
 })
 export class HomeComponent implements OnInit {
 
-  renderMonthView = true;//we postpone this a bit
+  // renderMonthView = true;//we postpone this a bit
 
   currentBdCardData: CardData = {
     loading: true,
