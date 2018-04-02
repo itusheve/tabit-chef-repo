@@ -197,7 +197,14 @@ export class DataService {
         relies on the local machine time to be correct.
     */
     public currentRestTime$: Observable<moment.Moment> = Observable.create(obs => {
-        obs.next(moment.tz(this.region));
+        let tmp;
+        try {
+            tmp = moment.tz(this.region);
+        } catch (e) {
+            console.error(e, 'tmp = moment.tz(this.region);', this.region);
+            tmp = moment();
+        }
+        obs.next(tmp);
     });
 
     /*
@@ -295,7 +302,13 @@ export class DataService {
                 for (let i=0;i<shiftsConfig.length;i++) {
                     if (shiftsConfig[i].active) {
                         const name = shiftsConfig[i].name;
-                        const startTime = moment.tz(`2018-01-01T${shiftsConfig[i].startTime}`, this.region);
+                        let startTime;
+                        try {
+                            startTime = moment.tz(`2018-01-01T${shiftsConfig[i].startTime}`, this.region);
+                        } catch (e) {
+                            console.error(e, 'startTime = moment.tz(`2018-01-01T${shiftsConfig[i].startTime}`, this.region);', shiftsConfig, this.region);
+                            startTime = moment();
+                        }
                         const shift = new Shift(name, i, startTime);
                         shifts.push(shift);
                     }
@@ -384,7 +397,14 @@ export class DataService {
         }
 
         const dateFrom: moment.Moment = moment().subtract(2, 'year').startOf('month');
-        const dateTo: moment.Moment = moment.tz(this.region);
+        let tmp;
+        try {
+            tmp = moment.tz(this.region);
+        } catch (e) {
+            console.error(e, 'tmp = moment.tz(this.region);', this.region);
+            tmp = moment();
+        }
+        const dateTo: moment.Moment = tmp;
         this.olapEp.getDailyData({dateFrom: dateFrom, dateTo: dateTo})
             .then(dailyDataRaw=>{
                 let minimum, maximum;
