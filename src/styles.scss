@@ -41,7 +41,6 @@ html, body {
 }
 
 .widget {
-<<<<<<< HEAD
   display: block;
   padding: 15px 12px;
   margin-bottom: 10px;
@@ -72,47 +71,6 @@ html, body {
     padding: 0;
     background-color: transparent;
   }
-=======
-    display: block;
-    padding: 15px 12px;
-    margin-bottom: 10px;
-    background-color: #fff;
-    color: #343E56;
-    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
-
-    &.fullWidth {
-        padding: 15px 0;
-    }
-
-    &.blueAccent {
-        background-color: #3A5675;
-        color: #fff;
-
-        dx-load-indicator {
-            .dx-loadindicator-segment {
-                background-color: #fff;
-            }
-        }
-    }
-    &.greyAccent {
-        background-color: #6e7482;
-        color: #fff;
-    }
-
-    &.noPadding {
-        padding: 0;
-        background-color: transparent;
-    }
-
-    .title {
-        font-size: 20px;
-        color: white;
-        background-color: #3a5675;
-        text-align: center;
-        padding: 5px 10px;
-        box-shadow: 0 0px 8px 2px rgba(0, 0, 0, 0.2);
-    }
->>>>>>> master
 
   .title {
     font-size: 20px;
@@ -123,22 +81,7 @@ html, body {
     box-shadow: 0 0px 8px 2px rgba(0, 0, 0, 0.2);
   }
 
-<<<<<<< HEAD
   .body {
-=======
-        dx-load-indicator {
-            margin: 5px 0;
-            padding: 3px;//making it a bit smaller
-        }
-
-        .noData {
-            margin: 5px 0;
-            text-align: center;
-        }
-
-        table {
-            color: $greyText;
->>>>>>> master
 
     table {
       color: $greyText;
