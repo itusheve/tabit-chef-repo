@@ -47,6 +47,7 @@
     "devextreme-intl": "^17.2.5",
     "express": "^4.16.2",
     "hammerjs": "^2.0.8",
+    "intl": "^1.2.5",
     "lodash": "^4.17.5",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
