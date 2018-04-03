@@ -115,7 +115,7 @@ export class TrendsDataService {
 
                             const changePct = (currentBusinessDaySales / avgTotalSales) - 1;
 
-                            if (changePct > 9) {
+                            if (changePct > 9 || changePct === -1) {
                                 trend.status = 'nodata';
                                 obs.next(trend);
                                 return;
@@ -209,7 +209,7 @@ export class TrendsDataService {
                         if (sumTotalSales) {
                             const changePct = (currentBusinessDaySales / sumTotalSales) - 1;
 
-                            if (changePct > 9) {
+                            if (changePct > 9 || changePct === -1) {
                                 trend.status = 'nodata';
                                 obs.next(trend);
                                 return;
@@ -277,7 +277,7 @@ export class TrendsDataService {
                     avgTotalSales = sumTotalSales / found;
                     const changePct = (previousBdSales / avgTotalSales) - 1;
 
-                    if (changePct > 9) {
+                    if (changePct > 9 || changePct === -1) {
                         trend.status = 'nodata';
                         obs.next(trend);
                         return;
@@ -426,7 +426,7 @@ export class TrendsDataService {
 
                         const changePct = (sumTotalSalesMTD / sumTotalSalesMTDpreviousYear) - 1;
 
-                        if (changePct > 9) {
+                        if (changePct > 9 || changePct === -1) {
                             trend.status = 'nodata';
                             obs.next(trend);
                             return;
@@ -529,7 +529,7 @@ export class TrendsDataService {
 
                         const changePct = (sales / prevYearSales) - 1;
 
-                        if (changePct > 9) {
+                        if (changePct > 9 || changePct === -1) {
                             trend.status = 'nodata';
                             resolve(trend);
                             return;
@@ -579,7 +579,7 @@ export class TrendsDataService {
 
                         const changePct = (sales / prevYearSales) - 1;
 
-                        if (changePct > 9) {
+                        if (changePct > 9 || changePct === -1) {
                             trend.status = 'nodata';
                             resolve(trend);
                             return;
@@ -634,7 +634,7 @@ export class TrendsDataService {
 
                                 const changePct = (sales / startOfMonthSales) - 1;
 
-                                if (changePct > 9) {
+                                if (changePct > 9 || changePct === -1) {
                                     trend.status = 'nodata';
                                     resolve(trend);
                                     return;
@@ -680,7 +680,7 @@ export class TrendsDataService {
 
                         const changePct = (sales / forecastDataSales) - 1;
 
-                        if (changePct > 9) {
+                        if (changePct > 9 || changePct === -1) {
                             trend.status = 'nodata';
                             resolve(trend);
                             return;
@@ -727,7 +727,7 @@ export class TrendsDataService {
 
                                 const changePct = (sales / startOfMonthSales) - 1;
 
-                                if (changePct > 9) {
+                                if (changePct > 9 || changePct === -1) {
                                     trend.status = 'nodata';
                                     resolve(trend);
                                     return;

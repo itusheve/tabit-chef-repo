@@ -1,4 +1,4 @@
-import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnChanges, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { Order } from '../../../../tabit/model/Order.model';
@@ -20,10 +20,10 @@ export interface OrderTypeVM {
   styleUrls: ['./day-orders-table.component.scss']
 })
 export class DayOrdersTableComponent implements OnChanges {
-
+  loading = true;
+  noData = false;
   @Input() orders: Order[];
   @Input() lastViewed: Order;
-
   @Output() onOrderClicked = new EventEmitter();
 
   public byOrderTypes: OrderTypeVM[];
@@ -36,9 +36,11 @@ export class DayOrdersTableComponent implements OnChanges {
 
   constructor(private dataService: DataService) {}
 
-  ngOnChanges(o) {
+  ngOnChanges(o: SimpleChanges) {
 
-    if (o.hasOwnProperty('orders')) {
+    if (o.orders && o.orders.currentValue) {
+      this.loading = true;
+
       const ordersCloned: Order[] = _.cloneDeep(this.orders);
 
       const orderTypesObj = this.dataService.orderTypes;
@@ -61,6 +63,8 @@ export class DayOrdersTableComponent implements OnChanges {
         ot.ordersCount = ot.orders.reduce((acc, curr) => (acc+1), 0);
       });
       this.byOrderTypes = orderTypesArr;
+
+      this.loading = false;
     }
 
   }

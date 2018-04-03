@@ -16,10 +16,10 @@ export class CardsDataService {
 
     // TODO move all other cards datas here....
 
-    /* 
+    /*
 
     */
-    public previousBdData$:Observable<any> = new Observable(obs=>{        
+    public previousBdData$:Observable<any> = new Observable(obs=>{
         // get the sales for the pbd from two sources: 1. ROS("previousSalesROS"), 2. Cube("previousSalesCube")
         const that = this;
 
@@ -33,7 +33,7 @@ export class CardsDataService {
                     .subscribe(dailyData => {
                         const pbdData = dailyData.find(dayData => dayData.businessDay.isSame(pbd, 'day'));
                         if (!pbdData) {
-                            reject();
+                            reject('noCubeDataForPreviousBD');
                         }
                         resolve(pbdData);
                     });
@@ -52,13 +52,13 @@ export class CardsDataService {
                         const previousBdData_ROS = data[0];
                         const previousBdData_Cube = data[1];
 
-                        
+
                         const previousBdSales_ROS = previousBdData_ROS.totalAmount ? previousBdData_ROS.totalAmount / 100 : 0;
                         const previousBdSales_Cube = previousBdData_Cube.kpi.sales;
-                        
+
                         console.info(`previousBdData: previousBdSales_ROS = ${previousBdSales_ROS}`);
                         console.info(`previousBdData: previousBdSales_Cube = ${previousBdSales_Cube}`);
-                        
+
                         if (Math.abs(previousBdSales_Cube-previousBdSales_ROS)<1) {
                             console.info(`previousBdData: no ROS<=>CUBE mismatch`);
                             let sales = previousBdData_Cube.kpi.sales;
@@ -87,7 +87,14 @@ export class CardsDataService {
                                 final: false
                             });
                         }
-                        
+
+                    })
+                    .catch(e=>{
+                        obs.next({
+                            sales: 0,
+                            diners: null,
+                            ppa: null
+                        });
                     });
                 }
             );

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { PopulationByRegion, Service } from './day-pie-chart.service';
 import { DecimalPipe, PercentPipe, CurrencyPipe } from '@angular/common';
 import { tmpTranslations } from '../../../../tabit/data/data.service';
@@ -11,18 +11,16 @@ import { OwnersDashboardCurrencyPipe } from '../../owners-dashboard.pipes';
   styleUrls: ['./day-pie-chart.component.scss'],
   providers: [Service]
 })
-export class DayPieChartComponent implements OnDestroy {
+export class DayPieChartComponent implements OnDestroy, OnChanges {
+  loading = true;
+  noData = false;
+  @Input() data: any;
 
-  decPipe: any = new DecimalPipe(environment.tbtLocale);
-  pctPipe: any = new PercentPipe(environment.tbtLocale);
   odCurrPipe: OwnersDashboardCurrencyPipe = new OwnersDashboardCurrencyPipe();
 
   dataSource = [];
-  show = false;
 
   pallete = ['rgb(101, 166, 211)', 'rgb(84, 153, 140)', 'rgb(196, 205, 214)', 'rgb(75, 118, 155)', 'rgb(147, 173, 168)'];
-
-  // currencySymbol = environment.region==='il' ? '&#8362;' : '$';
 
   private total: number;
   private totalEl: Element;
@@ -46,7 +44,15 @@ export class DayPieChartComponent implements OnDestroy {
     return `${orderType}` + '\t' + `${this.odCurrPipe.transform(val, '0')}`;
   }
 
-  render(data) {
+  render() {
+    this.loading = true;
+    this.noData = false;
+
+    if (Object.keys(this.data).length===0) {
+      this.noData = true;
+      this.loading = false;
+      return;
+    }
 
     setTimeout(() => {
       try {
@@ -77,25 +83,33 @@ export class DayPieChartComponent implements OnDestroy {
       this.totalEl.setAttributeNode(style);
 
       containerEl.appendChild(this.totalEl);
-    }, 100);
+
+    }, 1000);
 
     this.dataSource = [];
     this.total = 0;
 
     let i=0;
 
-    Object.keys(data).forEach(orderType=>{
-      this.total += data[orderType];
+    Object.keys(this.data).forEach(orderType=>{
+      this.total += this.data[orderType];
 
       this.dataSource.push({
         color: this.pallete[i],
         orderType: tmpTranslations.get(`orderTypes.${orderType}`),
-        val: data[orderType],
+        val: this.data[orderType],
       });
       i++;
     });
+
+    this.loading = false;
   }
 
+  ngOnChanges(o: SimpleChanges) {
+    if (o.data && o.data.currentValue) {
+      this.render();
+    }
+  }
 
   ngOnDestroy() {
     try {

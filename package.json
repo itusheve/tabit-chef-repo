@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "postinstall": "ng build --target=production --env=prod-il --output-hashing none --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he",
+    "postinstall":      "ng build --aot --env=prod-il --target=production --output-hashing=none --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he",
+    "postinstall-il":   "ng build --aot --env=prod-il --target=production --output-hashing=none --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he",
+    "postinstall-us":   "ng build --aot --env=prod-us --target=production --output-hashing=none",
     "ng": "ng",
     "start": "node server.js",
     "build": "ng build",

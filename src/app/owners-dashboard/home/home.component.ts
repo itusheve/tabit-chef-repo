@@ -113,7 +113,7 @@ export class HomeComponent implements OnInit {
       });
 
 
-    setTimeout(() => {
+    // setTimeout(() => {
       combineLatest(this.dataService.mtdData$, this.dataService.currentBd$, this.trendsDataService.trends$)
         .subscribe(data => {
           const trends = data[2];
@@ -139,7 +139,7 @@ export class HomeComponent implements OnInit {
 
         // this.renderMonthView = true;
 
-    }, 2500);
+    // }, 500);
   }
 
   ngOnInit() {
