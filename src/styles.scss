@@ -234,5 +234,9 @@ i.icon {
     }
 }
 
+.mat-drawer-content {
+  -webkit-overflow-scrolling: touch!important;
+}
+
 @import 'tabit/styles/util';
 @import 'tabit/styles/flex';
