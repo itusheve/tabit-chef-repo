@@ -1,3 +1,10 @@
+// we get 'Can't find variable Intl' on Safari 9:
+// https://stackoverflow.com/questions/35017800/ionic-2-using-angular-2-pipe-breaks-on-ios-cant-find-variable-intl
+import 'intl';
+import 'intl/locale-data/jsonp/en';
+import 'intl/locale-data/jsonp/he-IL';
+//TODO see maybe in angular 6 its solved.
+
 import { enableProdMode, TRANSLATIONS, TRANSLATIONS_FORMAT } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
@@ -23,7 +30,7 @@ let translations;
 
 const providers = [];
 
-if (environment.tbtLocale ==='he-IL') {
+if (environment.tbtLocale ==='angular 5') {
   translations = require(`raw-loader!./locale/messages.he.xlf`);
   providers.push({ provide: TRANSLATIONS, useValue: translations });
   providers.push({ provide: TRANSLATIONS_FORMAT, useValue: 'xlf' });

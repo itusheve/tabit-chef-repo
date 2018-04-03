@@ -18,7 +18,7 @@
     "dev-us-aot": "ng serve --aot --env=dev-us",
     "build-il": "ng build --aot --env=prod-il --target=production --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he",
     "build-us": "ng build --aot --env=prod-us --target=production",
-    "tmp": "ng serve --aot --env=dev-il --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he --port 8080 --host 0.0.0.0 --disable-host-check=true"
+    "serve-local-il": "ng serve --env=dev-il --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he --port 80 --host 0.0.0.0 --disable-host-check=true"
   },
   "private": true,
   "dependencies": {
@@ -47,6 +47,7 @@
     "devextreme-intl": "^17.2.5",
     "express": "^4.16.2",
     "hammerjs": "^2.0.8",
+    "intl": "^1.2.5",
     "lodash": "^4.17.5",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
