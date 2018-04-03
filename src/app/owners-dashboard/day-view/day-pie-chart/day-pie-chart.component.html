@@ -1,38 +1,36 @@
-<div class="flex d-col aj-center dayPieChart">
-    <div>
-        <dx-pie-chart
-            id="pie"
-            type="doughnut"
-            innerRadius="0.95"
-            diameter="0.55"
-            startAngle="90"
-            [palette]="pallete"
-            [dataSource]="dataSource"
-            [rtlEnabled]="true"
-            resolveLabelOverlapping="shift"
-            (onInitialized)="onInitializedEventHandler($event)"
-            style="height:270px;"
-            >
-            <dxi-series argumentField="orderType">
-                <dxo-label [visible]="true" [customizeText]="customizeLabelText" format="percent">
-                    <dxo-connector [visible]="true"></dxo-connector>
-                </dxo-label>
-            </dxi-series>
-            <dxo-size width="300" height="270"></dxo-size>
-            <dxo-export [enabled]="false"></dxo-export>
-            <!-- moved to custmo legend because of the negative returns figure (not supported by DX) -->
-            <dxo-legend [visible]="false"></dxo-legend>
-            <!-- <dxo-legend visible="false" [margin]="0" horizontalAlignment="center" verticalAlignment="bottom" columnCount="1" [customizeText]="customizeText" paddingTopBottom="80">
-                    <dxo-font color="white" family="'Alef', 'Helvetica Neue', Helvetica, Arial" size="16"></dxo-font>
-                </dxo-legend> -->
-        </dx-pie-chart>
-    </div>
+<div class="f-rtl flex d-col a-stretch">
+    <div class="title" i18n="@@sales2">Sales</div>
+    <div class="body flex d-col">
+        <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+        <div *ngIf="!loading">
+            <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
+            <div *ngIf="!noData" class="flex d-col a-center">
+                <div class="flex d-col aj-center">
+                    <dx-pie-chart id="pie" type="doughnut" innerRadius="0.95" diameter="0.55" startAngle="90" [palette]="pallete" [dataSource]="dataSource"
+                        [rtlEnabled]="true" resolveLabelOverlapping="shift" (onInitialized)="onInitializedEventHandler($event)" style="height:270px;">
+                        <dxi-series argumentField="orderType">
+                            <dxo-label [visible]="true" [customizeText]="customizeLabelText" format="percent">
+                                <dxo-connector [visible]="true"></dxo-connector>
+                            </dxo-label>
+                        </dxi-series>
+                        <dxo-size width="300" height="270"></dxo-size>
+                        <dxo-export [enabled]="false"></dxo-export>
+                        <!-- moved to custmo legend because of the negative returns figure (not supported by DX) -->
+                        <dxo-legend [visible]="false"></dxo-legend>
+                        <!-- <dxo-legend visible="false" [margin]="0" horizontalAlignment="center" verticalAlignment="bottom" columnCount="1" [customizeText]="customizeText" paddingTopBottom="80">
+                                            <dxo-font color="white" family="'Alef', 'Helvetica Neue', Helvetica, Arial" size="16"></dxo-font>
+                                        </dxo-legend> -->
+                    </dx-pie-chart>
+                </div>
 
-    <div class="flex d-col customLegend" *ngIf="dataSource">
-        <div class="flex a-center legendRow" *ngFor="let entry of dataSource">
-            <div class="flex mh5 itemColor" [style.background-color]="entry.color"></div>
-            <div class="flex mh5 itemName">{{entry.orderType}}</div>
-            <div class="flex mh5 itemVal">{{entry.val | curr:'0'}}</div>
+                <div class="flex d-col customLegend" *ngIf="dataSource">
+                    <div class="flex a-center legendRow" *ngFor="let entry of dataSource">
+                        <div class="flex mh5 itemColor" [style.background-color]="entry.color"></div>
+                        <div class="flex mh5 itemName">{{entry.orderType}}</div>
+                        <div class="flex mh5 itemVal">{{entry.val | curr:'0'}}</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

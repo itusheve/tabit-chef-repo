@@ -23,7 +23,6 @@ import { VisibilityService } from '../../../tabit/utils/visibility.service';
   styleUrls: ['./day-view.component.scss']
 })
 export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit  {
-  @ViewChild('dayPieChart') dayPieChart;
 
   day: moment.Moment;
   daySelectorOptions: {
@@ -31,9 +30,7 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
     maxDate: moment.Moment
   };
 
-  dinersTable = {
-    show: false
-  };
+  dayHasSales: boolean;
 
   drillTlogTime;
   drillTlogId: string;
@@ -41,14 +38,11 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
   drilledOrder: Order;
   drilledOrderNumber: number;
 
+  // for the pie chart
+  public salesByOrderType: any;
+
   /* the day's Orders */
   public orders: Order[];
-
-  public dinersTableData$: BehaviorSubject<any> = new BehaviorSubject<any>({
-    loading: true,
-    shifts: undefined,
-    dinersAndPPAByShift: undefined
-  });
 
   public KPIs: BusinessDayKPIs;
 
@@ -159,7 +153,7 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
         maxDate: moment(data.previousBd)
       };
 
-      this.dayPieChart.render(data.salesByOrderType);
+      this.salesByOrderType = data.salesByOrderType;
 
       this.orders = undefined;
 

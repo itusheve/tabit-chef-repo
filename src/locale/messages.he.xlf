@@ -6,6 +6,10 @@
         <source>Your user is not authorized to any Restaurants. Please contact support.</source>
         <target>המשתמש שלך לא מורשה לאף מסעדה. אנא פנה לתמיכה.</target>
       </trans-unit>
+      <trans-unit id="noData" datatype="html">
+        <source>No Data</source>
+        <target>אין נתונים</target>
+      </trans-unit>
       <trans-unit id="daily" datatype="html">
         <source>Daily</source>
         <target>יומי</target>
@@ -138,11 +142,6 @@
       <trans-unit id="organizationalValue" datatype="html">
         <source>Employees &amp; Owners</source>
         <target>עובדים ובעלים</target>
-      </trans-unit>
-
-      <trans-unit id="noData" datatype="html">
-        <source>No Data</source>
-        <target>אין נתונים</target>
       </trans-unit>
       <trans-unit id="sortAscending" datatype="html">
         <target>סדר עולה</target>
