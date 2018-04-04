@@ -30,7 +30,7 @@ let translations;
 
 const providers = [];
 
-if (environment.tbtLocale ==='angular 5') {
+if (environment.tbtLocale ==='he-IL') {
   translations = require(`raw-loader!./locale/messages.he.xlf`);
   providers.push({ provide: TRANSLATIONS, useValue: translations });
   providers.push({ provide: TRANSLATIONS_FORMAT, useValue: 'xlf' });

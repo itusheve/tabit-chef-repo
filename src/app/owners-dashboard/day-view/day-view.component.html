@@ -1,95 +1,93 @@
-<div class="row">
-  <div class="col-md-12">
+<div class="flex d-col">
+  <app-day-selector
+    class="widget noPadding daySelectorNotFixed"
+    [style.visibility]="daySelectorVisible ? 'visible' : 'hidden'"
+    [currentValue]="day"
+    [options]="daySelectorOptions"
+    (onDateChanged)="onDateChanged($event)"
+  ></app-day-selector>
 
-    <app-day-selector
-      class="widget noPadding daySelectorNotFixed"
-      [style.visibility]="daySelectorVisible ? 'visible' : 'hidden'"
-      [currentValue]="day"
-      [options]="daySelectorOptions"
-      (onDateChanged)="onDateChanged($event)"
-    ></app-day-selector>
+  <!-- <app-day-selector
+    class="widget noPadding daySelectorFixed"
+    [style.visibility]="!daySelectorVisible ? 'visible' : 'hidden'"
+    [currentValue]="day"
+    [options]="daySelectorOptions"
+    (onDateChanged)="onDateChanged($event)"></app-day-selector> -->
 
-    <!-- <app-day-selector
-      class="widget noPadding daySelectorFixed"
-      [style.visibility]="!daySelectorVisible ? 'visible' : 'hidden'"
-      [currentValue]="day"
-      [options]="daySelectorOptions"
-      (onDateChanged)="onDateChanged($event)"></app-day-selector> -->
+  <app-day-pie-chart
+    class="widget blueAccent"
+    [data]="salesByOrderType"
+  ></app-day-pie-chart>
 
-    <app-day-pie-chart
-      class="widget blueAccent"
-      [data]="salesByOrderType"
-    ></app-day-pie-chart>
+  <app-day-orders-table
+    class="widget"
+    style="padding-bottom: 0px;"
+    [lastViewed]="drilledOrder"
+    [orders]="orders"
+    (onOrderClicked)="onOrderClicked($event)"
+  ></app-day-orders-table>
 
-    <app-day-orders-table
-      class="widget"
-      style="padding-bottom: 0px;"
-      [lastViewed]="drilledOrder"
-      [orders]="orders"
-      (onOrderClicked)="onOrderClicked($event)"
-    ></app-day-orders-table>
+  <app-day-sales-table
+    class="widget"
+    title="Day Summary"
+    i18n-title="@@daySummary"
+    [totalSales]="KPIs?.totalSales"
+    [byOrderType]="KPIs?.byOrderType">
+  </app-day-sales-table>
 
+  <div *ngIf="KPIs">
     <app-day-sales-table
+      *ngFor="let key of getKeys(KPIs.byShiftByOrderType)"
       class="widget"
-      title="Day Summary"
-      i18n-title="@@daySummary"
-      [totalSales]="KPIs?.totalSales"
-      [byOrderType]="KPIs?.byOrderType">
+      [title]="key.name"
+      [totalSales]="KPIs.byShiftByOrderType.get(key).totalSales"
+      [byOrderType]="KPIs.byShiftByOrderType.get(key).byOrderType">
     </app-day-sales-table>
+  </div>
 
-    <div *ngIf="KPIs">
-      <app-day-sales-table
-        *ngFor="let key of getKeys(KPIs.byShiftByOrderType)"
-        class="widget"
-        [title]="key.name"
-        [totalSales]="KPIs.byShiftByOrderType.get(key).totalSales"
-        [byOrderType]="KPIs.byShiftByOrderType.get(key).byOrderType">
-      </app-day-sales-table>
-    </div>
+  <app-day-sales-by-sub-department-table
+    class="widget"
+    [bd]="day"
+    [salesBySubDepartment]="salesBySubDepartment"
+  ></app-day-sales-by-sub-department-table>
 
-    <app-day-sales-by-sub-department-table
-      class="widget"
-      [bd]="day"
-      [salesBySubDepartment]="salesBySubDepartment"
-    ></app-day-sales-by-sub-department-table>
-
-    <app-most-sold-items-table
-       class="widget"
-       [itemsData]="itemsData"
-    ></app-most-sold-items-table>
-
-    <app-most-returned-items-table
+  <app-most-sold-items-table
       class="widget"
       [itemsData]="itemsData"
-    ></app-most-returned-items-table>
+  ></app-most-sold-items-table>
 
-    <!-- <app-payments-table
-      class="widget"
-      [bd]="day"
-      [paymentsData]="paymentsData"
-    ></app-payments-table> -->
+  <app-most-returned-items-table
+    class="widget"
+    [itemsData]="itemsData"
+  ></app-most-returned-items-table>
 
-    <app-operational-errors-table
-      class="widget"
-      [operationalErrorsData]="operationalErrorsData"
-      [lastViewed]="drilledOrderNumber"
-      (onOrderClicked)="onOrderClicked_orderNumber($event)"
-    ></app-operational-errors-table>
+  <!-- TODO US missing measures -->
+  <app-payments-table
+    class="widget"
+    [bd]="day"
+    [paymentsData]="paymentsData"
+  ></app-payments-table>
 
-    <app-retention-table
-      class="widget"
-      [retentionData]="retentionData"
-      [lastViewed]="drilledOrderNumber"
-      (onOrderClicked)="onOrderClicked_orderNumber($event)"
-    ></app-retention-table>
+  <app-operational-errors-table
+    class="widget"
+    [operationalErrorsData]="operationalErrorsData"
+    [lastViewed]="drilledOrderNumber"
+    (onOrderClicked)="onOrderClicked_orderNumber($event)"
+  ></app-operational-errors-table>
 
-    <!-- <app-month-summary-table
-      class="widget"
-      [mtdBusinessDaysKPIs]="mtdBusinessDaysKPIs"
-      [mtdKPIs]="mtdKPIs"
-    ></app-month-summary-table> -->
+  <app-retention-table
+    class="widget"
+    [retentionData]="retentionData"
+    [lastViewed]="drilledOrderNumber"
+    (onOrderClicked)="onOrderClicked_orderNumber($event)"
+  ></app-retention-table>
 
-  </div>
+  <!-- TODO US missing measures -->
+  <app-month-summary-table
+    class="widget"
+    [mtdBusinessDaysKPIs]="mtdBusinessDaysKPIs"
+    [mtdKPIs]="mtdKPIs"
+  ></app-month-summary-table>
 </div>
 
 

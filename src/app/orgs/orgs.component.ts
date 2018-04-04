@@ -70,7 +70,9 @@ export class OrgsComponent implements OnInit {
         .then(()=>{
             this.router.navigate([''])
               .then(()=>{
-                  location.reload();
+                const bodyEl = document.getElementsByTagName('body')[0];
+                bodyEl.style.display = 'none';
+                location.reload();
               });
         })
         .catch(e=>{
@@ -84,10 +86,10 @@ export class OrgsComponent implements OnInit {
 
   ngOnInit() {
 
-    this.route.queryParams
+    this.route.paramMap
       //  .filter(params => params.m)
-      .subscribe(params => {
-        const mode = params.m;
+      .subscribe((params: ParamMap) => {
+        const mode = params.get('m');
         this.mode = (mode && mode==='s') ? 'switch' : 'normal';
       });
 

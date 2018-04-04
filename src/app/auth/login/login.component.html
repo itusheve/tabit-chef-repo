@@ -1,59 +1,50 @@
-<!-- <div dir="rtl"> -->
-
-
-<div class="container" dir="rtl">
-  <div class="row justify-content-center login">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <div class="flex f-ltr d-col a-center logoBars" style="margin-top:45px;">
-        <div class="bars flex j-center a-end">
-          <div class="bar bar1" style="margin-right:13px;"></div>
-          <div class="bar bar2" style="margin-right:13px;"></div>
-          <div class="bar bar3" style="margin-right:13px;"></div>
-          <div class="bar bar4"></div>
-        </div>
-        <div class="logo"></div>
+<div class="f-rtl flex d-col login">
+    <div class="flex f-ltr d-col a-center logoBars" style="margin-top:45px;">
+      <div class="bars flex j-center a-end">
+        <div class="bar bar1" style="margin-right:13px;"></div>
+        <div class="bar bar2" style="margin-right:13px;"></div>
+        <div class="bar bar3" style="margin-right:13px;"></div>
+        <div class="bar bar4"></div>
       </div>
-      <div class="row justify-content-center">
-        <div class="flex d-col col-12">
-
-            <!-- reactive form + material design: -->
-            <form class="flex d-col" [formGroup]="loginForm" novalidate>
-              <div class="flex d-col example-container">
-                <mat-form-field style="width:100%">
-                  <input 
-                    matInput 
-                    type="email" 
-                    placeholder="Email" 
-                    i18n-placeholder="login@@email" 
-                    formControlName="email" 
-                    required
-                    >
-                  <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
-                    <div *ngIf="email.errors.email" i18n="login@@illegalEmail">Illegal email</div>
-                  </mat-error>
-                </mat-form-field>
-                <mat-form-field>
-                  <input 
-                    matInput 
-                    placeholder="Password" 
-                    i18n-placeholder="login@@password"
-                    [type]="hidePass ? 'password' : 'text'" 
-                    formControlName="password" 
-                    required
-                    >
-                  <mat-icon matSuffix (click)="hidePass = !hidePass">{{hidePass ? 'visibility' : 'visibility_off'}}</mat-icon>
-                  <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
-                    <!-- <div *ngIf="password.errors.required"> -->
-                      
-                    <!-- </div> -->
-                  </mat-error>
-                </mat-form-field>
-              </div>
-              <button class="as-center" mat-raised-button color="primary" (click)="login()" i18n="login@@login">Login</button>
-            </form>
-
-        </div>
-      </div>
+      <div class="logo"></div>
     </div>
-  </div>
+    <div class="flex d-col" style="padding: 0 20px;">
+
+        <!-- reactive form + material design: -->
+        <form class="flex d-col" [formGroup]="loginForm" novalidate>
+          <div class="flex d-col example-container">
+            <mat-form-field style="width:100%">
+              <input
+                matInput
+                type="email"
+                placeholder="Email"
+                i18n-placeholder="login@@email"
+                formControlName="email"
+                required
+                >
+              <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+                <div *ngIf="email.errors.email" i18n="login@@illegalEmail">Illegal email</div>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input
+                matInput
+                placeholder="Password"
+                i18n-placeholder="login@@password"
+                [type]="hidePass ? 'password' : 'text'"
+                formControlName="password"
+                required
+                >
+              <mat-icon matSuffix (click)="hidePass = !hidePass">{{hidePass ? 'visibility' : 'visibility_off'}}</mat-icon>
+              <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
+                <!-- <div *ngIf="password.errors.required"> -->
+
+                <!-- </div> -->
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <button class="as-center" mat-raised-button color="primary" (click)="login()" i18n="login@@login">Login</button>
+        </form>
+
+    </div>
 </div>
