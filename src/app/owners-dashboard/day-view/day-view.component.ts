@@ -187,10 +187,11 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
           this.itemsData = data;
         });
 
-      // this.dataService.getPaymentsData(moment(this.day).startOf('month'), moment(this.day))
-      //   .then(paymentsData=>{
-      //     this.paymentsData = paymentsData;
-      //   });
+      // TODO US missing measures
+      this.dataService.getPaymentsData(moment(this.day).startOf('month'), moment(this.day))
+        .then(paymentsData=>{
+          this.paymentsData = paymentsData;
+        });
 
       this.dataService.get_operational_errors_by_BusinessDay(this.day)
         .then(operationalErrorsData=>{
@@ -202,14 +203,15 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
           this.retentionData = retentionData;
         });
 
-      // Promise.all([
-        // this.dataService.getBusinessDaysKPIs(moment(this.day).startOf('month'), moment(this.day)),
-        // this.dataService.getCustomRangeKPI(moment(this.day).startOf('month'), moment(this.day))
-      // ])
-        // .then(data => {
-          // this.mtdBusinessDaysKPIs = data[0];
-          // this.mtdKPIs = data[1];
-        // });
+      // TODO US missing measures
+      Promise.all([
+        this.dataService.getBusinessDaysKPIs(moment(this.day).startOf('month'), moment(this.day)),
+        this.dataService.getCustomRangeKPI(moment(this.day).startOf('month'), moment(this.day))
+      ])
+        .then(data => {
+          this.mtdBusinessDaysKPIs = data[0];
+          this.mtdKPIs = data[1];
+        });
 
     });
   }

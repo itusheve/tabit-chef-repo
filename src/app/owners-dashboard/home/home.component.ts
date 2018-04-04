@@ -112,34 +112,30 @@ export class HomeComponent implements OnInit {
         }
       });
 
+    // we don't want to delay the card on the trends so we split into two calls:
+    // A:
+    combineLatest(this.dataService.mtdData$, this.dataService.currentBd$)
+      .subscribe(data => {
+        const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} ${tmpTranslations.get('home.mtd')}`;
+        this.mtdCardData.diners = data[0].diners;
+        this.mtdCardData.ppa = data[0].ppa;
+        this.mtdCardData.sales = data[0].sales;
+        this.mtdCardData.title = title;
 
-    // setTimeout(() => {
-      combineLatest(this.dataService.mtdData$, this.dataService.currentBd$, this.trendsDataService.trends$)
-        .subscribe(data => {
-          const trends = data[2];
-
-          const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} ${tmpTranslations.get('home.mtd')}`;
-          this.mtdCardData.diners = data[0].diners;
-          this.mtdCardData.ppa = data[0].ppa;
-          this.mtdCardData.sales = data[0].sales;
-          this.mtdCardData.title = title;
-
-          this.mtdCardData.trends = {
-            // left: ,
-            right: trends.mtd.lastYear
-          };
-
-          this.mtdCardData.loading = false;
-
-          this.trendsDataService.partial_month_forecast_to_start_of_month_partial_month_forecast()
-            .then(partial_month_forecast_to_start_of_month_partial_month_forecast=>{
-              this.mtdCardData.trends.left = partial_month_forecast_to_start_of_month_partial_month_forecast;
-            });
-        });
-
-        // this.renderMonthView = true;
-
-    // }, 500);
+        this.mtdCardData.loading = false;
+      });
+    // B:
+    combineLatest(this.trendsDataService.trends$)
+      .subscribe(data => {
+        const trends = data[0];
+        this.mtdCardData.trends = {
+          right: trends.mtd.lastYear
+        };
+        this.trendsDataService.partial_month_forecast_to_start_of_month_partial_month_forecast()
+          .then(partial_month_forecast_to_start_of_month_partial_month_forecast=>{
+            this.mtdCardData.trends.left = partial_month_forecast_to_start_of_month_partial_month_forecast;
+          });
+      });
   }
 
   ngOnInit() {

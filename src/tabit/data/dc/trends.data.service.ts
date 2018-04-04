@@ -491,7 +491,7 @@ export class TrendsDataService {
 
                     obs.next(trends);
                 });
-            }, 4500);
+            }, 2500);
         }).publishReplay(1).refCount();
 
         constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService, private olapEp: OlapEp) {}
