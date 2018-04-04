@@ -1,20 +1,24 @@
-$cardSize: 28.5vmin;
-$cardsPerRow: 3;
-$cardMargin: (100 - ($cardSize * $cardsPerRow)) / ($cardsPerRow * 2);
-mat-card {
-    cursor: pointer;
-    padding: 16px;
-    width: $cardSize;
-    height: $cardSize;
-    margin: 0 $cardMargin $cardMargin $cardMargin;
-    overflow: hidden;
-    mat-card-content {
-        font-size: 18px;
-        word-wrap: break-word;
-    }
+.orgs {
+    background-color: #edf1f2;
 
-    &.selected {
-        background-color: #3A5675;
-        color: white;
+    $cardSize: 28.5vmin;
+    $cardsPerRow: 3;
+    $cardMargin: (100 - ($cardSize * $cardsPerRow)) / ($cardsPerRow * 2);
+    mat-card {
+        cursor: pointer;
+        padding: 16px;
+        width: $cardSize;
+        height: $cardSize;
+        margin: 0 $cardMargin $cardMargin $cardMargin;
+        overflow: hidden;
+        mat-card-content {
+            font-size: 18px;
+            word-wrap: break-word;
+        }
+
+        &.selected {
+            background-color: #3A5675;
+            color: white;
+        }
     }
 }
