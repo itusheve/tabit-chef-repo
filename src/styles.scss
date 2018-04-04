@@ -19,15 +19,19 @@ html, body {
   -webkit-font-smoothing: antialiased;
   color: $baseText;
   background-color: black;
-
+  overflow:hidden;//TLA
 }
+:focus {outline:none}//TLA
+::-webkit-scrollbar {display:none}//TLA
 
+// ============SCROLLBAR==============
+/*
+master:
 ::-webkit-scrollbar {
   height: 10px;
   width: 0px;
   background: #ddd;
 }
-
 ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 0;
@@ -38,7 +42,19 @@ html, body {
 
 ::-webkit-scrollbar-corner {
   background: #000;
-}
+} */
+
+/* TLA: */
+body::-webkit-scrollbar {display:none}
+// ============SCROLLBAR==============
+
+// h1,h2,h3,h4 {display:block;padding:0;margin:0;font-weight:normal}TLA
+
+/* TLA: */
+app-root {position:fixed;top:0;left:0;width:100vw;height:100vh;overflow:hidden}
+
+button {cursor:pointer}//TLA
+
 
 .widget {
   display: block;
@@ -235,6 +251,7 @@ i.icon {
 }
 
 .mat-drawer-content {
+  overflow: auto!important;
   -webkit-overflow-scrolling: touch!important;
 }
 
