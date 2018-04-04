@@ -1,24 +1,39 @@
 .orgs {
+    height: 100%;
+
     background-color: #edf1f2;
 
-    $cardSize: 28.5vmin;
-    $cardsPerRow: 3;
-    $cardMargin: (100 - ($cardSize * $cardsPerRow)) / ($cardsPerRow * 2);
-    mat-card {
-        cursor: pointer;
-        padding: 16px;
-        width: $cardSize;
-        height: $cardSize;
-        margin: 0 $cardMargin $cardMargin $cardMargin;
-        overflow: hidden;
-        mat-card-content {
-            font-size: 18px;
-            word-wrap: break-word;
-        }
-
-        &.selected {
-            background-color: #3A5675;
-            color: white;
+    .orgsFilter {
+        padding:15px 15px 0 15px;
+        mat-form-field {
+            width:100%;
         }
     }
+
+    .orgsCards {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+
+        $cardSize: 30vmin;
+        $cardsPerRow: 3;
+        $cardMargin: (100 - ($cardSize * $cardsPerRow)) / ($cardsPerRow * 2);
+        mat-card {
+            cursor: pointer;
+            padding: 2vmin;
+            width: $cardSize;
+            height: $cardSize;
+            margin: 0 $cardMargin ($cardMargin * 2) $cardMargin;
+            overflow: hidden;
+            mat-card-content {
+                font-size: 4vmin;
+                word-wrap: break-word;
+            }
+
+            &.selected {
+                background-color: #3A5675;
+                color: white;
+            }
+        }
+    }
+
 }

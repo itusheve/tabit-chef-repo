@@ -1,6 +1,6 @@
 <div class="f-rtl flex d-col orgs">
-  <div *ngIf="orgs && orgs.length>9" class="flex" style="padding:15px 15px 0 15px;">
-    <mat-form-field style="width:100%;">
+  <div *ngIf="orgs && orgs.length>9" class="s-0 flex orgsFilter">
+    <mat-form-field>
       <input
         matInput
         placeholder="Filter"
@@ -9,10 +9,10 @@
         >
     </mat-form-field>
   </div>
-  <div class="flex f-wrap" style="margin-top: 15px;">
+  <div class="g-1 flex f-wrap mt15 orgsCards">
     <mat-card (click)="selectOrg(org)" [ngClass]="{'selected': org===selectedOrg}" *ngFor="let org of orgsFiltered">
       <mat-card-content>{{org.name}}</mat-card-content>
     </mat-card>
-    <div *ngIf="orgsFiltered?.length===0" i18n="@@noOrgs">Your user is not authorized to any Restaurants. Please contact support.</div>
+    <div *ngIf="orgs?.length===0" class="ph20" i18n="@@noOrgs">Your user is not authorized to any Restaurants. Please contact support.</div>
   </div>
 </div>

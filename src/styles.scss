@@ -53,6 +53,9 @@ body::-webkit-scrollbar {display:none}
 /* TLA: */
 app-root {position:fixed;top:0;left:0;width:100vw;height:100vh;overflow:hidden}
 
+// TLA:
+.mat-button:hover .mat-button-focus-overlay {opacity:0!important}
+
 button {cursor:pointer}//TLA
 
 
@@ -250,7 +253,7 @@ i.icon {
     }
 }
 
-.mat-drawer-content {
+mat-sidenav-content {
   overflow: auto!important;
   -webkit-overflow-scrolling: touch!important;
 }
