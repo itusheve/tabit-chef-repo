@@ -6,6 +6,10 @@
         <source>Your user is not authorized to any Restaurants. Please contact support.</source>
         <target>המשתמש שלך לא מורשה לאף מסעדה. אנא פנה לתמיכה.</target>
       </trans-unit>
+      <trans-unit id="noData" datatype="html">
+        <source>No Data</source>
+        <target>אין נתונים</target>
+      </trans-unit>
       <trans-unit id="daily" datatype="html">
         <source>Daily</source>
         <target>יומי</target>
@@ -139,11 +143,6 @@
         <source>Employees &amp; Owners</source>
         <target>עובדים ובעלים</target>
       </trans-unit>
-
-      <trans-unit id="noData" datatype="html">
-        <source>No Data</source>
-        <target>אין נתונים</target>
-      </trans-unit>
       <trans-unit id="sortAscending" datatype="html">
         <target>סדר עולה</target>
       </trans-unit>
@@ -200,12 +199,6 @@
       <trans-unit id="filter" datatype="html">
         <source>Filter</source>
         <target>סינון</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/orgs/orgs.component.ts</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-        <note priority="1" from="description">סינון</note>
-        <note priority="1" from="meaning">orgs</note>
       </trans-unit>
       <trans-unit id="vat" datatype="html">
         <source>VAT</source>

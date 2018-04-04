@@ -6,17 +6,13 @@
     height: 350px;
 }
 
-.dayPieChart {
-
-}
-
 dx-pie-chart {
     position: relative;
     /* this is needed for the alignment of the total */
 }
 
 .customLegend {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     .legendRow {
         .itemColor {
             border-radius: 2px;

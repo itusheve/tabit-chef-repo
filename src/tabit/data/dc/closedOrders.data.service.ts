@@ -640,10 +640,6 @@ let billService = {
 @Injectable()
 export class ClosedOrdersDataService {
 
-    // currPipe: CurrencyPipe = new CurrencyPipe(environment.tbtLocale);
-
-    // currency = 'ILS';
-
     orderViewService: any;
 
     /*

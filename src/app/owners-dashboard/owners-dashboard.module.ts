@@ -1,4 +1,3 @@
-// import { NgModule, LOCALE_ID } from '@angular/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -19,9 +18,6 @@ import { DaySelectorComponent } from './day-view/day-selector/day-selector.compo
 import { DayPieChartComponent } from './day-view/day-pie-chart/day-pie-chart.component';
 import { DayOrdersTableComponent } from './day-view/day-orders-table/day-orders-table.component';
 import { DayOrdersTableHasSalesPipe, DayOrdersTableFilterPipe } from './day-view/day-orders-table/pipes';
-// import { DaySalesTypeTableComponent } from './day-view/day-sales-type-table/day-sales-type-table.component';
-// import { DayDinersTableComponent } from './day-view/day-diners-table/day-diners-table.component';
-// import { DayShiftsComponent } from './day-view/day-shifts/day-shifts.component';
 
 import { OrderViewComponent } from './order-view/order-view.component';
   import { OrderSlipsComponent } from './order-view/slips/slips.component';

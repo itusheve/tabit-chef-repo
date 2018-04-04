@@ -23,7 +23,6 @@ import { VisibilityService } from '../../../tabit/utils/visibility.service';
   styleUrls: ['./day-view.component.scss']
 })
 export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit  {
-  @ViewChild('dayPieChart') dayPieChart;
 
   day: moment.Moment;
   daySelectorOptions: {
@@ -31,9 +30,7 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
     maxDate: moment.Moment
   };
 
-  dinersTable = {
-    show: false
-  };
+  dayHasSales: boolean;
 
   drillTlogTime;
   drillTlogId: string;
@@ -41,14 +38,11 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
   drilledOrder: Order;
   drilledOrderNumber: number;
 
+  // for the pie chart
+  public salesByOrderType: any;
+
   /* the day's Orders */
   public orders: Order[];
-
-  public dinersTableData$: BehaviorSubject<any> = new BehaviorSubject<any>({
-    loading: true,
-    shifts: undefined,
-    dinersAndPPAByShift: undefined
-  });
 
   public KPIs: BusinessDayKPIs;
 
@@ -159,7 +153,7 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
         maxDate: moment(data.previousBd)
       };
 
-      this.dayPieChart.render(data.salesByOrderType);
+      this.salesByOrderType = data.salesByOrderType;
 
       this.orders = undefined;
 
@@ -193,10 +187,11 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
           this.itemsData = data;
         });
 
-      // this.dataService.getPaymentsData(moment(this.day).startOf('month'), moment(this.day))
-      //   .then(paymentsData=>{
-      //     this.paymentsData = paymentsData;
-      //   });
+      // TODO US missing measures
+      this.dataService.getPaymentsData(moment(this.day).startOf('month'), moment(this.day))
+        .then(paymentsData=>{
+          this.paymentsData = paymentsData;
+        });
 
       this.dataService.get_operational_errors_by_BusinessDay(this.day)
         .then(operationalErrorsData=>{
@@ -208,14 +203,15 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
           this.retentionData = retentionData;
         });
 
-      // Promise.all([
-        // this.dataService.getBusinessDaysKPIs(moment(this.day).startOf('month'), moment(this.day)),
-        // this.dataService.getCustomRangeKPI(moment(this.day).startOf('month'), moment(this.day))
-      // ])
-        // .then(data => {
-          // this.mtdBusinessDaysKPIs = data[0];
-          // this.mtdKPIs = data[1];
-        // });
+      // TODO US missing measures
+      Promise.all([
+        this.dataService.getBusinessDaysKPIs(moment(this.day).startOf('month'), moment(this.day)),
+        this.dataService.getCustomRangeKPI(moment(this.day).startOf('month'), moment(this.day))
+      ])
+        .then(data => {
+          this.mtdBusinessDaysKPIs = data[0];
+          this.mtdKPIs = data[1];
+        });
 
     });
   }
@@ -245,11 +241,11 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
   }
 
   ngAfterViewInit() {
-    this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByTagName('mat-sidenav-content')[0])
-      .subscribe(visible => {
-        console.info(`visible: ${visible}`);
-        this.daySelectorVisible = visible;
-      });
+    // this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByTagName('mat-sidenav-content')[0])
+    //   .subscribe(visible => {
+    //     console.info(`visible: ${visible}`);
+    //     this.daySelectorVisible = visible;
+    //   });
   }
 
   ngAfterContentInit() {}

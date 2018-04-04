@@ -63,10 +63,6 @@ if (environment.tbtLocale==='he-IL') {
   registerLocaleData(localeHe, 'he', localeHeExtra);//https://angular.io/guide/i18n
 }
 
-//serve/build an hebrew version:
-// ng serve --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he
-// ng serve --aot --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he
-
 @NgModule({
   declarations: [
     AppComponent,

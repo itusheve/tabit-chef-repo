@@ -1,99 +1,100 @@
-<div class="f-rtl">
+<div class="f-rtl flex d-col a-stretch">
     <div class="title" i18n="day-orders-table@@orders">Orders</div>
-    <div class="body">
-
-        <mat-accordion *ngIf="byOrderTypes">
-            <mat-expansion-panel expanded="false" hideToggle="true" *ngFor="let orderType of byOrderTypes | hasSales">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        {{orderType.caption}}
-                    </mat-panel-title>
-                    <mat-panel-description>
-                        <div class="flex a-center">
-                            <div style="width:70px;">{{orderType.sales | curr:'0'}}</div>
-                            <div>
-                                {{orderType.ordersCount | count}}
-                                &nbsp;<ng-container i18n="@@orders">Orders</ng-container>
-                            </div>
-                        </div>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-
-                <table class="fixedWidth">
-                    <tr style="background-color: #f2f2f2;">
-                        <td (click)="sort(orderType, 'time')" style="width:50px;">
+    <div class="body flex d-col">
+        <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+        <div *ngIf="!loading">
+            <mat-accordion *ngIf="byOrderTypes">
+                <mat-expansion-panel expanded="false" hideToggle="true" *ngFor="let orderType of byOrderTypes | hasSales">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{orderType.caption}}
+                        </mat-panel-title>
+                        <mat-panel-description>
                             <div class="flex a-center">
-                                <div i18n="day-orders-table@@opened">Opened</div>
-                                <mat-icon class="sortMatIcon" *ngIf="sortBy==='time' && sortDir==='desc'">arrow_drop_down</mat-icon>
-                                <mat-icon class="sortMatIcon" *ngIf="sortBy==='time' && sortDir==='asc'">arrow_drop_up</mat-icon>
-                            </div>
-                        </td>
-                        <td (click)="sort(orderType, 'number')" style="width:50px;">
-                            <div class="flex a-center">
-                                <div i18n="day-orders-table'@@orderNumber">Order #</div>
-                                <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='desc'">arrow_drop_down</mat-icon>
-                                <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='asc'">arrow_drop_up</mat-icon>
-                            </div>
-                        </td>
-                        <td (click)="sort(orderType, 'waiter')" style="width:55px;">
-                            <div class="flex a-center">
-                                <div i18n="server">Server</div>
-                                <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
-                                <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
-                            </div>
-                        </td>
-                        <td (click)="sort(orderType, 'sales')" style="width:50px;">
-                            <div class="flex a-center">
-                                <div i18n="day-orders-table@@sales">Sales</div>
-                                <mat-icon class="sortMatIcon" *ngIf="sortBy==='sales' && sortDir==='desc'">arrow_drop_down</mat-icon>
-                                <mat-icon class="sortMatIcon" *ngIf="sortBy==='sales' && sortDir==='asc'">arrow_drop_up</mat-icon>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="flex d-col">
-                                <div class="flex">
-                                    <div class="iconFilter cancellation flex ml5 mb5" [ngClass]="{'on': iconFilterOn('cancellation')}" (click)="filter(orderType, 'cancellation')">
-                                        <i *ngIf="iconFilterOn('cancellation')" class="icon iconOperationalAndCancellations"></i>
-                                        <i *ngIf="!iconFilterOn('cancellation')" class="icon iconOperationalAndCancellations_off"></i>
-                                    </div>
-                                    <div class="iconFilter discountsAndOTH flex mb5" [ngClass]="{'on': iconFilterOn('discountsAndOTH')}" (click)="filter(orderType, 'discountsAndOTH')">
-                                        <i *ngIf="iconFilterOn('discountsAndOTH')" class="icon iconRetention"></i>
-                                        <i *ngIf="!iconFilterOn('discountsAndOTH')" class="icon iconRetention_off"></i>
-                                    </div>
-                                </div>
-                                <div class="flex">
-                                    <div class="iconFilter employees flex ml5" [ngClass]="{'on': iconFilterOn('employees')}" (click)="filter(orderType, 'employees')">
-                                        <i *ngIf="iconFilterOn('employees')" class="icon iconOrganizational"></i>
-                                        <i *ngIf="!iconFilterOn('employees')" class="icon iconOrganizational_off"></i>
-                                    </div>
-                                    <div class="iconFilter promotions flex" [ngClass]="{'on': iconFilterOn('promotions')}" (click)="filter(orderType, 'promotions')">
-                                        <i *ngIf="iconFilterOn('promotions')" class="icon iconPromotions"></i>
-                                        <i *ngIf="!iconFilterOn('promotions')" class="icon iconPromotions_off"></i>
-                                    </div>
+                                <div style="width:70px;">{{orderType.sales | curr:'0'}}</div>
+                                <div>
+                                    {{orderType.ordersCount | count}}
+                                    &nbsp;<ng-container i18n="@@orders">Orders</ng-container>
                                 </div>
                             </div>
-                        </td>
-                    </tr>
-                    <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)" [ngClass]="{'lastViewed': lastViewed===order}">
-                        <td>{{order.openingTime | date:'H:mm'}}</td>
-                        <td>{{order.number | number:'1.0-0'}}</td>
-                        <td>{{order.waiter}}</td>
-                        <td>{{order.sales | curr:'0'}}</td>
-                        <td>
-                            <div class="flex a-center" style="height:100%;">
-                                <i class="mh3 icon iconOperationalAndCancellations" *ngIf="order.priceReductions.cancellation > 0"></i>
-                                <i class="mh3 icon iconRetention" *ngIf="order.priceReductions.discountsAndOTH > 0"></i>
-                                <i class="mh3 icon iconOrganizational" *ngIf="order.priceReductions.employees > 0"></i>
-                                <i class="mh3 icon iconPromotions" *ngIf="order.priceReductions.promotions > 0"></i>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
 
-            </mat-expansion-panel>
+                    <table class="fixedWidth">
+                        <tr style="background-color: #f2f2f2;">
+                            <td (click)="sort(orderType, 'time')" style="width:50px;">
+                                <div class="flex a-center">
+                                    <div i18n="day-orders-table@@opened">Opened</div>
+                                    <mat-icon class="sortMatIcon" *ngIf="sortBy==='time' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                                    <mat-icon class="sortMatIcon" *ngIf="sortBy==='time' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                                </div>
+                            </td>
+                            <td (click)="sort(orderType, 'number')" style="width:50px;">
+                                <div class="flex a-center">
+                                    <div i18n="day-orders-table'@@orderNumber">Order #</div>
+                                    <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                                    <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                                </div>
+                            </td>
+                            <td (click)="sort(orderType, 'waiter')" style="width:55px;">
+                                <div class="flex a-center">
+                                    <div i18n="server">Server</div>
+                                    <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                                    <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                                </div>
+                            </td>
+                            <td (click)="sort(orderType, 'sales')" style="width:50px;">
+                                <div class="flex a-center">
+                                    <div i18n="day-orders-table@@sales">Sales</div>
+                                    <mat-icon class="sortMatIcon" *ngIf="sortBy==='sales' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                                    <mat-icon class="sortMatIcon" *ngIf="sortBy==='sales' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex d-col">
+                                    <div class="flex">
+                                        <div class="iconFilter cancellation flex ml5 mb5" [ngClass]="{'on': iconFilterOn('cancellation')}" (click)="filter(orderType, 'cancellation')">
+                                            <i *ngIf="iconFilterOn('cancellation')" class="icon iconOperationalAndCancellations"></i>
+                                            <i *ngIf="!iconFilterOn('cancellation')" class="icon iconOperationalAndCancellations_off"></i>
+                                        </div>
+                                        <div class="iconFilter discountsAndOTH flex mb5" [ngClass]="{'on': iconFilterOn('discountsAndOTH')}" (click)="filter(orderType, 'discountsAndOTH')">
+                                            <i *ngIf="iconFilterOn('discountsAndOTH')" class="icon iconRetention"></i>
+                                            <i *ngIf="!iconFilterOn('discountsAndOTH')" class="icon iconRetention_off"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex">
+                                        <div class="iconFilter employees flex ml5" [ngClass]="{'on': iconFilterOn('employees')}" (click)="filter(orderType, 'employees')">
+                                            <i *ngIf="iconFilterOn('employees')" class="icon iconOrganizational"></i>
+                                            <i *ngIf="!iconFilterOn('employees')" class="icon iconOrganizational_off"></i>
+                                        </div>
+                                        <div class="iconFilter promotions flex" [ngClass]="{'on': iconFilterOn('promotions')}" (click)="filter(orderType, 'promotions')">
+                                            <i *ngIf="iconFilterOn('promotions')" class="icon iconPromotions"></i>
+                                            <i *ngIf="!iconFilterOn('promotions')" class="icon iconPromotions_off"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)" [ngClass]="{'lastViewed': lastViewed===order}">
+                            <td>{{order.openingTime | date:'H:mm'}}</td>
+                            <td>{{order.number | number:'1.0-0'}}</td>
+                            <td>{{order.waiter}}</td>
+                            <td>{{order.sales | curr:'0'}}</td>
+                            <td>
+                                <div class="flex a-center" style="height:100%;">
+                                    <i class="mh3 icon iconOperationalAndCancellations" *ngIf="order.priceReductions.cancellation > 0"></i>
+                                    <i class="mh3 icon iconRetention" *ngIf="order.priceReductions.discountsAndOTH > 0"></i>
+                                    <i class="mh3 icon iconOrganizational" *ngIf="order.priceReductions.employees > 0"></i>
+                                    <i class="mh3 icon iconPromotions" *ngIf="order.priceReductions.promotions > 0"></i>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </mat-expansion-panel>
 
 
-        </mat-accordion>
-
+            </mat-accordion>
+        </div>
     </div>
 </div>

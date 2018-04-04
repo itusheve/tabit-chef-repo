@@ -15,12 +15,12 @@ export class OwnersDashboardComponent {
   vat: boolean;
 
   constructor(
-    private dataService: DataService, 
-    private authService: AuthService, 
+    private dataService: DataService,
+    private authService: AuthService,
     public router: Router,
     public route: ActivatedRoute
   ) {
-  
+
     dataService.vat$.subscribe((vat:boolean)=>{
       this.vat = vat;
     });
@@ -39,7 +39,7 @@ export class OwnersDashboardComponent {
 
   vatChange(event) {
     setTimeout(() => {
-      this.dataService.vat$.next(event.checked);    
+      this.dataService.vat$.next(event.checked);
     }, 300);
   }
 
@@ -54,11 +54,9 @@ export class OwnersDashboardComponent {
   logout() {
     this.authService.logout()
       .then(() => {
-        this.router.navigate(['login']);
+        this.router.navigate(['login', { m: 's' }]);
       }, () => {
       });
   }
 
-  // onDayRequest(date: string) {
-  // }
 }

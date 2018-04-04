@@ -9,21 +9,21 @@
       </div>
       <div class="flex d-col buttons">
         <mat-slide-toggle class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)" i18n="owners-dashboard|maam@@vat">VAT</mat-slide-toggle>
-        <button mat-raised-button [routerLink]="['/restaurants']" [queryParams]="{ m: 's'}">
+        <button mat-raised-button [routerLink]="['/restaurants', { m: 's'}]">
           <span i18n="owners-dashboard@@mySites">My Sites</span>
         </button>
         <button mat-raised-button (click)="logout()">
           <span i18n="owners-dashboard@@logout">Logout</span>
-        </button>    
+        </button>
       </div>
     </div>
   </mat-sidenav>
-  
+
   <mat-sidenav-content>
     <div class="flex f-rtl j-sb a-center header">
       <div class="flex j-start" style="width:20%;">
         <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
-      </div>      
+      </div>
       <div class="flex d-col aj-center" style="width:80%;">
         <div style="color:white">{{org?.name}}</div>
         <div *ngIf="!vat" style="color:white;font-size:12px;">(<span i18n="owners-dashboard@@excludingVAT">Data excluding VAT</span>)</div>
