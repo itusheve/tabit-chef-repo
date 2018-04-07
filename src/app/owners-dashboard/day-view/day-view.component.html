@@ -14,10 +14,10 @@
     [options]="daySelectorOptions"
     (onDateChanged)="onDateChanged($event)"></app-day-selector> -->
 
-  <app-day-pie-chart
+  <!-- <app-day-pie-chart
     class="widget blueAccent"
     [data]="salesByOrderType"
-  ></app-day-pie-chart>
+  ></app-day-pie-chart> -->
 
   <app-day-orders-table
     class="widget"
@@ -68,7 +68,7 @@
     [paymentsData]="paymentsData"
   ></app-payments-table>
 
-  <app-operational-errors-table
+  <!-- <app-operational-errors-table
     class="widget"
     [operationalErrorsData]="operationalErrorsData"
     [lastViewed]="drilledOrderNumber"
@@ -80,7 +80,7 @@
     [retentionData]="retentionData"
     [lastViewed]="drilledOrderNumber"
     (onOrderClicked)="onOrderClicked_orderNumber($event)"
-  ></app-retention-table>
+  ></app-retention-table> -->
 
   <!-- TODO US missing measures -->
   <app-month-summary-table
@@ -91,7 +91,7 @@
 </div>
 
 
-<div class="flex d-col drill" *ngIf="drill" style="z-index:10000">
+<!-- <div class="flex d-col drill" *ngIf="drill" style="z-index:10000">
   <div class="flex s-0 j-sb a-center header">
     <div class="flex j-start" style="width:80%;">
       <div style="color:white">{{drillTlogTime | date:'d/M/yy H:mm'}}</div>
@@ -105,4 +105,4 @@
   <div class="flex g-1 body">
     <app-order-view style="width:100%;" [tlogId]="drillTlogId"></app-order-view>
   </div>
-</div>
+</div> -->
