@@ -25,18 +25,20 @@
       </div>
       <div style="width:20%;"> <!-- for design purpose only --> </div>
     </div>
-    <div class="content">
-      <div class="f-rtl flex d-col orgs">
-        <div *ngIf="orgs && orgs.length>9" class="s-0 flex orgsFilter">
-          <mat-form-field>
-            <input matInput placeholder="Filter" i18n-placeholder="@@filter" (keyup)='keyUp.next($event.target.value)'>
-          </mat-form-field>
-        </div>
-        <div class="g-1 flex f-wrap j-space-between mt15 orgsCards">
-          <mat-card (click)="selectOrg(org)" [ngClass]="{'selected': org===selectedOrg}" *ngFor="let org of orgsFiltered">
-            <mat-card-content>{{org.name}}</mat-card-content>
-          </mat-card>
-          <div *ngIf="orgs?.length===0" class="ph20" i18n="@@noOrgs">Your user is not authorized to any Restaurants. Please contact support.</div>
+    <div class="contentFixed">
+      <div class="content">
+        <div class="f-rtl flex d-col orgs">
+          <div *ngIf="orgs && orgs.length>9" class="s-0 flex orgsFilter">
+            <mat-form-field>
+              <input matInput placeholder="Filter" i18n-placeholder="@@filter" (keyup)='keyUp.next($event.target.value)'>
+            </mat-form-field>
+          </div>
+          <div class="g-1 flex f-wrap j-space-between mt15 orgsCards">
+            <mat-card (click)="selectOrg(org)" [ngClass]="{'selected': org===selectedOrg}" *ngFor="let org of orgsFiltered">
+              <mat-card-content>{{org.name}}</mat-card-content>
+            </mat-card>
+            <div *ngIf="orgs?.length===0" class="ph20" i18n="@@noOrgs">Your user is not authorized to any Restaurants. Please contact support.</div>
+          </div>
         </div>
       </div>
     </div>
