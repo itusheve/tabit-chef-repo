@@ -1,0 +1,77 @@
+@import 'config/frame';
+@import 'config/colors';
+
+mat-sidenav-container {
+    // TLA:
+    // height:100vh;
+
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+
+    // background-color: #edf1f2;
+
+    // .sidenav {
+    mat-sidenav {
+        height: 100%;
+        width: $sideNavWidth;
+        display: flex!important;
+        flex-direction: column!important;
+        // background-color: #d4d9dd;
+        .header {
+            padding: 15px;
+            background-color: $headerBgColor;
+            color: white;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: $contentBgColor;
+            mat-slide-toggle {
+                margin-bottom: 20px;
+            }
+            button {
+                font-size: 20px;
+                cursor: pointer;
+                margin-bottom: 10px;
+                height: 60px;
+            }
+        }
+    }
+
+    mat-sidenav-content {
+        position: fixed!important;
+        top: 0!important;
+        left: 0!important;
+        width: 100vw!important;
+        height: 100vh!important;
+        overflow: hidden!important;
+        display: flex!important;
+
+        .toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: $toolbarHeight;
+            overflow: hidden;
+            z-index: 10000000000;
+
+            background-color: $headerBgColor;
+            color:#d4d7dc;
+            font-size: 22px;
+            // height: 65px;
+            padding: 0 15px;
+        }
+        .content {
+            width: 100vw;
+            padding: ($toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
+            overflow: auto!important;
+            -webkit-overflow-scrolling: touch!important;
+            background-color: $contentBgColor;
+        }
+    }
+}

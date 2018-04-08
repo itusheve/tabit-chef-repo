@@ -12,6 +12,10 @@ import { MatSnackBar } from '@angular/material';
 })
 export class OrgsComponent implements OnInit {
 
+  org: any;
+  user: any;
+  userInitials: string;
+
   mode: string;// normal (selecting org and continuing to app), switch (changing an org, restart should occur)
 
   orgs: any;
@@ -27,6 +31,19 @@ export class OrgsComponent implements OnInit {
     private router: Router,
     public snackBar: MatSnackBar
   ) {
+
+    this.dataService.user
+      .subscribe(user => {
+        this.user = user;
+        this.userInitials = (user.firstName ? user.firstName.substring(0, 1) : '?').toUpperCase() + (user.lastName ? user.lastName.substring(0, 1) : '').toUpperCase();
+      });
+
+    this.dataService.organization
+      .subscribe(org => {
+        this.org = org;
+      });
+
+
     this.selectedOrg = undefined;
 
     this.keyUp.subscribe((filter: string)=>{
@@ -94,6 +111,18 @@ export class OrgsComponent implements OnInit {
       });
 
       this.render();
+  }
+
+  logout() {
+    this.authService.logout()
+      .then(() => {
+        const params: any = {};
+        if (this.mode==='switch') {
+          params.m = 's';
+        }
+        this.router.navigate(['login', params]);
+      }, () => {
+      });
   }
 
 }

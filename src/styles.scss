@@ -65,7 +65,7 @@ button {cursor:pointer}//TLA
   margin-bottom: 10px;
   background-color: #fff;
   color: #343E56;
-  // box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
 
   &.fullWidth {
     padding: 15px 0;
@@ -101,6 +101,10 @@ button {cursor:pointer}//TLA
   }
 
   .body {
+
+    .noData {
+      text-align: center;
+    }
 
     table {
       color: $greyText;
@@ -253,10 +257,11 @@ i.icon {
     }
 }
 
-mat-sidenav-content {
-  overflow: auto!important;
-  -webkit-overflow-scrolling: touch!important;
-}
+// mat-sidenav-content {
+//   overflow: auto!important;
+//   -webkit-overflow-scrolling: touch!important;
+// }
 
 @import 'tabit/styles/util';
 @import 'tabit/styles/flex';
+@import 'tabit/styles/frame';

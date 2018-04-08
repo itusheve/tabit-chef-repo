@@ -247,14 +247,8 @@
         <note priority="1" from="meaning">owners-dashboard</note>
       </trans-unit>
       <trans-unit id="mySites" datatype="html">
-        <source>My Sites</source>
+        <source>My Restaurants</source>
         <target>המסעדות שלי</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/owners-dashboard.component.ts</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <note priority="1" from="description">המסעדות שלי</note>
-        <note priority="1" from="meaning">owners-dashboard</note>
       </trans-unit>
       <trans-unit id="logout" datatype="html">
         <source>Logout</source>

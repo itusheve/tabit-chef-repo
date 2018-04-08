@@ -36,11 +36,11 @@ import { CardComponent } from '../ui/card/card.component';
 import { OwnersDashboardRoutingModule } from './owners-dashboard-routing.module';
 
 import {
+  MatSidenavModule,
   MatButtonModule,
   MatIconModule,
   MatMenuModule,
   MatCardModule,
-  MatSidenavModule,
   MatSlideToggleModule,
   MatExpansionModule,
   MatTabsModule
@@ -67,25 +67,12 @@ import { DayOperationalErrorsTableComponent } from './day-view/day-operational-e
 import { DayRetentionTableComponent } from './day-view/day-retention-table/day-retention-table.component';
 import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-table/day-month-summary-table.component';
 
-
-//Load localized messages (English included by default)
-// let messagesDe = require("devextreme/localization/messages/de.json"),
-//   messagesJa = require("devextreme/localization/messages/ja.json"),
-//   messagesRu = require("devextreme/localization/messages/ru.json");
-
-// loadMessages(messagesRu);
-// loadMessages(messagesDe);
-// loadMessages(messagesJa);
-
-// if (environment.tbtLocale==='he-IL') {
-//   locale('he');
-// }
-
 @NgModule({
   imports: [
     CommonModule,
     OwnersDashboardRoutingModule,
     MomentModule,
+
     MatButtonModule,
     MatIconModule,
     MatMenuModule,

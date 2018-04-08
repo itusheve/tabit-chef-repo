@@ -14,6 +14,7 @@ import { OwnersDashboardCurrencyPipe } from '../../owners-dashboard.pipes';
 export class DayPieChartComponent implements OnDestroy, OnChanges {
   loading = true;
   noData = false;
+
   @Input() data: any;
 
   odCurrPipe: OwnersDashboardCurrencyPipe = new OwnersDashboardCurrencyPipe();
@@ -107,6 +108,9 @@ export class DayPieChartComponent implements OnDestroy, OnChanges {
 
   ngOnChanges(o: SimpleChanges) {
     if (o.data && o.data.currentValue) {
+      this.loading = true;
+      this.noData = false;
+
       this.render();
     }
   }

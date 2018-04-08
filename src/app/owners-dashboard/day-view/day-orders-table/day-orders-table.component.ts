@@ -40,6 +40,7 @@ export class DayOrdersTableComponent implements OnChanges {
 
     if (o.orders && o.orders.currentValue) {
       this.loading = true;
+      this.noData = false;
 
       const ordersCloned: Order[] = _.cloneDeep(this.orders);
 
@@ -57,12 +58,18 @@ export class DayOrdersTableComponent implements OnChanges {
         return 1;
       });
 
+      let totalOrdersCount = 0;
       orderTypesArr.forEach(ot => {
         ot.orders = ordersCloned.filter(o => o.orderType.id === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);
         ot.sales = ot.orders.reduce((acc, curr) => acc + (curr.sales || 0), 0);
         ot.ordersCount = ot.orders.reduce((acc, curr) => (acc+1), 0);
+        totalOrdersCount += ot.ordersCount;
       });
       this.byOrderTypes = orderTypesArr;
+
+      if (totalOrdersCount===0) {
+        this.noData = true;
+      }
 
       this.loading = false;
     }
