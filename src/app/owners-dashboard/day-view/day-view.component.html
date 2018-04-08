@@ -1,15 +1,15 @@
-<div class="flex d-col">
-  <app-day-selector
+<div class="flex d-col dayView">
+  <!-- <app-day-selector
     class="widget noPadding daySelectorNotFixed"
     [style.visibility]="daySelectorVisible ? 'visible' : 'hidden'"
     [currentValue]="day"
     [options]="daySelectorOptions"
     (onDateChanged)="onDateChanged($event)"
-  ></app-day-selector>
+  ></app-day-selector> -->
 
+  <!-- [style.visibility]="!daySelectorVisible ? 'visible' : 'hidden'" -->
   <app-day-selector
     class="widget noPadding daySelectorFixed"
-    [style.visibility]="!daySelectorVisible ? 'visible' : 'hidden'"
     [currentValue]="day"
     [options]="daySelectorOptions"
     (onDateChanged)="onDateChanged($event)"></app-day-selector>
