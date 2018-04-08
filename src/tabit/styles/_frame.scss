@@ -63,8 +63,9 @@ mat-sidenav-container {
             background-color: $headerBgColor;
             color:#d4d7dc;
             font-size: 22px;
-            // height: 65px;
-            padding: 0 15px;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: env(safe-area-inset-top);//TLA, NOTCH
         }
         .content {
             position: fixed;
