@@ -242,10 +242,11 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
 
   ngAfterViewInit() {
     // this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByTagName('mat-sidenav-content')[0])
-    //   .subscribe(visible => {
-    //     console.info(`visible: ${visible}`);
-    //     this.daySelectorVisible = visible;
-    //   });
+    this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByClassName('willItWork')[0])
+      .subscribe(visible => {
+        console.info(`visible: ${visible}`);
+        this.daySelectorVisible = visible;
+      });
   }
 
   ngAfterContentInit() {}

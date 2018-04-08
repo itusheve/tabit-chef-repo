@@ -13,13 +13,14 @@
 
     $cardSize: 29vmin;
     $cardsPerRow: 3;
-    $cardMargin: (100 - (2 * $contentPadding) - ($cardSize * $cardsPerRow)) / ($cardsPerRow * 2);
+    // $cardMargin: (100 - (2 * $contentPadding) - ($cardSize * $cardsPerRow)) / ($cardsPerRow * 2);
     mat-card {
         cursor: pointer;
         padding: 2vmin;
         width: $cardSize;
         height: $cardSize;
-        margin: 0 $cardMargin ($cardMargin * 2) $cardMargin;
+        // margin: 0 $cardMargin ($cardMargin * 2) $cardMargin;
+        margin-bottom: 10px;
         overflow: hidden;
         mat-card-content {
             font-size: 4vmin;

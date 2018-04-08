@@ -1,3 +1,5 @@
+@import '../../../tabit/styles/config/frame';
+
 $stickyDayHeight: 30px;
 
 .widget {
@@ -7,7 +9,7 @@ $stickyDayHeight: 30px;
 app-day-selector {
     &.daySelectorFixed {
         position:fixed!important;
-        top:0!important;
+        top:$toolbarHeight!important;
         left: 0!important;
         right: 0!important;
         height:50px!important;

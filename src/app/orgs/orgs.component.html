@@ -32,7 +32,7 @@
             <input matInput placeholder="Filter" i18n-placeholder="@@filter" (keyup)='keyUp.next($event.target.value)'>
           </mat-form-field>
         </div>
-        <div class="g-1 flex f-wrap mt15 orgsCards">
+        <div class="g-1 flex f-wrap j-space-between mt15 orgsCards">
           <mat-card (click)="selectOrg(org)" [ngClass]="{'selected': org===selectedOrg}" *ngFor="let org of orgsFiltered">
             <mat-card-content>{{org.name}}</mat-card-content>
           </mat-card>
