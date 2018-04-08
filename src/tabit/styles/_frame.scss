@@ -43,13 +43,13 @@ mat-sidenav-container {
     }
 
     mat-sidenav-content {
-        position: fixed!important;
-        top: 0!important;
-        left: 0!important;
-        width: 100vw!important;
-        height: 100vh!important;
-        overflow: hidden!important;
-        display: flex!important;
+        // position: fixed!important;
+        // top: 0!important;
+        // left: 0!important;
+        // width: 100vw!important;
+        // height: 100vh!important;
+        // overflow: hidden!important;
+        // display: flex!important;
 
         .toolbar {
             position: fixed;
@@ -67,10 +67,17 @@ mat-sidenav-container {
             padding: 0 15px;
         }
         .content {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            // overflow: hidden;
+
             width: 100vw;
             padding: ($toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
-            overflow: auto!important;
-            -webkit-overflow-scrolling: touch!important;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
             background-color: $contentBgColor;
         }
     }
