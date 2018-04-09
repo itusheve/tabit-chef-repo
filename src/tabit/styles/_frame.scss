@@ -65,7 +65,8 @@ mat-sidenav-container {
             font-size: 22px;
             padding-left: 15px;
             padding-right: 15px;
-            // padding-top: env(safe-area-inset-top);//TLA, NOTCH
+            padding-top: env(safe-area-inset-top);//TLA, NOTCH
+            padding-top: constant(safe-area-inset-top);//TLA, NOTCH
         }
         .contentFixed {
             position: fixed;
