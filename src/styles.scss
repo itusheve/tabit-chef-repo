@@ -252,15 +252,15 @@ i.icon {
     #daySelector {
         justify-content: center;
         .dx-widget.dx-calendar-navigator {
-            // max-width: 800px;
         }
     }
 }
 
-// mat-sidenav-content {
-//   overflow: auto!important;
-//   -webkit-overflow-scrolling: touch!important;
-// }
+//https://quickleft.com/blog/4-steps-to-minimizing-rendering-issues-in-cordova-applications/
+* {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
 
 @import 'tabit/styles/util';
 @import 'tabit/styles/flex';
