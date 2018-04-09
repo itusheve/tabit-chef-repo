@@ -12,6 +12,9 @@
         &.daySelectorFixed {
             position: fixed;
             top: $toolbarHeight;
+            @media #{$iphoneX-media-query} {
+                top: $iphoneX-notch-px + $toolbarHeight;
+            }
             left: 0;
             right: 0;
             height: $secondaryToolbarHeight;
