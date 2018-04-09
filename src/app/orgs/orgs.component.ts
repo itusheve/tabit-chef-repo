@@ -125,4 +125,8 @@ export class OrgsComponent implements OnInit {
       });
   }
 
+  refresh() {
+    location.reload();
+  }
+
 }

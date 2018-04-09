@@ -59,4 +59,8 @@ export class OwnersDashboardComponent {
       });
   }
 
+  refresh() {
+    location.reload();
+  }
+
 }

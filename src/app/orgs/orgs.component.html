@@ -21,7 +21,12 @@
         </button>
       </div>
       <div class="flex d-col aj-center" style="width:80%;">
-        <div style="color:white" i18n="@@mySites">My Restaurants</div>
+        <div class="flex a-center" style="color:white">
+          <div i18n="@@mySites">My Restaurants</div>
+          <button style="color: #c2c9d4;" mat-icon-button (click)="refresh()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
       </div>
       <div style="width:20%;"> <!-- for design purpose only --> </div>
     </div>
