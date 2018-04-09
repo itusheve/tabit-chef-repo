@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { OwnersDashboardComponent } from './owners-dashboard.component';
+import { OwnersDashboardService } from './owners-dashboard.service';
 import { OwnersDashboardCurrencyPipe, OwnersDashboardCountPipe, OwnersDashboardPercentPipe } from './owners-dashboard.pipes';
 
 import { HomeComponent } from './home/home.component';
@@ -135,6 +136,9 @@ import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-tabl
         OrderChequeRefundComponent,
         OrderCashRefundComponent,
       OrderDetailsComponent
+  ],
+  providers: [
+    OwnersDashboardService
   ]
 })
 export class OwnersDashboardModule { }

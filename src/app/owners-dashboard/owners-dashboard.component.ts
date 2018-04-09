@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { DataService } from '../../tabit/data/data.service';
 import { AuthService } from '../auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { OwnersDashboardService } from './owners-dashboard.service';
 
 @Component({
   templateUrl: './owners-dashboard.component.html',
@@ -14,27 +15,25 @@ export class OwnersDashboardComponent {
   userInitials: string;
   vat: boolean;
 
+  toolbarConfig: any;
+  sideNavConfig: any;
+
   constructor(
     private dataService: DataService,
     private authService: AuthService,
+    public ownersDashboardService: OwnersDashboardService,
     public router: Router,
     public route: ActivatedRoute
   ) {
+    ownersDashboardService.toolbarConfig.left.back.showBtn = false;
+
+    //bind for the view:
+    this.toolbarConfig = ownersDashboardService.toolbarConfig;
+    this.sideNavConfig = ownersDashboardService.sideNavConfig;
 
     dataService.vat$.subscribe((vat:boolean)=>{
       this.vat = vat;
     });
-
-    this.dataService.user
-      .subscribe(user => {
-        this.user = user;
-        this.userInitials = (user.firstName ? user.firstName.substring(0, 1) : '?').toUpperCase() + (user.lastName ? user.lastName.substring(0, 1) : '').toUpperCase();
-      });
-
-    this.dataService.organization
-      .subscribe(org=>{
-        this.org = org;
-      });
   }
 
   vatChange(event) {
@@ -45,10 +44,6 @@ export class OwnersDashboardComponent {
 
   changeRest() {
     //TODO hide the switch rest button if only one rest exists
-  }
-
-  goBack():void {
-    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   logout() {

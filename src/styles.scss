@@ -4,8 +4,9 @@
 // @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "./tabit-material-theme.scss";
 
+@import "./tabit/styles/config/colors";
+
 $baseText: #343E56;
-$greyText: #6e7482;
 
 $oldDashBG: #edf1f2;
 
@@ -24,34 +25,15 @@ html, body {
 :focus {outline:none}//TLA
 ::-webkit-scrollbar {display:none}//TLA
 
-// ============SCROLLBAR==============
-/*
-master:
-::-webkit-scrollbar {
-  height: 10px;
-  width: 0px;
-  background: #ddd;
-}
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 0;
-  -webkit-border-radius: 0;
-  box-shadow: none;
-  -webkit-box-shadow: none;
-}
-
-::-webkit-scrollbar-corner {
-  background: #000;
-} */
 
 /* TLA: */
 body::-webkit-scrollbar {display:none}
-// ============SCROLLBAR==============
+
 
 // h1,h2,h3,h4 {display:block;padding:0;margin:0;font-weight:normal}TLA
 
 /* TLA: */
-app-root {position:fixed;top:0;left:0;width:100vw;height:100vh;overflow:hidden}
+// app-root {position:fixed;top:0;left:0;width:100vw;height:100vh;overflow:hidden}
 
 // TLA:
 .mat-button:hover .mat-button-focus-overlay {opacity:0!important}
@@ -107,7 +89,7 @@ button {cursor:pointer}//TLA
     }
 
     table {
-      color: $greyText;
+      color: $fontColor;
 
       &.fixedWidth {
         table-layout: fixed;
@@ -135,7 +117,7 @@ button {cursor:pointer}//TLA
     }
 
     .table {
-      color: $greyText;
+      color: $fontColor;
       .tblRow {
         padding: 8px 0px;
         border-bottom: 1px solid #eaeff0;
@@ -203,7 +185,7 @@ $navigatorBtnWidth: 50px;
     }
     &.dx-data-row > td {
       line-height: 30px;
-      color: #6E7482;
+      color: $fontColor;
       border-top: 1px solid #eaeff0;
     }
     &:first-child {
@@ -260,6 +242,10 @@ i.icon {
 * {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+}
+
+.mat-expansion-panel-header-description, .mat-expansion-indicator::after {
+    color: rgba(0, 0, 0, 0.54);
 }
 
 @import 'tabit/styles/util';

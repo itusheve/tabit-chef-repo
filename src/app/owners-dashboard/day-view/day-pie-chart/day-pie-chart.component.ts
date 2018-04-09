@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
-import { PopulationByRegion, Service } from './day-pie-chart.service';
 import { DecimalPipe, PercentPipe, CurrencyPipe } from '@angular/common';
 import { tmpTranslations } from '../../../../tabit/data/data.service';
 import { environment } from '../../../../environments/environment';
@@ -8,8 +7,7 @@ import { OwnersDashboardCurrencyPipe } from '../../owners-dashboard.pipes';
 @Component({
   selector: 'app-day-pie-chart',
   templateUrl: './day-pie-chart.component.html',
-  styleUrls: ['./day-pie-chart.component.scss'],
-  providers: [Service]
+  styleUrls: ['./day-pie-chart.component.scss']
 })
 export class DayPieChartComponent implements OnDestroy, OnChanges {
   loading = true;
@@ -26,7 +24,7 @@ export class DayPieChartComponent implements OnDestroy, OnChanges {
   private total: number;
   private totalEl: Element;
 
-  constructor(service: Service) {
+  constructor() {
     this.customizeText = this.customizeText.bind(this);
   }
 
