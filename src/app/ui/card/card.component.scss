@@ -65,11 +65,16 @@
             }
         }
         .cfooter {
-            font-size: 16px;
             .cperson {
                 i {
                     color: #7CBCEC;
                 }
+            }
+            .ctitle {
+                font-size: 14px;
+            }
+            .cfigure {
+                font-size: 17px;
             }
         }
     }
