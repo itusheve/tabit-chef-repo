@@ -143,14 +143,15 @@ const OrderViewService = (function () {
                     });
 
                     if (!isReturnOrder) {
-                        offer.ORDERED_ITEMS_LIST.forEach(item => {
-                            items.push({
-                                isItem: true,
-                                name: item.ITEM_NAME,
-                                qty: null,
-                                amount: null
-                            })
-                        });
+                        if (offer.ORDERED_ITEMS_LIST && offer.ORDERED_ITEMS_LIST.length > 0)
+                            offer.ORDERED_ITEMS_LIST.forEach(item => {
+                                items.push({
+                                    isItem: true,
+                                    name: item.ITEM_NAME,
+                                    qty: null,
+                                    amount: null
+                                })
+                            });
                     }
 
                     if (!isReturnOrder) {
