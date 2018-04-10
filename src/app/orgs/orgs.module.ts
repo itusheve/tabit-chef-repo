@@ -4,23 +4,29 @@ import { CommonModule } from '@angular/common';
 import { OrgsComponent } from './orgs.component';
 import { OrgsRoutingModule } from './orgs-routing.module';
 
-import { 
+import {
   MatCardModule,
   MatFormFieldModule,
-  MatInputModule
+  MatInputModule,
+  MatSidenavModule,
+  MatIconModule,
+  MatButtonModule
 } from '@angular/material';
 
 @NgModule({
   imports: [
     CommonModule,
     OrgsRoutingModule,
+
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule
   ],
   declarations: [
     OrgsComponent
-  ],
-  providers: []
+  ]
 })
 export class OrgsModule { }

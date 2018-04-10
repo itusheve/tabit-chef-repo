@@ -10,8 +10,10 @@ import { tmpTranslations } from '../../../../tabit/data/data.service';
   styleUrls: ['./day-payments-table.component.scss']
 })
 export class DayPaymentsTableComponent implements OnChanges {
-  @Input() bd: moment.Moment;
+  loading = true;
+  noData = false;
 
+  @Input() bd: moment.Moment;
   @Input() paymentsData: {
     [index: string]: {
       account: string;
@@ -48,12 +50,12 @@ export class DayPaymentsTableComponent implements OnChanges {
     }[]
   };
 
-  show = true;
-  loading = true;
-
   constructor() {}
 
   ngOnChanges(o: SimpleChanges) {
+    this.loading = true;
+    this.noData = false;
+
     if (o.paymentsData && o.paymentsData.currentValue) {
 
       this.data = {
@@ -68,7 +70,9 @@ export class DayPaymentsTableComponent implements OnChanges {
 
       Object.keys(this.paymentsData).forEach(k=>{
         const dailyPayments = this.paymentsData[k];
-        
+
+        if (!dailyPayments) return;
+
         dailyPayments.forEach(dp=>{
           let byAccountTypeObj = this.data.byAccountType.find(o=>o.accountType===dp.accountType);
           if (!byAccountTypeObj) {
@@ -98,7 +102,7 @@ export class DayPaymentsTableComponent implements OnChanges {
             };
             byAccountTypeObj.byAccount.push(byAccountObj);
           }
-          
+
           byAccountObj.totalPayments.mtd += dp.grossPayments;
           byAccountTypeObj.totalPayments.mtd += dp.grossPayments;
           this.data.totalPayments.mtd += dp.grossPayments;
@@ -120,6 +124,10 @@ export class DayPaymentsTableComponent implements OnChanges {
           oo.totalPayments.todayPct = oo.totalPayments.today / this.data.totalPayments.today;
         });
       });
+
+      if (this.data.totalPayments.today===0) {
+        this.noData = true;
+      }
 
       this.loading = false;
     }

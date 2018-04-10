@@ -4,7 +4,6 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { zip } from 'rxjs/observable/zip';
 import { Subscriber } from 'rxjs/Subscriber';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
@@ -16,6 +15,7 @@ import { Shift } from '../../../tabit/model/Shift.model';
 import { Department } from '../../../tabit/model/Department.model';
 import { OrderType } from '../../../tabit/model/OrderType.model';
 import { VisibilityService } from '../../../tabit/utils/visibility.service';
+import { OwnersDashboardService } from '../owners-dashboard.service';
 
 @Component({
   selector: 'app-day-view',
@@ -128,15 +128,20 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
 
   public mtdKPIs: CustomRangeKPI;
 
-  public daySelectorVisible = true;
+  // public daySelectorVisible = true;
 
   constructor(
+    private ownersDashboardService: OwnersDashboardService,
     private closedOrdersDataService: ClosedOrdersDataService,
     private dataService: DataService,
     private visibilityService: VisibilityService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {
+    ownersDashboardService.toolbarConfig.left.back.pre = ()=>true;
+    ownersDashboardService.toolbarConfig.left.back.target = '/owners-dashboard/home';
+    ownersDashboardService.toolbarConfig.left.back.showBtn = true;
+  }
 
   private render() {
     const data$ = combineLatest(
@@ -241,11 +246,12 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
   }
 
   ngAfterViewInit() {
-    this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByTagName('mat-sidenav-content')[0])
-      .subscribe(visible => {
-        console.info(`visible: ${visible}`);
-        this.daySelectorVisible = visible;
-      });
+    // this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByTagName('mat-sidenav-content')[0])
+    // this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByClassName('willItWork')[0])
+    //   .subscribe(visible => {
+    //     console.info(`visible: ${visible}`);
+    //     this.daySelectorVisible = visible;
+    //   });
   }
 
   ngAfterContentInit() {}
@@ -275,6 +281,13 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
 
     this.drilledOrder = order;
     this.drilledOrderNumber = order.number;
+
+    this.ownersDashboardService.toolbarConfig.left.back.pre = ()=>{
+      this.closeDrill();
+      this.ownersDashboardService.toolbarConfig.left.back.pre = undefined;
+      //prevent navigating back
+      return false;
+    };
   }
 
   closeDrill() {
@@ -283,6 +296,12 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
 
   getKeys(map) {
     return Array.from(map.keys());
+  }
+
+  onBackPressed() {
+    if (!this.drill) {
+
+    }
   }
 
 }

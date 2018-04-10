@@ -11,6 +11,7 @@ import { TrendsDataService } from '../../../tabit/data/dc/trends.data.service';
 import { DataService, tmpTranslations } from '../../../tabit/data/data.service';
 
 import { CardData } from '../../ui/card/card.component';
+import { OwnersDashboardService } from '../owners-dashboard.service';
 
 @Component({
   selector: 'app-home',
@@ -52,12 +53,15 @@ export class HomeComponent implements OnInit {
   private previousBdNotFinal = false;
 
   constructor(
+    private ownersDashboardService: OwnersDashboardService,
     private cardsDataService: CardsDataService,
     private trendsDataService: TrendsDataService,
     private dataService: DataService,
     private router: Router,
     private datePipe: DatePipe
   ) {
+
+    ownersDashboardService.toolbarConfig.left.back.showBtn = false;
 
     // we don't want to delay the card on the trends so we split into two calls:
     // A:

@@ -1,18 +1,29 @@
-.orgs {
-    background-color: #edf1f2;
+@import '../../tabit/styles/config/frame';
 
-    $cardSize: 28.5vmin;
+.orgsFilter {
+    // padding: 15px 15px 0 15px;
+    mat-form-field {
+        width:100%;
+    }
+}
+
+.orgsCards {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+
+    $cardSize: 29vmin;
     $cardsPerRow: 3;
-    $cardMargin: (100 - ($cardSize * $cardsPerRow)) / ($cardsPerRow * 2);
+    // $cardMargin: (100 - (2 * $contentPadding) - ($cardSize * $cardsPerRow)) / ($cardsPerRow * 2);
     mat-card {
         cursor: pointer;
-        padding: 16px;
+        padding: 2vmin;
         width: $cardSize;
         height: $cardSize;
-        margin: 0 $cardMargin $cardMargin $cardMargin;
+        // margin: 0 $cardMargin ($cardMargin * 2) $cardMargin;
+        margin-bottom: 10px;
         overflow: hidden;
         mat-card-content {
-            font-size: 18px;
+            font-size: 4vmin;
             word-wrap: break-word;
         }
 

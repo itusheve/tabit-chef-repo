@@ -6,10 +6,4 @@ export class MonthViewService {
     constructor() {
 
     }
-
-
-    // getGridData() {
-        //console.log('bla');
-        // return this.dataService.getGridData();
-    // }
 }

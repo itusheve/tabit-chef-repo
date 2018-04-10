@@ -36,8 +36,24 @@ if (environment.tbtLocale ==='he-IL') {
   providers.push({ provide: TRANSLATIONS_FORMAT, useValue: 'xlf' });
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule, {
-  providers: providers
-})
-  .catch(err => console.log(err));
+const bootstrap = () => {
+  platformBrowserDynamic().bootstrapModule(AppModule, {
+    providers: providers
+  })
+    .catch(err => console.log(err));
+};
 
+if (typeof window['cordova'] !== 'undefined') {
+  document.addEventListener('deviceready', () => {
+    bootstrap();
+
+    // Hiding the Splash Screen
+    document.querySelector('#splash').classList.add('transition');
+    setTimeout(function() {
+      document.querySelector('#splash').remove();
+    }, 500);
+
+  }, false);
+} else {
+  bootstrap();
+}

@@ -1,0 +1,12 @@
+$toolbarHeight: 65px;
+$contentPadding: 15px;
+
+$sideNavWidth: 300px;
+
+$secondaryToolbarHeight: 50px;
+
+
+// targeting iphoneX portrait mode (notch problem)
+// https://stackoverflow.com/questions/46376860/what-is-the-safe-region-for-iphone-x-in-pixels-that-factors-the-top-notch-an
+$iphoneX-notch-px: 44px;
+$iphoneX-media-query: "only screen and (orientation : portrait) and (device-width : 375px) and (device-height : 812px) and (-webkit-device-pixel-ratio : 3)";

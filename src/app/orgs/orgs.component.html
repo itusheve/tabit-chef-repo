@@ -1,18 +1,52 @@
-<div class="f-rtl flex d-col orgs">
-  <div *ngIf="orgs && orgs.length>9" class="flex" style="padding:15px 15px 0 15px;">
-    <mat-form-field style="width:100%;">
-      <input
-        matInput
-        placeholder="Filter"
-        i18n-placeholder="@@filter"
-        (keyup)='keyUp.next($event.target.value)'
-        >
-    </mat-form-field>
-  </div>
-  <div class="flex f-wrap" style="margin-top: 15px;">
-    <mat-card (click)="selectOrg(org)" [ngClass]="{'selected': org===selectedOrg}" *ngFor="let org of orgsFiltered">
-      <mat-card-content>{{org.name}}</mat-card-content>
-    </mat-card>
-    <div *ngIf="orgsFiltered?.length===0" i18n="@@noOrgs">Your user is not authorized to any Restaurants. Please contact support.</div>
-  </div>
-</div>
+<mat-sidenav-container>
+
+  <mat-sidenav class="f-rtl" #sidenav mode="over">
+    <div class="flex d-col header">
+      <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{userInitials}}</button>
+      <div class="mt10 mb10">{{user?.firstName}} {{user?.lastName}}</div>
+      <div>{{org?.name}}</div>
+    </div>
+    <div class="flex d-col content">
+      <button mat-raised-button (click)="logout()">
+        <span i18n="owners-dashboard@@logout">Logout</span>
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="flex f-rtl j-sb a-center toolbar">
+      <div class="flex j-start" style="width:20%;padding-right:15px;">
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+      <div class="flex d-col aj-center" style="width:60%;">
+        <div class="flex a-center" style="color:white">
+          <div i18n="@@mySites">My Restaurants</div>
+          <button style="color: #c2c9d4;" mat-icon-button (click)="refresh()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div style="width:20%;padding-left:15px;"> <!-- for design purpose only --> </div>
+    </div>
+    <div class="contentFixed">
+      <div class="content">
+        <div class="f-rtl flex d-col orgs">
+          <div *ngIf="orgs && orgs.length>9" class="s-0 flex orgsFilter">
+            <mat-form-field>
+              <input matInput placeholder="Filter" i18n-placeholder="@@filter" (keyup)='keyUp.next($event.target.value)'>
+            </mat-form-field>
+          </div>
+          <div class="g-1 flex f-wrap j-space-between mt15 orgsCards">
+            <mat-card (click)="selectOrg(org)" [ngClass]="{'selected': org===selectedOrg}" *ngFor="let org of orgsFiltered">
+              <mat-card-content>{{org.name}}</mat-card-content>
+            </mat-card>
+            <div *ngIf="orgs?.length===0" class="ph20" i18n="@@noOrgs">Your user is not authorized to any Restaurants. Please contact support.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

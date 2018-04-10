@@ -10,7 +10,9 @@ import { BusinessDayKPI, CustomRangeKPI } from '../../../../tabit/data/data.serv
   styleUrls: ['./day-month-summary-table.component.scss']
 })
 export class DayMonthSummaryTableComponent implements OnChanges {
-  
+  loading = true;
+  noData = false;
+
   @Input() mtdBusinessDaysKPIs: {
     [index: string]: BusinessDayKPI
   };
@@ -18,13 +20,13 @@ export class DayMonthSummaryTableComponent implements OnChanges {
 
   data: BusinessDayKPI[] = [];
 
-  show = true;
-  loading = true;
 
   constructor() {}
 
   ngOnChanges(o: SimpleChanges) {
     if (o.mtdBusinessDaysKPIs && o.mtdBusinessDaysKPIs.currentValue) {
+      this.loading = true;
+      this.noData = false;
 
       this.data = [];
 
