@@ -39,6 +39,8 @@ until angular comes up with the final i18n solution that includes in-component t
 
 const tmpTranslations_ = {
     'he-IL': {
+        areYouSureYouWish: 'האם אתה בטוח שברצונך',
+        toLogout: 'להתנתק',
         login: {
             userPassIncorrect: 'שם משתמש ו/או סיסמא אינם נכונים'
         },
@@ -79,6 +81,8 @@ const tmpTranslations_ = {
         }
     },
     'en-US': {
+        areYouSureYouWish: 'Are you sure you wish',
+        toLogout: 'to logout',
         login: {
             userPassIncorrect: 'Incorrect User / Password'
         },

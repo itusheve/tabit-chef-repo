@@ -21,6 +21,7 @@ html, body {
   color: $baseText;
   background-color: black;
   overflow:hidden;//TLA
+  text-align: start;
 }
 :focus {outline:none}//TLA
 ::-webkit-scrollbar {display:none}//TLA
@@ -134,11 +135,11 @@ table {
   font-family: 'Assistant', sans-serif;
 }
 
-html[dir=rtl] {
-  mat-card-content {
-    text-align: start;
-  }
-}
+// html[dir=rtl] {
+//   mat-card-content {
+//     text-align: start;
+//   }
+// }
 
 .dx-widget, dx-datagrid, dx-pie-chart, dx-chart {
   font-family: 'Assistant', sans-serif !important;

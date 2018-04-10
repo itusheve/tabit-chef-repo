@@ -3,7 +3,8 @@ import { DataService, tmpTranslations } from '../../tabit/data/data.service';
 import { AuthService } from '../auth/auth.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { AreYouSureDialogComponent } from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
 
 @Component({
   selector: 'app-orgs',
@@ -27,9 +28,10 @@ export class OrgsComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private authService: AuthService,
+    public dialog: MatDialog,
+    public snackBar: MatSnackBar,
     private route: ActivatedRoute,
-    private router: Router,
-    public snackBar: MatSnackBar
+    private router: Router
   ) {
 
     this.dataService.user
@@ -114,15 +116,30 @@ export class OrgsComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout()
-      .then(() => {
-        const params: any = {};
-        if (this.mode==='switch') {
-          params.m = 's';
-        }
-        this.router.navigate(['login', params]);
-      }, () => {
-      });
+    let dialogRef = this.dialog.open(AreYouSureDialogComponent, {
+      direction: 'rtl',//TODO localization
+      width: '250px',
+      data: {
+        title: '',
+        content: `
+          ${tmpTranslations.get('areYouSureYouWish')} ${tmpTranslations.get('toLogout')}?
+        `
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.authService.logout()
+          .then(() => {
+            const params: any = {};
+            if (this.mode==='switch') {
+              params.m = 's';
+            }
+            this.router.navigate(['login', params]);
+          }, () => {
+          });
+      }
+    });
   }
 
   refresh() {

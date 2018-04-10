@@ -23,6 +23,7 @@ import {
   MatSnackBarModule,
   MatButtonToggleModule,
   MatGridListModule,
+  MatDialogModule,
 } from '@angular/material';//material modules
 
 import { MomentModule } from 'angular2-moment';
@@ -45,8 +46,8 @@ import { TrendsDataService } from '../tabit/data/dc/trends.data.service';
 import { DataService } from '../tabit/data/data.service';
 
 import { AppComponent } from './app.component';
-
 import { LoginComponent } from './auth/login/login.component';
+import { AreYouSureDialogComponent } from '../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
 
 import { AuthService } from './auth/auth.service';
 import { UserGuard } from './auth/user-guard.service';
@@ -58,13 +59,16 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
 import { VisibilityService } from '../tabit/utils/visibility.service';
 import { OlapMappings } from '../tabit/data/ep/olap.mappings';
 
+
 // The CLI imports the locale data for you when you use the parameter --locale with ng serve and ng build.
 if (environment.tbtLocale==='he-IL') {
   registerLocaleData(localeHe, 'he', localeHeExtra);//https://angular.io/guide/i18n
 }
 
 @NgModule({
+  entryComponents: [AreYouSureDialogComponent],
   declarations: [
+    AreYouSureDialogComponent,
     AppComponent,
     LoginComponent,
   ],
@@ -84,6 +88,7 @@ if (environment.tbtLocale==='he-IL') {
 
     AppRoutingModule,//must be after the feature modules: "Each routing module augments the route configuration in the order of import."
 
+    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,

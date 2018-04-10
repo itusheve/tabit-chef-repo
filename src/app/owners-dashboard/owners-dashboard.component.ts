@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
-import { DataService } from '../../tabit/data/data.service';
-import { AuthService } from '../auth/auth.service';
+import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
+import { DataService, tmpTranslations } from '../../tabit/data/data.service';
+import { AuthService } from '../auth/auth.service';
 import { OwnersDashboardService } from './owners-dashboard.service';
+
+import { AreYouSureDialogComponent } from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
 
 @Component({
   templateUrl: './owners-dashboard.component.html',
@@ -22,6 +26,7 @@ export class OwnersDashboardComponent {
     private dataService: DataService,
     private authService: AuthService,
     public ownersDashboardService: OwnersDashboardService,
+    public dialog: MatDialog,
     public router: Router,
     public route: ActivatedRoute
   ) {
@@ -31,7 +36,7 @@ export class OwnersDashboardComponent {
     this.toolbarConfig = ownersDashboardService.toolbarConfig;
     this.sideNavConfig = ownersDashboardService.sideNavConfig;
 
-    dataService.vat$.subscribe((vat:boolean)=>{
+    dataService.vat$.subscribe((vat: boolean) => {
       this.vat = vat;
     });
   }
@@ -47,11 +52,27 @@ export class OwnersDashboardComponent {
   }
 
   logout() {
-    this.authService.logout()
-      .then(() => {
-        this.router.navigate(['login', { m: 's' }]);
-      }, () => {
-      });
+    let dialogRef = this.dialog.open(AreYouSureDialogComponent, {
+      direction: 'rtl',//TODO localization
+      width: '250px',
+      data: {
+        title: '',
+        content: `
+          ${tmpTranslations.get('areYouSureYouWish')} ${tmpTranslations.get('toLogout')}?
+        `
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.authService.logout()
+          .then(() => {
+            this.router.navigate(['login', { m: 's' }]);
+          }, () => {
+          });
+      }
+    });
+
   }
 
   refresh() {
