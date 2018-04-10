@@ -1,12 +1,18 @@
+:host {
+    // box-sizing: content-box;
+    height: 123px;
+    padding: 10px 12px;
+}
 
 .card {
-    height: 93px;
+    line-height: 1;
+    height: 100%;
     .ctitle {
         font-size: 16px;
-        text-align: center;     
+        text-align: center;
         .ctag {
             color: #7CBCEC;
-        }   
+        }
     }
     .cbody {
         .cmain {
@@ -20,7 +26,7 @@
                     font-size: 16px;
                     line-height: 0.8;
                 }
-                
+
                 .label {
                     line-height: 1;
                     mat-icon {
@@ -30,7 +36,7 @@
                         font-size: 15px;
                     }
                 }
-                
+
                 &.up {
                     .label {
                         color: #30e430;
