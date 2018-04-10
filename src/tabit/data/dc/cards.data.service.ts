@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 
 // rxjs
 import { Observable } from 'rxjs/Observable';
-import { zip } from 'rxjs/observable/zip';
 
 import * as moment from 'moment';
 // import * as _ from 'lodash';
 
 import { DataService } from '../data.service';
 import { ROSEp } from '../ep/ros.ep';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Injectable()
 export class CardsDataService {
@@ -40,7 +40,7 @@ export class CardsDataService {
             });
         }
 
-        zip(this.dataService.vat$, this.dataService.previousBd$)
+        combineLatest(this.dataService.vat$, this.dataService.previousBd$)
             .subscribe(data => {
                 const vat = data[0];
                 const pbd = data[1];

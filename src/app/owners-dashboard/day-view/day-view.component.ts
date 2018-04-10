@@ -4,7 +4,6 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { zip } from 'rxjs/observable/zip';
 import { Subscriber } from 'rxjs/Subscriber';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';

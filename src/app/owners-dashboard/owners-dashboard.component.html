@@ -7,7 +7,19 @@
       <div>{{this.sideNavConfig.header.org?.name}}</div>
     </div>
     <div class="flex d-col content">
-      <mat-slide-toggle *ngIf="this.sideNavConfig.content.showVatCb" class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)" i18n="owners-dashboard|maam@@vat">VAT</mat-slide-toggle>
+      <!-- <mat-slide-toggle *ngIf="this.sideNavConfig.content.showVatCb" class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)" i18n="owners-dashboard|maam@@vat">VAT</mat-slide-toggle> -->
+      <!-- [ngModel]="vat"  -->
+      <mat-checkbox
+        color="primary"
+        *ngIf="this.sideNavConfig.content.showVatCb"
+        [checked]="vat"
+        (change)="vatChange($event)"
+        [indeterminate]="false"
+        [align]="'start'"
+        [disabled]="false"
+        i18n="owners-dashboard|maam@@vat">
+        VAT
+      </mat-checkbox>
       <button *ngIf="this.sideNavConfig.content.showMySitesBtn" mat-raised-button [routerLink]="['/restaurants', { m: 's'}]">
         <span i18n="owners-dashboard@@mySites">My Sites</span>
       </button>
@@ -23,9 +35,9 @@
         <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
       </div>
       <div class="flex d-col aj-center" style="width:60%;">
-        <div class="flex a-center" style="color:white">
+        <div class="flex a-center" style="color:white" (click)="refresh()">
           <div>{{toolbarConfig.center.caption}}</div>
-          <button *ngIf="toolbarConfig.center.showRefresh" style="color: #c2c9d4;" mat-icon-button (click)="refresh()">
+          <button *ngIf="toolbarConfig.center.showRefresh" style="color: #c2c9d4;" mat-icon-button>
             <mat-icon>refresh</mat-icon>
           </button>
         </div>

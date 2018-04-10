@@ -5,7 +5,6 @@ import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { zip } from 'rxjs/observable/zip';
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -555,7 +554,7 @@ export class DataService {
 
     /* excluding today! */
     public mtdData$: Observable<any> = new Observable(obs=>{
-        return zip(this.vat$, this.currentBd$, this.previousBd$)
+        return combineLatest(this.vat$, this.currentBd$, this.previousBd$)
             .subscribe(data => {
                 const vat = data[0];
                 const cbd = data[1];

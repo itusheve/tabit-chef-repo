@@ -44,7 +44,8 @@ import {
   MatCardModule,
   MatSlideToggleModule,
   MatExpansionModule,
-  MatTabsModule
+  MatTabsModule,
+  MatCheckboxModule
 } from '@angular/material';//material modules
 
 // import { locale, loadMessages } from 'devextreme/localization'; //https://github.com/DevExpress/devextreme-examples/tree/17_2/intl-angular
@@ -74,6 +75,7 @@ import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-tabl
     OwnersDashboardRoutingModule,
     MomentModule,
 
+    MatCheckboxModule,
     MatButtonModule,
     MatIconModule,
     MatMenuModule,

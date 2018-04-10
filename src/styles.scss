@@ -239,10 +239,11 @@ i.icon {
 }
 
 //https://quickleft.com/blog/4-steps-to-minimizing-rendering-issues-in-cordova-applications/
-* {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
+// * {
+//   backface-visibility: hidden;
+//   -webkit-backface-visibility: hidden;
+// }
+// for some reason this screws the tables' borders.
 
 .mat-expansion-panel-header-description, .mat-expansion-indicator::after {
     color: rgba(0, 0, 0, 0.54);

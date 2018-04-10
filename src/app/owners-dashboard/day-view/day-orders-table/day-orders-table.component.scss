@@ -1,5 +1,9 @@
 @import '../../../../tabit/styles/config/colors';
 
+:host {
+    box-shadow: none;//each panel has its own box-shadow
+}
+
 mat-expansion-panel-header {
     height: 41px!important;
     font-family: inherit!important;
