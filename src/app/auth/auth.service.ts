@@ -3,8 +3,6 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { JSONSchema } from 'angular-async-local-storage';
-
 import { User } from '../../tabit/model/User.model';
 import { Subject } from 'rxjs/Subject';
 import { zip } from 'rxjs/observable/zip';
