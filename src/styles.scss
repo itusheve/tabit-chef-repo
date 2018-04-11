@@ -98,6 +98,10 @@ button {
           background-color: #b8cbdf;
         }
 
+        &.clicked {
+          background-color: #b8cbdf;
+        }
+
         &.tblTotalRow {
           font-weight: bold;
         }
@@ -247,3 +251,4 @@ i.icon {
 @import 'tabit/styles/util';
 @import 'tabit/styles/flex';
 @import 'tabit/styles/frame';
+@import 'tabit/styles/pulse';

@@ -42,7 +42,7 @@
     }
     background-color: #edf1f2;
     overflow: auto;
-    // -webkit-overflow-scrolling: touch;
+    // -webkit-overflow-scrolling: touch;This caused bad behaviour with the fixed order-view - on ios user was able to scroll to see the view beneath. removing this solved the problem, and momentum scrolling is still working on ios.
 }
 
 /deep/table {

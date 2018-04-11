@@ -77,7 +77,14 @@ export class DayOrdersTableComponent implements OnChanges {
   }
 
   orderClicked(order:any) {
-    this.onOrderClicked.emit(order);
+    order.__dayOrdersTable__clicked = true;
+    setTimeout(() => {
+      order.__dayOrdersTable__clicked = false;
+    }, 1500);
+
+    setTimeout(() => {
+      this.onOrderClicked.emit(order);
+    }, 500);
   }
 
   sort(orderType: any, by: string) {

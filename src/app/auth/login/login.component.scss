@@ -5,6 +5,11 @@
   font-size: 20px;
 
   .bars {
+
+    @media (max-height: 500px) {
+      display: none;
+    }
+
     height: 170px;
     .bar {
       width: 27px;
@@ -51,7 +56,7 @@
       background: url(https://chef-cordova-prod.herokuapp.com/assets/images/logo-orig-2.png);
       background-repeat: no-repeat;
       background-position-x: center;
-      background-size: contain;
+      // background-size: contain;
       margin-bottom: 30px;
       margin-top: 15px;
     }
@@ -105,7 +110,7 @@
   /deep/.mat-raised-button.mat-primary {
     color: #282a2f;
     width: 85%;
-    background: linear-gradient(to right, #62cab8 , #917dce);
+    background: linear-gradient(to right, #93bfb8 , #8bb3cf);
     font-weight: bold;
     font-size: 18px;
     margin-top: 10px!important;
