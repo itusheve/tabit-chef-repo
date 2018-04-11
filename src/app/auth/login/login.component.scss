@@ -51,13 +51,13 @@
 
   .logoBars {
     .logo {
-      width: 302px;
-      height: 58px;
+      width: 272px;
+      height: 52px;
       background: url(https://chef-cordova-prod.herokuapp.com/assets/images/logo-orig-2.png);
       background-repeat: no-repeat;
       background-position-x: center;
-      // background-size: contain;
-      margin-bottom: 30px;
+      background-size: contain;
+      margin-bottom: 15px;
       margin-top: 15px;
     }
   }
