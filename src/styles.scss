@@ -1,14 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
-@import "fonts";
-// @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-// @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
-@import "./tabit-material-theme.scss";
-
 @import "./tabit/styles/config/colors";
 
-$baseText: #343E56;
-
-$oldDashBG: #edf1f2;
+@import "fonts";
+@import "./tabit/styles/material-theme.scss";
 
 html, body {
   width: 100%;
@@ -18,7 +11,7 @@ html, body {
   font-family: 'Assistant', sans-serif;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
-  color: $baseText;
+  color: $fontColor;
   background-color: black;
   overflow:hidden;//TLA
   text-align: start;
@@ -39,8 +32,9 @@ body::-webkit-scrollbar {display:none}
 // TLA:
 .mat-button:hover .mat-button-focus-overlay {opacity:0!important}
 
-button {cursor:pointer}//TLA
-
+button {
+  cursor: pointer;
+}
 
 .widget {
   display: block;

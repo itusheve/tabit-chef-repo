@@ -4,9 +4,7 @@
     	border-top: 1px solid #eee;
 	}
 
-	.offer-line {
-		font-weight: bold;
-	}
+	.offer-line {}
 	.item-line {
 		font-weight: normal;
 		.item-name {
@@ -20,10 +18,11 @@
 		width: 100%;
 	}
 
-	background-color: #fff;// url(/public/images/ticket-back.png) repeat-y top left;
+	background-color: #fff;
 	min-height: 200px;
 	font-family: "Courier New", Courier, monospace;
 	color: #000;
+	font-weight: bold;
 	border-radius: 4px;
 	border: 1px solid #ddd;
 	position: relative;
@@ -37,7 +36,7 @@
 		}
 	}
 
-	.ticket-box {		
+	.ticket-box {
 		padding: 11px 0;
 
 		h3 {
@@ -48,7 +47,7 @@
 
 		font-size: 14px;
 		&.common {
-			font-size: 18px;
+			font-size: 17px;
 		}
 
 
@@ -88,7 +87,7 @@
 		height: 8px;
 	}
 
-	.te {	
+	.te {
 		padding-top: 10px;
 
 		.fs-24 {
@@ -98,7 +97,7 @@
 		.fs-16 {
 			font-size: 14px;
 		}
-		
+
 		.text-bold {
 			font-weight: 600;
 		}

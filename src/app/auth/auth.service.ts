@@ -16,7 +16,7 @@ export class AuthService {
     private rosBaseUrl = environment.rosConfig.baseUrl;
 
     constructor(
-            private httpClient: HttpClient
+        private httpClient: HttpClient
     ) {}
 
     private authState = 0;//0: anon, 1: user mode, 2: org mode
