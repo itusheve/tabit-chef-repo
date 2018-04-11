@@ -1,3 +1,9 @@
+@import '../../../../tabit/styles/config/colors';
+
+:host {
+    box-shadow: none;//each panel has its own box-shadow
+}
+
 mat-expansion-panel-header {
     height: 41px!important;
     font-family: inherit!important;
@@ -9,12 +15,13 @@ mat-expansion-panel-header {
         border-bottom: 1px solid #eaeff0;
     }
     mat-panel-title {
-        color: #6e7482!important;
+        color: $fontColor!important;
         flex-grow: 0!important;
         width: 50px!important;
     }
     mat-panel-description {
         font-weight: normal!important;
+        color: $fontColor!important;
     }
 }
 
@@ -40,5 +47,5 @@ table tr td:first-child {
     padding: 6px;
     border: 1px solid #b3b6ca;
     border-radius: 25px;
-    color: #b3b6ca;
+    // color: #b3b6ca;
 }

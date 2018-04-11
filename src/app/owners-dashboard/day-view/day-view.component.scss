@@ -1,6 +1,10 @@
 @import '../../../tabit/styles/config/frame';
 
-// $stickyDayHeight: 30px;
+// :host {
+//     position: relative;//for the drill that is absolute positioned
+//     display: block;
+//     height: 100%;
+// }
 
 .widget {
     z-index: 1;
@@ -25,68 +29,20 @@
 
 }
 
-
-// app-day-selector {
-//     display:block!important;
-//     position:sticky!important;
-//     // position:fixed!important;
-//     top:0!important;
-//     left: 0!important;
-//     right: 0!important;
-//     height:50px!important;
-//     z-index: 10000!important;
-//     background-color: yellowgreen!important;
-// }
-
-// .app-day-selector {
-//     // display:block!important;
-//     position:sticky;
-
-//     // position: -webkit-sticky;
-//     // position:fixed!important;
-//     top:0!important;
-//     // left: 0!important;
-//     // right: 0!important;
-//     height:50px!important;
-//     z-index: 10000!important;
-//     background-color: yellowgreen!important;
-// }
-
-// .stickyDay {
-//     position: fixed;
-//     top: 0;
-//     left: 0;
-//     right: 0;
-//     margin: 0 auto;
-//     width: 300px;
-//     height: $stickyDayHeight;
-//     z-index: 100;
-// }
-
-// .stickyDayVisible {
-//     height: $stickyDayHeight;
-// }
-
 .drill {
+    z-index: 10000;
     position:fixed;
-    bottom:0;
-    right:0;
-    left:0;
-    // max-width: 800px;
-    margin: 0 auto;
-    height:100%;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding-top: $toolbarHeight;
+    @media #{$iphoneX-media-query} {
+        padding-top: $iphoneX-notch-px + $toolbarHeight;
+    }
     background-color: #edf1f2;
-    overflow-y:auto;overflow-x:hidden;
-    .header {
-            background-color: #414e5f;
-            color: #d4d7dc;
-            font-size: 18px;
-            height: 65px;
-            padding: 0 15px;
-    }
-    .body {
-        // padding: 15px;
-    }
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /deep/table {
@@ -98,8 +54,6 @@
 }
 
 /deep/.widget {
-    .title {
-    }
     .body {
         padding: 0px;
         & > table {

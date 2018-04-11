@@ -22,6 +22,7 @@
       "serviceWorker": false,
       "styles": [
         "../node_modules/bootstrap/dist/css/bootstrap-reboot.min.css",
+        "../node_modules/bootstrap/dist/css/bootstrap-grid.min.css",
         "../node_modules/devextreme/dist/css/dx.common.css",
         "../node_modules/devextreme/dist/css/dx.light.css",
         "styles.scss"

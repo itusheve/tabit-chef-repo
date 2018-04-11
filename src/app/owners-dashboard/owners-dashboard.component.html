@@ -2,16 +2,28 @@
 
   <mat-sidenav class="f-rtl" #sidenav mode="over">
     <div class="flex d-col header">
-      <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{userInitials}}</button>
-      <div class="mt10 mb10">{{user?.firstName}} {{user?.lastName}}</div>
-      <div>{{org?.name}}</div>
+      <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{this.sideNavConfig.header.userInitials}}</button>
+      <div class="mt10 mb10">{{this.sideNavConfig.header.user?.firstName}} {{this.sideNavConfig.header.user?.lastName}}</div>
+      <div>{{this.sideNavConfig.header.org?.name}}</div>
     </div>
     <div class="flex d-col content">
-      <mat-slide-toggle class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)" i18n="owners-dashboard|maam@@vat">VAT</mat-slide-toggle>
-      <button mat-raised-button [routerLink]="['/restaurants', { m: 's'}]">
+      <!-- <mat-slide-toggle *ngIf="this.sideNavConfig.content.showVatCb" class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)" i18n="owners-dashboard|maam@@vat">VAT</mat-slide-toggle> -->
+      <!-- [ngModel]="vat"  -->
+      <mat-checkbox
+        color="primary"
+        *ngIf="this.sideNavConfig.content.showVatCb"
+        [checked]="vat"
+        (change)="vatChange($event)"
+        [indeterminate]="false"
+        [align]="'start'"
+        [disabled]="false"
+        i18n="owners-dashboard|maam@@vat">
+        VAT
+      </mat-checkbox>
+      <button *ngIf="this.sideNavConfig.content.showMySitesBtn" mat-raised-button [routerLink]="['/restaurants', { m: 's'}]">
         <span i18n="owners-dashboard@@mySites">My Sites</span>
       </button>
-      <button mat-raised-button (click)="logout()">
+      <button *ngIf="this.sideNavConfig.content.showLogoutBtn" mat-raised-button (click)="logout()">
         <span i18n="owners-dashboard@@logout">Logout</span>
       </button>
     </div>
@@ -19,22 +31,20 @@
 
   <mat-sidenav-content>
     <div class="flex f-rtl j-sb a-center toolbar">
-      <div class="flex j-start" style="width:20%;">
+      <div class="flex j-start" style="width:20%;padding-right:15px;">
         <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
       </div>
-      <div class="flex d-col aj-center" style="width:80%;">
-        <div class="flex a-center" style="color:white">
-          <div>{{org?.name}}</div>
-          <button style="color: #c2c9d4;" mat-icon-button (click)="refresh()">
+      <div class="flex d-col aj-center" style="width:60%;">
+        <div class="flex a-center" style="color:white" (click)="refresh()">
+          <div>{{toolbarConfig.center.caption}}</div>
+          <button *ngIf="toolbarConfig.center.showRefresh" style="color: #c2c9d4;" mat-icon-button>
             <mat-icon>refresh</mat-icon>
           </button>
         </div>
         <div *ngIf="!vat" style="color:white;font-size:12px;">(<span i18n="owners-dashboard@@excludingVAT">Data excluding VAT</span>)</div>
       </div>
-      <div class="flex j-end" style="width:20%;">
-        <!-- <pre>{{router.routerState}}</pre> -->
-        <button mat-icon-button *ngIf="router.url != '/owners-dashboard/home'" routerLink="/owners-dashboard/home">
-        <!-- <button mat-icon-button *ngIf="router.url != '/owners-dashboard/home'" (click)="goBack()">         -->
+      <div class="flex j-end" style="width:20%;padding-left:15px;">
+        <button mat-icon-button *ngIf="toolbarConfig.left.back.showBtn" (click)="toolbarConfig.left.back.onGoBackClicked()">
           <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
       </div>

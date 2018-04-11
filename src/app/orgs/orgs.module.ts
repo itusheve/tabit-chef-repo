@@ -27,7 +27,6 @@ import {
   ],
   declarations: [
     OrgsComponent
-  ],
-  providers: []
+  ]
 })
 export class OrgsModule { }

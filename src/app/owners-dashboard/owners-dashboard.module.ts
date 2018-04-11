@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { OwnersDashboardComponent } from './owners-dashboard.component';
+import { OwnersDashboardService } from './owners-dashboard.service';
 import { OwnersDashboardCurrencyPipe, OwnersDashboardCountPipe, OwnersDashboardPercentPipe } from './owners-dashboard.pipes';
 
 import { HomeComponent } from './home/home.component';
@@ -43,7 +44,8 @@ import {
   MatCardModule,
   MatSlideToggleModule,
   MatExpansionModule,
-  MatTabsModule
+  MatTabsModule,
+  MatCheckboxModule
 } from '@angular/material';//material modules
 
 // import { locale, loadMessages } from 'devextreme/localization'; //https://github.com/DevExpress/devextreme-examples/tree/17_2/intl-angular
@@ -73,6 +75,7 @@ import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-tabl
     OwnersDashboardRoutingModule,
     MomentModule,
 
+    MatCheckboxModule,
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
@@ -135,6 +138,9 @@ import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-tabl
         OrderChequeRefundComponent,
         OrderCashRefundComponent,
       OrderDetailsComponent
+  ],
+  providers: [
+    OwnersDashboardService
   ]
 })
 export class OwnersDashboardModule { }

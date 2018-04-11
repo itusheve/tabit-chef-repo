@@ -6,6 +6,7 @@ import { Order } from '../../../tabit/model/Order.model';
 
 import { ClosedOrdersDataService } from '../../../tabit/data/dc/closedOrders.data.service';
 import ORDERS_VIEW from '../../../tabit/data/dc/closedOrders.data.service';
+import { OwnersDashboardService } from '../owners-dashboard.service';
 
 export interface SlipVM {
   id: number;
