@@ -12,7 +12,6 @@ import { environment } from '../environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { TokenInterceptor } from './auth/token.interceptor';
-import { AsyncLocalStorageModule } from 'angular-async-local-storage';
 
 import {
   MatFormFieldModule,
@@ -80,7 +79,6 @@ if (environment.tbtLocale==='he-IL') {
 
     MomentModule,
     BrowserAnimationsModule,
-    AsyncLocalStorageModule,
 
     //feature modules:
     OrgsModule,

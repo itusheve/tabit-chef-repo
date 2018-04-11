@@ -34,13 +34,13 @@ export class OrgsComponent implements OnInit {
     private router: Router
   ) {
 
-    this.dataService.user
+    this.dataService.user$
       .subscribe(user => {
         this.user = user;
         this.userInitials = (user.firstName ? user.firstName.substring(0, 1) : '?').toUpperCase() + (user.lastName ? user.lastName.substring(0, 1) : '').toUpperCase();
       });
 
-    this.dataService.organization
+    this.dataService.organization$
       .subscribe(org => {
         this.org = org;
       });

@@ -3,7 +3,6 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { AsyncLocalStorage } from 'angular-async-local-storage';
 import { JSONSchema } from 'angular-async-local-storage';
 
 import { User } from '../../tabit/model/User.model';
@@ -19,14 +18,18 @@ export class AuthService {
     private rosBaseUrl = environment.rosConfig.baseUrl;
 
     constructor(
-            private httpClient: HttpClient,
-            protected localStorage: AsyncLocalStorage
-            // private router: Router
+            private httpClient: HttpClient
     ) {}
 
     private authState = 0;//0: anon, 1: user mode, 2: org mode
 
     public authToken: string;
+
+    private clearLocalStorage() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('org');
+    }
 
     login(credentials): Promise<any> {
         return this.authenticate(credentials);
@@ -35,50 +38,29 @@ export class AuthService {
     selectOrg(org: any): Promise<any> {
         return new Promise((resolve, reject)=>{
             if (this.authState >= 1) {
+                const user = JSON.parse(localStorage.getItem('user'));
 
-
-                this.localStorage.getItem<any>('user')
-                    .subscribe(user=>{
-
-                        if (!user.isStaff) {
-                            let membership = user.memberships.find(m => {
-                                return m.organization === org.id && m.active;
-                            });
-                            if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1) {
-                                // not allowed
-                                reject('');
-                            }
-                        }
-
-                        this.httpClient.post(`${this.rosBaseUrl}Organizations/${org.id}/change`, {})
-                            .subscribe(org_=>{
-                                this.localStorage.setItem('org', org_).subscribe(() => {
-                                    this.authState = 2;
-                                    resolve();
-                                });
-                            });
+                if (!user.isStaff) {
+                    let membership = user.memberships.find(m => {
+                        return m.organization === org.id && m.active;
                     });
+                    if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1) {
+                        // not allowed
+                        reject('');
+                    }
+                }
 
-
-
+                this.httpClient.post(`${this.rosBaseUrl}Organizations/${org.id}/change`, {})
+                    .subscribe(org_=>{
+                        localStorage.setItem('org', JSON.stringify(org_));
+                        this.authState = 2;
+                        resolve();
+                    });
             } else {
                 reject();
             }
         });
     }
-
-    // switchOrg(org:any): Promise<any> {
-    //     return new Promise((resolve, reject) => {
-    //         if (this.authState >= 1) {
-    //             this.httpClient.post(`${this.rosBaseUrl}Organizations/${org.id}/change`, {})
-    //                 .subscribe(org_ => {
-    //                     this.localStorage.setItem('org', org_).subscribe(() => {
-    //                         resolve();
-    //                     });
-    //                 });
-    //         }
-    //     });
-    // }
 
     logout() {
         return this.unauthenticate();
@@ -108,26 +90,24 @@ export class AuthService {
                         }
                     ) => {
                         this.authToken = token.access_token;
-                        this.localStorage.setItem('token', token).subscribe(() => {
-                            this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
-                                .subscribe(
-                                    user=>{
-                                        this.localStorage.setItem('user', user).subscribe(() => {
-                                            this.authState = 1;
-                                            resolve();
-                                        });
-                                    },
-                                    e=>{
-                                        //reverse process upon error
-                                        this.authToken = undefined;
-                                        this.localStorage.clear().subscribe(() => {});
-                                        console.error(e);
-                                    },
-                                    ()=>{
-                                        //console.log('bla');
-                                    }
-                                );
-                        });
+                        localStorage.setItem('token', JSON.stringify(token));
+                        this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
+                            .subscribe(
+                                user=>{
+                                    localStorage.setItem('user', JSON.stringify(user));
+                                    this.authState = 1;
+                                    resolve();
+                                },
+                                e=>{
+                                    //reverse process upon error
+                                    this.authToken = undefined;
+                                    this.clearLocalStorage();
+                                    console.error(e);
+                                },
+                                ()=>{
+                                    //console.log('bla');
+                                }
+                            );
 
                     },
                     err => {
@@ -136,28 +116,20 @@ export class AuthService {
                 );
             } else {
                 //look for token, user and possibly an org
-                const data$ = zip(
-                    this.localStorage.getItem<any>('token'),
-                    this.localStorage.getItem<any>('user'),
-                    this.localStorage.getItem<any>('org')
-                    // (token: any, dailyData: any) => Object.assign({}, { shifts: shifts }, dailyData)
-                );
+                const token = JSON.parse(localStorage.getItem('token'));
+                const user = JSON.parse(localStorage.getItem('user'));
+                const org = JSON.parse(localStorage.getItem('org'));
 
-                data$.subscribe(data => {
-                    if (!!data[0] && !!data[1]) {
-                        this.authToken = data[0].access_token;
-                        if (!!data[2]) {
-                            this.authState = 2;
-                        } else {
-                            this.authState = 1;
-                        }
+                if (token && user) {
+                    this.authToken = token.access_token;
+                    if (org) {
+                        this.authState = 2;
+                    } else {
+                        this.authState = 1;
                     }
-                });
+                }
 
-
-                this.localStorage.getItem<any>('token').subscribe((token) => {
-                    resolve();
-                });
+                resolve();
             }
         });
     }
@@ -168,31 +140,28 @@ export class AuthService {
      */
     public refreshToken(): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.localStorage.getItem<any>('token')
-                .subscribe(token_=>{
-                    this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
-                        client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
-                        grant_type: 'refresh_token',
-                        refresh_token: token_.refresh_token
-                    })
-                        .subscribe((token: {
-                            access_token: string,
-                            refresh_token: string
-                        })=>{
-                            this.authToken = token.access_token;
-                            this.localStorage.setItem('token', token).subscribe(() => { });
-                            resolve(this.authToken);
-                        },err=>{
-                            reject(err);
-                        });
+            const token = JSON.parse(localStorage.getItem('token'));
+            this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
+                client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
+                grant_type: 'refresh_token',
+                refresh_token: token.refresh_token
+            })
+                .subscribe((token: {
+                    access_token: string,
+                    refresh_token: string
+                })=>{
+                    this.authToken = token.access_token;
+                    localStorage.setItem('token', JSON.stringify(token));
+                    resolve(this.authToken);
+                },err=>{
+                    reject(err);
                 });
         });
     }
 
     private unauthenticate(): Promise<any> {
         return new Promise((resolve, reject)=>{
-            // this.localStorage.removeItem('token').subscribe(() => { });
-            this.localStorage.clear().subscribe(() => { });
+            this.clearLocalStorage();
             this.authState = 0;
             this.authToken = undefined;
             resolve();
@@ -212,40 +181,10 @@ export class AuthService {
     }
 
     getAuthToken(ep: string): Subject<any> {
-        //return this.authToken;
         const subject = new Subject<any>();
-        // return new Promise((resolve, reject)=>{
-            this.localStorage.getItem<any>('token').subscribe((token) => {
-                // Called if data is valid or null
-                if (!token) throw Observable.throw({});
-                subject.next(token.access_token);
-                // next(token.access_token);
-            }, (error) => {
-                // Called if data is invalid
-                throw Observable.throw({});
-            });
-        // });
+        const token = JSON.parse(localStorage.getItem('token'));
+        if (!token) throw Observable.throw({});
+        subject.next(token.access_token);
         return subject;
     }
 }
-
-
-                        //this.localStorage.setItem('user', user).subscribe(() => { });
-                        //this.localStorage.removeItem('user').subscribe(() => {});
-                        //this.localStorage.clear().subscribe(() => {});
-                        // this.localStorage.getItem<User>('user').subscribe((user) => {
-                        //     user.firstName; // should be 'Henri'
-                        // });
-                        // const schema: JSONSchema = {
-                        //     properties: {
-                        //         firstName: { type: 'string' },
-                        //         lastName: { type: 'string' }
-                        //     },
-                        //     required: ['firstName', 'lastName']
-                        // };
-
-                        // this.localStorage.getItem<User>('user', { schema }).subscribe((user) => {
-                        //     // Called if data is valid or null
-                        // }, (error) => {
-                        //     // Called if data is invalid
-                        // });

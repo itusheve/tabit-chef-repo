@@ -41,13 +41,13 @@ export class OwnersDashboardService {
         private router: Router
     ) {
         const that = this;
-        dataService.user
+        dataService.user$
             .subscribe(user => {
                 this.sideNavConfig.header.user = user;
                 this.sideNavConfig.header.userInitials = (user.firstName ? user.firstName.substring(0, 1) : '?').toUpperCase() + (user.lastName ? user.lastName.substring(0, 1) : '').toUpperCase();
             });
 
-        dataService.organization
+        dataService.organization$
             .subscribe(org => {
                 this.toolbarConfig.center.caption = org.name;
                 this.sideNavConfig.header.org = org;

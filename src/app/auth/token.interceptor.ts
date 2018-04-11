@@ -17,36 +17,35 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/take';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AsyncLocalStorage } from 'angular-async-local-storage';
 
 @Injectable()
-export class TokenInterceptor implements HttpInterceptor {    
-    
+export class TokenInterceptor implements HttpInterceptor {
+
     private authService: AuthService;//https://github.com/angular/angular/issues/18224
 
-    constructor(private injector: Injector, protected localStorage: AsyncLocalStorage) { 
-        
+    constructor(private injector: Injector) {
+
     }
 
     isRefreshingToken = false;
     tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
     private addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
-        return req.clone({ 
-            setHeaders: { 
+        return req.clone({
+            setHeaders: {
                 Authorization: 'Bearer ' + token
-            } 
+            }
         });
     }
 
     //https://www.intertech.com/Blog/angular-4-tutorial-handling-refresh-token-with-new-httpinterceptor/
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
-        this.authService = this.injector.get(AuthService); 
-            
+        this.authService = this.injector.get(AuthService);
+
         if (request.url.indexOf('oauth2')>-1) return next.handle(request);
 
         const that = this;
-                    
+
         //to test the 401 behaviour:
         // let clonedReq = request.clone({
         //     setHeaders: {
@@ -54,13 +53,13 @@ export class TokenInterceptor implements HttpInterceptor {
         //     }
         // });
         // return next.handle(clonedReq)
-        
+
         return next.handle(that.addToken(request, that.authService.authToken))
             .catch(error => {
                 if (error instanceof HttpErrorResponse) {
                     switch ((<HttpErrorResponse>error).status) {
                         case 400:
-                            //TODO (general bad request the server couldnt understand)                                
+                            //TODO (general bad request the server couldnt understand)
                             console.error('Token Interceptor 400', request);
                             console.error(error);
                             return Observable.throw(error);
@@ -77,7 +76,7 @@ export class TokenInterceptor implements HttpInterceptor {
     handle401Error(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
         if (!this.isRefreshingToken) {
             this.isRefreshingToken = true;
-            
+
             // Reset here so that the following requests wait until the token
             // comes back from the refreshToken call.
             this.tokenSubject.next(null);
@@ -116,7 +115,7 @@ export class TokenInterceptor implements HttpInterceptor {
                 });
         }
     }
-    
+
     // handle400Error(req: HttpRequest<any>, next: HttpHandler) {
     //     if (!this.isRefreshingToken) {
     //         this.isRefreshingToken = true;
@@ -159,11 +158,11 @@ export class TokenInterceptor implements HttpInterceptor {
     //https://github.com/angular/angular/issues/18224
     // intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    //     this.authService = this.injector.get(AuthService); 
+    //     this.authService = this.injector.get(AuthService);
 
     //     //white list:
     //     if (request.url.indexOf('oauth2')>-1) return next.handle(request);
-        
+
     //     return this.authService.getAuthToken('ros').mergeMap(authToken=>{
     //             request = request.clone({
     //                 setHeaders: {

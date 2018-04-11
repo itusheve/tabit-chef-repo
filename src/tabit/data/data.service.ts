@@ -13,7 +13,6 @@ import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/share';
 
 //tools
-import { AsyncLocalStorage } from 'angular-async-local-storage';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import 'moment-timezone';
@@ -192,6 +191,23 @@ export class DataService {
     //             });
     //     }, 5000);
     // }).publishReplay(1).refCount();
+
+
+    /*
+        TBD
+    */
+    public organization$: Observable<any> = Observable.create(obs => {
+        obs.next(JSON.parse(localStorage.getItem('org')));
+    });
+
+    /*
+        TBD
+    */
+    public user$: Observable<any> = Observable.create(obs => {
+        obs.next(JSON.parse(localStorage.getItem('user')));
+    });
+
+
 
     public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';//'America/Chicago' / 'Asia/Jerusalem'
 
@@ -622,7 +638,7 @@ export class DataService {
     private businessDayKPI_cache: { [index: string]: BusinessDayKPI } = {};
 
     /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {}
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp) {}
 
     get currentBdData$(): Observable<KPI> {
         return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
@@ -639,19 +655,14 @@ export class DataService {
         if (this.organizations$) return this.organizations$;
         this.organizations$ = new ReplaySubject<any>();
 
-        const data$ = combineLatest(
-            this.localStorage.getItem<any>('user'),
-            fromPromise(this.rosEp.get('organizations', {})),
-            (user: any, orgs: any) => Object.assign({}, { user: user }, { orgs: orgs })
-        );
+        this.rosEp.get('organizations', {}).then(orgs => {
+            const filtered = orgs
+            .filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT')
+            .filter(o=>{
+                    const user = JSON.parse(localStorage.getItem('user'));
+                    if (user.isStaff) return true;
 
-        data$.subscribe(data => {
-            const filtered = data.orgs
-                .filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT')
-                .filter(o=>{
-                    if (data.user.isStaff) return true;
-
-                    let membership = data.user.memberships.find(m => {
+                    let membership = user.memberships.find(m => {
                         return m.organization === o.id && m.active;
                     });
                     if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1) {
@@ -664,14 +675,6 @@ export class DataService {
         });
 
         return this.organizations$;
-    }
-
-    get user(): Observable<any> {
-        return this.localStorage.getItem<any>('user');
-    }
-
-    get organization(): Observable<any> {
-        return this.localStorage.getItem<any>('org');
     }
 
     getMonthlyData(month: moment.Moment): Promise<any> {//TODO now that olapDataByMonths is available, use it? or is it too slow?

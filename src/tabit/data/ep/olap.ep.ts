@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AsyncLocalStorage } from 'angular-async-local-storage';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -34,18 +33,15 @@ export class OlapEp {
     private url$: ReplaySubject<any>;
 
     constructor(
-        private olapMappings: OlapMappings,
-        protected localStorage: AsyncLocalStorage
+        private olapMappings: OlapMappings
     ) {}
 
     get url(): ReplaySubject<any> {
         if (this.url$) return this.url$;
         this.url$ = new ReplaySubject<any>();
 
-        this.localStorage.getItem<any>('org')
-            .subscribe(org => {
-                this.url$.next(`${this.baseUrl}?customdata=S${org.id}`);
-            });
+        const org = JSON.parse(localStorage.getItem('org'));
+        this.url$.next(`${this.baseUrl}?customdata=S${org.id}`);
 
         return this.url$;
     }
