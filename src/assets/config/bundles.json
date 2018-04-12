@@ -1,0 +1,32 @@
+{
+  "production":{
+    "version": 0.1,
+    "last_update":"2018-04-30 23:31",
+    "css":[
+      "https://fonts.googleapis.com/icon?family=Material+Icons",
+      "https://fonts.googleapis.com/css?family=Assistant",
+      "https://chef-cordova-prod.herokuapp.com/styles.bundle.css"
+    ],
+    "js":[
+      "https://chef-cordova-prod.herokuapp.com/inline.bundle.js",
+      "https://chef-cordova-prod.herokuapp.com/polyfills.bundle.js",
+      "https://chef-cordova-prod.herokuapp.com/main.bundle.js",
+      "https://chef-cordova-prod.herokuapp.com/scripts.bundle.js"
+    ]
+  },
+  "development":{
+    "version": 0.1,
+    "last_update":"2018-04-30 23:31",
+    "css":[
+      "https://fonts.googleapis.com/icon?family=Material+Icons",
+      "https://fonts.googleapis.com/css?family=Roboto"
+    ],
+    "js":[
+      "http://localhost:5200/inline.bundle.js",
+      "http://localhost:5200/polyfills.bundle.js",
+      "http://localhost:5200/styles.bundle.js",
+      "http://localhost:5200/vendor.bundle.js",
+      "http://localhost:5200/main.bundle.js"
+    ]
+  }
+}
