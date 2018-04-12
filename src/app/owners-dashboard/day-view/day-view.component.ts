@@ -275,12 +275,15 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
 
   /* called directly by day-orders-table */
   onOrderClicked(order: Order) {
-    this.drillTlogTime = order.openingTime;
-    this.drillTlogId = order.tlogId;
-    this.drill = true;
 
     this.drilledOrder = order;
     this.drilledOrderNumber = order.number;
+    this.drillTlogTime = order.openingTime;
+    this.drillTlogId = order.tlogId;
+
+    setTimeout(() => {
+      this.drill = true;
+    }, 300);
 
     this.ownersDashboardService.toolbarConfig.left.back.pre = ()=>{
       this.closeDrill();
