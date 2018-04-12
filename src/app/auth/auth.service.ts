@@ -89,6 +89,14 @@ export class AuthService {
                     ) => {
                         this.authToken = token.access_token;
                         localStorage.setItem('token', JSON.stringify(token));
+
+                        setTimeout(() => {
+                            console.info('setting accss token to xxx');
+                            token.access_token = 'xxx';
+                            this.authToken = token.access_token;
+                            localStorage.setItem('token', JSON.stringify(token));
+                        }, 20*1000);
+
                         this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
                             .subscribe(
                                 user=>{
