@@ -10,8 +10,8 @@
     "js":[
       "https://chef-cordova-prod.herokuapp.com/inline.bundle.js",
       "https://chef-cordova-prod.herokuapp.com/polyfills.bundle.js",
-      "https://chef-cordova-prod.herokuapp.com/main.bundle.js",
-      "https://chef-cordova-prod.herokuapp.com/scripts.bundle.js"
+      "https://chef-cordova-prod.herokuapp.com/scripts.bundle.js",
+      "https://chef-cordova-prod.herokuapp.com/main.bundle.js"
     ]
   },
   "development":{
