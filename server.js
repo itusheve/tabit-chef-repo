@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const compress = require('compression');
 
@@ -29,6 +30,7 @@ app.use(compress({
     level: 9
 }));
 
+app.use(cors());
 // Run the app by serving the static files
 // in the dist directory
 app.use(express.static(__dirname + '/dist'));
