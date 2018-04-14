@@ -46,13 +46,8 @@ const bootstrap = () => {
 if (typeof window['cordova'] !== 'undefined') {
   document.addEventListener('deviceready', () => {
     bootstrap();
-
     // Hiding the Splash Screen
-    document.querySelector('#splash').classList.add('transition');
-    setTimeout(function() {
-      document.querySelector('#splash').remove();
-    }, 500);
-
+    document.querySelector('#splash').remove();
   }, false);
 } else {
   bootstrap();
