@@ -24,9 +24,9 @@ export class AuthService {
     public authToken: string;
 
     private clearLocalStorage() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        localStorage.removeItem('org');
+        window.localStorage.removeItem('token');
+        window.localStorage.removeItem('user');
+        window.localStorage.removeItem('org');
     }
 
     login(credentials): Promise<any> {
@@ -36,7 +36,7 @@ export class AuthService {
     selectOrg(org: any): Promise<any> {
         return new Promise((resolve, reject)=>{
             if (this.authState >= 1) {
-                const user = JSON.parse(localStorage.getItem('user'));
+                const user = JSON.parse(window.localStorage.getItem('user'));
 
                 if (!user.isStaff) {
                     let membership = user.memberships.find(m => {
@@ -50,7 +50,7 @@ export class AuthService {
 
                 this.httpClient.post(`${this.rosBaseUrl}Organizations/${org.id}/change`, {})
                     .subscribe(org_=>{
-                        localStorage.setItem('org', JSON.stringify(org_));
+                        window.localStorage.setItem('org', JSON.stringify(org_));
                         this.authState = 2;
                         resolve();
                     });
@@ -88,19 +88,19 @@ export class AuthService {
                         }
                     ) => {
                         this.authToken = token.access_token;
-                        localStorage.setItem('token', JSON.stringify(token));
+                        window.localStorage.setItem('token', JSON.stringify(token));
 
                         setTimeout(() => {
                             console.info('setting accss token to xxx');
                             token.access_token = 'xxx';
                             this.authToken = token.access_token;
-                            localStorage.setItem('token', JSON.stringify(token));
-                        }, 20*1000);
+                            window.localStorage.setItem('token', JSON.stringify(token));
+                        }, 10*1000);
 
                         this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
                             .subscribe(
                                 user=>{
-                                    localStorage.setItem('user', JSON.stringify(user));
+                                    window.localStorage.setItem('user', JSON.stringify(user));
                                     this.authState = 1;
                                     resolve();
                                 },
@@ -122,9 +122,9 @@ export class AuthService {
                 );
             } else {
                 //look for token, user and possibly an org
-                const token = JSON.parse(localStorage.getItem('token'));
-                const user = JSON.parse(localStorage.getItem('user'));
-                const org = JSON.parse(localStorage.getItem('org'));
+                const token = JSON.parse(window.localStorage.getItem('token'));
+                const user = JSON.parse(window.localStorage.getItem('user'));
+                const org = JSON.parse(window.localStorage.getItem('org'));
 
                 if (token && user) {
                     this.authToken = token.access_token;
@@ -146,7 +146,7 @@ export class AuthService {
      */
     public refreshToken(): Promise<string> {
         return new Promise((resolve, reject) => {
-            const token = JSON.parse(localStorage.getItem('token'));
+            const token = JSON.parse(window.localStorage.getItem('token'));
             this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
                 client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
                 grant_type: 'refresh_token',
@@ -157,7 +157,7 @@ export class AuthService {
                     refresh_token: string
                 })=>{
                     this.authToken = token.access_token;
-                    localStorage.setItem('token', JSON.stringify(token));
+                    window.localStorage.setItem('token', JSON.stringify(token));
                     resolve(this.authToken);
                 },err=>{
                     reject(err);
@@ -188,7 +188,7 @@ export class AuthService {
 
     getAuthToken(ep: string): Subject<any> {
         const subject = new Subject<any>();
-        const token = JSON.parse(localStorage.getItem('token'));
+        const token = JSON.parse(window.localStorage.getItem('token'));
         if (!token) throw Observable.throw({});
         subject.next(token.access_token);
         return subject;

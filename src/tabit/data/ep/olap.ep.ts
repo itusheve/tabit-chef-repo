@@ -40,7 +40,7 @@ export class OlapEp {
         if (this.url$) return this.url$;
         this.url$ = new ReplaySubject<any>();
 
-        const org = JSON.parse(localStorage.getItem('org'));
+        const org = JSON.parse(window.localStorage.getItem('org'));
         this.url$.next(`${this.baseUrl}?customdata=S${org.id}`);
 
         return this.url$;
