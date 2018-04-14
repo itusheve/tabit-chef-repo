@@ -1,4 +1,8 @@
 <div class="app">
-    <div style="position:fixed;/* top:0; */left:0;color:red;width: 100%;z-index: 1000000000000000000000;/* white-space: normal; */word-break: break-all;/* overflow: auto; *//* display: block; */text-align: left;padding: 5px;background-color: white;bottom: 0;">{{token}}</div>
+    <div style="position:fixed;/* top:0; */left:0;color:black;width: 100%;z-index: 1000000000000000000000;/* white-space: normal; */word-break: break-all;/* overflow: auto; *//* display: block; */text-align: left;padding: 5px;background-color: white;bottom: 0;">
+        <div class="mb10">{{token}}</div>
+        <div class="flex d-col mb5" *ngFor="let logEntry of logArr" [ngStyle]="{'color': logEntry.type==='error' ? 'red' : 'black'}">{{logEntry.message}}</div>
+    </div>
     <router-outlet></router-outlet>
 </div>
+

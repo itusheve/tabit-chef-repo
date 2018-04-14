@@ -7,6 +7,7 @@ import { User } from '../../tabit/model/User.model';
 import { Subject } from 'rxjs/Subject';
 import { zip } from 'rxjs/observable/zip';
 import { environment } from '../../environments/environment';
+import { DebugService } from '../debug.service';
 
 const loginUrl = 'oauth2/token';
 const meUrl = 'account/me';
@@ -16,7 +17,8 @@ export class AuthService {
     private rosBaseUrl = environment.rosConfig.baseUrl;
 
     constructor(
-        private httpClient: HttpClient
+        private httpClient: HttpClient,
+        private ds: DebugService
     ) {}
 
     private authState = 0;//0: anon, 1: user mode, 2: org mode
@@ -73,6 +75,8 @@ export class AuthService {
     private authenticate(credentials?): Promise<any> {
         return new Promise((resolve, reject)=>{
             if (credentials) {
+                this.ds.log('authSvc: authenticate: authenticating using credentials');
+
                 /* login attempt. get token & user, store locally and set authState to 1 (user mode) */
                 this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
                     client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
@@ -91,7 +95,8 @@ export class AuthService {
                         window.localStorage.setItem('token', JSON.stringify(token));
 
                         setTimeout(() => {
-                            console.info('setting accss token to xxx');
+                            // console.info('setting accss token to xxx');
+                            this.ds.log('authSvc: authenticate: setting access token to xxx');
                             token.access_token = 'xxx';
                             this.authToken = token.access_token;
                             window.localStorage.setItem('token', JSON.stringify(token));
@@ -108,7 +113,8 @@ export class AuthService {
                                     //reverse process upon error
                                     this.authToken = undefined;
                                     this.clearLocalStorage();
-                                    console.error(e);
+                                    // console.error(e);
+                                    this.ds.err(`authSvc: authenticate: get me failed: ${e}`);
                                 },
                                 ()=>{
                                     //console.log('bla');
@@ -121,6 +127,8 @@ export class AuthService {
                     }
                 );
             } else {
+                this.ds.log('authSvc: authenticate: authenticating from localStorage');
+
                 //look for token, user and possibly an org
                 const token = JSON.parse(window.localStorage.getItem('token'));
                 const user = JSON.parse(window.localStorage.getItem('user'));
@@ -146,6 +154,7 @@ export class AuthService {
      */
     public refreshToken(): Promise<string> {
         return new Promise((resolve, reject) => {
+            this.ds.log('authSvc: refreshToken: started');
             const token = JSON.parse(window.localStorage.getItem('token'));
             this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
                 client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
@@ -159,7 +168,9 @@ export class AuthService {
                     this.authToken = token.access_token;
                     window.localStorage.setItem('token', JSON.stringify(token));
                     resolve(this.authToken);
+                    this.ds.log('authSvc: refreshToken: success');
                 },err=>{
+                    this.ds.err('authSvc: refreshToken: fail' + err);
                     reject(err);
                 });
         });
@@ -189,6 +200,9 @@ export class AuthService {
     getAuthToken(ep: string): Subject<any> {
         const subject = new Subject<any>();
         const token = JSON.parse(window.localStorage.getItem('token'));
+        if (!token) {
+            this.ds.err('authSvc: getAuthToken: couldnt get token out of localStorage');
+        }
         if (!token) throw Observable.throw({});
         subject.next(token.access_token);
         return subject;

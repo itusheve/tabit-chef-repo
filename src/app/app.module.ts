@@ -52,6 +52,8 @@ import { AuthService } from './auth/auth.service';
 import { UserGuard } from './auth/user-guard.service';
 import { OrgGuard } from './auth/org-guard.service';
 
+import { DebugService } from './debug.service';
+
 //feature modules:
 import { OrgsModule } from './orgs/orgs.module';
 import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.module';
@@ -115,6 +117,7 @@ if (environment.tbtLocale==='he-IL') {
     AuthService,
     UserGuard,
     OrgGuard,
+    DebugService,
 
     // Utils:
     VisibilityService,

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DebugService } from './debug.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,13 @@ export class AppComponent implements OnInit {
 
   token = 'please hold';
 
-  constructor() {  }
+  logArr: {type: string, message: string}[];
+
+  constructor(
+    private ds: DebugService
+  ) {
+    this.logArr = ds.logArr;
+  }
 
   ngOnInit() {
     /* TLA: */
