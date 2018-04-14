@@ -15,6 +15,8 @@ import { Component, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   cordova = '';
 
+  token = 'please hold';
+
   constructor() {  }
 
   ngOnInit() {
@@ -34,6 +36,11 @@ export class AppComponent implements OnInit {
     } else {
       console.log('Cordova does NOT exist');
     }
+
+    const that = this;
+    setInterval(function(){
+      that.token = window.localStorage.getItem('token');
+    }, 1000);
   }
 }
 

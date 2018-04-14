@@ -197,14 +197,14 @@ export class DataService {
         TBD
     */
     public organization$: Observable<any> = Observable.create(obs => {
-        obs.next(JSON.parse(localStorage.getItem('org')));
+        obs.next(JSON.parse(window.localStorage.getItem('org')));
     });
 
     /*
         TBD
     */
     public user$: Observable<any> = Observable.create(obs => {
-        obs.next(JSON.parse(localStorage.getItem('user')));
+        obs.next(JSON.parse(window.localStorage.getItem('user')));
     });
 
 
@@ -659,7 +659,7 @@ export class DataService {
             const filtered = orgs
             .filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT')
             .filter(o=>{
-                    const user = JSON.parse(localStorage.getItem('user'));
+                    const user = JSON.parse(window.localStorage.getItem('user'));
                     if (user.isStaff) return true;
 
                     let membership = user.memberships.find(m => {
