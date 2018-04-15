@@ -18,12 +18,13 @@
 
   <script type="text/javascript">
         window.debugServiceLogArr = [];//arr for uncaught errors
-        window.addEventListener('error', function(e) {
-          window.debugServiceLogArr.push({type: 'error', message: e.message});
-          e.preventDefault();
-          e.stopPropagation();
-          return false;
-        });
+        // window.addEventListener('error', function(e) {
+        //   window.debugServiceLogArr.push({type: 'error', message: e.message});
+        //   if (e.message===`Uncaught TypeError: Cannot read property 'version' of undefined`) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        //   }
+        // });
   </script>
 
 </head>
