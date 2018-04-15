@@ -34,14 +34,14 @@
     position:absolute;
     top:0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     padding-top: $toolbarHeight;
     @media #{$iphoneX-media-query} {
         padding-top: $iphoneX-notch-px + $toolbarHeight;
     }
     background-color: #edf1f2;
-    overflow: auto;
+    overflow: hidden;
     // -webkit-overflow-scrolling: touch;This caused bad behaviour with the fixed order-view - on ios user was able to scroll to see the view beneath. removing this solved the problem, and momentum scrolling is still working on ios.
 }
 
