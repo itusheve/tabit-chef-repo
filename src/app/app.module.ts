@@ -144,6 +144,18 @@ if (environment.tbtLocale==='he-IL') {
 })
 export class AppModule {
 
-  constructor() {}
+  // constructor(
+  //   private ds: DebugService
+  // ) {
+  //   ds.log('appModule Constructor: setting access token to xxx in 10 seconds');
+  //   setTimeout(() => {
+  //     // console.info('setting accss token to xxx');
+  //     ds.log('appModule Constructor: setting access token to xxx');
+  //     const token = JSON.parse(window.localStorage.getItem('token'));
+  //     token.access_token = 'xxx';
+  //     this.authToken = token.access_token;
+  //     window.localStorage.setItem('token', JSON.stringify(token));
+  //   }, 10 * 1000);
+  // }
 
 }
