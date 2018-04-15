@@ -15,6 +15,17 @@
 
   <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <script type="text/javascript">
+        window.debugServiceLogArr = [];//arr for uncaught errors
+        window.addEventListener('error', function(e) {
+          window.debugServiceLogArr.push({type: 'error', message: e.message});
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        });
+  </script>
+
 </head>
 <body>
   <app-root></app-root>

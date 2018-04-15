@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { ROSEp } from '../ep/ros.ep';
 
 import * as _ from 'lodash';
+import { DebugService } from '../../../app/debug.service';
 
 @Injectable()
 export class OffersDataService {
@@ -23,7 +24,7 @@ export class OffersDataService {
                     .keyBy('_id')
                     .value();
 
-
+                this.ds.log('offersDS: fetching: done');
                 obs.next({
                     offersRaw: offersRaw,
                     bundlesRaw: bundlesRaw
@@ -32,11 +33,13 @@ export class OffersDataService {
     }).publishReplay(1).refCount();
 
     constructor(
-        private rosEp: ROSEp
+        private rosEp: ROSEp,
+        private ds: DebugService
     ) {
 
         //lets cache!
         setTimeout(() => {
+            this.ds.log('offersDS: fetching');
             this.offers$.subscribe(data => {});
         }, Math.random() * 8000 + 5000);
     }

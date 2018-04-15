@@ -21,6 +21,7 @@ import { ROSEp } from '../ep/ros.ep';
 // import { CurrencyPipe } from '@angular/common';
 import { User } from '../../model/User.model';
 import { environment } from '../../../environments/environment';
+import { DebugService } from '../../../app/debug.service';
 
 //declare var OrdersViewService: any;
 
@@ -666,7 +667,8 @@ export class ClosedOrdersDataService {
         private peripheralsDataService: PeripheralsDataService,
         private promotionsDataService: PromotionsDataService,
         private tablesDataService: TablesDataService,
-        private dataService: DataService
+        private dataService: DataService,
+        private ds: DebugService
     ) {
 
         this.orderViewService = new OrderViewService({
@@ -1634,6 +1636,7 @@ export class ClosedOrdersDataService {
         }
 
         function getLookupData() {
+            that.ds.log('closedOrdersDS: getLookupData');
             return new Promise((resolve, reject) => {
                 zip(
                     // that.categoriesDataService.categories$,
@@ -1661,6 +1664,7 @@ export class ClosedOrdersDataService {
                         promotionsData: promotionsData
                     }))
                     .subscribe(data => {
+                        that.ds.log('closedOrdersDS: getLookupData: done');
                         resolve(data);
                     });
             });
@@ -1675,8 +1679,10 @@ export class ClosedOrdersDataService {
         }
 
         let printData;
+        that.ds.log('closedOrdersDS: getLookupData: get tlog, lookupdata, billdata');
         return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])
             .then(data => {
+                that.ds.log('closedOrdersDS: getLookupData: get tlog, lookupdata, billdata: done');
                 const tlog: any = data[0];
                 const lookupData: any = data[1];
                 const billData: any = data[2];
