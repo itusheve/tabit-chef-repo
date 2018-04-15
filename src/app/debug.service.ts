@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class DebugService {
 
-    logArr: { type: string, message: string }[] = (<any>window).debugServiceLogArr;
+    logArr: { type: string, message: string }[];
 
     log(message) {
         console.log(message);
@@ -20,6 +20,18 @@ export class DebugService {
     }
 
     constructor() {
+
+        (<any>window).debugServiceLogArr = [];//arr for uncaught errors
+        (<any>window).addEventListener('error', function (e) {
+            (<any>window).debugServiceLogArr.push({ type: 'error', message: e.message });
+            if (e.message === `Uncaught TypeError: Cannot read property 'version' of undefined`) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+
+        this.logArr = (<any>window).debugServiceLogArr;
+
 
         // window.onerror = function(msg, url, lineNumber) {
         //     debugger;

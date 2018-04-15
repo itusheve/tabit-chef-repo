@@ -142,4 +142,8 @@ if (environment.tbtLocale==='he-IL') {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+  constructor() {}
+
+}
