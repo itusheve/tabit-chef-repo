@@ -14,7 +14,7 @@
     padding-top: $secondaryToolbarHeight;
     app-day-selector {
         &.daySelectorFixed {
-            position: fixed;
+            position: absolute;
             top: $toolbarHeight;
             @media #{$iphoneX-media-query} {
                 top: $iphoneX-notch-px + $toolbarHeight;
@@ -31,7 +31,7 @@
 
 .drill {
     z-index: 10000;
-    position:fixed;
+    position:absolute;
     top:0;
     left: 0;
     width: 100%;

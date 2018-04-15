@@ -5,9 +5,9 @@ mat-sidenav-container {
     // TLA:
     // height:100vh;
 
-    position:fixed;
-    top:0;
-    left:0;
+    // position:fixed;
+    // top:0;
+    // left:0;
     width:100vw;
     height:100vh;
     overflow:hidden;
@@ -43,7 +43,7 @@ mat-sidenav-container {
     }
 
     mat-sidenav-content {
-        position: fixed!important;
+        position: absolute!important;
         top: 0!important;
         left: 0!important;
         width: 100vw!important;
@@ -53,7 +53,7 @@ mat-sidenav-container {
         // display: flex!important;
 
         .toolbar {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100vw;
@@ -76,7 +76,7 @@ mat-sidenav-container {
             }
         }
         .contentFixed {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100vw;
