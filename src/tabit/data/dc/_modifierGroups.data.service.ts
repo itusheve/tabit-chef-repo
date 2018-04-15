@@ -35,9 +35,9 @@ export class ModifierGroupsDataService {
     ) {
 
         //lets cache!
-        setTimeout(() => {
-            this.modifierGroups$.subscribe(data => { });
-        }, Math.random() * 8000 + 5000);
+        // setTimeout(() => {
+        //     this.modifierGroups$.subscribe(data => { });
+        // }, Math.random() * 8000 + 5000);
     }
 
 }

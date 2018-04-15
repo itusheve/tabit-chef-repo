@@ -1,16 +1,16 @@
 {
   "production":{
-    "version": 11,
+    "version": 12,
     "css":[
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Assistant",
-      "https://chef-cordova-prod.herokuapp.com/styles.bundle.css?v=11"
+      "https://chef-cordova-prod.herokuapp.com/styles.bundle.css?v=12"
     ],
     "js":[
-      "https://chef-cordova-prod.herokuapp.com/inline.bundle.js?v=11",
-      "https://chef-cordova-prod.herokuapp.com/polyfills.bundle.js?v=11",
-      "https://chef-cordova-prod.herokuapp.com/scripts.bundle.js?v=11",
-      "https://chef-cordova-prod.herokuapp.com/main.bundle.js?v=11"
+      "https://chef-cordova-prod.herokuapp.com/inline.bundle.js?v=12",
+      "https://chef-cordova-prod.herokuapp.com/polyfills.bundle.js?v=12",
+      "https://chef-cordova-prod.herokuapp.com/scripts.bundle.js?v=12",
+      "https://chef-cordova-prod.herokuapp.com/main.bundle.js?v=12"
     ]
   },
   "development":{
