@@ -1672,15 +1672,17 @@ export class ClosedOrdersDataService {
         }
 
         function getTlog(order: Order) {
+            that.ds.log('closedOrdersDS: getTlog');
             return that.rosEp.get(`tlogs/${order.tlogId}`, {});
         }
 
         function getBillData(order: Order) {
+            that.ds.log('closedOrdersDS: getBillData');
             return that.rosEp.get(`tlogs/${order.tlogId}/bill`, {});
         }
 
         let printData;
-        that.ds.log('closedOrdersDS: getLookupData: get tlog, lookupdata, billdata');
+        that.ds.log('closedOrdersDS: enrichOrder: Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])');
         return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])
             .then(data => {
                 that.ds.log('closedOrdersDS: getLookupData: get tlog, lookupdata, billdata: done');

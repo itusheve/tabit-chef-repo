@@ -10,6 +10,7 @@ export class ItemsDataService {
 
     */
     public items$: Observable<any> = new Observable(obs => {
+        this.ds.log('itemsDS: fetching');
         this.rosEp.get('items', {})
             .then((itemsRaw: {}[]) => {
                 this.ds.log('itemsDS: fetching: done');

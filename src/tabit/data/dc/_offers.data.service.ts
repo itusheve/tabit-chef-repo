@@ -12,6 +12,7 @@ export class OffersDataService {
 
     */
     public offers$: Observable<any> = new Observable(obs => {
+        this.ds.log('offersDS: fetching');
         this.rosEp.get('offers', {})
             .then((offersRaw: {}[]) => {
 

@@ -11,6 +11,7 @@ export class PromotionsDataService {
     */
 
     public promotions$: Observable<any> = new Observable(obs => {
+        this.ds.log('promotionsDS: fetching');
         this.rosEp.get('promotions', {})
             .then((promotionsRaw: {}[]) => {
                 this.ds.log('promotionsDS: fetching: done');

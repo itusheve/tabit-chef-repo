@@ -14,6 +14,7 @@ export class UsersDataService {
     */
     public users$: Observable<any> = new Observable(obs => {
 
+        this.ds.log('usersDS: fetching');
         let that = this;
 
         zip(
