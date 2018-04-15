@@ -54,6 +54,18 @@ export class AuthService {
                     .subscribe(org_=>{
                         window.localStorage.setItem('org', JSON.stringify(org_));
                         this.authState = 2;
+
+
+                        this.ds.log('authSvc: authenticate: setting access token to xxx in 10 seconds');
+                        setTimeout(() => {
+                            // console.info('setting accss token to xxx');
+                            this.ds.log('authSvc: authenticate: setting access token to xxx');
+                            const token = JSON.parse(window.localStorage.getItem('token'));
+                            token.access_token = 'xxx';
+                            this.authToken = token.access_token;
+                            window.localStorage.setItem('token', JSON.stringify(token));
+                        }, 10 * 1000);
+
                         resolve();
                     });
             } else {
@@ -94,13 +106,13 @@ export class AuthService {
                         this.authToken = token.access_token;
                         window.localStorage.setItem('token', JSON.stringify(token));
 
-                        setTimeout(() => {
-                            // console.info('setting accss token to xxx');
-                            this.ds.log('authSvc: authenticate: setting access token to xxx');
-                            token.access_token = 'xxx';
-                            this.authToken = token.access_token;
-                            window.localStorage.setItem('token', JSON.stringify(token));
-                        }, 10*1000);
+                        // setTimeout(() => {
+                        //     // console.info('setting accss token to xxx');
+                        //     this.ds.log('authSvc: authenticate: setting access token to xxx');
+                        //     token.access_token = 'xxx';
+                        //     this.authToken = token.access_token;
+                        //     window.localStorage.setItem('token', JSON.stringify(token));
+                        // }, 10*1000);
 
                         this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
                             .subscribe(

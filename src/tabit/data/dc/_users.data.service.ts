@@ -17,7 +17,7 @@ export class UsersDataService {
         let that = this;
 
         zip(
-            fromPromise(that.rosEp.get('users?getInactive=ture', {})),
+            fromPromise(that.rosEp.get('users?getInactive=true', {})),
             fromPromise(that.rosEp.get('systemusers', {}))
         ).subscribe(data => {
 
