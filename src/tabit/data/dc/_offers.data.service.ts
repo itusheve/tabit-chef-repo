@@ -38,10 +38,10 @@ export class OffersDataService {
     ) {
 
         //lets cache!
-        setTimeout(() => {
-            this.ds.log('offersDS: fetching');
-            this.offers$.subscribe(data => {});
-        }, Math.random() * 8000 + 5000);
+        // setTimeout(() => {
+        //     this.ds.log('offersDS: fetching');
+        //     this.offers$.subscribe(data => {});
+        // }, Math.random() * 8000 + 5000);
     }
 
 }

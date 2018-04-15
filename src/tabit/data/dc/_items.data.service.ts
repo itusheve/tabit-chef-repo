@@ -25,10 +25,10 @@ export class ItemsDataService {
     ) {
 
         //lets cache!
-        setTimeout(() => {
-            this.ds.log('itemsDS: fetching');
-            this.items$.subscribe(data => { });
-        }, Math.random() * 8000 + 5000);
+        // setTimeout(() => {
+        //     this.ds.log('itemsDS: fetching');
+        //     this.items$.subscribe(data => { });
+        // }, Math.random() * 8000 + 5000);
     }
 
 }

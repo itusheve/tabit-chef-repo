@@ -38,11 +38,11 @@ export class UsersDataService {
         private ds: DebugService
     ) {
 
-        //lets cache!
-        setTimeout(() => {
-            this.ds.log('usersDS: fetching');
-            this.users$.subscribe(data => { });
-        }, Math.random() * 8000 + 5000);
+        // //lets cache!
+        // setTimeout(() => {
+        //     this.ds.log('usersDS: fetching');
+        //     this.users$.subscribe(data => { });
+        // }, Math.random() * 8000 + 5000);
     }
 
 }
