@@ -60,18 +60,23 @@ export class TokenInterceptor implements HttpInterceptor {
 
         return next.handle(that.addToken(request, that.authService.authToken))
             .catch(error => {
+                this.ds.log(`tokenInterceptor: intercept: catched error`);
                 if (error instanceof HttpErrorResponse) {
+                    this.ds.log(`tokenInterceptor: intercept: catched error (1)`);
                     switch ((<HttpErrorResponse>error).status) {
                         case 400:
                             //TODO (general bad request the server couldnt understand)
-                            console.error('Token Interceptor 400', request);
-                            console.error(error);
+                            this.ds.err(`tokenInterceptor: intercept: catched error (1): 400 ${JSON.stringify(request)}`);
+                            // console.error('Token Interceptor 400', request);
+                            // console.error(error);
                             return Observable.throw(error);
                         // return this.handle400Error(request, next);
                         case 401:
+                            this.ds.log(`tokenInterceptor: intercept: catched error (1): 401`);
                             return that.handle401Error(request, next);
                     }
                 } else {
+                    this.ds.err(`tokenInterceptor: intercept: catched error (2)`);
                     return Observable.throw(error);
                 }
             });
