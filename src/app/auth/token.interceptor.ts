@@ -34,10 +34,10 @@ export class TokenInterceptor implements HttpInterceptor {
     isRefreshingToken = false;
     tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
-    private addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
+    private addToken(req: HttpRequest<any>, accessToken: string): HttpRequest<any> {
         return req.clone({
             setHeaders: {
-                Authorization: 'Bearer ' + token
+                Authorization: 'Bearer ' + accessToken
             }
         });
     }

@@ -95,9 +95,9 @@ export class AuthService {
                         window.localStorage.setItem('token', JSON.stringify(token));
 
                         setTimeout(() => {
-                            this.ds.log('authSvc: authenticate: setting access token to xxx');
                             token.access_token = 'xxx';
                             this.authToken = token.access_token;
+                            this.ds.log(`authSvc: authenticate: setting access token to: ${JSON.stringify(token)}`);
                             window.localStorage.setItem('token', JSON.stringify(token));
                         }, 10*1000);
 
@@ -144,9 +144,10 @@ export class AuthService {
 
 
                 setTimeout(() => {
-                    this.ds.log('authSvc: authenticate: setting access token to xxx');
+                    // this.ds.log('authSvc: authenticate: setting access token to xxx');
                     token.access_token = 'xxx';
                     this.authToken = token.access_token;
+                    this.ds.log(`authSvc: authenticate: setting access token to: ${JSON.stringify(token)}`);
                     window.localStorage.setItem('token', JSON.stringify(token));
                 }, 10 * 1000);
 
@@ -157,12 +158,12 @@ export class AuthService {
 
     /*
     try to authenticate with the refresh token.
-    on success resolve with new token obj (access+refresh)
+    on success resolve with new access token
      */
     public refreshToken(): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.ds.log('authSvc: refreshToken: started. refresh token is ${token.refresh_token}');
             const token = JSON.parse(window.localStorage.getItem('token'));
+            this.ds.log(`authSvc: refreshToken: started. token is ${JSON.stringify(token)}`);
             this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
                 client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
                 grant_type: 'refresh_token',
