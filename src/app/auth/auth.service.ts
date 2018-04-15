@@ -54,18 +54,6 @@ export class AuthService {
                     .subscribe(org_=>{
                         window.localStorage.setItem('org', JSON.stringify(org_));
                         this.authState = 2;
-
-
-                        // this.ds.log('authSvc: authenticate: setting access token to xxx in 10 seconds');
-                        // setTimeout(() => {
-                        //     // console.info('setting accss token to xxx');
-                        //     this.ds.log('authSvc: authenticate: setting access token to xxx');
-                        //     const token = JSON.parse(window.localStorage.getItem('token'));
-                        //     token.access_token = 'xxx';
-                        //     this.authToken = token.access_token;
-                        //     window.localStorage.setItem('token', JSON.stringify(token));
-                        // }, 10 * 1000);
-
                         resolve();
                     });
             } else {
@@ -173,7 +161,7 @@ export class AuthService {
      */
     public refreshToken(): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.ds.log('authSvc: refreshToken: started');
+            this.ds.log('authSvc: refreshToken: started. refresh token is ${token.refresh_token}');
             const token = JSON.parse(window.localStorage.getItem('token'));
             this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
                 client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
@@ -189,7 +177,7 @@ export class AuthService {
                     resolve(this.authToken);
                     this.ds.log('authSvc: refreshToken: success');
                 },err=>{
-                    this.ds.err('authSvc: refreshToken: fail' + err);
+                    this.ds.err('authSvc: refreshToken: fail: ' + JSON.stringify(err));
                     reject(err);
                 });
         });
