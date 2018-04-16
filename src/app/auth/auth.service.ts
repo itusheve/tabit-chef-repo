@@ -94,12 +94,12 @@ export class AuthService {
                         this.authToken = token.access_token;
                         window.localStorage.setItem('token', JSON.stringify(token));
 
-                        setTimeout(() => {
-                            token.access_token = 'xxx';
-                            this.authToken = token.access_token;
-                            this.ds.log(`authSvc: authenticate: setting access token to: ${JSON.stringify(token)}`);
-                            window.localStorage.setItem('token', JSON.stringify(token));
-                        }, 10*1000);
+                        // setTimeout(() => {
+                        //     token.access_token = 'xxx';
+                        //     this.authToken = token.access_token;
+                        //     this.ds.log(`authSvc: authenticate: setting access token to: ${JSON.stringify(token)}`);
+                        //     window.localStorage.setItem('token', JSON.stringify(token));
+                        // }, 10*1000);
 
                         this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
                             .subscribe(
@@ -142,16 +142,27 @@ export class AuthService {
                     }
                 }
 
+                if (!token) {
+                    resolve();
+                    return;
+                }
 
-                setTimeout(() => {
-                    // this.ds.log('authSvc: authenticate: setting access token to xxx');
-                    token.access_token = 'xxx';
-                    this.authToken = token.access_token;
-                    this.ds.log(`authSvc: authenticate: setting access token to: ${JSON.stringify(token)}`);
-                    window.localStorage.setItem('token', JSON.stringify(token));
-                }, 10 * 1000);
+                this.ds.log('authSvc: authenticate: refreshing token (to try and solve the problem)');
+                this.refreshToken()
+                    .then(()=>{
+                        this.ds.log('authSvc: authenticate: refreshing token: done');
+                        resolve();
+                    });
 
-                resolve();
+
+                // setTimeout(() => {
+                //     token.access_token = 'xxx';
+                //     this.authToken = token.access_token;
+                //     this.ds.log(`authSvc: authenticate: setting access token to: ${JSON.stringify(token)}`);
+                //     window.localStorage.setItem('token', JSON.stringify(token));
+                // }, 10 * 1000);
+
+                // resolve();
             }
         });
     }

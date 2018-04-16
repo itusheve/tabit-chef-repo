@@ -95,14 +95,12 @@ export class TokenInterceptor implements HttpInterceptor {
 
             return Observable.create(sub=>{
                 return this.authService.refreshToken()
-                    .then((newToken: string) => {
-                        if (newToken) {
+                    .then((newAccessToken: string) => {
+                        if (newAccessToken) {
                             this.ds.log(`tokenInterceptor: handle401Error: got new token`);
-                            this.tokenSubject.next(newToken);
-                            //return next.handle(this.addToken(req, newToken));
-                            sub.next(newToken);
+                            this.tokenSubject.next(newAccessToken);
+                            sub.next(newAccessToken);
                         } else {
-                            // console.error('handle401Error: error 1');
                             this.ds.err(`tokenInterceptor: handle401Error: failed getting new token (1)`);
                             // If we don't get a new token, we are in trouble so logout.
                             this.isRefreshingToken = false;
@@ -124,70 +122,13 @@ export class TokenInterceptor implements HttpInterceptor {
         } else {
             this.ds.log(`tokenInterceptor: handle401Error: this.isRefreshingToken, waiting for new token`);
             return this.tokenSubject
-                .filter(token => token != null)
+                .filter(accessToken => accessToken != null)
                 .take(1)
-                .switchMap(token => {
+                .switchMap(accessToken => {
                     this.ds.log(`tokenInterceptor: handle401Error: this.isRefreshingToken, new token arrived, firing call`);
-                    return next.handle(this.addToken(req, token));
+                    return next.handle(this.addToken(req, accessToken));
                 });
         }
     }
 
-    // handle400Error(req: HttpRequest<any>, next: HttpHandler) {
-    //     if (!this.isRefreshingToken) {
-    //         this.isRefreshingToken = true;
-
-    //         // Reset here so that the following requests wait until the token
-    //         // comes back from the refreshToken call.
-    //         this.tokenSubject.next(null);
-
-    //         return this.authService.refreshToken()
-    //             .then((newToken: string) => {
-    //                 if (newToken) {
-    //                     this.tokenSubject.next(newToken);
-    //                     return next.handle(this.addToken(req, newToken));
-    //                 }
-    //                 // If we don't get a new token, we are in trouble so logout.
-    //                 this.isRefreshingToken = false;
-    //                 return this.authService.logout();
-    //             })
-    //             .catch(error => {
-    //                 // If there is an exception calling 'refreshToken', bad news so logout.
-    //                 this.isRefreshingToken = false;
-    //                 return this.authService.logout();
-    //             });
-    //     } else {
-    //         return this.tokenSubject
-    //             .filter(token => token != null)
-    //             .take(1)
-    //             .switchMap(token => {
-    //                 return next.handle(this.addToken(req, token));
-    //             });
-    //     }
-    // }
-
 }
-
-    // private authService: AuthService;//https://github.com/angular/angular/issues/18224
-
-    // constructor(private injector: Injector) { }//https://github.com/angular/angular/issues/18224
-
-    //https://github.com/angular/angular/issues/18224
-    // intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    //     this.authService = this.injector.get(AuthService);
-
-    //     //white list:
-    //     if (request.url.indexOf('oauth2')>-1) return next.handle(request);
-
-    //     return this.authService.getAuthToken('ros').mergeMap(authToken=>{
-    //             request = request.clone({
-    //                 setHeaders: {
-    //                     Authorization: `Bearer ${authToken}`
-    //                 }
-    //             });
-    //             return next.handle(request);
-    //         });
-
-//     }
-// }
