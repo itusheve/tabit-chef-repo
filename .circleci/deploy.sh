@@ -24,6 +24,7 @@ elif [[ "$CIRCLE_BRANCH" == "master" ]]; then
   echo "On master branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "ecs-dev" ]]; then
   npm install --ignore-scripts
+  npm rebuild node-sass
   ng build --aot --env=prod-il --target=production --output-hashing=none --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he
   chmod +x _s3/s3-push-dev.sh
   S3_BUCKET="us-chef.tabit-dev.com" _s3/s3-push-dev.sh
