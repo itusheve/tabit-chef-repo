@@ -33,7 +33,6 @@ export class AppComponent implements OnInit {
     this.cordova = window['cordova'];
     if (typeof window['cordova'] !== 'undefined') {
       console.log('Cordova exists');
-      document.querySelector('#splash').remove();
     } else {
       console.log('Cordova does NOT exist');
     }
