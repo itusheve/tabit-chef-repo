@@ -1,0 +1,102 @@
+version: 2
+
+defaults: &defaults
+  docker:
+    # Run this build in the Docker image created from the Dockerfile in this folder. This Dockerfile installs all of
+    # our build dependencies.
+    - image: 075139435924.dkr.ecr.eu-west-1.amazonaws.com/chef:v1
+      # These env vars should be set on the CircleCi website, in the settings page for this build. They should be the
+      # access keys for an IAM machine user.
+      aws_auth:
+        aws_access_key_id: $AWS_ACCESS_KEY_ID
+        aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+  environment:
+    - DOCKER_IMAGE: "075139435924.dkr.ecr.eu-west-1.amazonaws.com/chef"
+  working_directory: ~/chef
+
+jobs:
+  checkout_code:
+   <<: *defaults
+   steps:
+     - checkout
+     - save_cache:
+         key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+         paths:
+           - ~/chef
+
+  build:
+    <<: *defaults
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - setup_remote_docker:
+          version: 17.05.0-ce
+          docker_layer_caching: true
+      - run: chmod +x .circleci/build.sh
+
+
+  test:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - setup_remote_docker:
+          version: 17.05.0-ce
+          docker_layer_caching: true
+
+  deploy:
+    <<: *defaults
+    steps:
+      - run:
+          name: Avoid hosts unknown for github
+          command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - setup_remote_docker:
+          version: 17.05.0-ce
+          docker_layer_caching: true
+      # Try to cache the Terraform providers: https://github.com/hashicorp/terraform/issues/16448
+      - restore_cache:
+          key: terraform-providers
+      - run: chmod +x .circleci/deploy.sh
+      - run: chmod +x _s3/s3-push-us-prod.sh
+      - run: .circleci/deploy.sh
+      # Try to cache the Terraform providers: https://github.com/hashicorp/terraform/issues/16448
+      - save_cache:
+          key: terraform-providers
+          paths:
+            - ~/.terraform.d/plugin-cache
+
+workflows:
+  version: 2
+  build_test_and_deploy:
+    jobs:
+      - checkout_code:
+          # We have to explicitly tell CircleCi to run on all tags and branches, or tag commits/pushes will not trigger
+          # builds: https://circleci.com/docs/2.0/workflows/#git-tag-job-execution.
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /.*/
+      - build:
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /.*/
+          requires:
+            - checkout_code
+
+      - deploy:
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /.*/
+          requires:
+            - build
