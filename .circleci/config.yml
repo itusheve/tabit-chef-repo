@@ -63,7 +63,6 @@ jobs:
       - restore_cache:
           key: terraform-providers
       - run: chmod +x .circleci/deploy.sh
-      - run: chmod +x _s3/s3-push-us-prod.sh
       - run: .circleci/deploy.sh
       # Try to cache the Terraform providers: https://github.com/hashicorp/terraform/issues/16448
       - save_cache:
