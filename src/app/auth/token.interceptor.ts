@@ -17,23 +17,27 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/take';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { DebugService } from '../debug.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
     private authService: AuthService;//https://github.com/angular/angular/issues/18224
 
-    constructor(private injector: Injector) {
+    constructor(
+        private injector: Injector,
+        private ds: DebugService
+    ) {
 
     }
 
     isRefreshingToken = false;
     tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
-    private addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
+    private addToken(req: HttpRequest<any>, accessToken: string): HttpRequest<any> {
         return req.clone({
             setHeaders: {
-                Authorization: 'Bearer ' + token
+                Authorization: 'Bearer ' + accessToken
             }
         });
     }
@@ -56,25 +60,33 @@ export class TokenInterceptor implements HttpInterceptor {
 
         return next.handle(that.addToken(request, that.authService.authToken))
             .catch(error => {
+                this.ds.log(`tokenInterceptor: intercept: catched error`);
                 if (error instanceof HttpErrorResponse) {
+                    this.ds.log(`tokenInterceptor: intercept: catched error (1)`);
                     switch ((<HttpErrorResponse>error).status) {
                         case 400:
                             //TODO (general bad request the server couldnt understand)
-                            console.error('Token Interceptor 400', request);
-                            console.error(error);
+                            this.ds.err(`tokenInterceptor: intercept: catched error (1): 400 ${JSON.stringify(request)}`);
+                            // console.error('Token Interceptor 400', request);
+                            // console.error(error);
                             return Observable.throw(error);
                         // return this.handle400Error(request, next);
                         case 401:
+                            this.ds.log(`tokenInterceptor: intercept: catched error (1): 401`);
                             return that.handle401Error(request, next);
                     }
                 } else {
+                    this.ds.err(`tokenInterceptor: intercept: catched error (2)`);
                     return Observable.throw(error);
                 }
             });
     }
 
     handle401Error(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
+        this.ds.log(`tokenInterceptor: handle401Error`);
         if (!this.isRefreshingToken) {
+            this.ds.log(`tokenInterceptor: handle401Error: !this.isRefreshingToken`);
+
             this.isRefreshingToken = true;
 
             // Reset here so that the following requests wait until the token
@@ -83,13 +95,13 @@ export class TokenInterceptor implements HttpInterceptor {
 
             return Observable.create(sub=>{
                 return this.authService.refreshToken()
-                    .then((newToken: string) => {
-                        if (newToken) {
-                            this.tokenSubject.next(newToken);
-                            //return next.handle(this.addToken(req, newToken));
-                            sub.next(newToken);
+                    .then((newAccessToken: string) => {
+                        if (newAccessToken) {
+                            this.ds.log(`tokenInterceptor: handle401Error: got new token`);
+                            this.tokenSubject.next(newAccessToken);
+                            sub.next(newAccessToken);
                         } else {
-                            console.error('handle401Error: error 1');
+                            this.ds.err(`tokenInterceptor: handle401Error: failed getting new token (1)`);
                             // If we don't get a new token, we are in trouble so logout.
                             this.isRefreshingToken = false;
                             return this.authService.logout();
@@ -97,7 +109,8 @@ export class TokenInterceptor implements HttpInterceptor {
                     })
                     .catch(error => {
                         // If there is an exception calling 'refreshToken', bad news so logout.
-                        console.error('handle401Error: error 2: couldnt regenerate access token', error);
+                        // console.error('handle401Error: error 2: couldnt regenerate access token', error);
+                        this.ds.err(`tokenInterceptor: handle401Error: failed getting new token (2)`);
                         this.isRefreshingToken = false;
                         return this.authService.logout();
                     });
@@ -107,70 +120,15 @@ export class TokenInterceptor implements HttpInterceptor {
                     return next.handle(this.addToken(req, token));
                 });
         } else {
+            this.ds.log(`tokenInterceptor: handle401Error: this.isRefreshingToken, waiting for new token`);
             return this.tokenSubject
-                .filter(token => token != null)
+                .filter(accessToken => accessToken != null)
                 .take(1)
-                .switchMap(token => {
-                    return next.handle(this.addToken(req, token));
+                .switchMap(accessToken => {
+                    this.ds.log(`tokenInterceptor: handle401Error: this.isRefreshingToken, new token arrived, firing call`);
+                    return next.handle(this.addToken(req, accessToken));
                 });
         }
     }
 
-    // handle400Error(req: HttpRequest<any>, next: HttpHandler) {
-    //     if (!this.isRefreshingToken) {
-    //         this.isRefreshingToken = true;
-
-    //         // Reset here so that the following requests wait until the token
-    //         // comes back from the refreshToken call.
-    //         this.tokenSubject.next(null);
-
-    //         return this.authService.refreshToken()
-    //             .then((newToken: string) => {
-    //                 if (newToken) {
-    //                     this.tokenSubject.next(newToken);
-    //                     return next.handle(this.addToken(req, newToken));
-    //                 }
-    //                 // If we don't get a new token, we are in trouble so logout.
-    //                 this.isRefreshingToken = false;
-    //                 return this.authService.logout();
-    //             })
-    //             .catch(error => {
-    //                 // If there is an exception calling 'refreshToken', bad news so logout.
-    //                 this.isRefreshingToken = false;
-    //                 return this.authService.logout();
-    //             });
-    //     } else {
-    //         return this.tokenSubject
-    //             .filter(token => token != null)
-    //             .take(1)
-    //             .switchMap(token => {
-    //                 return next.handle(this.addToken(req, token));
-    //             });
-    //     }
-    // }
-
 }
-
-    // private authService: AuthService;//https://github.com/angular/angular/issues/18224
-
-    // constructor(private injector: Injector) { }//https://github.com/angular/angular/issues/18224
-
-    //https://github.com/angular/angular/issues/18224
-    // intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    //     this.authService = this.injector.get(AuthService);
-
-    //     //white list:
-    //     if (request.url.indexOf('oauth2')>-1) return next.handle(request);
-
-    //     return this.authService.getAuthToken('ros').mergeMap(authToken=>{
-    //             request = request.clone({
-    //                 setHeaders: {
-    //                     Authorization: `Bearer ${authToken}`
-    //                 }
-    //             });
-    //             return next.handle(request);
-    //         });
-
-//     }
-// }

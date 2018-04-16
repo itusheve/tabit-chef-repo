@@ -5,12 +5,17 @@ import { AuthService } from '../../../app/auth/auth.service';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { environment } from '../../../environments/environment';
+import { DebugService } from '../../../app/debug.service';
 
 @Injectable()
 export class ROSEp {
     private rosBaseUrl = environment.rosConfig.baseUrl;
 
-    constructor(private httpClient: HttpClient, private authService: AuthService) {}
+    constructor(
+        private httpClient: HttpClient,
+        private authService: AuthService,
+        private ds: DebugService
+    ) {}
 
     get(url, params): Promise<any> {
         return new Promise((resolve, reject)=>{
@@ -21,7 +26,8 @@ export class ROSEp {
                     (results: any)=>{
                         resolve(results);
                     },
-                    ()=>{
+                    (err)=>{
+                        this.ds.err(`ROSEp: ${JSON.stringify(err)}`);
                     },
                     ()=>{}
                 );
@@ -34,6 +40,9 @@ export class ROSEp {
                 .subscribe(
                     (results: any)=>{
                         resolve(results);
+                    },
+                    (err) => {
+                        this.ds.err(`ROSEp: ${JSON.stringify(err)}`);
                     }
                 );
         });

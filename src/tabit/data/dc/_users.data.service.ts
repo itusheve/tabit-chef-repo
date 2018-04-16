@@ -4,6 +4,7 @@ import { ROSEp } from '../ep/ros.ep';
 
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { zip } from 'rxjs/observable/zip';
+import { DebugService } from '../../../app/debug.service';
 
 @Injectable()
 export class UsersDataService {
@@ -13,10 +14,11 @@ export class UsersDataService {
     */
     public users$: Observable<any> = new Observable(obs => {
 
+        this.ds.log('usersDS: fetching');
         let that = this;
 
         zip(
-            fromPromise(that.rosEp.get('users?getInactive=ture', {})),
+            fromPromise(that.rosEp.get('users?getInactive=true', {})),
             fromPromise(that.rosEp.get('systemusers', {}))
         ).subscribe(data => {
 
@@ -24,6 +26,7 @@ export class UsersDataService {
             let systemusers = data[1];
             let result = allusers.concat(systemusers);
 
+            this.ds.log('usersDS: fetching: done');
             obs.next({
                 usersRaw: result
             });
@@ -32,13 +35,15 @@ export class UsersDataService {
     }).publishReplay(1).refCount();
 
     constructor(
-        private rosEp: ROSEp
+        private rosEp: ROSEp,
+        private ds: DebugService
     ) {
 
-        //lets cache!
-        setTimeout(() => {
-            this.users$.subscribe(data => { });
-        }, Math.random() * 8000 + 5000);
+        // //lets cache!
+        // setTimeout(() => {
+        //     this.ds.log('usersDS: fetching');
+        //     this.users$.subscribe(data => { });
+        // }, Math.random() * 8000 + 5000);
     }
 
 }

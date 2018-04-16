@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DataService } from '../../tabit/data/data.service';
 import { Router } from '@angular/router';
+import { DebugService } from '../debug.service';
 
 @Injectable()
 export class OwnersDashboardService {
@@ -38,8 +39,16 @@ export class OwnersDashboardService {
 
     constructor(
         private dataService: DataService,
-        private router: Router
+        private router: Router,
+        private ds: DebugService
     ) {
+        document.addEventListener('backbutton', function(e) {
+            ds.log('event: back button pressed');
+            e.preventDefault();
+            e.stopPropagation();
+            that.toolbarConfig.left.back.onGoBackClicked();
+        });
+
         const that = this;
         dataService.user$
             .subscribe(user => {
