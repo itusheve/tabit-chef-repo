@@ -1,0 +1,102 @@
+<div class="ticket-box flex d-col">
+
+    <div class="flex j-sb">
+        <span i18n="slips@@TransactionType">Transaction Type</span>
+        <span *ngIf="data.TRANS_TYPE">{{data.TRANS_TYPE}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <span i18n="slips@@CardType">Card Type</span>
+        <span *ngIf="data.CARD_TYPE">{{data.CARD_TYPE}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <span i18n="slips@@CardNumber">CARD NO</span>
+        <span ng-if="data.CARD_NUMBER_MASKED">{{data.CARD_NUMBER_MASKED}}</span>
+        <span ng-if="!data.CARD_NUMBER_MASKED">XXXX-{{data.LAST_4}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <span i18n="slips@@CardHolder">Card Holder</span>
+        <span *ngIf="data.CUSTOMER_NAME">{{data.CUSTOMER_NAME}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <span i18n="slips@@DateOrTime">Date/Time</span>
+        <span *ngIf="data.PROVIDER_PAYMENT_DATE">{{data.PROVIDER_PAYMENT_DATE | date : 'dd/MM/yyyy HH:mm'}}</span>
+    </div>
+
+    <hr />
+
+    <div class="flex j-sb">
+        <span i18n="slips@@Merchant">Merchant</span>
+        <span *ngIf="data.MERCHANT_NUMBER">{{data.MERCHANT_NUMBER}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <span i18n="slips@@Sequence">Sequence</span>
+        <span *ngIf="data.PROVIDER_TRANS_ID">{{data.PROVIDER_TRANS_ID}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <span i18n="slips@@Response">Response</span>
+        <span *ngIf="data.PROVIDER_RESPONSE_CODE&&data.PROVIDER_RESPONSE_MESSAGE">{{data.PROVIDER_RESPONSE_CODE}}/{{data.PROVIDER_RESPONSE_MESSAGE}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <span i18n="slips@@Approval">Approval</span>
+        <span *ngIf="data.CONFIRMATION_NUMBER">{{data.CONFIRMATION_NUMBER}}</span>
+    </div>
+
+    <div class="flex j-sb">
+        <span i18n="slips@@Entry">Entry</span>
+        <span *ngIf="data.ENTRY_METHOD">{{data.ENTRY_METHOD}}</span>
+    </div>
+
+    <hr />
+
+</div>
+
+<div class="clearfix">
+    <div class="row">
+        <div class="col-md-8">
+            <span>{{'OrderBillPopup.CheckTotal' | translate}}: </span>
+        </div>
+        <div class="col-md-3">
+            <span class="pull-right flip">{{$ctrl.selectedPayment.P_AMOUNT_WO_TIP | number:2}}</span>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix">
+    <div class="row">
+        <div class="col-md-8">
+            <span>{{'OrderBillPopup.Tip' | translate}}: </span>
+        </div>
+        <div class="col-md-3">
+            <span class="pull-right flip">{{$ctrl.selectedPayment.TIP_AMOUNT | number:2}}</span>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix">
+    <div class="row">
+        <div class="col-md-8">
+            <span>{{'OrderBillPopup.Total' | translate}}: </span>
+        </div>
+        <div class="col-md-3">
+            <span class="pull-right flip">{{$ctrl.selectedPayment.P_AMOUNT | number:2}}</span>
+        </div>
+    </div>
+</div>
+
+<div id="signatureContainer" class="row">
+    <div ng-show="$ctrl.orderOption.data.signature.show" class="m-t">
+        <tbt-signature data="$ctrl.orderOption.data.signature" print-mode="false"></tbt-signature>
+    </div>
+</div>
+
+
+<div class="m-t-md">
+    <button class="btn btn-dark btn-block" print-data call="$ctrl.printSlipCopy" tpl="modulesNew/Tabit/UI/OrderBillView/OrderBillPopup/Templates/SlipTemplate.tplt.html">{{ 'OrderBillPopup.PrintCopy' | translate }}</button>
+</div>
