@@ -26,8 +26,9 @@ elif [[ "$CIRCLE_BRANCH" == "ecs-dev" ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
   ng build --aot --env=prod-il --target=production --output-hashing=none --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he
-  chmod +x _s3/s3-push-dev.sh
-  S3_BUCKET="chef.tabit-dev.com" _s3/s3-push-dev.sh
+  IAM_ROLE_ARN="arn:aws:iam::101444535047:role/allow-auto-deploy-from-other-accounts"
+  chmod +x _s3/s3-push.sh
+  S3_BUCKET="chef.tabit-dev.com" _s3/s3-push.sh
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "us-production-rp" ]]; then
   npm rebuild node-sass
