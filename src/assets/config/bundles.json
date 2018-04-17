@@ -1,31 +1,28 @@
 {
   "production":{
-    "version": 14,
-    "css":[
+    "version": 0.9,
+    "last_update":"2018-04-30 23:31",
+    "bundles":[
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Assistant",
-      "https://chef-cordova-prod.herokuapp.com/styles.bundle.css?v=14"
-    ],
-    "js":[
-      "https://chef-cordova-prod.herokuapp.com/inline.bundle.js?v=14",
-      "https://chef-cordova-prod.herokuapp.com/polyfills.bundle.js?v=14",
-      "https://chef-cordova-prod.herokuapp.com/scripts.bundle.js?v=14",
-      "https://chef-cordova-prod.herokuapp.com/main.bundle.js?v=14"
+      "https://chef-cordova-prod.herokuapp.com/styles.bundle.css",
+      "https://chef-cordova-prod.herokuapp.com/inline.bundle.js",
+      "https://chef-cordova-prod.herokuapp.com/polyfills.bundle.js",
+      "https://chef-cordova-prod.herokuapp.com/scripts.bundle.js",
+      "https://chef-cordova-prod.herokuapp.com/main.bundle.js"
     ]
   },
   "development":{
-    "version": 4,
-    "css":[
+    "version": 0.9,
+    "last_update":"2018-04-30 23:31",
+    "bundles":[
       "https://fonts.googleapis.com/icon?family=Material+Icons",
-      "https://fonts.googleapis.com/css?family=Roboto"
-    ],
-    "js":[
-      "http://10.100.10.48:8080/inline.bundle.js?v=4",
-      "http://10.100.10.48:8080/polyfills.bundle.js?v=4",
-      "http://10.100.10.48:8080/styles.bundle.js?v=4",
-      "http://10.100.10.48:8080/scripts.bundle.js?v=4",
-      "http://10.100.10.48:8080/vendor.bundle.js?v=4",
-      "http://10.100.10.48:8080/main.bundle.js?v=4"
+      "https://fonts.googleapis.com/css?family=Roboto",
+      "http://192.168.1.10:8080/styles.bundle.css",
+      "http://192.168.1.10:8080/inline.bundle.js",
+      "http://192.168.1.10:8080/polyfills.bundle.js",
+      "http://192.168.1.10:8080/scripts.bundle.js",
+      "http://192.168.1.10:8080/main.bundle.js"
     ]
   }
 }
