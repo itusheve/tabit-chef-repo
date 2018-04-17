@@ -20,7 +20,7 @@
     "build-us": "ng build --aot --env=prod-us --target=production",
     "cordova-il": "ng build --target=production --aot --env=prod-il --output-hashing=none --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he",
     "cordova-us": "ng build --target=production --aot --env=prod-us --output-hashing=none",
-    "serve-ipad-oren": "ng serve --aot --live-reload=false",
+    "serve-ipad-oren": "ng serve --aot --live-reload=false --disable-host-check --host=0.0.0.0 --port=5200 --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he",
     "serve-ipad": "ng serve --aot --disable-host-check --host=0.0.0.0 --env=dev-il --live-reload=false --port=8080 --output-hashing=none --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he"
   },
   "private": true,

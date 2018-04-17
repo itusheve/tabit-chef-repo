@@ -1,8 +1,8 @@
 <div class="app">
-    <div style="position:fixed;left:0;width: 100%;z-index: 100000000000000000;word-break: break-all;text-align: left;padding: 5px;background-color: white;bottom: 0;max-height: 150px;overflow: auto;">
+    <!-- <div style="position:fixed;left:0;width: 100%;z-index: 100000000000000000;word-break: break-all;text-align: left;padding: 5px;background-color: white;bottom: 0;max-height: 150px;overflow: auto;">
         <div class="mb10">{{token}}</div>
         <div class="flex d-col mb5" *ngFor="let logEntry of logArr" [ngStyle]="{'color': logEntry.type==='error' ? 'red' : 'black'}">{{logEntry.message}}</div>
-    </div>
+    </div> -->
     <router-outlet></router-outlet>
 </div>
 
