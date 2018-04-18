@@ -29,74 +29,67 @@
     <hr />
 
     <div class="flex j-sb">
-        <span i18n="slips@@Merchant">Merchant</span>
+        <span i18n="slips@@Merchant">Merchant Code.</span>
         <span *ngIf="data.MERCHANT_NUMBER">{{data.MERCHANT_NUMBER}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@Sequence">Sequence</span>
+        <span i18n="slips@@Sequence">Sequence No.</span>
         <span *ngIf="data.PROVIDER_TRANS_ID">{{data.PROVIDER_TRANS_ID}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@Response">Response</span>
+        <span i18n="slips@@Response">Response Code.</span>
         <span *ngIf="data.PROVIDER_RESPONSE_CODE&&data.PROVIDER_RESPONSE_MESSAGE">{{data.PROVIDER_RESPONSE_CODE}}/{{data.PROVIDER_RESPONSE_MESSAGE}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@Approval">Approval</span>
+        <span i18n="slips@@Approval">Approval No.</span>
         <span *ngIf="data.CONFIRMATION_NUMBER">{{data.CONFIRMATION_NUMBER}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@Entry">Entry</span>
+        <span i18n="slips@@Entry">Entry Method</span>
         <span *ngIf="data.ENTRY_METHOD">{{data.ENTRY_METHOD}}</span>
     </div>
 
     <hr />
 
-</div>
+    <div class="flex j-sb">
+        <span i18n="slips@@CheckTotal">Check Total</span>
+        <span *ngIf="data.ENTRY_METHOD">
+            <span class="negative">{{data.P_AMOUNT_WO_TIP | number:'1.2-2'}}</span>
+        </span>
+    </div>
 
-<div class="clearfix">
-    <div class="row">
-        <div class="col-md-8">
-            <span>{{'OrderBillPopup.CheckTotal' | translate}}: </span>
-        </div>
-        <div class="col-md-3">
-            <span class="pull-right flip">{{$ctrl.selectedPayment.P_AMOUNT_WO_TIP | number:2}}</span>
+    <div class="flex j-sb">
+        <span i18n="slips@@Tip">Tip</span>
+        <span *ngIf="data.TIP_AMOUNT">
+            <span class="negative">{{data.TIP_AMOUNT | number:'1.2-2'}}</span>
+        </span>
+    </div>
+
+    <div class="flex j-sb">
+        <span i18n="slips@@Total">Total</span>
+        <span *ngIf="data.P_AMOUNT">
+            <span class="negative">{{data.P_AMOUNT | number:'1.2-2'}}</span>
+        </span>
+    </div>
+
+    <div class="flex j-sb">
+        <div *ngIf="data.signature.show">
+
+            <app-signature [data]="data.signature.data" [printMode]="false"></app-signature>
+
+            <!-- <tbt-signature data="$ctrl.orderOption.data.signature" print-mode="false"></tbt-signature> -->
         </div>
     </div>
-</div>
 
-<div class="clearfix">
-    <div class="row">
-        <div class="col-md-8">
-            <span>{{'OrderBillPopup.Tip' | translate}}: </span>
+    <!-- <div id="signatureContainer" class="row">
+        <div ng-show="data.signature.show" class="m-t">
+            signature
+          <tbt-signature data="$ctrl.orderOption.data.signature" print-mode="false"></tbt-signature> 
         </div>
-        <div class="col-md-3">
-            <span class="pull-right flip">{{$ctrl.selectedPayment.TIP_AMOUNT | number:2}}</span>
-        </div>
-    </div>
-</div>
+    </div>-->
 
-<div class="clearfix">
-    <div class="row">
-        <div class="col-md-8">
-            <span>{{'OrderBillPopup.Total' | translate}}: </span>
-        </div>
-        <div class="col-md-3">
-            <span class="pull-right flip">{{$ctrl.selectedPayment.P_AMOUNT | number:2}}</span>
-        </div>
-    </div>
-</div>
-
-<div id="signatureContainer" class="row">
-    <div ng-show="$ctrl.orderOption.data.signature.show" class="m-t">
-        <tbt-signature data="$ctrl.orderOption.data.signature" print-mode="false"></tbt-signature>
-    </div>
-</div>
-
-
-<div class="m-t-md">
-    <button class="btn btn-dark btn-block" print-data call="$ctrl.printSlipCopy" tpl="modulesNew/Tabit/UI/OrderBillView/OrderBillPopup/Templates/SlipTemplate.tplt.html">{{ 'OrderBillPopup.PrintCopy' | translate }}</button>
 </div>

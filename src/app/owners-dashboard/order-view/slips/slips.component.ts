@@ -77,12 +77,13 @@ export class OrderSlipsComponent implements OnInit {
         this.orderOld.ChecksDetails.forEach(check => {
           this.slips.push({
             id: i,
-            class: 'checkDetails',
+            class: 'check',
             data: { printData: check },
             caption: `Check #${check.variables.CHECK_NO}`
           });
-        });
+          
         i++;
+        });
       }
 
       this.printDataOld.collections.PAYMENT_LIST.forEach(payment => {
@@ -97,17 +98,35 @@ export class OrderSlipsComponent implements OnInit {
         //   });
         // }
 
+
+
         let title = 'Credit Slip'; //tmpTranslations.get('OrderBillPopup.CreditSlip');
         if (payment.P_TENDER_TYPE === 'creditCard') {
+
+          if (payment.SIGNATURE_CAPTURED) {
+            let paymentData = this.orderOld.payments.find(c => c._id === payment.P_ID);
+            let signatureData = paymentData.customerSignature;
+            let signatureView = {
+              view: 'signature',
+              show: true,
+              data: signatureData.data,
+              format: signatureData.format
+            }
+
+            payment.signature = signatureView;
+          }
+
+
           payment.PAYMENT_NUMBER = `${this.orderOld.number}/${payment.NUMBER}`;
           this.slips.push({
             id: i,
             class: 'invoice',
-            subclass: 'credit',
+            subclass: 'credit-slip',
             data: payment,
             caption: `${title} - ${payment.PAYMENT_NUMBER}`
           });
           i++;
+
         }
       });
 
@@ -216,6 +235,9 @@ export class OrderSlipsComponent implements OnInit {
 
   change(slipId) {
     this.slip = this.slips.find(s => s.id === slipId);
+
+    console.log(this.slip.data);
+
   }
 
 }

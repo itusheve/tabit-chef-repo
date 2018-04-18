@@ -1,0 +1,18 @@
+.Signature {
+ 
+    .signature-container {
+        border-radius: 4px;
+        background-color: #f7f7f7;
+    }
+
+    .print-module .order-print{
+        .signature-line {
+            height: 1px;
+            background-color: gray !important;
+            width: 600px;
+            margin: auto;
+            margin-bottom: 10px;
+        }
+    }
+
+}
