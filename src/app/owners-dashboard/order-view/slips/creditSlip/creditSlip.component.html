@@ -77,19 +77,11 @@
     </div>
 
     <div class="flex j-sb">
-        <div *ngIf="data.signature.show">
+        <div *ngIf="data.signature.show" style="width: 100%;">
 
             <app-signature [data]="data.signature.data" [printMode]="false"></app-signature>
 
-            <!-- <tbt-signature data="$ctrl.orderOption.data.signature" print-mode="false"></tbt-signature> -->
         </div>
     </div>
-
-    <!-- <div id="signatureContainer" class="row">
-        <div ng-show="data.signature.show" class="m-t">
-            signature
-          <tbt-signature data="$ctrl.orderOption.data.signature" print-mode="false"></tbt-signature> 
-        </div>
-    </div>-->
 
 </div>

@@ -677,9 +677,8 @@ export class ClosedOrdersDataService {
         private dataService: DataService
     ) {
 
-        const isUS = environment.region === 'us' ? true : false,//controls behaviour
+        const isUS = environment.region === 'us' ? true : false //controls behaviour
 
-        debugger;
         this.orderViewService = new OrderViewService({
             local: environment.tbtLocale,//controls translations, accepts 'he-IL' / 'en-US'
             isUS: environment.region === 'us' ? true : false,//controls behaviour
@@ -1744,7 +1743,6 @@ export class ClosedOrdersDataService {
                             .then(result => {
                                 resultOrder.ChecksDetails = [];
                                 result.forEach(printCheck => {
-                                    debugger;
                                     let _checkBill = that.orderViewService.Bill.resolveBillCheck(printCheck);
                                     if (_checkBill) {
                                         resultOrder.ChecksDetails.push(_checkBill);

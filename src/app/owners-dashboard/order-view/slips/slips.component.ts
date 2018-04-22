@@ -49,8 +49,6 @@ export class OrderSlipsComponent implements OnInit {
     });
     i++;
 
-    console.log(this.orderOld);
-
     if (this.orderOld.clubMembers.length) {
       this.slips.push({
         id: i,
@@ -61,14 +59,6 @@ export class OrderSlipsComponent implements OnInit {
       });
       i++;
     }
-
-    debugger;
-    // $ctrl.signature = {
-    //   show: false
-    // }
-    // $ctrl.svg = {};
-
-
 
     if (this.isUS) {//TODO! US is not treated nor tested!
 
@@ -88,19 +78,7 @@ export class OrderSlipsComponent implements OnInit {
 
       this.printDataOld.collections.PAYMENT_LIST.forEach(payment => {
 
-        // let title = $translate.instant('OrderBillPopup.CreditSlip');
-        // if (payment.P_TENDER_TYPE === 'creditCard') {
-        //   payment.PAYMENT_NUMBER = `${$ctrl.selectedOrder.number}/${payment.NUMBER}`;
-        //   $ctrl.orderOptions.push({
-        //     view: 'CreditCardSlip',
-        //     data: payment,
-        //     text: `${title} - ${payment.PAYMENT_NUMBER}`
-        //   });
-        // }
-
-
-
-        let title = 'Credit Slip'; //tmpTranslations.get('OrderBillPopup.CreditSlip');
+        let title = 'Credit Slip'; 
         if (payment.P_TENDER_TYPE === 'creditCard') {
 
           if (payment.SIGNATURE_CAPTURED) {
@@ -235,8 +213,6 @@ export class OrderSlipsComponent implements OnInit {
 
   change(slipId) {
     this.slip = this.slips.find(s => s.id === slipId);
-
-    console.log(this.slip.data);
 
   }
 

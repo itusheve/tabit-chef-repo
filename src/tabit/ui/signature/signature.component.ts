@@ -1,50 +1,41 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { Component, Input, OnChanges, ElementRef, SimpleChanges } from '@angular/core';
 
 @Component({
     selector: 'app-signature',
     templateUrl: 'signature.component.html',
+    styleUrls: ['./signature.component.scss']
 })
 
-export class SignatureComponent {
+export class SignatureComponent implements OnChanges {
 
     @Input() data: any;
     @Input() printMode: boolean;
 
     element: any;
 
-    html: any;
-
-    constructor(elm: ElementRef) {
-        debugger;
+    constructor(
+        elm: ElementRef, ) {
         this.element = elm;
     }
 
-    ngOnInit() {
 
-        debugger;
+    ngOnChanges(o: SimpleChanges) {
+
+        let elementSVG = this.element.nativeElement.getElementsByTagName('svg');
+
+        try {
+            elementSVG.svg.childNodes[1].remove();
+        } catch (error) {
+
+        }
 
         if (this.data) {
 
-            debugger;
             let elementSVG = this.element.nativeElement.getElementsByTagName('svg');
-            let elementParent = this.element.nativeElement.parentElement.parentElement;
-            let widthsignatureContenier = elementParent.clientWidth;
-            widthsignatureContenier = "100%";
-            if (this.printMode) {
-                widthsignatureContenier = "100%";
-            }
 
-            var path = this.makeSVG('path', { d: this.data, stroke: "#06067f", 'stroke-width': "2", 'stroke-linecap': "butt", fill: "none", 'stroke-linejoin': "miter" });
-            // elementSVG.html("");
-            // elementSVG.append(path);
-            // elementSVG.width(widthsignatureContenier);
-            elementSVG.svg.insertAdjacentElement(this.element.nativeElement, path);
-            // elementSVG[0].outerHTML = path;
-            //elementSVG[0].clientWidth = widthsignatureContenier;
+            let path = this.makeSVG('path', { d: this.data, stroke: "#06067f", 'stroke-width': "2", 'stroke-linecap': "butt", fill: "none", 'stroke-linejoin': "miter" });
 
-            this.element.nativeElement.insertAdjacentElement(elementSVG);
-
-            //this.html = elementSVG;
+            elementSVG.svg.appendChild(path);
         }
 
     }
