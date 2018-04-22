@@ -16,10 +16,11 @@
     "bundles":[
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Roboto",
-      "http://10.100.10.48:5200/styles.bundle.css",
       "http://10.100.10.48:5200/inline.bundle.js",
       "http://10.100.10.48:5200/polyfills.bundle.js",
+      "http://10.100.10.48:5200/styles.bundle.js",
       "http://10.100.10.48:5200/scripts.bundle.js",
+      "http://10.100.10.48:5200/vendor.bundle.js",
       "http://10.100.10.48:5200/main.bundle.js"
     ]
   }
