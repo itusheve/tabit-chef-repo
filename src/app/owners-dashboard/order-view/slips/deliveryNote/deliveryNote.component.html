@@ -1,5 +1,4 @@
 <div class="ticket-box d-col">
-
     <div class="flex j-sb">
         <span i18n="slips@@diner">Diner</span>
         <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
@@ -11,12 +10,10 @@
         <span *ngIf="data.cashback">{{((data.amount/100)-(data.tax.amount/100)-(data.cashback/100)) | number:'1.2-2'}}</span>
         <span *ngIf="!data.cashback">{{((data.amount/100)-(data.tax.amount/100)) | number:'1.2-2'}}</span>
     </div>
-
     <div class="flex j-sb">
         <span i18n="slips@@vat">VAT</span>
         <span>{{(data.tax.amount/100) | number:'1.2-2'}}</span>
     </div>
-
     <div class="flex j-sb">
         <span i18n="slips@@includeVAT">Include VAT</span>
         <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
@@ -25,26 +22,27 @@
 
     <hr/>
 
-    <div class="flex d-col">
-        <div class="flex j-center a-baseline">
-            <small class="flex as-center">{{(data.amount/100) | number:'1.2-2'}}</small>&nbsp;<small i18n="slips@@paidInChargeAccountFrom">Paid in charge account from</small>
-        </div>
-        <h4 class="flex as-center">{{data.payments[0].accountName}}</h4>
+    <div class="flex j-sb">
+        <span>
+            <span i18n="slips@@paidInChargeAccountFrom">Paid in charge account from</span>
+            <span>{{data.payments[0].accountName}}</span>
+        </span>
+        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
     </div>
 
-    <div class="flex j-sb" *ngIf="data.companyName?.length>0">
+    <div class="flex j-sb d-block" *ngIf="data.companyName?.length>0">
         <span class="text-upper" i18n="slips@@companyName">Company name</span>
         <span>{{data.companyName}}</span>
     </div>
-    <div class="flex j-sb" *ngIf="data.cardNum?.length>0">
+    <div class="flex j-sb d-block" *ngIf="data.cardNum?.length>0">
         <span class="text-upper" i18n="slips@@cardNumber">Card number</span>
         <span>{{data.cardNum}}</span>
     </div>
-    <div class="flex j-sb" *ngIf="data.providerTransactionId?.length>0">
+    <div class="flex j-sb d-block" *ngIf="data.providerTransactionId?.length>0">
         <span class="text-upper" i18n="slips@@transactionNumber">Transaction no.</span>
         <span>{{data.providerTransactionId}}</span>
     </div>
-    <div class="flex j-sb" *ngIf="data.confirmationNum?.length>0">
+    <div class="flex j-sb d-block" *ngIf="data.confirmationNum?.length>0">
         <span class="text-upper" i18n="slips@@approvalNumber">Approval no.</span>
         <span>{{data.confirmationNum}}</span>
     </div>

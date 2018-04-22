@@ -26,29 +26,30 @@
 
     <hr />
 
-    <div class="flex d-col">
-        <div class="flex j-center a-baseline">
-            <small class="flex as-center">{{(data.amount/100) | number:'1.2-2'}}</small>&nbsp;<small i18n="slips@@paidInCreditFrom">Paid in credit from</small>
-        </div>
-        <h4 class="flex as-center">{{data.issuerName}}</h4>
+    <div class="flex j-sb">
+        <span>
+            <span i18n="slips@@paidInCreditFrom">Paid in credit from</span>
+            <span>{{data.issuerName}}</span>
+        </span>
+        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
     </div>
 
-    <div class="flex j-sb" *ngIf="data.payments[0].last4">
+    <div class="flex j-sb d-block" *ngIf="data.payments[0].last4">
         <span i18n="slips@@last4Digits">Last 4 Digits</span>
         <span>{{data.payments[0].last4}}</span>
     </div>
 
-    <div class="flex j-sb" *ngIf="data.payments[0].providerTransactionId">
+    <div class="flex j-sb d-block" *ngIf="data.payments[0].providerTransactionId">
         <span i18n="slips@@transactionNumber">Transaction no.</span>
         <span>{{data.payments[0].providerTransactionId}}</span>
     </div>
 
-    <div class="flex j-sb" *ngIf="data.payments[0].confirmationNum">
+    <div class="flex j-sb d-block" *ngIf="data.payments[0].confirmationNum">
         <span i18n="slips@@approvalNumber">Approval no.</span>
         <span>{{data.payments[0].confirmationNum}}</span>
     </div>
 
-    <div class="flex j-sb" *ngIf="data.cashback">
+    <div class="flex j-sb d-block" *ngIf="data.cashback">
         <span i18n="slips@@change">Change</span>
         <span>{{(data.cashback/100) | number:'1.2-2'}}</span>
     </div>
