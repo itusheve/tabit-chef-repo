@@ -1,4 +1,5 @@
 <div class="ticket-box d-col">
+
     <div class="flex j-sb">
         <span i18n="slips@@diner">Diner</span>
         <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
@@ -7,14 +8,15 @@
 
     <div class="flex j-sb">
         <span i18n="slips@@beforeVAT">Before VAT</span>
-        <span *ngIf="data.cashback">{{((data.amount/100)-(data.tax.amount/100)-(data.cashback/100))
-            | number:'1.2-2'}}</span>
+        <span *ngIf="data.cashback">{{((data.amount/100)-(data.tax.amount/100)-(data.cashback/100)) | number:'1.2-2'}}</span>
         <span *ngIf="!data.cashback">{{((data.amount/100)-(data.tax.amount/100)) | number:'1.2-2'}}</span>
     </div>
+
     <div class="flex j-sb">
         <span i18n="slips@@vat">VAT</span>
         <span>{{(data.tax.amount/100) | number:'1.2-2'}}</span>
     </div>
+
     <div class="flex j-sb">
         <span i18n="slips@@includeVAT">Include VAT</span>
         <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
@@ -23,9 +25,11 @@
 
     <hr/>
 
-    <div class="flex d-col a-center">
-        <small i18n="slips@@paidInChargeAccountFrom">Paid in charge account from</small>
-        <h4>{{data.payments[0].accountName}}</h4>
+    <div class="flex d-col">
+        <div class="flex j-center a-baseline">
+            <small class="flex as-center">{{(data.amount/100) | number:'1.2-2'}}</small>&nbsp;<small i18n="slips@@paidInChargeAccountFrom">Paid in charge account from</small>
+        </div>
+        <h4 class="flex as-center">{{data.payments[0].accountName}}</h4>
     </div>
 
     <div class="flex j-sb" *ngIf="data.companyName?.length>0">

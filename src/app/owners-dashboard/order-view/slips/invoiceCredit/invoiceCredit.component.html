@@ -8,14 +8,14 @@
 
     <div class="flex j-sb">
         <span i18n="slips@@beforeVAT">Before VAT</span>
-        <span *ngIf="data.cashback">{{((data.amount/100)-(data.tax.amount/100)-(data.cashback/100)) |
-            number:'1.2-2'}}</span>
+        <span *ngIf="data.cashback">{{((data.amount/100)-(data.tax.amount/100)-(data.cashback/100)) | number:'1.2-2'}}
+        </span>
         <span *ngIf="!data.cashback">{{((data.amount/100)-(data.tax.amount/100)) | number:'1.2-2'}}</span>
     </div>
 
     <div class="flex j-sb">
         <span i18n="slips@@vat">VAT</span>
-        <span >{{(data.tax.amount/100) | number:'1.2-2'}}</span>
+        <span>{{(data.tax.amount/100) | number:'1.2-2'}}</span>
     </div>
 
     <div class="flex j-sb">
@@ -35,22 +35,22 @@
 
     <div class="flex j-sb" *ngIf="data.payments[0].last4">
         <span i18n="slips@@last4Digits">Last 4 Digits</span>
-        <span >{{data.payments[0].last4}}</span>
+        <span>{{data.payments[0].last4}}</span>
     </div>
 
     <div class="flex j-sb" *ngIf="data.payments[0].providerTransactionId">
         <span i18n="slips@@transactionNumber">Transaction no.</span>
-        <span >{{data.payments[0].providerTransactionId}}</span>
+        <span>{{data.payments[0].providerTransactionId}}</span>
     </div>
 
     <div class="flex j-sb" *ngIf="data.payments[0].confirmationNum">
         <span i18n="slips@@approvalNumber">Approval no.</span>
-        <span >{{data.payments[0].confirmationNum}}</span>
+        <span>{{data.payments[0].confirmationNum}}</span>
     </div>
 
     <div class="flex j-sb" *ngIf="data.cashback">
         <span i18n="slips@@change">Change</span>
-        <span >{{(data.cashback/100) | number:'1.2-2'}}</span>
+        <span>{{(data.cashback/100) | number:'1.2-2'}}</span>
     </div>
 
 </div>
