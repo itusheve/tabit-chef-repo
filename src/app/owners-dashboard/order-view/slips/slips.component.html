@@ -1,6 +1,6 @@
-<div class="flex d-col">
-  <button class="mb10" (click)="change(slip.id)" mat-raised-button *ngFor="let slip of slips">
-    <span>{{slip.caption}}</span>
+<div class="flex d-col order-ticket-btns">
+  <button class="mb10" (click)="change(slipItem.id)" mat-raised-button *ngFor="let slipItem of slips" [class.selected]="slipItem === slip">
+    <span>{{slipItem.caption}}</span>
   </button>
 </div>
 
