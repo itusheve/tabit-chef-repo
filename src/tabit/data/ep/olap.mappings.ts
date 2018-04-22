@@ -356,21 +356,6 @@ export class OlapMappings {
                 }
             }
         },
-        tlog: {
-            v: 2,
-            path: {
-                il: 'Tlog',
-                us: 'Tlog'
-            },
-            attr: {
-                id: {
-                    path: {
-                        il: 'Tlog Header Tlog Id',
-                        us: 'Tlog Header Tlog Id'
-                    }
-                }
-            }
-        },
         businessDateV2: {//"תאריך יום עסקים"
             v: 2,
             path: {

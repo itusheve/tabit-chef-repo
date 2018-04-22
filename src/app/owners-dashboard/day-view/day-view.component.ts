@@ -33,7 +33,6 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
   dayHasSales: boolean;
 
   drillTlogTime;
-  drillTlogId: string;
   drill = false;
   drilledOrder: Order;
   drilledOrderNumber: number;
@@ -279,7 +278,6 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
     this.drilledOrder = order;
     this.drilledOrderNumber = order.number;
     this.drillTlogTime = order.openingTime;
-    this.drillTlogId = order.tlogId;
 
     setTimeout(() => {
       this.drill = true;

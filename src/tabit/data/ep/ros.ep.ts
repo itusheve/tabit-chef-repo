@@ -34,9 +34,9 @@ export class ROSEp {
         });
     }
 
-    post(url, payload): Promise<any> {
+    post(url, payload?): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.httpClient.post(this.rosBaseUrl + url, payload)
+            this.httpClient.post(this.rosBaseUrl + url, payload || {})
                 .subscribe(
                     (results: any)=>{
                         resolve(results);

@@ -694,13 +694,13 @@ export class ClosedOrdersDataService {
     /*
         @caching(indirect)
         @:promise
-        resolves with the Order with the provided tlogId (and orderOld as copied from Office).
+        resolves with the Order with the provided order number (and orderOld as copied from Office).
         you supply the business date ('YYYY-MM-DD').
         if 'enriched', enriches the order.
     */
     public getOrder(
         businessDateStr: string,
-        tlogId: string,
+        orderNumber: number,
         { enriched = false }: { enriched?: boolean } = {}
     ): Promise<{
         order: Order,
@@ -710,12 +710,12 @@ export class ClosedOrdersDataService {
         return new Promise((resolve, reject) => {
             this.dataService.getOrders(moment(businessDateStr))
                 .then(orders => {
-                    const order = orders.find(o => o.tlogId === tlogId);
+                    const order = orders.find(o => o.number === orderNumber);
                     if (order && enriched) {
                         if (order.enrichmentLevels.orderDetails) {
                             resolve({ order: order });
                         } else {
-                            return this.enrichOrder(order)
+                            return this.enrichOrder(order, businessDateStr)
                                 .then(data => {
                                     resolve(data);
                                 });
@@ -733,7 +733,7 @@ export class ClosedOrdersDataService {
             b.
             ...
      */
-    public enrichOrder(order_: Order): Promise<{
+    public enrichOrder(order_: Order, businessDateStr: string): Promise<{
         order: Order,
         orderOld: any,
         printDataOld: any
@@ -1681,9 +1681,28 @@ export class ClosedOrdersDataService {
             return that.rosEp.get(`tlogs/${order.tlogId}/bill`, {});
         }
 
+        function addTlogId(order: Order, businessDateStr: string) {
+            return new Promise((resolve, reject) => {
+                that.rosEp.post(`documents/v2?businessDate=${businessDateStr}&number=${order.number}`)
+                    .then(data=>{
+                        try {
+                            order.tlogId = data[0]._id;
+                            resolve();
+                        } catch (e) {
+                            reject(e);
+                        }
+                    });
+            });
+        }
+
         let printData;
-        that.ds.log('closedOrdersDS: enrichOrder: Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])');
-        return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])
+
+        /* since tlogId dim is removed, we need to add procedure here to find it using the order number + BD: */
+        return addTlogId(order_, businessDateStr)
+            .then(()=>{
+                that.ds.log('closedOrdersDS: enrichOrder: Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])');
+                return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)]);
+            })
             .then(data => {
                 that.ds.log('closedOrdersDS: getLookupData: get tlog, lookupdata, billdata: done');
                 const tlog: any = data[0];

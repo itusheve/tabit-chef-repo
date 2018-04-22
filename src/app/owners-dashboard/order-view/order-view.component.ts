@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
+import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Order } from '../../../tabit/model/Order.model';
 
@@ -23,7 +24,7 @@ export interface SlipVM {
 })
 export class OrderViewComponent implements OnInit {
 
-  @Input() tlogId: string;
+  @Input() orderNumber: number;
 
   show = false;
 
@@ -49,7 +50,7 @@ export class OrderViewComponent implements OnInit {
       .subscribe((params: ParamMap) => {
         const dateStr = params.get('businessDate');
 
-        this.closedOrdersDataService.getOrder(dateStr, this.tlogId, { enriched: true })
+        this.closedOrdersDataService.getOrder(dateStr, this.orderNumber, { enriched: true })
           .then((o: {
             order: Order,
             orderOld: any,

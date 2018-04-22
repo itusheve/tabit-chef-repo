@@ -516,7 +516,6 @@ export class OlapEp {
 
     // TODO smartQuery
     public getOrders(o: { day: moment.Moment }): Promise<{
-        tlogId: string,
         openingTime: moment.Moment,
         orderTypeCaption: string,
         orderNumber: number,
@@ -546,7 +545,6 @@ export class OlapEp {
                     ${<string>this.olapMappings.measures.ppa.diners[environment.region]}
                 } ON 0,
                 NonEmptyCrossJoin(
-                    ${this.members(this.olapMappings.dims.tlog.attr.id)},
                     ${this.members(this.olapMappings.dims.ordersV2.attr.orderNumber)},
                     ${this.olapMappings.dims.orderType.hierarchy[environment.region]}.${this.olapMappings.dims.orderType.dim[environment.region]}.${this.olapMappings.dims.orderType.dim[environment.region]}.Members,
                     ${this.olapMappings.dims.orderOpeningDate.hierarchy[environment.region]}.${this.olapMappings.dims.orderOpeningDate.dims.date[environment.region]}.${this.olapMappings.dims.orderOpeningDate.dims.date[environment.region]}.Members,
@@ -564,7 +562,6 @@ export class OlapEp {
                     xmla4j_w.executeNew(mdx)
                         .then(rowset => {
                             const treated = rowset.map(r => {
-                                const tlogId = this.parseDim(r, this.olapMappings.dims.tlog.attr.id);
                                 const rawOrderNumber = this.parseDim(r, this.olapMappings.dims.ordersV2.attr.orderNumber);
 
                                 const rawOrderType = r[`${this.olapMappings.dims.orderType.hierarchy[environment.region]}.${this.olapMappings.dims.orderType.dim[environment.region]}.${this.olapMappings.dims.orderType.dim[environment.region]}.[MEMBER_CAPTION]`];
@@ -590,7 +587,6 @@ export class OlapEp {
                                 const ppa = (salesPPA ? salesPPA : 0) / (dinersPPA ? dinersPPA : 1);
 
                                 return {
-                                    tlogId: tlogId,
                                     openingTime: openingTime,
                                     orderTypeCaption: rawOrderType,
                                     orderNumber: rawOrderNumber,

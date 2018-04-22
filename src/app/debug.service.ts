@@ -45,10 +45,6 @@ export class DebugService {
         //     that.error(`uncaught error: ${JSON.stringify(e)}`);
         //     return false;
         // });
-
-        // setTimeout(() => {
-        //     throw new Error('dsfsdfsd');
-        // }, 2000);
     }
 
 }
