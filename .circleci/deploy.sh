@@ -19,9 +19,9 @@ function deploy {
 }
 
 if [[ "$CIRCLE_TAG" =~ ^release-.*$ ]]; then
-  echo "Found release tag. Deploying $SERVICES to $ACCOUNT in $REGIONS"
+  echo "not in use"
 elif [[ "$CIRCLE_BRANCH" == "master" ]]; then
-  echo "On master branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
+  echo "Not in use"
 elif [[ "$CIRCLE_BRANCH" == "ecs-dev" ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
