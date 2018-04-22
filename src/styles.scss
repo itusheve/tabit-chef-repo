@@ -106,23 +106,22 @@ button {
           font-weight: bold;
         }
 
+        &.header {
+          font-weight: bold;
+          background-color: #eaecee;
+        }
+
         td {
-          padding: 8px 0px;
+          padding: 8px 3px;
+
           &:first-child {
             font-weight: bold;
+            padding-right: 12px;//TODO localize
           }
-        }
-      }
-    }
 
-    .table {
-      color: $fontColor;
-      .tblRow {
-        padding: 8px 0px;
-        border-bottom: 1px solid #eaeff0;
-
-        &.tblTotalRow {
-          font-weight: bold;
+          &:last-child {
+              padding-left: 12px;//TODO localize
+          }
         }
       }
     }

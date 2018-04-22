@@ -5,8 +5,15 @@ $sideNavWidth: 300px;
 
 $secondaryToolbarHeight: 50px;
 
-
 // targeting iphoneX portrait mode (notch problem)
 // https://stackoverflow.com/questions/46376860/what-is-the-safe-region-for-iphone-x-in-pixels-that-factors-the-top-notch-an
-$iphoneX-notch-px: 44px;
-$iphoneX-media-query: "only screen and (orientation : portrait) and (device-width : 375px) and (device-height : 812px) and (-webkit-device-pixel-ratio : 3)";
+$iphone-X-notch-px: 44px;
+$iphone-6-7-8-status-bar-px: 20px;
+$iphone-6-7-8-plus-status-bar-px: 21px;
+$ipad-6-7-8-plus-status-bar-px: 21px;
+$ipad-status-bar-px: 20px;
+// http://stephen.io/mediaqueries/
+$iphone-X-portrait-mq: "only screen and (orientation : portrait) and (device-width : 375px) and (device-height : 812px) and (-webkit-device-pixel-ratio : 3)";
+$iphone-6-7-8-portrait-mq: "only screen and (orientation : portrait) and (device-width : 375px) and (device-height : 667px)";
+$iphone-6-7-8-plus-portrait-mq: "only screen and (orientation : portrait) and (device-width : 414px) and (device-height : 736px)";
+$ipad-portrait-mq: "only screen and (orientation : portrait) and (device-width : 768px) and (device-height : 1024px)";

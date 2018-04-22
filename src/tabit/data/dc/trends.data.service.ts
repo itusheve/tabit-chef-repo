@@ -34,7 +34,7 @@ export class TrendsDataService {
                 const currentBusinessDaySales = data[2].sales;
                 //console.info(`Trends: Current: Last 4: Current BD Total Sales (Open & Closed): ${currentBusinessDaySales}`);
 
-                const firstShiftStartingTime = moment(shifts[0].startTime);
+                const firstShiftStartingTime = shifts.length ? moment(shifts[0].startTime) : moment().hour(6).minute(0).seconds(0);
                 //console.info(`Trends: Current: Last 4: First Shift Starting Time: ${firstShiftStartingTime.format('HH:mm')}`);
 
                 if (currentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
@@ -152,7 +152,7 @@ export class TrendsDataService {
                 const currentBusinessDaySales = data[2].sales;
                 const currentRestTime:moment.Moment = moment(data[3]);
 
-                const firstShiftStartingTime = moment(shifts[0].startTime);
+                const firstShiftStartingTime = shifts.length ? moment(shifts[0].startTime) : moment().hour(6).minute(0).seconds(0);
 
                 if (currentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
                     timeFrom1 = firstShiftStartingTime.format('HHmm');

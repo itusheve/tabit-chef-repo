@@ -1,24 +1,27 @@
 <div class="flex f-rtl d-col">
-    <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
-    <div class="flex d-col" *ngIf="!loading">
-        <div class="title" i18n="@@mostSoldItems">Most Sold Items</div>
-        <div class="flex d-col body" *ngIf="data">
-            <table class="fixedWidth">
-                <tr class="header">
-                    <td style="width:60px;" i18n="@@department">Department</td>
-                    <td i18n="@@item">Item</td>
-                    <td style="width:60px;" i18n="@@sales2">Sales</td>
-                    <td style="width:42px;" i18n="@@sold">Sold</td>
-                </tr>
-            </table>
-            <table class="fixedWidth" *ngFor="let departmentData of data">
-                <tr *ngFor="let dataObj of departmentData.topItems">
-                    <td style="width:60px;">{{departmentData.department}}</td>
-                    <td>{{dataObj.itemName}}</td>
-                    <td style="width:60px;">{{dataObj.itemSales | curr:'0'}}</td>
-                    <td style="width:42px;">{{dataObj.itemSold | count}}</td>
-                </tr>
-            </table>
+    <div class="title" i18n="@@mostSoldItems">Most Sold Items</div>
+    <div class="flex d-col body">
+        <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+        <div *ngIf="!loading">
+            <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
+            <div *ngIf="!noData" class="flex d-col a-center widget-data">
+                <table class="fixedWidth">
+                    <tr class="header">
+                        <td style="width:70px;" i18n="@@department">Department</td>
+                        <td i18n="@@item">Item</td>
+                        <td style="width:60px;" i18n="@@sales2">Sales</td>
+                        <td style="width:42px;" i18n="@@sold">Sold</td>
+                    </tr>
+                </table>
+                <table class="fixedWidth" *ngFor="let departmentData of data">
+                    <tr *ngFor="let dataObj of departmentData.topItems">
+                        <td style="width:70px;">{{departmentData.department}}</td>
+                        <td>{{dataObj.itemName}}</td>
+                        <td style="width:60px;">{{dataObj.itemSales | curr:'0'}}</td>
+                        <td style="width:42px;">{{dataObj.itemSold | count}}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>

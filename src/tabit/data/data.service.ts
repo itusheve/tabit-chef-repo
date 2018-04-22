@@ -28,6 +28,7 @@ import { OrderType } from '../model/OrderType.model';
 import { Order } from '../model/Order.model';
 import { environment } from '../../environments/environment';
 import { Department } from '../model/Department.model';
+import { DebugService } from '../../app/debug.service';
 //import { CategoriesDataService } from './dc/_categories.data.service';
 
 /*
@@ -284,37 +285,89 @@ export class DataService {
     }).publishReplay(1).refCount();
 
     public shifts$: Observable<Shift[]> = Observable.create(obs => {
-        this.rosEp.get('configuration/regionalSettings', {})
-            .then(data => {
-                const serverShiftsConfig = data[0].ownerDashboard;
-                if (!serverShiftsConfig) console.error('error 7727: missing configuration: regionalSettings.ownerDashboard config is missing. please contact support.');
-                const shiftsConfig = [
-                    {
-                        active: _.get(serverShiftsConfig, 'morningShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'morningShiftName', tmpTranslations.get('shifts.defaults.first')),
-                        startTime: _.get(serverShiftsConfig, 'morningStartTime')
-                    },
-                    {
-                        active: _.get(serverShiftsConfig, 'afternoonShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'afternoonShiftName', tmpTranslations.get('shifts.defaults.second')),
-                        startTime: _.get(serverShiftsConfig, 'afternoonStartTime')
-                    },
-                    {
-                        active: _.get(serverShiftsConfig, 'eveningShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'eveningShiftName', tmpTranslations.get('shifts.defaults.third')),
-                        startTime: _.get(serverShiftsConfig, 'eveningStartTime')
-                    },
-                    {
-                        active: _.get(serverShiftsConfig, 'fourthShiftActive', false),
-                        name: _.get(serverShiftsConfig, 'fourthShiftName', tmpTranslations.get('shifts.defaults.fourth')),
-                        startTime: _.get(serverShiftsConfig, 'fourthStartTime')
-                    },
-                    {
-                        active: _.get(serverShiftsConfig, 'fifthShiftActive', false),
-                        name: _.get(serverShiftsConfig, 'fifthShiftName', tmpTranslations.get('shifts.defaults.fifth')),
-                        startTime: _.get(serverShiftsConfig, 'fifthStartTime')
+        const that = this;
+
+        function getShifts(): Promise<{
+            active: boolean;
+            name: string;
+            startTime: string;
+        }[]> {
+            return Promise.all([
+                that.rosEp.get('configuration/regionalSettings'),
+                that.rosEp.get('configuration/regionalSettings/schema', { format: 'mongoose' })
+            ])
+                .then(data=>{
+                    let shiftsConfig: {
+                        active: boolean,
+                        name: string,
+                        startTime: string
+                    }[];
+                    if (data[0].length && data[0][0].ownerDashboard) {
+                        const serverShiftsConfig = data[0][0].ownerDashboard;
+                        shiftsConfig = [
+                            {
+                                active: _.get(serverShiftsConfig, 'morningShiftActive', true),
+                                name: _.get(serverShiftsConfig, 'morningShiftName', tmpTranslations.get('shifts.defaults.first')),
+                                startTime: _.get(serverShiftsConfig, 'morningStartTime')
+                            },
+                            {
+                                active: _.get(serverShiftsConfig, 'afternoonShiftActive', true),
+                                name: _.get(serverShiftsConfig, 'afternoonShiftName', tmpTranslations.get('shifts.defaults.second')),
+                                startTime: _.get(serverShiftsConfig, 'afternoonStartTime')
+                            },
+                            {
+                                active: _.get(serverShiftsConfig, 'eveningShiftActive', false),
+                                name: _.get(serverShiftsConfig, 'eveningShiftName', tmpTranslations.get('shifts.defaults.third')),
+                                startTime: _.get(serverShiftsConfig, 'eveningStartTime')
+                            },
+                            {
+                                active: _.get(serverShiftsConfig, 'fourthShiftActive', false),
+                                name: _.get(serverShiftsConfig, 'fourthShiftName', tmpTranslations.get('shifts.defaults.fourth')),
+                                startTime: _.get(serverShiftsConfig, 'fourthStartTime')
+                            },
+                            {
+                                active: _.get(serverShiftsConfig, 'fifthShiftActive', false),
+                                name: _.get(serverShiftsConfig, 'fifthShiftName', tmpTranslations.get('shifts.defaults.fifth')),
+                                startTime: _.get(serverShiftsConfig, 'fifthStartTime')
+                            }
+                        ];
+                    } else {
+                        that.ds.log('shifts$: regionalSettings.ownerDashboard config is missing. falling back to default shifts.');
+                        const serverShiftsConfigSchema = data[1].ownerDashboard;
+                        shiftsConfig = [
+                            {
+                                active: _.get(serverShiftsConfigSchema, 'morningShiftActive.default', true),
+                                name: _.get(serverShiftsConfigSchema, 'morningShiftName.default', tmpTranslations.get('shifts.defaults.first')),//TODO should also come from ROS scheme! this must be the same as kosover names which now he chooses.
+                                startTime: _.get(serverShiftsConfigSchema, 'morningStartTime.default')
+                            },
+                            {
+                                active: _.get(serverShiftsConfigSchema, 'afternoonShiftActive.default', true),
+                                name: _.get(serverShiftsConfigSchema, 'afternoonShiftName.default', tmpTranslations.get('shifts.defaults.second')),
+                                startTime: _.get(serverShiftsConfigSchema, 'afternoonStartTime.default')
+                            },
+                            {
+                                active: _.get(serverShiftsConfigSchema, 'eveningShiftActive.default', false),
+                                name: _.get(serverShiftsConfigSchema, 'eveningShiftName.default', tmpTranslations.get('shifts.defaults.third')),
+                                startTime: _.get(serverShiftsConfigSchema, 'eveningStartTime.default')
+                            },
+                            {
+                                active: _.get(serverShiftsConfigSchema, 'fourthShiftActive.default', false),
+                                name: _.get(serverShiftsConfigSchema, 'fourthShiftName.default', tmpTranslations.get('shifts.defaults.fourth')),
+                                startTime: _.get(serverShiftsConfigSchema, 'fourthStartTime.default')
+                            },
+                            {
+                                active: _.get(serverShiftsConfigSchema, 'fifthShiftActive.default', false),
+                                name: _.get(serverShiftsConfigSchema, 'fifthShiftName.default', tmpTranslations.get('shifts.defaults.fifth')),
+                                startTime: _.get(serverShiftsConfigSchema, 'fifthStartTime.default')
+                            }
+                        ];
                     }
-                ];
+                    return shiftsConfig;
+                });
+        }
+
+        getShifts()
+            .then(shiftsConfig => {
 
                 const shifts:Shift[] = [];
 
@@ -638,7 +691,7 @@ export class DataService {
     private businessDayKPI_cache: { [index: string]: BusinessDayKPI } = {};
 
     /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp) {}
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService) {}
 
     get currentBdData$(): Observable<KPI> {
         return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
@@ -987,6 +1040,10 @@ export class DataService {
                                 }>
                             }
                         >();
+
+                        if (!data.shifts.length) {
+                            return byShiftByOrderType;
+                        }
 
                         for (let i = 0; i < data.shifts.length; i++) {
                             byShiftByOrderType.set(data.shifts[i], {

@@ -17,10 +17,10 @@ export class ROSEp {
         private ds: DebugService
     ) {}
 
-    get(url, params): Promise<any> {
+    get(url, params?): Promise<any> {
         return new Promise((resolve, reject)=>{
             this.httpClient.get(this.rosBaseUrl + url, {
-                params: params
+                params: params || {}
             })
                 .subscribe(
                     (results: any)=>{

@@ -31,7 +31,9 @@ export class DayMonthSummaryTableComponent implements OnChanges {
       this.data = [];
 
       Object.keys(this.mtdBusinessDaysKPIs).forEach(k=>{
-        this.data.push(this.mtdBusinessDaysKPIs[k]);
+        if (this.mtdBusinessDaysKPIs[k]) {
+          this.data.push(this.mtdBusinessDaysKPIs[k]);
+        }
       });
 
       this.data.sort((a, b)=>{

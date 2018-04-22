@@ -31,13 +31,13 @@
       </div>
     </div>
     <div class="flex j-sb cfooter">
-      <div class="flex d-col a-center cperson">
-        <div class="flex ctitle" *ngIf="cardData && cardData.diners > 0"><i class="icomoon-man"></i></div>
+      <div class="flex d-col a-center cperson" *ngIf="cardData && cardData.diners > 0">
+        <div class="flex ctitle"><i class="icomoon-man"></i></div>
         <div class="flex cfigure">{{cardData?.diners | number:'1.0-0'}}</div>
       </div>
       <div class="flex"></div>
-      <div class="flex d-col a-center cppa">
-        <div class="flex ctitle" *ngIf="cardData && cardData.diners > 0">PPA</div>
+      <div class="flex d-col a-center cppa" *ngIf="cardData && cardData.diners > 0">
+        <div class="flex ctitle">PPA</div>
         <div class="flex cfigure">{{cardData?.ppa | curr}}</div>
       </div>
     </div>

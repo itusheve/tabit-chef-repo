@@ -1,32 +1,35 @@
 <div class="flex f-rtl d-col">
-    <dx-load-indicator class="as-center" *ngIf="!show" rtlEnabled="true"></dx-load-indicator>
-    <div class="flex d-col" *ngIf="show">
-        <div class="title">{{title}}</div>
-        <div class="flex body">
-            <table class="fixedWidth" *ngIf="byOrderType">
-                
-                <tr class="header">
-                    <td i18n="@@orderType2">Order Type</td>
-                    <td i18n="@@sales2">Sales</td>
-                    <td style="width:100px;" i18n="@@dinersOrders">Diners / Orders</td>
-                    <td i18n="@@average">Average</td>
-                </tr>
-                
-                <tr>
-                    <td i18n="@@total">Total</td>
-                    <td>{{totalSales | curr:'0'}}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-    
-                <tr *ngFor="let key of getKeys(byOrderType)">
-                    <td i18n="@@orderTypeSelect">{ key.id, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange {Media Exchange} }</td>
-                    <td>{{byOrderType.get(key).sales | curr:'0'}}</td>
-                    <td>{{byOrderType.get(key).dinersOrOrders | count}}</td>
-                    <td>{{byOrderType.get(key).average | curr}}</td>
-                </tr>
-    
-            </table>
+    <div class="title" i18n="@@summary">Summary</div>
+    <div class="flex body d-col">
+        <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+        <div *ngIf="!loading">
+            <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
+            <div *ngIf="!noData" class="flex d-col a-center">
+                <table class="fixedWidth" *ngIf="byOrderType">
+
+                    <tr class="header">
+                        <td i18n="@@orderType2">Order Type</td>
+                        <td i18n="@@sales2">Sales</td>
+                        <td style="width:100px;" i18n="@@dinersOrders">Diners / Orders</td>
+                        <td i18n="@@average">Average</td>
+                    </tr>
+
+                    <tr>
+                        <td i18n="@@total">Total</td>
+                        <td>{{totalSales | curr:'0'}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr *ngFor="let key of getKeys(byOrderType)">
+                        <td i18n="@@orderTypeSelect">{ key.id, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange {Media Exchange} }</td>
+                        <td>{{byOrderType.get(key).sales | curr:'0'}}</td>
+                        <td>{{byOrderType.get(key).dinersOrOrders | count}}</td>
+                        <td>{{byOrderType.get(key).average | curr}}</td>
+                    </tr>
+
+                </table>
+            </div>
         </div>
     </div>
 </div>
