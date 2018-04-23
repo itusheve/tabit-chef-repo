@@ -9,6 +9,7 @@ import { OrderType } from '../../../../tabit/model/OrderType.model';
 export class DaySalesTableComponent implements OnChanges {
   loading = true;
   noData = false;
+  @Input() title: string;
   @Input() totalSales: number;
   @Input() byOrderType: Map<OrderType, {
     sales: number,
