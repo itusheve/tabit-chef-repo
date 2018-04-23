@@ -26,6 +26,10 @@
       <button *ngIf="this.sideNavConfig.content.showLogoutBtn" mat-raised-button (click)="logout()">
         <span i18n="owners-dashboard@@logout">Logout</span>
       </button>
+      <div class="versions" style="align-self: center; margin-top: auto; justify-self: end; display: flex; flex-direction: column;">
+        <div>{{appVersions.chef}}</div>
+        <div>{{appVersions.wrapper}}</div>
+      </div>
     </div>
   </mat-sidenav>
 

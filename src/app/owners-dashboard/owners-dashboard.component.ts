@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { DataService, tmpTranslations } from '../../tabit/data/data.service';
+import { DataService, tmpTranslations, appVersions } from '../../tabit/data/data.service';
 import { AuthService } from '../auth/auth.service';
 import { OwnersDashboardService } from './owners-dashboard.service';
 
@@ -22,6 +22,11 @@ export class OwnersDashboardComponent {
   toolbarConfig: any;
   sideNavConfig: any;
 
+  appVersions: {
+    chef: string,
+    wrapper: string
+  };
+
   constructor(
     private dataService: DataService,
     private authService: AuthService,
@@ -30,6 +35,9 @@ export class OwnersDashboardComponent {
     public router: Router,
     public route: ActivatedRoute
   ) {
+
+    this.appVersions = appVersions;
+
     ownersDashboardService.toolbarConfig.left.back.showBtn = false;
 
     //bind for the view:

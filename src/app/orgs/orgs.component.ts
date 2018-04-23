@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService, tmpTranslations } from '../../tabit/data/data.service';
+import { DataService, tmpTranslations, appVersions } from '../../tabit/data/data.service';
 import { AuthService } from '../auth/auth.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
@@ -25,6 +25,11 @@ export class OrgsComponent implements OnInit {
 
   selectedOrg: any;
 
+  appVersions: {
+    chef: string,
+    wrapper: string
+  };
+
   constructor(
     private dataService: DataService,
     private authService: AuthService,
@@ -33,6 +38,8 @@ export class OrgsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
+
+    this.appVersions = appVersions;
 
     this.dataService.user$
       .subscribe(user => {
