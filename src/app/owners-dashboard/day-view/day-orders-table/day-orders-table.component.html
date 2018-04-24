@@ -4,7 +4,7 @@
         <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
-            <div *ngIf="!noData" class="flex d-col a-center">
+            <div *ngIf="!noData" class="flex d-col a-stretch">
                 <mat-accordion *ngIf="byOrderTypes">
                     <mat-expansion-panel expanded="false" hideToggle="true" *ngFor="let orderType of byOrderTypes | hasSales">
                         <mat-expansion-panel-header>
