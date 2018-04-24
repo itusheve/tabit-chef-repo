@@ -66,6 +66,8 @@
     <app-order-credit-refund *ngIf="slip.class==='refund' && slip.subclass==='credit'" [data]="slip.data"></app-order-credit-refund>
     <app-order-cash-refund *ngIf="slip.class==='refund' && slip.subclass==='cash'" [data]="slip.data"></app-order-cash-refund>
     <app-order-cheque-refund *ngIf="slip.class==='refund' && slip.subclass==='cheque'" [data]="slip.data"></app-order-cheque-refund>
+    <app-order-credit-slip *ngIf="slip.class==='invoice' && slip.subclass==='credit-slip'" [data]="slip.data"></app-order-credit-slip>
+    <app-order-bill *ngIf="slip.class==='check'" [order]="order" [orderOld]="orderOld" [printDataOld]="slip.data.printData"></app-order-bill>
 
   </div>
 </div>

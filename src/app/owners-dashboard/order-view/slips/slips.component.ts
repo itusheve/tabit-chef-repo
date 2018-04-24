@@ -6,6 +6,8 @@ import { Order } from '../../../../tabit/model/Order.model';
 import ORDERS_VIEW from '../../../../tabit/data/dc/closedOrders.data.service';
 import { tmpTranslations } from '../../../../tabit/data/data.service';
 
+import { environment } from '../../../../environments/environment';
+
 export interface SlipVM {
   id: number;
   class: string;//bill/club
@@ -19,14 +21,14 @@ export interface SlipVM {
   templateUrl: './slips.component.html',
   styleUrls: ['./slips.component.scss']
 })
-export class OrderSlipsComponent implements OnInit  {
+export class OrderSlipsComponent implements OnInit {
 
   @Input() order: Order;
   @Input() orderOld: any;
   @Input() printDataOld: any;
   @Input() ORDERSVIEW: any;
 
-  isUS = false;
+  isUS = environment.region === 'us' ? true : false;
   showOrderDetails = true;
   isCheck = false;
 
@@ -34,8 +36,8 @@ export class OrderSlipsComponent implements OnInit  {
   slip: SlipVM;
 
   constructor() { }
-  
-  ngOnInit() {  
+
+  ngOnInit() {
     let i = 0;
 
     this.slips.push({
@@ -47,8 +49,6 @@ export class OrderSlipsComponent implements OnInit  {
     });
     i++;
 
-    console.log(this.orderOld);
-    
     if (this.orderOld.clubMembers.length) {
       this.slips.push({
         id: i,
@@ -60,57 +60,55 @@ export class OrderSlipsComponent implements OnInit  {
       i++;
     }
 
-    // $ctrl.signature = {
-    //   show: false
-    // }
-    // $ctrl.svg = {};
-
     if (this.isUS) {//TODO! US is not treated nor tested!
-      // if ($ctrl.selectedOrder.checks.length > 1) {
-      //   //set check in split check to 'orderOptions' (the option btns on the PopupBill)
-      //   $ctrl.selectedOrder.checks.forEach(check => {
-      //     $ctrl.orderOptions.push({
-      //       view: 'checkDetails',
-      //       data: check,
-      //       text: `Check #${check.number}`
-      //     });
-      //   });
-      // }
 
-      // $ctrl.printData.collections.PAYMENT_LIST.forEach(payment => {
+      // if tlog includ checks.
+      if (this.orderOld.ChecksDetails && this.orderOld.ChecksDetails.length > 1) {
+        this.orderOld.ChecksDetails.forEach(check => {
+          this.slips.push({
+            id: i,
+            class: 'check',
+            data: { printData: check },
+            caption: `Check #${check.variables.CHECK_NO}`
+          });
+          
+        i++;
+        });
+      }
 
-      //   let title = $translate.instant('OrderBillPopup.CreditSlip');
-      //   if (payment.P_TENDER_TYPE === 'creditCard') {
-      //     payment.PAYMENT_NUMBER = `${$ctrl.selectedOrder.number}/${payment.NUMBER}`;
-      //     $ctrl.orderOptions.push({
-      //       view: 'CreditCardSlip',
-      //       data: payment,
-      //       text: `${title} - ${payment.PAYMENT_NUMBER}`
-      //     });
-      //   }
+      this.printDataOld.collections.PAYMENT_LIST.forEach(payment => {
 
-      //   $timeout(() => {
-      //     if (payment.SIGNATURE_CAPTURED) {
+        let title = 'Credit Slip'; 
+        if (payment.P_TENDER_TYPE === 'creditCard') {
 
-      //       $ctrl.orderOptions.forEach(orderOption => {
-      //         if (orderOption.view === "CreditCardSlip" && orderOption.data.P_ID === payment.P_ID) {
+          if (payment.SIGNATURE_CAPTURED) {
+            let paymentData = this.orderOld.payments.find(c => c._id === payment.P_ID);
+            let signatureData = paymentData.customerSignature;
+            let signatureView = {
+              view: 'signature',
+              show: true,
+              data: signatureData.data,
+              format: signatureData.format
+            }
 
-      //           let paymentData = $ctrl.selectedOrder.payments.find(c => c._id === payment.P_ID)
-      //           let signatureData = paymentData.customerSignature;
+            payment.signature = signatureView;
+          }
 
-      //           orderOption.data.signature = {
-      //             view: 'signature',
-      //             show: true,
-      //             data: signatureData.data,
-      //             format: signatureData.format
-      //           }
-      //         }
-      //       })
 
-      //     }
-      //   }, 10)
+          payment.PAYMENT_NUMBER = `${this.orderOld.number}/${payment.NUMBER}`;
+          this.slips.push({
+            id: i,
+            class: 'invoice',
+            subclass: 'credit-slip',
+            data: payment,
+            caption: `${title} - ${payment.PAYMENT_NUMBER}`
+          });
+          i++;
 
-      // })
+        }
+      });
+
+
     } else {
       this.orderOld.deliveryNotes.forEach(dn => {
         if (dn.payments[0]._type === 'ChargeAccountPayment') {
@@ -214,7 +212,8 @@ export class OrderSlipsComponent implements OnInit  {
   }
 
   change(slipId) {
-    this.slip = this.slips.find(s=>s.id===slipId);
+    this.slip = this.slips.find(s => s.id === slipId);
+
   }
 
 }

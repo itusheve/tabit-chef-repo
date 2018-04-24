@@ -15,6 +15,7 @@ export class OrderBillComponent implements OnInit {
   
   constructor() {}
   
-  ngOnInit() { }
+  ngOnInit() { 
+  }
 
 }
