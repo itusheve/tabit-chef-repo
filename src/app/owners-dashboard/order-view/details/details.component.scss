@@ -4,7 +4,7 @@
 
 mat-expansion-panel {
     /deep/.mat-expansion-panel-body {
-        padding: 0!important;
+        padding: 0 0 10px 0!important;
     }
 }
 
