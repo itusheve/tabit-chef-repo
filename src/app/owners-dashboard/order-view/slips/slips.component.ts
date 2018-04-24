@@ -34,21 +34,19 @@ export class OrderSlipsComponent implements OnInit  {
   slip: SlipVM;
 
   constructor() { }
-  
-  ngOnInit() {  
+
+  ngOnInit() {
     let i = 0;
 
     this.slips.push({
       id: i,
       class: 'bill',
       caption: `${tmpTranslations.get('order.slips.order')} ${this.orderOld.number}`
-      // data: undefined,
-      //caption: ORDERS_VIEW.order + ' ' + $ctrl.selectedOrder.number
     });
     i++;
 
     console.log(this.orderOld);
-    
+
     if (this.orderOld.clubMembers.length) {
       this.slips.push({
         id: i,

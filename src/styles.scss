@@ -9,7 +9,7 @@ html, body {
   padding: 0;
   margin: 0;
   font-family: 'Assistant', sans-serif;
-  font-size: 16px;
+  font-size: $base-font-size;
   -webkit-font-smoothing: antialiased;
   color: $fontColor;
   background-color: black;
@@ -83,54 +83,149 @@ button {
       text-align: center;
     }
 
-    table {
-      color: $fontColor;
 
-      &.fixedWidth {
-        table-layout: fixed;
-        width: 100%;
-      }
-
-      tr {
-        border-bottom: 1px solid #eaeff0;
-
-        &.lastViewed {
-          background-color: #b8cbdf;
-        }
-
-        &.clicked {
-          background-color: #b8cbdf;
-        }
-
-        &.tblTotalRow {
-          font-weight: bold;
-        }
-
-        &.header {
-          font-weight: bold;
-          background-color: #eaecee;
-        }
-
-        td {
-          padding: 8px 3px;
-
-          &:first-child {
-            font-weight: bold;
-            padding-right: 12px;//TODO localize
-          }
-
-          &:last-child {
-              padding-left: 12px;//TODO localize
-          }
-        }
-      }
-    }
   }
+}
+
+.break {
+  //https://css-tricks.com/almanac/properties/o/overflow-wrap/
+  // overflow-wrap: break-word; TODO this didnt work well, explore why
+  word-break: break-word;
 }
 
 table {
   font-family: 'Assistant', sans-serif;
+  font-size: $base-font-size;
+
+  &.chf-tbl {
+    color: $fontColor;//TODO move to general table?
+    border-collapse: collapse;
+    width: 100%;
+
+    &.chf-tbl-fixed {
+      table-layout: fixed;
+    }
+
+    thead {
+        tr {
+            th {
+                vertical-align: bottom;
+            }
+        }
+    }
+
+    tr {
+      border-bottom: 1px solid #eaeff0;
+
+      &.lastViewed {
+        background-color: #b8cbdf;
+      }
+
+      &.clicked {
+        background-color: #b8cbdf;
+      }
+
+      &.tblTotalRow {
+        font-weight: bold;
+      }
+
+      &.header {
+        font-weight: bold;
+        background-color: #eaecee;
+      }
+
+      td, th {
+        padding: 8px 3px;
+
+        &:first-child {
+          padding-right: 12px;//TODO localize
+        }
+
+        &:last-child {
+          padding-left: 12px;//TODO localize
+        }
+      }
+
+    }
+
+    &.chf-tbl-smaller {
+      font-size: $smaller-font-size;
+      tr {
+        td, th {
+          padding: 8px 2px;
+
+          &:first-child {
+            padding-right: 10px;//TODO localize
+          }
+
+          &:last-child {
+              padding-left: 10px;//TODO localize
+          }
+        }
+      }
+    }
+    &.chf-tbl-x-smaller {
+      font-size: $x-smaller-font-size;
+      tr {
+        td, th {
+          padding: 8px 1px;
+
+          &:first-child {
+            padding-right: 8px;//TODO localize
+          }
+
+          &:last-child {
+              padding-left: 8px;//TODO localize
+          }
+        }
+      }
+    }
+    &.chf-tbl-xx-smaller {
+      font-size: $xx-smaller-font-size;
+      tr {
+        td, th {
+          padding: 8px 0px;
+
+          &:first-child {
+            padding-right: 4px;//TODO localize
+          }
+
+          &:last-child {
+              padding-left: 4px;//TODO localize
+          }
+        }
+      }
+    }
+    &.chf-tbl-xxx-smaller {
+      font-size: $xxx-smaller-font-size;
+      tr {
+        td, th {
+          padding: 8px 0px;
+
+          &:first-child {
+            padding-right: 0px;//TODO localize
+          }
+
+          &:last-child {
+              padding-left: 0px;//TODO localize
+          }
+        }
+      }
+    }
+
+    &.chf-tbl-row-oriented {
+      tr {
+        td {
+          &:first-child {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+  }
 }
+
 
 // html[dir=rtl] {
 //   mat-card-content {
@@ -178,7 +273,7 @@ $navigatorBtnWidth: 50px;
     }
     &.dx-header-row > td {
       line-height: 40px;
-      color: #aaa;
+      color: $fontColor!important;
       border-bottom: 1px solid #aaa;
     }
     &.dx-data-row > td {

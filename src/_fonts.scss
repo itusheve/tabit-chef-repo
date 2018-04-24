@@ -1,1 +1,13 @@
 @import "./assets/fonts/icomoon/icomoon";
+
+$base-font-size: 16px;
+
+$smaller-font-size: $base-font-size - 1;
+$x-smaller-font-size: $base-font-size - 2;
+$xx-smaller-font-size: $base-font-size - 3;
+$xxx-smaller-font-size: $base-font-size - 4;
+
+$larger-font-size: $base-font-size + 1;
+$x-larger-font-size: $base-font-size + 2;
+$xx-larger-font-size: $base-font-size + 3;
+$xxx-larger-font-size: $base-font-size + 4;

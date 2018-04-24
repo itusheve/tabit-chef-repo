@@ -961,28 +961,6 @@ export class ClosedOrdersDataService {
                 });
             }
 
-            //transformed
-            //pre:
-            // function resolveName(userId) {
-            //     let user = users.find(u => u._id === userId);
-            //     if (user) return `${user.firstName} ${user.lastName}`;
-            //     return `None`;
-            // }
-            // order.waiter = resolveName(order.openedBy);
-            // order.owner = resolveName(order.owner);
-            // order.openedBy = resolveName(order.openedBy);
-            // if (order.lockedBy) {
-            //     order.lockedBy = resolveName(order.lockedBy);
-            // }
-            //post:
-            orderObj.users = {
-                openedBy: resolveUser(order.openedBy),
-                owner: resolveUser(order.owner),
-                opened: resolveUser(order.openedBy),
-                locked: resolveUser(order.lockedBy)
-            };
-            //transformed
-
             order.clubMembers = findClubMembers(order);
 
             if (order.orderedOffers) {
@@ -1711,7 +1689,7 @@ export class ClosedOrdersDataService {
 
                 let _status = "closed"; // order status, dashboard show only closed orders.
 
-                // this function return Promise obj with enrich order form 3td party serivce.
+                // this function return Promise obj with enrich order form 3td party service.
                 function getResolveOrder(
                     tlog,
                     tablesRaw,
@@ -1746,9 +1724,7 @@ export class ClosedOrdersDataService {
 
                     let OrderUsers = {
                         openedBy: resolveUser(resultOrder.openedBy),
-                        owner: resolveUser(resultOrder.owner),
-                        opened: resolveUser(resultOrder.openedBy),
-                        locked: resolveUser(resultOrder.lockedBy)
+                        owner: resolveUser(resultOrder.owner)
                     };
 
                     resultOrder.OrderUsers = OrderUsers;

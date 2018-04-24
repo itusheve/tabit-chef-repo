@@ -2,43 +2,37 @@
     padding: 20px 8px;
 }
 
-table {
-    width: 100%;
-    border-spacing: 0;
-    border-collapse: collapse;
-    
-    th, td {
-        padding: 0 3px;
-        min-width: 35px;
-        // word-break: break-word;
-    }
-    
+// table {
+
+    // th, td {
+        // padding: 0 3px;
+    // }
+
     // td.brea/k-all {
         // word-break: break-all;
     // }
-    
-    td.curr2 {
-        width: 62px;
-    }
 
-    thead {
-        tr {
-            th {
-                vertical-align: bottom;
-            }
-        }
-    }
-    tbody {
-        tr {
-            td {
-                // padding: 8px;
-                line-height: 1.42857143;
-                vertical-align: top;
-                border-top: 1px solid #ddd;
-            }
-        }
-    }
-}
+    // td.curr2 {
+    //     width: 62px;
+    // }
+
+    // thead {
+    //     tr {
+    //         th {
+    //             vertical-align: bottom;
+    //         }
+    //     }
+    // }
+    // tbody {
+    //     tr {
+    //         td {
+                // line-height: 1.42857143;
+                // vertical-align: top;
+                // border-top: 1px solid #ddd;
+    //         }
+    //     }
+    // }
+// }
 
 p {
     padding: 0 20px;

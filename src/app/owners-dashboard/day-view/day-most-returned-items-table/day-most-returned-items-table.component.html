@@ -5,7 +5,7 @@
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center">
-                <table class="fixedWidth">
+                <table class="chf-tbl chf-tbl-row-oriented">
                     <tr class="header">
                         <td style="width:60px;" i18n="@@department">Department</td>
                         <td i18n="@@item">Item</td>
@@ -14,12 +14,15 @@
                         <td style="width:50px;" i18n="@@operationalReductionsValue">Operational Reductions Value</td>
                     </tr>
                 </table>
-                <table class="fixedWidth" *ngFor="let departmentData of data">
+                <table class="chf-tbl chf-tbl-row-oriented" *ngFor="let departmentData of data">
                     <tr *ngFor="let dataObj of departmentData.topItems">
                         <td style="width:60px;">{{departmentData.department}}</td>
                         <td>{{dataObj.itemName}}</td>
                         <td style="width:42px;">{{dataObj.itemPrepared | count}}</td>
-                        <td style="width:70px;">{{dataObj.itemReturned | count}} ({{dataObj.itemReturnedPct | percent:'1.2-2'}})</td>
+                        <td style="width:75px;">
+                            <div>{{dataObj.itemReturned | count}}</div>
+                            <div>({{dataObj.itemReturnedPct | percent:'1.2-2'}})</div>
+                        </td>
                         <td style="width:50px;">{{dataObj.itemReturnValue | curr:'0'}}</td>
                     </tr>
                 </table>

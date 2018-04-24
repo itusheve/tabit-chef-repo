@@ -11,8 +11,6 @@ export class Order {
     users: {
         openedBy: User;
         owner: User;
-        opened: User;
-        locked: User;
     };
     orderType: OrderType;
     sales: number;
@@ -32,7 +30,7 @@ export class Order {
 
     constructor() {
         this.enrichmentLevels = {
-            orderDetails: false//brings: users, 
+            orderDetails: false//brings: users,
         };
     }
 }

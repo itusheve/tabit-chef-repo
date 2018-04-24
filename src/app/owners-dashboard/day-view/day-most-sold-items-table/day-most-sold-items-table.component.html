@@ -5,7 +5,7 @@
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center widget-data">
-                <table class="fixedWidth">
+                <table class="chf-tbl chf-tbl-row-oriented">
                     <tr class="header">
                         <td style="width:70px;" i18n="@@department">Department</td>
                         <td i18n="@@item">Item</td>
@@ -13,7 +13,7 @@
                         <td style="width:42px;" i18n="@@sold">Sold</td>
                     </tr>
                 </table>
-                <table class="fixedWidth" *ngFor="let departmentData of data">
+                <table class="chf-tbl chf-tbl-row-oriented" *ngFor="let departmentData of data">
                     <tr *ngFor="let dataObj of departmentData.topItems">
                         <td style="width:70px;">{{departmentData.department}}</td>
                         <td>{{dataObj.itemName}}</td>

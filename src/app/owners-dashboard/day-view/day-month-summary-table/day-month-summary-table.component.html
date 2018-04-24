@@ -5,7 +5,7 @@
             <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center">
-                <table class="fixedWidth">
+                <table class="chf-tbl chf-tbl-xxx-smaller chf-tbl-row-oriented">
                     <tr class="header">
                         <td i18n="@@businessDay">Business Day</td>
                         <td i18n="@@netSales">Net Sales</td>
@@ -13,7 +13,6 @@
                             <ng-container i18n="@@diners">Diners</ng-container>&nbsp;
                             (<ng-container i18n="@@ppd">Pay Per Diner</ng-container>)
                         </td>
-                        <!-- <td i18n="@@ppd">Pay Per Diner</td> -->
                         <td i18n="@@cancellationsValue">Cancellations Value</td>
                         <td i18n="@@operationalErrorsValue">שווי תקלות תפעול</td>
                         <td i18n="@@retentionValue">Retention Value</td>
@@ -25,7 +24,6 @@
                         <td>
                             {{mtdKPIs?.kpi.diners.count | count}} ({{mtdKPIs?.kpi.diners.ppa | curr:'1'}})
                         </td>
-                        <!-- <td>{{mtdKPIs?.kpi.diners.ppa | curr:'1'}}</td> -->
                         <td>{{mtdKPIs?.kpi.reductions.cancellation | curr:'0'}} ({{mtdKPIs.kpi.reductions.cancellation_pct | pct:1}})</td>
                         <td>{{mtdKPIs?.kpi.reductions.operational | curr:'0'}} ({{mtdKPIs.kpi.reductions.operational_pct | pct:1}})</td>
                         <td>{{mtdKPIs?.kpi.reductions.retention | curr:'0'}} ({{mtdKPIs.kpi.reductions.retention_pct | pct:1}})</td>
