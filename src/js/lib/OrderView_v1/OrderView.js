@@ -16,9 +16,9 @@ const OrderViewService = (function () {
     function _configure(options) {
         if (options.local) _options.local = options.local;
 
-        if (options.isUs !== undefined) {
-            _options.isUs = options.isUs;
-            isUS = options.isUs;
+        if (options.isUS !== undefined) {
+            _options.isUS = options.isUS;
+            isUS = options.isUS;
         };
 
         if (options.moment) {
@@ -99,6 +99,7 @@ const OrderViewService = (function () {
             let oth = [];
 
             offersList.forEach(offer => {
+
                 let offerQyt = 0;
                 if (offer.SPLIT_DENOMINATOR && offer.SPLIT_NUMERATOR && offer.SPLIT_DENOMINATOR !== 100 && offer.SPLIT_NUMERATOR !== 100) {
                     offerQyt = `${offer.SPLIT_NUMERATOR}/${offer.SPLIT_DENOMINATOR}`;
@@ -247,11 +248,15 @@ const OrderViewService = (function () {
                                 _name = tip.NAME ? `${tip.NAME} ${_percent}%` : `${translateService.getText('SERVICE_CHARGE')} ${_percent}%`;
                             }
 
-                            totals.push({
-                                type: 'service_charge',
-                                name: _name,
-                                amount: utils.toFixedSafe(tip.AMOUNT, 2)
-                            })
+                            if (tip.AMOUNT !== 0) {
+                                totals.push({
+                                    type: 'service_charge',
+                                    name: _name,
+                                    amount: utils.toFixedSafe(tip.AMOUNT, 2)
+                                })
+
+                            }
+
                         })
                     }
                 }
@@ -270,6 +275,16 @@ const OrderViewService = (function () {
                         name: translateService.getText('TIP'),
                         amount: utils.toFixedSafe(tipAmount, 2)
                     })
+                }
+                //if it is a returned order, the tip is negative and needs to be presented
+                if (collections.PAYMENT_LIST[0].TRANS_TYPE === Enums.TransTypes.Return) {
+                    if (collections.PAYMENT_LIST[0].TIP_AMOUNT !== 0) {
+                        totals.push({
+                            type: 'tips',
+                            name: translateService.getText('TIP'),
+                            amount: utils.toFixedSafe(-1 * collections.PAYMENT_LIST[0].TIP_AMOUNT, 2)
+                        })
+                    }
                 }
             }
 
@@ -452,7 +467,7 @@ const OrderViewService = (function () {
 
         /**
          * resolve object Order / Tlog.
-         * @param { Object } tlog 
+         * @param { Object } tlog
          */
         function _resolveObject(tlog) {
             let _result;
@@ -471,7 +486,7 @@ const OrderViewService = (function () {
 
         /**
          * resolve total cashback
-         * @param { Object } ResultOrder 
+         * @param { Object } ResultOrder
          */
         function _resolveTotalCashback(payments) {
 
@@ -791,8 +806,8 @@ const OrderViewService = (function () {
 
         /**
          * get table number or OrderType (Refund/TA/Delivery)
-         * @param {*} orderType 
-         * @param {*} tableIds 
+         * @param {*} orderType
+         * @param {*} tableIds
          */
         function _resolveTable(orderType, tableIds) {
 
@@ -1465,7 +1480,7 @@ const OrderViewService = (function () {
             if (order.history && order.history.length > 0) {
                 order.history.forEach(historyItem => {
                     result.push({
-                        action: historyItem.action, // $translate.instant(`ORDERS_VIEW.${historyItem.action}`), // ??????????
+                        action: historyItem.action,
                         data: `Device name: ${historyItem.deviceName}`,
                         at: historyItem.at,
                         by: _resolveUserName(historyItem.by)
@@ -1643,6 +1658,7 @@ const OrderViewService = (function () {
         let data = {};
 
         let _details = billService.resolveItems(variables, collections);
+
         data.items = _details.items;
         data.oth = _details.oth;
         data.isReturnOrder = _details.isReturnOrder;
@@ -1680,6 +1696,7 @@ const OrderViewService = (function () {
         let data = {};
 
         let _details = billService.resolveItems(variables, collections);
+
         data.items = _details.items;
         data.oth = _details.oth;
         data.isReturnOrder = _details.isReturnOrder;
@@ -1687,7 +1704,6 @@ const OrderViewService = (function () {
 
         let _totals = billService.resolveTotals(variables, collections, true)
         data.totals = _totals;
-
         let _payments = billService.resolvePayments(variables, collections, true);
         data.payments = _payments;
 
@@ -1698,6 +1714,7 @@ const OrderViewService = (function () {
 
         let printByOrder = billService.resolvePrintByOrder(variables);
         let waiterDiners = billService.resolveWaiterDiners(variables);
+
 
         return new DataBill(collections, variables, data, printByOrder, waiterDiners);
     }

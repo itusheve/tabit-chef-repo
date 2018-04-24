@@ -38,6 +38,7 @@ import { OffersDataService } from '../tabit/data/dc/_offers.data.service';
 import { PeripheralsDataService } from '../tabit/data/dc/_peripherals.data.service';
 import { PromotionsDataService } from '../tabit/data/dc/_promotions.data.service';
 import { TablesDataService } from '../tabit/data/dc/_tables.data.service';
+import { CheckDataService } from '../tabit/data/dc/_checks.data.service';
 
 import { CardsDataService } from '../tabit/data/dc/cards.data.service';
 import { ClosedOrdersDataService } from '../tabit/data/dc/closedOrders.data.service';
@@ -132,6 +133,7 @@ if (environment.tbtLocale==='he-IL') {
     PeripheralsDataService,
     PromotionsDataService,
     TablesDataService,
+    CheckDataService,
 
     CardsDataService,
     ClosedOrdersDataService,

@@ -34,24 +34,11 @@
         &nbsp;
         <div>{{orderOld.dinersNum}}</div>
       </div>
-      <!-- TODO... -->
-      <!-- <h4 *ngIf="isCheck">
-                    <span class="inline m-far-xs">{{ 'CHECK_NUMBER' | translate }}</span>
-                    <span class="inline">{{$ctrl.selectedCheck.printData.variables.CHECK_NO}}</span>
-                </h4> -->
       <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
-        <!-- TODO why is this commented? -->
-        <!-- <span class="inline m-far-xs returnOrder" i18n="slips@@returnTransaction">Return Transaction</span> -->
       </div>
       <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
-        <!-- TODO why is this commented? -->
-        <!-- <span class="inline m-far-xs fs-12">{{ $ctrl.selectedCheck.printData.variables.RETURN_COMMENT }}</span> -->
       </div>
       <div class="flex te" *ngIf="order.isTaxExempt && (showOrderDetails || isCheck)">
-        <!-- TODO... -->
-        <!-- <div class="text-bold fs-24">{{ 'ORDERS_VIEW.exempted_tax' | translate }}</div>
-                    <div class="text-bold fs-16">{{ $ctrl.printData.variables.TAX_EXEMPTION_CODE }}</div>
-                    <div class="text">{{ $ctrl.printData.variables.TAX_EXEMPTION_COMMENT }}</div> -->
       </div>
     </div>
 
@@ -66,6 +53,8 @@
     <app-order-credit-refund *ngIf="slip.class==='refund' && slip.subclass==='credit'" [data]="slip.data"></app-order-credit-refund>
     <app-order-cash-refund *ngIf="slip.class==='refund' && slip.subclass==='cash'" [data]="slip.data"></app-order-cash-refund>
     <app-order-cheque-refund *ngIf="slip.class==='refund' && slip.subclass==='cheque'" [data]="slip.data"></app-order-cheque-refund>
+    <app-order-credit-slip *ngIf="slip.class==='invoice' && slip.subclass==='credit-slip'" [data]="slip.data"></app-order-credit-slip>
+    <app-order-bill *ngIf="slip.class==='check'" [order]="order" [orderOld]="orderOld" [printDataOld]="slip.data.printData"></app-order-bill>
 
   </div>
 </div>
