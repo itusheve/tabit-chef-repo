@@ -13,21 +13,11 @@ html, body {
   -webkit-font-smoothing: antialiased;
   color: $fontColor;
   background-color: black;
-  overflow:hidden;//TLA
+  overflow:hidden;
   text-align: start;
 }
-:focus {outline:none}//TLA
-::-webkit-scrollbar {display:none}//TLA
-
-
-/* TLA: */
-body::-webkit-scrollbar {display:none}
-
-
-// h1,h2,h3,h4 {display:block;padding:0;margin:0;font-weight:normal}TLA
-
-/* TLA: */
-// app-root {position:fixed;top:0;left:0;width:100vw;height:100vh;overflow:hidden}
+:focus {outline:none}
+::-webkit-scrollbar {display:none}
 
 // TLA:
 .mat-button:hover .mat-button-focus-overlay {opacity:0!important}
@@ -98,7 +88,7 @@ table {
   font-size: $base-font-size;
 
   &.chf-tbl {
-    color: $fontColor;//TODO move to general table?
+    color: $fontColor;
     border-collapse: collapse;
     width: 100%;
 

@@ -4,48 +4,36 @@
     box-shadow: none;//each panel has its own box-shadow
 }
 
-mat-expansion-panel-header {
-    height: 41px!important;
-    font-family: inherit!important;
-    font-size: 16px!important;
-    font-weight: bold!important;
-    padding: 0 12px!important;
-    background-color: #ffffff;
-    &:first-child {
-        border-bottom: 1px solid #eaeff0;
+mat-expansion-panel {
+    mat-expansion-panel-header {
+        height: 41px!important;
+        font-family: inherit!important;
+        font-size: 16px!important;
+        font-weight: bold!important;
+        padding: 0 12px!important;
+        background-color: #ffffff;
+        &:first-child {
+            border-bottom: 1px solid #eaeff0;
+        }
+        mat-panel-title {
+            color: $fontColor!important;
+            flex-grow: 0!important;
+            width: 50px!important;
+        }
+        mat-panel-description {
+            font-weight: normal!important;
+            color: $fontColor!important;
+        }
     }
-    mat-panel-title {
-        color: $fontColor!important;
-        flex-grow: 0!important;
-        width: 50px!important;
-    }
-    mat-panel-description {
-        font-weight: normal!important;
-        color: $fontColor!important;
+
+    /deep/.mat-expansion-panel-body {
+        padding: 0!important;
     }
 }
-
-.mat-expansion-panel-body {
-    padding: 0 7px 16px 7px!important;
-}
-
-// table {
-//     table-layout: auto;
-// }
-
-// table tr td {
-//     padding-right: 3px!important;
-//     padding-left: 3px!important;
-// }
-// table tr td:first-child {
-//     padding-right: 8px!important;
-//     padding-left: 8px!important;
-// }
 
 .iconFilter {
     cursor: pointer;
     padding: 6px;
     border: 1px solid #b3b6ca;
     border-radius: 25px;
-    // color: #b3b6ca;
 }

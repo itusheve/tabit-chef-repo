@@ -2,37 +2,11 @@
     padding: 20px 8px;
 }
 
-// table {
-
-    // th, td {
-        // padding: 0 3px;
-    // }
-
-    // td.brea/k-all {
-        // word-break: break-all;
-    // }
-
-    // td.curr2 {
-    //     width: 62px;
-    // }
-
-    // thead {
-    //     tr {
-    //         th {
-    //             vertical-align: bottom;
-    //         }
-    //     }
-    // }
-    // tbody {
-    //     tr {
-    //         td {
-                // line-height: 1.42857143;
-                // vertical-align: top;
-                // border-top: 1px solid #ddd;
-    //         }
-    //     }
-    // }
-// }
+mat-expansion-panel {
+    /deep/.mat-expansion-panel-body {
+        padding: 0!important;
+    }
+}
 
 p {
     padding: 0 20px;
