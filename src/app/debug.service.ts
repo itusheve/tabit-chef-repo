@@ -20,7 +20,6 @@ export class DebugService {
     }
 
     constructor() {
-        (<any>window).debugServiceLogArr = (<any>window).debugServiceLogArr || [];//arr for uncaught errors (normally gets created by the WRAPPER)
         this.logArr = (<any>window).debugServiceLogArr;
     }
 

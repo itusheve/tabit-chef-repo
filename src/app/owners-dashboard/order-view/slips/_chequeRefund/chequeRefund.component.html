@@ -1,24 +1,24 @@
 <div class="ticket-box d-col">
 
-    <small i18n="slips@@returnedInCheque">Returned in cheque</small>
+    <small i18n="@@returnedInCheque">Returned in cheque</small>
 
     <div class="flex j-sb">
-        <span i18n="slips@@businessMeal">Business Meal></span>
+        <span i18n="@@businessMeal">Business Meal></span>
         <span>{{(data.amount/100) | number:'1.2-2'}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@beforeVAT">Before VAT</span>
+        <span i18n="@@beforeVAT">Before VAT</span>
         <span>{{((data.amount/100)-(data.tax?.amount/100)) | number:'1.2-2'}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@vat">VAT</span>
+        <span i18n="@@vat">VAT</span>
         <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@includeVAT">Include VAT</span>
+        <span i18n="@@includeVAT">Include VAT</span>
         <span>{{(data.amount/100) | number:'1.2-2'}}</span>
     </div>
 

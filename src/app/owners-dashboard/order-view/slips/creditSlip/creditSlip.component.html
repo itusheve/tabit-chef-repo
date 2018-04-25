@@ -1,76 +1,76 @@
 <div class="ticket-box flex d-col">
 
     <div class="flex j-sb">
-        <span i18n="slips@@TransactionType">Transaction Type</span>
+        <span i18n="transactionType">Transaction Type</span>
         <span *ngIf="data.TRANS_TYPE">{{data.TRANS_TYPE}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@CardType">Card Type</span>
+        <span i18n="cardType">Card Type</span>
         <span *ngIf="data.CARD_TYPE">{{data.CARD_TYPE}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@CardNumber">CARD NO</span>
+        <span i18n="cardNumber">CARD no.</span>
         <span ng-if="data.CARD_NUMBER_MASKED">{{data.CARD_NUMBER_MASKED}}</span>
         <span ng-if="!data.CARD_NUMBER_MASKED">XXXX-{{data.LAST_4}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@CardHolder">Card Holder</span>
+        <span i18n="cardHolder">Card Holder</span>
         <span *ngIf="data.CUSTOMER_NAME">{{data.CUSTOMER_NAME}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@DateOrTime">Date/Time</span>
+        <span i18n="dateOrTime">Date/Time</span>
         <span *ngIf="data.PROVIDER_PAYMENT_DATE">{{data.PROVIDER_PAYMENT_DATE | date : 'dd/MM/yyyy HH:mm'}}</span>
     </div>
 
     <hr />
 
     <div class="flex j-sb">
-        <span i18n="slips@@Merchant">Merchant Code.</span>
+        <span i18n="merchantCode">Merchant code</span>
         <span *ngIf="data.MERCHANT_NUMBER">{{data.MERCHANT_NUMBER}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@Sequence">Sequence No.</span>
+        <span i18n="sequenceNum">Sequence no.</span>
         <span *ngIf="data.PROVIDER_TRANS_ID">{{data.PROVIDER_TRANS_ID}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@Response">Response Code.</span>
+        <span i18n="responseCode">Response code</span>
         <span *ngIf="data.PROVIDER_RESPONSE_CODE&&data.PROVIDER_RESPONSE_MESSAGE">{{data.PROVIDER_RESPONSE_CODE}}/{{data.PROVIDER_RESPONSE_MESSAGE}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@Approval">Approval No.</span>
+        <span i18n="approvalNumber">Approval no.</span>
         <span *ngIf="data.CONFIRMATION_NUMBER">{{data.CONFIRMATION_NUMBER}}</span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@Entry">Entry Method</span>
+        <span i18n="entryMethod">Entry Method</span>
         <span *ngIf="data.ENTRY_METHOD">{{data.ENTRY_METHOD}}</span>
     </div>
 
     <hr />
 
     <div class="flex j-sb">
-        <span i18n="slips@@CheckTotal">Check Total</span>
+        <span i18n="checkTotal">Check Total</span>
         <span *ngIf="data.ENTRY_METHOD">
             <span class="negative">{{data.P_AMOUNT_WO_TIP | number:'1.2-2'}}</span>
         </span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@Tip">Tip</span>
+        <span i18n="tip">Gratuity</span>
         <span *ngIf="data.TIP_AMOUNT">
             <span class="negative">{{data.TIP_AMOUNT | number:'1.2-2'}}</span>
         </span>
     </div>
 
     <div class="flex j-sb">
-        <span i18n="slips@@Total">Total</span>
+        <span i18n="total">Total</span>
         <span *ngIf="data.P_AMOUNT">
             <span class="negative">{{data.P_AMOUNT | number:'1.2-2'}}</span>
         </span>

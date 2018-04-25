@@ -181,6 +181,12 @@ export class MonthViewComponent  {
 
         that.dataService.currentMonthForecast$
           .subscribe(data => {
+            // dat ais undefined if not enough data for forecasting
+            if (!data) {
+              that.showForecast = false;
+              return;
+            }
+
             const title = `${that.datePipe.transform(month, 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
             that.forecastCardData.diners = data.diners;
             that.forecastCardData.ppa = vat ? data.ppa : data.ppa / 1.17;

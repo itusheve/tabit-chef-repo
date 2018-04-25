@@ -2,6 +2,14 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="entryMethod" datatype="html">
+        <source>Entry Method</source>
+        <target>שיטת הזנה</target>
+      </trans-unit>
+      <trans-unit id="checkTotal" datatype="html">
+        <source>Check Total</source>
+        <target>סך חשבון</target>
+      </trans-unit>
       <trans-unit id="cancel" datatype="html">
         <source>Cancel</source>
         <target>בטל</target>
@@ -610,25 +618,23 @@
       </trans-unit>
       <trans-unit id="approvalNumber" datatype="html">
         <source>Approval no.</source>
-        <target>מספר אישור</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/invoiceCredit/invoiceCredit.component.ts</context>
-          <context context-type="linenumber">53</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/deliveryNote/deliveryNote.component.ts</context>
-          <context context-type="linenumber">53</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/deliveryNoteRefund/deliveryNoteRefund.component.ts</context>
-          <context context-type="linenumber">57</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/_creditRefund/creditRefund.component.ts</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-        <note priority="1" from="description">מספר אישור</note>
-        <note priority="1" from="meaning">slips</note>
+        <target>מספר אישור</target>2
+      </trans-unit>
+      <trans-unit id="sequenceNum" datatype="html">
+        <source>Sequence no.</source>
+        <target>מספר רץ</target>2
+      </trans-unit>
+      <trans-unit id="dateOrTime" datatype="html">
+        <source>Date/Time</source>
+        <target>תאריך/שעה</target>2
+      </trans-unit>
+      <trans-unit id="cardHolder" datatype="html">
+        <source>Card Holder</source>
+        <target>כרטיס ע"ש</target>2
+      </trans-unit>
+      <trans-unit id="merchantCode" datatype="html">
+        <source>Merchant code</source>
+        <target>קוד מסוף</target>2
       </trans-unit>
       <trans-unit id="change" datatype="html">
         <source>Change</source>
@@ -713,7 +719,7 @@
         <note priority="1" from="meaning">slips</note>
       </trans-unit>
       <trans-unit id="cardNumber" datatype="html">
-        <source>Card number</source>
+        <source>Card no.</source>
         <target>מספר כרטיס</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/owners-dashboard/order-view/slips/deliveryNote/deliveryNote.component.ts</context>
@@ -755,6 +761,14 @@
         </context-group>
         <note priority="1" from="description">כרטיס</note>
         <note priority="1" from="meaning">slips</note>
+      </trans-unit>
+      <trans-unit id="cardType" datatype="html">
+        <source>Card Type</source>
+        <target>סוג כרטיס</target>
+      </trans-unit>
+      <trans-unit id="transactionType" datatype="html">
+        <source>Transaction Type</source>
+        <target>סוג טרנזקציה</target>
       </trans-unit>
       <trans-unit id="returnedInCheque" datatype="html">
         <source>Returned in cheque</source>
