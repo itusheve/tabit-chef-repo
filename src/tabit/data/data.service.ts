@@ -712,12 +712,16 @@ export class DataService {
             - the logged user has both ANALYTICS_VIEW AND FINANCE responsiblities for the org
     */
     getOrganizations(): Promise<any> {
-        return this.rosEp.get('organizations')
-            .then(orgs => {
+        return Promise.all([
+            this.rosEp.get('organizations'),
+            this.rosEp.get('account/me')//user responsibilities might got changed so we re-get them for the permissions test
+        ])
+            .then(data => {
+                const orgs = data[0];
+                const user = data[1];
                 return orgs
                     .filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT')
                     .filter(o=>{
-                        const user = JSON.parse(window.localStorage.getItem('user'));
                         if (user.isStaff) return true;
 
                         let membership = user.memberships.find(m => {
