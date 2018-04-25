@@ -719,7 +719,7 @@ export class DataService {
                     let membership = user.memberships.find(m => {
                         return m.organization === o.id && m.active;
                     });
-                    if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1) {
+                if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1 || membership.responsibilities.indexOf('FINANCE') === -1) {
                         return false;
                     }
                     return true;
