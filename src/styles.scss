@@ -321,6 +321,11 @@ i.icon {
     }
 }
 
+simple-snack-bar {
+  font-size: $base-font-size!important;
+  font-family: inherit!important;
+}
+
 //https://quickleft.com/blog/4-steps-to-minimizing-rendering-issues-in-cordova-applications/
 // * {
 //   backface-visibility: hidden;

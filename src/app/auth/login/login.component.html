@@ -22,8 +22,12 @@
                 formControlName="email"
                 required
                 autofocus
+                 [(ngModel)]="email_"
                 >
-              <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+              <button mat-button *ngIf="email_" matSuffix mat-icon-button aria-label="Clear" (click)="email_=''">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error *ngIf="email.invalid && email.value && (email.dirty || email.touched)">
                 <div *ngIf="email.errors.email" i18n="login@@illegalEmail">Illegal email</div>
               </mat-error>
             </mat-form-field>

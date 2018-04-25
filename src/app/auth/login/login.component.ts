@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(1)])
   });
 
+  email_;
   get email() { return this.loginForm.get('email'); }
   get password() { return this.loginForm.get('password'); }
 
@@ -64,7 +65,8 @@ export class LoginComponent implements OnInit {
           this.snackBar.open(tmpTranslations.get('login.userPassIncorrect'), null, {
             direction: 'rtl',//TODO localization
             duration: 3000,
-              });
+            verticalPosition: 'top'
+          });
         }
       });
   }
