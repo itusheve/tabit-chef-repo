@@ -44,7 +44,7 @@ export class AuthService {
                     let membership = user.memberships.find(m => {
                         return m.organization === org.id && m.active;
                     });
-                    if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1) {
+                    if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1 || membership.responsibilities.indexOf('FINANCE') === -1) {
                         // not allowed
                         reject('');
                     }
