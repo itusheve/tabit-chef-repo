@@ -705,30 +705,31 @@ export class DataService {
         });
     }
 
-    get organizations(): ReplaySubject<any> {
-        if (this.organizations$) return this.organizations$;
-        this.organizations$ = new ReplaySubject<any>();
+    /*
+        returns Promise that resolves with array of org objects (raw from ROS), filtered by:
+            - org is active & live
+            - org is not TABIT or an HQ
+            - the logged user has both ANALYTICS_VIEW AND FINANCE responsiblities for the org
+    */
+    getOrganizations(): Promise<any> {
+        return this.rosEp.get('organizations')
+            .then(orgs => {
+                return orgs
+                    .filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT')
+                    .filter(o=>{
+                        const user = JSON.parse(window.localStorage.getItem('user'));
+                        if (user.isStaff) return true;
 
-        this.rosEp.get('organizations', {}).then(orgs => {
-            const filtered = orgs
-            .filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT')
-            .filter(o=>{
-                    const user = JSON.parse(window.localStorage.getItem('user'));
-                    if (user.isStaff) return true;
+                        let membership = user.memberships.find(m => {
+                            return m.organization === o.id && m.active;
+                        });
 
-                    let membership = user.memberships.find(m => {
-                        return m.organization === o.id && m.active;
+                        if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1 || membership.responsibilities.indexOf('FINANCE') === -1) {
+                                return false;
+                        }
+                        return true;
                     });
-                if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1 || membership.responsibilities.indexOf('FINANCE') === -1) {
-                        return false;
-                    }
-                    return true;
-                });
-
-            this.organizations$.next(filtered);
-        });
-
-        return this.organizations$;
+            });
     }
 
     getMonthlyData(month: moment.Moment): Promise<any> {//TODO now that olapDataByMonths is available, use it? or is it too slow?

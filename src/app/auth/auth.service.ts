@@ -94,13 +94,6 @@ export class AuthService {
                         this.authToken = token.access_token;
                         window.localStorage.setItem('token', JSON.stringify(token));
 
-                        // setTimeout(() => {
-                        //     token.access_token = 'xxx';
-                        //     this.authToken = token.access_token;
-                        //     this.ds.log(`authSvc: authenticate: setting access token to: ${JSON.stringify(token)}`);
-                        //     window.localStorage.setItem('token', JSON.stringify(token));
-                        // }, 10*1000);
-
                         this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
                             .subscribe(
                                 user=>{
@@ -152,17 +145,34 @@ export class AuthService {
                     .then(()=>{
                         this.ds.log('authSvc: authenticate: refreshing token: done');
                         resolve();
+                    })
+                    .catch(e=>{
+                        reject(e);
                     });
 
+                // async check if the user responsibilities hasnt changed and they still allow him the org.
+                // if not, user will be logged out and will be forced to re authenticate.
+                if (org)  {
+                    this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
+                        .subscribe(
+                            (user: any) => {
+                                if (user.isStaff) return;
 
-                // setTimeout(() => {
-                //     token.access_token = 'xxx';
-                //     this.authToken = token.access_token;
-                //     this.ds.log(`authSvc: authenticate: setting access token to: ${JSON.stringify(token)}`);
-                //     window.localStorage.setItem('token', JSON.stringify(token));
-                // }, 10 * 1000);
+                                //TODO DRY with getOrganizations, refactor to a common func
+                                let membership = user.memberships.find(m => {
+                                    return m.organization === org.id && m.active;
+                                });
 
-                // resolve();
+                                if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1 || membership.responsibilities.indexOf('FINANCE') === -1) {
+                                    //log out:
+                                    this.ds.err(`authSvc: authenticate: user no longer permitted to org ${org.name}: logging out;`);
+                                    this.authToken = undefined;
+                                    this.clearLocalStorage();
+                                    window.location.reload();
+                                }
+                            }
+                        );
+                }
             }
         });
     }

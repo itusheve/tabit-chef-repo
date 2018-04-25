@@ -102,7 +102,13 @@ if (environment.tbtLocale==='he-IL') {
   providers: [
     {
       provide: APP_INITIALIZER,
-      useFactory: (as: AuthService) => function () { return as.authByToken(); },
+      useFactory: (as: AuthService) => function () {
+        return as.authByToken()
+          .catch(e=>{
+            window.localStorage.clear();
+            window.location.reload();
+          });
+      },
       deps: [AuthService],
       multi: true
     },

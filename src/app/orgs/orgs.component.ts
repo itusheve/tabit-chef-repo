@@ -65,9 +65,8 @@ export class OrgsComponent implements OnInit {
   }
 
   private render() {
-
-    this.dataService.organizations.take(1)
-      .subscribe(orgs=>{
+    this.dataService.getOrganizations()
+      .then(orgs=>{
         if (orgs.length===1) {
           this.selectOrg(orgs[0]);
         } else {
@@ -75,7 +74,6 @@ export class OrgsComponent implements OnInit {
           this.orgsFiltered = orgs;
         }
       });
-
   }
 
   selectOrg(org:any) {
