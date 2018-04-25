@@ -12,7 +12,7 @@
 
         <!-- reactive form + material design: -->
         <form class="flex d-col" [formGroup]="loginForm" novalidate>
-          <div class="flex d-col example-container">
+          <div class="flex d-col">
             <mat-form-field style="width:100%">
               <input
                 matInput
@@ -22,9 +22,8 @@
                 formControlName="email"
                 required
                 autofocus
-                 [(ngModel)]="email_"
                 >
-              <button mat-button *ngIf="email_" matSuffix mat-icon-button aria-label="Clear" (click)="email_=''">
+              <button mat-button *ngIf="loginForm.value.email" matSuffix mat-icon-button aria-label="Clear" (click)="loginForm.patchValue({email: ''})">
                 <mat-icon>close</mat-icon>
               </button>
               <mat-error *ngIf="email.invalid && email.value && (email.dirty || email.touched)">
@@ -49,6 +48,7 @@
             </mat-form-field>
           </div>
           <button class="as-center" style="height: 50px;" mat-raised-button color="primary" (click)="login()" i18n="login@@login">Login</button>
+          <div i18n="@@forgotPassword" (click)="forgotPassword()" style=" color: #9b9b9b; text-align: center; font-size: medium; margin-top: 10px; cursor: pointer; ">Forgot Password</div>
         </form>
 
     </div>

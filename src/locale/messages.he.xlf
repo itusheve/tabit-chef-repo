@@ -6,6 +6,10 @@
         <source>Entry Method</source>
         <target>שיטת הזנה</target>
       </trans-unit>
+      <trans-unit id="send" datatype="html">
+        <source>Send</source>
+        <target>שלח</target>
+      </trans-unit>
       <trans-unit id="checkTotal" datatype="html">
         <source>Check Total</source>
         <target>סך חשבון</target>
@@ -201,6 +205,10 @@
         </context-group>
         <note priority="1" from="description">סיסמא</note>
         <note priority="1" from="meaning">login</note>
+      </trans-unit>
+      <trans-unit id="forgotPassword" datatype="html">
+        <source>Forgot Password</source>
+        <target>שכחתי סיסמא</target>
       </trans-unit>
       <trans-unit id="login" datatype="html">
         <source>Login</source>

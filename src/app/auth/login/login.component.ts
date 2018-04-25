@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { AuthService } from '../auth.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { tmpTranslations } from '../../../tabit/data/data.service';
+import { ForgotPasswordDialogComponent } from '../../../tabit/ui/dialogs/forgot-password.component/forgot-password.component';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private router:Router,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) { }
 
   //TODO: side menu add X and enable sliding off
@@ -32,9 +34,8 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(1)])
   });
 
-  email_;
-  get email() { return this.loginForm.get('email'); }
-  get password() { return this.loginForm.get('password'); }
+  get email(): any { return this.loginForm.get('email'); }
+  get password(): any { return this.loginForm.get('password'); }
 
   ngOnInit() {
     // after hitting logout, we get the switch mode so after login, the org selection comp will know to reload
@@ -69,6 +70,40 @@ export class LoginComponent implements OnInit {
           });
         }
       });
+  }
+
+  forgotPassword() {
+    let dialogRef = this.dialog.open(ForgotPasswordDialogComponent, {
+      direction: 'rtl',//TODO localization
+      width: '450px',
+      data: {
+        title: tmpTranslations.get('login.passwordRestore'),
+        // content: `
+        //   ${tmpTranslations.get('areYouSureYouWish')} ${tmpTranslations.get('toLogout')}?
+        // `
+        email: this.loginForm.value.email.slice(0)
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result!==false) {
+        this.authService.forgotPassword({email: result.email})
+          .then(() => {
+            this.snackBar.open(`${tmpTranslations.get('login.resetPasswordSent')} ${result.email}`, null, {
+              direction: 'rtl',//TODO localization
+              duration: 5000,
+              verticalPosition: 'top'
+            });
+          })
+          .catch(()=> {
+            this.snackBar.open(`${tmpTranslations.get('opFailed')} (err 826)`, null, {
+              direction: 'rtl',//TODO localization
+              duration: 5000,
+              verticalPosition: 'top'
+            });
+          });
+      }
+    });
   }
 
 }

@@ -135,20 +135,43 @@ export class AuthService {
                     }
                 }
 
-                if (!token) {
-                    resolve();
-                    return;
-                }
+                // if (!token) {
+                //     resolve();
+                //     return;
+                // }
 
-                this.ds.log('authSvc: authenticate: refreshing token (to try and solve the problem)');
-                this.refreshToken()
-                    .then(()=>{
-                        this.ds.log('authSvc: authenticate: refreshing token: done');
-                        resolve();
+                if (token) {
+                    if (token.refresh_token) {
+                        this.ds.log('authSvc: authenticate: refreshing token (to try and solve the problem)');
+                        this.refreshToken()
+                            .then(()=>{
+                                this.ds.log('authSvc: authenticate: refreshing token: done');
+                                resolve();
+                            })
+                            .catch(e=>{
+                                reject(e);
+                            });
+                    }
+                } else {
+                    //get anonymous token for this session only - not storing in localStorage. required to send to ROS for e.g. when requesting to reset password.
+                    this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
+                        client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
+                        grant_type: 'client_credentials'
                     })
-                    .catch(e=>{
-                        reject(e);
-                    });
+                        .subscribe(
+                            (
+                                token: {
+                                    access_token: string
+                                }
+                            ) => {
+                                this.authToken = token.access_token;
+                                resolve();
+                            },
+                            err => {
+                                // reject(err);
+                            }
+                        );
+                }
 
                 // async check if the user responsibilities hasnt changed and they still allow him the org.
                 // if not, user will be logged out and will be forced to re authenticate.
@@ -235,5 +258,19 @@ export class AuthService {
         if (!token) throw Observable.throw({});
         subject.next(token.access_token);
         return subject;
+    }
+
+    forgotPassword(options: {email: string}): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.httpClient.post(`${this.rosBaseUrl}account/password/request`, {
+                email: options.email,
+                locale: environment.tbtLocale
+            })
+                .subscribe((a: any) => {
+                    resolve();
+                }, err => {
+                    reject(err);
+                });
+        });
     }
 }

@@ -39,10 +39,13 @@ until angular comes up with the final i18n solution that includes in-component t
 
 const tmpTranslations_ = {
     'he-IL': {
+        opFailed: 'הפעולה נכשלה. אנא פנה לתמיכה.',
         areYouSureYouWish: 'האם אתה בטוח שברצונך',
         toLogout: 'להתנתק',
         login: {
-            userPassIncorrect: 'שם משתמש ו/או סיסמא אינם נכונים'
+            userPassIncorrect: 'שם משתמש ו/או סיסמא אינם נכונים',
+            passwordRestore: 'איפוס סיסמא',
+            resetPasswordSent: 'דוא"ל עם פרטי איפוס סיסמא נשלח ל'
         },
         orderTypes: {
             seated: 'בישיבה',
@@ -81,10 +84,13 @@ const tmpTranslations_ = {
         }
     },
     'en-US': {
+        opFailed: 'Operation has failed. please contact support.',
         areYouSureYouWish: 'Are you sure you wish',
         toLogout: 'to logout',
         login: {
-            userPassIncorrect: 'Incorrect User / Password'
+            userPassIncorrect: 'Incorrect User / Password',
+            passwordRestore: 'Reset Password',
+            resetPasswordSent: 'An email with password reset details was sent to'
         },
         orderTypes: {
             seated: 'Seated',
