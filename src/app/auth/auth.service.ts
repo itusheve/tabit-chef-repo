@@ -201,8 +201,8 @@ export class AuthService {
     }
 
     /*
-    try to authenticate with the refresh token.
-    on success resolve with new access token
+        try to authenticate with the refresh token.
+        on success resolve with new access token
      */
     public refreshToken(): Promise<string> {
         return new Promise((resolve, reject) => {
@@ -212,11 +212,7 @@ export class AuthService {
                 client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
                 grant_type: 'refresh_token',
                 refresh_token: token.refresh_token
-            })
-                .subscribe((token: {
-                    access_token: string,
-                    refresh_token: string
-                })=>{
+            }).subscribe((token: any)=>{
                     this.authToken = token.access_token;
                     window.localStorage.setItem('token', JSON.stringify(token));
                     resolve(this.authToken);

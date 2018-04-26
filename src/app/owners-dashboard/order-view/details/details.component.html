@@ -122,7 +122,7 @@
                         <td *ngIf="!isUS">{{ row.at | date : 'dd/MM/yyyy HH:mm:ss' }}</td>
                         <td *ngIf="isUS">{{ row.at | date : 'MM/dd/yyyy HH:mm:ss a' }}</td>
                         <td style="text-transform: capitalize;">{{ row.action }}</td>
-                        <td>
+                        <td class="break">
                             <ng-container *ngIf="row.recordType!=='payment'">{{row.data}}</ng-container>
                             <ng-container class="flex d-row" *ngIf="row.recordType==='payment'">
                                 <ng-container *ngFor="let item of row.data">
@@ -225,7 +225,7 @@
                             <ng-container>{{payment.methodName}}</ng-container>
                             <ng-container ng-if="payment.creditCardBrand">{{payment.creditCardBrand}} {{payment.source}}</ng-container>
                         </td>
-                        <td>{{payment.customerName}}</td>
+                        <td class="break">{{payment.customerName}}</td>
                         <td>{{payment.last4}}</td>
                         <td>{{payment.amount | curr:'2':'cents'}}</td>
                         <td>{{payment.faceValue | curr:'2':'cents'}}</td>
