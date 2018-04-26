@@ -1,6 +1,6 @@
 {
   "production":{
-    "version": "1.0.18",
+    "version": "1.0.19",
     "bundles":[
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Assistant",
@@ -12,16 +12,16 @@
     ]
   },
   "development":{
-    "version": "1.0.1",
+    "version": "1.0.4",
     "bundles":[
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Roboto",
-      "http://10.100.10.236:4200/inline.bundle.js",
-      "http://10.100.10.236:4200/polyfills.bundle.js",
-      "http://10.100.10.236:4200/styles.bundle.js",
-      "http://10.100.10.236:4200/scripts.bundle.js",
-      "http://10.100.10.236:4200/vendor.bundle.js",
-      "http://10.100.10.236:4200/main.bundle.js"
+      "http://10.100.10.93:5200/inline.bundle.js",
+      "http://10.100.10.93:5200/polyfills.bundle.js",
+      "http://10.100.10.93:5200/styles.bundle.js",
+      "http://10.100.10.93:5200/scripts.bundle.js",
+      "http://10.100.10.93:5200/vendor.bundle.js",
+      "http://10.100.10.93:5200/main.bundle.js"
     ]
   }
 }

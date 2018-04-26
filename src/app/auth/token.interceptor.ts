@@ -58,6 +58,7 @@ export class TokenInterceptor implements HttpInterceptor {
         // });
         // return next.handle(clonedReq)
 
+        this.ds.log(`tokenInterceptor: request intercepted: adding token: ${that.authService.authToken}`);
         return next.handle(that.addToken(request, that.authService.authToken))
             .catch(error => {
                 this.ds.log(`tokenInterceptor: intercept: catched error`);

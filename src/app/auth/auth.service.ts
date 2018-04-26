@@ -103,10 +103,8 @@ export class AuthService {
                                 },
                                 e=>{
                                     //reverse process upon error
-                                    this.authToken = undefined;
-                                    this.clearLocalStorage();
-                                    // console.error(e);
-                                    this.ds.err(`authSvc: authenticate: get me failed: ${e}`);
+                                    this.ds.err(`authSvc: authenticate: get me failed - unauthenticate (anon auth): ${e}`);
+                                    this.unauthenticate();
                                 },
                                 ()=>{
                                     //console.log('bla');
@@ -141,6 +139,7 @@ export class AuthService {
                 // }
 
                 if (token) {
+                    this.ds.log('authSvc: authenticate: token found');
                     if (token.refresh_token) {
                         this.ds.log('authSvc: authenticate: refreshing token (to try and solve the problem)');
                         this.refreshToken()
@@ -153,24 +152,15 @@ export class AuthService {
                             });
                     }
                 } else {
-                    //get anonymous token for this session only - not storing in localStorage. required to send to ROS for e.g. when requesting to reset password.
-                    this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
-                        client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
-                        grant_type: 'client_credentials'
-                    })
-                        .subscribe(
-                            (
-                                token: {
-                                    access_token: string
-                                }
-                            ) => {
-                                this.authToken = token.access_token;
-                                resolve();
-                            },
-                            err => {
-                                // reject(err);
-                            }
-                        );
+                    this.ds.log('authSvc: authenticate: no token found');
+                    this.ds.log('authSvc: authenticate: no token found: unauthenticating (anon auth)');
+                    this.unauthenticate()
+                        .then(()=>{
+                            resolve();
+                        })
+                        .catch(e=>{
+                            reject(e);
+                        })
                 }
 
                 // async check if the user responsibilities hasnt changed and they still allow him the org.
@@ -188,10 +178,13 @@ export class AuthService {
 
                                 if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1 || membership.responsibilities.indexOf('FINANCE') === -1) {
                                     //log out:
-                                    this.ds.err(`authSvc: authenticate: user no longer permitted to org ${org.name}: logging out;`);
-                                    this.authToken = undefined;
-                                    this.clearLocalStorage();
-                                    window.location.reload();
+                                    this.ds.err(`authSvc: authenticate: user no longer permitted to org ${org.name}: unauthenticate (anon auth)`);
+                                    this.unauthenticate()
+                                        .then(()=>{
+                                            this.ds.err(`authSvc: authenticate: user no longer permitted to org ${org.name}: unauthenticate (anon auth): done`);
+                                            this.ds.err(`authSvc: authenticate: user no longer permitted to org ${org.name}: reloading`);
+                                            window.location.reload();
+                                        })
                                 }
                             }
                         );
@@ -226,10 +219,31 @@ export class AuthService {
 
     private unauthenticate(): Promise<any> {
         return new Promise((resolve, reject)=>{
+            this.ds.log(`unauthenticate: started`);
             this.clearLocalStorage();
             this.authState = 0;
-            this.authToken = undefined;
-            resolve();
+
+            //get anonymous token for this session only - not storing in localStorage. required at times to send to ROS on anon scenarios, e.g. when requesting to reset password.
+            this.ds.log(`unauthenticate: get anon token`);
+            this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
+                client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
+                grant_type: 'client_credentials'
+            })
+                .subscribe(
+                    (
+                        token: {
+                            access_token: string
+                        }
+                    ) => {
+                        this.ds.log(`unauthenticate: get anon token: success: ${token.access_token}`);
+                        this.authToken = token.access_token;
+                        resolve();
+                    },
+                    e => {
+                        this.ds.log(`unauthenticate: get anon token: failed: ${e}`);
+                        reject(e);
+                    }
+                );
         });
     }
 
