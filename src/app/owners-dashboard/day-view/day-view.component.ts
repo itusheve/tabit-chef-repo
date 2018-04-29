@@ -147,14 +147,14 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
       this.dataService.shifts$,
       this.dataService.getDailyDataByShiftAndType(this.day),
       this.dataService.dailyDataLimits$,
-      this.dataService.previousBd$,
-      (shifts: Shift[], dailyData: any, dailyDataLimits: any, previousBd: moment.Moment) => Object.assign({}, { shifts: shifts }, dailyData, { dailyDataLimits: dailyDataLimits }, { previousBd: previousBd})
+      this.dataService.currentBd$,
+      (shifts: Shift[], dailyData: any, dailyDataLimits: any, currentBd: moment.Moment) => Object.assign({}, { shifts: shifts }, dailyData, { dailyDataLimits: dailyDataLimits }, { currentBd: currentBd})
     );
 
     data$.subscribe(data=>{
       this.daySelectorOptions = {
         minDate: moment(data.dailyDataLimits.minimum),
-        maxDate: moment(data.previousBd)
+        maxDate: moment(data.currentBd)
       };
 
       this.salesByOrderType = data.salesByOrderType;

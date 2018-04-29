@@ -17,10 +17,10 @@
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
                     </td>
-                    <td (click)="sort('tableId')" style="width:60px">
+                    <td (click)="sort('tableId')">
                         <div class="flex a-center">
                             <div>
-                                <ng-container i18n="@@table">Table</ng-container>
+                                <ng-container i18n="@@table">Table</ng-container><br>
                                 (<ng-container i18n="@@order">Order</ng-container>)
                             </div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='desc'">arrow_drop_down</mat-icon>
@@ -41,7 +41,7 @@
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='item' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
                     </td>
-                    <td (click)="sort('retention')" style="width:42px">
+                    <td (click)="sort('retention')">
                         <div class="flex a-center">
                             <div i18n="@@amount">Amount</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='retention' && sortDir==='desc'">arrow_drop_down</mat-icon>
@@ -86,8 +86,9 @@
                                 mediaExchange {Media Exchange}
                             }
                         </span>
+                        <br>
                         <span>
-                            &nbsp;({{tuple.orderNumber}})
+                            ({{tuple.orderNumber}})
                         </span>
                     </td>
                     <!-- <td

@@ -147,7 +147,12 @@ export class HomeComponent implements OnInit {
   }
 
   onDayRequest(date: string) {
-    if (date ==='previousBD') {
+    if (date === 'currentBD') {
+      this.dataService.currentBd$.take(1).subscribe(cbd => {
+        date = cbd.format('YYYY-MM-DD');
+        this.router.navigate(['/owners-dashboard/day', date]);
+      });
+    } else if (date ==='previousBD') {
       if (this.previousBdNotFinal) {
         return;
       }
