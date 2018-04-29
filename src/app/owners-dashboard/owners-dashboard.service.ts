@@ -49,6 +49,13 @@ export class OwnersDashboardService {
             that.toolbarConfig.left.back.onGoBackClicked();
         });
 
+        this.dataService.getOrganizations()
+            .then(orgs => {
+                if (orgs.length === 1) {
+                    this.sideNavConfig.content.showMySitesBtn = false;
+                }
+            });
+
         const that = this;
         dataService.user$
             .subscribe(user => {

@@ -6,7 +6,7 @@
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-stretch">
                 <mat-accordion *ngIf="byOrderTypes">
-                    <mat-expansion-panel expanded="false" hideToggle="true" *ngFor="let orderType of byOrderTypes | hasSales">
+                    <mat-expansion-panel expanded="false" hideToggle="true" (closed)="panelClosed()" *ngFor="let orderType of byOrderTypes | hasSales">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{orderType.caption}}
@@ -94,8 +94,6 @@
                         </table>
 
                     </mat-expansion-panel>
-
-
                 </mat-accordion>
             </div>
         </div>

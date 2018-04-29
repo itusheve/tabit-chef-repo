@@ -186,8 +186,6 @@ export const appVersions = (document as any).tbtAppVersions;
 @Injectable()
 export class DataService {
 
-    private organizations$: ReplaySubject<any>;
-
     // private dashboardData$: Observable<any> = Observable.create(obs => {//Barry: do not auto-update this figure
     //     const params = {
     //         daysOfHistory: 2//0 returns everything...
@@ -200,6 +198,7 @@ export class DataService {
     //     }, 5000);
     // }).publishReplay(1).refCount();
 
+    private organizations: any[];
 
     /*
         TBD
@@ -716,8 +715,12 @@ export class DataService {
             - org is active & live
             - org is not TABIT or an HQ
             - the logged user has both ANALYTICS_VIEW AND FINANCE responsiblities for the org
+
+            the function uses caching!
     */
     getOrganizations(): Promise<any> {
+        if (this.organizations) return Promise.resolve(this.organizations);
+
         return Promise.all([
             this.rosEp.get('organizations'),
             this.rosEp.get('account/me')//user responsibilities might got changed so we re-get them for the permissions test
@@ -725,7 +728,7 @@ export class DataService {
             .then(data => {
                 const orgs = data[0];
                 const user = data[1];
-                return orgs
+                this.organizations = orgs
                     .filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT')
                     .filter(o=>{
                         if (user.isStaff) return true;
@@ -739,6 +742,7 @@ export class DataService {
                         }
                         return true;
                     });
+                return this.organizations;
             });
     }
 

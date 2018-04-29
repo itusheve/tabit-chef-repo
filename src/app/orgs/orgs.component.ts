@@ -67,10 +67,10 @@ export class OrgsComponent implements OnInit {
   private render() {
     this.dataService.getOrganizations()
       .then(orgs=>{
+        this.orgs = orgs;
         if (orgs.length===1) {
           this.selectOrg(orgs[0]);
         } else {
-          this.orgs = orgs;
           this.orgsFiltered = orgs;
         }
       });
