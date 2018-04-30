@@ -128,8 +128,8 @@
     <app-order-invoice-credit *ngIf="slip.class==='invoice' && slip.subclass==='credit'" [data]="slip.data" [printDataOld]="slip.data.printData"></app-order-invoice-credit>
     <app-order-credit-refund *ngIf="slip.class==='refund' && slip.subclass==='credit'" [data]="slip.data" [printDataOld]="slip.data.printData"></app-order-credit-refund>
 
-    <app-order-invoice-cash *ngIf="slip.class==='invoice' && slip.subclass==='cash'" [data]="slip.data"></app-order-invoice-cash>
-    <app-order-cash-refund *ngIf="slip.class==='refund' && slip.subclass==='cash'" [data]="slip.data"></app-order-cash-refund>
+    <app-order-invoice-cash *ngIf="slip.class==='invoice' && slip.subclass==='cash'" [data]="slip.data" [printDataOld]="slip.data.printData"></app-order-invoice-cash>
+    <app-order-cash-refund *ngIf="slip.class==='refund' && slip.subclass==='cash'" [data]="slip.data" [printDataOld]="slip.data.printData"></app-order-cash-refund>
 
     <app-order-invoice-check *ngIf="slip.class==='invoice' && slip.subclass==='cheque'" [data]="slip.data"></app-order-invoice-check>
     <app-order-cheque-refund *ngIf="slip.class==='refund' && slip.subclass==='cheque'" [data]="slip.data"></app-order-cheque-refund>

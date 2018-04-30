@@ -1,11 +1,11 @@
 <div class="ticket-box flex d-col">
 
-    <!-- RETURN AMOUNT -->
+    <!-- BUSINESS MEAL -->
     <div class="flex d-row  j-sb">
         <div class="flex g-4 row-txt">
             <span i18n="slips@@businessMeal">Business Meal</span>
         </div>
-        <div class="flex g-1">
+        <div class="flex g-1 row-amount">
             <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
             <span *ngIf="!data.cashback">{{(data.amount/100) | number:'1.2-2'}}</span>
         </div>
@@ -16,7 +16,7 @@
         <div class="flex g-4 row-txt">
             <span i18n="slips@@beforeVAT">Before VAT</span>
         </div>
-        <div class="flex g-1">
+        <div class="flex g-1 row-amount">
             <span *ngIf="data.cashback">{{((data.amount/100)-(data.tax.amount/100)-(data.cashback/100)) | number:'1.2-2'}}
             </span>
             <span *ngIf="!data.cashback">{{((data.amount/100)-(data.tax.amount/100)) | number:'1.2-2'}}</span>
@@ -28,7 +28,7 @@
         <div class="flex g-4 row-txt">
             <span i18n="slips@@vat">VAT</span>
         </div>
-        <div class="flex g-1">
+        <div class="flex g-1 row-amount">
             <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
         </div>
     </div>
@@ -38,7 +38,7 @@
         <div class="flex g-4 row-txt">
             <span i18n="slips@@includeVAT">Include VAT</span>
         </div>
-        <div class="flex g-1">
+        <div class="flex g-1 row-amount">
             <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
             <span *ngIf="!data.cashback">{{(data.amount/100) | number:'1.2-2'}}</span>
         </div>
@@ -51,7 +51,7 @@
         <div class="flex g-4 row-txt">
             <span i18n="slips@@paidByCheque">Paid by cheque</span>
         </div>
-        <div class="flex g-1">
+        <div class="flex g-1 row-amount">
             <span>{{(data.amount/100) | number:'1.2-2'}}</span>
         </div>
     </div>
@@ -61,7 +61,7 @@
         <div class="flex g-4 row-txt">
             <span i18n="slips@@change">Change</span>
         </div>
-        <div class="flex g-1">
+        <div class="flex g-1 row-amount">
             <span>{{(data.cashback/100) | number:'1.2-2'}}</span>
         </div>
     </div>

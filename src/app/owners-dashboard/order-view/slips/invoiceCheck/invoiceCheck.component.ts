@@ -14,6 +14,7 @@ export class OrderInvoiceCheckComponent implements OnInit {
   constructor() {}
   
   ngOnInit() { 
+    
   }
 
 }

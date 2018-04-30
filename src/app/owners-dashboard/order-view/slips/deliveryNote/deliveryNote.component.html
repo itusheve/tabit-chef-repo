@@ -1,11 +1,11 @@
 <div class="ticket-box d-col">
 
-    <!-- RETURN AMOUNT -->
+    <!-- BUSINESS MEAL -->
     <div class="flex d-row  j-sb">
         <div class="flex g-4 row-txt">
-            <span i18n="slips@@diner">Diner</span>
+            <span i18n="slips@@businessMeal">Business Meal</span>
         </div>
-        <div class="flex g-1">
+        <div class="flex g-1 row-amount">
             <span>{{(data.amount/100) | number:'1.2-2'}}</span>
         </div>
     </div>
@@ -15,7 +15,7 @@
         <div class="flex g-4 row-txt">
             <span i18n="slips@@beforeVAT">Before VAT</span>
         </div>
-        <div class="flex g-1">
+        <div class="flex g-1 row-amount">
             <span>{{((data.amount/100)-(data.tax?.amount/100)) | number:'1.2-2'}}</span>
         </div>
     </div>
@@ -25,7 +25,7 @@
         <div class="flex g-4 row-txt">
             <span i18n="slips@@vat">VAT</span>
         </div>
-        <div class="flex g-1">
+        <div class="flex g-1 row-amount">
             <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
         </div>
     </div>
@@ -35,7 +35,7 @@
         <div class="flex g-4 row-txt">
             <span i18n="slips@@includeVAT">Include VAT</span>
         </div>
-        <div class="flex g-1">
+        <div class="flex g-1 row-amount">
             <span>{{(data.amount/100) | number:'1.2-2'}}</span>
         </div>
     </div>
@@ -48,7 +48,7 @@
             <span i18n="slips@@paidInChargeAccountFrom">Paid in charge account from</span>
             <span>{{data.payments[0]?.accountName}}</span>
         </div>
-        <div class="flex g-1">
+        <div class="flex g-1 row-amount">
             <span>{{(data.amount/100) | number:'1.2-2'}}</span>
         </div>
     </div>
@@ -70,16 +70,22 @@
         <!-- <span>{{printDataOld.PROVIDER_PAYMENT_DATE |date : 'MM/dd/yyyy HH:mm'}}</span> -->
     </div>
 
+    <!-- COMPANY_NAME-->
+    <div class="flex j-sb d-block" *ngIf="printDataOld.COMPANY_NAME">
+        <span i18n="slips@@compantName">Company name </span>
+        <span>{{printDataOld.COMPANY_NAME}}</span>
+    </div>
+
     <!-- CARD NUMBER-->
-    <div class="flex j-sb d-block" *ngIf="data.cardNum.length>0">
+    <div class="flex j-sb d-block" *ngIf="printDataOld.CARD_NUMBER">
         <span i18n="slips@@cardNumber">Card number</span>
-        <span>{{data.cardNum}}</span>
+        <span>{{printDataOld.CARD_NUMBER}}</span>
     </div>
 
     <!-- PROVIDER TRANSACTIOB ID -->
-    <div class="flex j-sb d-block" *ngIf="data.providerTransactionId&&data.providerTransactionId.length>0">
+    <div class="flex j-sb d-block" *ngIf="printDataOld.PROVIDER_TRANS_ID">
         <span class="text-upper" i18n="slips@@transactionNumber">Transaction no.</span>
-        <span>{{data.providerTransactionId}}</span>
+        <span>{{printDataOld.PROVIDER_TRANS_ID}}</span>
     </div>
 
     <!-- CONFIRMATION NUM -->

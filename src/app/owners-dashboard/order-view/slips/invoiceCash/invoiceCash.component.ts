@@ -10,6 +10,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class OrderInvoiceCashComponent implements OnInit {
 
   @Input() data: any;
+  @Input() printDataOld: any;
   
   constructor() {}
   

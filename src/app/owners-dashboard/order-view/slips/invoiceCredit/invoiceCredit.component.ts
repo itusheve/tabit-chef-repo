@@ -11,10 +11,11 @@ export class OrderInvoiceCreditComponent implements OnInit {
 
   @Input() data: any;
   @Input() printDataOld: any;
-  
-  constructor() {}
-  
-  ngOnInit() { 
+
+  constructor() { }
+
+  ngOnInit() {
+    
   }
 
 }
