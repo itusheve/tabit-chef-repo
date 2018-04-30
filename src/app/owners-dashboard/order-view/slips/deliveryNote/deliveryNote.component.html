@@ -1,56 +1,89 @@
 <div class="ticket-box d-col">
-    <div class="flex j-sb">
-        <!-- <span>{{'ORDERS_VIEW.diner' | translate}}</span> -->
-        <span i18n="slips@@diner">Diner</span>
-        <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
-        <span *ngIf="!data.cashback">{{(data.amount/100) | number:'1.2-2'}}</span>
+
+    <!-- RETURN AMOUNT -->
+    <div class="flex d-row  j-sb">
+        <div class="flex g-4 row-txt">
+            <span i18n="slips@@diner">Diner</span>
+        </div>
+        <div class="flex g-1">
+            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
-    <div class="flex j-sb">
-        <!-- <span>{{'BEFORE_VAT' | translate}}</span> -->
-        <span i18n="slips@@beforeVAT">Before VAT</span>
-        <span *ngIf="data.cashback">{{((data.amount/100)-(data.tax.amount/100)-(data.cashback/100)) | number:'1.2-2'}}</span>
-        <span *ngIf="!data.cashback">{{((data.amount/100)-(data.tax.amount/100)) | number:'1.2-2'}}</span>
-    </div>
-    <div class="flex j-sb">
-        <!-- <span>{{'VAT' | translate}}</span> -->
-        <span i18n="slips@@vat">VAT</span>
-        <span>{{(data.tax.amount/100) | number:'1.2-2'}}</span>
-    </div>
-    <div class="flex j-sb">
-        <!-- <span>{{'INCLUDE_VAT' | translate}}</span> -->
-        <span i18n="slips@@includeVAT">Include VAT</span>
-        <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
-        <span *ngIf="!data.cashback">{{(data.amount/100) | number:'1.2-2'}}</span>
+    <!-- BEFORE VAT -->
+    <div class="flex d-row j-sb">
+        <div class="flex g-4 row-txt">
+            <span i18n="slips@@beforeVAT">Before VAT</span>
+        </div>
+        <div class="flex g-1">
+            <span>{{((data.amount/100)-(data.tax?.amount/100)) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
-    <hr/>
+    <!-- VAT -->
+    <div class="flex d-row j-sb">
+        <div class="flex g-4 row-txt">
+            <span i18n="slips@@vat">VAT</span>
+        </div>
+        <div class="flex g-1">
+            <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
+        </div>
+    </div>
 
-    <div class="flex j-sb">
-        <span>
+    <!-- INCLUDE VAT -->
+    <div class="flex d-row j-sb">
+        <div class="flex g-4 row-txt">
+            <span i18n="slips@@includeVAT">Include VAT</span>
+        </div>
+        <div class="flex g-1">
+            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+        </div>
+    </div>
+
+    <hr />
+
+    <!-- Paid IN CHARGE ACCOUNT FROM -->
+    <div class="flex d-row a-center">
+        <div class="flex g-4 row-txt">
             <span i18n="slips@@paidInChargeAccountFrom">Paid in charge account from</span>
-            <span>{{data.payments[0].accountName}}</span>
-        </span>
-        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+            <span>{{data.payments[0]?.accountName}}</span>
+        </div>
+        <div class="flex g-1">
+            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
-    <div class="flex j-sb d-block" *ngIf="data.companyName?.length>0">
-        <!-- <span class="text-upper">{{'COMPANY_NAME' | translate}}</span> -->
-        <span class="text-upper" i18n="slips@@companyName">Company name</span>
-        <span>{{data.companyName}}</span>
+    <hr />
+
+    <!-- LAST 4 -->
+    <div class="flex j-sb d-block" *ngIf="printDataOld.LAST_4">
+        <span i18n="slips@@last_4">LAST 4</span>
+        <span>{{printDataOld.LAST_4}}</span>
     </div>
-    <div class="flex j-sb d-block" *ngIf="data.cardNum?.length>0">
-        <!-- <span class="text-upper">{{'CARD_NO' | translate}}</span> -->
-        <span class="text-upper" i18n="slips@@cardNumber">Card number</span>
+
+    <!-- PROVIDER PAYMENT DATE -->
+    <div class="flex j-sb d-block" *ngIf="printDataOld.PROVIDER_PAYMENT_DATE">
+        <span i18n="slips@@card_no">Transaction Time</span>
+        <span>{{printDataOld.PROVIDER_PAYMENT_DATE | date : 'dd/MM/yyyy HH:mm' }}</span>
+
+        <!-- US format -->
+        <!-- <span>{{printDataOld.PROVIDER_PAYMENT_DATE |date : 'MM/dd/yyyy HH:mm'}}</span> -->
+    </div>
+
+    <!-- CARD NUMBER-->
+    <div class="flex j-sb d-block" *ngIf="data.cardNum.length>0">
+        <span i18n="slips@@cardNumber">Card number</span>
         <span>{{data.cardNum}}</span>
     </div>
-    <div class="flex j-sb d-block" *ngIf="data.providerTransactionId?.length>0">
-        <!-- <span class="text-upper">{{'TRANSACTION_NO' | translate}}</span> -->
+
+    <!-- PROVIDER TRANSACTIOB ID -->
+    <div class="flex j-sb d-block" *ngIf="data.providerTransactionId&&data.providerTransactionId.length>0">
         <span class="text-upper" i18n="slips@@transactionNumber">Transaction no.</span>
         <span>{{data.providerTransactionId}}</span>
     </div>
-    <div class="flex j-sb d-block" *ngIf="data.confirmationNum?.length>0">
-        <!-- <span class="text-upper">{{'APPROVAL_NO' | translate}}</span> -->
+
+    <!-- CONFIRMATION NUM -->
+    <div class="flex j-sb d-block" *ngIf="data.confirmationNum&&data.confirmationNum.length>0">
         <span class="text-upper" i18n="slips@@approvalNumber">Approval no.</span>
         <span>{{data.confirmationNum}}</span>
     </div>
