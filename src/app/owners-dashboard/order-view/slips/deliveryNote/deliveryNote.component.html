@@ -57,13 +57,13 @@
 
     <!-- LAST 4 -->
     <div class="flex j-sb d-block" *ngIf="printDataOld.LAST_4">
-        <span i18n="slips@@last_4">LAST 4</span>
+        <span i18n="slips@@last4">LAST 4</span>
         <span>{{printDataOld.LAST_4}}</span>
     </div>
 
     <!-- PROVIDER PAYMENT DATE -->
     <div class="flex j-sb d-block" *ngIf="printDataOld.PROVIDER_PAYMENT_DATE">
-        <span i18n="slips@@card_no">Transaction Time</span>
+        <span i18n="@@transactionTime">Transaction Time</span>
         <span>{{printDataOld.PROVIDER_PAYMENT_DATE | date : 'dd/MM/yyyy HH:mm' }}</span>
 
         <!-- US format -->
@@ -72,7 +72,7 @@
 
     <!-- COMPANY_NAME-->
     <div class="flex j-sb d-block" *ngIf="printDataOld.COMPANY_NAME">
-        <span i18n="slips@@compantName">Company name </span>
+        <span i18n="@@companyName">Company name</span>
         <span>{{printDataOld.COMPANY_NAME}}</span>
     </div>
 

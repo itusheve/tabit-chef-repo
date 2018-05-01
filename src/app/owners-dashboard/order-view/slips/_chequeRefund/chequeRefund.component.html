@@ -45,7 +45,7 @@
     <!-- RETURNED IN CHEQUE -->
     <div class="flex d-row j-sb">
         <div class="flex g-4 row-txt">
-            <span i18n="slips@@ReturnedInCheque">Returned in cheque</span>
+            <span i18n="slips@@returnedInCheque">Returned in cheque</span>
         </div>
         <div class="flex g-1 row-amount">
             <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:2}}</span>
@@ -56,7 +56,7 @@
     <!-- CHANGE -->
     <div class="flex d-row j-sb" *ngIf="data.cashback">
         <div class="flex g-4 row-txt">
-            <span i18n="slips@@Change">Change</span>
+            <span i18n="@@change">Change</span>
         </div>
         <div class="flex g-1 row-amount">
             <span>{{(data.cashback/100) | number:2}}</span>

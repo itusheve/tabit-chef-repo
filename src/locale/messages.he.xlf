@@ -110,6 +110,10 @@
         <source>Returned</source>
         <target>הוחזר</target>
       </trans-unit>
+      <trans-unit id="return" datatype="html">
+        <source>Return</source>
+        <target>החזר</target>
+      </trans-unit>
       <trans-unit id="operationalErrors" datatype="html">
         <source>Operational Errors</source>
         <target>תקלות תפעול</target>
@@ -592,15 +596,9 @@
         <note priority="1" from="description">שולם באשראי מ</note>
         <note priority="1" from="meaning">slips</note>
       </trans-unit>
-      <trans-unit id="last4Digits" datatype="html">
-        <source>Last 4 Digits</source>
-        <target>4 ספרות</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/invoiceCredit/invoiceCredit.component.ts</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-        <note priority="1" from="description">4 ספרות</note>
-        <note priority="1" from="meaning">slips</note>
+      <trans-unit id="last4" datatype="html">
+        <source>LAST 4</source>
+        <target>4 ספרות אחרונות</target>
       </trans-unit>
       <trans-unit id="transactionNumber" datatype="html">
         <source>Transaction no.</source>
@@ -647,20 +645,6 @@
       <trans-unit id="change" datatype="html">
         <source>Change</source>
         <target>עודף</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/invoiceCredit/invoiceCredit.component.ts</context>
-          <context context-type="linenumber">59</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/invoiceCash/invoiceCash.component.ts</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/invoiceCheck/invoiceCheck.component.ts</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-        <note priority="1" from="description">עודף</note>
-        <note priority="1" from="meaning">slips</note>
       </trans-unit>
       <trans-unit id="paidInCash" datatype="html">
         <source>Paid in cash</source>
@@ -715,16 +699,6 @@
       <trans-unit id="companyName" datatype="html">
         <source>Company name</source>
         <target>שם חברה</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/deliveryNote/deliveryNote.component.ts</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/deliveryNoteRefund/deliveryNoteRefund.component.ts</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-        <note priority="1" from="description">שם חברה</note>
-        <note priority="1" from="meaning">slips</note>
       </trans-unit>
       <trans-unit id="cardNumber" datatype="html">
         <source>Card no.</source>
@@ -777,6 +751,10 @@
       <trans-unit id="transactionType" datatype="html">
         <source>Transaction Type</source>
         <target>סוג טרנזקציה</target>
+      </trans-unit>
+      <trans-unit id="transactionTime" datatype="html">
+        <source>Transaction Time</source>
+        <target>זמן טרנזקציה</target>
       </trans-unit>
       <trans-unit id="returnedInCheque" datatype="html">
         <source>Returned in cheque</source>

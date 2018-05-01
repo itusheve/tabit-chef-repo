@@ -3,7 +3,7 @@
     <!-- RETURN AMOUNT -->
     <div class="flex d-row  j-sb">
         <div class="flex g-4 row-txt">
-            <span i18n="slips@@return">Return</span>
+            <span i18n="@@return">Return</span>
         </div>
         <div class="flex g-1 row-amount">
             <span>{{(data.amount/100) | number:'1.2-2'}}</span>
@@ -55,13 +55,13 @@
 
     <!-- LAST 4 -->
     <div class="flex j-sb d-block" *ngIf="printDataOld.LAST_4">
-        <span i18n="slips@@last_4">LAST 4</span>
+        <span i18n="slips@@last4">LAST 4</span>
         <span>{{printDataOld.LAST_4}}</span>
     </div>
 
     <!-- PROVIDER PAYMENT DATE -->
     <div class="flex j-sb d-block" *ngIf="printDataOld.PROVIDER_PAYMENT_DATE">
-        <span i18n="slips@@card_no">Transaction Time</span>
+        <span i18n="@@transactionTime">Transaction Time</span>
         <span>{{printDataOld.PROVIDER_PAYMENT_DATE | date : 'dd/MM/yyyy HH:mm' }}</span>
 
         <!-- US format -->
@@ -89,7 +89,7 @@
     <!-- CHANGE -->
     <div class="flex d-row j-sb" *ngIf="data.cashback">
         <div class="flex g-4 row-txt">
-            <span i18n="slips@@change">Change</span>
+            <span i18n="@@change">Change</span>
         </div>
         <div class="flex g-1 row-amount">
             <span>{{(data.cashback/100) | number:'1.2-2'}}</span>
