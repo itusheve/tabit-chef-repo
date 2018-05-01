@@ -10,9 +10,15 @@ import { Order } from '../../../../../tabit/model/Order.model';
 export class OrderCreditRefundComponent implements OnInit {
 
   @Input() data: any;
-  
-  constructor() {}
-  
-  ngOnInit() { }
+  @Input() printDataOld: any;
+
+
+  constructor() { }
+
+  ngOnInit() {
+    console.log(this.data);
+    console.log(this.printDataOld);
+    debugger;
+  }
 
 }

@@ -1,54 +1,99 @@
 <div class="ticket-box d-col">
-    
-    <div class="flex j-sb">
-        <!-- <span>{{'BUSINESS_MEAL' | translate}}</span> -->
-        <span i18n="slips@@businessMeal">Business Meal></span>
-        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+
+    <!-- RETURN AMOUNT -->
+    <div class="flex d-row  j-sb">
+        <div class="flex g-4 row-txt">
+            <span i18n="slips@@return">Return</span>
+        </div>
+        <div class="flex g-1 row-amount">
+            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
-    <div class="flex j-sb">
-        <!-- <span>{{'BEFORE_VAT' | translate}}</span> -->
-        <span i18n="slips@@beforeVAT">Before VAT</span>
-        <span>{{((data.amount/100)-(data.tax?.amount/100)) | number:'1.2-2'}}</span>
+    <!-- BEFORE VAT -->
+    <div class="flex d-row j-sb">
+        <div class="flex g-4 row-txt">
+            <span i18n="slips@@beforeVAT">Before VAT</span>
+        </div>
+        <div class="flex g-1 row-amount">
+            <span>{{((data.amount/100)-(data.tax?.amount/100)) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
-    <div class="flex j-sb">
-        <!-- <span>{{'VAT' | translate}}</span> -->
-        <span i18n="slips@@vat">VAT</span>
-        <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
+    <!-- VAT -->
+    <div class="flex d-row j-sb">
+        <div class="flex g-4 row-txt">
+            <span i18n="slips@@vat">VAT</span>
+        </div>
+        <div class="flex g-1 row-amount">
+            <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
-    <div class="flex j-sb">
-        <!-- <span>{{'INCLUDE_VAT' | translate}}</span> -->
-        <span i18n="slips@@includeVAT">Include VAT</span>
-        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+    <!-- INCLUDE VAT -->
+    <div class="flex d-row j-sb">
+        <div class="flex g-4 row-txt">
+            <span i18n="slips@@includeVAT">Include VAT</span>
+        </div>
+        <div class="flex g-1 row-amount">
+            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
     <hr />
 
-    <div class="flex d-col a-center">
-        <!-- <small>{{'RETURNED_IN_CREDIT_FROM' | translate}}</small> -->
-        <small i18n="slips@@returnedInCreditFrom">Returned in credit from</small>         
-        <h4>{{data.issuerName}}</h4>
+    <!-- RETURNED IN CREDIT FROM -->
+    <div class="flex d-row j-sb">
+        <div class="flex g-4 row-txt">
+            <span i18n="slips@@returnedInCreditFrom">Returned in credit from</span>
+            <span>{{printDataOld.ISSUER}}</span>
+        </div>
+        <div class="flex g-1 row-amount">
+            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
-    <div class="flex j-sb" *ngIf="data.payments[0]?.last4.length>0">
-        <!-- <span>{{'CARD' | translate}}</span> -->
-        <span i18n="slips@@card">Card</span>
-        <span>{{data.payments[0]?.last4}}</span>
+    <!-- LAST 4 -->
+    <div class="flex j-sb d-block" *ngIf="printDataOld.LAST_4">
+        <span i18n="slips@@last_4">LAST 4</span>
+        <span>{{printDataOld.LAST_4}}</span>
     </div>
 
-    <div class="flex j-sb" *ngIf="data.payments[0]?.providerTransactionId.length>0">
-        <!-- <span>{{'TRANSACTION_NO' | translate}}</span> -->
-        <span i18n="slips@@transactionNumber">Transaction no.</span>    
-        <span>{{data.payments[0]?.providerTransactionId}}</span>
+    <!-- PROVIDER PAYMENT DATE -->
+    <div class="flex j-sb d-block" *ngIf="printDataOld.PROVIDER_PAYMENT_DATE">
+        <span i18n="slips@@card_no">Transaction Time</span>
+        <span>{{printDataOld.PROVIDER_PAYMENT_DATE | date : 'dd/MM/yyyy HH:mm' }}</span>
+
+        <!-- US format -->
+        <!-- <span>{{printDataOld.PROVIDER_PAYMENT_DATE |date : 'MM/dd/yyyy HH:mm'}}</span> -->
     </div>
 
-    <div class="flex j-sb" *ngIf="data.payments[0]?.confirmationNum.length>0">
-        <!-- <span>{{'APPROVAL_NO' | translate}}</span> -->
-        <span i18n="slips@@approvalNumber">Approval no.</span>    
-        <span>{{data.payments[0]?.confirmationNum}}</span>
+    <!-- CARD NUMBER-->
+    <div class="flex j-sb d-block" *ngIf="data.cardNum&&data.cardNum.length>0">
+        <span i18n="slips@@cardNumber">Card number</span>
+        <span>{{data.cardNum}}</span>
+    </div>
+
+    <!-- PROVIDER TRANSACTIOB ID -->
+    <div class="flex j-sb d-block" *ngIf="printDataOld.PROVIDER_TRANS_ID">
+        <span class="text-upper" i18n="slips@@transactionNumber">Transaction no.</span>
+        <span>{{printDataOld.PROVIDER_TRANS_ID}}</span>
+    </div>
+
+    <!-- CONFIRMATION NUM -->
+    <div class="flex j-sb d-block" *ngIf="printDataOld.CONFIRMATION_NUMBER">
+        <span class="text-upper" i18n="slips@@approvalNumber">Approval no.</span>
+        <span>{{printDataOld.CONFIRMATION_NUMBER}}</span>
+    </div>
+
+    <!-- CHANGE -->
+    <div class="flex d-row j-sb" *ngIf="data.cashback">
+        <div class="flex g-4 row-txt">
+            <span i18n="slips@@change">Change</span>
+        </div>
+        <div class="flex g-1 row-amount">
+            <span>{{(data.cashback/100) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
 </div>
-
