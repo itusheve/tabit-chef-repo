@@ -16,7 +16,7 @@
                 <table class="chf-tbl chf-tbl-row-oriented" *ngFor="let departmentData of data">
                     <tr *ngFor="let dataObj of departmentData.topItems">
                         <td style="width:70px;">{{departmentData.department}}</td>
-                        <td>{{dataObj.itemName}}</td>
+                        <td class="break">{{dataObj.itemName}}</td>
                         <td style="width:60px;">{{dataObj.itemSales | curr:'0'}}</td>
                         <td style="width:42px;">{{dataObj.itemSold | count}}</td>
                     </tr>
