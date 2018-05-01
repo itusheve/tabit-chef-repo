@@ -14,6 +14,20 @@ import { AreYouSureDialogComponent } from '../../tabit/ui/dialogs/are-you-sure.c
 export class OrgsComponent implements OnInit {
 
   org: any;
+  exampleOrg: any = {//this renders a card that is actually an alias to another org, just for presentation purposes.
+    enabled: undefined,//whether to render the card.
+    selected: false,//set to true when it is pressed. reset to false when another org is pressed.
+    name: undefined,//name to display on the card
+    realOrgId: '53eb1ee2e6c77111203d8503',//TODO and in us?
+    select: () => {//what to do when it is pressed
+      const realOrg = this.orgs.find(o => o._id === this.exampleOrg.realOrgId);
+      if (realOrg) {
+        this.selectOrg(realOrg, true);
+      }
+    }
+  }
+
+
   user: any;
   userInitials: string;
 
@@ -72,12 +86,27 @@ export class OrgsComponent implements OnInit {
           this.selectOrg(orgs[0]);
         } else {
           this.orgsFiltered = orgs;
+
+          if (this.user.email.indexOf('@tabit.cloud') > 0) {
+            this.exampleOrg.name = tmpTranslations.get('exampleOrgName');
+            this.exampleOrg.enabled = true;
+          }
+
         }
       });
   }
 
-  selectOrg(org:any) {
-    this.selectedOrg = org;
+  selectOrg(org:any, isExampleOrg?: boolean) {
+    if (isExampleOrg) {
+      this.selectedOrg = undefined;
+      this.exampleOrg.selected = true;
+      window.localStorage.setItem('exampleOrg', JSON.stringify({name: this.exampleOrg.name}));
+    } else {
+      this.selectedOrg = org;
+      this.exampleOrg.selected = false;
+      window.localStorage.removeItem('exampleOrg');
+    }
+
     if (this.mode==='normal') {
       this.authService.selectOrg(org)
         .then(() => {

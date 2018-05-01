@@ -4,7 +4,7 @@
     <div class="flex d-col header">
       <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{this.sideNavConfig.header.userInitials}}</button>
       <div class="mt10 mb10">{{this.sideNavConfig.header.user?.firstName}} {{this.sideNavConfig.header.user?.lastName}}</div>
-      <div>{{this.sideNavConfig.header.org?.name}}</div>
+      <div>{{this.sideNavConfig.header.org?.alias || this.sideNavConfig.header.org?.name}}</div>
     </div>
     <div class="flex d-col content">
       <!-- <mat-slide-toggle *ngIf="this.sideNavConfig.content.showVatCb" class="" color="primary" [checked]="vat" [disabled]="false" (change)="vatChange($event)" i18n="owners-dashboard|maam@@vat">VAT</mat-slide-toggle> -->

@@ -43,6 +43,9 @@
             </mat-form-field>
           </div>
           <div class="g-1 flex f-wrap j-space-between mt15 orgsCards">
+            <mat-card *ngIf="exampleOrg.enabled" (click)="exampleOrg.select()" [ngClass]="{'selected': exampleOrg.selected}">
+              <mat-card-content>{{exampleOrg.name}}</mat-card-content>
+            </mat-card>
             <mat-card (click)="selectOrg(org)" [ngClass]="{'selected': org===selectedOrg}" *ngFor="let org of orgsFiltered">
               <mat-card-content>{{org.name}}</mat-card-content>
             </mat-card>

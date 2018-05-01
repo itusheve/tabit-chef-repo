@@ -63,9 +63,22 @@ export class OwnersDashboardService {
                 this.sideNavConfig.header.userInitials = (user.firstName ? user.firstName.substring(0, 1) : '?').toUpperCase() + (user.lastName ? user.lastName.substring(0, 1) : '').toUpperCase();
             });
 
+
+        let exampleOrgName;
+        try {
+            exampleOrgName = JSON.parse(window.localStorage.getItem('exampleOrg')).name;
+        } catch (e) {}
+
         dataService.organization$
             .subscribe(org => {
-                this.toolbarConfig.center.caption = org.name;
+
+                if (exampleOrgName) {
+                    org.alias = exampleOrgName;
+                } else {
+                    org.alias = undefined;
+                }
+
+                this.toolbarConfig.center.caption = org.alias || org.name;
                 this.sideNavConfig.header.org = org;
             });
 

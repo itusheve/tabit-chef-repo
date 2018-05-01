@@ -39,6 +39,7 @@ until angular comes up with the final i18n solution that includes in-component t
 
 const tmpTranslations_ = {
     'he-IL': {
+        exampleOrgName: 'מסעדה לדוגמא',
         opFailed: 'הפעולה נכשלה. אנא פנה לתמיכה.',
         areYouSureYouWish: 'האם אתה בטוח שברצונך',
         toLogout: 'להתנתק',
@@ -84,6 +85,7 @@ const tmpTranslations_ = {
         }
     },
     'en-US': {
+        exampleOrgName: 'Example Restaurant',
         opFailed: 'Operation has failed. please contact support.',
         areYouSureYouWish: 'Are you sure you wish',
         toLogout: 'to logout',

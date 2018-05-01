@@ -22,7 +22,7 @@
     window.addEventListener('error', function(e) {
       window.debugServiceLogArr.push({type: 'error', message: e.message});
       if (e.message===`Uncaught TypeError: Cannot read property 'version' of undefined`) {
-        console.info('slienced error: Uncaught TypeError: Cannot read property \'version\' of undefined');
+        console.info('silenced error: Uncaught TypeError: Cannot read property \'version\' of undefined');
         e.preventDefault();
         e.stopPropagation();
       }
