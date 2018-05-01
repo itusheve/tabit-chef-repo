@@ -716,10 +716,14 @@ export class DataService {
             - org is not TABIT or an HQ
             - the logged user has both ANALYTICS_VIEW AND FINANCE responsiblities for the org
 
-            the function uses caching!
+            the function uses caching by default unless option:
+            cacheStrategy: 'nocache'
+            is provided.
     */
-    getOrganizations(): Promise<any> {
-        if (this.organizations) return Promise.resolve(this.organizations);
+    getOrganizations(o?): Promise<any> {
+        const cacheStrategy = o && o.cacheStrategy ? o.cacheStrategy : 'cache';
+
+        if (this.organizations && cacheStrategy==='cache') return Promise.resolve(this.organizations);
 
         return Promise.all([
             this.rosEp.get('organizations'),

@@ -65,7 +65,7 @@ export class OrgsComponent implements OnInit {
   }
 
   private render() {
-    this.dataService.getOrganizations()
+    this.dataService.getOrganizations({cacheStrategy: 'nocache'})
       .then(orgs=>{
         this.orgs = orgs;
         if (orgs.length===1) {
