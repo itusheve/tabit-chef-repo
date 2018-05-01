@@ -68,7 +68,7 @@ export class OrderSlipsComponent implements OnInit {
             caption: `Check #${check.variables.CHECK_NO}`
           });
 
-        i++;
+          i++;
         });
       }
 
@@ -107,7 +107,18 @@ export class OrderSlipsComponent implements OnInit {
 
     } else {
       this.orderOld.deliveryNotes.forEach(dn => {
+
+        let _paymentPrintData;
+        if (dn.payments && dn.payments.length > 0) {
+          if (this.printDataOld.collections.PAYMENT_LIST && this.printDataOld.collections.PAYMENT_LIST.length > 0) {
+            _paymentPrintData = this.printDataOld.collections.PAYMENT_LIST.find(c => c.P_ID === dn.payments[0]._id);
+          }
+        }
+
+        dn.printData = _paymentPrintData;
+
         if (dn.payments[0]._type === 'ChargeAccountPayment') {
+
           this.slips.push({
             id: i,
             class: 'deliveryNote',
@@ -115,7 +126,9 @@ export class OrderSlipsComponent implements OnInit {
             caption: ORDERS_VIEW.delivery_note_number + dn.number
           });
           i++;
+
         } else if (dn.payments[0]._type === 'ChargeAccountRefund') {
+
           this.slips.push({
             id: i,
             class: 'deliveryNoteRefund',
@@ -123,10 +136,22 @@ export class OrderSlipsComponent implements OnInit {
             caption: ORDERS_VIEW.refund_note_number + dn.number
           });
           i++;
+
         }
       });
 
       this.orderOld.invoices.forEach(invoice => {
+
+        let _paymentPrintData;
+        if (invoice.payments && invoice.payments.length > 0) {
+          if (this.printDataOld.collections.PAYMENT_LIST && this.printDataOld.collections.PAYMENT_LIST.length > 0) {
+            _paymentPrintData = this.printDataOld.collections.PAYMENT_LIST.find(c => c.P_ID === invoice.payments[0]._id);
+          }
+        }
+
+        invoice.printData = _paymentPrintData;
+
+
         switch (invoice.payments[0]._type) {
           case 'CreditCardPayment':
             this.slips.push({

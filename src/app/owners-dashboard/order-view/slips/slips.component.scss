@@ -4,13 +4,25 @@
     	border-top: 1px solid #eee;
 	}
 
-	.offer-line {}
+	.offer-line {
+		font-weight: bold;
+	}
+
 	.item-line {
 		font-weight: normal;
 		.item-name {
 			padding-right: 40px;
 		}
 	}
+
+	.line {
+		width: 100%;
+		height: 2px;
+		margin: 10px 0;
+		overflow: hidden;
+		font-size: 0;
+	}
+
 	.negative {
 		display: inline-block;
 		direction: ltr;
@@ -50,6 +62,17 @@
 			font-size: 17px;
 		}
 
+		.row-txt {
+			width: 65%;
+		}
+
+		.row-amount {
+			width: 15%;
+		}
+
+		.d-block {
+			display: block;
+		}
 
 	}
 
@@ -71,6 +94,14 @@
 
 	.change {
 		padding: 10px 0;
+	}
+
+	.pad3 {
+		padding: 0px 3px;
+	}
+
+	.fs-15 {
+		font-size: 15px;
 	}
 
 	.returnOrder {
