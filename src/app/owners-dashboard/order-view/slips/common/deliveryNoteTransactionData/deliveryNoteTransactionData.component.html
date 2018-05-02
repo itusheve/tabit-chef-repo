@@ -1,0 +1,11 @@
+<!-- CARD NUMBER-->
+<div class="flex j-sb d-block" *ngIf="houseAccount.LAST_4">
+    <span i18n="slips@@cardNumber">Card number</span>
+    <span>{{ houseAccount.LAST_4 }}</span>
+</div>
+
+<!-- PROVIDER TRANSACTIOB DATE -->
+<div class="flex j-sb d-block" *ngIf="houseAccount.PROVIDER_PAYMENT_DATE">
+    <span class="text-upper" i18n="slips@@transactionTime">Transaction Time.</span>
+    <span>{{ houseAccount.PROVIDER_PAYMENT_DATE}}</span>
+</div>

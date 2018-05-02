@@ -11,6 +11,8 @@ export class OrderCashRefundComponent implements OnInit {
 
   @Input() data: any;
   @Input() printDataOld: any;
+  @Input() invoice: any;
+  @Input() orderOld: any;
   
   constructor() {}
   
