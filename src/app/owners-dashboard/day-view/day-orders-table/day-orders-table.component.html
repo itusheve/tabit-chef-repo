@@ -1,5 +1,11 @@
 <div class="f-rtl flex d-col a-stretch">
-    <div class="title" i18n="day-orders-table@@orders">Orders</div>
+    <div class="title">
+        <ng-container i18n="@@orders">Orders</ng-container>
+        <ng-container *ngIf="bdIsCurrentBd" style="font-size:14px;">
+            <br>
+            <ng-container i18n="@@openOrders">Open Orders</ng-container>: {{closedOpenSalesDiff | curr:'0'}}
+        </ng-container>
+    </div>
     <div class="body flex d-col">
         <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
         <div *ngIf="!loading">

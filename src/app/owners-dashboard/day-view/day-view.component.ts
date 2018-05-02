@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, AfterContentInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataService, BusinessDayKPI, BusinessDayKPIs, CustomRangeKPI } from '../../../tabit/data/data.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
@@ -11,13 +11,14 @@ import { ClosedOrdersDataService } from '../../../tabit/data/dc/closedOrders.dat
 import { Shift } from '../../../tabit/model/Shift.model';
 import { OrderType } from '../../../tabit/model/OrderType.model';
 import { OwnersDashboardService } from '../owners-dashboard.service';
+import { KPI } from '../../../tabit/model/KPI.model';
 
 @Component({
   selector: 'app-day-view',
   templateUrl: './day-view.component.html',
   styleUrls: ['./day-view.component.scss']
 })
-export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit  {
+export class DayViewComponent implements OnInit  {
 
   day: moment.Moment;
   daySelectorOptions: {
@@ -122,6 +123,9 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
 
   public mtdKPIs: CustomRangeKPI;
 
+  public bdIsCurrentBd: boolean;
+  public closedOpenSalesDiff: number;
+
   constructor(
     private ownersDashboardService: OwnersDashboardService,
     private closedOrdersDataService: ClosedOrdersDataService,
@@ -144,6 +148,10 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
     );
 
     data$.subscribe(data=>{
+      const cbd: moment.Moment = moment(data.currentBd);
+      this.bdIsCurrentBd = false;
+      this.closedOpenSalesDiff = undefined;
+
       this.daySelectorOptions = {
         minDate: moment(data.dailyDataLimits.minimum),
         maxDate: moment(data.currentBd)
@@ -156,6 +164,16 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
       this.closedOrdersDataService.getOrders(this.day)
         .then((orders: Order[]) => {
           this.orders = orders;
+
+          if (cbd.isSame(this.day, 'day')) {
+            this.bdIsCurrentBd = true;
+            this.dataService.todayDataVatInclusive$
+              .subscribe((kpi: KPI) => {
+                const totalClosedSales = this.orders.reduce((acc, curr)=>(acc+=curr.sales, acc), 0);
+                const totalOpenSales = kpi.sales || 0;
+                this.closedOpenSalesDiff = totalOpenSales - totalClosedSales;
+              });
+          }
         });
 
       this.dataService.getBusinessDateKPIs(this.day)
@@ -236,16 +254,14 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
       });
   }
 
-  ngAfterViewInit() {
+  // ngAfterViewInit() {
     // this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByTagName('mat-sidenav-content')[0])
     // this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByClassName('willItWork')[0])
     //   .subscribe(visible => {
     //     console.info(`visible: ${visible}`);
     //     this.daySelectorVisible = visible;
     //   });
-  }
-
-  ngAfterContentInit() {}
+  // }
 
   onDateChanged(dateM: moment.Moment) {
     const date = dateM.format('YYYY-MM-DD');

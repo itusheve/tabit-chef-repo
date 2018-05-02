@@ -24,6 +24,8 @@ export class DayOrdersTableComponent implements OnChanges {
   noData = false;
   @Input() orders: Order[];
   @Input() lastViewed: Order;
+  @Input() bdIsCurrentBd: boolean;
+  @Input() closedOpenSalesDiff: number;
   @Output() onOrderClicked = new EventEmitter();
 
   public byOrderTypes: OrderTypeVM[];
@@ -37,6 +39,10 @@ export class DayOrdersTableComponent implements OnChanges {
   constructor(private dataService: DataService) {}
 
   ngOnChanges(o: SimpleChanges) {
+
+    // if (o.bdIsCurrentBd && o.bdIsCurrentBd.currentValue) {
+      // if (this.)
+    // }
 
     if (o.orders && o.orders.currentValue) {
       this.loading = true;

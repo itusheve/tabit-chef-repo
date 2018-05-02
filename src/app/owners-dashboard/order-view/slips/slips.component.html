@@ -47,7 +47,26 @@
         </div>
       </div>
 
-      <ng-template #exampleOrgNameTplt><div class="flex j-center">{{exampleOrgName}}</div></ng-template>
+      <ng-template #exampleOrgNameTplt>
+        <div class="flex j-center">{{exampleOrgName}}</div>
+
+        <!-- ORGANIZATION_ADDR_STREET -->
+        <div class="flex j-center fs-15">
+          <div i18n="@@exampleOrgAddrStreet">31 Hapardes Road</div>
+        </div>
+
+        <!-- ORGANIZATION_ADDR_CITY -->
+        <div class="flex j-center fs-15">
+          <div i18n="@@exampleOrgAddrCity">Rishpon</div>
+        </div>
+
+        <!-- ORGANIZATION_TEL -->
+        <div class="flex j-center fs-15">
+          <div i18n="slips@@tel"></div>
+          &nbsp;
+          <div>972-9-9585682</div>
+        </div>
+      </ng-template>
 
       <div class="line"></div>
 

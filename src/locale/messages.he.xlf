@@ -2,6 +2,18 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="exampleOrgAddrStreet" datatype="html">
+        <source>31 Hapardes Road</source>
+        <target>דרך הפרדס 31</target>
+      </trans-unit>
+      <trans-unit id="exampleOrgAddrCity" datatype="html">
+        <source>Rishpon</source>
+        <target>רשפון</target>
+      </trans-unit>
+      <trans-unit id="openOrders" datatype="html">
+        <source>Open</source>
+        <target>פתוחות</target>
+      </trans-unit>
       <trans-unit id="entryMethod" datatype="html">
         <source>Entry Method</source>
         <target>שיטת הזנה</target>
