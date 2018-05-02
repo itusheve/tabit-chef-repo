@@ -15,10 +15,10 @@
 
                 <tr>
                     <td i18n="@@total">Total</td>
-                    <td>{{data.totalSales.thisBdSales | curr:'0'}}<br>({{1 | percent:'1.2-2'}})</td>
-                    <td>{{data.totalSales.thisWeekSales | curr:'0'}}<br>({{1 | percent:'1.2-2'}})</td>
-                    <td>{{data.totalSales.thisMonthSales | curr:'0'}}<br>({{1 | percent:'1.2-2'}})</td>
-                    <td>{{data.totalSales.thisYearSales | curr:'0'}}<br>({{1 | percent:'1.2-2'}})</td>
+                    <td>{{data.totalSales.thisBdSales | curr:'0'}}<br>({{1 | pct:'1'}})</td>
+                    <td>{{data.totalSales.thisWeekSales | curr:'0'}}<br>({{1 | pct:'1'}})</td>
+                    <td>{{data.totalSales.thisMonthSales | curr:'0'}}<br>({{1 | pct:'1'}})</td>
+                    <td>{{data.totalSales.thisYearSales | curr:'0'}}<br>({{1 | pct:'1'}})</td>
                 </tr>
 
                 <tr *ngFor="let o of data.bySubDepartment">
@@ -26,25 +26,25 @@
                     <td>
                         <div *ngIf="o['data']['thisBd']">
                             <div>{{o['data']['thisBd']['sales'] | curr:'0'}}</div>
-                            <div style="font-size:smaller">({{o['data']['thisBd']['pct'] | percent:'1.2-2'}})</div>
+                            <div style="font-size:smaller">({{o['data']['thisBd']['pct'] | pct:'1'}})</div>
                         </div>
                     </td>
                     <td>
                         <div *ngIf="o['data']['thisWeek']">
                             <div>{{o['data']['thisWeek']['sales'] | curr:'0'}}</div>
-                            <div style="font-size:smaller">({{o['data']['thisWeek']['pct'] | percent:'1.2-2'}})</div>
+                            <div style="font-size:smaller">({{o['data']['thisWeek']['pct'] | pct:'1'}})</div>
                         </div>
                     </td>
                     <td>
                         <div *ngIf="o['data']['thisMonth']">
                             <div>{{o['data']['thisMonth']['sales'] | curr:'0'}}</div>
-                            <div style="font-size:smaller">({{o['data']['thisMonth']['pct'] | percent:'1.2-2'}})</div>
+                            <div style="font-size:smaller">({{o['data']['thisMonth']['pct'] | pct:'1'}})</div>
                         </div>
                     </td>
                     <td>
                         <div *ngIf="o['data']['thisYear']">
                             <div>{{o['data']['thisYear']['sales'] | curr:'0'}}</div>
-                            <div style="font-size:smaller">({{o['data']['thisYear']['pct'] | percent:'1.2-2'}})</div>
+                            <div style="font-size:smaller">({{o['data']['thisYear']['pct'] | pct:'1'}})</div>
                         </div>
                     </td>
                 </tr>

@@ -128,11 +128,11 @@ table {
         padding: 8px 3px;
 
         &:first-child {
-          padding-right: 12px;//TODO localize
+          padding-right: 12px;
         }
 
         &:last-child {
-          padding-left: 12px;//TODO localize
+          padding-left: 12px;
         }
       }
 
@@ -145,11 +145,11 @@ table {
           padding: 8px 2px;
 
           &:first-child {
-            padding-right: 10px;//TODO localize
+            padding-right: 10px;
           }
 
           &:last-child {
-              padding-left: 10px;//TODO localize
+              padding-left: 10px;
           }
         }
       }
@@ -161,11 +161,11 @@ table {
           padding: 8px 1px;
 
           &:first-child {
-            padding-right: 8px;//TODO localize
+            padding-right: 8px;
           }
 
           &:last-child {
-              padding-left: 8px;//TODO localize
+              padding-left: 8px;
           }
         }
       }
@@ -174,14 +174,14 @@ table {
       font-size: $xx-smaller-font-size;
       tr {
         td, th {
-          padding: 8px 0px;
+          padding: 8px 3px;
 
           &:first-child {
-            padding-right: 4px;//TODO localize
+            padding-right: 3px;
           }
 
           &:last-child {
-              padding-left: 4px;//TODO localize
+              padding-left: 3px;
           }
         }
       }
@@ -193,11 +193,11 @@ table {
           padding: 8px 0px;
 
           &:first-child {
-            padding-right: 0px;//TODO localize
+            padding-right: 0px;
           }
 
           &:last-child {
-              padding-left: 0px;//TODO localize
+              padding-left: 0px;
           }
         }
       }

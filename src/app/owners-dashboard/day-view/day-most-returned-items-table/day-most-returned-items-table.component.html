@@ -21,7 +21,7 @@
                         <td style="width:42px;">{{dataObj.itemPrepared | count}}</td>
                         <td style="width:75px;">
                             <div>{{dataObj.itemReturned | count}}</div>
-                            <div>({{dataObj.itemReturnedPct | percent:'1.2-2'}})</div>
+                            <div>({{dataObj.itemReturnedPct | pct:'1'}})</div>
                         </td>
                         <td style="width:50px;">{{dataObj.itemReturnValue | curr:'0'}}</td>
                     </tr>

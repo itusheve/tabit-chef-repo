@@ -159,21 +159,17 @@
         <source>Net Sales</source>
         <target>מכירות נטו</target>
       </trans-unit>
-      <trans-unit id="ppd" datatype="html">
-        <source>Pay Per Diner</source>
-        <target>ממוצע לסועד</target>
-      </trans-unit>
       <trans-unit id="cancellationsValue" datatype="html">
-        <source>Cancellations Value</source>
-        <target>שווי ביטולים</target>
+        <source>Voids</source>
+        <target>ביטולים</target>
       </trans-unit>
       <trans-unit id="operationalErrorsValue" datatype="html">
-        <source>Operational Errors Value</source>
-        <target>שווי תקלות תפעול</target>
+        <source>Operational Errors</source>
+        <target>תקלות תפעול</target>
       </trans-unit>
       <trans-unit id="retentionValue" datatype="html">
-        <source>Retention Value</source>
-        <target>שווי שימור ושיווק</target>
+        <source>Retention</source>
+        <target>שימור ושיווק</target>
       </trans-unit>
       <trans-unit id="organizationalValue" datatype="html">
         <source>Employees &amp; Owners</source>
@@ -379,12 +375,6 @@
       <trans-unit id="ppa" datatype="html">
         <source>PPA</source>
         <target>PPA</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/day-view/day-diners-table/day-diners-table.component.ts</context>
-          <context context-type="linenumber">21</context>
-        </context-group>
-        <note priority="1" from="description">PPA</note>
-        <note priority="1" from="meaning">day-diners-table</note>
       </trans-unit>
       <trans-unit id="orders" datatype="html">
         <source>Orders</source>
