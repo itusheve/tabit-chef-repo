@@ -1,146 +1,170 @@
 <div class="flex d-col order-ticket-btns">
-  <button class="mb10" (click)="change(slipItem.id)" mat-raised-button *ngFor="let slipItem of slips" [class.selected]="slipItem === slip">
-    <span>{{slipItem.caption}}</span>
+  <button class="mb10" (click)="change(slipItem.index)" mat-raised-button *ngFor="let slipItem of slips" [class.selected]="slipItem === slip">
+    <span>{{slipItem.caption}} {{selectedDoc?.loading}}</span>
   </button>
 </div>
 
 <div class="flex d-col f-rtl order-ticket" *ngIf="slip!==undefined">
   <div class="d-col flex order-ticket-body text-u-c">
 
-    <!-- Common -->
-    <div class="ticket-box d-col common" style="border-bottom: 2px solid #000;">
+    <div *ngIf="selectedDoc?.loading" class="flex j-center a-center order-ticket-body">
+      <dx-load-indicator class="as-center" rtlEnabled="true"></dx-load-indicator>
+    </div>
 
-      <!-- ORGANIZATION_NAME -->
-      <div class="flex j-center">
-        <div>{{printDataOld.variables.ORGANIZATION_NAME}}</div>
-      </div>
 
-      <!-- ORGANIZATION_LEGAL_NAME -->
-      <div class="flex j-center fs-15">
-        <div *ngIf="printDataOld.variables.ORGANIZATION_BN_NUMBER">
-          <span>{{printDataOld.variables.ORGANIZATION_LEGAL_NAME}}</span>
-          <span> - </span>
-          <span i18n="slips@@bn_number"></span>
-          <span>{{printDataOld.variables.ORGANIZATION_BN_NUMBER}}</span>
+    <!-- TEMPLATE -->
+    <div *ngIf="!selectedDoc?.loading">
+
+      <!-- Common -->
+      <div class="ticket-box d-col common" style="border-bottom: 2px solid #000;">
+
+        <!-- ORGANIZATION_NAME -->
+        <div class="flex j-center">
+          <div>{{printDataOld.variables.ORGANIZATION_NAME}}</div>
         </div>
-        <div *ngIf="!printDataOld.variables.ORGANIZATION_BN_NUMBER">
-          <span>{{printDataOld.variables.ORGANIZATION_LEGAL_NAME}}</span>
+
+        <!-- ORGANIZATION_LEGAL_NAME -->
+        <div class="flex j-center fs-15">
+          <div *ngIf="printDataOld.variables.ORGANIZATION_BN_NUMBER">
+            <span>{{printDataOld.variables.ORGANIZATION_LEGAL_NAME}}</span>
+            <span> - </span>
+            <span i18n="slips@@bn_number"></span>
+            <span>{{printDataOld.variables.ORGANIZATION_BN_NUMBER}}</span>
+          </div>
+          <div *ngIf="!printDataOld.variables.ORGANIZATION_BN_NUMBER">
+            <span>{{printDataOld.variables.ORGANIZATION_LEGAL_NAME}}</span>
+          </div>
         </div>
-      </div>
 
-      <!-- ORGANIZATION_ADDR_STREET -->
-      <div class="flex j-center fs-15">
-        <div>{{printDataOld.variables.ORGANIZATION_ADDR_STREET}}</div>
-      </div>
+        <!-- ORGANIZATION_ADDR_STREET -->
+        <div class="flex j-center fs-15">
+          <div>{{printDataOld.variables.ORGANIZATION_ADDR_STREET}}</div>
+        </div>
 
-      <!-- ORGANIZATION_ADDR_CITY -->
-      <div class="flex j-center fs-15">
-        <div>{{printDataOld.variables.ORGANIZATION_ADDR_CITY}}</div>
-      </div>
+        <!-- ORGANIZATION_ADDR_CITY -->
+        <div class="flex j-center fs-15">
+          <div>{{printDataOld.variables.ORGANIZATION_ADDR_CITY}}</div>
+        </div>
 
-      <!-- ORGANIZATION_TEL -->
-      <div class="flex j-center fs-15">
-        <div i18n="slips@@tel"></div>
-        &nbsp;
-        <div>{{printDataOld.variables.ORGANIZATION_TEL}}</div>
-      </div>
-
-      <div class="line"></div>
-
-      <!-- DATE -->
-      <div class="flex j-center">
-        <div>{{orderOld.created | date : 'dd/MM/yyyy HH:mm'}}</div>
-      </div>
-
-      <!-- INVOICE / RECEIPT -->
-      <div *ngIf="slip.class!=='bill'" class="flex j-center">
-        <div>{{ slip.caption }}</div>
-      </div>
-
-      <!-- ORDER TYPE -->
-      <div class="flex j-center">
-        <div i18n="slips@@orderType">Order Type</div>
-        &nbsp;
-        <div>{{ orderOld.orderTypeDisplayText }}</div>
-        &nbsp;
-        <div>#{{ orderOld.number }}</div>
-      </div>
-
-      <!-- TABLE # -->
-      <div *ngIf="orderOld.orderType==='Seated'" class="flex j-center">
-        <div i18n="slips@@table">Table</div>
-        &nbsp;
-        <div>{{orderOld.table}}</div>
-      </div>
-
-      <!-- OWNER & NUM_OF_DINERS -->
-      <div class="flex d-row j-center fs-15">
-
-        <div class="flex j-center pad3">
-          <div i18n="slips@@server">Server</div>
+        <!-- ORGANIZATION_TEL -->
+        <div class="flex j-center fs-15">
+          <div i18n="slips@@tel"></div>
           &nbsp;
-          <div>{{order.users.owner.fullName}}</div>
+          <div>{{printDataOld.variables.ORGANIZATION_TEL}}</div>
         </div>
 
-        <div class="flex j-center pad3" *ngIf="!isCheck">
-          <div i18n="slips@@diners">Guests</div>
+        <div class="line"></div>
+
+        <!-- DATE -->
+        <div class="flex j-center">
+          <div>{{orderOld.created | date : 'dd/MM/yyyy HH:mm'}}</div>
+        </div>
+
+        <!-- INVOICE / RECEIPT -->
+        <div *ngIf="slip.class!=='bill'" class="flex j-center">
+          <div>{{ slip.caption }}</div>
+        </div>
+
+        <!-- ORDER TYPE -->
+        <div class="flex j-center">
+          <div i18n="slips@@orderType">Order Type</div>
           &nbsp;
-          <div>{{orderOld.dinersNum}}</div>
+          <div>{{ orderOld.orderTypeDisplayText }}</div>
+          &nbsp;
+          <div>#{{ orderOld.number }}</div>
         </div>
 
-      </div>
+        <!-- TABLE # -->
+        <div *ngIf="orderOld.orderType==='Seated'" class="flex j-center">
+          <div i18n="slips@@table">Table</div>
+          &nbsp;
+          <div>{{orderOld.table}}</div>
+        </div>
+
+        <!-- OWNER & NUM_OF_DINERS -->
+        <div class="flex d-row j-center fs-15">
+
+          <div class="flex j-center pad3">
+            <div i18n="slips@@server">Server</div>
+            &nbsp;
+            <div>{{order.users.owner.fullName}}</div>
+          </div>
+
+          <div class="flex j-center pad3" *ngIf="!isCheck">
+            <div i18n="slips@@diners">Guests</div>
+            &nbsp;
+            <div>{{orderOld.dinersNum}}</div>
+          </div>
+
+        </div>
 
 
-
-
-      <!-- TODO... -->
-      <!-- <h4 *ngIf="isCheck">
+        <!-- TODO... -->
+        <!-- <h4 *ngIf="isCheck">
         <span class="inline m-far-xs">{{ 'CHECK_NUMBER' | translate }}</span>
         <span class="inline">{{$ctrl.selectedCheck.printData.variables.CHECK_NO}}</span>
       </h4> -->
 
-      <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
-        <!-- TODO why is this commented? -->
-        <!-- <span class="inline m-far-xs returnOrder" i18n="slips@@returnTransaction">Return Transaction</span> -->
-      </div>
+        <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
+          <!-- TODO why is this commented? -->
+          <!-- <span class="inline m-far-xs returnOrder" i18n="slips@@returnTransaction">Return Transaction</span> -->
+        </div>
 
-      <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
-        <!-- TODO why is this commented? -->
-        <!-- <span class="inline m-far-xs fs-12">{{ $ctrl.selectedCheck.printData.variables.RETURN_COMMENT }}</span> -->
-      </div>
+        <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
+          <!-- TODO why is this commented? -->
+          <!-- <span class="inline m-far-xs fs-12">{{ $ctrl.selectedCheck.printData.variables.RETURN_COMMENT }}</span> -->
+        </div>
 
-      <div class="flex te" *ngIf="order.isTaxExempt && (showOrderDetails || isCheck)">
+        <div class="flex te" *ngIf="order.isTaxExempt && (showOrderDetails || isCheck)">
 
-        <!-- TODO... -->
-        <!-- 
+          <!-- TODO... -->
+          <!-- 
             <div class="text-bold fs-24">{{ 'ORDERS_VIEW.exempted_tax' | translate }}</div>
             <div class="text-bold fs-16">{{ $ctrl.printData.variables.TAX_EXEMPTION_CODE }}</div>
             <div class="text">{{ $ctrl.printData.variables.TAX_EXEMPTION_COMMENT }}</div> 
         -->
+        </div>
+
       </div>
 
+      <app-order-bill *ngIf="slip.class==='bill'" [order]="order" [orderOld]="orderOld" [printDataOld]="printDataOld"></app-order-bill>
+
+      <app-order-club *ngIf="slip.class==='club'" [order]="order" [orderOld]="orderOld" [printDataOld]="printDataOld"></app-order-club>
+
+      <app-order-invoice-giftcard *ngIf="slip.class==='invoice' && slip.subclass==='giftcard'" [data]="slip.data"></app-order-invoice-giftcard>
+
+      <!-- CREDIT & CREDIT REFUND -->
+      <app-order-invoice-credit *ngIf="slip.class==='invoice' && slip.subclass==='credit'" [data]="slip.data" [printDataOld]="slip.data.printData"
+        [invoice]="invoicePrintData" [orderOld]="orderOld"></app-order-invoice-credit>
+      <app-order-credit-refund *ngIf="slip.class==='refund' && slip.subclass==='credit'" [data]="slip.data" [printDataOld]="slip.data.printData"
+        [invoice]="invoicePrintData" [orderOld]="orderOld"></app-order-credit-refund>
+
+      <!-- CASH & CASH REFUND -->
+      <app-order-invoice-cash *ngIf="slip.class==='invoice' && slip.subclass==='cash'" [data]="slip.data" [printDataOld]="slip.data.printData"
+        [invoice]="invoicePrintData" [orderOld]="orderOld"></app-order-invoice-cash>
+      <app-order-cash-refund *ngIf="slip.class==='refund' && slip.subclass==='cash'" [data]="slip.data" [printDataOld]="slip.data.printData"
+        [invoice]="invoicePrintData" [orderOld]="orderOld"></app-order-cash-refund>
+
+      <!-- CHEQUE & CHEQUE REFUND -->
+      <!-- TODO: change 'app-order-invoice-check' component to 'app-order-invoice-cheque' -->
+      <app-order-invoice-check *ngIf="slip.class==='invoice' && slip.subclass==='cheque'" [data]="slip.data" [invoice]="invoicePrintData"
+        [orderOld]="orderOld"></app-order-invoice-check>
+      <app-order-cheque-refund *ngIf="slip.class==='refund' && slip.subclass==='cheque'" [data]="slip.data" [invoice]="invoicePrintData"
+        [orderOld]="orderOld"></app-order-cheque-refund>
+
+      <!-- DELIVERY NOTE &  DELIVERY NOTE REFUND -->
+      <app-order-delivery-note *ngIf="slip.class==='deliveryNote'" [data]="slip.data" [printDataOld]="slip.data.printData" [invoice]="invoicePrintData"
+        [orderOld]="orderOld"></app-order-delivery-note>
+      <app-order-delivery-note-refund *ngIf="slip.class==='deliveryNoteRefund'" [data]="slip.data" [printDataOld]="slip.data.printData"
+        [invoice]="invoicePrintData" [orderOld]="orderOld"></app-order-delivery-note-refund>
+
+      <!-- CHECK (SPLIT CHECK) -->
+      <app-order-credit-slip *ngIf="slip.class==='invoice' && slip.subclass==='credit-slip'" [data]="slip.data"></app-order-credit-slip>
+
+      <!-- BILL -->
+      <app-order-bill *ngIf="slip.class==='check'" [order]="order" [orderOld]="orderOld" [printDataOld]="slip.data.printData"></app-order-bill>
+
     </div>
-
-    <app-order-bill *ngIf="slip.class==='bill'" [order]="order" [orderOld]="orderOld" [printDataOld]="printDataOld"></app-order-bill>
-
-    <app-order-club *ngIf="slip.class==='club'" [order]="order" [orderOld]="orderOld" [printDataOld]="printDataOld"></app-order-club>
-
-    <app-order-invoice-credit *ngIf="slip.class==='invoice' && slip.subclass==='credit'" [data]="slip.data" [printDataOld]="slip.data.printData"></app-order-invoice-credit>
-    <app-order-credit-refund *ngIf="slip.class==='refund' && slip.subclass==='credit'" [data]="slip.data" [printDataOld]="slip.data.printData"></app-order-credit-refund>
-
-    <app-order-invoice-cash *ngIf="slip.class==='invoice' && slip.subclass==='cash'" [data]="slip.data" [printDataOld]="slip.data.printData"></app-order-invoice-cash>
-    <app-order-cash-refund *ngIf="slip.class==='refund' && slip.subclass==='cash'" [data]="slip.data" [printDataOld]="slip.data.printData"></app-order-cash-refund>
-
-    <app-order-invoice-check *ngIf="slip.class==='invoice' && slip.subclass==='cheque'" [data]="slip.data"></app-order-invoice-check>
-    <app-order-cheque-refund *ngIf="slip.class==='refund' && slip.subclass==='cheque'" [data]="slip.data"></app-order-cheque-refund>
-
-    <app-order-invoice-giftcard *ngIf="slip.class==='invoice' && slip.subclass==='giftcard'" [data]="slip.data"></app-order-invoice-giftcard>
-
-    <app-order-delivery-note *ngIf="slip.class==='deliveryNote'" [data]="slip.data" [printDataOld]="slip.data.printData"></app-order-delivery-note>
-    <app-order-delivery-note-refund *ngIf="slip.class==='deliveryNoteRefund'" [data]="slip.data" [printDataOld]="slip.data.printData"></app-order-delivery-note-refund>
-
-    <app-order-credit-slip *ngIf="slip.class==='invoice' && slip.subclass==='credit-slip'" [data]="slip.data"></app-order-credit-slip>
-    <app-order-bill *ngIf="slip.class==='check'" [order]="order" [orderOld]="orderOld" [printDataOld]="slip.data.printData"></app-order-bill>
 
   </div>
 </div>

@@ -1,69 +1,34 @@
 <div class="ticket-box flex d-col">
 
+    <app-order-single-invoice-data [printData]="invoice" [orderOld]="orderOld"></app-order-single-invoice-data>
 
-    <!-- Business Meal -->
-    <div class="flex d-row  j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@businessMeal">Business Meal</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-        </div>
-    </div>
+    <app-order-invoice-vat [printData]="invoice"></app-order-invoice-vat>
 
-    <!-- BEFORE VAT -->
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@beforeVAT">Before VAT</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{((data.amount/100)-(data.tax?.amount/100)) | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-    <!-- VAT -->
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@vat">VAT</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-    <!-- INCLUDE VAT -->
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@includeVAT">Include VAT</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-        </div>
-    </div>
 
     <hr />
 
     <!-- PAID IN CASH -->
-    <div class="flex d-row a-center">
-        <div class="flex g-4 row-txt">
+    <div class="row">
+        <div class="col-8">
             <span i18n="slips@@paidInCash">Paid in cash</span>
         </div>
 
         <!-- 'faceValue' copy from old tpl -->
-        <div class="flex g-1 row-amount" *ngIf="data.payments[0].faceValue">
+        <div class="col-3" *ngIf="data.payments[0].faceValue">
             <span>{{(data.payments[0].faceValue/100) | number:'1.2-2'}}</span>
         </div>
     </div>
 
+
     <!-- CHANGE -->
-    <div class="flex d-row j-sb" *ngIf="data.payments[0].change.amount">
-        <div class="flex g-4 row-txt">
+    <div class="row" *ngIf="data.payments[0].change.amount">
+        <div class="col-8">
             <span i18n="slips@@change">Change</span>
         </div>
-        <div class="flex g-1 row-amount">
-            <!-- <span>{{(printDataOld.P_CHANGE) | number:2}}</span> -->
+        <div class="col-3">
             <span>{{printDataOld.P_CHANGE | number:'1.2-2'}}</span>
         </div>
     </div>
+
 
 </div>
