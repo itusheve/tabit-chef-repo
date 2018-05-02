@@ -171,7 +171,8 @@ export class DayViewComponent implements OnInit  {
               .subscribe((kpi: KPI) => {
                 const totalClosedSales = this.orders.reduce((acc, curr)=>(acc+=curr.sales, acc), 0);
                 const totalOpenSales = kpi.sales || 0;
-                this.closedOpenSalesDiff = totalOpenSales - totalClosedSales;
+                const diff = totalOpenSales - totalClosedSales;
+                if (diff>0) this.closedOpenSalesDiff = diff;
               });
           }
         });
