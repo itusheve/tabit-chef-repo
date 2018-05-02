@@ -123,15 +123,6 @@ export class OrderSlipsComponent implements OnInit {
 
       this.orderOld.deliveryNotes.forEach(dn => {
 
-        let _paymentPrintData;
-        if (dn.payments && dn.payments.length > 0) {
-          if (this.printDataOld.collections.PAYMENT_LIST && this.printDataOld.collections.PAYMENT_LIST.length > 0) {
-            _paymentPrintData = this.printDataOld.collections.PAYMENT_LIST.find(c => c.P_ID === dn.payments[0]._id);
-          }
-        }
-
-        dn.printData = _paymentPrintData;
-
         if (dn.payments[0]._type === 'ChargeAccountPayment') {
 
           this.slips.push({
@@ -158,16 +149,6 @@ export class OrderSlipsComponent implements OnInit {
       });
 
       this.orderOld.invoices.forEach(invoice => {
-
-        let _paymentPrintData;
-        if (invoice.payments && invoice.payments.length > 0) {
-          if (this.printDataOld.collections.PAYMENT_LIST && this.printDataOld.collections.PAYMENT_LIST.length > 0) {
-            _paymentPrintData = this.printDataOld.collections.PAYMENT_LIST.find(c => c.P_ID === invoice.payments[0]._id);
-          }
-        }
-
-        invoice.printData = _paymentPrintData;
-
 
         switch (invoice.payments[0]._type) {
           case 'CreditCardPayment':
