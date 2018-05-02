@@ -35,9 +35,22 @@ export class OrderSlipsComponent implements OnInit {
   slips: SlipVM[] = [];
   slip: SlipVM;
 
+  showExampleOrg = false;
+  exampleOrgName: string;
+
   constructor() { }
 
   ngOnInit() {
+    try {
+      this.exampleOrgName = JSON.parse(window.localStorage.getItem('exampleOrg')).name;
+    } catch (e) {
+      this.exampleOrgName = undefined;
+    }
+    if (this.exampleOrgName) {
+      this.showExampleOrg = true;
+    }
+
+
     let i = 0;
 
     this.slips.push({

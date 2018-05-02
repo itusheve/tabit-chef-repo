@@ -4,17 +4,12 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { Subscriber } from 'rxjs/Subscriber';
 import 'rxjs/add/operator/switchMap';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Order } from '../../../tabit/model/Order.model';
 import { ClosedOrdersDataService } from '../../../tabit/data/dc/closedOrders.data.service';
 import { Shift } from '../../../tabit/model/Shift.model';
-import { Department } from '../../../tabit/model/Department.model';
 import { OrderType } from '../../../tabit/model/OrderType.model';
-import { VisibilityService } from '../../../tabit/utils/visibility.service';
 import { OwnersDashboardService } from '../owners-dashboard.service';
 
 @Component({
@@ -127,13 +122,10 @@ export class DayViewComponent implements OnInit, AfterViewInit, AfterContentInit
 
   public mtdKPIs: CustomRangeKPI;
 
-  // public daySelectorVisible = true;
-
   constructor(
     private ownersDashboardService: OwnersDashboardService,
     private closedOrdersDataService: ClosedOrdersDataService,
     private dataService: DataService,
-    private visibilityService: VisibilityService,
     private route: ActivatedRoute,
     private router: Router
   ) {

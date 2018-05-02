@@ -10,40 +10,44 @@
     <!-- Common -->
     <div class="ticket-box d-col common" style="border-bottom: 2px solid #000;">
 
-      <!-- ORGANIZATION_NAME -->
-      <div class="flex j-center">
-        <div>{{printDataOld.variables.ORGANIZATION_NAME}}</div>
-      </div>
-
-      <!-- ORGANIZATION_LEGAL_NAME -->
-      <div class="flex j-center fs-15">
-        <div *ngIf="printDataOld.variables.ORGANIZATION_BN_NUMBER">
-          <span>{{printDataOld.variables.ORGANIZATION_LEGAL_NAME}}</span>
-          <span> - </span>
-          <span i18n="slips@@bn_number"></span>
-          <span>{{printDataOld.variables.ORGANIZATION_BN_NUMBER}}</span>
+      <div *ngIf="showExampleOrg===false; else exampleOrgNameTplt">
+        <!-- ORGANIZATION_NAME -->
+        <div class="flex j-center">
+          <div>{{printDataOld.variables.ORGANIZATION_NAME}}</div>
         </div>
-        <div *ngIf="!printDataOld.variables.ORGANIZATION_BN_NUMBER">
-          <span>{{printDataOld.variables.ORGANIZATION_LEGAL_NAME}}</span>
+
+        <!-- ORGANIZATION_LEGAL_NAME -->
+        <div class="flex j-center fs-15">
+          <div *ngIf="printDataOld.variables.ORGANIZATION_BN_NUMBER">
+            <span>{{printDataOld.variables.ORGANIZATION_LEGAL_NAME}}</span>
+            <span> - </span>
+            <span i18n="slips@@bn_number"></span>
+            <span>{{printDataOld.variables.ORGANIZATION_BN_NUMBER}}</span>
+          </div>
+          <div *ngIf="!printDataOld.variables.ORGANIZATION_BN_NUMBER">
+            <span>{{printDataOld.variables.ORGANIZATION_LEGAL_NAME}}</span>
+          </div>
+        </div>
+
+        <!-- ORGANIZATION_ADDR_STREET -->
+        <div class="flex j-center fs-15">
+          <div>{{printDataOld.variables.ORGANIZATION_ADDR_STREET}}</div>
+        </div>
+
+        <!-- ORGANIZATION_ADDR_CITY -->
+        <div class="flex j-center fs-15">
+          <div>{{printDataOld.variables.ORGANIZATION_ADDR_CITY}}</div>
+        </div>
+
+        <!-- ORGANIZATION_TEL -->
+        <div class="flex j-center fs-15">
+          <div i18n="slips@@tel"></div>
+          &nbsp;
+          <div>{{printDataOld.variables.ORGANIZATION_TEL}}</div>
         </div>
       </div>
 
-      <!-- ORGANIZATION_ADDR_STREET -->
-      <div class="flex j-center fs-15">
-        <div>{{printDataOld.variables.ORGANIZATION_ADDR_STREET}}</div>
-      </div>
-
-      <!-- ORGANIZATION_ADDR_CITY -->
-      <div class="flex j-center fs-15">
-        <div>{{printDataOld.variables.ORGANIZATION_ADDR_CITY}}</div>
-      </div>
-
-      <!-- ORGANIZATION_TEL -->
-      <div class="flex j-center fs-15">
-        <div i18n="slips@@tel"></div>
-        &nbsp;
-        <div>{{printDataOld.variables.ORGANIZATION_TEL}}</div>
-      </div>
+      <ng-template #exampleOrgNameTplt><div class="flex j-center">{{exampleOrgName}}</div></ng-template>
 
       <div class="line"></div>
 

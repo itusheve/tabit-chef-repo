@@ -106,7 +106,7 @@ export class DayPaymentsTableComponent implements OnChanges {
           byAccountObj.totalPayments.mtd += dp.grossPayments;
           byAccountTypeObj.totalPayments.mtd += dp.grossPayments;
           this.data.totalPayments.mtd += dp.grossPayments;
-          if (dp.date.isSame(this.bd, 'date')) {
+          if (dp.date.isSame(this.bd, 'day')) {
             byAccountObj.totalPayments.today += dp.grossPayments;
             byAccountTypeObj.totalPayments.today += dp.grossPayments;
             this.data.totalPayments.today += dp.grossPayments;

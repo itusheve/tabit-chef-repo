@@ -865,8 +865,8 @@ const OrderViewService = (function () {
                 if (_discount.rewardedResources && _discount.rewardedResources[0].orderedItem &&
                     _discount.rewardedResources[0].selectedModifier) {
                     //item discount with selected modifiers
-                    _item = items.find(c => c._id === discount.rewardedResources[0].selectedModifier);
-                    _item.discount = { amount: discount.amount, name: reward.name };
+                    _item = items.find(c => c._id === _discount.rewardedResources[0].selectedModifier);
+                    _item.discount = { amount: _discount.amount, name: reward.name };
                 }
                 else if (_discount.rewardedResources && _discount.rewardedResources[0].orderedItem) {
                     //item discount

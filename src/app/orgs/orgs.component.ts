@@ -15,7 +15,7 @@ export class OrgsComponent implements OnInit {
 
   org: any;
   exampleOrg: any = {//this renders a card that is actually an alias to another org, just for presentation purposes.
-    enabled: undefined,//whether to render the card.
+    enabled: false,//whether to render the card.
     selected: false,//set to true when it is pressed. reset to false when another org is pressed.
     name: undefined,//name to display on the card
     realOrgId: '53eb1ee2e6c77111203d8503',//TODO and in us?
