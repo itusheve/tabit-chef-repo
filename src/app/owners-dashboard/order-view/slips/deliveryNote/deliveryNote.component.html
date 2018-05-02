@@ -1,97 +1,24 @@
 <div class="ticket-box d-col">
 
-    <!-- BUSINESS MEAL -->
-    <div class="flex d-row  j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@businessMeal">Business Meal</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-        </div>
-    </div>
+    <app-order-single-invoice-data [printData]="invoice" [orderOld]="orderOld"></app-order-single-invoice-data>
 
-    <!-- BEFORE VAT -->
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@beforeVAT">Before VAT</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{((data.amount/100)-(data.tax?.amount/100)) | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-    <!-- VAT -->
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@vat">VAT</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-    <!-- INCLUDE VAT -->
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@includeVAT">Include VAT</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-        </div>
-    </div>
+    <app-order-invoice-vat [printData]="invoice"></app-order-invoice-vat>
 
     <hr />
 
     <!-- Paid IN CHARGE ACCOUNT FROM -->
-    <div class="flex d-row a-center">
-        <div class="flex g-4 row-txt">
+    <div class="row">
+        <div class="col-8">
             <span i18n="slips@@paidInChargeAccountFrom">Paid in charge account from</span>
             <span>{{data.payments[0]?.accountName}}</span>
         </div>
-        <div class="flex g-1 row-amount">
+        <div class="col-3">
             <span>{{(data.amount/100) | number:'1.2-2'}}</span>
         </div>
     </div>
 
     <hr />
 
-    <!-- LAST 4 -->
-    <div class="flex j-sb d-block" *ngIf="printDataOld.LAST_4">
-        <span i18n="slips@@last4">LAST 4</span>
-        <span>{{printDataOld.LAST_4}}</span>
-    </div>
-
-    <!-- PROVIDER PAYMENT DATE -->
-    <div class="flex j-sb d-block" *ngIf="printDataOld.PROVIDER_PAYMENT_DATE">
-        <span i18n="@@transactionTime">Transaction Time</span>
-        <span>{{printDataOld.PROVIDER_PAYMENT_DATE | date : 'dd/MM/yyyy HH:mm' }}</span>
-
-        <!-- US format -->
-        <!-- <span>{{printDataOld.PROVIDER_PAYMENT_DATE |date : 'MM/dd/yyyy HH:mm'}}</span> -->
-    </div>
-
-    <!-- COMPANY_NAME-->
-    <div class="flex j-sb d-block" *ngIf="printDataOld.COMPANY_NAME">
-        <span i18n="@@companyName">Company name</span>
-        <span>{{printDataOld.COMPANY_NAME}}</span>
-    </div>
-
-    <!-- CARD NUMBER-->
-    <div class="flex j-sb d-block" *ngIf="printDataOld.CARD_NUMBER">
-        <span i18n="slips@@cardNumber">Card number</span>
-        <span>{{printDataOld.CARD_NUMBER}}</span>
-    </div>
-
-    <!-- PROVIDER TRANSACTIOB ID -->
-    <div class="flex j-sb d-block" *ngIf="printDataOld.PROVIDER_TRANS_ID">
-        <span class="text-upper" i18n="slips@@transactionNumber">Transaction no.</span>
-        <span>{{printDataOld.PROVIDER_TRANS_ID}}</span>
-    </div>
-
-    <!-- CONFIRMATION NUM -->
-    <div class="flex j-sb d-block" *ngIf="data.confirmationNum&&data.confirmationNum.length>0">
-        <span class="text-upper" i18n="slips@@approvalNumber">Approval no.</span>
-        <span>{{data.confirmationNum}}</span>
-    </div>
+    <app-order-delivery-note-transaction-data [printData]="invoice"></app-order-delivery-note-transaction-data>
 
 </div>

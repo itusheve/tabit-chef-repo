@@ -1,54 +1,16 @@
 <div class="ticket-box d-col">
 
-    <!-- RETURN AMOUNT -->
-    <div class="flex d-row  j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="@@return">Return</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-    <!-- BEFORE VAT -->
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@beforeVAT">Before VAT</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{((data.amount/100)-(data.tax?.amount/100)) | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-    <!-- VAT -->
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@vat">VAT</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-    <!-- INCLUDE VAT -->
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@includeVAT">Include VAT</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-        </div>
-    </div>
+    <app-order-invoice-vat [printData]="invoice"></app-order-invoice-vat>
 
     <hr />
 
     <!-- RETURN IN CASH FROM -->
-    <div class="flex d-row a-center">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@returnInCash">Returned in cash</span>
+    <div class="row">
+        <div class="col-8">
+            <span i18n="@@returnedWithCash">Returned in cash</span>
         </div>
-        <div class="flex g-1 row-amount">
-            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+        <div class="col-3">
+            <span class="negative">{{(data.amount/100) | number:'1.2-2'}}</span>
         </div>
     </div>
 

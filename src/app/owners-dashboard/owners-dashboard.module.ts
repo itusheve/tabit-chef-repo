@@ -31,6 +31,10 @@ import { OrderViewComponent } from './order-view/order-view.component';
     import { OrderDeliveryNoteComponent } from './order-view/slips/deliveryNote/deliveryNote.component';
     import { OrderDeliveryNoteRefundComponent } from './order-view/slips/deliveryNoteRefund/deliveryNoteRefund.component';
     import { OrderCreditSlipComponent } from './order-view/slips/creditSlip/creditSlip.component';
+      import { OrderInvoiceVatComponent } from './order-view/slips/common/invoiceVat/invoiceVat.component';
+      import { OrderCreditTransactionDataComponent } from './order-view/slips/common/creditTransactionData/creditTransactionData.component';
+      import { OrderDeliveryNoteTransactionDataComponent } from './order-view/slips/common/deliveryNoteTransactionData/deliveryNoteTransactionData.component';
+      import { OrderSingleInvoiceDataComponent } from './order-view/slips/common/singleInvoiceData/singleInvoiceData.component';
   import { OrderDetailsComponent } from './order-view/details/details.component';
 
 import { CardComponent } from '../ui/card/card.component';
@@ -145,6 +149,10 @@ import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-tabl
         OrderCreditRefundComponent,
         OrderChequeRefundComponent,
         OrderCashRefundComponent,
+          OrderInvoiceVatComponent,
+          OrderCreditTransactionDataComponent,
+          OrderDeliveryNoteTransactionDataComponent,
+          OrderSingleInvoiceDataComponent,
       OrderDetailsComponent,
 
   ],

@@ -756,17 +756,11 @@
       </trans-unit>
       <trans-unit id="transactionTime" datatype="html">
         <source>Transaction Time</source>
-        <target>זמן טרנזקציה</target>
+        <target>זמן עסקה</target>
       </trans-unit>
       <trans-unit id="returnedInCheque" datatype="html">
         <source>Returned in cheque</source>
         <target>הוחזר בהמחאה</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/_chequeRefund/chequeRefund.component.ts</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-        <note priority="1" from="description">הוחזר בהמחאה</note>
-        <note priority="1" from="meaning">slips</note>
       </trans-unit>
       <trans-unit id="returnedWithCash" datatype="html">
         <source>Returned in Cash</source>

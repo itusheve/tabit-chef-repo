@@ -314,6 +314,9 @@ const ORDERS_VIEW = environment.tbtLocale === 'he-IL' ? ORDERS_VIEW_he : ORDERS_
 
 export default ORDERS_VIEW;
 
+const PRINT_DATA = 'printdata';
+const DOCUMENTS_URL = 'documents/v2';
+
 // copied as is from office 4.X
 let Enums = {
     ReturnTypes: {
@@ -630,6 +633,19 @@ export class ClosedOrdersDataService {
                 };
 
             });
+    }
+
+    /**
+     * get print data of invoice
+     * @param id invoice id
+     */
+    public getPrintData(id): Promise<any> {
+        return new Promise((resolve, reject) => {
+            return this.rosEp.get(`${DOCUMENTS_URL}/${id}/${PRINT_DATA}`, {})
+                .then((result: any[]) => {
+                    return resolve(result);
+                });
+        });
     }
 
 

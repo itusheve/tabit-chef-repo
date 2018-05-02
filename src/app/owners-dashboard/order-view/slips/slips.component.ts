@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 
 import * as _ from 'lodash';
 import { Order } from '../../../../tabit/model/Order.model';
@@ -9,7 +9,8 @@ import { tmpTranslations } from '../../../../tabit/data/data.service';
 import { environment } from '../../../../environments/environment';
 
 export interface SlipVM {
-  id: number;
+  id: string;
+  index: number;
   class: string;//bill/club
   subclass?: string;
   caption: string;
@@ -27,6 +28,7 @@ export class OrderSlipsComponent implements OnInit {
   @Input() orderOld: any;
   @Input() printDataOld: any;
   @Input() ORDERSVIEW: any;
+  @Input() orderDocs: any;
 
   isUS = environment.region === 'us' ? true : false;
   showOrderDetails = true;
@@ -37,6 +39,7 @@ export class OrderSlipsComponent implements OnInit {
 
   showExampleOrg = false;
   exampleOrgName: string;
+  invoicePrintData: any;
 
   constructor() { }
 
@@ -49,24 +52,34 @@ export class OrderSlipsComponent implements OnInit {
     if (this.exampleOrgName) {
       this.showExampleOrg = true;
     }
+    this.buildOptions();
+  }
 
+  change(slipId) {
+    this.slip = this.slips.find(s => s.index === slipId);
+    this.invoicePrintData = this.orderDocs[this.slip.id];
+  }
 
-    let i = 0;
+  private buildOptions() {
+
+    let index = 0;
 
     this.slips.push({
-      id: i,
+      id: this.orderOld.id,
+      index: index,
       class: 'bill',
       caption: `${tmpTranslations.get('order.slips.order')} ${this.orderOld.number}`
     });
-    i++;
+    index++;
 
     if (this.orderOld.clubMembers.length) {
       this.slips.push({
-        id: i,
+        id: "",
+        index: index,
         class: 'club',
         caption: tmpTranslations.get('order.slips.clubMembers')
       });
-      i++;
+      index++;
     }
 
     if (this.isUS) {
@@ -75,13 +88,13 @@ export class OrderSlipsComponent implements OnInit {
       if (this.orderOld.ChecksDetails && this.orderOld.ChecksDetails.length > 1) {
         this.orderOld.ChecksDetails.forEach(check => {
           this.slips.push({
-            id: i,
+            id: check.id,
+            index: index,
             class: 'check',
             data: { printData: check },
             caption: `Check #${check.variables.CHECK_NO}`
           });
-
-          i++;
+          index++;
         });
       }
 
@@ -93,32 +106,28 @@ export class OrderSlipsComponent implements OnInit {
           if (payment.SIGNATURE_CAPTURED) {
             let paymentData = this.orderOld.payments.find(c => c._id === payment.P_ID);
             let signatureData = paymentData.customerSignature;
-            let signatureView = {
-              view: 'signature',
-              show: true,
-              data: signatureData.data,
-              format: signatureData.format
-            };
-
+            let signatureView = { view: 'signature', show: true, data: signatureData.data, format: signatureData.format }
             payment.signature = signatureView;
           }
 
-
           payment.PAYMENT_NUMBER = `${this.orderOld.number}/${payment.NUMBER}`;
+
           this.slips.push({
-            id: i,
+            id: "",
+            index: index,
             class: 'invoice',
             subclass: 'credit-slip',
             data: payment,
             caption: `${title} - ${payment.PAYMENT_NUMBER}`
           });
-          i++;
+          index++;
 
         }
       });
 
 
     } else {
+
       this.orderOld.deliveryNotes.forEach(dn => {
 
         let _paymentPrintData;
@@ -133,22 +142,24 @@ export class OrderSlipsComponent implements OnInit {
         if (dn.payments[0]._type === 'ChargeAccountPayment') {
 
           this.slips.push({
-            id: i,
+            id: dn.id,
+            index: index,
             class: 'deliveryNote',
             data: dn,
             caption: ORDERS_VIEW.delivery_note_number + dn.number
           });
-          i++;
+          index++;
 
         } else if (dn.payments[0]._type === 'ChargeAccountRefund') {
 
           this.slips.push({
-            id: i,
+            id: dn.id,
+            index: index,
             class: 'deliveryNoteRefund',
             data: dn,
             caption: ORDERS_VIEW.refund_note_number + dn.number
           });
-          i++;
+          index++;
 
         }
       });
@@ -168,7 +179,8 @@ export class OrderSlipsComponent implements OnInit {
         switch (invoice.payments[0]._type) {
           case 'CreditCardPayment':
             this.slips.push({
-              id: i,
+              id: invoice.id,
+              index: index,
               class: 'invoice',
               subclass: 'credit',
               data: invoice,
@@ -178,7 +190,8 @@ export class OrderSlipsComponent implements OnInit {
 
           case 'CreditCardRefund':
             this.slips.push({
-              id: i,
+              id: invoice.id,
+              index: index,
               class: 'refund',
               subclass: 'credit',
               data: invoice,
@@ -188,7 +201,8 @@ export class OrderSlipsComponent implements OnInit {
 
           case 'CashPayment':
             this.slips.push({
-              id: i,
+              id: invoice.id,
+              index: index,
               class: 'invoice',
               subclass: 'cash',
               data: invoice,
@@ -198,7 +212,8 @@ export class OrderSlipsComponent implements OnInit {
 
           case 'CashRefund':
             this.slips.push({
-              id: i,
+              id: invoice.id,
+              index: index,
               class: 'refund',
               subclass: 'cash',
               data: invoice,
@@ -208,7 +223,8 @@ export class OrderSlipsComponent implements OnInit {
 
           case 'GiftCard':
             this.slips.push({
-              id: i,
+              id: invoice.id,
+              index: index,
               class: 'invoice',
               subclass: 'giftcard',
               data: invoice,
@@ -218,7 +234,8 @@ export class OrderSlipsComponent implements OnInit {
 
           case 'ChequePayment':
             this.slips.push({
-              id: i,
+              id: invoice.id,
+              index: index,
               class: 'invoice',
               subclass: 'cheque',
               data: invoice,
@@ -228,7 +245,8 @@ export class OrderSlipsComponent implements OnInit {
 
           case 'ChequeRefund':
             this.slips.push({
-              id: i,
+              id: invoice.id,
+              index: index,
               class: 'refund',
               subclass: 'cheque',
               data: invoice,
@@ -237,16 +255,12 @@ export class OrderSlipsComponent implements OnInit {
             break;
 
         }
-        i++;
+        index++;
       });
     }
 
-
     this.slip = this.slips[0];
-  }
-
-  change(slipId) {
-    this.slip = this.slips.find(s => s.id === slipId);
+    this.invoicePrintData = this.orderDocs[this.slip.id];
 
   }
 

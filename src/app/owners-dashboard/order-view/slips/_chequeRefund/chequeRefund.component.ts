@@ -10,6 +10,8 @@ import { Order } from '../../../../../tabit/model/Order.model';
 export class OrderChequeRefundComponent implements OnInit {
 
   @Input() data: any;
+  @Input() invoice: any;
+  @Input() orderOld: any;
   
   constructor() {}
   

@@ -98,99 +98,101 @@ const OrderViewService = (function () {
             let items = [];
             let oth = [];
 
-            offersList.forEach(offer => {
+            if (offersList && offersList.length > 0) {
+                offersList.forEach(offer => {
 
-                let offerQyt = 0;
-                if (offer.SPLIT_DENOMINATOR && offer.SPLIT_NUMERATOR && offer.SPLIT_DENOMINATOR !== 100 && offer.SPLIT_NUMERATOR !== 100) {
-                    offerQyt = `${offer.SPLIT_NUMERATOR}/${offer.SPLIT_DENOMINATOR}`;
-                } else {
-                    offerQyt = offer.OFFER_QTY
-                }
-
-                if (offer.OFFER_TYPE == Enums.OfferTypes.Simple) {
-                    let item = {
-                        isOffer: true,
-                        name: offer.OFFER_NAME,
-                        qty: offerQyt
-                    };
-
-                    if (offer.ON_THE_HOUSE) {
-                        item.amount = translateService.getText('OTH');
-                        oth.push(item)
+                    let offerQyt = 0;
+                    if (offer.SPLIT_DENOMINATOR && offer.SPLIT_NUMERATOR && offer.SPLIT_DENOMINATOR !== 100 && offer.SPLIT_NUMERATOR !== 100) {
+                        offerQyt = `${offer.SPLIT_NUMERATOR}/${offer.SPLIT_DENOMINATOR}`;
                     } else {
-                        item.amount = utils.toFixedSafe(offer.OFFER_AMOUNT, 2)
-                        items.push(item);
+                        offerQyt = offer.OFFER_QTY
                     }
 
-                    if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
-                        offer.ORDERED_OFFER_DISCOUNTS.forEach(discount => {
-                            items.push({
-                                isOfferDiscount: true,
-                                name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : translateService.getText('MANUAL_ITEM_DISCOUNT'),
-                                qty: null,
-                                amount: utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
-                            })
-                        });
-                    }
-                }
+                    if (offer.OFFER_TYPE == Enums.OfferTypes.Simple) {
+                        let item = {
+                            isOffer: true,
+                            name: offer.OFFER_NAME,
+                            qty: offerQyt
+                        };
 
-                if ([Enums.OfferTypes.ComplexOne, Enums.OfferTypes.Combo].indexOf(offer.OFFER_TYPE) > -1) {
+                        if (offer.ON_THE_HOUSE) {
+                            item.amount = translateService.getText('OTH');
+                            oth.push(item)
+                        } else {
+                            item.amount = utils.toFixedSafe(offer.OFFER_AMOUNT, 2)
+                            items.push(item);
+                        }
 
-                    items.push({
-                        isOffer: true,
-                        name: offer.OFFER_NAME,
-                        qty: offerQyt,
-                        amount: offer.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(isReturnOrder ? offer.OFFER_AMOUNT : offer.OFFER_CALC_AMT, 2)
-                    });
-
-                    if (!isReturnOrder) {
-                        if (offer.ORDERED_ITEMS_LIST && offer.ORDERED_ITEMS_LIST.length > 0)
-                            offer.ORDERED_ITEMS_LIST.forEach(item => {
+                        if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
+                            offer.ORDERED_OFFER_DISCOUNTS.forEach(discount => {
                                 items.push({
-                                    isItem: true,
-                                    name: item.ITEM_NAME,
+                                    isOfferDiscount: true,
+                                    name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : translateService.getText('MANUAL_ITEM_DISCOUNT'),
                                     qty: null,
-                                    amount: null
+                                    amount: utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
                                 })
-                            });
-                    }
-
-                    if (!isReturnOrder) {
-                        if (offer.EXTRA_CHARGE_LIST && offer.EXTRA_CHARGE_LIST.length > 0) {
-                            offer.EXTRA_CHARGE_LIST.forEach(item => {
-                                if (item.EXTRA_CHARGE_MODIFIERS_LIST && item.EXTRA_CHARGE_MODIFIERS_LIST.length > 0) {
-                                    item.EXTRA_CHARGE_MODIFIERS_LIST.forEach(modifier => {
-                                        items.push({
-                                            isItem: true,
-                                            name: modifier.MODIFIER_NAME,
-                                            qty: null,
-                                            amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(item.ITEM_AMOUNT, 2)
-                                        })
-                                    })
-                                } else {
-                                    items.push({
-                                        isItem: true,
-                                        name: item.ITEM_NAME,
-                                        qty: null,
-                                        amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(item.ITEM_AMOUNT, 2)
-                                    })
-                                }
                             });
                         }
                     }
 
-                    if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
-                        offer.ORDERED_OFFER_DISCOUNTS.forEach(discount => {
-                            items.push({
-                                isOfferDiscount: true,
-                                name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : translateService.getText('MANUAL_ITEM_DISCOUNT'),
-                                qty: null,
-                                amount: utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                    if ([Enums.OfferTypes.ComplexOne, Enums.OfferTypes.Combo].indexOf(offer.OFFER_TYPE) > -1) {
+
+                        items.push({
+                            isOffer: true,
+                            name: offer.OFFER_NAME,
+                            qty: offerQyt,
+                            amount: offer.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(isReturnOrder ? offer.OFFER_AMOUNT : offer.OFFER_CALC_AMT, 2)
+                        });
+
+                        if (!isReturnOrder) {
+                            if (offer.ORDERED_ITEMS_LIST && offer.ORDERED_ITEMS_LIST.length > 0)
+                                offer.ORDERED_ITEMS_LIST.forEach(item => {
+                                    items.push({
+                                        isItem: true,
+                                        name: item.ITEM_NAME,
+                                        qty: null,
+                                        amount: null
+                                    })
+                                });
+                        }
+
+                        if (!isReturnOrder) {
+                            if (offer.EXTRA_CHARGE_LIST && offer.EXTRA_CHARGE_LIST.length > 0) {
+                                offer.EXTRA_CHARGE_LIST.forEach(item => {
+                                    if (item.EXTRA_CHARGE_MODIFIERS_LIST && item.EXTRA_CHARGE_MODIFIERS_LIST.length > 0) {
+                                        item.EXTRA_CHARGE_MODIFIERS_LIST.forEach(modifier => {
+                                            items.push({
+                                                isItem: true,
+                                                name: modifier.MODIFIER_NAME,
+                                                qty: null,
+                                                amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(item.ITEM_AMOUNT, 2)
+                                            })
+                                        })
+                                    } else {
+                                        items.push({
+                                            isItem: true,
+                                            name: item.ITEM_NAME,
+                                            qty: null,
+                                            amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(item.ITEM_AMOUNT, 2)
+                                        })
+                                    }
+                                });
+                            }
+                        }
+
+                        if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
+                            offer.ORDERED_OFFER_DISCOUNTS.forEach(discount => {
+                                items.push({
+                                    isOfferDiscount: true,
+                                    name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : translateService.getText('MANUAL_ITEM_DISCOUNT'),
+                                    qty: null,
+                                    amount: utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                                })
                             })
-                        })
+                        }
                     }
-                }
-            })
+                });
+            }
 
             return {
                 items: items,
