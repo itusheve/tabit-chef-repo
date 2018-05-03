@@ -33,6 +33,8 @@ export class OrderInvoiceVatComponent implements OnInit {
             this.documentItems.ITEM_VAT_PERCENT = this.variables.VAT_PERCENT;
         }
 
+        console.log(this.documentItems);
+
 
     }
 
