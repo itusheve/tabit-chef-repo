@@ -54,6 +54,7 @@ import { AuthService } from './auth/auth.service';
 import { UserGuard } from './auth/user-guard.service';
 import { OrgGuard } from './auth/org-guard.service';
 
+import { LocalizationService } from './localization.service';
 import { DebugService } from './debug.service';
 
 //feature modules:
@@ -110,7 +111,7 @@ if (environment.tbtLocale==='he-IL') {
             window.location.reload();
           });
       },
-      deps: [AuthService],
+      deps: [AuthService, LocalizationService],
       multi: true
     },
     {
@@ -125,6 +126,7 @@ if (environment.tbtLocale==='he-IL') {
     AuthService,
     UserGuard,
     OrgGuard,
+    LocalizationService,
     DebugService,
 
     // Utils:

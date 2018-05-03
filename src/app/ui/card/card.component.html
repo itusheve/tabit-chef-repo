@@ -1,15 +1,15 @@
-<div class="flex f-rtl d-col card">
+<div class="flex d-col card">
   <div class="flex ctitle">
     <!-- <div class="flex j-start ctag" style="width:25%">{{cardData?.tag}}</div> -->
     <div class="flex j-start ctag" style="width:25%"><span *ngIf="cardData" i18n>{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</span></div>
     <div class="flex j-center" style="width:75%">{{cardData?.title || '&nbsp;'}}</div>
     <div class="flex j-end" style="width:25%"></div>
   </div>
-  <dx-load-indicator [(visible)]="!cardData || cardData.loading" rtlEnabled="true"></dx-load-indicator>
+  <dx-load-indicator [(visible)]="!cardData || cardData.loading"></dx-load-indicator>
   <div *ngIf="cardData && !cardData.loading" class="g-1 flex d-col cbody">
     <div class="g-1 flex a-center j-sb cmain">
       <div style="width:18%" class="s-0 flex j-end a-center">
-        <div *ngIf="cardData.trends && cardData.trends.right && cardData.trends.right.status==='ready'" class="flex d-col a-center trend"
+        <div *ngIf="cardData.trends && cardData.trends.right && cardData.trends.right.status==='ready'" class="flex d-col a-center trend "
           [ngClass]="cardData.trends.right.val > 0 ? 'up' : 'down'">
           <div class="flex label"><div class="flex letter" i18n="@@cardLetter">{ cardData.trends.right.letter, select, A {A} Y {Y} }</div><mat-icon>play_arrow</mat-icon></div>
           <div class="figure">{{cardData.trends.right.val | percent:'1.1-1'}}</div>

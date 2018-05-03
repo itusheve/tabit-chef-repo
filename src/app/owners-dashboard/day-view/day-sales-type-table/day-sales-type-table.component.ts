@@ -15,15 +15,12 @@ export class DaySalesTypeTableComponent {
 
   @Output() onRowClicked = new EventEmitter();
 
-  // currencySymbol = environment.region === 'il' ? '&#8362;' : '$';
-
   public show = false;
 
   public hSize = 'normal';
 
   public byTypeByShiftArr = [];
   public summary = [];
-  // public shifts;
 
   public total;
 

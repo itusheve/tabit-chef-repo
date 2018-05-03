@@ -1,7 +1,7 @@
-<div class="flex f-rtl d-col">
+<div class="flex d-col">
     <div class="title" i18n="@@mostSoldItems">Most Sold Items</div>
     <div class="flex d-col body">
-        <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+        <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center widget-data">

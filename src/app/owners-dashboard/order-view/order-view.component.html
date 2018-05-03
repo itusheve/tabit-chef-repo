@@ -1,4 +1,4 @@
-<div class="flex d-col f-rtl order-view" style="position:relative">
+<div class="flex d-col order-view" style="position:relative">
   <!-- https://github.com/angular/material2/issues/5269 -->
   <mat-tab-group class="flex d-col" style="height:100%">
     <mat-tab label="Tab 1">
@@ -8,7 +8,7 @@
       <ng-template matTabContent>
         <div class="tab slips">
           <div *ngIf="!show" class="flex aj-center" style="width:100%;height:100%;">
-            <dx-load-indicator rtlEnabled="true"></dx-load-indicator>
+            <dx-load-indicator></dx-load-indicator>
           </div>
           <app-order-slips
             *ngIf="show"
@@ -29,7 +29,7 @@
       <ng-template matTabContent>
         <div class="tab details">
           <div *ngIf="!show" class="flex aj-center" style="width:100%;height:100%;">
-            <dx-load-indicator rtlEnabled="true"></dx-load-indicator>
+            <dx-load-indicator></dx-load-indicator>
           </div>
           <app-order-details
             *ngIf="show"

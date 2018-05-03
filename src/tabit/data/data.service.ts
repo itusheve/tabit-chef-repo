@@ -181,7 +181,6 @@ export interface BusinessDayKPIs {
     >;
 }
 
-//export const currencySymbol = environment.region === 'il' ? '&#8362;' : '$';
 export const currencySymbol = environment.region === 'il' ? '₪' : '$';
 
 export const appVersions = (document as any).tbtAppVersions;

@@ -10,7 +10,7 @@
             [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}"
             >
             <div class="col-1">{{item.qty}}</div>
-            <div class="col-7 item-name">{{item.name}}</div>
+            <div class="col-7 ps40">{{item.name}}</div>
             <div class="col-3">
                 <span class="negative">{{item.amount}}</span>
             </div>
@@ -22,7 +22,7 @@
             [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}"
             >
             <div class="col-1">{{item.qty}}</div>
-            <div class="col-5 item-name">{{item.name}}</div>
+            <div class="col-5 ps40">{{item.name}}</div>
             <div class="col-5">{{item.amount}}</div>
         </div>
 

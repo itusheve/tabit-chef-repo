@@ -61,7 +61,6 @@ export class OwnersDashboardComponent {
 
   logout() {
     let dialogRef = this.dialog.open(AreYouSureDialogComponent, {
-      direction: 'rtl',//TODO localization
       width: '250px',
       data: {
         title: '',

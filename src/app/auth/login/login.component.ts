@@ -64,7 +64,6 @@ export class LoginComponent implements OnInit {
       .catch(err=>{
         if (err.status===403) {
           this.snackBar.open(tmpTranslations.get('login.userPassIncorrect'), null, {
-            direction: 'rtl',//TODO localization
             duration: 3000,
             verticalPosition: 'top'
           });
@@ -74,13 +73,9 @@ export class LoginComponent implements OnInit {
 
   forgotPassword() {
     let dialogRef = this.dialog.open(ForgotPasswordDialogComponent, {
-      direction: 'rtl',//TODO localization
       width: '450px',
       data: {
         title: tmpTranslations.get('login.passwordRestore'),
-        // content: `
-        //   ${tmpTranslations.get('areYouSureYouWish')} ${tmpTranslations.get('toLogout')}?
-        // `
         email: this.loginForm.value.email.slice(0)
       }
     });
@@ -90,14 +85,12 @@ export class LoginComponent implements OnInit {
         this.authService.forgotPassword({email: result.email})
           .then(() => {
             this.snackBar.open(`${tmpTranslations.get('login.resetPasswordSent')} ${result.email}`, null, {
-              direction: 'rtl',//TODO localization
               duration: 5000,
               verticalPosition: 'top'
             });
           })
           .catch(()=> {
             this.snackBar.open(`${tmpTranslations.get('opFailed')} (err 826)`, null, {
-              direction: 'rtl',//TODO localization
               duration: 5000,
               verticalPosition: 'top'
             });

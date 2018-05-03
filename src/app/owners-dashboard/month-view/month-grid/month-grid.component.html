@@ -1,11 +1,10 @@
 <div class="flex d-col a-stretch">
-  <dx-load-indicator class="as-center" *ngIf="!dxGrid.show" rtlEnabled="true"></dx-load-indicator>
+  <dx-load-indicator class="as-center" *ngIf="!dxGrid.show"></dx-load-indicator>
   <dx-data-grid
     *ngIf="dxGrid.show"
     (onRowClick)="rowClickHandler($event)"
     [dataSource]="dxGrid.dataSource"
     [columnAutoWidth]="true"
-    [rtlEnabled]="true"
     [showColumnLines]="false"
 
     noDataText="No Data"
@@ -37,7 +36,6 @@
       dataField="sales"
       dataType="number"
       ></dxi-column>
-      <!-- [format]="{ style: 'currency', currency: 'ILS', currencyDisplay: 'symbol', minimumFractionDigits: 0, maximumFractionDigits: 0 }" -->
     <dxi-column
       caption="Diners"
       i18n-caption="@@diners"
@@ -48,7 +46,6 @@
       i18n-caption="@@ppa"
       dataField="ppa"
       ></dxi-column>
-      <!-- [format]="{ style: 'currency', currency: 'ILS', minimumFractionDigits: 2, maximumFractionDigits: 2 }" -->
 
     <tbody *dxTemplate="let data of 'rowTemplateName'">
       <tr class="dx-row dx-data-row dx-row-lines">
@@ -58,7 +55,7 @@
             <div class="flex">{{data.data.sales | curr:'0'}}</div>
             <div
               *ngIf="data.data.dailyTrends.trends.sales.status==='ready'"
-              class="flex d-col a-center trend"
+              class="flex d-col a-center trend ms5"
               [ngClass]="data.data.dailyTrends.trends.sales.val > 0 ? 'up' : 'down'">
               <div class="flex label">
                 <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.sales.letter, select, A {A} Y {Y} }</div>
@@ -72,7 +69,7 @@
         <td style="text-align: right;">
           <div class="flex">
             <div class="flex">{{data.data.dinersPPA | number : '1.0-0'}}</div>
-            <div *ngIf="data.data.dailyTrends.trends.diners.status==='ready'" class="flex d-col a-center trend" [ngClass]="data.data.dailyTrends.trends.diners.val > 0 ? 'up' : 'down'">
+            <div *ngIf="data.data.dailyTrends.trends.diners.status==='ready'" class="flex d-col a-center trend ms5" [ngClass]="data.data.dailyTrends.trends.diners.val > 0 ? 'up' : 'down'">
               <div class="flex label">
                 <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.diners.letter, select, A {A} Y {Y} }</div>
                 <mat-icon>play_arrow</mat-icon>

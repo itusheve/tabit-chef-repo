@@ -1,8 +1,8 @@
-<div class="flex f-rtl d-col">
+<div class="flex d-col">
     <div class="flex d-col" *ngIf="!loading">
         <div class="title" i18n="@@monthlyReport">Monthly Report</div>
         <div class="flex d-col body">
-            <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+            <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center">
                 <table class="chf-tbl chf-tbl-xx-smaller chf-tbl-row-oriented">

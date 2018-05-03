@@ -21,21 +21,12 @@ import { DataService, tmpTranslations } from '../data.service';
 
 import { OlapEp } from '../ep/olap.ep';
 import { ROSEp } from '../ep/ros.ep';
-// import { CurrencyPipe } from '@angular/common';
 import { User } from '../../model/User.model';
 import { environment } from '../../../environments/environment';
 import { DebugService } from '../../../app/debug.service';
 
-//declare var OrdersViewService: any;
-
 declare var OrderViewService: any;
 
-
-//import * as OrdersViewService from '../../../js/lib/OrderView/OrderView_v1/OrderView';
-
-//import OrdersViewService from '../../../lib/OrderView_v1/OrderView/OrderView';
-
-// copied as is from office 4.X
 //TODO establish proper translation service
 // tslint:disable:quotemark
 let ORDERS_VIEW_he = {

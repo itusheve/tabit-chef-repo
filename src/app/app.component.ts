@@ -28,15 +28,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     /* TLA: */
-    // this.appService.setAppSidenav(this.appSidenav);
-
-    /* TLA: */
-    // Setting the title
-    // this.title = this.appService.appConfig.title;
-    // this.direction = this.appService.appConfig.direction;
-    // console.log('isPlatformBrowser: ', isPlatformBrowser(this._platformId));
-
-    /* TLA: */
     this.cordova = window['cordova'];
     if (typeof window['cordova'] !== 'undefined') {
       console.log('Cordova exists');

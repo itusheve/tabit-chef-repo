@@ -4,11 +4,11 @@
   </button>
 </div>
 
-<div class="flex d-col f-rtl mb10 order-ticket" *ngIf="slip!==undefined">
+<div class="flex d-col mb10 order-ticket" *ngIf="slip!==undefined">
   <div class="d-col flex order-ticket-body">
 
     <div *ngIf="selectedDoc?.loading" class="flex j-center a-center order-ticket-body">
-      <dx-load-indicator class="as-center" rtlEnabled="true"></dx-load-indicator>
+      <dx-load-indicator class="as-center"></dx-load-indicator>
     </div>
 
     <!-- TEMPLATE -->

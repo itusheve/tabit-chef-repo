@@ -1,5 +1,5 @@
-<div class="flex f-rtl d-col">
-    <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+<div class="flex d-col">
+    <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
     <div class="flex d-col" *ngIf="!loading">
         <div class="title">
             <ng-container i18n="@@operationalErrors">Operational Errors</ng-container>&nbsp;-&nbsp;<ng-container i18n="@@operationalErrorsByServer">Item Returns, OTH and Discounts by Server</ng-container>

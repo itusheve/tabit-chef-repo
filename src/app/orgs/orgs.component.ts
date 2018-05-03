@@ -114,8 +114,7 @@ export class OrgsComponent implements OnInit {
         })
         .catch(e=>{
           this.snackBar.open('unauthorized', null, {
-            direction: 'rtl',//TODO localization
-            duration: 3000,
+            duration: 3000
           });
         });
     } else {
@@ -130,8 +129,7 @@ export class OrgsComponent implements OnInit {
         })
         .catch(e=>{
           this.snackBar.open('unauthorized', null, {
-            direction: 'rtl',//TODO localization
-            duration: 3000,
+            duration: 3000
           });
         });
     }
@@ -151,7 +149,6 @@ export class OrgsComponent implements OnInit {
 
   logout() {
     let dialogRef = this.dialog.open(AreYouSureDialogComponent, {
-      direction: 'rtl',//TODO localization
       width: '250px',
       data: {
         title: '',

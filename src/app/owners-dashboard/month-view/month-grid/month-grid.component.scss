@@ -6,15 +6,14 @@
 .trend {
     // width: 45px;
     // color: transparent;
-    
+
     transform: scale(0.7);//scaling compared to the card trend components
-    margin-right: 4px;
 
     .figure {
         font-size: 16px;
         line-height: 0.8;
     }
-    
+
     .label {
         line-height: 1;
         mat-icon {
@@ -24,7 +23,7 @@
             font-size: 15px;
         }
     }
-    
+
     &.up {
         .label {
             color: #30e430;
