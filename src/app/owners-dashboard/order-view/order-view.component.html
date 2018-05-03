@@ -43,7 +43,7 @@
     </mat-tab>
   </mat-tab-group>
 
-  <div class="flex a-center ph10 flags" style="position:absolute;top: 0;left: 0;height:48px;">
+  <div class="flex a-center ph10 flags posEnd" style="position:absolute;top: 0;height:48px;">
     <i class="mh3 icon iconOperationalAndCancellations" *ngIf="order?.priceReductions?.cancellation > 0"></i>
     <i class="mh3 icon iconRetention" *ngIf="order?.priceReductions?.discountsAndOTH > 0"></i>
     <i class="mh3 icon iconOrganizational" *ngIf="order?.priceReductions?.employees > 0"></i>

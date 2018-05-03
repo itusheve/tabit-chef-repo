@@ -521,40 +521,17 @@ export class OlapMappings {
                         }
                     },
                     members: {
-                        cancellation: {
-                            path: {
-                                il: 'cancellation',
-                                us: 'Voids Actions'
-                            },
-                            caption: 'ביטולים'//TODO localization
-                        },
                         operational: {
                             path: {
                                 il: 'compensation',
                                 us: 'Compensation Actions'
-                            },
-                            caption: 'תפעול'
+                            }
                         },
                         retention: {
                             path: {
                                 il: 'retention',
                                 us: 'Retention Actions'
-                            },
-                            caption: 'שימור ושיווק'//TODO localization
-                        },
-                        organizational: {
-                            path: {
-                                il: 'organizational',
-                                us: 'TBD'
-                            },
-                            caption: 'ארגוני'//TODO localization
-                        },
-                        promotions: {
-                            path: {
-                                il: '',
-                                us: 'TBD'
-                            },
-                            caption: 'מבצעים'//TODO localization
+                            }
                         }
                     }
                 }

@@ -2,6 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
+import { environment } from '../../environments/environment';
+
 import { DataService, tmpTranslations, appVersions } from '../../tabit/data/data.service';
 import { AuthService } from '../auth/auth.service';
 import { OwnersDashboardService } from './owners-dashboard.service';
@@ -27,6 +29,8 @@ export class OwnersDashboardComponent {
     wrapper: string
   };
 
+  env;
+
   constructor(
     private dataService: DataService,
     private authService: AuthService,
@@ -35,6 +39,8 @@ export class OwnersDashboardComponent {
     public router: Router,
     public route: ActivatedRoute
   ) {
+
+    this.env = environment;
 
     this.appVersions = appVersions;
 

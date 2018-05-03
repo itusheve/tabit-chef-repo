@@ -71,7 +71,7 @@
 
 // direction (ltr/rtl) sensitive approach
 // decoding: p = padding, m = margin, b = start, e = end, e.g., ps5 will add 5 pixels padding on the "start", which for ltr its padding-left and for rtl its padding-right
-:not(body[dir="rtl"]) {
+body[dir="ltr"] {
     .ps5 {padding-left: 5px; }
     .ps10 {padding-left: 10px; }
     .ps15 {padding-left: 15px; }
@@ -104,6 +104,8 @@
     .me30 {margin-right: 30px!important; }
     .me35 {margin-right: 35px!important; }
     .me40 {margin-right: 40px!important; }
+    .posStart {left: 0}
+    .posEnd {right: 0}
 }
 body[dir="rtl"] {
     .ps5 {padding-right: 5px; }
@@ -138,4 +140,6 @@ body[dir="rtl"] {
     .me30 {margin-left: 30px!important; }
     .me35 {margin-left: 35px!important; }
     .me40 {margin-left: 40px!important; }
+    .posStart {right: 0}
+    .posEnd {left: 0}
 }

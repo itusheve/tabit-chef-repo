@@ -49,7 +49,7 @@
       </div>
       <div class="flex j-end pe15" style="width:20%">
         <button mat-icon-button *ngIf="toolbarConfig.left.back.showBtn" (click)="toolbarConfig.left.back.onGoBackClicked()">
-          <mat-icon>keyboard_arrow_left</mat-icon>
+          <mat-icon>{{env.tbtLocale==='he-IL' ? 'keyboard_arrow_left' : 'keyboard_arrow_right'}}</mat-icon>
         </button>
       </div>
     </div>

@@ -1,4 +1,4 @@
-<div class="flex d-col a-stretch">
+<div class="flex d-col a-stretch month-grid">
   <dx-load-indicator class="as-center" *ngIf="!dxGrid.show"></dx-load-indicator>
   <dx-data-grid
     *ngIf="dxGrid.show"
@@ -49,8 +49,8 @@
 
     <tbody *dxTemplate="let data of 'rowTemplateName'">
       <tr class="dx-row dx-data-row dx-row-lines">
-        <td style="text-align: right;">{{data.data.dateFormatted}}</td>
-        <td style="text-align: right;">
+        <td>{{data.data.dateFormatted}}</td>
+        <td>
           <div class="flex">
             <div class="flex">{{data.data.sales | curr:'0'}}</div>
             <div
@@ -66,7 +66,7 @@
           </div>
         </td>
 
-        <td style="text-align: right;">
+        <td>
           <div class="flex">
             <div class="flex">{{data.data.dinersPPA | number : '1.0-0'}}</div>
             <div *ngIf="data.data.dailyTrends.trends.diners.status==='ready'" class="flex d-col a-center trend ms5" [ngClass]="data.data.dailyTrends.trends.diners.val > 0 ? 'up' : 'down'">
@@ -79,12 +79,12 @@
           </div>
         </td>
 
-        <td style="text-align: right;">
+        <td>
           <div class="flex">
             <div class="flex">{{data.data.ppa | curr}}</div>
             <div
               *ngIf="data.data.dailyTrends.trends.ppa.status==='ready'"
-              class="flex d-col a-center trend"
+              class="flex d-col a-center trend ms5"
               [ngClass]="data.data.dailyTrends.trends.ppa.val > 0 ? 'up' : 'down'">
               <div class="flex label">
                 <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.ppa.letter, select, A {A} Y {Y} }</div>
