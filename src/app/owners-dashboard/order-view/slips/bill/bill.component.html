@@ -1,14 +1,16 @@
-<div class="ticket-box d-col">                    
-    <div><!-- orderDetails.tplt.html -->
+<div class="ticket-box d-col">
+
+
+    <!-- MEDIA EXCHANGE DETAILS -->
+    <app-order-media-exchange-details *ngIf="isMediaExchange" [printData]="printDataOld"></app-order-media-exchange-details>
+
+    <div>
+        <!-- orderDetails.tplt.html -->
         <h3 *ngIf="orderOld.onTheHouse">
             <!-- {{ 'ORDERS_VIEW.all_order_oth' | translate }} -->
         </h3>
-        
-        <div 
-            class="row offer-line" 
-            *ngFor="let item of printDataOld.data.items" 
-            [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}"
-            >
+
+        <div class="row offer-line" *ngFor="let item of printDataOld.data.items" [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}">
             <div class="col-1">{{item.qty}}</div>
             <div class="col-7 item-name">{{item.name}}</div>
             <div class="col-3">
@@ -16,16 +18,12 @@
             </div>
         </div>
         <br/>
-        <div 
-            class="row offer-line" 
-            *ngFor="let item of printDataOld.data.oth" 
-            [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}"
-            >
+        <div class="row offer-line" *ngFor="let item of printDataOld.data.oth" [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}">
             <div class="col-1">{{item.qty}}</div>
             <div class="col-5 item-name">{{item.name}}</div>
             <div class="col-5">{{item.amount}}</div>
         </div>
-        
+
         <div *ngIf="orderOld.totalDiscounts">
             <div *ngFor="let discount of orderOld.totalDiscounts">
                 <hr/>
@@ -37,7 +35,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div *ngIf="orderOld.tips.length">
             <hr/>
             <div class="row">
@@ -51,22 +49,17 @@
 
         <hr/>
 
-        <div 
-            class="row" 
-            *ngFor="let total of printDataOld.data.totals" 
-            [ngClass]="{'tax': total.type === 'exclusive_tax', 'pr_discountsAndOTH': total._priceReductions?.discountsAndOTH}"
-            >
-            <div 
-                class="col-8" [ngClass]="{'title': total.type === 'exclusive_tax'}">{{ total.name }}
+        <div class="row" *ngFor="let total of printDataOld.data.totals" [ngClass]="{'tax': total.type === 'exclusive_tax', 'pr_discountsAndOTH': total._priceReductions?.discountsAndOTH}">
+            <div class="col-8" [ngClass]="{'title': total.type === 'exclusive_tax'}">{{ total.name }}
                 <span class="rate" *ngIf="total.rate">{{total.rate}}%</span>
             </div>
             <div class="col-3">
                 <span class="negative">{{total.amount | number:'1.2-2'}}</span>
             </div>
         </div>
-        
+
         <hr/>
-        
+
         <div>
             <div *ngFor="let payment of printDataOld.data.payments">
                 <div class="row" [ngClass]="{'change': payment.type === 'change', 'tax': payment.type === 'inclusive_tax'}">
@@ -129,14 +122,14 @@
                 <span [innerHtml]="orderOld.member.printMessage"></span>
             </div>
         </div>
-        
+
         <div class="row text-center">
             <h4 *ngIf="order.isReturnOrder">
                 <!-- <span class="inline m-far-xs returnOrder">{{ 'RETURN_TRANSACTION' | translate }}</span> -->
                 <span class="inline m-far-xs returnOrder" i18n="slips@@returnTransaction">Return Transaction</span>
             </h4>
         </div>
-        
+
     </div>
 
 </div>

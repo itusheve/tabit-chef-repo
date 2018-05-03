@@ -34,6 +34,7 @@ import { OrderViewComponent } from './order-view/order-view.component';
       import { OrderInvoiceVatComponent } from './order-view/slips/common/invoiceVat/invoiceVat.component';
       import { OrderCreditTransactionDataComponent } from './order-view/slips/common/creditTransactionData/creditTransactionData.component';
       import { OrderDeliveryNoteTransactionDataComponent } from './order-view/slips/common/deliveryNoteTransactionData/deliveryNoteTransactionData.component';
+      import { OrderMediaExchangeDetailsComponent } from './order-view/slips/common/mediaExchangeDetails/mediaExchangeDetails.component';
       import { OrderSingleInvoiceDataComponent } from './order-view/slips/common/singleInvoiceData/singleInvoiceData.component';
   import { OrderDetailsComponent } from './order-view/details/details.component';
 
@@ -153,6 +154,7 @@ import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-tabl
           OrderCreditTransactionDataComponent,
           OrderDeliveryNoteTransactionDataComponent,
           OrderSingleInvoiceDataComponent,
+          OrderMediaExchangeDetailsComponent,
       OrderDetailsComponent,
 
   ],

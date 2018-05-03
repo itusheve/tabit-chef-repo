@@ -91,9 +91,9 @@
           </div>
 
           <div class="flex j-center pad3" *ngIf="!isCheck">
-            <div i18n="slips@@diners">Guests</div>
-            &nbsp;
             <div>{{orderOld.dinersNum}}</div>
+            &nbsp;
+            <div i18n="slips@@diners">Guests</div>
           </div>
 
         </div>
@@ -112,7 +112,11 @@
 
         <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
           <!-- TODO why is this commented? -->
-          <!-- <span class="inline m-far-xs fs-12">{{ $ctrl.selectedCheck.printData.variables.RETURN_COMMENT }}</span> -->
+          <span class="inline m-far-xs fs-12">{{ printDataOld.variables.RETURN_COMMENT }}</span>
+        </div>
+
+        <div class="flex j-center" *ngIf="isOTH">
+          <div class="oth-txt" i18n="slips@@allOrderOth">OTH Order</div>
         </div>
 
         <div class="flex te" *ngIf="order.isTaxExempt && (showOrderDetails || isCheck)">
