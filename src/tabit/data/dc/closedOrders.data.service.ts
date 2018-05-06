@@ -499,7 +499,8 @@ export class ClosedOrdersDataService {
             return that.rosEp.get(`tlogs/${order.tlogId}/bill`, {});
         }
 
-        order_.tlogId = "5aeaa11169bc882a009e2137";
+        // set tlog id to get specific tlog.
+        //order_.tlogId = "5aeaa5fa69bc882a009e218a";
 
         let printData;
         return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])

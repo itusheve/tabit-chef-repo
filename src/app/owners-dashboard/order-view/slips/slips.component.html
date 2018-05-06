@@ -135,7 +135,7 @@
 
       <app-order-club *ngIf="slip.class==='club'" [order]="order" [orderOld]="orderOld" [printDataOld]="printDataOld"></app-order-club>
 
-      <app-order-invoice-giftcard *ngIf="slip.class==='invoice' && slip.subclass==='giftcard'" [data]="slip.data"></app-order-invoice-giftcard>
+      <app-order-invoice-giftcard *ngIf="slip.class==='invoice' && slip.subclass==='giftcard'" [data]="slip.data" [invoice]="invoicePrintData"></app-order-invoice-giftcard>
 
       <!-- CREDIT & CREDIT REFUND -->
       <app-order-invoice-credit *ngIf="slip.class==='invoice' && slip.subclass==='credit'" [data]="slip.data" [printDataOld]="slip.data.printData"
