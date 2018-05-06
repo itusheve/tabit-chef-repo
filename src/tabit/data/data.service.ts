@@ -407,9 +407,10 @@ export class DataService {
         counter: new OrderType('counter', 1),
         ta: new OrderType('ta', 2),
         delivery: new OrderType('delivery', 3),
-        other: new OrderType('other', 4),
-        returns: new OrderType('returns', 5),
-        mediaExchange: new OrderType('mediaExchange', 6)
+        returns: new OrderType('returns', 4),
+        refund: new OrderType('refund', 5),
+        mediaExchange: new OrderType('mediaExchange', 6),
+        other: new OrderType('other', 7)
     };
 
     /*
@@ -429,12 +430,7 @@ export class DataService {
                 'החזר': this.orderTypes.returns,
                 'החלפת אמצעי תשלום': this.orderTypes.mediaExchange,
                 'סוג הזמנה לא מוגדר': this.orderTypes.other
-            },
-            // department: {
-            //     'מזון': this.departments.food,
-            //     'משקאות': this.departments.beverages,
-            //     'אחר': this.departments.other
-            // }
+            }
         },
         usCubes: {
             orderType: {
@@ -445,12 +441,7 @@ export class DataService {
                 'REFUND': this.orderTypes.returns,
                 'MEDIAEXCHANGE': this.orderTypes.mediaExchange,
                 'UNKNOWN': this.orderTypes.other
-            },
-            // department: {
-            //     'a': this.departments[0],
-            //     'b': this.departments[1],
-            //     'c': this.departments[2]
-            // }
+            }
         }
     };
 

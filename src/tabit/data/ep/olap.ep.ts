@@ -68,7 +68,7 @@ export class OlapEp {
     private monthlyData$: ReplaySubject<any>;
 
     // query helpers
-    private smartQuery({ measures, dimensions, slicers }: { measures?: any[], dimensions?: {membersConfigArr?: MembersConfig[], memberConfigArr?: MemberConfig[][]}, slicers?: MemberConfig[] } = {}): Promise<any> {
+    public smartQuery({ measures, dimensions, slicers }: { measures?: any[], dimensions?: {membersConfigArr?: MembersConfig[], memberConfigArr?: MemberConfig[][]}, slicers?: MemberConfig[] } = {}): Promise<any> {
         return new Promise((resolve, reject) => {
             const measuresClause = measures.map(measure => `
                         ${this.measure(measure)}
@@ -699,7 +699,7 @@ export class OlapEp {
         });
     }
 
-    // TODO smartQuery
+    // DEPRECATED. for old IL cube only. US should use get_BD_data_by_OrderType_by_Service (uses smartQuery + support the new cube structure of gross/net sales)
     public get_sales_and_ppa_by_OrderType_by_Service(day: moment.Moment): Promise<{
         orderType: string,
         service: string,

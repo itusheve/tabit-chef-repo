@@ -36,25 +36,6 @@ export class OlapMappings {
         }
     };
 
-//     select
-// 	{
-//     //Order Summary:
-//     [Measures].[GrossSales],//Gross Sales $
-//         [Measures].[headerTotalAmount],//headerTotalAmount
-//         [Measures].[headerTotalIncludedTax],//headerTotalIncludedTax
-//         [Measures].[headerTotalPaymentAmount],//headerTotalPaymentAmount
-//         [Measures].[headerTotalSalesAmount],//Net Sales $
-
-//         //Items:
-//         [Measures].[salesNetAmount],//Item Net Sales $
-//         [Measures].[ItemGrossSales],//Items Gross Sales $
-//         [Measures].[salesGeneralAmount],//salesGeneralAmount
-//         [Measures].[salesGrossAmount],//salesGrossAmount
-//         [Measures].[salesNetAmountVat]//salesNetAmountVat
-// }
-// on 0
-// from[Usadwhtabit Int]
-
     public measures = {//deprecated, use measureGroups instead
         sales: {
             il: '[Measures].[Tlog Header Total Payment Amount]',
@@ -77,19 +58,93 @@ export class OlapMappings {
     };
 
     public measureGroups = {//the structure is similar to the one in the CUBE, with the hebrew captions in comments as helpers
+        newStructure: {//for now this will only hold measures that are part of the new cubes structure (e.g. supporting gross/net sales). for now only US cube supports this.
+            measures: {
+                grossSalesAmnt: {
+                    path: {
+                        il: 'TBD',
+                        us: 'salesNetAmount'
+                    },
+                    type: 'number'
+                },
+                netSalesAmnt: {
+                    path: {
+                        il: 'TBD',
+                        us: 'GrossSales'
+                    },
+                    type: 'number'
+                },
+                taxAmnt: {
+                    path: {
+                        il: 'TBD',
+                        us: 'headerTaxs'
+                    },
+                    type: 'number'
+                },
+                tipAmnt: {
+                    path: {
+                        il: 'TBD',
+                        us: 'headerTotalTipAmount'
+                    },
+                    type: 'number'
+                },
+                serviceChargeAmnt: {
+                    path: {
+                        il: 'TBD',
+                        us: 'salesServiceCharge'
+                    },
+                    type: 'number'
+                },
+                paymentsAmnt: {
+                    path: {
+                        il: 'TBD',
+                        us: 'calcTotalPaymentAmount'
+                    },
+                    type: 'number'
+                },
+                dinersSales: {
+                    path: {
+                        il: 'TBD',
+                        us: 'dinersNetAmount'
+                    },
+                    type: 'number'
+                },
+                dinersCount: {
+                    path: {
+                        il: 'TBD',
+                        us: 'headerDiners'
+                    },
+                    type: 'number'
+                },
+                ppa: {// :== dinersSales / dinersCount
+                    path: {
+                        il: 'TBD',
+                        us: 'calcPpaAmount'
+                    },
+                    type: 'number'
+                },
+                ordersCount: {
+                    path: {
+                        il: 'TBD',
+                        us: 'headerOrderCount'
+                    },
+                    type: 'number'
+                }
+            }
+        },
         general: {//"כללי" and stuff in Measures' root
             measures: {
+                sales: {//"מכירות" DEPRECATED, only for use in the old IL cube. see 'newStructure'.
+                    path: {
+                        il: 'Tlog Header Total Payment Amount',
+                        us: 'salesNetAmount'
+                    },
+                    type: 'number'
+                },
                 ordersCount: {//"הזמנות"
                     path: {
                         il: 'PPAOrders',
                         us: 'headerOrderCount'
-                    },
-                    type: 'number'
-                },
-                sales: {//"מכירות"
-                    path: {
-                        il: 'Tlog Header Total Payment Amount',
-                        us: 'salesNetAmount'
                     },
                     type: 'number'
                 },
@@ -466,6 +521,25 @@ export class OlapMappings {
                 }
             }
         },
+        serviceV2: {
+            v: 2,
+            path: {
+                il: 'Service',
+                us: 'Services'
+            },
+            attr: {
+                name: {
+                    path: {
+                        il: 'Service Name',
+                        us: 'Service Key'
+                    },
+                    parse: {
+                        il: raw => raw,
+                        us: raw => raw
+                    }
+                }
+            }
+        },
         priceReductions: {//סיבות הנחה          TODO
             v: 2,
             path: {
@@ -596,6 +670,65 @@ export class OlapMappings {
                     path: {
                         il: 'Tlog Header Ordertype',
                         us: 'Order Type Key'
+                    },
+                    parse: {
+                        il: raw => { },//TBD //must map to the indexes in dataService.orderTypes!
+                        us: raw => {
+                            switch (raw) {//must map to the indexes in dataService.orderTypes!
+                                case 'seated':
+                                    return 'seated';
+                                case 'otc':
+                                    return 'counter';
+                                case 'takeaway':
+                                    return 'ta';
+                                case 'delivery':
+                                    return 'delivery';
+                                case 'refund':
+                                    return 'refund';
+                                case 'mediaexchange':
+                                    return 'mediaExchange';
+                                default:
+                                    return 'other';
+                            }
+                        }
+                    },
+                    members: {
+                        seated: {
+                            path: {
+                                il: 'TBD',
+                                us: 'seated'
+                            }
+                        },
+                        otc: {
+                            path: {
+                                il: 'TBD',
+                                us: 'otc'
+                            }
+                        },
+                        takeaway: {
+                            path: {
+                                il: 'TBD',
+                                us: 'takeaway'
+                            }
+                        },
+                        delivery: {
+                            path: {
+                                il: 'TBD',
+                                us: 'delivery'
+                            }
+                        },
+                        refund: {
+                            path: {
+                                il: 'TBD',
+                                us: 'refund'
+                            }
+                        },
+                        mediaexchange: {
+                            path: {
+                                il: 'TBD',
+                                us: 'mediaexchange'
+                            }
+                        }
                     }
                 }
             }

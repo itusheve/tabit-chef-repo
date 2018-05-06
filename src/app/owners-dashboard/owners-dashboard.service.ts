@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DataService } from '../../tabit/data/data.service';
 import { Router } from '@angular/router';
 import { DebugService } from '../debug.service';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class OwnersDashboardService {
@@ -31,7 +32,7 @@ export class OwnersDashboardService {
             org: undefined
         },
         content: {
-            showVatCb: true,
+            showVatCb: environment.region==='il' ? true : false,
             showMySitesBtn: true,
             showLogoutBtn: true
         }
