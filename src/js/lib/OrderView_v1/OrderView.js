@@ -290,17 +290,17 @@ const OrderViewService = (function () {
                 }
             }
 
-            if (order.TOTAL_IN_VAT && !isUS) {
+            if (!isUS) {
                 totals.push({
                     name: translateService.getText('TOTAL_INC_VAT'),
-                    amount: utils.toFixedSafe(order.TOTAL_IN_VAT, 2)
+                    amount: utils.toFixedSafe(order.TOTAL_IN_VAT || 0, 2)
                 })
             }
 
-            if (order.TOTAL_AFTER_EXCLUDED_TAX && isUS) {
+            if (isUS) {
                 totals.push({
                     name: translateService.getText('TOTAL_INC_VAT'),
-                    amount: utils.toFixedSafe(order.TOTAL_AMOUNT, 2)
+                    amount: utils.toFixedSafe(order.TOTAL_AMOUNT || 0, 2)
                 })
             }
 

@@ -14,14 +14,14 @@
         </div>
 
         <!-- 'faceValue' copy from old tpl -->
-        <div class="col-3" *ngIf="data.payments[0].faceValue">
+        <div class="col-3" *ngIf="data?.payments[0]?.faceValue">
             <span>{{(data.payments[0].faceValue/100) | number:'1.2-2'}}</span>
         </div>
     </div>
 
 
     <!-- CHANGE -->
-    <div class="row" *ngIf="data.payments[0].change.amount">
+    <div class="row" *ngIf="data.payments[0].change?.amount">
         <div class="col-8">
             <span i18n="@@change">Change</span>
         </div>

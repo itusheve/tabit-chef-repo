@@ -1,5 +1,11 @@
 <div class="ticket-box d-col">
-    <div><!-- orderDetails.tplt.html -->
+
+
+    <!-- MEDIA EXCHANGE DETAILS -->
+    <app-order-media-exchange-details *ngIf="isMediaExchange" [printData]="printDataOld"></app-order-media-exchange-details>
+
+    <div>
+        <!-- orderDetails.tplt.html -->
         <h3 *ngIf="orderOld.onTheHouse">
             <!-- {{ 'ORDERS_VIEW.all_order_oth' | translate }} -->
         </h3>
@@ -55,8 +61,7 @@
             *ngFor="let total of printDataOld.data.totals"
             [ngClass]="{'tax': total.type === 'exclusive_tax', 'pr_discountsAndOTH': total._priceReductions?.discountsAndOTH}"
             >
-            <div
-                class="col-8" [ngClass]="{'title': total.type === 'exclusive_tax'}">{{ total.name }}
+            <div class="col-8" [ngClass]="{'title': total.type === 'exclusive_tax'}">{{ total.name }}
                 <span class="rate" *ngIf="total.rate">{{total.rate}}%</span>
             </div>
             <div class="col-3">

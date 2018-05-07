@@ -348,6 +348,8 @@ export class ClosedOrdersDataService {
             moment: moment //the lib requires moment
         });
 
+
+
     }
 
     /*
@@ -476,8 +478,6 @@ export class ClosedOrdersDataService {
                     });
             });
         }
-
-        let printData;
 
         /* since tlogId dim is removed, we need to add procedure here to find it using the order number + BD: */
         return addTlogId(order_, businessDateStr)
