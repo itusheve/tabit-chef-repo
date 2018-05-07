@@ -1,25 +1,5 @@
 <div class="ticket-box flex d-col">
-
-    <h4 i18n="slips@@giftCard">Gift Card</h4>
-
-    <div class="flex j-sb">
-        <span i18n="slips@@businessMeal">Business Meal></span>
-        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-    </div>
-    <div class="flex j-sb">
-        <span i18n="slips@@beforeVAT">Before VAT</span>
-        <span>{{((data.amount/100)-(data.tax.amount/100)) | number:'1.2-2'}}</span>
-    </div>
-    <div class="flex j-sb">
-        <span i18n="slips@@vat">VAT</span>
-        <span>{{(data.tax.amount/100) | number:'1.2-2'}}</span>
-    </div>
-    <div class="flex j-sb">
-        <span i18n="slips@@includeVAT">Include VAT</span>
-        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-    </div>
-
+    <app-order-invoice-vat [printData]="invoice"></app-order-invoice-vat>
+    <hr/>
+    <app-order-gift-card-details [printData]="invoice"></app-order-gift-card-details>
 </div>
-
-
-

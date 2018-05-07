@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
       .catch(err=>{
         if (err.status===403) {
           this.snackBar.open(tmpTranslations.get('login.userPassIncorrect'), null, {
-            duration: 3000,
+            duration: 5000,
             verticalPosition: 'top'
           });
         }
