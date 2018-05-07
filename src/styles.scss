@@ -312,10 +312,6 @@ i.icon {
     }
 }
 
-simple-snack-bar {
-  font-size: $base-font-size!important;
-  font-family: inherit!important;
-}
 
 //https://quickleft.com/blog/4-steps-to-minimizing-rendering-issues-in-cordova-applications/
 // * {
@@ -332,3 +328,26 @@ simple-snack-bar {
 @import 'tabit/styles/flex';
 @import 'tabit/styles/frame';
 @import 'tabit/styles/pulse';
+
+
+snack-bar-container {
+  $snackTopPadding: 14px;
+  padding-top: $snackTopPadding!important;
+  @media #{$iphone-X-portrait-mq} {
+      padding-top: $snackTopPadding + $iphone-X-notch-px!important;
+  }
+  @media #{$iphone-6-7-8-portrait-mq} {
+      padding-top: $snackTopPadding + $iphone-6-7-8-status-bar-px!important;
+  }
+  @media #{$iphone-6-7-8-plus-portrait-mq} {
+      padding-top: $snackTopPadding + $iphone-6-7-8-plus-status-bar-px!important;
+  }
+  @media #{$ipad-portrait-mq} {
+      padding-top: $snackTopPadding + $ipad-status-bar-px!important;
+  }
+
+  simple-snack-bar {
+    font-size: $base-font-size!important;
+    font-family: inherit!important;
+  }
+}
