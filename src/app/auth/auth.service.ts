@@ -140,6 +140,37 @@ export class AuthService {
                             .then(()=>{
                                 this.ds.log('authSvc: authenticate: refreshing token: success');
                                 resolve();
+
+                                // async check if the user responsibilities hasnt changed and they still allow him the org.
+                                // if not, user will be logged out and will be forced to re authenticate.
+                                if (org) {
+                                    this.ds.log('  authSvc: async checking user responsibilities');
+                                    this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
+                                        .subscribe(
+                                            (user: any) => {
+                                                if (user.isStaff) {
+                                                    this.ds.log('  authSvc: async checking user responsibilities: user isStaff: skipping');
+                                                    return;
+                                                }
+
+                                                //TODO DRY with getOrganizations, refactor to a common func
+                                                let membership = user.memberships.find(m => {
+                                                    return m.organization === org.id && m.active;
+                                                });
+
+                                                if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1 || membership.responsibilities.indexOf('FINANCE') === -1) {
+                                                    //log out:
+                                                    this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: unauthenticate (anon auth)`);
+                                                    this.unauthenticate()
+                                                        .then(() => {
+                                                            this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: unauthenticate (anon auth): done`);
+                                                            this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: reloading`);
+                                                            window.location.reload();
+                                                        });
+                                                }
+                                            }
+                                        );
+                                }
                             })
                             .catch(e=>{
                                 this.ds.log('authSvc: authenticate: refreshing token: fail ' + e);
@@ -157,39 +188,10 @@ export class AuthService {
                         .catch(e=>{
                             this.ds.log('authSvc: authenticate: no token found: unauthenticating (anon auth): fail ' + e);
                             reject(e);
-                        })
+                        });
                 }
 
-                // async check if the user responsibilities hasnt changed and they still allow him the org.
-                // if not, user will be logged out and will be forced to re authenticate.
-                if (org)  {
-                    this.ds.log('  authSvc: async checking user responsibilities');
-                    this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
-                        .subscribe(
-                            (user: any) => {
-                                if (user.isStaff) {
-                                    this.ds.log('  authSvc: async checking user responsibilities: user isStaff: skipping');
-                                    return;
-                                };
 
-                                //TODO DRY with getOrganizations, refactor to a common func
-                                let membership = user.memberships.find(m => {
-                                    return m.organization === org.id && m.active;
-                                });
-
-                                if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1 || membership.responsibilities.indexOf('FINANCE') === -1) {
-                                    //log out:
-                                    this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: unauthenticate (anon auth)`);
-                                    this.unauthenticate()
-                                        .then(()=>{
-                                            this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: unauthenticate (anon auth): done`);
-                                            this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: reloading`);
-                                            window.location.reload();
-                                        })
-                                }
-                            }
-                        );
-                }
             }
         });
     }
