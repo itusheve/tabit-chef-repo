@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { OrderType } from '../../../../tabit/model/OrderType.model';
 import { Orders_KPIs } from '../../../../tabit/data/ep/olap.ep';
-import { salesTableRow } from '../day-view.component';
 
 @Component({
   selector: 'app-day-sales-table',
@@ -12,7 +11,7 @@ export class DaySalesTableComponent implements OnChanges {
   loading = true;
   noData = false;
   @Input() title: string;
-  @Input() dataSet;
+  @Input() data;
 
   totals;
 
@@ -22,9 +21,9 @@ export class DaySalesTableComponent implements OnChanges {
     this.loading = true;
     this.noData = false;
 
-    if (this.dataSet) {
+    if (this.data) {
 
-      this.dataSet.forEach(element => {
+      this.data.forEach(element => {
         element.ordersKpis.dinersOrdersCount = element.orderType.id==='seated' ? element.ordersKpis.dinersCount : element.ordersKpis.ordersCount;
       });
 
@@ -40,9 +39,9 @@ export class DaySalesTableComponent implements OnChanges {
         ordersCount: 0,
         ppa: undefined,
         dinersOrdersCount: 0
-      }
+      };
 
-      this.dataSet.forEach(row => {
+      this.data.forEach(row => {
         this.totals.netSalesAmnt += row.ordersKpis.netSalesAmnt;
         this.totals.taxAmnt += row.ordersKpis.taxAmnt;
         this.totals.grossSalesAmnt += row.ordersKpis.grossSalesAmnt;

@@ -26,6 +26,15 @@ export interface Orders_KPIs {
     ppa?: number;
 }
 
+// All sorts of KPIs for payments
+export interface PaymentsKPIs {
+    calcSalesAmnt: number;
+    refundAmnt: number;
+    paymentsAmount: number;//=calcSalesAmnt - refundAmnt
+    tipsAmnt: number;
+    totalPaymentsAmnt: number;//=paymentsAmount + tipsAmnt
+}
+
 // OLD INTERFACES:
 
 interface MemberConfig {
@@ -902,21 +911,27 @@ export class OlapEp {
 
     public get_daily_payments_data_per_month(month: moment.Moment): Promise<{
         [index: string]: {
-            account: string; //"דינרס", "ישראכרט", "סיבוס", "מזומן", "עודף מאשראי"
-            accountType: string; //e.g. "אשראי", "הקפה", "מזומן"
+            accountGroup: string;
+            accountType: string;
+            clearerName: string;
             date: moment.Moment;
-            grossPayments: number;
+            paymentsKPIs: PaymentsKPIs;
         }[]
     }> {
         return this.smartQuery({
             measures: [
-                this.olapMappings.measureGroups.payments.measures.grossPayments
+                this.olapMappings.measureGroups.payments.measures.calcSalesAmnt,
+                this.olapMappings.measureGroups.payments.measures.refundAmnt,
+                this.olapMappings.measureGroups.payments.measures.paymentsAmount,
+                this.olapMappings.measureGroups.payments.measures.tipsAmnt,
+                this.olapMappings.measureGroups.payments.measures.totalPaymentsAmnt
             ],
             dimensions: {
                 membersConfigArr: [
                     { dimAttr: this.olapMappings.dims.businessDateV2.attr.date },
+                    { dimAttr: this.olapMappings.dims.accounts.attr.accountGroup },
                     { dimAttr: this.olapMappings.dims.accounts.attr.accountType },
-                    { dimAttr: this.olapMappings.dims.accounts.attr.account }
+                    { dimAttr: this.olapMappings.dims.clearer.attr.clearerName }
                 ]
             },
             slicers: [
@@ -927,14 +942,31 @@ export class OlapEp {
             ]
         })
             .then((rowset: {
-                account: string;
+                accountGroup: string;
                 accountType: string;
+                clearerName: string;
                 date: moment.Moment;
-                grossPayments: number;
+                calcSalesAmnt: number;
+                refundAmnt: number;
+                paymentsAmount: number;//=calcSalesAmnt - refundAmnt
+                tipsAmnt: number;
+                totalPaymentsAmnt: number;//=paymentsAmount + tipsAmnt
             }[])=>{
                 return rowset.reduce((acc, curr)=>{
                     const key = curr.date.format('YYYY-MM-DD');
-                    (acc[key] = acc[key] || []).push(curr);
+                    (acc[key] = acc[key] || []).push({
+                        accountGroup: curr.accountGroup,
+                        accountType: curr.accountType,
+                        clearerName: curr.clearerName,
+                        date: curr.date,
+                        paymentsKPIs: {
+                            calcSalesAmnt: curr.calcSalesAmnt,
+                            refundAmnt: curr.refundAmnt,
+                            paymentsAmount: curr.paymentsAmount,
+                            tipsAmnt: curr.tipsAmnt,
+                            totalPaymentsAmnt: curr.totalPaymentsAmnt
+                        }
+                    });
                     return acc;
                 }, {});
             });

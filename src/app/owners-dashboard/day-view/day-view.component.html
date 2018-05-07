@@ -20,19 +20,17 @@
     class="widget"
     title="Summary"
     i18n-title="@@summary"
-    [dataSet]="dailySummaryTblData">
+    [data]="dailySummaryTblData?.data">
   </app-day-sales-table>
 
-  <!--
-  <div *ngIf="KPIs">
+  <ng-container *ngFor="let tblData of byShiftSummaryTblsData">
     <app-day-sales-table
-      *ngFor="let key of getKeys(KPIs.byShiftByOrderType)"
+      *ngIf="tblData.data.length"
       class="widget"
-      [title]="key.name"
-      [totalSales]="KPIs.byShiftByOrderType.get(key).totalSales"
-      [byOrderType]="KPIs.byShiftByOrderType.get(key).byOrderType">
+      [title]="tblData?.title"
+      [data]="tblData?.data">
     </app-day-sales-table>
-  </div> -->
+  </ng-container>
 
   <app-day-sales-by-sub-department-table
     class="widget"
@@ -71,7 +69,6 @@
     (onOrderClicked)="onOrderClicked_orderNumber($event)"
   ></app-retention-table>
 
-  <!-- TODO US missing measures -->
   <app-month-summary-table
     class="widget"
     [mtdBusinessDaysKPIs]="mtdBusinessDaysKPIs"

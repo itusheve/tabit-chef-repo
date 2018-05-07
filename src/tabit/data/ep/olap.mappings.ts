@@ -198,28 +198,28 @@ export class OlapMappings {
                         us: 'salesReturn'
                     }
                 },
-                takalotTiful_value_pct: {//"% תקלות תפעול" TODO
+                takalotTiful_value_pct: {//"% תקלות תפעול"
                     path: {
                         il: '%ShoviTakalotTiful',
-                        us: 'TBD'
+                        us: '%ReductionsOperationalDiscountAmount'
                     }
                 },
-                shimurShivuk_value_pct: {//"% שימור ושיווק"  TODO
+                shimurShivuk_value_pct: {//"% שימור ושיווק"
                     path: {
                         il: '%ShoviShimurShivuk',
-                        us: 'TBD'
+                        us: '%ReductionsRetentionDiscountAmount'
                     }
                 },
-                shoviIrguni_value_pct: {//"% ארוחות עובדים"   TODO
+                shoviIrguni_value_pct: {//"% ארוחות עובדים"
                     path: {
                         il: '%ShoviIrguni',
-                        us: 'TBD'
+                        us: '%ReductionsOrganizationalDiscountAmount'
                     }
                 },
-                cancelled_value_pct: {//"% ביטול כספי"  TODO
+                cancelled_value_pct: {//"% ביטול כספי"
                     path: {
                         il: '%CancelledAmount',
-                        us: 'TBD'
+                        us: '%ReductionsCancellationAmount'
                     }
                 }
             }
@@ -256,12 +256,40 @@ export class OlapMappings {
                 }
             }
         },
-        payments: {//"תקבולים"
+        payments: {
             measures: {
-                grossPayments: {
+                calcSalesAmnt: {
                     path: {
-                        il: 'Tlog Payments Actual Amount',
-                        us: 'paymentsActualAmount'
+                        il: 'TBD',
+                        us: 'calcPaymentSalesAmount'
+                    },
+                    type: 'number'
+                },
+                refundAmnt: {
+                    path: {
+                        il: 'TBD',
+                        us: 'paymentsRefund'
+                    },
+                    type: 'number'
+                },
+                paymentsAmount: {
+                    path: {
+                        il: 'TBD',
+                        us: 'paymentsPaymentAmount'
+                    },
+                    type: 'number'
+                },
+                tipsAmnt: {
+                    path: {
+                        il: 'TBD',
+                            us: 'Total Tips'
+                    },
+                    type: 'number'
+                },
+                totalPaymentsAmnt: {
+                    path: {
+                        il: 'TBD',
+                        us: 'calcTotalPaymentAmount'
                     },
                     type: 'number'
                 }
@@ -655,20 +683,35 @@ export class OlapMappings {
         accounts: {//"אמצעי תשלום"
             v: 2,
             path: {
-                il: 'Accounts',
+                il: 'TBD',
                 us: 'Accounts'
             },
             attr: {
-                accountType: {//"Typeid"  e.g. "אשראי", "הקפה", "מזומן"
+                accountGroup: {//e.g. CashAccount, CreditAccount
                     path: {
-                        il: 'Typeid',
-                        us: 'Type Id'//offer need to fix
+                        il: 'TBD',
+                        us: 'Type'
                     }
                 },
-                account: {//"HQ Name"  e.g. "דינרס", "ישראכרט", "סיבוס", "מזומן", "עודף מאשראי"
+                accountType: {//e.g. Cash, Credit, CreditCard (?)
                     path: {
-                        il: 'HQ Name',
-                        us: 'TBD'
+                        il: 'TBD',
+                        us: 'Name'
+                    }
+                }
+            }
+        },
+        clearer: {
+            v: 2,
+            path: {
+                il: 'TBD',
+                us: 'Clearing'
+            },
+            attr: {
+                clearerName: {// e.g. diners, amex...
+                    path: {
+                        il: 'TBD',
+                        us: 'Clearing Name'
                     }
                 }
             }

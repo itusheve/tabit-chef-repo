@@ -22,7 +22,7 @@ import { KPI } from '../model/KPI.model';
 import { Shift } from '../model/Shift.model';
 
 //end points
-import { OlapEp, Orders_KPIs } from './ep/olap.ep';
+import { OlapEp, Orders_KPIs, PaymentsKPIs } from './ep/olap.ep';
 import { ROSEp } from './ep/ros.ep';
 import { OrderType } from '../model/OrderType.model';
 import { Order } from '../model/Order.model';
@@ -706,10 +706,11 @@ export class DataService {
 
     /* cache of PaymentData by business date ('YYYY-MM-DD') */
     private paymentDataCache: {[index:string]: {
-        account: string;
+        accountGroup: string;
         accountType: string;
+        clearerName: string;
         date: moment.Moment;
-        grossPayments: number;
+        paymentsKPIs: PaymentsKPIs;
     }[]} = {};
 
     /* cache of BusinessDayKPI by business date ('YYYY-MM-DD') */
@@ -1224,10 +1225,11 @@ export class DataService {
         toBusinessDate: moment.Moment
     ): Promise<{
         [index: string]: {//index is date in the format YYYY-MM-DD
-            account: string;
+            accountGroup: string;
             accountType: string;
+            clearerName: string;
             date: moment.Moment;
-            grossPayments: number;
+            paymentsKPIs: PaymentsKPIs;
         }[]
     }> {
 
@@ -1256,10 +1258,11 @@ export class DataService {
 
                 const returnObj: {
                     [index: string]: {//index is date in the format YYYY-MM-DD
-                        account: string;
+                        accountGroup: string;
                         accountType: string;
+                        clearerName: string;
                         date: moment.Moment;
-                        grossPayments: number;
+                        paymentsKPIs: PaymentsKPIs;
                     }[]
                 } = {};
 

@@ -31,7 +31,7 @@
                         <td>{{totals.ppa | curr:'2'}}</td>
                     </tr>
 
-                    <tr *ngFor="let row of dataSet">
+                    <tr *ngFor="let row of data">
                         <td i18n="@@orderTypeSelect">{ row.orderType.id, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange {Media Exchange} }</td>
                         <td>{{row.ordersKpis.netSalesAmnt | curr:'2'}}</td>
                         <td>{{row.ordersKpis.taxAmnt | curr:'2'}}</td>

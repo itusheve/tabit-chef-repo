@@ -12,9 +12,10 @@ import { Shift } from '../../../tabit/model/Shift.model';
 import { OrderType } from '../../../tabit/model/OrderType.model';
 import { OwnersDashboardService } from '../owners-dashboard.service';
 import { KPI } from '../../../tabit/model/KPI.model';
-import { Orders_KPIs } from '../../../tabit/data/ep/olap.ep';
+import { Orders_KPIs, PaymentsKPIs } from '../../../tabit/data/ep/olap.ep';
+import { DebugService } from '../../debug.service';
 
-export interface salesTableRow {
+export interface SalesTableRow {
   orderType: OrderType;
   ordersKpis: Orders_KPIs;
 }
@@ -45,11 +46,8 @@ export class DayViewComponent implements OnInit  {
   /* the day's Orders */
   public orders: Order[];
 
-  // public KPIs: BusinessDayKPIs;
-  // public KPIs: any;
-
-  public dailySummaryTblData: salesTableRow[];
-  public byShiftSummaryTblsData: {[shiftId: string]: salesTableRow[]};
+  public dailySummaryTblData: { title: string; data: SalesTableRow[] };
+  public byShiftSummaryTblsData: { title: string; data: SalesTableRow[] }[];
 
   public salesBySubDepartment: {
     thisBd: {
@@ -96,10 +94,11 @@ export class DayViewComponent implements OnInit  {
 
   public paymentsData: {
     [index: string]: {
-      account: string;
+      accountGroup: string;
       accountType: string;
+      clearerName: string;
       date: moment.Moment;
-      grossPayments: number;
+      paymentsKPIs: PaymentsKPIs;
     }[]
   };
 
@@ -140,7 +139,8 @@ export class DayViewComponent implements OnInit  {
     private closedOrdersDataService: ClosedOrdersDataService,
     private dataService: DataService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private ds: DebugService
   ) {
     ownersDashboardService.toolbarConfig.left.back.pre = ()=>true;
     ownersDashboardService.toolbarConfig.left.back.target = '/owners-dashboard/home';
@@ -149,16 +149,17 @@ export class DayViewComponent implements OnInit  {
 
   private render() {
     this.dailySummaryTblData = undefined;
+    this.byShiftSummaryTblsData = undefined;
 
     const data$ = combineLatest(
       this.dataService.shifts$,
-      // this.dataService.getDailyDataByShiftAndType(this.day),
       this.dataService.dailyDataLimits$,
       this.dataService.currentBd$,
       (shifts: Shift[], dailyDataLimits: any, currentBd: moment.Moment) => Object.assign({}, { shifts: shifts }, { dailyDataLimits: dailyDataLimits }, { currentBd: currentBd})
     );
 
     data$.subscribe(data=>{
+
       const cbd: moment.Moment = moment(data.currentBd);
       this.bdIsCurrentBd = false;
       this.closedOpenSalesDiff = undefined;
@@ -167,8 +168,6 @@ export class DayViewComponent implements OnInit  {
         minDate: moment(data.dailyDataLimits.minimum),
         maxDate: moment(data.currentBd)
       };
-
-      // this.salesByOrderType = data.salesByOrderType;
 
       this.orders = undefined;
 
@@ -191,9 +190,26 @@ export class DayViewComponent implements OnInit  {
 
       this.dataService.getBusinessDateKPIs(this.day)
         .then(KPIs=>{
-          // public dailySummaryTblData: salesTableRow;
-          // public byShiftSummaryTblsData: { [shiftId: string]: salesTableRow };
-          this.dailySummaryTblData = KPIs.kpisByOrderType;
+          this.dailySummaryTblData = {
+            title: '',
+            data: KPIs.kpisByOrderType
+          };
+
+          this.byShiftSummaryTblsData = [];
+          data.shifts.forEach(shift => {
+            this.byShiftSummaryTblsData.push({
+              title: shift.name,
+              data: []
+            });
+          });
+
+          KPIs.kpisByOrderTypeByShift.forEach(tuple=>{
+            const obj = this.byShiftSummaryTblsData.find(o=>o.title===tuple.shift.name);
+            if (!obj) this.ds.err(`dayView: cant find ${tuple.shift.name}`);
+            if (obj) {
+              obj.data.push(tuple);
+            }
+          });
         });
 
       Promise.all([
@@ -216,8 +232,7 @@ export class DayViewComponent implements OnInit  {
           this.itemsData = data;
         });
 
-      // TODO US missing measures
-      this.dataService.getPaymentsData(moment(this.day).startOf('month'), moment(this.day))
+      this.dataService.getPaymentsData(moment(this.day), moment(this.day))
         .then(paymentsData=>{
           this.paymentsData = paymentsData;
         });
@@ -232,7 +247,6 @@ export class DayViewComponent implements OnInit  {
           this.retentionData = retentionData;
         });
 
-      // TODO US missing measures
       Promise.all([
         this.dataService.getBusinessDaysKPIs(moment(this.day).startOf('month'), moment(this.day)),
         this.dataService.getCustomRangeKPI(moment(this.day).startOf('month'), moment(this.day))
