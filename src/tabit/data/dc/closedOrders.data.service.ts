@@ -383,6 +383,8 @@ export class ClosedOrdersDataService {
             moment: moment //the lib requires moment
         });
 
+        
+
     }
 
     /*
@@ -496,6 +498,9 @@ export class ClosedOrdersDataService {
         function getBillData(order: Order) {
             return that.rosEp.get(`tlogs/${order.tlogId}/bill`, {});
         }
+
+        // set tlog id to get specific tlog.
+        //order_.tlogId = "5aeaa5fa69bc882a009e218a";
 
         let printData;
         return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])

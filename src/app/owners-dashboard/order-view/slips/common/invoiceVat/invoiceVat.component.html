@@ -1,13 +1,22 @@
 <div class="ticket-box d-col">
 
+
     <!-- BUSINESS MEAL -->
     <div class="row">
         <div class="col-8">
-            <span *ngIf="!isRefund" i18n="slips@@businessMeal">Business Meal</span>
-            <span *ngIf="isRefund" i18n="slips@@return">Business Meal</span>
+
+            <!-- RETURN AMOUNT & MULTI PAYMENT-->
+            <h4 *ngIf="!isRefund&&variables.ORDER_DOCUMENT_PRINT==='MULTI_DOC'" i18n="slips@@businessMeal">Business Meal</h4>
+
+            <!-- RETURN AMOUNT & SINGLE PAYMENT-->
+            <h4 *ngIf="!isRefund&&variables.ORDER_DOCUMENT_PRINT==='SINGLE_DOC'" i18n="slips@@totalAmount">Total Amount</h4>
+
+            <!-- RETURN -->
+            <h4 *ngIf="isRefund" i18n="slips@@return">Return</h4>
+
         </div>
         <div class="col-3">
-            <span class="negative">{{ documentItems.ITEM_AMOUNT | number:'1.2-2'}}</span>
+            <h4 class="negative">{{ documentItems.ITEM_AMOUNT | number:'1.2-2'}}</h4>
         </div>
     </div>
 
@@ -43,48 +52,3 @@
     </div>
 
 </div>
-
-<!-- 
-<div class="ticket-box d-col">
-
-    <div class="flex d-row  j-sb">
-        <div class="flex g-4 row-txt">
-            <span *ngIf="!isRefund" i18n="slips@@businessMeal">Business Meal</span>
-            <span *ngIf="isRefund" i18n="slips@@return">Business Meal</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span class="negative">{{ documentItems.ITEM_AMOUNT | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@beforeVAT">Before VAT</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span>{{documentItems.ITEM_AMOUNT_EX_VAT | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@vat">VAT</span>
-            <span *ngIf="documentItems.ITEM_VAT_PERCENT">{{documentItems.ITEM_VAT_PERCENT}}%</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span class="negative">{{ documentItems.ITEM_VAT_AMOUNT | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-    <div class="flex d-row j-sb">
-        <div class="flex g-4 row-txt">
-            <span i18n="slips@@includeVAT">Include VAT</span>
-        </div>
-        <div class="flex g-1 row-amount">
-            <span class="negative">{{ documentItems.ITEM_AMOUNT | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-
-
-</div> -->
