@@ -58,7 +58,7 @@ export class TokenInterceptor implements HttpInterceptor {
         // });
         // return next.handle(clonedReq)
 
-        // this.ds.log(`tokenInterceptor: request intercepted: adding token: ${that.authService.authToken}`);
+        this.ds.log(`tokenInterceptor: request intercepted: adding token: ${that.authService.authToken}`);
         return next.handle(that.addToken(request, that.authService.authToken))
             .catch(error => {
                 this.ds.log(`tokenInterceptor: intercept: catched error`);
@@ -68,10 +68,7 @@ export class TokenInterceptor implements HttpInterceptor {
                         case 400:
                             //TODO (general bad request the server couldnt understand)
                             this.ds.err(`tokenInterceptor: intercept: catched error (1): 400 ${JSON.stringify(request)}`);
-                            // console.error('Token Interceptor 400', request);
-                            // console.error(error);
                             return Observable.throw(error);
-                        // return this.handle400Error(request, next);
                         case 401:
                             this.ds.log(`tokenInterceptor: intercept: catched error (1): 401`);
                             return that.handle401Error(request, next);
@@ -110,7 +107,6 @@ export class TokenInterceptor implements HttpInterceptor {
                     })
                     .catch(error => {
                         // If there is an exception calling 'refreshToken', bad news so logout.
-                        // console.error('handle401Error: error 2: couldnt regenerate access token', error);
                         this.ds.err(`tokenInterceptor: handle401Error: failed getting new token (2)`);
                         this.isRefreshingToken = false;
                         return this.authService.logout();

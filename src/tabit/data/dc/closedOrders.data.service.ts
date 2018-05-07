@@ -320,44 +320,15 @@ let Enums = {
     }
 };
 
-// copied as is from office 4.X
-let Utils = {
-    toFixedSafe: (value, num) => {
-        if (value !== undefined) {
-            return value.toFixed(num);
-        }
-        // console.log('missing value..');
-        return '--';
-    },
-    nl2br: (str) => {
-        if (!str) return '';
-        return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br />$2');
-    }
-};
-
 @Injectable()
 export class ClosedOrdersDataService {
 
     orderViewService: any;
 
-    /*
-        the stream emits the currentBd's last closed order time, in the restaurant's timezone and in the format dddd
-        e.g. 1426 means the last order was closed at 14:26, restaurnat time
-    */
-    // public lastClosedOrderTime$: Observable<any> = new Observable(obs => {
-    //     this.dataService.currentBd$.subscribe((cbd: moment.Moment) => {
-    //         this.olapEp.getLastClosedOrderTime(cbd)
-    //             .then((lastClosedOrderTime: string) => {
-    //                 obs.next(lastClosedOrderTime);
-    //             });
-    //     });
-    // }).publishReplay(1).refCount();
-
     constructor(
         private olapEp: OlapEp,
         private rosEp: ROSEp,
         private usersDataService: UsersDataService,
-        // private categoriesDataService: CategoriesDataService,
         private itemsDataService: ItemsDataService,
         private modifierGroupsDataService: ModifierGroupsDataService,
         private offersDataService: OffersDataService,
@@ -454,7 +425,6 @@ export class ClosedOrdersDataService {
             that.ds.log('closedOrdersDS: getLookupData');
             return new Promise((resolve, reject) => {
                 zip(
-                    // that.categoriesDataService.categories$,
                     that.offersDataService.offers$,
                     that.modifierGroupsDataService.modifierGroups$,
                     that.usersDataService.users$,
@@ -462,7 +432,6 @@ export class ClosedOrdersDataService {
                     that.tablesDataService.tables$,
                     that.promotionsDataService.promotions$,
                     (
-                        // categoriesData: any,
                         offersData: any,
                         modifierGroupsData: any,
                         usersData: any,
@@ -470,7 +439,6 @@ export class ClosedOrdersDataService {
                         tablesData: any,
                         promotionsData: any
                     ) => ({
-                        // categoriesData: categoriesData,
                         offersData: offersData,
                         modifierGroupsData: modifierGroupsData,
                         usersData: usersData,

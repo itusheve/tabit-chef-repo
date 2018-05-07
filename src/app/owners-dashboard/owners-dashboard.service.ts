@@ -32,6 +32,7 @@ export class OwnersDashboardService {
         },
         content: {
             showVatCb: true,
+            showDebugCb: false,
             showMySitesBtn: true,
             showLogoutBtn: true
         }
@@ -59,6 +60,10 @@ export class OwnersDashboardService {
         const that = this;
         dataService.user$
             .subscribe(user => {
+                if (user.email.indexOf('@tabit.cloud') > 0) {
+                    this.sideNavConfig.content.showDebugCb = true;
+                }
+
                 this.sideNavConfig.header.user = user;
                 this.sideNavConfig.header.userInitials = (user.firstName ? user.firstName.substring(0, 1) : '?').toUpperCase() + (user.lastName ? user.lastName.substring(0, 1) : '').toUpperCase();
             });

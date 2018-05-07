@@ -30,9 +30,9 @@ export class AppComponent implements OnInit {
     /* TLA: */
     this.cordova = window['cordova'];
     if (typeof window['cordova'] !== 'undefined') {
-      console.log('Cordova exists');
+      this.ds.log('Cordova exists');
     } else {
-      console.log('Cordova does NOT exist');
+      this.ds.log('Cordova does NOT exist');
     }
 
     const that = this;

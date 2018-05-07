@@ -9,6 +9,7 @@ import { AuthService } from '../auth/auth.service';
 import { OwnersDashboardService } from './owners-dashboard.service';
 
 import { AreYouSureDialogComponent } from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
+import { DebugService } from '../debug.service';
 
 @Component({
   templateUrl: './owners-dashboard.component.html',
@@ -31,14 +32,21 @@ export class OwnersDashboardComponent {
 
   env;
 
+  debug: boolean;
+
+  logArr: { type: string, message: string }[];
+
   constructor(
     private dataService: DataService,
     private authService: AuthService,
     public ownersDashboardService: OwnersDashboardService,
     public dialog: MatDialog,
     public router: Router,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    private ds: DebugService
   ) {
+
+    this.logArr = ds.logArr;
 
     this.env = environment;
 

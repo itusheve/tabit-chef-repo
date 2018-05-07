@@ -146,6 +146,7 @@ export class OlapEp {
                                             key = Object.keys(sampleMemberConfig.member.parent.parent.parent).find(k => sampleMemberConfig.member.parent.parent.parent[k] === sampleMemberConfig.member.parent.parent);
                                             val = this.parseDim(r, sampleMemberConfig.member.parent.parent);
                                         }
+                                        row[key] = val;
                                     });
                                 }
 
