@@ -1,12 +1,12 @@
-<mat-sidenav-container>
+<mat-sidenav-container (swiperight)="sidenav.close()">
 
-  <mat-sidenav #sidenav mode="over">
+  <mat-sidenav #sidenav mode="over" (swiperight)="sidenav.close()">
     <div class="flex d-col header">
       <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{userInitials}}</button>
       <div class="mt10 mb10">{{user?.firstName}} {{user?.lastName}}</div>
       <div>{{org?.name}}</div>
     </div>
-    <div class="flex d-col content">
+    <div class="flex d-col content" (swiperight)="sidenav.close()">
       <button mat-raised-button (click)="logout()">
         <span i18n="owners-dashboard@@logout">Logout</span>
       </button>
@@ -18,7 +18,7 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <div class="flex j-sb a-center toolbar">
+    <div class="flex j-sb a-center toolbar" (swipeleft)="sidenav.open()">
       <div class="flex j-start ps15" style="width:20%">
         <button mat-icon-button (click)="sidenav.toggle()">
           <mat-icon>menu</mat-icon>
@@ -36,13 +36,13 @@
     </div>
     <div class="contentFixed">
       <div class="content">
-        <div class="flex d-col orgs">
+        <div class="flex d-col orgs" (swipeleft)="sidenav.open()">
           <div *ngIf="orgs && orgs.length>9" class="s-0 flex orgsFilter">
             <mat-form-field>
               <input matInput placeholder="Filter" i18n-placeholder="@@filter" (keyup)='keyUp.next($event.target.value)'>
             </mat-form-field>
           </div>
-          <div class="g-1 flex f-wrap j-space-between mt15 orgsCards">
+          <div class="g-1 flex f-wrap j-space-between mt15 orgsCards" (swipeleft)="sidenav.open()">
             <mat-card *ngIf="exampleOrg.enabled" (click)="exampleOrg.select()" [ngClass]="{'selected': exampleOrg.selected}">
               <mat-card-content>{{exampleOrg.name}}</mat-card-content>
             </mat-card>
