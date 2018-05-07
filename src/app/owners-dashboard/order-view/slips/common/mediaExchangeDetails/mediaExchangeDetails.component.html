@@ -4,11 +4,11 @@
         <span>{{mediaExchangeData.P_NAME}}</span>
     </div>
     <div *ngIf="mediaExchangeData.CARD_NUMBER" class="flex bold-txt">
-        <span i18n="slips@@cardNo">Card No.</span>&nbsp;
+        <span i18n="@@cardNo">Card No.</span>&nbsp;
         <span>{{mediaExchangeData.CARD_NUMBER }}</span>
     </div>
     <div *ngIf="mediaExchangeData.P_AMOUNT" class="flex bold-txt">
-        <span i18n="slips@@amount">Amount</span>:&nbsp;
+        <span i18n="@@amount">Amount</span>:&nbsp;
         <span>{{mediaExchangeData.P_AMOUNT | number:'1.2-2'}}</span>
     </div>
     <div *ngIf="mediaExchangeData.PRINT_MESSAGE" class="flex center-txt">

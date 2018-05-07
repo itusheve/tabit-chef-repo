@@ -36,25 +36,6 @@ export class OlapMappings {
         }
     };
 
-//     select
-// 	{
-//     //Order Summary:
-//     [Measures].[GrossSales],//Gross Sales $
-//         [Measures].[headerTotalAmount],//headerTotalAmount
-//         [Measures].[headerTotalIncludedTax],//headerTotalIncludedTax
-//         [Measures].[headerTotalPaymentAmount],//headerTotalPaymentAmount
-//         [Measures].[headerTotalSalesAmount],//Net Sales $
-
-//         //Items:
-//         [Measures].[salesNetAmount],//Item Net Sales $
-//         [Measures].[ItemGrossSales],//Items Gross Sales $
-//         [Measures].[salesGeneralAmount],//salesGeneralAmount
-//         [Measures].[salesGrossAmount],//salesGrossAmount
-//         [Measures].[salesNetAmountVat]//salesNetAmountVat
-// }
-// on 0
-// from[Usadwhtabit Int]
-
     public measures = {//deprecated, use measureGroups instead
         sales: {
             il: '[Measures].[Tlog Header Total Payment Amount]',
