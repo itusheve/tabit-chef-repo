@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService, BusinessDayKPI, BusinessDayKPIs, CustomRangeKPI } from '../../../tabit/data/data.service';
+import { DataService, BusinessDayKPI, CustomRangeKPI } from '../../../tabit/data/data.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import * as moment from 'moment';
@@ -12,6 +12,12 @@ import { Shift } from '../../../tabit/model/Shift.model';
 import { OrderType } from '../../../tabit/model/OrderType.model';
 import { OwnersDashboardService } from '../owners-dashboard.service';
 import { KPI } from '../../../tabit/model/KPI.model';
+import { Orders_KPIs } from '../../../tabit/data/ep/olap.ep';
+
+export interface salesTableRow {
+  orderType: OrderType;
+  ordersKpis: Orders_KPIs;
+}
 
 @Component({
   selector: 'app-day-view',
@@ -39,7 +45,11 @@ export class DayViewComponent implements OnInit  {
   /* the day's Orders */
   public orders: Order[];
 
-  public KPIs: BusinessDayKPIs;
+  // public KPIs: BusinessDayKPIs;
+  // public KPIs: any;
+
+  public dailySummaryTblData: salesTableRow[];
+  public byShiftSummaryTblsData: {[shiftId: string]: salesTableRow[]};
 
   public salesBySubDepartment: {
     thisBd: {
@@ -113,7 +123,6 @@ export class DayViewComponent implements OnInit  {
     item: string;
     subType: string;
     reasonId: string;
-    reasons: string;
     retention: number;
   }[];
 
@@ -139,12 +148,14 @@ export class DayViewComponent implements OnInit  {
   }
 
   private render() {
+    this.dailySummaryTblData = undefined;
+
     const data$ = combineLatest(
       this.dataService.shifts$,
-      this.dataService.getDailyDataByShiftAndType(this.day),
+      // this.dataService.getDailyDataByShiftAndType(this.day),
       this.dataService.dailyDataLimits$,
       this.dataService.currentBd$,
-      (shifts: Shift[], dailyData: any, dailyDataLimits: any, currentBd: moment.Moment) => Object.assign({}, { shifts: shifts }, dailyData, { dailyDataLimits: dailyDataLimits }, { currentBd: currentBd})
+      (shifts: Shift[], dailyDataLimits: any, currentBd: moment.Moment) => Object.assign({}, { shifts: shifts }, { dailyDataLimits: dailyDataLimits }, { currentBd: currentBd})
     );
 
     data$.subscribe(data=>{
@@ -157,7 +168,7 @@ export class DayViewComponent implements OnInit  {
         maxDate: moment(data.currentBd)
       };
 
-      this.salesByOrderType = data.salesByOrderType;
+      // this.salesByOrderType = data.salesByOrderType;
 
       this.orders = undefined;
 
@@ -177,9 +188,12 @@ export class DayViewComponent implements OnInit  {
           }
         });
 
+
       this.dataService.getBusinessDateKPIs(this.day)
         .then(KPIs=>{
-          this.KPIs = KPIs;
+          // public dailySummaryTblData: salesTableRow;
+          // public byShiftSummaryTblsData: { [shiftId: string]: salesTableRow };
+          this.dailySummaryTblData = KPIs.kpisByOrderType;
         });
 
       Promise.all([

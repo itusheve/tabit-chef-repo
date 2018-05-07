@@ -63,14 +63,14 @@ export class OlapMappings {
                 grossSalesAmnt: {
                     path: {
                         il: 'TBD',
-                        us: 'salesNetAmount'
+                        us: 'GrossSales'
                     },
                     type: 'number'
                 },
                 netSalesAmnt: {
                     path: {
                         il: 'TBD',
-                        us: 'GrossSales'
+                        us: 'salesNetAmount'
                     },
                     type: 'number'
                 },
@@ -84,7 +84,7 @@ export class OlapMappings {
                 tipAmnt: {
                     path: {
                         il: 'TBD',
-                        us: 'headerTotalTipAmount'
+                        us: 'Total Tips'
                     },
                     type: 'number'
                 },
@@ -551,12 +551,26 @@ export class OlapMappings {
                     path: {
                         il: 'Tlog Pricereductions Reason Sub Type',
                         us: 'Reason Sub Type Key'
+                    },
+                    members: {
+                        retention: {
+                            path: {
+                                il: 'TBD',
+                                us: 'retention@OTH'
+                            }
+                        },
+                        discounts: {
+                            path: {
+                                il: 'TBD',
+                                us: 'retention@Discounts'
+                            }
+                        }
                     }
                 },
                 reasonId: {//סיבות הנחה
                     path: {
                         il: 'Tlog Pricereductions Reason Id',
-                        us: 'Reason Id Key'
+                        us: 'Reason Name'
                     }
                 },
                 reasons: {

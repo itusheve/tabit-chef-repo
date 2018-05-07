@@ -5,27 +5,42 @@
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center">
-                <table class="chf-tbl chf-tbl-row-oriented" *ngIf="byOrderType">
+                <table class="chf-tbl chf-tbl-row-oriented">
 
                     <tr class="header">
-                        <td i18n="@@orderType2">Order Type</td>
-                        <td i18n="@@sales2">Sales</td>
-                        <td style="width:100px;" i18n="@@dinersOrders">Diners / Orders</td>
-                        <td i18n="@@average">Average</td>
+                        <td></td>
+                        <td i18n="@@netSales">Net Sales</td>
+                        <td i18n="@@tax">Tax</td>
+                        <td i18n="@@grossSales">Gross Sales</td>
+                        <td i18n="@@tip">Gratuity</td>
+                        <td i18n="@@serviceCharge">serviceCharge</td>
+                        <td i18n="@@payments">Payments</td>
+                        <td i18n="@@dinersOrders">Diners / Orders</td>
+                        <td i18n="@@ppa">PPA</td>
                     </tr>
 
                     <tr>
                         <td i18n="@@total">Total</td>
-                        <td>{{totalSales | curr:'0'}}</td>
-                        <td></td>
-                        <td></td>
+                        <td>{{totals.netSalesAmnt | curr:'2'}}</td>
+                        <td>{{totals.taxAmnt | curr:'2'}}</td>
+                        <td>{{totals.grossSalesAmnt | curr:'2'}}</td>
+                        <td>{{totals.tipAmnt | curr:'2'}}</td>
+                        <td>{{totals.serviceChargeAmnt | curr:'2'}}</td>
+                        <td>{{totals.paymentsAmnt | curr:'2'}}</td>
+                        <td>{{totals.dinersOrdersCount | count}}</td>
+                        <td>{{totals.ppa | curr:'2'}}</td>
                     </tr>
 
-                    <tr *ngFor="let key of getKeys(byOrderType)">
-                        <td i18n="@@orderTypeSelect">{ key.id, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange {Media Exchange} }</td>
-                        <td>{{byOrderType.get(key).sales | curr:'0'}}</td>
-                        <td>{{byOrderType.get(key).dinersOrOrders | count}}</td>
-                        <td>{{byOrderType.get(key).average | curr}}</td>
+                    <tr *ngFor="let row of dataSet">
+                        <td i18n="@@orderTypeSelect">{ row.orderType.id, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange {Media Exchange} }</td>
+                        <td>{{row.ordersKpis.netSalesAmnt | curr:'2'}}</td>
+                        <td>{{row.ordersKpis.taxAmnt | curr:'2'}}</td>
+                        <td>{{row.ordersKpis.grossSalesAmnt | curr:'2'}}</td>
+                        <td>{{row.ordersKpis.tipAmnt | curr:'2'}}</td>
+                        <td>{{row.ordersKpis.serviceChargeAmnt | curr:'2'}}</td>
+                        <td>{{row.ordersKpis.paymentsAmnt | curr:'2'}}</td>
+                        <td>{{row.ordersKpis.dinersOrdersCount | count}}</td>
+                        <td>{{row.ordersKpis.ppa | curr:'2'}}</td>
                     </tr>
 
                 </table>

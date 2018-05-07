@@ -22,7 +22,7 @@ import { KPI } from '../model/KPI.model';
 import { Shift } from '../model/Shift.model';
 
 //end points
-import { OlapEp } from './ep/olap.ep';
+import { OlapEp, Orders_KPIs } from './ep/olap.ep';
 import { ROSEp } from './ep/ros.ep';
 import { OrderType } from '../model/OrderType.model';
 import { Order } from '../model/Order.model';
@@ -143,6 +143,33 @@ export const tmpTranslations = {
 };
 /* ==tmpTranslations== */
 
+
+// NEW INTERFACES
+
+// Orders_KPIs in different resolutions, scoped for a business date
+// export interface BD_Orders_KPIs {
+//     businessDay: moment.Moment;
+
+//     //bd kpis:
+//     orderKpis: Orders_KPIs;
+
+//     //bd * orderType kpis:
+//     byOrderType: Map<OrderType, Orders_KPIs>;
+
+//     //bd * shift * orderType kpis:
+//     byShiftByOrderType: Map<
+//     Shift,
+//     {
+//         orderKpis: Orders_KPIs,
+//         byOrderType: Map<OrderType, Orders_KPIs>
+//     }
+//     >;
+// }
+
+
+
+// DEPRECATED INTERFACES:
+
 export interface BusinessDayKPI {
     businessDay: moment.Moment;
     dayOfWeek?: string;
@@ -155,50 +182,44 @@ export interface CustomRangeKPI {
     kpi: KPI;
 }
 
-export interface BusinessDayKPIs {
-    businessDay: moment.Moment;
+// export interface BusinessDayKPIs {
+//     businessDay: moment.Moment;
 
-    // for sikum yomi
-    totalSales: number;
-    /// maps OrderType to different figures
-    byOrderType: Map<OrderType, {
-        sales: number,
-        dinersOrOrders: number,
-        average: number
-    }>;
+//     // for sikum yomi
+//     totalSales: number;
+//     /// maps OrderType to different figures
+//     byOrderType: Map<OrderType, {
+//         sales: number,
+//         dinersOrOrders: number,
+//         average: number
+//     }>;
 
-    // maps by Shift then by OrderType to different figures
-    byShiftByOrderType: Map<
-        Shift,
-        {
-            totalSales: number,
-            byOrderType: Map<OrderType, {
-                sales: number,
-                dinersOrOrders: number,
-                average: number
-            }>
-        }
-    >;
-}
+//     // maps by Shift then by OrderType to different figures
+//     byShiftByOrderType: Map<
+//         Shift,
+//         {
+//             totalSales: number,
+//             byOrderType: Map<OrderType, {
+//                 sales: number,
+//                 dinersOrOrders: number,
+//                 average: number
+//             }>
+//         }
+//     >;
+// }
 
+// NEW CONSTS:
 export const currencySymbol = environment.region === 'il' ? '₪' : '$';
 
 export const appVersions = (document as any).tbtAppVersions;
+
+// DEPRECATED CONSTS:
+
+
 @Injectable()
 export class DataService {
 
-    // private dashboardData$: Observable<any> = Observable.create(obs => {//Barry: do not auto-update this figure
-    //     const params = {
-    //         daysOfHistory: 2//0 returns everything...
-    //     };
-    //     setInterval(() => {
-    //         this.rosEp.getMocked('reports/owner-dashboard', params)
-    //             .then(data => {
-    //                 obs.next(data);
-    //             });
-    //     }, 5000);
-    // }).publishReplay(1).refCount();
-
+// NEW PROPERTIES:
     private organizations: any[];
 
     /*
@@ -214,8 +235,6 @@ export class DataService {
     public user$: Observable<any> = Observable.create(obs => {
         obs.next(JSON.parse(window.localStorage.getItem('user')));
     });
-
-
 
     public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';//'America/Chicago' / 'Asia/Jerusalem'
 
@@ -407,10 +426,9 @@ export class DataService {
         counter: new OrderType('counter', 1),
         ta: new OrderType('ta', 2),
         delivery: new OrderType('delivery', 3),
-        returns: new OrderType('returns', 4),
-        refund: new OrderType('refund', 5),
-        mediaExchange: new OrderType('mediaExchange', 6),
-        other: new OrderType('other', 7)
+        refund: new OrderType('refund', 4),
+        mediaExchange: new OrderType('mediaExchange', 5),
+        other: new OrderType('other', 6)
     };
 
     /*
@@ -420,6 +438,15 @@ export class DataService {
         this is a mapping of tokens from different cubes to the DataService domain
     */
     private cubeCollection = environment.region==='il' ? 'israeliCubes' : 'usCubes';
+
+    public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+
+    // DEPRECATED PROPERTIES:
+
+
+
+
+
     private olapNormalizationMaps: any = {
         israeliCubes: {
             orderType: {
@@ -445,7 +472,7 @@ export class DataService {
         }
     };
 
-    public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+
 
     //TODO optimize this, getting two years of data once is costly (is it?)
     //maybe cache data for closed business dates?
@@ -691,6 +718,77 @@ export class DataService {
     /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService) {}
 
+    // NEW METHODS:
+
+    /*
+        returns BD_Orders_KPIs for the BusinessDate (bd)
+    */
+    getBusinessDateKPIs(bd: moment.Moment): Promise<{
+        businessDay: moment.Moment,
+        kpisByOrderType: {
+            orderType: OrderType;
+            ordersKpis: Orders_KPIs;
+        }[],
+        kpisByOrderTypeByShift: {
+            orderType: OrderType;
+            shift: Shift;
+            ordersKpis: Orders_KPIs;
+        }[]
+    }> {
+        return new Promise((resolve, reject) => {
+
+            const that = this;
+
+            const data$ = combineLatest(
+                this.shifts$,
+                // fromPromise(this.olapEp.get_BD_Orders_KPIs(bd)),
+                fromPromise(this.olapEp.get_BD_Orders_KPIs_by_orderType(bd)),
+                fromPromise(this.olapEp.get_BD_Orders_KPIs_by_orderType_by_shift(bd)),
+            )
+                .subscribe(([shifts, kpisByOrderType_, kpisByOrderTypeByShift_]) => {
+
+                    function normalize(data, orderTypes?, shifts?):{
+                        orderType: OrderType;
+                        shift: Shift;
+                        ordersKpis: Orders_KPIs;
+                    }[] {
+                        return _.cloneDeep(data)
+                            .map(o => {
+                                const ro: any = {};
+                                if (o.orderTypeName) ro.orderType = orderTypes[o.orderTypeName];
+                                if (o.shiftName) ro.shift = shifts.find(s => s.name === o.shiftName);
+                                ro.ordersKpis = o.ordersKpis;
+                                return ro;
+                            });
+                    }
+
+                    // data preparation
+                    const kpisByOrderTypeByShift: {
+                        orderType: OrderType;
+                        shift: Shift;
+                        ordersKpis: Orders_KPIs;
+                    }[] = normalize(kpisByOrderTypeByShift_, that.orderTypes, shifts);
+
+                    const kpisByOrderType: {
+                        orderType: OrderType;
+                        ordersKpis: Orders_KPIs;
+                    }[] = normalize(kpisByOrderType_, that.orderTypes);
+
+                    // const kpis: Orders_KPIs = normalize(kpis_)[0].ordersKpis;
+
+                    resolve({
+                        businessDay: moment(bd),
+                        kpisByOrderType: kpisByOrderType,
+                        kpisByOrderTypeByShift: kpisByOrderTypeByShift
+                    });
+            });
+
+        });
+    }
+
+
+    // DEPRECATED METHODS:
+
     get currentBdData$(): Observable<KPI> {
         return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
             data = _.cloneDeep(data);
@@ -892,312 +990,6 @@ export class DataService {
             });
     }
 
-    /* deprectaed, use getBusinessDateKPIs instead */
-    getDailyDataByShiftAndType(date: moment.Moment): Subject<any> {
-        const sub$ = new Subject<any>();
-
-        const data$ = combineLatest(
-            this.vat$,
-            this.shifts$,
-            fromPromise(this.olapEp.get_sales_and_ppa_by_OrderType_by_Service(date)),
-            (vat: boolean, shifts: Shift[], daily_data_by_orderType_by_service: any) => Object.assign({}, { shifts: shifts }, { daily_data_by_orderType_by_service: daily_data_by_orderType_by_service }, {vat: vat})
-        );
-
-        data$.subscribe(data => {
-
-            const daily_data_by_orderType_by_service = _.cloneDeep(data.daily_data_by_orderType_by_service);
-
-            // normalize olapData:
-            daily_data_by_orderType_by_service.forEach(o=>{
-                o.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][o.orderType.toUpperCase()];
-            });
-            // end of normalizeOlapData
-
-            if (!data.vat) {
-                daily_data_by_orderType_by_service.forEach(tuple=>{
-                    tuple.sales = tuple.sales/1.17;
-                    tuple.dinersSales = tuple.dinersSales/1.17;
-                });
-            }
-
-            const salesByOrderType: {//TODO use 'KPI' and 'Service' Models
-                dinersCount: any,
-                dinersSales: any,
-                sales: any,
-                service: any,
-                orderTypeId: string
-            } = _.groupBy(daily_data_by_orderType_by_service, item => item.orderType.id);
-
-            Object.keys(salesByOrderType).forEach(service => {
-                salesByOrderType[service] = salesByOrderType[service].reduce((acc, curr) => {
-                    return acc + curr.sales;
-                }, 0);
-            });
-
-            const dinersAndPPAByShift = [];
-            for (let i=0;i<data.shifts.length;i++) {
-                dinersAndPPAByShift.push({
-                    name: data.shifts[i].name
-                });
-            }
-            dinersAndPPAByShift.forEach(i=>{
-                const datai = daily_data_by_orderType_by_service.find(dataItem => dataItem.service === i.name && dataItem.orderType === this.orderTypes.seated);
-                i.diners = _.get(datai, 'dinersPPA', 0);
-                i.sales = _.get(datai, 'sales', 0);
-                i.salesPPA = _.get(datai, 'salesPPA', 0);
-                i.ppa = _.get(datai, 'salesPPA', 0) / _.get(datai, 'dinersPPA', 1);
-            });
-
-            const totalSales = Object.keys(salesByOrderType).reduce((acc, currKey, currIdx, arr) => {
-                return acc + salesByOrderType[currKey];
-            }, 0);
-
-            sub$.next({
-                byOrderTypeAndService: daily_data_by_orderType_by_service,
-                salesByOrderType: salesByOrderType,
-                dinersAndPPAByShift: dinersAndPPAByShift,
-                totalSales: totalSales
-            });
-
-        });
-
-        return sub$;
-    }
-
-    /*
-        returns (VAT-aware) KPIs for the BusinessDate (bd)
-     */
-    /* todo replace getDailyDataByShiftAndType with this */
-    getBusinessDateKPIs(bd: moment.Moment): Promise<BusinessDayKPIs> {
-        return new Promise((resolve, reject)=>{
-
-            const that = this;
-
-            const data$ = combineLatest(
-                this.vat$,
-                this.shifts$,
-                fromPromise(this.olapEp.get_sales_and_ppa_by_OrderType_by_Service(bd)),
-                (vat, shifts, daily_data_by_orderType_by_service_raw) => Object.assign({}, { shifts: shifts }, { daily_data_by_orderType_by_service_raw: daily_data_by_orderType_by_service_raw }, { vat: vat })
-            );
-
-            data$.subscribe(data => {
-
-                // data preparation
-                const daily_data_by_orderType_by_service: {
-                    orderType: OrderType,
-                    shift: Shift,
-                    sales: number,
-                    dinersSales: number,
-                    dinersCount: number,
-                    ordersCount: number
-                }[] = (function(){
-                    // clone raw data
-                    const daily_data_by_orderType_by_service_raw: {
-                        orderType: string | OrderType,
-                        service: string,
-                        shift: Shift,
-                        sales: number,
-                        dinersSales: number,
-                        dinersCount: number,
-                        ordersCount: number
-                    }[] = _.cloneDeep(data.daily_data_by_orderType_by_service_raw);
-
-                    // normalize olapData:
-                    daily_data_by_orderType_by_service_raw.forEach(o => {
-                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][(o.orderType + '').toUpperCase()];
-                        o.shift = data.shifts.find(s=>s.name===o.service);
-                    });
-
-                    // be VAT aware
-                    if (!data.vat) {
-                        daily_data_by_orderType_by_service_raw.forEach(tuple => {
-                            tuple.sales = tuple.sales / 1.17;
-                            tuple.dinersSales = tuple.dinersSales / 1.17;
-                        });
-                    }
-
-                    // prepare final data
-                    const daily_data_by_orderType_by_service_: any = daily_data_by_orderType_by_service_raw.map(o=>({
-                        orderType: o.orderType,
-                        shift: o.shift,
-                        sales: o.sales,
-                        dinersSales: o.dinersSales,
-                        dinersCount: o.dinersCount,
-                        ordersCount: o.ordersCount
-                    }));
-
-                    return daily_data_by_orderType_by_service_;
-                }());
-
-                // byShiftByOrderType setup
-                const byShiftByOrderType: Map<
-                    Shift,
-                    {
-                        totalSales: number,
-                        byOrderType: Map<OrderType, {
-                            sales: number,
-                            dinersOrOrders: number,
-                            average: number
-                        }>
-                    }
-                    > = (function(){
-                        const byShiftByOrderType = new Map<
-                            Shift,
-                            {
-                                totalSales: number,
-                                byOrderType: Map<OrderType, {
-                                    sales: number,
-                                    dinersOrOrders: number,
-                                    average: number
-                                }>
-                            }
-                        >();
-
-                        if (!data.shifts.length) {
-                            return byShiftByOrderType;
-                        }
-
-                        for (let i = 0; i < data.shifts.length; i++) {
-                            byShiftByOrderType.set(data.shifts[i], {
-                                totalSales: 0,
-                                byOrderType: new Map<OrderType, {
-                                    sales: number,
-                                    dinersOrOrders: number,
-                                    average: number
-                                }>()
-                            });
-                        }
-
-                        daily_data_by_orderType_by_service.forEach(o=>{
-                            const mapEntry = byShiftByOrderType.get(o.shift);
-                            let dinersOrOrders;
-                            let average;
-                            if (o.orderType.id === 'seated') {
-                                dinersOrOrders = o.dinersCount;
-                                average = o.dinersCount > 0 ? o.dinersSales / o.dinersCount : undefined;
-                            } else {
-                                dinersOrOrders = o.ordersCount;
-                                average = o.ordersCount > 0 ? o.sales / o.ordersCount : undefined;
-                            }
-
-                            mapEntry.byOrderType.set(o.orderType, {
-                                sales: o.sales,
-                                dinersOrOrders: dinersOrOrders,
-                                average: average
-                            });
-
-                            mapEntry.totalSales+=o.sales;
-                        });
-
-                        //remove shifts with 0 sales
-                        byShiftByOrderType.forEach((val, key, map)=>{
-                            if (val.totalSales===0) {
-                                map.delete(key);
-                            }
-                        });
-
-                        return byShiftByOrderType;
-                }());
-
-                // byOrderType setup
-                const byOrderType: Map<OrderType, {
-                    sales: number,
-                    dinersOrOrders: number,
-                    average: number
-                }> = (function(){
-                    const byOrderType = new Map<OrderType, {
-                        sales: number,
-                        dinersOrOrders: number,
-                        average: number
-                    }>();
-
-                    const byOrderType_: {
-                        [index:string]: {
-                            orderType: OrderType,
-                            service: any,
-                            sales: number,
-                            dinersSales: number,
-                            dinersCount: number,
-                            ordersCount: number
-                        }[]
-                    } = _.groupBy(daily_data_by_orderType_by_service, item => item.orderType.id);
-
-                    const byOrderType_reduced: {
-                        [index: string]: {
-                            orderType: OrderType,
-                            sales: number,
-                            dinersSales: number,
-                            dinersCount: number,
-                            ordersCount: number
-                        }
-                    } = {};
-
-                    Object.keys(byOrderType_).forEach(orderTypeId => {
-                        const reduced = byOrderType_[orderTypeId].reduce((acc, curr) => {
-                            return {
-                                orderType: curr.orderType,
-                                sales: acc.sales + curr.sales,
-                                dinersSales: acc.dinersSales + curr.dinersSales,
-                                dinersCount: acc.dinersCount + curr.dinersCount,
-                                ordersCount: acc.ordersCount + curr.ordersCount
-                            };
-                        }, {
-                                orderType: undefined,
-                                sales: 0,
-                                dinersSales: 0,
-                                dinersCount: 0,
-                                ordersCount: 0
-                            });
-
-                        byOrderType_reduced[orderTypeId] = reduced;
-                    });
-
-                    Object.keys(byOrderType_reduced).forEach(orderTypeId => {
-                        const obj = byOrderType_reduced[orderTypeId];
-                        const orderType = obj.orderType;
-
-                        let dinersOrOrders;
-                        let average;
-                        if (orderType.id==='seated') {
-                            dinersOrOrders = obj.dinersCount;
-                            average = obj.dinersCount > 0 ? obj.dinersSales / obj.dinersCount : undefined;
-                        } else {
-                            dinersOrOrders = obj.ordersCount;
-                            average = obj.ordersCount > 0 ? obj.sales / obj.ordersCount : undefined;
-                        }
-
-                        byOrderType.set(orderType, {
-                            sales: obj.sales,
-                            dinersOrOrders: dinersOrOrders,
-                            average: average
-                        });
-                    });
-
-                    return byOrderType;
-                }());
-
-                // totalSales setup
-                const totalSales: number = (function(){
-                    let totalSales = 0;
-
-                    byOrderType.forEach(o=>{
-                        totalSales += o.sales;
-                    });
-
-                    return totalSales;
-                }());
-
-                resolve({
-                    businessDay: moment(bd),
-                    totalSales: totalSales,
-                    byOrderType: byOrderType,
-                    byShiftByOrderType: byShiftByOrderType
-                });
-
-            });
-
-        });
-    }
 
     /*
         returns (VAT-aware) Sales by SubDepartment for the BusinessDate (bd)
@@ -1561,7 +1353,6 @@ export class DataService {
         item: string;
         subType: string;
         reasonId: string;
-        reasons: string;
         retention: number;
     }[]> {
         return new Promise((resolve, reject) => {
@@ -1586,7 +1377,6 @@ export class DataService {
                     item: string;
                     subType: string;
                     reasonId: string;
-                    reasons: string;
                     retention: number;
                 }[] = (function () {
 
@@ -1600,7 +1390,6 @@ export class DataService {
                         item: string;
                         subType: string;
                         reasonId: string;
-                        reasons: string;
                         retention: number;
                     }[] = _.cloneDeep(data.retentionDataRaw).map(o => {
                         o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType.toUpperCase()];

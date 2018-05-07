@@ -155,9 +155,17 @@
         <source>Business Day</source>
         <target>יום עסקים</target>
       </trans-unit>
+      <trans-unit id="grossSales" datatype="html">
+        <source>Gross Sales</source>
+        <target>מכירות ברוטו</target>
+      </trans-unit>
       <trans-unit id="netSales" datatype="html">
         <source>Net Sales</source>
         <target>מכירות נטו</target>
+      </trans-unit>
+      <trans-unit id="tax" datatype="html">
+        <source>Tax</source>
+        <target>מס</target>
       </trans-unit>
       <trans-unit id="cancellationsValue" datatype="html">
         <source>Voids</source>
@@ -333,6 +341,7 @@
         <target>מכירות</target>
       </trans-unit>
       <trans-unit id="dinersOrders" datatype="html">
+        <source>Diners / Orders</source>
         <target>סועדים / הזמנות</target>
       </trans-unit>
       <trans-unit id="average" datatype="html">
@@ -439,12 +448,10 @@
       <trans-unit id="tip" datatype="html">
         <source>Gratuity</source>
         <target>תשר</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/owners-dashboard/order-view/slips/bill/bill.component.ts</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-        <note priority="1" from="description">תשר</note>
-        <note priority="1" from="meaning">slips</note>
+      </trans-unit>
+      <trans-unit id="serviceCharge" datatype="html">
+        <source>Service Charge</source>
+        <target>???</target>
       </trans-unit>
       <trans-unit id="returnTransaction" datatype="html">
         <source>Return Transaction</source>

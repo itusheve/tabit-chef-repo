@@ -62,8 +62,6 @@ import { OrgsModule } from './orgs/orgs.module';
 import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.module';
 import { VisibilityService } from '../tabit/utils/visibility.service';
 import { OlapMappings } from '../tabit/data/ep/olap.mappings';
-import { NewCubeOlapEp } from '../tabit/data/ep/newCubeOlap.ep';
-import { newCubeDataService } from '../tabit/data/newCubeData.service';
 
 // The CLI imports the locale data for you when you use the parameter --locale with ng serve and ng build.
 if (environment.tbtLocale==='he-IL') {
@@ -135,7 +133,6 @@ if (environment.tbtLocale==='he-IL') {
     VisibilityService,
 
     DataService,
-    newCubeDataService,
 
     UsersDataService,
     CategoriesDataService,
@@ -152,7 +149,6 @@ if (environment.tbtLocale==='he-IL') {
     TrendsDataService,
     ROSEp,
     OlapEp,
-    NewCubeOlapEp,
     OlapMappings
   ],
   bootstrap: [AppComponent]

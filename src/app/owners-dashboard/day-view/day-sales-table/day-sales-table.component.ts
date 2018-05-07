@@ -1,5 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { OrderType } from '../../../../tabit/model/OrderType.model';
+import { Orders_KPIs } from '../../../../tabit/data/ep/olap.ep';
+import { salesTableRow } from '../day-view.component';
 
 @Component({
   selector: 'app-day-sales-table',
@@ -10,25 +12,52 @@ export class DaySalesTableComponent implements OnChanges {
   loading = true;
   noData = false;
   @Input() title: string;
-  @Input() totalSales: number;
-  @Input() byOrderType: Map<OrderType, {
-    sales: number,
-    dinersOrOrders: number,
-    average: number
-  }>;
+  @Input() dataSet;
 
-  getKeys(map) {
-    return Array.from(map.keys());
-  }
+  totals;
 
-  constructor( ) {}
+  constructor() { }
 
   ngOnChanges(o: SimpleChanges) {
     this.loading = true;
     this.noData = false;
 
-    if ((o.byOrderType && o.byOrderType.currentValue !== null) || (o.totalSales && o.totalSales.currentValue !== null)) {
-      if (this.totalSales===0) {
+    if (this.dataSet) {
+
+      this.dataSet.forEach(element => {
+        element.ordersKpis.dinersOrdersCount = element.orderType.id==='seated' ? element.ordersKpis.dinersCount : element.ordersKpis.ordersCount;
+      });
+
+      this.totals = {
+        netSalesAmnt: 0,
+        taxAmnt: 0,
+        grossSalesAmnt: 0,
+        tipAmnt: 0,
+        serviceChargeAmnt: 0,
+        paymentsAmnt: 0,
+        dinersSales: 0,
+        dinersCount: 0,
+        ordersCount: 0,
+        ppa: undefined,
+        dinersOrdersCount: 0
+      }
+
+      this.dataSet.forEach(row => {
+        this.totals.netSalesAmnt += row.ordersKpis.netSalesAmnt;
+        this.totals.taxAmnt += row.ordersKpis.taxAmnt;
+        this.totals.grossSalesAmnt += row.ordersKpis.grossSalesAmnt;
+        this.totals.tipAmnt += row.ordersKpis.tipAmnt;
+        this.totals.serviceChargeAmnt += row.ordersKpis.serviceChargeAmnt;
+        this.totals.paymentsAmnt += row.ordersKpis.paymentsAmnt;
+        this.totals.dinersSales += row.ordersKpis.dinersSales;
+        this.totals.dinersCount += row.ordersKpis.dinersCount;
+        this.totals.ordersCount += row.ordersKpis.ordersCount;
+        this.totals.dinersOrdersCount += row.ordersKpis.dinersOrdersCount;
+      });
+
+      this.totals.ppa = this.totals.netSalesAmnt / this.totals.dinersOrdersCount;
+
+      if (this.totals.netSalesAmnt === 0 && this.totals.paymentsAmnt === 0) {
         this.noData = true;
       }
 

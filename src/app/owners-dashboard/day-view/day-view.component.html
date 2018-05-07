@@ -1,23 +1,10 @@
 <div class="flex d-col dayView">
-  <!-- <app-day-selector
-    class="widget noPadding daySelectorNotFixed"
-    [style.visibility]="daySelectorVisible ? 'visible' : 'hidden'"
-    [currentValue]="day"
-    [options]="daySelectorOptions"
-    (onDateChanged)="onDateChanged($event)"
-  ></app-day-selector> -->
 
-  <!-- [style.visibility]="!daySelectorVisible ? 'visible' : 'hidden'" -->
   <app-day-selector
     class="widget noPadding daySelectorFixed"
     [currentValue]="day"
     [options]="daySelectorOptions"
     (onDateChanged)="onDateChanged($event)"></app-day-selector>
-
-  <!-- <app-day-pie-chart
-    class="widget blueAccent"
-    [data]="salesByOrderType"
-  ></app-day-pie-chart> -->
 
   <app-day-orders-table
     class="widget"
@@ -33,10 +20,10 @@
     class="widget"
     title="Summary"
     i18n-title="@@summary"
-    [totalSales]="KPIs?.totalSales"
-    [byOrderType]="KPIs?.byOrderType">
+    [dataSet]="dailySummaryTblData">
   </app-day-sales-table>
 
+  <!--
   <div *ngIf="KPIs">
     <app-day-sales-table
       *ngFor="let key of getKeys(KPIs.byShiftByOrderType)"
@@ -45,7 +32,7 @@
       [totalSales]="KPIs.byShiftByOrderType.get(key).totalSales"
       [byOrderType]="KPIs.byShiftByOrderType.get(key).byOrderType">
     </app-day-sales-table>
-  </div>
+  </div> -->
 
   <app-day-sales-by-sub-department-table
     class="widget"
