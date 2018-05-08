@@ -17,7 +17,7 @@ function deploy {
       done
     done
 }
-
+echo "On0"
 if [[ "$CIRCLE_TAG" =~ ^release-.*$ ]]; then
   echo "not in use"
 elif [[ "$CIRCLE_BRANCH" == "master" ]]; then
@@ -29,12 +29,27 @@ elif [[ "$CIRCLE_BRANCH" == "ecs-dev" ]]; then
   chmod +x _s3/s3-push-dev.sh
   S3_BUCKET="chef.tabit-dev.com" _s3/s3-push-dev.sh
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
-elif [[ "$CIRCLE_BRANCH" == "us-production-rp" ]]; then
+elif [[ "$CIRCLE_BRANCH" == "us-production-rp"  ]]; then
+  echo "On1"
+  npm install --ignore-scripts
   npm rebuild node-sass
+  echo "On2"
   ng build --aot --env=prod-us --target=production --output-hashing=none
+  echo "On3"
   chmod +x _s3/s3-push-us-prod.sh
-  S3_BUCKET="us-chef.tabit.cloud" _s3/s3-push-us-prod.sh
-  echo "On verification branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
+  echo "On4"
+  S3_BUCKET="chef-web-us.tabit.cloud" _s3/s3-push-us-prod.sh
+  echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
+elif [[ "$CIRCLE_BRANCH" == "us-production-rp-cordova"  ]]; then
+  echo "On1"
+  npm install --ignore-scripts
+  echo "On2"
+  ng build --aot --env=prod-us --target=production --output-hashing=none
+  echo "On3"
+  chmod +x _s3/s3-push-us-prod.sh
+  echo "On4"
+  S3_BUCKET="chef-cordova-us.tabit.cloud" _s3/s3-push-us-prod.sh
+  echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "us-production-rp-beta" ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
@@ -78,18 +93,6 @@ elif [[ "$CIRCLE_BRANCH" == "ecs-us-demo" ]]; then
   S3_BUCKET="us-demo-chef.tabit-stage.com" _s3/s3-push-us-demo.sh
   echo "On verification branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "util" ]]; then
-  echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
-elif [[ "$CIRCLE_BRANCH" == "us-production-rp"  ]]; then
-  npm install --ignore-scripts
-  ng build --aot --env=prod-us --target=production --output-hashing=none
-  chmod +x _s3/s3-push-us-prod.sh
-  S3_BUCKET="chef-web-us.tabit.cloud" _s3/s3-push-us-prod.sh
-  echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
-elif [[ "$CIRCLE_BRANCH" == "us-production-rp-cordova"  ]]; then
-  npm install --ignore-scripts
-  ng build --aot --env=prod-us --target=production --output-hashing=none
-  chmod +x _s3/s3-push-us-prod.sh
-  S3_BUCKET="chef-cordova-us.tabit.cloud" _s3/s3-push-us-prod.sh
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 # elif [[ "$CIRCLE_BRANCH" == "<THE_BRANCH_YOU_WANT_TO_DEPLOY>" ]]; then
 
