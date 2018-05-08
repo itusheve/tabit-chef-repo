@@ -1,6 +1,6 @@
-<mat-sidenav-container (swiperight)="sidenav.close()">
+<mat-sidenav-container>
 
-  <mat-sidenav class="flex d-col" #sidenav mode="over" (swiperight)="sidenav.close()">
+  <mat-sidenav class="flex d-col" #sidenav mode="over">
     <div class="s-0 flex d-col header">
       <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{this.sideNavConfig.header.userInitials}}</button>
       <div class="mt10 mb10">{{this.sideNavConfig.header.user?.firstName}} {{this.sideNavConfig.header.user?.lastName}}</div>
