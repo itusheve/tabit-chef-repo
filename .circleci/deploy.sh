@@ -81,14 +81,12 @@ elif [[ "$CIRCLE_BRANCH" == "util" ]]; then
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "us-production-rp"  ]]; then
   npm install --ignore-scripts
-  npm rebuild node-sass
   ng build --aot --env=prod-us --target=production --output-hashing=none
   chmod +x _s3/s3-push-us-prod.sh
   S3_BUCKET="chef-web-us.tabit.cloud" _s3/s3-push-us-prod.sh
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "us-production-rp-cordova"  ]]; then
   npm install --ignore-scripts
-  npm rebuild node-sass
   ng build --aot --env=prod-us --target=production --output-hashing=none
   chmod +x _s3/s3-push-us-prod.sh
   S3_BUCKET="chef-cordova-us.tabit.cloud" _s3/s3-push-us-prod.sh
