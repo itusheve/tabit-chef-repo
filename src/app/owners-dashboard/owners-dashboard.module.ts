@@ -30,11 +30,21 @@ import { OrderViewComponent } from './order-view/order-view.component';
     import { OrderInvoiceGiftcardComponent } from './order-view/slips/invoiceGiftcard/invoiceGiftcard.component';
     import { OrderDeliveryNoteComponent } from './order-view/slips/deliveryNote/deliveryNote.component';
     import { OrderDeliveryNoteRefundComponent } from './order-view/slips/deliveryNoteRefund/deliveryNoteRefund.component';
+    import { OrderCreditSlipComponent } from './order-view/slips/creditSlip/creditSlip.component';
+      import { OrderInvoiceVatComponent } from './order-view/slips/common/invoiceVat/invoiceVat.component';
+      import { OrderCreditTransactionDataComponent } from './order-view/slips/common/creditTransactionData/creditTransactionData.component';
+      import { OrderDeliveryNoteTransactionDataComponent } from './order-view/slips/common/deliveryNoteTransactionData/deliveryNoteTransactionData.component';
+      import { OrderMediaExchangeDetailsComponent } from './order-view/slips/common/mediaExchangeDetails/mediaExchangeDetails.component';
+      import { OrderSingleInvoiceDataComponent } from './order-view/slips/common/singleInvoiceData/singleInvoiceData.component';
+      import { OrderGiftCardDetailsComponent } from './order-view/slips/common/giftCardDetails/giftCardDetails.component';
   import { OrderDetailsComponent } from './order-view/details/details.component';
 
 import { CardComponent } from '../ui/card/card.component';
 
+import { SignatureComponent } from '../../tabit/ui/signature/signature.component';
+
 import { OwnersDashboardRoutingModule } from './owners-dashboard-routing.module';
+
 
 import {
   MatSidenavModule,
@@ -91,6 +101,7 @@ import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-tabl
     DxPieChartModule,
     DxDataGridModule,
     DxLoadIndicatorModule
+
   ],
   declarations: [
     OwnersDashboardComponent,
@@ -100,6 +111,8 @@ import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-tabl
 
     HomeComponent,
     CardComponent,
+
+    SignatureComponent,
 
     MonthViewComponent,
     MonthSelectorComponent,
@@ -134,10 +147,18 @@ import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-tabl
         OrderInvoiceGiftcardComponent,
         OrderDeliveryNoteComponent,
         OrderDeliveryNoteRefundComponent,
+        OrderCreditSlipComponent,
         OrderCreditRefundComponent,
         OrderChequeRefundComponent,
         OrderCashRefundComponent,
-      OrderDetailsComponent
+          OrderInvoiceVatComponent,
+          OrderCreditTransactionDataComponent,
+          OrderDeliveryNoteTransactionDataComponent,
+          OrderSingleInvoiceDataComponent,
+          OrderMediaExchangeDetailsComponent,
+          OrderGiftCardDetailsComponent,
+      OrderDetailsComponent,
+
   ],
   providers: [
     OwnersDashboardService

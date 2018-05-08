@@ -2,11 +2,14 @@ import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { DataService, tmpTranslations } from '../../tabit/data/data.service';
+import { environment } from '../../environments/environment';
+
+import { DataService, tmpTranslations, appVersions } from '../../tabit/data/data.service';
 import { AuthService } from '../auth/auth.service';
 import { OwnersDashboardService } from './owners-dashboard.service';
 
 import { AreYouSureDialogComponent } from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
+import { DebugService } from '../debug.service';
 
 @Component({
   templateUrl: './owners-dashboard.component.html',
@@ -22,14 +25,33 @@ export class OwnersDashboardComponent {
   toolbarConfig: any;
   sideNavConfig: any;
 
+  appVersions: {
+    chef: string,
+    wrapper: string
+  };
+
+  env;
+
+  debug: boolean;
+
+  logArr: { type: string, message: string }[];
+
   constructor(
     private dataService: DataService,
     private authService: AuthService,
     public ownersDashboardService: OwnersDashboardService,
     public dialog: MatDialog,
     public router: Router,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    private ds: DebugService
   ) {
+
+    this.logArr = ds.logArr;
+
+    this.env = environment;
+
+    this.appVersions = appVersions;
+
     ownersDashboardService.toolbarConfig.left.back.showBtn = false;
 
     //bind for the view:
@@ -53,7 +75,6 @@ export class OwnersDashboardComponent {
 
   logout() {
     let dialogRef = this.dialog.open(AreYouSureDialogComponent, {
-      direction: 'rtl',//TODO localization
       width: '250px',
       data: {
         title: '',

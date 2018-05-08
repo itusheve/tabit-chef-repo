@@ -1,0 +1,32 @@
+<!-- LAST 4 -->
+<div class="flex j-sb d-block" *ngIf="collections.CREDIT_PAYMENTS[0].LAST_4">
+    <span i18n="slips@@last4">LAST 4</span>
+    <span>{{collections.CREDIT_PAYMENTS[0].LAST_4}}</span>
+</div>
+
+<!-- PROVIDER PAYMENT DATE -->
+<div class="flex j-sb d-block" *ngIf="collections.CREDIT_PAYMENTS[0].PROVIDER_PAYMENT_DATE">
+    <span i18n="@@transactionTime">Transaction Time</span>
+    <span>{{ collections.CREDIT_PAYMENTS[0].PROVIDER_PAYMENT_DATE | date : 'dd/MM/yyyy HH:mm' }}</span>
+
+    <!-- US format -->
+    <!-- <span>{{printDataOld.PROVIDER_PAYMENT_DATE |date : 'MM/dd/yyyy HH:mm'}}</span> -->
+</div>
+
+<!-- CARD NUMBER-->
+<div class="flex j-sb d-block" *ngIf="collections.CREDIT_PAYMENTS[0].PROVIDER_TRANS_ID">
+    <span i18n="slips@@cardNumber">Card number</span>
+    <span>{{ collections.CREDIT_PAYMENTS[0].PROVIDER_TRANS_ID }}</span>
+</div>
+
+<!-- PROVIDER TRANSACTIOB ID -->
+<div class="flex j-sb d-block" *ngIf="collections.CREDIT_PAYMENTS[0].CONFIRMATION_NUMBER">
+    <span class="text-upper" i18n="slips@@transactionNumber">Transaction no.</span>
+    <span>{{collections.CREDIT_PAYMENTS[0].CONFIRMATION_NUMBER}}</span>
+</div>
+
+<!-- CONFIRMATION NUM -->
+<div class="flex j-sb d-block" *ngIf="collections.CREDIT_PAYMENTS[0].CONFIRMATION_NUMBER">
+    <span class="text-upper" i18n="slips@@approvalNumber">Approval no.</span>
+    <span>{{collections.CREDIT_PAYMENTS[0].CONFIRMATION_NUMBER}}</span>
+</div>

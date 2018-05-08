@@ -1,52 +1,37 @@
-<div class="flex f-rtl d-col">
+<div class="flex d-col">
     <div class="flex d-col" *ngIf="!loading">
         <div class="title" i18n="@@monthlyReport">Monthly Report</div>
         <div class="flex d-col body">
-            <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+            <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center">
-                <table class="fixedWidth">
+                <table class="chf-tbl chf-tbl-xx-smaller chf-tbl-row-oriented">
                     <tr class="header">
                         <td i18n="@@businessDay">Business Day</td>
                         <td i18n="@@netSales">Net Sales</td>
-                        <td>
-                            <ng-container i18n="@@diners">Diners</ng-container>&nbsp;
-                            (<ng-container i18n="@@ppd">Pay Per Diner</ng-container>)
-                        </td>
-                        <!-- <td i18n="@@ppd">Pay Per Diner</td> -->
-                        <td i18n="@@cancellationsValue">Cancellations Value</td>
-                        <td i18n="@@operationalErrorsValue">שווי תקלות תפעול</td>
-                        <td i18n="@@retentionValue">Retention Value</td>
+                        <td><ng-container i18n="@@diners">Diners</ng-container><br>(<ng-container i18n="@@ppa">PPA</ng-container>)</td>
+                        <td i18n="@@cancellationsValue">Voids</td>
+                        <td i18n="@@operationalErrorsValue">Operational Errors</td>
+                        <td i18n="@@retentionValue">Retention</td>
                         <td i18n="@@organizationalValue">Employees &amp; Owners</td>
                     </tr>
                     <tr>
                         <td i18n="@@total">Total</td>
                         <td>{{mtdKPIs?.kpi.sales | curr:'0'}}</td>
-                        <td>
-                            {{mtdKPIs?.kpi.diners.count | count}} ({{mtdKPIs?.kpi.diners.ppa | curr:'1'}})
-                        </td>
-                        <!-- <td>{{mtdKPIs?.kpi.diners.ppa | curr:'1'}}</td> -->
-                        <td>{{mtdKPIs?.kpi.reductions.cancellation | curr:'0'}} ({{mtdKPIs.kpi.reductions.cancellation_pct | pct:1}})</td>
-                        <td>{{mtdKPIs?.kpi.reductions.operational | curr:'0'}} ({{mtdKPIs.kpi.reductions.operational_pct | pct:1}})</td>
-                        <td>{{mtdKPIs?.kpi.reductions.retention | curr:'0'}} ({{mtdKPIs.kpi.reductions.retention_pct | pct:1}})</td>
-                        <td>{{mtdKPIs?.kpi.reductions.organizational | curr:'0'}} ({{mtdKPIs.kpi.reductions.organizational_pct | pct:1}})</td>
+                        <td>{{mtdKPIs?.kpi.diners.count | count}}<br>({{mtdKPIs?.kpi.diners.ppa | curr:'1'}})</td>
+                        <td>{{mtdKPIs?.kpi.reductions.cancellation | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.cancellation_pct | pct:'1'}})</td>
+                        <td>{{mtdKPIs?.kpi.reductions.operational | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.operational_pct | pct:'1'}})</td>
+                        <td>{{mtdKPIs?.kpi.reductions.retention | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.retention_pct | pct:'1'}})</td>
+                        <td>{{mtdKPIs?.kpi.reductions.organizational | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.organizational_pct | pct:'1'}})</td>
                     </tr>
                     <tr *ngFor="let tuple of data">
                         <td>{{tuple.businessDay | date:'dd/MM'}} {{tuple.dayOfWeek}}</td>
                         <td>{{tuple.kpi.sales | curr:'0'}}</td>
-                        <td>
-                            {{tuple.kpi.diners.count | count}}&nbsp;
-                            ({{tuple.kpi.diners.ppa | curr:'1'}})
-                        </td>
-                        <!-- <td>{{tuple.dinersPPA | curr:'1'}}</td> -->
-
-                        <td>{{tuple.kpi.reductions.cancellation | curr:'0'}} ({{tuple.kpi.reductions.cancellation_pct | pct:1}})</td>
-
-                        <td>{{tuple.kpi.reductions.operational | curr:'0'}} ({{tuple.kpi.reductions.operational_pct | pct:1}})</td>
-
-                        <td>{{tuple.kpi.reductions.retention | curr:'0'}} ({{tuple.kpi.reductions.retention_pct | pct:1}})</td>
-
-                        <td>{{tuple.kpi.reductions.organizational | curr:'0'}} ({{tuple.kpi.reductions.organizational_pct | pct:1}})</td>
+                        <td>{{tuple.kpi.diners.count | count}}<br>({{tuple.kpi.diners.ppa | curr:'1'}})</td>
+                        <td>{{tuple.kpi.reductions.cancellation | curr:'0'}}<br>({{tuple.kpi.reductions.cancellation_pct | pct:'1'}})</td>
+                        <td>{{tuple.kpi.reductions.operational | curr:'0'}}<br>({{tuple.kpi.reductions.operational_pct | pct:'1'}})</td>
+                        <td>{{tuple.kpi.reductions.retention | curr:'0'}}<br>({{tuple.kpi.reductions.retention_pct | pct:'1'}})</td>
+                        <td>{{tuple.kpi.reductions.organizational | curr:'0'}}<br>({{tuple.kpi.reductions.organizational_pct | pct:'1'}})</td>
                     </tr>
                 </table>
             </div>

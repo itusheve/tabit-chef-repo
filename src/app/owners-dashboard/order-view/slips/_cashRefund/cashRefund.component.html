@@ -1,35 +1,18 @@
 <div class="ticket-box d-col">
-    
-    <h4 i18n="slips@@returnedWithCash">Returned in Cash</h4>
-    <!-- <h4>{{'RETURNED_CACHE' | translate}}</h4> -->
 
-    <div class="flex j-sb">
-        <!-- <span>{{'BUSINESS_MEAL' | translate}}</span> -->
-        <span i18n="slips@@businessMeal">Business Meal></span>        
-        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-    </div>
-    
-    <div class="flex j-sb">
-        <!-- <span>{{'BEFORE_VAT' | translate}}</span> -->
-        <span i18n="slips@@beforeVAT">Before VAT</span>        
-        <span>{{((data.amount/100)-(data.tax?.amount/100)) | number:'1.2-2'}}</span>
-    </div>
-    
-    <div class="flex j-sb">
-        <!-- <span>{{'VAT' | translate}}</span> -->
-        <span i18n="slips@@vat">VAT</span>
-        <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
+    <app-order-invoice-vat [printData]="invoice"></app-order-invoice-vat>
+
+    <hr />
+
+    <!-- RETURN IN CASH FROM -->
+    <div class="row">
+        <div class="col-8">
+            <span i18n="@@returnedWithCash">Returned in cash</span>
+        </div>
+        <div class="col-3">
+            <span class="negative">{{(data.amount/100) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
-    <div class="flex j-sb">
-        <!-- <span>{{'INCLUDE_VAT' | translate}}</span> -->
-        <span i18n="slips@@includeVAT">Include VAT</span>
-        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-    </div>
 
 </div>
-
-
-
-
-

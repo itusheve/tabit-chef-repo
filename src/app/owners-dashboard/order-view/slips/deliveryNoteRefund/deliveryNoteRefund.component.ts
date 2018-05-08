@@ -10,9 +10,14 @@ import { Order } from '../../../../../tabit/model/Order.model';
 export class OrderDeliveryNoteRefundComponent implements OnInit {
 
   @Input() data: any;
-  
-  constructor() {}
-  
-  ngOnInit() { }
+  @Input() printDataOld: any;
+  @Input() invoice: any;
+  @Input() orderOld: any;
+
+  constructor() { }
+
+  ngOnInit() {
+    
+  }
 
 }

@@ -16,9 +16,9 @@ const OrderViewService = (function () {
     function _configure(options) {
         if (options.local) _options.local = options.local;
 
-        if (options.isUs !== undefined) {
-            _options.isUs = options.isUs;
-            isUS = options.isUs;
+        if (options.isUS !== undefined) {
+            _options.isUS = options.isUS;
+            isUS = options.isUS;
         };
 
         if (options.moment) {
@@ -98,98 +98,101 @@ const OrderViewService = (function () {
             let items = [];
             let oth = [];
 
-            offersList.forEach(offer => {
-                let offerQyt = 0;
-                if (offer.SPLIT_DENOMINATOR && offer.SPLIT_NUMERATOR && offer.SPLIT_DENOMINATOR !== 100 && offer.SPLIT_NUMERATOR !== 100) {
-                    offerQyt = `${offer.SPLIT_NUMERATOR}/${offer.SPLIT_DENOMINATOR}`;
-                } else {
-                    offerQyt = offer.OFFER_QTY
-                }
+            if (offersList && offersList.length > 0) {
+                offersList.forEach(offer => {
 
-                if (offer.OFFER_TYPE == Enums.OfferTypes.Simple) {
-                    let item = {
-                        isOffer: true,
-                        name: offer.OFFER_NAME,
-                        qty: offerQyt
-                    };
-
-                    if (offer.ON_THE_HOUSE) {
-                        item.amount = translateService.getText('OTH');
-                        oth.push(item)
+                    let offerQyt = 0;
+                    if (offer.SPLIT_DENOMINATOR && offer.SPLIT_NUMERATOR && offer.SPLIT_DENOMINATOR !== 100 && offer.SPLIT_NUMERATOR !== 100) {
+                        offerQyt = `${offer.SPLIT_NUMERATOR}/${offer.SPLIT_DENOMINATOR}`;
                     } else {
-                        item.amount = utils.toFixedSafe(offer.OFFER_AMOUNT, 2)
-                        items.push(item);
+                        offerQyt = offer.OFFER_QTY
                     }
 
-                    if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
-                        offer.ORDERED_OFFER_DISCOUNTS.forEach(discount => {
-                            items.push({
-                                isOfferDiscount: true,
-                                name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : translateService.getText('MANUAL_ITEM_DISCOUNT'),
-                                qty: null,
-                                amount: utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
-                            })
-                        });
-                    }
-                }
+                    if (offer.OFFER_TYPE == Enums.OfferTypes.Simple) {
+                        let item = {
+                            isOffer: true,
+                            name: offer.OFFER_NAME,
+                            qty: offerQyt
+                        };
 
-                if ([Enums.OfferTypes.ComplexOne, Enums.OfferTypes.Combo].indexOf(offer.OFFER_TYPE) > -1) {
+                        if (offer.ON_THE_HOUSE) {
+                            item.amount = translateService.getText('OTH');
+                            oth.push(item)
+                        } else {
+                            item.amount = utils.toFixedSafe(offer.OFFER_AMOUNT, 2)
+                            items.push(item);
+                        }
 
-                    items.push({
-                        isOffer: true,
-                        name: offer.OFFER_NAME,
-                        qty: offerQyt,
-                        amount: offer.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(isReturnOrder ? offer.OFFER_AMOUNT : offer.OFFER_CALC_AMT, 2)
-                    });
-
-                    if (!isReturnOrder) {
-                        if (offer.ORDERED_ITEMS_LIST && offer.ORDERED_ITEMS_LIST.length > 0)
-                            offer.ORDERED_ITEMS_LIST.forEach(item => {
+                        if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
+                            offer.ORDERED_OFFER_DISCOUNTS.forEach(discount => {
                                 items.push({
-                                    isItem: true,
-                                    name: item.ITEM_NAME,
+                                    isOfferDiscount: true,
+                                    name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : translateService.getText('MANUAL_ITEM_DISCOUNT'),
                                     qty: null,
-                                    amount: null
+                                    amount: utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
                                 })
-                            });
-                    }
-
-                    if (!isReturnOrder) {
-                        if (offer.EXTRA_CHARGE_LIST && offer.EXTRA_CHARGE_LIST.length > 0) {
-                            offer.EXTRA_CHARGE_LIST.forEach(item => {
-                                if (item.EXTRA_CHARGE_MODIFIERS_LIST && item.EXTRA_CHARGE_MODIFIERS_LIST.length > 0) {
-                                    item.EXTRA_CHARGE_MODIFIERS_LIST.forEach(modifier => {
-                                        items.push({
-                                            isItem: true,
-                                            name: modifier.MODIFIER_NAME,
-                                            qty: null,
-                                            amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(item.ITEM_AMOUNT, 2)
-                                        })
-                                    })
-                                } else {
-                                    items.push({
-                                        isItem: true,
-                                        name: item.ITEM_NAME,
-                                        qty: null,
-                                        amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(item.ITEM_AMOUNT, 2)
-                                    })
-                                }
                             });
                         }
                     }
 
-                    if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
-                        offer.ORDERED_OFFER_DISCOUNTS.forEach(discount => {
-                            items.push({
-                                isOfferDiscount: true,
-                                name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : translateService.getText('MANUAL_ITEM_DISCOUNT'),
-                                qty: null,
-                                amount: utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                    if ([Enums.OfferTypes.ComplexOne, Enums.OfferTypes.Combo].indexOf(offer.OFFER_TYPE) > -1) {
+
+                        items.push({
+                            isOffer: true,
+                            name: offer.OFFER_NAME,
+                            qty: offerQyt,
+                            amount: offer.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(isReturnOrder ? offer.OFFER_AMOUNT : offer.OFFER_CALC_AMT, 2)
+                        });
+
+                        if (!isReturnOrder) {
+                            if (offer.ORDERED_ITEMS_LIST && offer.ORDERED_ITEMS_LIST.length > 0)
+                                offer.ORDERED_ITEMS_LIST.forEach(item => {
+                                    items.push({
+                                        isItem: true,
+                                        name: item.ITEM_NAME,
+                                        qty: null,
+                                        amount: null
+                                    })
+                                });
+                        }
+
+                        if (!isReturnOrder) {
+                            if (offer.EXTRA_CHARGE_LIST && offer.EXTRA_CHARGE_LIST.length > 0) {
+                                offer.EXTRA_CHARGE_LIST.forEach(item => {
+                                    if (item.EXTRA_CHARGE_MODIFIERS_LIST && item.EXTRA_CHARGE_MODIFIERS_LIST.length > 0) {
+                                        item.EXTRA_CHARGE_MODIFIERS_LIST.forEach(modifier => {
+                                            items.push({
+                                                isItem: true,
+                                                name: modifier.MODIFIER_NAME,
+                                                qty: null,
+                                                amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(item.ITEM_AMOUNT, 2)
+                                            })
+                                        })
+                                    } else {
+                                        items.push({
+                                            isItem: true,
+                                            name: item.ITEM_NAME,
+                                            qty: null,
+                                            amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(item.ITEM_AMOUNT, 2)
+                                        })
+                                    }
+                                });
+                            }
+                        }
+
+                        if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
+                            offer.ORDERED_OFFER_DISCOUNTS.forEach(discount => {
+                                items.push({
+                                    isOfferDiscount: true,
+                                    name: discount.DISCOUNT_NAME ? discount.DISCOUNT_NAME : translateService.getText('MANUAL_ITEM_DISCOUNT'),
+                                    qty: null,
+                                    amount: utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                                })
                             })
-                        })
+                        }
                     }
-                }
-            })
+                });
+            }
 
             return {
                 items: items,
@@ -247,11 +250,15 @@ const OrderViewService = (function () {
                                 _name = tip.NAME ? `${tip.NAME} ${_percent}%` : `${translateService.getText('SERVICE_CHARGE')} ${_percent}%`;
                             }
 
-                            totals.push({
-                                type: 'service_charge',
-                                name: _name,
-                                amount: utils.toFixedSafe(tip.AMOUNT, 2)
-                            })
+                            if (tip.AMOUNT !== 0) {
+                                totals.push({
+                                    type: 'service_charge',
+                                    name: _name,
+                                    amount: utils.toFixedSafe(tip.AMOUNT, 2)
+                                })
+
+                            }
+
                         })
                     }
                 }
@@ -271,19 +278,29 @@ const OrderViewService = (function () {
                         amount: utils.toFixedSafe(tipAmount, 2)
                     })
                 }
+                //if it is a returned order, the tip is negative and needs to be presented
+                if (collections.PAYMENT_LIST[0].TRANS_TYPE === Enums.TransTypes.Return) {
+                    if (collections.PAYMENT_LIST[0].TIP_AMOUNT !== 0) {
+                        totals.push({
+                            type: 'tips',
+                            name: translateService.getText('TIP'),
+                            amount: utils.toFixedSafe(-1 * collections.PAYMENT_LIST[0].TIP_AMOUNT, 2)
+                        })
+                    }
+                }
             }
 
-            if (order.TOTAL_IN_VAT && !isUS) {
+            if (!isUS) {
                 totals.push({
                     name: translateService.getText('TOTAL_INC_VAT'),
-                    amount: utils.toFixedSafe(order.TOTAL_IN_VAT, 2)
+                    amount: utils.toFixedSafe(order.TOTAL_IN_VAT || 0, 2)
                 })
             }
 
-            if (order.TOTAL_AFTER_EXCLUDED_TAX && isUS) {
+            if (isUS) {
                 totals.push({
                     name: translateService.getText('TOTAL_INC_VAT'),
-                    amount: utils.toFixedSafe(order.TOTAL_AMOUNT, 2)
+                    amount: utils.toFixedSafe(order.TOTAL_AMOUNT || 0, 2)
                 })
             }
 
@@ -452,7 +469,7 @@ const OrderViewService = (function () {
 
         /**
          * resolve object Order / Tlog.
-         * @param { Object } tlog 
+         * @param { Object } tlog
          */
         function _resolveObject(tlog) {
             let _result;
@@ -471,7 +488,7 @@ const OrderViewService = (function () {
 
         /**
          * resolve total cashback
-         * @param { Object } ResultOrder 
+         * @param { Object } ResultOrder
          */
         function _resolveTotalCashback(payments) {
 
@@ -791,8 +808,8 @@ const OrderViewService = (function () {
 
         /**
          * get table number or OrderType (Refund/TA/Delivery)
-         * @param {*} orderType 
-         * @param {*} tableIds 
+         * @param {*} orderType
+         * @param {*} tableIds
          */
         function _resolveTable(orderType, tableIds) {
 
@@ -850,8 +867,8 @@ const OrderViewService = (function () {
                 if (_discount.rewardedResources && _discount.rewardedResources[0].orderedItem &&
                     _discount.rewardedResources[0].selectedModifier) {
                     //item discount with selected modifiers
-                    _item = items.find(c => c._id === discount.rewardedResources[0].selectedModifier);
-                    _item.discount = { amount: discount.amount, name: reward.name };
+                    _item = items.find(c => c._id === _discount.rewardedResources[0].selectedModifier);
+                    _item.discount = { amount: _discount.amount, name: reward.name };
                 }
                 else if (_discount.rewardedResources && _discount.rewardedResources[0].orderedItem) {
                     //item discount
@@ -1465,7 +1482,7 @@ const OrderViewService = (function () {
             if (order.history && order.history.length > 0) {
                 order.history.forEach(historyItem => {
                     result.push({
-                        action: historyItem.action, // $translate.instant(`ORDERS_VIEW.${historyItem.action}`), // ??????????
+                        action: historyItem.action,
                         data: `Device name: ${historyItem.deviceName}`,
                         at: historyItem.at,
                         by: _resolveUserName(historyItem.by)
@@ -1643,6 +1660,7 @@ const OrderViewService = (function () {
         let data = {};
 
         let _details = billService.resolveItems(variables, collections);
+
         data.items = _details.items;
         data.oth = _details.oth;
         data.isReturnOrder = _details.isReturnOrder;
@@ -1680,6 +1698,7 @@ const OrderViewService = (function () {
         let data = {};
 
         let _details = billService.resolveItems(variables, collections);
+
         data.items = _details.items;
         data.oth = _details.oth;
         data.isReturnOrder = _details.isReturnOrder;
@@ -1687,7 +1706,6 @@ const OrderViewService = (function () {
 
         let _totals = billService.resolveTotals(variables, collections, true)
         data.totals = _totals;
-
         let _payments = billService.resolvePayments(variables, collections, true);
         data.payments = _payments;
 
@@ -1698,6 +1716,7 @@ const OrderViewService = (function () {
 
         let printByOrder = billService.resolvePrintByOrder(variables);
         let waiterDiners = billService.resolveWaiterDiners(variables);
+
 
         return new DataBill(collections, variables, data, printByOrder, waiterDiners);
     }

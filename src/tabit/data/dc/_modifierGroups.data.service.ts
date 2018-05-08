@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { ROSEp } from '../ep/ros.ep';
 
 import * as _ from 'lodash';
+import { DebugService } from '../../../app/debug.service';
 
 @Injectable()
 export class ModifierGroupsDataService {
@@ -11,6 +12,7 @@ export class ModifierGroupsDataService {
 
     */
     public modifierGroups$: Observable<any> = new Observable(obs => {
+        this.ds.log('modifierGroupsDS: fetching');
         this.rosEp.get('modifierGroups', {})
             .then((modifierGroupsRaw: {}[]) => {
                 const allModifiersRaw = [];
@@ -19,6 +21,7 @@ export class ModifierGroupsDataService {
                     allModifiersRaw.push(...mg.modifiers);
                 });
 
+                this.ds.log('modifierGroupsDS: fetching: done');
                 obs.next({
                     modifierGroups: modifierGroupsRaw,
                     allModifiersRaw: allModifiersRaw
@@ -27,13 +30,14 @@ export class ModifierGroupsDataService {
     }).publishReplay(1).refCount();
 
     constructor(
-        private rosEp: ROSEp
+        private rosEp: ROSEp,
+        private ds: DebugService
     ) {
 
         //lets cache!
-        setTimeout(() => {
-            this.modifierGroups$.subscribe(data => { });
-        }, Math.random() * 8000 + 5000);
+        // setTimeout(() => {
+        //     this.modifierGroups$.subscribe(data => { });
+        // }, Math.random() * 8000 + 5000);
     }
 
 }

@@ -1,12 +1,18 @@
-<div class="f-rtl flex d-col a-stretch">
-    <div class="title" i18n="day-orders-table@@orders">Orders</div>
+<div class="flex d-col a-stretch">
+    <div class="title">
+        <ng-container i18n="@@orders">Orders</ng-container>
+        <ng-container *ngIf="bdIsCurrentBd" style="font-size:14px;">
+            <br>
+            <ng-container i18n="@@openOrders">Open Orders</ng-container>: {{closedOpenSalesDiff | curr:'0'}}
+        </ng-container>
+    </div>
     <div class="body flex d-col">
-        <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+        <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
-            <div *ngIf="!noData" class="flex d-col a-center">
+            <div *ngIf="!noData" class="flex d-col a-stretch">
                 <mat-accordion *ngIf="byOrderTypes">
-                    <mat-expansion-panel expanded="false" hideToggle="true" *ngFor="let orderType of byOrderTypes | hasSales">
+                    <mat-expansion-panel expanded="false" hideToggle="true" (closed)="panelClosed()" *ngFor="let orderType of byOrderTypes | hasSales">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{orderType.caption}}
@@ -22,8 +28,8 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
 
-                        <table class="fixedWidth">
-                            <tr style="background-color: #f2f2f2;">
+                        <table class="chf-tbl">
+                            <tr style="background-color: #f2f2f2;font-weight: bold;">
                                 <td (click)="sort(orderType, 'time')" style="width:50px;">
                                     <div class="flex a-center">
                                         <div i18n="day-orders-table@@opened">Opened</div>
@@ -77,7 +83,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)" [ngClass]="{'lastViewed': lastViewed===order}">
+                            <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)" [ngClass]="{'lastViewed': lastViewed===order, 'clicked': order.__dayOrdersTable__clicked}">
                                 <td>{{order.openingTime | date:'H:mm'}}</td>
                                 <td>{{order.number | number:'1.0-0'}}</td>
                                 <td>{{order.waiter}}</td>
@@ -94,8 +100,6 @@
                         </table>
 
                     </mat-expansion-panel>
-
-
                 </mat-accordion>
             </div>
         </div>

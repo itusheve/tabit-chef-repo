@@ -1,0 +1,54 @@
+<div class="ticket-box d-col">
+
+
+    <!-- BUSINESS MEAL -->
+    <div class="row">
+        <div class="col-8">
+
+            <!-- RETURN AMOUNT & MULTI PAYMENT-->
+            <h4 *ngIf="!isRefund&&variables.ORDER_DOCUMENT_PRINT==='MULTI_DOC'" i18n="@@businessMeal">Business Meal</h4>
+
+            <!-- RETURN AMOUNT & SINGLE PAYMENT-->
+            <h4 *ngIf="!isRefund&&variables.ORDER_DOCUMENT_PRINT==='SINGLE_DOC'" i18n="@@totalAmount">Total Amount</h4>
+
+            <!-- RETURN -->
+            <h4 *ngIf="isRefund" i18n="@@return">Return</h4>
+
+        </div>
+        <div class="col-3">
+            <h4 class="negative">{{ documentItems.ITEM_AMOUNT | number:'1.2-2'}}</h4>
+        </div>
+    </div>
+
+    <!-- BEFORE VAT -->
+    <div class="row">
+        <div class="col-8">
+            <span i18n="slips@@beforeVAT">Before VAT</span>
+        </div>
+        <div class="col-3">
+            <span>{{documentItems.ITEM_AMOUNT_EX_VAT | number:'1.2-2'}}</span>
+        </div>
+    </div>
+
+    <!-- VAT -->
+    <div class="row">
+        <div class="col-8">
+            <span i18n="slips@@vat">VAT</span>
+            <span *ngIf="documentItems.ITEM_VAT_PERCENT">{{documentItems.ITEM_VAT_PERCENT}}%</span>
+        </div>
+        <div class="col-3">
+            <span class="negative">{{ documentItems.ITEM_VAT_AMOUNT | number:'1.2-2'}}</span>
+        </div>
+    </div>
+
+    <!-- INCLUDE VAT -->
+    <div class="row">
+        <div class="col-8">
+            <span i18n="slips@@includeVAT">Include VAT</span>
+        </div>
+        <div class="col-3">
+            <span class="negative">{{ documentItems.ITEM_AMOUNT | number:'1.2-2'}}</span>
+        </div>
+    </div>
+
+</div>

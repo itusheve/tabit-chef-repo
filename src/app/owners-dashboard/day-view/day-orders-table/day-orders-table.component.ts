@@ -24,6 +24,8 @@ export class DayOrdersTableComponent implements OnChanges {
   noData = false;
   @Input() orders: Order[];
   @Input() lastViewed: Order;
+  @Input() bdIsCurrentBd: boolean;
+  @Input() closedOpenSalesDiff: number;
   @Output() onOrderClicked = new EventEmitter();
 
   public byOrderTypes: OrderTypeVM[];
@@ -37,6 +39,10 @@ export class DayOrdersTableComponent implements OnChanges {
   constructor(private dataService: DataService) {}
 
   ngOnChanges(o: SimpleChanges) {
+
+    // if (o.bdIsCurrentBd && o.bdIsCurrentBd.currentValue) {
+      // if (this.)
+    // }
 
     if (o.orders && o.orders.currentValue) {
       this.loading = true;
@@ -77,7 +83,7 @@ export class DayOrdersTableComponent implements OnChanges {
   }
 
   orderClicked(order:any) {
-    this.onOrderClicked.emit(order);
+      this.onOrderClicked.emit(order);
   }
 
   sort(orderType: any, by: string) {
@@ -110,21 +116,11 @@ export class DayOrdersTableComponent implements OnChanges {
       .sort((a, b) => (a[field] < b[field] ? dir : dir*-1));
   }
 
-  filter(orderType: any, type: string) {
-    const existingFilter = this.filters.find(f=>f.type===type);
-    if (existingFilter) {
-      existingFilter.on = !existingFilter.on;
-    } else {
-      this.filters.push({
-        type: type,
-        on: true
-      });
-    }
-
-    this.byOrderTypes.forEach(o=>{
-      o.orders.forEach(ord=>{
+  private markOrdersAsFiltered() {
+    this.byOrderTypes.forEach(o => {
+      o.orders.forEach(ord => {
         let filter = false;
-        this.filters.forEach(f=>{
+        this.filters.forEach(f => {
           if (f.on) {
             const reductionAmount = ord['priceReductions'][f.type];
             if (!reductionAmount) filter = true;
@@ -135,10 +131,28 @@ export class DayOrdersTableComponent implements OnChanges {
     });
   }
 
+  filter(orderType: any, type: string) {
+    const existingFilter = this.filters.find(f=>f.type===type);
+    if (existingFilter) {
+      existingFilter.on = !existingFilter.on;
+    } else {
+      this.filters.push({
+        type: type,
+        on: true
+      });
+    }
+    this.markOrdersAsFiltered();
+  }
+
   iconFilterOn(type: string) {
     const filter = this.filters.find(f=>f.type===type);
     if (filter && filter.on) return true;
     return false;
+  }
+
+  panelClosed() {
+    this.filters = [];
+    this.markOrdersAsFiltered();
   }
 
 }

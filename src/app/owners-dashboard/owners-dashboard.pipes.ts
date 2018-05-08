@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DecimalPipe, PercentPipe } from '@angular/common';
 import { environment } from '../../environments/environment';
 import { currencySymbol } from '../../tabit/data/data.service';
-// import { SlipVM } from '../order-view.component';
 
 @Pipe({
     name: 'curr',
@@ -10,7 +9,6 @@ import { currencySymbol } from '../../tabit/data/data.service';
 })
 export class OwnersDashboardCurrencyPipe implements PipeTransform {
     private decPipe: DecimalPipe = new DecimalPipe(environment.tbtLocale);
-    // private currencySymbol = '₪';
 
     transform(value: any, decimal?: string, cents?: string, nullify?: string): any {
         decimal = decimal || '2';

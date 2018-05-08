@@ -1,57 +1,25 @@
 <div class="ticket-box d-col">
-    <div class="flex j-sb">
-        <!-- <span>{{'ORDERS_VIEW.diner' | translate}}</span> -->
-        <span i18n="slips@@diner">Diner</span>
-        <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
-        <span *ngIf="!data.cashback">{{(data.amount/100) | number:'1.2-2'}}</span>
+
+    <app-order-single-invoice-data [printData]="invoice" [orderOld]="orderOld"></app-order-single-invoice-data>
+
+
+    <app-order-invoice-vat [printData]="invoice"></app-order-invoice-vat>
+
+    <hr />
+
+    <!-- Paid IN CHARGE ACCOUNT FROM -->
+    <div class="row">
+        <div class="col-8">
+            <span i18n="slips@@paidInChargeAccountFrom">Paid in charge account from</span>
+            <span>{{data.payments[0]?.accountName}}</span>
+        </div>
+        <div class="col-3">
+            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
-    <div class="flex j-sb">
-        <!-- <span>{{'BEFORE_VAT' | translate}}</span> -->
-        <span i18n="slips@@beforeVAT">Before VAT</span>
-        <span *ngIf="data.cashback">{{((data.amount/100)-(data.tax.amount/100)-(data.cashback/100))
-            | number:'1.2-2'}}</span>
-        <span *ngIf="!data.cashback">{{((data.amount/100)-(data.tax.amount/100)) | number:'1.2-2'}}</span>
-    </div>
-    <div class="flex j-sb">
-        <!-- <span>{{'VAT' | translate}}</span> -->
-        <span i18n="slips@@vat">VAT</span>
-        <span>{{(data.tax.amount/100) | number:'1.2-2'}}</span>
-    </div>
-    <div class="flex j-sb">
-        <!-- <span>{{'INCLUDE_VAT' | translate}}</span> -->
-        <span i18n="slips@@includeVAT">Include VAT</span>
-        <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:'1.2-2'}}</span>
-        <span *ngIf="!data.cashback">{{(data.amount/100) | number:'1.2-2'}}</span>
-    </div>
+    <hr />
 
-    <hr/>
-
-    <div class="flex d-col a-center">
-        <!-- <small>{{'PAID_IN_CHARCHACCOUNT_FROM' | translate}}</small> -->
-        <small i18n="slips@@paidInChargeAccountFrom">Paid in charge account from</small>        
-        <h4>{{data.payments[0].accountName}}</h4>
-    </div>
-
-    <div class="flex j-sb" *ngIf="data.companyName?.length>0">
-        <!-- <span class="text-upper">{{'COMPANY_NAME' | translate}}</span> -->
-        <span class="text-upper" i18n="slips@@companyName">Company name</span>         
-        <span>{{data.companyName}}</span>
-    </div>
-    <div class="flex j-sb" *ngIf="data.cardNum?.length>0">
-        <!-- <span class="text-upper">{{'CARD_NO' | translate}}</span> -->
-        <span class="text-upper" i18n="slips@@cardNumber">Card number</span>         
-        <span>{{data.cardNum}}</span>
-    </div>
-    <div class="flex j-sb" *ngIf="data.providerTransactionId?.length>0">
-        <!-- <span class="text-upper">{{'TRANSACTION_NO' | translate}}</span> -->
-        <span class="text-upper" i18n="slips@@transactionNumber">Transaction no.</span>
-        <span>{{data.providerTransactionId}}</span>
-    </div>
-    <div class="flex j-sb" *ngIf="data.confirmationNum?.length>0">
-        <!-- <span class="text-upper">{{'APPROVAL_NO' | translate}}</span> -->
-        <span class="text-upper" i18n="slips@@approvalNumber">Approval no.</span>
-        <span>{{data.confirmationNum}}</span>
-    </div>
+    <app-order-delivery-note-transaction-data [printData]="invoice"></app-order-delivery-note-transaction-data>
 
 </div>

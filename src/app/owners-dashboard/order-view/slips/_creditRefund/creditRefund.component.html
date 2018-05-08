@@ -1,54 +1,30 @@
 <div class="ticket-box d-col">
-    
-    <div class="flex j-sb">
-        <!-- <span>{{'BUSINESS_MEAL' | translate}}</span> -->
-        <span i18n="slips@@businessMeal">Business Meal></span>
-        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-    </div>
 
-    <div class="flex j-sb">
-        <!-- <span>{{'BEFORE_VAT' | translate}}</span> -->
-        <span i18n="slips@@beforeVAT">Before VAT</span>
-        <span>{{((data.amount/100)-(data.tax?.amount/100)) | number:'1.2-2'}}</span>
-    </div>
-
-    <div class="flex j-sb">
-        <!-- <span>{{'VAT' | translate}}</span> -->
-        <span i18n="slips@@vat">VAT</span>
-        <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
-    </div>
-
-    <div class="flex j-sb">
-        <!-- <span>{{'INCLUDE_VAT' | translate}}</span> -->
-        <span i18n="slips@@includeVAT">Include VAT</span>
-        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-    </div>
+    <app-order-invoice-vat [printData]="invoice"></app-order-invoice-vat>
 
     <hr />
 
-    <div class="flex d-col a-center">
-        <!-- <small>{{'RETURNED_IN_CREDIT_FROM' | translate}}</small> -->
-        <small i18n="slips@@returnedInCreditFrom">Returned in credit from</small>         
-        <h4>{{data.issuerName}}</h4>
+    <!-- RETURNED IN CREDIT FROM -->
+    <div class="row">
+        <div class="col-8">
+            <span i18n="slips@@returnedInCreditFrom">Returned in credit from</span>
+            <span>{{printDataOld.ISSUER}}</span>
+        </div>
+        <div class="col-3">
+            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
-    <div class="flex j-sb" *ngIf="data.payments[0]?.last4.length>0">
-        <!-- <span>{{'CARD' | translate}}</span> -->
-        <span i18n="slips@@card">Card</span>
-        <span>{{data.payments[0]?.last4}}</span>
-    </div>
+    <app-order-credit-transaction-data [printData]="invoice"></app-order-credit-transaction-data>
 
-    <div class="flex j-sb" *ngIf="data.payments[0]?.providerTransactionId.length>0">
-        <!-- <span>{{'TRANSACTION_NO' | translate}}</span> -->
-        <span i18n="slips@@transactionNumber">Transaction no.</span>    
-        <span>{{data.payments[0]?.providerTransactionId}}</span>
-    </div>
-
-    <div class="flex j-sb" *ngIf="data.payments[0]?.confirmationNum.length>0">
-        <!-- <span>{{'APPROVAL_NO' | translate}}</span> -->
-        <span i18n="slips@@approvalNumber">Approval no.</span>    
-        <span>{{data.payments[0]?.confirmationNum}}</span>
+    <!-- CHANGE -->
+    <div class="row">
+        <div class="col-8">
+            <span i18n="@@change">Change</span>
+        </div>
+        <div class="col-3">
+            <span>{{(data.cashback/100) | number:'1.2-2'}}</span>
+        </div>
     </div>
 
 </div>
-

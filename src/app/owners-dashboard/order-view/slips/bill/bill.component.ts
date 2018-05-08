@@ -7,14 +7,39 @@ import { Order } from '../../../../../tabit/model/Order.model';
   templateUrl: './bill.component.html',
   styleUrls: ['./bill.component.scss']
 })
+
+
+
 export class OrderBillComponent implements OnInit {
 
   @Input() order: Order;
   @Input() orderOld: any;
   @Input() printDataOld: any;
-  
-  constructor() {}
-  
-  ngOnInit() { }
+
+  isMediaExchange = false;
+
+  private Enums = {
+    ORDER_TYPES: {
+      MEDIAEXCHANGE: "MEDIAEXCHANGE"
+    }
+  }
+
+  constructor() { }
+
+  ngOnInit() {
+
+    this.isMediaExchange = this.isMediaExchangeType(this.printDataOld);
+
+  }
+
+
+  private isMediaExchangeType(printData) {
+
+    if (printData.variables && printData.variables.ORDER_TYPE === this.Enums.ORDER_TYPES.MEDIAEXCHANGE) {
+      return true;
+    }
+
+    return false;
+  }
 
 }

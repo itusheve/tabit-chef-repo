@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DataService } from '../../tabit/data/data.service';
 import { Router } from '@angular/router';
+import { DebugService } from '../debug.service';
 
 @Injectable()
 export class OwnersDashboardService {
@@ -31,6 +32,7 @@ export class OwnersDashboardService {
         },
         content: {
             showVatCb: true,
+            showDebugCb: false,
             showMySitesBtn: true,
             showLogoutBtn: true
         }
@@ -38,18 +40,50 @@ export class OwnersDashboardService {
 
     constructor(
         private dataService: DataService,
-        private router: Router
+        private router: Router,
+        private ds: DebugService
     ) {
+        document.addEventListener('backbutton', function(e) {
+            ds.log('event: back button pressed');
+            e.preventDefault();
+            e.stopPropagation();
+            that.toolbarConfig.left.back.onGoBackClicked();
+        });
+
+        this.dataService.getOrganizations()
+            .then(orgs => {
+                if (orgs.length === 1) {
+                    this.sideNavConfig.content.showMySitesBtn = false;
+                }
+            });
+
         const that = this;
-        dataService.user
+        dataService.user$
             .subscribe(user => {
+                if (user.email.indexOf('@tabit.cloud') > 0) {
+                    this.sideNavConfig.content.showDebugCb = true;
+                }
+
                 this.sideNavConfig.header.user = user;
                 this.sideNavConfig.header.userInitials = (user.firstName ? user.firstName.substring(0, 1) : '?').toUpperCase() + (user.lastName ? user.lastName.substring(0, 1) : '').toUpperCase();
             });
 
-        dataService.organization
+
+        let exampleOrgName;
+        try {
+            exampleOrgName = JSON.parse(window.localStorage.getItem('exampleOrg')).name;
+        } catch (e) {}
+
+        dataService.organization$
             .subscribe(org => {
-                this.toolbarConfig.center.caption = org.name;
+
+                if (exampleOrgName) {
+                    org.alias = exampleOrgName;
+                } else {
+                    org.alias = undefined;
+                }
+
+                this.toolbarConfig.center.caption = org.alias || org.name;
                 this.sideNavConfig.header.org = org;
             });
 

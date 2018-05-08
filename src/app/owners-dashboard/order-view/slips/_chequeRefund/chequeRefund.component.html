@@ -1,35 +1,28 @@
 <div class="ticket-box d-col">
 
-    <small i18n="slips@@returnedInCheque">Returned in cheque</small>
-    <!-- <h4>{{'RETURNED_CHEQUE' | translate}}</h4> -->
+    <app-order-invoice-vat [printData]="invoice"></app-order-invoice-vat>
 
-    <div class="flex j-sb">
-        <!-- <span>{{'BUSINESS_MEAL' | translate}}</span> -->
-        <span i18n="slips@@businessMeal">Business Meal></span>
-        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+    <hr />
+
+    <!-- RETURNED IN CHEQUE -->
+    <div class="row">
+        <div class="col-8">
+            <span i18n="@@returnedInCheque">Returned in cheque</span>
+        </div>
+        <div class="col-3">
+            <span *ngIf="data.cashback">{{(data.amount/100)-(data.cashback/100) | number:2}}</span>
+            <span *ngIf="!data.cashback">{{(data.amount/100) | number:2}}</span>
+        </div>
     </div>
 
-    <div class="flex j-sb">
-        <!-- <span>{{'BEFORE_VAT' | translate}}</span> -->
-        <span i18n="slips@@beforeVAT">Before VAT</span>
-        <span>{{((data.amount/100)-(data.tax?.amount/100)) | number:'1.2-2'}}</span>
-    </div>
-
-    <div class="flex j-sb">
-        <!-- <span>{{'VAT' | translate}}</span> -->
-        <span i18n="slips@@vat">VAT</span>
-        <span>{{(data.tax?.amount/100) | number:'1.2-2'}}</span>
-    </div>
-
-    <div class="flex j-sb">
-        <!-- <span>{{'INCLUDE_VAT' | translate}}</span> -->
-        <span i18n="slips@@includeVAT">Include VAT</span>
-        <span>{{(data.amount/100) | number:'1.2-2'}}</span>
+    <!-- CHANGE -->
+    <div class="row">
+        <div class="col-8">
+            <span i18n="@@change">Change</span>
+        </div>
+        <div class="col-3">
+            <span>{{(data.cashback/100) | number:2}}</span>
+        </div>
     </div>
 
 </div>
-
-
-
-
-

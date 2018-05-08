@@ -1,9 +1,8 @@
-<!-- <div class="OrderPopup" ng-style="{'direction' : isUS 'ltr' : 'rtl'}"> -->
-<div class="flex f-rtl d-col">
+<div class="flex d-col">
 
     <mat-card class="mb20" *ngIf="checkOrderer(orderOld)">
         <mat-card-content>
-            <table>
+            <table class="chf-tbl chf-tbl-smaller">
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.orderer_name }}</th>
@@ -29,18 +28,12 @@
     <!--start general 1 details start-->
     <mat-card class="mb20">
         <mat-card-content>
-            <table>
+            <table class="chf-tbl chf-tbl-smaller">
                 <thead>
                     <tr>
-                        <!-- <th>{{ 'ORDER_NUMBER' | translate }}</th>
-                        <th>{{ 'ORDER_TYPE' | translate }}</th>
-                        <th>{{ 'WAITER' | translate }}</th> -->
                         <th i18n="details@@orderNumber">Order #</th>
                         <th i18n="details@@orderType">Type</th>
                         <th i18n="details@@serverOwner">Server / Owner</th>
-                        <!-- <th>{{ 'TABLE' | translate }}</th>
-                        <th>{{ 'NUM_OF_DINERS' | translate }}</th>
-                        <th>{{ 'DATE' | translate }}</th> -->
                         <th i18n="details@@table">Table</th>
                         <th i18n="details@@diners">Diners</th>
                         <th i18n="details@@date">Date</th>
@@ -51,8 +44,8 @@
                         <td>{{orderOld.number}}</td>
                         <td>{{orderOld.orderType}}</td>
                         <td>
-                            <span>{{order.users.openedBy.fullName}}</span>
-                            <span *ngIf="order.users.openedBy.fullName!==order.users.owner.fullName"> / {{order.users.owner.fullName}}</span>
+                            <ng-container>{{order.users.openedBy.fullName}}</ng-container>
+                            <ng-container *ngIf="order.users.openedBy.fullName!==order.users.owner.fullName"> / {{order.users.owner.fullName}}</ng-container>
                         </td>
                         <td>{{orderOld.table}}</td>
                         <td>{{orderOld.dinersNum}}</td>
@@ -71,7 +64,7 @@
             {{ ORDERSVIEW.general }}
         </mat-card-title>
         <mat-card-content>
-            <table>
+            <table class="chf-tbl chf-tbl-smaller">
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.tip_behavior }}</th>
@@ -86,9 +79,9 @@
                 <tbody>
                     <tr>
                         <td>{{orderOld.settings?.tipBehavior}}</td>
-                        <td class="curr2">{{orderOld.paymentSummary?.totalAmount | curr:'2':'cents'}}</td>
-                        <td class="curr2">{{orderOld.totals?.totalTips | curr:'2':'cents'}}</td>
-                        <td class="curr2">{{orderOld.totalDiscounts?.amount | curr:'2':'cents'}}</td>
+                        <td>{{orderOld.paymentSummary?.totalAmount | curr:'2':'cents'}}</td>
+                        <td>{{orderOld.totals?.totalTips | curr:'2':'cents'}}</td>
+                        <td>{{orderOld.totalDiscounts?.amount | curr:'2':'cents'}}</td>
                         <td>{{orderOld.pricingOptimization?.isOptimized}}</td>
                         <td *ngIf="orderOld.orderSummary?.wasForceClosed">
                             <mat-icon>done</mat-icon>
@@ -114,7 +107,7 @@
                     {{ ORDERSVIEW.time_line }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table>
+            <table class="chf-tbl chf-tbl-smaller">
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.at }}</th>
@@ -128,13 +121,13 @@
                         <td *ngIf="!isUS">{{ row.at | date : 'dd/MM/yyyy HH:mm:ss' }}</td>
                         <td *ngIf="isUS">{{ row.at | date : 'MM/dd/yyyy HH:mm:ss a' }}</td>
                         <td style="text-transform: capitalize;">{{ row.action }}</td>
-                        <td>
-                            <div *ngIf="row.recordType!=='payment'">{{row.data}}</div>
-                            <div class="flex d-row" *ngIf="row.recordType==='payment'">
-                                <div *ngFor="let item of row.data">
-                                    <div *ngIf="item.value">{{item.value}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                </div>
-                            </div>
+                        <td class="break">
+                            <ng-container *ngIf="row.recordType!=='payment'">{{row.data}}</ng-container>
+                            <ng-container class="flex d-row" *ngIf="row.recordType==='payment'">
+                                <ng-container *ngFor="let item of row.data">
+                                    <ng-container *ngIf="item.value">{{item.value}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ng-container>
+                                </ng-container>
+                            </ng-container>
                         </td>
                         <td>{{ row.by }}</td>
                     </tr>
@@ -151,7 +144,7 @@
                     {{ ORDERSVIEW.orders }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table *ngIf="orderOld.orderedOffers?.length">
+            <table class="chf-tbl chf-tbl-smaller" *ngIf="orderOld.orderedOffers?.length">
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.item }}</th>
@@ -162,8 +155,8 @@
                 <tbody *ngFor="let offer of orderOld.orderedOffers">
                     <tr>
                         <td>{{offer.name}}</td>
-                        <td class="curr2">{{offer.price | curr:'2':'cents'}}</td>
-                        <td class="curr2">{{offer.amount | curr:'2':'cents'}}</td>
+                        <td>{{offer.price | curr:'2':'cents'}}</td>
+                        <td>{{offer.amount | curr:'2':'cents'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -179,7 +172,7 @@
                     {{ ORDERSVIEW.cancelled_items }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table *ngIf="orderOld.cencelledItems?.length">
+            <table class="chf-tbl chf-tbl-smaller" *ngIf="orderOld.cencelledItems?.length">
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.item }}</th>
@@ -213,7 +206,7 @@
                     {{ ORDERSVIEW.payments }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table *ngIf="orderOld.PaymentsTimeLine?.length">
+            <table class="chf-tbl chf-tbl-x-smaller" *ngIf="orderOld.PaymentsTimeLine?.length">
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.tender_type }}</th>
@@ -228,15 +221,15 @@
                 <tbody>
                     <tr *ngFor="let payment of orderOld.PaymentsTimeLine">
                         <td>
-                            <span>{{payment.methodName}}</span>
-                            <span ng-if="payment.creditCardBrand">{{payment.creditCardBrand}} {{payment.source}}</span>
+                            <ng-container>{{payment.methodName}}</ng-container>
+                            <ng-container ng-if="payment.creditCardBrand">{{payment.creditCardBrand}} {{payment.source}}</ng-container>
                         </td>
-                        <td>{{payment.customerName}}</td>
+                        <td class="break">{{payment.customerName}}</td>
                         <td>{{payment.last4}}</td>
-                        <td class="curr2">{{payment.amount | curr:'2':'cents'}}</td>
-                        <td class="curr2">{{payment.faceValue | curr:'2':'cents'}}</td>
-                        <td class="curr2">{{payment.tipAmount | curr:'2':'cents'}}</td>
-                        <td class="curr2">{{payment.quantity | curr:'2':'cents'}}</td>
+                        <td>{{payment.amount | curr:'2':'cents'}}</td>
+                        <td>{{payment.faceValue | curr:'2':'cents'}}</td>
+                        <td>{{payment.tipAmount | curr:'2':'cents'}}</td>
+                        <td>{{payment.quantity | curr:'2':'cents'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -252,7 +245,7 @@
                     {{ ORDERSVIEW.discounts }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table *ngIf="orderOld.discountsTimeLine?.length">
+            <table class="chf-tbl chf-tbl-smaller" *ngIf="orderOld.discountsTimeLine?.length">
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.discount_type }}</th>
@@ -264,7 +257,7 @@
                 <tbody>
                     <tr *ngFor="let discount of orderOld.discountsTimeLine">
                         <td>{{discount.discountType}}</td>
-                        <td class="curr2">{{discount.discountAmount | curr:'2':'cents'}}</td>
+                        <td>{{discount.discountAmount | curr:'2':'cents'}}</td>
                         <td>{{discount.reason?.name}}</td>
                         <td>{{discount.reason?.othType}}</td>
                     </tr>
@@ -282,7 +275,7 @@
                     {{ ORDERSVIEW.promotions }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table *ngIf="orderOld.orderedPromotionsData?.length">
+            <table class="chf-tbl chf-tbl-smaller" *ngIf="orderOld.orderedPromotionsData?.length">
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.promotion }}</th>
@@ -293,8 +286,8 @@
                 <tbody>
                     <tr *ngFor="let promotion of orderOld.orderedPromotionsData">
                         <td>{{promotion.promotionData?.name}}</td>
-                        <td class="curr2">{{promotion.discount?.amount | curr:'2':'cents'}}</td>
-                        <td style="word-break: break-all;">{{promotion.promotionData?.redeemCode}}</td>
+                        <td>{{promotion.discount?.amount | curr:'2':'cents'}}</td>
+                        <td class="break">{{promotion.promotionData?.redeemCode}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -310,7 +303,7 @@
                     {{ ORDERSVIEW.unassigned_items }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table *ngIf="orderOld.unasignedItems?.length">
+            <table class="chf-tbl chf-tbl-smaller" *ngIf="orderOld.unasignedItems?.length">
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.item }}</th>
@@ -321,8 +314,8 @@
                 <tbody>
                     <tr *ngFor="let item of orderOld.unasignedItems">
                         <td>{{item.name}}</td>
-                        <td class="curr2">{{item.price | curr:'2':'cents'}}</td>
-                        <td class="curr2">{{item.amount | curr:'2':'cents'}}</td>
+                        <td>{{item.price | curr:'2':'cents'}}</td>
+                        <td>{{item.amount | curr:'2':'cents'}}</td>
                     </tr>
                 </tbody>
             </table>

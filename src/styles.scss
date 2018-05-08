@@ -1,46 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
-@import "fonts";
-// @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-// @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
-@import "./tabit-material-theme.scss";
-
 @import "./tabit/styles/config/colors";
 
-$baseText: #343E56;
-
-$oldDashBG: #edf1f2;
+@import "fonts";
+@import "./tabit/styles/material-theme.scss";
 
 html, body {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   padding: 0;
   margin: 0;
   font-family: 'Assistant', sans-serif;
-  font-size: 16px;
+  font-size: $base-font-size;
   -webkit-font-smoothing: antialiased;
-  color: $baseText;
+  color: $fontColor;
   background-color: black;
-  overflow:hidden;//TLA
+  overflow:hidden;
   text-align: start;
 }
-:focus {outline:none}//TLA
-::-webkit-scrollbar {display:none}//TLA
-
-
-/* TLA: */
-body::-webkit-scrollbar {display:none}
-
-
-// h1,h2,h3,h4 {display:block;padding:0;margin:0;font-weight:normal}TLA
-
-/* TLA: */
-// app-root {position:fixed;top:0;left:0;width:100vw;height:100vh;overflow:hidden}
+:focus {outline:none}
+::-webkit-scrollbar {display:none}
 
 // TLA:
 .mat-button:hover .mat-button-focus-overlay {opacity:0!important}
 
-button {cursor:pointer}//TLA
-
+button {
+  cursor: pointer;
+}
 
 .widget {
   display: block;
@@ -89,27 +73,139 @@ button {cursor:pointer}//TLA
       text-align: center;
     }
 
-    table {
-      color: $fontColor;
 
-      &.fixedWidth {
-        table-layout: fixed;
-        width: 100%;
+  }
+}
+
+.break {
+  //https://css-tricks.com/almanac/properties/o/overflow-wrap/
+  // overflow-wrap: break-word; TODO this didnt work well, explore why
+  word-break: break-word;
+}
+
+table {
+  font-family: 'Assistant', sans-serif;
+  font-size: $base-font-size;
+
+  &.chf-tbl {
+    color: $fontColor;
+    border-collapse: collapse;
+    width: 100%;
+
+    &.chf-tbl-fixed {
+      table-layout: fixed;
+    }
+
+    thead {
+        tr {
+            th {
+                vertical-align: bottom;
+            }
+        }
+    }
+
+    tr {
+      border-bottom: 1px solid #eaeff0;
+
+      &.lastViewed {
+        background-color: #b8cbdf;
       }
 
+      &.clicked {
+        background-color: #b8cbdf;
+      }
+
+      &.tblTotalRow {
+        font-weight: bold;
+      }
+
+      &.header {
+        font-weight: bold;
+        background-color: #eaecee;
+      }
+
+      td, th {
+        padding: 8px 3px;
+
+        &:first-child {
+          padding-right: 12px;
+        }
+
+        &:last-child {
+          padding-left: 12px;
+        }
+      }
+
+    }
+
+    &.chf-tbl-smaller {
+      font-size: $smaller-font-size;
       tr {
-        border-bottom: 1px solid #eaeff0;
+        td, th {
+          padding: 8px 2px;
 
-        &.lastViewed {
-          background-color: #b8cbdf;
+          &:first-child {
+            padding-right: 10px;
+          }
+
+          &:last-child {
+              padding-left: 10px;
+          }
         }
+      }
+    }
+    &.chf-tbl-x-smaller {
+      font-size: $x-smaller-font-size;
+      tr {
+        td, th {
+          padding: 8px 1px;
 
-        &.tblTotalRow {
-          font-weight: bold;
+          &:first-child {
+            padding-right: 8px;
+          }
+
+          &:last-child {
+              padding-left: 8px;
+          }
         }
+      }
+    }
+    &.chf-tbl-xx-smaller {
+      font-size: $xx-smaller-font-size;
+      tr {
+        td, th {
+          padding: 8px 3px;
 
-        td {
+          &:first-child {
+            padding-right: 3px;
+          }
+
+          &:last-child {
+              padding-left: 3px;
+          }
+        }
+      }
+    }
+    &.chf-tbl-xxx-smaller {
+      font-size: $xxx-smaller-font-size;
+      tr {
+        td, th {
           padding: 8px 0px;
+
+          &:first-child {
+            padding-right: 0px;
+          }
+
+          &:last-child {
+              padding-left: 0px;
+          }
+        }
+      }
+    }
+
+    &.chf-tbl-row-oriented {
+      tr {
+        td {
           &:first-child {
             font-weight: bold;
           }
@@ -117,29 +213,8 @@ button {cursor:pointer}//TLA
       }
     }
 
-    .table {
-      color: $fontColor;
-      .tblRow {
-        padding: 8px 0px;
-        border-bottom: 1px solid #eaeff0;
-
-        &.tblTotalRow {
-          font-weight: bold;
-        }
-      }
-    }
   }
 }
-
-table {
-  font-family: 'Assistant', sans-serif;
-}
-
-// html[dir=rtl] {
-//   mat-card-content {
-//     text-align: start;
-//   }
-// }
 
 .dx-widget, dx-datagrid, dx-pie-chart, dx-chart {
   font-family: 'Assistant', sans-serif !important;
@@ -181,7 +256,7 @@ $navigatorBtnWidth: 50px;
     }
     &.dx-header-row > td {
       line-height: 40px;
-      color: #aaa;
+      color: $fontColor!important;
       border-bottom: 1px solid #aaa;
     }
     &.dx-data-row > td {
@@ -234,10 +309,9 @@ i.icon {
 .daySelectorFixed {
     #daySelector {
         justify-content: center;
-        .dx-widget.dx-calendar-navigator {
-        }
     }
 }
+
 
 //https://quickleft.com/blog/4-steps-to-minimizing-rendering-issues-in-cordova-applications/
 // * {
@@ -253,3 +327,27 @@ i.icon {
 @import 'tabit/styles/util';
 @import 'tabit/styles/flex';
 @import 'tabit/styles/frame';
+@import 'tabit/styles/pulse';
+
+
+snack-bar-container {
+  $snackTopPadding: 14px;
+  padding-top: $snackTopPadding!important;
+  @media #{$iphone-X-portrait-mq} {
+      padding-top: $snackTopPadding + $iphone-X-notch-px!important;
+  }
+  @media #{$iphone-6-7-8-portrait-mq} {
+      padding-top: $snackTopPadding + $iphone-6-7-8-status-bar-px!important;
+  }
+  @media #{$iphone-6-7-8-plus-portrait-mq} {
+      padding-top: $snackTopPadding + $iphone-6-7-8-plus-status-bar-px!important;
+  }
+  @media #{$ipad-portrait-mq} {
+      padding-top: $snackTopPadding + $ipad-status-bar-px!important;
+  }
+
+  simple-snack-bar {
+    font-size: $base-font-size!important;
+    font-family: inherit!important;
+  }
+}

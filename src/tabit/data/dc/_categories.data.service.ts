@@ -3,15 +3,16 @@ import { Observable } from 'rxjs/Observable';
 import { ROSEp } from '../ep/ros.ep';
 
 import * as _ from 'lodash';
+import { DebugService } from '../../../app/debug.service';
 
 @Injectable()
 export class CategoriesDataService {
 
-    /* 
-        
+    /*
+
     */
     public categories$: Observable<any> = new Observable(obs => {
-        
+
         function sortCategoryTree(node) {
 			/**
 			 * comparison function used to sort first by index and then by name
@@ -43,12 +44,12 @@ export class CategoriesDataService {
 
         this.rosEp.get('menu/categories', {})
             .then((categoriesRaw: {}[]) => {
-                
+
                 //public\l10n\he - IL.json
                 const ALLITEMS = 'כל הפריטים';
                 //sortCategoryTree({ name: $translate.instant('ALLITEMS'), children: result.data })
                 const categoriesTreeRaw = sortCategoryTree({ name: ALLITEMS, children: categoriesRaw });
-                
+
                 // let mainCategoriesRaw;//TODO mainCategories looks like maybe it is never used. categoriesTree is an obj and not array. behaves weird.
                 // _.each(categoriesTreeRaw, function (category) {
                 //     _.each(category.children, function (department) {
@@ -66,7 +67,8 @@ export class CategoriesDataService {
     }).publishReplay(1).refCount();
 
     constructor(
-        private rosEp: ROSEp
+        private rosEp: ROSEp,
+        private ds: DebugService
     ) {
 
     }

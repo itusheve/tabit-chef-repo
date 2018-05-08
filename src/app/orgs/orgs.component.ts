@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService, tmpTranslations } from '../../tabit/data/data.service';
+import { DataService, tmpTranslations, appVersions } from '../../tabit/data/data.service';
 import { AuthService } from '../auth/auth.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
@@ -14,6 +14,20 @@ import { AreYouSureDialogComponent } from '../../tabit/ui/dialogs/are-you-sure.c
 export class OrgsComponent implements OnInit {
 
   org: any;
+  exampleOrg: any = {//this renders a card that is actually an alias to another org, just for presentation purposes.
+    enabled: false,//whether to render the card.
+    selected: false,//set to true when it is pressed. reset to false when another org is pressed.
+    name: undefined,//name to display on the card
+    realOrgId: '53eb1ee2e6c77111203d8503',//TODO and in us?
+    select: () => {//what to do when it is pressed
+      const realOrg = this.orgs.find(o => o._id === this.exampleOrg.realOrgId);
+      if (realOrg) {
+        this.selectOrg(realOrg, true);
+      }
+    }
+  }
+
+
   user: any;
   userInitials: string;
 
@@ -25,6 +39,11 @@ export class OrgsComponent implements OnInit {
 
   selectedOrg: any;
 
+  appVersions: {
+    chef: string,
+    wrapper: string
+  };
+
   constructor(
     private dataService: DataService,
     private authService: AuthService,
@@ -34,13 +53,15 @@ export class OrgsComponent implements OnInit {
     private router: Router
   ) {
 
-    this.dataService.user
+    this.appVersions = appVersions;
+
+    this.dataService.user$
       .subscribe(user => {
         this.user = user;
         this.userInitials = (user.firstName ? user.firstName.substring(0, 1) : '?').toUpperCase() + (user.lastName ? user.lastName.substring(0, 1) : '').toUpperCase();
       });
 
-    this.dataService.organization
+    this.dataService.organization$
       .subscribe(org => {
         this.org = org;
       });
@@ -58,21 +79,34 @@ export class OrgsComponent implements OnInit {
   }
 
   private render() {
-
-    this.dataService.organizations.take(1)
-      .subscribe(orgs=>{
+    this.dataService.getOrganizations({cacheStrategy: 'nocache'})
+      .then(orgs=>{
+        this.orgs = orgs;
         if (orgs.length===1) {
           this.selectOrg(orgs[0]);
         } else {
-          this.orgs = orgs;
           this.orgsFiltered = orgs;
+
+          if (this.user.email.indexOf('@tabit.cloud') > 0) {
+            this.exampleOrg.name = tmpTranslations.get('exampleOrgName');
+            this.exampleOrg.enabled = true;
+          }
+
         }
       });
-
   }
 
-  selectOrg(org:any) {
-    this.selectedOrg = org;
+  selectOrg(org:any, isExampleOrg?: boolean) {
+    if (isExampleOrg) {
+      this.selectedOrg = undefined;
+      this.exampleOrg.selected = true;
+      window.localStorage.setItem('exampleOrg', JSON.stringify({name: this.exampleOrg.name}));
+    } else {
+      this.selectedOrg = org;
+      this.exampleOrg.selected = false;
+      window.localStorage.removeItem('exampleOrg');
+    }
+
     if (this.mode==='normal') {
       this.authService.selectOrg(org)
         .then(() => {
@@ -80,8 +114,7 @@ export class OrgsComponent implements OnInit {
         })
         .catch(e=>{
           this.snackBar.open('unauthorized', null, {
-            direction: 'rtl',//TODO localization
-            duration: 3000,
+            duration: 3000
           });
         });
     } else {
@@ -96,8 +129,7 @@ export class OrgsComponent implements OnInit {
         })
         .catch(e=>{
           this.snackBar.open('unauthorized', null, {
-            direction: 'rtl',//TODO localization
-            duration: 3000,
+            duration: 3000
           });
         });
     }
@@ -117,7 +149,6 @@ export class OrgsComponent implements OnInit {
 
   logout() {
     let dialogRef = this.dialog.open(AreYouSureDialogComponent, {
-      direction: 'rtl',//TODO localization
       width: '250px',
       data: {
         title: '',

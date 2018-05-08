@@ -1,0 +1,30 @@
+<div *ngIf="variables.ORDER_DOCUMENT_PRINT==='SINGLE_DOC'">
+
+    <div class="row offer-line" *ngFor="let item of invoiceData.data.items" [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}">
+        <div class="col-1">{{item.qty}}</div>
+        <div class="col-7 ps40">{{item.name}}</div>
+        <div class="col-3">
+            <span class="negative">{{item.amount}}</span>
+        </div>
+    </div>
+    <br/>
+    <div class="row offer-line" *ngFor="let item of invoiceData.data.oth" [ngClass]="{'item-line': item.isItem || item.isOfferDiscount, 'pr_discountsAndOTH': item._priceReductions?.discountsAndOTH}">
+        <div class="col-1">{{item.qty}}</div>
+        <div class="col-5 ps40">{{item.name}}</div>
+        <div class="col-5">{{item.amount}}</div>
+    </div>
+
+    <div *ngIf="orderOld.totalDiscounts">
+        <div *ngFor="let discount of orderOld.totalDiscounts">
+            <hr/>
+            <div class="row">
+                <div class="col-8">{{discount.name}}</div>
+                <div class="col-3">
+                    <span class="negative">{{(discount.amount/100) * -1 | number:'1.2-2'}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+</div>

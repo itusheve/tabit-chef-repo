@@ -1,13 +1,13 @@
-<div class="f-rtl flex d-col a-stretch">
+<div class="flex d-col a-stretch">
     <div class="title" i18n="@@sales2">Sales</div>
     <div class="body flex d-col">
-        <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+        <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center">
                 <div class="flex d-col aj-center">
                     <dx-pie-chart id="pie" type="doughnut" innerRadius="0.95" diameter="0.55" startAngle="90" [palette]="pallete" [dataSource]="dataSource"
-                        [rtlEnabled]="true" resolveLabelOverlapping="shift" (onInitialized)="onInitializedEventHandler($event)" style="height:270px;">
+                        resolveLabelOverlapping="shift" (onInitialized)="onInitializedEventHandler($event)" style="height:270px;">
                         <dxi-series argumentField="orderType">
                             <dxo-label [visible]="true" [customizeText]="customizeLabelText" format="percent">
                                 <dxo-connector [visible]="true"></dxo-connector>

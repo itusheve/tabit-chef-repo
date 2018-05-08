@@ -13,7 +13,6 @@ import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/share';
 
 //tools
-import { AsyncLocalStorage } from 'angular-async-local-storage';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import 'moment-timezone';
@@ -29,6 +28,7 @@ import { OrderType } from '../model/OrderType.model';
 import { Order } from '../model/Order.model';
 import { environment } from '../../environments/environment';
 import { Department } from '../model/Department.model';
+import { DebugService } from '../../app/debug.service';
 //import { CategoriesDataService } from './dc/_categories.data.service';
 
 /*
@@ -39,10 +39,14 @@ until angular comes up with the final i18n solution that includes in-component t
 
 const tmpTranslations_ = {
     'he-IL': {
+        exampleOrgName: 'מסעדה לדוגמא',
+        opFailed: 'הפעולה נכשלה. אנא פנה לתמיכה.',
         areYouSureYouWish: 'האם אתה בטוח שברצונך',
         toLogout: 'להתנתק',
         login: {
-            userPassIncorrect: 'שם משתמש ו/או סיסמא אינם נכונים'
+            userPassIncorrect: 'שם משתמש ו/או סיסמא אינם נכונים',
+            passwordRestore: 'איפוס סיסמא',
+            resetPasswordSent: 'דוא"ל עם פרטי איפוס סיסמא נשלח ל'
         },
         orderTypes: {
             seated: 'בישיבה',
@@ -81,10 +85,14 @@ const tmpTranslations_ = {
         }
     },
     'en-US': {
+        exampleOrgName: 'Example Restaurant',
+        opFailed: 'Operation has failed. please contact support.',
         areYouSureYouWish: 'Are you sure you wish',
         toLogout: 'to logout',
         login: {
-            userPassIncorrect: 'Incorrect User / Password'
+            userPassIncorrect: 'Incorrect User / Password',
+            passwordRestore: 'Reset Password',
+            resetPasswordSent: 'An email with password reset details was sent to'
         },
         orderTypes: {
             seated: 'Seated',
@@ -173,13 +181,11 @@ export interface BusinessDayKPIs {
     >;
 }
 
-//export const currencySymbol = environment.region === 'il' ? '&#8362;' : '$';
 export const currencySymbol = environment.region === 'il' ? '₪' : '$';
 
+export const appVersions = (document as any).tbtAppVersions;
 @Injectable()
 export class DataService {
-
-    private organizations$: ReplaySubject<any>;
 
     // private dashboardData$: Observable<any> = Observable.create(obs => {//Barry: do not auto-update this figure
     //     const params = {
@@ -192,6 +198,24 @@ export class DataService {
     //             });
     //     }, 5000);
     // }).publishReplay(1).refCount();
+
+    private organizations: any[];
+
+    /*
+        TBD
+    */
+    public organization$: Observable<any> = Observable.create(obs => {
+        obs.next(JSON.parse(window.localStorage.getItem('org')));
+    });
+
+    /*
+        TBD
+    */
+    public user$: Observable<any> = Observable.create(obs => {
+        obs.next(JSON.parse(window.localStorage.getItem('user')));
+    });
+
+
 
     public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';//'America/Chicago' / 'Asia/Jerusalem'
 
@@ -268,37 +292,89 @@ export class DataService {
     }).publishReplay(1).refCount();
 
     public shifts$: Observable<Shift[]> = Observable.create(obs => {
-        this.rosEp.get('configuration/regionalSettings', {})
-            .then(data => {
-                const serverShiftsConfig = data[0].ownerDashboard;
-                if (!serverShiftsConfig) console.error('error 7727: missing configuration: regionalSettings.ownerDashboard config is missing. please contact support.');
-                const shiftsConfig = [
-                    {
-                        active: _.get(serverShiftsConfig, 'morningShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'morningShiftName', tmpTranslations.get('shifts.defaults.first')),
-                        startTime: _.get(serverShiftsConfig, 'morningStartTime')
-                    },
-                    {
-                        active: _.get(serverShiftsConfig, 'afternoonShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'afternoonShiftName', tmpTranslations.get('shifts.defaults.second')),
-                        startTime: _.get(serverShiftsConfig, 'afternoonStartTime')
-                    },
-                    {
-                        active: _.get(serverShiftsConfig, 'eveningShiftActive', true),
-                        name: _.get(serverShiftsConfig, 'eveningShiftName', tmpTranslations.get('shifts.defaults.third')),
-                        startTime: _.get(serverShiftsConfig, 'eveningStartTime')
-                    },
-                    {
-                        active: _.get(serverShiftsConfig, 'fourthShiftActive', false),
-                        name: _.get(serverShiftsConfig, 'fourthShiftName', tmpTranslations.get('shifts.defaults.fourth')),
-                        startTime: _.get(serverShiftsConfig, 'fourthStartTime')
-                    },
-                    {
-                        active: _.get(serverShiftsConfig, 'fifthShiftActive', false),
-                        name: _.get(serverShiftsConfig, 'fifthShiftName', tmpTranslations.get('shifts.defaults.fifth')),
-                        startTime: _.get(serverShiftsConfig, 'fifthStartTime')
+        const that = this;
+
+        function getShifts(): Promise<{
+            active: boolean;
+            name: string;
+            startTime: string;
+        }[]> {
+            return Promise.all([
+                that.rosEp.get('configuration/regionalSettings'),
+                that.rosEp.get('configuration/regionalSettings/schema', { format: 'mongoose' })
+            ])
+                .then(data=>{
+                    let shiftsConfig: {
+                        active: boolean,
+                        name: string,
+                        startTime: string
+                    }[];
+                    if (data[0].length && data[0][0].ownerDashboard) {
+                        const serverShiftsConfig = data[0][0].ownerDashboard;
+                        shiftsConfig = [
+                            {
+                                active: _.get(serverShiftsConfig, 'morningShiftActive', true),
+                                name: _.get(serverShiftsConfig, 'morningShiftName', tmpTranslations.get('shifts.defaults.first')),
+                                startTime: _.get(serverShiftsConfig, 'morningStartTime')
+                            },
+                            {
+                                active: _.get(serverShiftsConfig, 'afternoonShiftActive', true),
+                                name: _.get(serverShiftsConfig, 'afternoonShiftName', tmpTranslations.get('shifts.defaults.second')),
+                                startTime: _.get(serverShiftsConfig, 'afternoonStartTime')
+                            },
+                            {
+                                active: _.get(serverShiftsConfig, 'eveningShiftActive', false),
+                                name: _.get(serverShiftsConfig, 'eveningShiftName', tmpTranslations.get('shifts.defaults.third')),
+                                startTime: _.get(serverShiftsConfig, 'eveningStartTime')
+                            },
+                            {
+                                active: _.get(serverShiftsConfig, 'fourthShiftActive', false),
+                                name: _.get(serverShiftsConfig, 'fourthShiftName', tmpTranslations.get('shifts.defaults.fourth')),
+                                startTime: _.get(serverShiftsConfig, 'fourthStartTime')
+                            },
+                            {
+                                active: _.get(serverShiftsConfig, 'fifthShiftActive', false),
+                                name: _.get(serverShiftsConfig, 'fifthShiftName', tmpTranslations.get('shifts.defaults.fifth')),
+                                startTime: _.get(serverShiftsConfig, 'fifthStartTime')
+                            }
+                        ];
+                    } else {
+                        that.ds.log('shifts$: regionalSettings.ownerDashboard config is missing. falling back to default shifts.');
+                        const serverShiftsConfigSchema = data[1].ownerDashboard;
+                        shiftsConfig = [
+                            {
+                                active: _.get(serverShiftsConfigSchema, 'morningShiftActive.default', true),
+                                name: _.get(serverShiftsConfigSchema, 'morningShiftName.default', tmpTranslations.get('shifts.defaults.first')),//TODO should also come from ROS scheme! this must be the same as kosover names which now he chooses.
+                                startTime: _.get(serverShiftsConfigSchema, 'morningStartTime.default')
+                            },
+                            {
+                                active: _.get(serverShiftsConfigSchema, 'afternoonShiftActive.default', true),
+                                name: _.get(serverShiftsConfigSchema, 'afternoonShiftName.default', tmpTranslations.get('shifts.defaults.second')),
+                                startTime: _.get(serverShiftsConfigSchema, 'afternoonStartTime.default')
+                            },
+                            {
+                                active: _.get(serverShiftsConfigSchema, 'eveningShiftActive.default', false),
+                                name: _.get(serverShiftsConfigSchema, 'eveningShiftName.default', tmpTranslations.get('shifts.defaults.third')),
+                                startTime: _.get(serverShiftsConfigSchema, 'eveningStartTime.default')
+                            },
+                            {
+                                active: _.get(serverShiftsConfigSchema, 'fourthShiftActive.default', false),
+                                name: _.get(serverShiftsConfigSchema, 'fourthShiftName.default', tmpTranslations.get('shifts.defaults.fourth')),
+                                startTime: _.get(serverShiftsConfigSchema, 'fourthStartTime.default')
+                            },
+                            {
+                                active: _.get(serverShiftsConfigSchema, 'fifthShiftActive.default', false),
+                                name: _.get(serverShiftsConfigSchema, 'fifthShiftName.default', tmpTranslations.get('shifts.defaults.fifth')),
+                                startTime: _.get(serverShiftsConfigSchema, 'fifthStartTime.default')
+                            }
+                        ];
                     }
-                ];
+                    return shiftsConfig;
+                });
+        }
+
+        getShifts()
+            .then(shiftsConfig => {
 
                 const shifts:Shift[] = [];
 
@@ -622,7 +698,7 @@ export class DataService {
     private businessDayKPI_cache: { [index: string]: BusinessDayKPI } = {};
 
     /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, protected localStorage: AsyncLocalStorage) {}
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService) {}
 
     get currentBdData$(): Observable<KPI> {
         return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
@@ -635,43 +711,44 @@ export class DataService {
         });
     }
 
-    get organizations(): ReplaySubject<any> {
-        if (this.organizations$) return this.organizations$;
-        this.organizations$ = new ReplaySubject<any>();
+    /*
+        returns Promise that resolves with array of org objects (raw from ROS), filtered by:
+            - org is active & live
+            - org is not TABIT or an HQ
+            - the logged user has both ANALYTICS_VIEW AND FINANCE responsiblities for the org
 
-        const data$ = combineLatest(
-            this.localStorage.getItem<any>('user'),
-            fromPromise(this.rosEp.get('organizations', {})),
-            (user: any, orgs: any) => Object.assign({}, { user: user }, { orgs: orgs })
-        );
+            the function uses caching by default unless option:
+            cacheStrategy: 'nocache'
+            is provided.
+    */
+    getOrganizations(o?): Promise<any> {
+        const cacheStrategy = o && o.cacheStrategy ? o.cacheStrategy : 'cache';
 
-        data$.subscribe(data => {
-            const filtered = data.orgs
-                .filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT')
-                .filter(o=>{
-                    if (data.user.isStaff) return true;
+        if (this.organizations && cacheStrategy==='cache') return Promise.resolve(this.organizations);
 
-                    let membership = data.user.memberships.find(m => {
-                        return m.organization === o.id && m.active;
+        return Promise.all([
+            this.rosEp.get('organizations'),
+            this.rosEp.get('account/me')//user responsibilities might got changed so we re-get them for the permissions test
+        ])
+            .then(data => {
+                const orgs = data[0];
+                const user = data[1];
+                this.organizations = orgs
+                    .filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT')
+                    .filter(o=>{
+                        if (user.isStaff) return true;
+
+                        let membership = user.memberships.find(m => {
+                            return m.organization === o.id && m.active;
+                        });
+
+                        if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1 || membership.responsibilities.indexOf('FINANCE') === -1) {
+                                return false;
+                        }
+                        return true;
                     });
-                    if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1) {
-                        return false;
-                    }
-                    return true;
-                });
-
-            this.organizations$.next(filtered);
-        });
-
-        return this.organizations$;
-    }
-
-    get user(): Observable<any> {
-        return this.localStorage.getItem<any>('user');
-    }
-
-    get organization(): Observable<any> {
-        return this.localStorage.getItem<any>('org');
+                return this.organizations;
+            });
     }
 
     getMonthlyData(month: moment.Moment): Promise<any> {//TODO now that olapDataByMonths is available, use it? or is it too slow?
@@ -985,6 +1062,10 @@ export class DataService {
                             }
                         >();
 
+                        if (!data.shifts.length) {
+                            return byShiftByOrderType;
+                        }
+
                         for (let i = 0; i < data.shifts.length; i++) {
                             byShiftByOrderType.set(data.shifts[i], {
                                 totalSales: 0,
@@ -1295,7 +1376,6 @@ export class DataService {
                 for (let i = 0; i < ordersRaw.length; i++) {
                     const order: Order = new Order();
                     order.id = i;
-                    order.tlogId = ordersRaw[i].tlogId;
                     order.waiter = ordersRaw[i].waiter;
                     order.openingTime = ordersRaw[i].openingTime;
                     order.number = ordersRaw[i].orderNumber;

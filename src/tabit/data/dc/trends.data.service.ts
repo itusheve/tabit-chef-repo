@@ -3,7 +3,6 @@ import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
 import { zip } from 'rxjs/observable/zip';
 import { TrendModel } from '../../model/Trend.model';
-import { ClosedOrdersDataService } from '../dc/closedOrders.data.service';
 import { DataService } from '../data.service';
 import { OlapEp } from '../ep/olap.ep';
 import { Shift } from '../../model/Shift.model';
@@ -34,7 +33,7 @@ export class TrendsDataService {
                 const currentBusinessDaySales = data[2].sales;
                 //console.info(`Trends: Current: Last 4: Current BD Total Sales (Open & Closed): ${currentBusinessDaySales}`);
 
-                const firstShiftStartingTime = moment(shifts[0].startTime);
+                const firstShiftStartingTime = shifts.length ? moment(shifts[0].startTime) : moment().hour(6).minute(0).seconds(0);
                 //console.info(`Trends: Current: Last 4: First Shift Starting Time: ${firstShiftStartingTime.format('HH:mm')}`);
 
                 if (currentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
@@ -152,7 +151,7 @@ export class TrendsDataService {
                 const currentBusinessDaySales = data[2].sales;
                 const currentRestTime:moment.Moment = moment(data[3]);
 
-                const firstShiftStartingTime = moment(shifts[0].startTime);
+                const firstShiftStartingTime = shifts.length ? moment(shifts[0].startTime) : moment().hour(6).minute(0).seconds(0);
 
                 if (currentRestTime.isSameOrAfter(firstShiftStartingTime, 'minutes')) {
                     timeFrom1 = firstShiftStartingTime.format('HHmm');
@@ -494,7 +493,7 @@ export class TrendsDataService {
             }, 2500);
         }).publishReplay(1).refCount();
 
-        constructor(private dataService: DataService, private closedOrdersDataService: ClosedOrdersDataService, private olapEp: OlapEp) {}
+        constructor(private dataService: DataService, private olapEp: OlapEp) {}
 
     /*
         the func returns a TrendModel that compares the sales of the month to the sales of the same month in previous year.

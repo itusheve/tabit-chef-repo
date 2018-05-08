@@ -5,9 +5,9 @@ mat-sidenav-container {
     // TLA:
     // height:100vh;
 
-    position:fixed;
-    top:0;
-    left:0;
+    // position:fixed;
+    // top:0;
+    // left:0;
     width:100vw;
     height:100vh;
     overflow:hidden;
@@ -21,8 +21,21 @@ mat-sidenav-container {
         display: flex!important;
         flex-direction: column!important;
         // background-color: #d4d9dd;
+        $header-padding-px: 15px;
         .header {
-            padding: 15px;
+            padding: $header-padding-px;
+            @media #{$iphone-X-portrait-mq} {
+                padding-top: $iphone-X-notch-px + $header-padding-px;
+            }
+            @media #{$iphone-6-7-8-portrait-mq} {
+                padding-top: $iphone-6-7-8-status-bar-px + $header-padding-px;
+            }
+            @media #{$iphone-6-7-8-plus-portrait-mq} {
+                padding-top: $iphone-6-7-8-plus-status-bar-px + $header-padding-px;
+            }
+            @media #{$ipad-portrait-mq} {
+                padding-top: $ipad-status-bar-px + $header-padding-px;
+            }
             background-color: $headerBgColor;
             color: white;
         }
@@ -43,7 +56,7 @@ mat-sidenav-container {
     }
 
     mat-sidenav-content {
-        position: fixed!important;
+        position: absolute!important;
         top: 0!important;
         left: 0!important;
         width: 100vw!important;
@@ -53,7 +66,7 @@ mat-sidenav-container {
         // display: flex!important;
 
         .toolbar {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100vw;
@@ -66,17 +79,24 @@ mat-sidenav-container {
             font-size: 22px;
 
             box-sizing: content-box;
-            // padding-left: 15px;
-            // padding-right: 15px;
             // padding-top: env(safe-area-inset-top);//TLA, NOTCH
             // padding-top: constant(safe-area-inset-top);//TLA, NOTCH
             // padding-top: $tmpToolbarPaddingTopForNotch;
-            @media #{$iphoneX-media-query} {
-                padding-top: $iphoneX-notch-px;
+            @media #{$iphone-X-portrait-mq} {
+                padding-top: $iphone-X-notch-px;
+            }
+            @media #{$iphone-6-7-8-portrait-mq} {
+                padding-top: $iphone-6-7-8-status-bar-px;
+            }
+            @media #{$iphone-6-7-8-plus-portrait-mq} {
+                padding-top: $iphone-6-7-8-plus-status-bar-px;
+            }
+            @media #{$ipad-portrait-mq} {
+                padding-top: $ipad-status-bar-px;
             }
         }
         .contentFixed {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100vw;
@@ -85,14 +105,23 @@ mat-sidenav-container {
             z-index: 0;
             .content {
                 padding: ($toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
-                @media #{$iphoneX-media-query} {
-                    padding: ($iphoneX-notch-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
+                @media #{$iphone-X-portrait-mq} {
+                    padding: ($iphone-X-notch-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
+                }
+                @media #{$iphone-6-7-8-portrait-mq} {
+                    padding: ($iphone-6-7-8-status-bar-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
+                }
+                @media #{$iphone-6-7-8-plus-portrait-mq} {
+                    padding: ($iphone-6-7-8-plus-status-bar-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
+                }
+                @media #{$ipad-portrait-mq} {
+                    padding: ($ipad-status-bar-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
                 }
                 background-color: $contentBgColor;
                 width: 100vw;
                 height: 100vh;
                 overflow: auto;
-                -webkit-overflow-scrolling: touch;
+                // -webkit-overflow-scrolling: touch;This caused bad behaviour with the fixed order-view - on ios user was able to scroll to see the view beneath. removing this solved the problem, and momentum scrolling is still working on ios.
             }
         }
     }

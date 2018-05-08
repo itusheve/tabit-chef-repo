@@ -9,6 +9,8 @@ import { tmpTranslations } from '../../../../tabit/data/data.service';
   styleUrls: ['./day-most-sold-items-table.component.scss']
 })
 export class DayMostSoldItemsTableComponent implements OnChanges {
+  loading = true;
+  noData = false;
   @Input() itemsData: {
     byItem: {
       department: string;
@@ -32,13 +34,13 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
     }[]
   }[];
 
-  show = true;
-  loading = true;
-
   constructor() {}
 
   ngOnChanges(o: SimpleChanges) {
     if (o.itemsData.currentValue) {
+
+      this.loading = true;
+      this.noData = false;
 
       let data: {
         department?: string,
@@ -111,6 +113,15 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
       });
 
       this.data = data;
+
+      let totalCount = 0;
+      Object.keys(this.data).forEach(k => {
+        totalCount += this.data[k].topItems.length;
+      });
+
+      if (!totalCount) {
+        this.noData = true;
+      }
 
       this.loading = false;
     }

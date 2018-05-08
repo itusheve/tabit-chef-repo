@@ -78,12 +78,12 @@ export class MonthViewComponent  {
   constructor(private dataService: DataService, private trendsDataService: TrendsDataService) {
     let that = this;
 
-    // setTimeout(() => {
+    setTimeout(() => {
       combineLatest(this.month$, dataService.vat$, dataService.currentBd$, dataService.dailyDataLimits$)
         .subscribe(data=>{
           update(data[0], data[1], data[2], data[3]);
         });
-    // }, 1500);
+    }, 1500);
 
     function updateGridAndChart(month, vat, currentBd: moment.Moment, dailyDataLimits) {
 
@@ -181,6 +181,12 @@ export class MonthViewComponent  {
 
         that.dataService.currentMonthForecast$
           .subscribe(data => {
+            // dat ais undefined if not enough data for forecasting
+            if (!data) {
+              that.showForecast = false;
+              return;
+            }
+
             const title = `${that.datePipe.transform(month, 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
             that.forecastCardData.diners = data.diners;
             that.forecastCardData.ppa = vat ? data.ppa : data.ppa / 1.17;

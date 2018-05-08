@@ -56,11 +56,7 @@ export class CardsDataService {
                         const previousBdSales_ROS = previousBdData_ROS.totalAmount ? previousBdData_ROS.totalAmount / 100 : 0;
                         const previousBdSales_Cube = previousBdData_Cube.kpi.sales;
 
-                        console.info(`previousBdData: previousBdSales_ROS = ${previousBdSales_ROS}`);
-                        console.info(`previousBdData: previousBdSales_Cube = ${previousBdSales_Cube}`);
-
-                        if (Math.abs(previousBdSales_Cube-previousBdSales_ROS)<1) {
-                            console.info(`previousBdData: no ROS<=>CUBE mismatch`);
+                        // if (Math.abs(previousBdSales_Cube-previousBdSales_ROS)<1) {
                             let sales = previousBdData_Cube.kpi.sales;
                             let dinersPPA = previousBdData_Cube.kpi.diners.count;
                             let salesPPA = previousBdData_Cube.kpi.diners.sales;
@@ -74,19 +70,21 @@ export class CardsDataService {
                                 diners: dinersPPA,
                                 ppa: ppa
                             });
-                        } else {
-                            console.info(`previousBdData: ROS<=>CUBE mismatch`);
-                            let sales = previousBdSales_ROS;
-                            if (!vat) {
-                                sales = sales / 1.17;
-                            }
-                            obs.next({
-                                sales: sales,
-                                diners: undefined,
-                                ppa: undefined,
-                                final: false
-                            });
-                        }
+                        // } else {
+                        //     console.info(`previousBdData: previousBdSales_ROS = ${previousBdSales_ROS}`);
+                        //     console.info(`previousBdData: previousBdSales_Cube = ${previousBdSales_Cube}`);
+                        //     console.info(`previousBdData: ROS<=>CUBE mismatch`);
+                        //     let sales = previousBdSales_ROS;
+                        //     if (!vat) {
+                        //         sales = sales / 1.17;
+                        //     }
+                        //     obs.next({
+                        //         sales: sales,
+                        //         diners: undefined,
+                        //         ppa: undefined,
+                        //         final: false
+                        //     });
+                        // }
 
                     })
                     .catch(e=>{

@@ -1,21 +1,18 @@
-<div class="flex f-rtl d-col">
+<div class="flex d-col">
     <div class="title" i18n="@@payments">Payments</div>
     <div class="flex d-col body">
-        <dx-load-indicator class="as-center" *ngIf="loading" rtlEnabled="true"></dx-load-indicator>
+        <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center">
-                <table class="fixedWidth">
+                <table class="chf-tbl chf-tbl-smaller">
                     <tr class="header">
                         <td i18n="@@payment">Payment</td>
-                        <!-- <td>{{bd | date:'dd/MM/yyyy'}}</td> -->
                         <td i18n="@@daily">Daily</td>
                         <td class="pctCell">%</td>
                         <td i18n="@@monthly">Monthly</td>
                         <td class="pctCell">%</td>
                     </tr>
-                </table>
-                <table class="fixedWidth">
                     <tr class="totalRow">
                         <td i18n="@@totalPayments">Total Payments</td>
                         <td>{{data.totalPayments.today | curr:'0':'':'nullify'}}</td>
@@ -23,22 +20,22 @@
                         <td>{{data.totalPayments.mtd | curr:'0':'':'nullify'}}</td>
                         <td class="pctCell">{{data.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
                     </tr>
-                </table>
-                <table class="fixedWidth" *ngFor="let accountTypeData of data.byAccountType">
-                    <tr class="accountTypeRow">
-                        <td>{{accountTypeData.accountType}}</td>
-                        <td>{{accountTypeData.totalPayments.today | curr:'0':'':'nullify'}}</td>
-                        <td class="pctCell">{{accountTypeData.totalPayments.todayPct | pct:'1':'nullify'}}</td>
-                        <td>{{accountTypeData.totalPayments.mtd | curr:'0':'':'nullify'}}</td>
-                        <td class="pctCell">{{accountTypeData.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
-                    </tr>
-                    <tr *ngFor="let accountData of accountTypeData.byAccount" class="accountRow">
-                        <td>{{accountData.account}}</td>
-                        <td>{{accountData.totalPayments.today | curr:'0':'':'nullify'}}</td>
-                        <td class="pctCell">{{accountData.totalPayments.todayPct | pct:'1':'nullify'}}</td>
-                        <td>{{accountData.totalPayments.mtd | curr:'0':'':'nullify'}}</td>
-                        <td class="pctCell">{{accountData.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
-                    </tr>
+                    <ng-container *ngFor="let accountTypeData of data.byAccountType">
+                        <tr class="accountTypeRow">
+                            <td>{{accountTypeData.accountType}}</td>
+                            <td>{{accountTypeData.totalPayments.today | curr:'0':'':'nullify'}}</td>
+                            <td class="pctCell">{{accountTypeData.totalPayments.todayPct | pct:'1':'nullify'}}</td>
+                            <td>{{accountTypeData.totalPayments.mtd | curr:'0':'':'nullify'}}</td>
+                            <td class="pctCell">{{accountTypeData.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
+                        </tr>
+                        <tr *ngFor="let accountData of accountTypeData.byAccount" class="accountRow">
+                            <td>{{accountData.account}}</td>
+                            <td>{{accountData.totalPayments.today | curr:'0':'':'nullify'}}</td>
+                            <td class="pctCell">{{accountData.totalPayments.todayPct | pct:'1':'nullify'}}</td>
+                            <td>{{accountData.totalPayments.mtd | curr:'0':'':'nullify'}}</td>
+                            <td class="pctCell">{{accountData.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
+                        </tr>
+                    </ng-container>
                 </table>
             </div>
         </div>

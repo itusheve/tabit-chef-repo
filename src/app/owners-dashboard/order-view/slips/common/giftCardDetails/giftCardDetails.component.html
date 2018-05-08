@@ -1,0 +1,22 @@
+
+<!-- BEFORE VAT -->
+<div class="row">
+    <div class="col-8">
+        <span i18n="@@paidInGiftCard">Paid In Gift Card</span>
+    </div>
+    <div class="col-3">
+        <span>{{ giftCardData.P_AMOUNT | number:'1.2-2'}}</span>
+    </div>
+</div>
+
+<!-- CARD NUMBER -->
+<div class="flex j-sb d-block" *ngIf="giftCardData.CARD_NUMBER">
+    <span class="text-upper" i18n="slips@@cardNumber">Card number</span>
+    <span>{{ giftCardData.CARD_NUMBER}}</span>
+</div>
+
+<!-- TRANSACTION NUMBER -->
+<div class="flex j-sb d-block" *ngIf="giftCardData.PROVIDER_TRANS_ID">
+    <span class="text-upper" i18n="slips@@transactionNumber">Transaction no.</span>
+    <span>{{ giftCardData.PROVIDER_TRANS_ID }}</span>
+</div>

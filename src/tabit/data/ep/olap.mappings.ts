@@ -36,25 +36,6 @@ export class OlapMappings {
         }
     };
 
-//     select
-// 	{
-//     //Order Summary:
-//     [Measures].[GrossSales],//Gross Sales $
-//         [Measures].[headerTotalAmount],//headerTotalAmount
-//         [Measures].[headerTotalIncludedTax],//headerTotalIncludedTax
-//         [Measures].[headerTotalPaymentAmount],//headerTotalPaymentAmount
-//         [Measures].[headerTotalSalesAmount],//Net Sales $
-
-//         //Items:
-//         [Measures].[salesNetAmount],//Item Net Sales $
-//         [Measures].[ItemGrossSales],//Items Gross Sales $
-//         [Measures].[salesGeneralAmount],//salesGeneralAmount
-//         [Measures].[salesGrossAmount],//salesGrossAmount
-//         [Measures].[salesNetAmountVat]//salesNetAmountVat
-// }
-// on 0
-// from[Usadwhtabit Int]
-
     public measures = {//deprecated, use measureGroups instead
         sales: {
             il: '[Measures].[Tlog Header Total Payment Amount]',
@@ -356,21 +337,6 @@ export class OlapMappings {
                 }
             }
         },
-        tlog: {
-            v: 2,
-            path: {
-                il: 'Tlog',
-                us: 'Tlog'
-            },
-            attr: {
-                id: {
-                    path: {
-                        il: 'Tlog Header Tlog Id',
-                        us: 'Tlog Header Tlog Id'
-                    }
-                }
-            }
-        },
         businessDateV2: {//"תאריך יום עסקים"
             v: 2,
             path: {
@@ -536,40 +502,17 @@ export class OlapMappings {
                         }
                     },
                     members: {
-                        cancellation: {
-                            path: {
-                                il: 'cancellation',
-                                us: 'Voids Actions'
-                            },
-                            caption: 'ביטולים'//TODO localization
-                        },
                         operational: {
                             path: {
                                 il: 'compensation',
                                 us: 'Compensation Actions'
-                            },
-                            caption: 'תפעול'
+                            }
                         },
                         retention: {
                             path: {
                                 il: 'retention',
                                 us: 'Retention Actions'
-                            },
-                            caption: 'שימור ושיווק'//TODO localization
-                        },
-                        organizational: {
-                            path: {
-                                il: 'organizational',
-                                us: 'TBD'
-                            },
-                            caption: 'ארגוני'//TODO localization
-                        },
-                        promotions: {
-                            path: {
-                                il: '',
-                                us: 'TBD'
-                            },
-                            caption: 'מבצעים'//TODO localization
+                            }
                         }
                     }
                 }

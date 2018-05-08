@@ -1,24 +1,24 @@
-<div class="f-rtl">
-    <div class="title" i18n="day-diners-table@@diners">Diners</div>
+<div>
+    <div class="title" i18n="@@diners">Diners</div>
     <div class="flex body">
-        <table class="fixedWidth" [ngClass]="{'hLarge':hSize==='large', 'hxLarge':hSize==='xlarge'}">
+        <table class="chf-tbl" [ngClass]="{'hLarge':hSize==='large', 'hxLarge':hSize==='xlarge'}">
             <tr>
                 <td></td>
-                <td i18n="day-diners-table@@total">Total</td>
+                <td i18n="@@total">Total</td>
                 <td *ngFor="let shift of dataByShifts">{{shift.name}}</td>
-            </tr>            
+            </tr>
             <tr>
-                <td i18n="day-diners-table@@dinersSales">Diners Sales</td>
+                <td i18n="@@dinersSales">Diners Sales</td>
                 <td>{{totalSalesPPA | curr:'0'}}</td>
                 <td *ngFor="let shift of dataByShifts">{{shift.salesPPA | curr:'0'}}</td>
             </tr>
             <tr>
-                <td i18n="day-diners-table@@diners">Diners</td>
+                <td i18n="@@diners">Diners</td>
                 <td>{{totalDiners | number : '1.0-0'}}</td>
                 <td *ngFor="let shift of dataByShifts">{{shift.diners | number : '1.0-0'}}</td>
             </tr>
             <tr>
-                <td i18n="day-diners-table@@ppa">PPA</td>
+                <td i18n="@@ppa">PPA</td>
                 <td>{{totalPPA | curr}}</td>
                 <td *ngFor="let shift of dataByShifts">{{shift.ppa | curr}}</td>
             </tr>

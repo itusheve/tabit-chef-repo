@@ -12,7 +12,6 @@ import { environment } from '../environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { TokenInterceptor } from './auth/token.interceptor';
-import { AsyncLocalStorageModule } from 'angular-async-local-storage';
 
 import {
   MatFormFieldModule,
@@ -39,6 +38,7 @@ import { OffersDataService } from '../tabit/data/dc/_offers.data.service';
 import { PeripheralsDataService } from '../tabit/data/dc/_peripherals.data.service';
 import { PromotionsDataService } from '../tabit/data/dc/_promotions.data.service';
 import { TablesDataService } from '../tabit/data/dc/_tables.data.service';
+import { CheckDataService } from '../tabit/data/dc/_checks.data.service';
 
 import { CardsDataService } from '../tabit/data/dc/cards.data.service';
 import { ClosedOrdersDataService } from '../tabit/data/dc/closedOrders.data.service';
@@ -48,10 +48,14 @@ import { DataService } from '../tabit/data/data.service';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
 import { AreYouSureDialogComponent } from '../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
+import { ForgotPasswordDialogComponent } from '../tabit/ui/dialogs/forgot-password.component/forgot-password.component';
 
 import { AuthService } from './auth/auth.service';
 import { UserGuard } from './auth/user-guard.service';
 import { OrgGuard } from './auth/org-guard.service';
+
+import { LocalizationService } from './localization.service';
+import { DebugService } from './debug.service';
 
 //feature modules:
 import { OrgsModule } from './orgs/orgs.module';
@@ -59,16 +63,16 @@ import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.modul
 import { VisibilityService } from '../tabit/utils/visibility.service';
 import { OlapMappings } from '../tabit/data/ep/olap.mappings';
 
-
 // The CLI imports the locale data for you when you use the parameter --locale with ng serve and ng build.
 if (environment.tbtLocale==='he-IL') {
   registerLocaleData(localeHe, 'he', localeHeExtra);//https://angular.io/guide/i18n
 }
 
 @NgModule({
-  entryComponents: [AreYouSureDialogComponent],
+  entryComponents: [AreYouSureDialogComponent, ForgotPasswordDialogComponent],
   declarations: [
     AreYouSureDialogComponent,
+    ForgotPasswordDialogComponent,
     AppComponent,
     LoginComponent,
   ],
@@ -80,7 +84,6 @@ if (environment.tbtLocale==='he-IL') {
 
     MomentModule,
     BrowserAnimationsModule,
-    AsyncLocalStorageModule,
 
     //feature modules:
     OrgsModule,
@@ -101,8 +104,14 @@ if (environment.tbtLocale==='he-IL') {
   providers: [
     {
       provide: APP_INITIALIZER,
-      useFactory: (as: AuthService) => function () { return as.authByToken(); },
-      deps: [AuthService],
+      useFactory: (as: AuthService) => function () {
+        return as.authByToken()
+          .catch(e=>{
+            window.localStorage.clear();
+            window.location.reload();
+          });
+      },
+      deps: [AuthService, LocalizationService],
       multi: true
     },
     {
@@ -117,6 +126,8 @@ if (environment.tbtLocale==='he-IL') {
     AuthService,
     UserGuard,
     OrgGuard,
+    LocalizationService,
+    DebugService,
 
     // Utils:
     VisibilityService,
@@ -131,6 +142,7 @@ if (environment.tbtLocale==='he-IL') {
     PeripheralsDataService,
     PromotionsDataService,
     TablesDataService,
+    CheckDataService,
 
     CardsDataService,
     ClosedOrdersDataService,
@@ -141,4 +153,4 @@ if (environment.tbtLocale==='he-IL') {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

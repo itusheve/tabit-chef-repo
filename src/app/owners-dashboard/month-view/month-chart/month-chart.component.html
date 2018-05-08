@@ -1,11 +1,10 @@
 <!-- (onInitialized)="onInitializedEventHandler($event)" -->
 <div class="flex d-col a-stretch monthChartComponent">
-    <dx-load-indicator class="as-center" *ngIf="!dxChart.show" rtlEnabled="true"></dx-load-indicator>
-    <dx-chart            
+    <dx-load-indicator class="as-center" *ngIf="!dxChart.show"></dx-load-indicator>
+    <dx-chart
         *ngIf="dxChart.show"
         (onPointClick)="pointClickHandler($event)"
         [dataSource]="dxChart.dataSource"
-        [rtlEnabled]="true"
         >
         <dxo-legend [visible]="false"></dxo-legend>
         <dxi-series argumentField="dateFormatted" valueField="sales" type="bar"></dxi-series>
