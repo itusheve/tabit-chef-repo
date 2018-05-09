@@ -701,11 +701,11 @@ export class OlapEp {
                     ${<string>this.olapMappings.measures.ppa.diners[environment.region]}
                 } ON 0,
                 NonEmptyCrossJoin(
-                    ${this.members(this.olapMappings.dims.ordersV2.attr.orderNumber)},
-                    ${this.olapMappings.dims.orderType.hierarchy[environment.region]}.${this.olapMappings.dims.orderType.dim[environment.region]}.${this.olapMappings.dims.orderType.dim[environment.region]}.Members,
-                    ${this.olapMappings.dims.orderOpeningDate.hierarchy[environment.region]}.${this.olapMappings.dims.orderOpeningDate.dims.date[environment.region]}.${this.olapMappings.dims.orderOpeningDate.dims.date[environment.region]}.Members,
-                    ${this.olapMappings.dims.orderOpeningTime.hierarchy[environment.region]}.${this.olapMappings.dims.orderOpeningTime.dims.time[environment.region]}.${this.olapMappings.dims.orderOpeningTime.dims.time[environment.region]}.Members,
-                    ${this.olapMappings.dims.waiters.hierarchy[environment.region]}.${this.olapMappings.dims.waiters.dims.waiter[environment.region]}.${this.olapMappings.dims.waiters.dims.waiter[environment.region]}.Members
+                    ${this.membersNew({ dimAttr: this.olapMappings.dims.ordersV2.attr.orderNumber})},
+                    ${this.membersNew({ dimAttr: this.olapMappings.dims.orderTypeV2.attr.orderType})},
+                    ${this.membersNew({ dimAttr: this.olapMappings.dims.orderOpeningDateV2.attr.openingDate})},
+                    ${this.membersNew({ dimAttr: this.olapMappings.dims.orderOpeningTimeV2.attr.openingTime})},
+                    ${this.membersNew({ dimAttr: this.olapMappings.dims.waitersV2.attr.waiter})}
                 ) ON 1
                 FROM ${this.cube}
                 ${whereClause}
@@ -720,15 +720,15 @@ export class OlapEp {
                             const treated = rowset.map(r => {
                                 const rawOrderNumber = this.parseDim(r, this.olapMappings.dims.ordersV2.attr.orderNumber);
 
-                                const rawOrderType = r[`${this.olapMappings.dims.orderType.hierarchy[environment.region]}.${this.olapMappings.dims.orderType.dim[environment.region]}.${this.olapMappings.dims.orderType.dim[environment.region]}.[MEMBER_CAPTION]`];
+                                const rawOrderType = this.parseDim(r, this.olapMappings.dims.orderTypeV2.attr.orderType);
 
                                 //format: DD/MM/YYYY
-                                const rawOrderDate = r[`${this.olapMappings.dims.orderOpeningDate.hierarchy[environment.region]}.${this.olapMappings.dims.orderOpeningDate.dims.date[environment.region]}.${this.olapMappings.dims.orderOpeningDate.dims.date[environment.region]}.[MEMBER_CAPTION]`];
-                                //format:  Hmm (637, 1823)
-                                const rawOrderTime = r[`${this.olapMappings.dims.orderOpeningTime.hierarchy[environment.region]}.${this.olapMappings.dims.orderOpeningTime.dims.time[environment.region]}.${this.olapMappings.dims.orderOpeningTime.dims.time[environment.region]}.[MEMBER_CAPTION]`];
+                                const rawOrderDate = this.parseDim(r, this.olapMappings.dims.orderOpeningDateV2.attr.openingDate);
+
+                                const rawOrderTime = this.parseDim(r, this.olapMappings.dims.orderOpeningTimeV2.attr.openingTime);
                                 //TODO take into consideration the rest' TZ! moment.timezone
 
-                                const orderWaiter = r[`${this.olapMappings.dims.waiters.hierarchy[environment.region]}.${this.olapMappings.dims.waiters.dims.waiter[environment.region]}.${this.olapMappings.dims.waiters.dims.waiter[environment.region]}.[MEMBER_CAPTION]`];
+                                const orderWaiter = this.parseDim(r, this.olapMappings.dims.waitersV2.attr.waiter);
 
                                 const openingTime: moment.Moment = moment(`${rawOrderDate} ${rawOrderTime}`, environment.region==='il' ? 'DD/MM/YYYY Hmm' : 'MM/DD/YYYY Hmm');
 
@@ -1058,7 +1058,7 @@ export class OlapEp {
     public get_kpi_data_business_day_resolution(month: moment.Moment): Promise<{
         [index: string]: {
             date: moment.Moment;
-            dayOfWeek: string;
+            dayOfWeek: moment.Moment;
 
             sales: number;
             dinersCount: number;
@@ -1110,7 +1110,7 @@ export class OlapEp {
         })
             .then((rowset: {
                 date: moment.Moment;
-                dayOfWeek: string;
+                dayOfWeek: moment.Moment;
 
                 sales: number;
                 dinersCount: number;

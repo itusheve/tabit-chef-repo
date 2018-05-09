@@ -313,53 +313,7 @@ export class OlapMappings {
     }.init();
 
     public dims = {
-        orderType: {//v1, deprecated
-            hierarchy: {
-                il: '[Ordertype]',
-                us: '[orderType]'
-            },
-            dim: {
-                il: '[Tlog Header Ordertype]',
-                us: '[Order Type Key]'
-            },
-            members: {
-                seated: {
-                    il: '&[seated]',
-                    us: '&[seated]'
-                },
-                takeaway: {
-                    il: '&[takeaway]',
-                    us: '&[takeaway]'
-                },
-                delivery: {
-                    il: '&[delivery]',
-                    us: '&[delivery]'
-                },
-                otc: {
-                    il: '&[otc]',
-                    us: '&[otc]'
-                },
-                refund: {
-                    il: '&[refund]',
-                    us: '&[refund]'
-                },
-                mediaexchange: {
-                    il: '&[mediaexchange]',
-                    us: '&[mediaexchange]'
-                }
-            }
-        },
-        service: {//v1, deprecated
-            hierarchy: {
-                il: '[Service]',
-                us: '[Services]'
-            },
-            dim: {
-                il: '[Service Name]',
-                us: '[Service Key]'
-            }
-        },
-        BusinessDate: {//v1, deprecated
+        BusinessDate: {//v1, deprecated TODO
             hierarchy: {
                 il: '[BusinessDate]',
                 us: '[Business Date]'
@@ -379,31 +333,7 @@ export class OlapMappings {
                 }
             }
         },
-        orderOpeningDate: {//v1, deprecated
-            hierarchy: {
-                il: '[DateOpen]',
-                us: '[Open Order Date]'
-            },
-            dims: {
-                date: {
-                    il: '[Date Key]',
-                    us: '[Date Key]'
-                }
-            }
-        },
-        orderOpeningTime: {//v1, deprecated         TODO
-            hierarchy: {
-                il: '[TimeOpen]',
-                us: '[Opened Hour]'
-            },
-            dims: {
-                time: {
-                    il: '[Time Id]',
-                    us: '[HHMM Order]'
-                }
-            }
-        },
-        orderClosingTime: {//v1, deprecated
+        orderClosingTime: {//v1, deprecated TODO
             hierarchy: {
                 il: '[CloseTime]',
                 us: '[Closed Hour]'
@@ -415,7 +345,7 @@ export class OlapMappings {
                 }
             }
         },
-        firingTime: {//v1, deprecated
+        firingTime: {//v1, deprecated TODO
             hierarchy: {
                 il: '[FireTime]',
                 us: '[FireOn Time]'
@@ -424,18 +354,6 @@ export class OlapMappings {
                 time: {
                     il: '[Time Id]',
                     us: '[HHMM Key]'
-                }
-            }
-        },
-        waiters: {//v1, deprecated
-            hierarchy: {
-                il: '[Owners]',
-                us: '[WaiterOwner]'
-            },
-            dims: {
-                waiter: {
-                    il: '[Tlog Header Owner Id]',
-                    us: '[Full Name]'
                 }
             }
         },
@@ -514,6 +432,27 @@ export class OlapMappings {
                     path: {
                         il: 'Dayofweek Key',//'ראשון'...
                         us: 'Week Day Name'//'Sunday'...
+                    },
+                    parse: {
+                        il: raw => raw,
+                        us: raw => {
+                            switch (raw.toUpperCase()) {
+                                case 'SUNDAY':
+                                    return moment('0', 'e');
+                                case 'MONDAY':
+                                    return moment('0', 'e');
+                                case 'TUESDAY':
+                                    return moment('0', 'e');
+                                case 'WEDNESDAY':
+                                    return moment('0', 'e');
+                                case 'THURSDAY':
+                                    return moment('0', 'e');
+                                case 'FRIDAY':
+                                    return moment('0', 'e');
+                                case 'SATURDAY':
+                                    return moment('0', 'e');
+                            }
+                        }
                     }
                 }
             }
@@ -568,7 +507,7 @@ export class OlapMappings {
                 }
             }
         },
-        priceReductions: {//סיבות הנחה          TODO
+        priceReductions: {//סיבות הנחה
             v: 2,
             path: {
                 il: 'Pricereductionreasons',
@@ -888,6 +827,36 @@ export class OlapMappings {
                         }
                     }
 
+                }
+            }
+        },
+        orderOpeningDateV2: {
+            v: 2,
+            path: {
+                il: 'TBD',
+                us: 'Open Order Date'
+            },
+            attr: {
+                openingDate: {
+                    path: {
+                        il: 'TBD',
+                        us: 'Date Key'
+                    }
+                }
+            }
+        },
+        orderOpeningTimeV2: {
+            v: 2,
+            path: {
+                il: 'TBD',
+                us: 'Opened Hour'
+            },
+            attr: {
+                openingTime: {
+                    path: {
+                        il: 'TBD',
+                        us: 'HHMM Order'
+                    }
                 }
             }
         },

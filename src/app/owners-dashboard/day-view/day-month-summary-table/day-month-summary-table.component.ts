@@ -13,10 +13,13 @@ export class DayMonthSummaryTableComponent implements OnChanges {
   loading = true;
   noData = false;
 
+  @Input() month: moment.Moment;
+
   @Input() mtdBusinessDaysKPIs: {
     [index: string]: BusinessDayKPI
   };
   @Input() mtdKPIs: CustomRangeKPI;
+
 
   data: BusinessDayKPI[] = [];
 

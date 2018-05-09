@@ -70,6 +70,9 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
   show = true;
   loading = true;
 
+  public sortBy: string;//category, daily, thisWeek, thisMonth, thisYear
+  public sortDir = 'desc';//asc | desc
+
   constructor( ) {}
 
   ngOnChanges(o: SimpleChanges) {
@@ -182,7 +185,40 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
 
       });
 
+      // we wish sorting to occur automatically only on component init, not on further changes:
+      if (!this.sortBy) {
+        this.sort('thisYear');
+      }
+
       this.loading = false;
     }
+
+
   }
+
+  sort(by: string) {
+    const that = this;
+    if (this.sortBy && this.sortBy === by) {
+      this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
+    } else {
+      if (by === 'category') {
+        this.sortDir = 'asc';
+      } else {
+        this.sortDir = 'desc';
+      }
+      this.sortBy = by;
+    }
+    let dir = this.sortDir === 'asc' ? -1 : 1;
+    this.data.bySubDepartment
+      .sort((a, b) => {
+        if (this.sortBy==='category') {
+          return a.subDepartment < b.subDepartment ? dir : dir * -1;
+        } else {
+          const aSales = a['data'][that.sortBy] && a['data'][that.sortBy]['sales'] ? a['data'][that.sortBy]['sales'] : 0;
+          const bSales = b['data'][that.sortBy] && b['data'][that.sortBy]['sales'] ? b['data'][that.sortBy]['sales'] : 0;
+          return (aSales < bSales) ? dir : dir * -1;
+        }
+      });
+  }
+
 }

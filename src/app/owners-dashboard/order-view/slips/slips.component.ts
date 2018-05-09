@@ -41,7 +41,7 @@ export class OrderSlipsComponent implements OnInit {
   exampleOrgName: string;
   invoicePrintData: any;
 
-  isOTH: boolean = false;
+  isOTH = false;
 
   constructor() { }
 

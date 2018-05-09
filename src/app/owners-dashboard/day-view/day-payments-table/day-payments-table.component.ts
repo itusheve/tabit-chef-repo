@@ -55,6 +55,12 @@ export class DayPaymentsTableComponent implements OnChanges {
 
       const dayPaymentsData = this.paymentsData[keys[0]];
 
+      if (!dayPaymentsData) {
+        this.noData = true;
+        this.loading = false;
+        return;
+      }
+
       const data:any = {
         paymentsKpis: {},
         byAccountGroup: []

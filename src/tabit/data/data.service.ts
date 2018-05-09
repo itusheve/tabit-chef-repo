@@ -172,7 +172,7 @@ export const tmpTranslations = {
 
 export interface BusinessDayKPI {
     businessDay: moment.Moment;
-    dayOfWeek?: string;
+    dayOfWeek?: moment.Moment;
     kpi: KPI;
 }
 
@@ -447,30 +447,30 @@ export class DataService {
 
 
 
-    private olapNormalizationMaps: any = {
-        israeliCubes: {
-            orderType: {
-                'בישיבה': this.orderTypes.seated,
-                'דלפק': this.orderTypes.counter,
-                'לקחת': this.orderTypes.ta,
-                'משלוח': this.orderTypes.delivery,
-                'החזר': this.orderTypes.returns,
-                'החלפת אמצעי תשלום': this.orderTypes.mediaExchange,
-                'סוג הזמנה לא מוגדר': this.orderTypes.other
-            }
-        },
-        usCubes: {
-            orderType: {
-                'SEATED': this.orderTypes.seated,
-                'OTC': this.orderTypes.counter,
-                'TAKEAWAY': this.orderTypes.ta,
-                'DELIVERY': this.orderTypes.delivery,
-                'REFUND': this.orderTypes.returns,
-                'MEDIAEXCHANGE': this.orderTypes.mediaExchange,
-                'UNKNOWN': this.orderTypes.other
-            }
-        }
-    };
+    // private olapNormalizationMaps: any = {
+    //     israeliCubes: {
+    //         orderType: {
+    //             'בישיבה': this.orderTypes.seated,
+    //             'דלפק': this.orderTypes.counter,
+    //             'לקחת': this.orderTypes.ta,
+    //             'משלוח': this.orderTypes.delivery,
+    //             'החזר': this.orderTypes.returns,
+    //             'החלפת אמצעי תשלום': this.orderTypes.mediaExchange,
+    //             'סוג הזמנה לא מוגדר': this.orderTypes.other
+    //         }
+    //     },
+    //     usCubes: {
+    //         orderType: {
+    //             'SEATED': this.orderTypes.seated,
+    //             'OTC': this.orderTypes.counter,
+    //             'TAKEAWAY': this.orderTypes.ta,
+    //             'DELIVERY': this.orderTypes.delivery,
+    //             'REFUND': this.orderTypes.returns,
+    //             'MEDIAEXCHANGE': this.orderTypes.mediaExchange,
+    //             'UNKNOWN': this.orderTypes.other
+    //         }
+    //     }
+    // };
 
 
 
@@ -1167,9 +1167,8 @@ export class DataService {
                     order.number = ordersRaw[i].orderNumber;
 
                     // normalize olapData:
-                    // daily_data_by_orderType_by_service.forEach(o => {
-                    order.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][ordersRaw[i].orderTypeCaption.toUpperCase()];
-                    // });
+                    //order.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][ordersRaw[i].orderTypeCaption.toUpperCase()];
+                    order.orderType = this.orderTypes[ordersRaw[i].orderTypeCaption];
                     // end of normalizeOlapData
 
                     // order.orderTypeId = '';//this.dataService.orderTypes.find(ot => ot.caption === ordersRaw[i].orderTypeCaption)['id'];
@@ -1326,7 +1325,8 @@ export class DataService {
                         reasonId: string;
                         operational: number;
                     }[] = _.cloneDeep(data.operationalErrorsDataRaw).map(o => {
-                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType.toUpperCase()];
+                        //o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType.toUpperCase()];
+                        o.orderType = that.orderTypes[o.orderType];
                         return o;
                     });
 
@@ -1397,7 +1397,8 @@ export class DataService {
                         reasonId: string;
                         retention: number;
                     }[] = _.cloneDeep(data.retentionDataRaw).map(o => {
-                        o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType.toUpperCase()];
+                        // o.orderType = that.olapNormalizationMaps[that.cubeCollection]['orderType'][o.orderType.toUpperCase()];
+                        o.orderType = that.orderTypes[o.orderType];
                         return o;
                     });
 
@@ -1446,7 +1447,7 @@ export class DataService {
             .then((data: {
                 [index: string]: {
                     date: moment.Moment;
-                    dayOfWeek: string;
+                    dayOfWeek: moment.Moment;
                     sales: number;
                     dinersCount: number;
                     dinersPPA: number;

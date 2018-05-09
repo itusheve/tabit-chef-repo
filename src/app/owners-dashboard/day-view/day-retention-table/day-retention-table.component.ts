@@ -10,7 +10,7 @@ import { OrderType } from '../../../../tabit/model/OrderType.model';
   styleUrls: ['./day-retention-table.component.scss']
 })
 export class DayRetentionTableComponent implements OnChanges {
-  
+
   @Input() retentionData: {
     orderType: OrderType;
     source: string;
@@ -33,7 +33,7 @@ export class DayRetentionTableComponent implements OnChanges {
   loading = true;
 
   public sortBy: string;//waiter, orderNumber, tableId, item, subType, reasonId, retention
-  public sortDir = 'desc';//asc | desc  
+  public sortDir = 'desc';//asc | desc
 
   constructor() {}
 
@@ -55,6 +55,7 @@ export class DayRetentionTableComponent implements OnChanges {
   }
 
   sort(by: string) {
+    const that = this;
     if (this.sortBy && this.sortBy === by) {
       this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
     } else {
@@ -67,7 +68,7 @@ export class DayRetentionTableComponent implements OnChanges {
     }
     let dir = this.sortDir === 'asc' ? -1 : 1;
     this.retentionData
-      .sort((a, b) => (a[this.sortBy] < b[this.sortBy] ? dir : dir * -1));
+      .sort((a, b) => (a[that.sortBy] < b[that.sortBy] ? dir : dir * -1));
   }
 
 }
