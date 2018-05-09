@@ -29,70 +29,70 @@
     <dxi-column
       caption="Day"
       i18n-caption="@@day"
-      dataField="dateFormatted"></dxi-column>
+      dataField="dateFormatted">
+    </dxi-column>
     <dxi-column
       caption='Total'
       i18n-caption="@@total"
+      alignment="right"
       dataField="sales"
-      dataType="number"
-      ></dxi-column>
+      dataType="number">
+    </dxi-column>
+    <dxi-column caption=''></dxi-column>
     <dxi-column
       caption="Diners"
       i18n-caption="@@diners"
+       alignment="right"
       dataField="dinersPPA"
-      format="#,###"></dxi-column>
+      format="#,###">
+    </dxi-column>
+    <dxi-column caption=''></dxi-column>
     <dxi-column
       caption="PPA"
       i18n-caption="@@ppa"
-      dataField="ppa"
-      ></dxi-column>
+       alignment="right"
+      dataField="ppa">
+    </dxi-column>
+    <dxi-column caption=''></dxi-column>
 
     <tbody *dxTemplate="let data of 'rowTemplateName'">
       <tr class="dx-row dx-data-row dx-row-lines">
         <td>{{data.data.dateFormatted}}</td>
+
+        <td style="text-align: right;"> {{data.data.sales | curr:'0'}}</td>
+
         <td>
-          <div class="flex">
-            <div class="flex">{{data.data.sales | curr:'0'}}</div>
-            <div
-              *ngIf="data.data.dailyTrends.trends.sales.status==='ready'"
-              class="flex d-col a-center trend ms5"
-              [ngClass]="data.data.dailyTrends.trends.sales.val > 0 ? 'up' : 'down'">
-              <div class="flex label">
-                <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.sales.letter, select, A {A} Y {Y} }</div>
-                <mat-icon>play_arrow</mat-icon>
-              </div>
-              <div class="figure">{{data.data.dailyTrends.trends.sales.val | percent:'1.1-1'}}</div>
+          <div *ngIf="data.data.dailyTrends.trends.sales.status==='ready'" class="flex d-col a-center trend" [ngClass]="data.data.dailyTrends.trends.sales.val > 0 ? 'up' : 'down'">
+            <div class="flex label">
+              <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.sales.letter, select, A {A} Y {Y} }</div>
+              <mat-icon>play_arrow</mat-icon>
             </div>
+            <div class="figure">{{data.data.dailyTrends.trends.sales.val | percent:'1.1-1'}}</div>
           </div>
         </td>
 
+        <td style="text-align: right;">{{data.data.dinersPPA | number : '1.0-0'}}</td>
+
         <td>
-          <div class="flex">
-            <div class="flex">{{data.data.dinersPPA | number : '1.0-0'}}</div>
-            <div *ngIf="data.data.dailyTrends.trends.diners.status==='ready'" class="flex d-col a-center trend ms5" [ngClass]="data.data.dailyTrends.trends.diners.val > 0 ? 'up' : 'down'">
+            <div *ngIf="data.data.dailyTrends.trends.diners.status==='ready'" class="flex d-col a-center trend" [ngClass]="data.data.dailyTrends.trends.diners.val > 0 ? 'up' : 'down'">
               <div class="flex label">
                 <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.diners.letter, select, A {A} Y {Y} }</div>
                 <mat-icon>play_arrow</mat-icon>
               </div>
               <div class="figure">{{data.data.dailyTrends.trends.diners.val | percent:'1.1-1'}}</div>
             </div>
-          </div>
         </td>
 
+        <td style="text-align: right;">{{data.data.ppa | curr}}</td>
+
         <td>
-          <div class="flex">
-            <div class="flex">{{data.data.ppa | curr}}</div>
-            <div
-              *ngIf="data.data.dailyTrends.trends.ppa.status==='ready'"
-              class="flex d-col a-center trend ms5"
-              [ngClass]="data.data.dailyTrends.trends.ppa.val > 0 ? 'up' : 'down'">
+            <div *ngIf="data.data.dailyTrends.trends.ppa.status==='ready'" class="flex d-col a-center trend" [ngClass]="data.data.dailyTrends.trends.ppa.val > 0 ? 'up' : 'down'">
               <div class="flex label">
                 <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.ppa.letter, select, A {A} Y {Y} }</div>
                 <mat-icon>play_arrow</mat-icon>
               </div>
               <div class="figure">{{data.data.dailyTrends.trends.ppa.val | percent:'1.1-1'}}</div>
             </div>
-          </div>
         </td>
 
       </tr>

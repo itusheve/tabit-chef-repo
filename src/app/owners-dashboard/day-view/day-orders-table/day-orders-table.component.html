@@ -19,8 +19,8 @@
                             </mat-panel-title>
                             <mat-panel-description>
                                 <div class="flex a-center">
-                                    <div style="width:70px;">{{orderType.sales | curr:'0'}}</div>
-                                    <div>
+                                    <div class="ar" style="width:70px">{{orderType.sales | curr:'0'}}</div>
+                                    <div class="ms20">
                                         {{orderType.ordersCount | count}}
                                         &nbsp;<ng-container i18n="@@orders">Orders</ng-container>
                                     </div>
@@ -52,7 +52,7 @@
                                     </div>
                                 </td>
                                 <td (click)="sort(orderType, 'sales')" style="width:50px;">
-                                    <div class="flex a-center">
+                                    <div class="flex a-center j-end">
                                         <div i18n="day-orders-table@@sales">Sales</div>
                                         <mat-icon class="sortMatIcon" *ngIf="sortBy==='sales' && sortDir==='desc'">arrow_drop_down</mat-icon>
                                         <mat-icon class="sortMatIcon" *ngIf="sortBy==='sales' && sortDir==='asc'">arrow_drop_up</mat-icon>
@@ -87,7 +87,7 @@
                                 <td>{{order.openingTime | date:'H:mm'}}</td>
                                 <td>{{order.number | number:'1.0-0'}}</td>
                                 <td>{{order.waiter}}</td>
-                                <td>{{order.sales | curr:'0'}}</td>
+                                <td class="ar">{{order.sales | curr:'0'}}</td>
                                 <td>
                                     <div class="flex a-center" style="height:100%;">
                                         <i class="mh3 icon iconOperationalAndCancellations" *ngIf="order.priceReductions.cancellation > 0"></i>

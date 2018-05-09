@@ -27,13 +27,6 @@
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
                     </td>
-                    <!-- <td (click)="sort('orderNumber')" style="width:42px">
-                        <div class="flex a-center">
-                            <div i18n="@@order">Order</div>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='orderNumber' && sortDir==='desc'">arrow_drop_down</mat-icon>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='orderNumber' && sortDir==='asc'">arrow_drop_up</mat-icon>
-                        </div>
-                    </td> -->
                     <td (click)="sort('item')">
                         <div class="flex a-center">
                             <div i18n="@@item">Item</div>
@@ -42,7 +35,7 @@
                         </div>
                     </td>
                     <td (click)="sort('retention')">
-                        <div class="flex a-center">
+                        <div class="flex a-center j-end">
                             <div i18n="@@amount">Amount</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='retention' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='retention' && sortDir==='asc'">arrow_drop_up</mat-icon>
@@ -91,15 +84,8 @@
                             ({{tuple.orderNumber}})
                         </span>
                     </td>
-                    <!-- <td
-                        *ngIf="tuple.tableId!==''">{{tuple.tableId}}</td>
-                    <td
-                        *ngIf="tuple.tableId==='' && tuple.orderType && tuple.orderType.id"
-                        i18n="@@orderTypeSelect2">{ tuple.orderType.id, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange
-                        {Media Exchange} }</td>
-                    <td>{{tuple.orderNumber}}</td> -->
                     <td class="break">{{tuple.item}}</td>
-                    <td>{{tuple.retention | curr:'0'}}</td>
+                    <td class="ar">{{tuple.retention | curr:'0'}}</td>
                     <td>{{tuple.subType}}</td>
                     <td>{{tuple.reasonId}}</td>
                 </tr>

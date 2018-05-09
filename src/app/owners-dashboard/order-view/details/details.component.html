@@ -68,9 +68,9 @@
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.tip_behavior }}</th>
-                        <th>{{ ORDERSVIEW.amount }}</th>
-                        <th>{{ ORDERSVIEW.tip }}</th>
-                        <th>{{ ORDERSVIEW.discount }}</th>
+                        <th class="ar">{{ ORDERSVIEW.amount }}</th>
+                        <th class="ar">{{ ORDERSVIEW.tip }}</th>
+                        <th class="ar">{{ ORDERSVIEW.discount }}</th>
                         <th>{{ ORDERSVIEW.optimization }}</th>
                         <th *ngIf="orderOld.orderSummary?.wasForceClosed">{{ ORDERSVIEW.forcedClosed }}</th>
                         <th *ngIf="orderOld.orderSummary?.wasKickout">{{ ORDERSVIEW.Kicked_out }}</th>
@@ -79,9 +79,9 @@
                 <tbody>
                     <tr>
                         <td>{{orderOld.settings?.tipBehavior}}</td>
-                        <td>{{orderOld.paymentSummary?.totalAmount | curr:'2':'cents'}}</td>
-                        <td>{{orderOld.totals?.totalTips | curr:'2':'cents'}}</td>
-                        <td>{{orderOld.totalDiscounts?.amount | curr:'2':'cents'}}</td>
+                        <td class="ar">{{orderOld.paymentSummary?.totalAmount | curr:'2':'cents'}}</td>
+                        <td class="ar">{{orderOld.totals?.totalTips | curr:'2':'cents'}}</td>
+                        <td class="ar">{{orderOld.totalDiscounts?.amount | curr:'2':'cents'}}</td>
                         <td>{{orderOld.pricingOptimization?.isOptimized}}</td>
                         <td *ngIf="orderOld.orderSummary?.wasForceClosed">
                             <mat-icon>done</mat-icon>
@@ -148,15 +148,15 @@
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.item }}</th>
-                        <th>{{ ORDERSVIEW.price }}</th>
-                        <th>{{ ORDERSVIEW.amount }}</th>
+                        <th class="ar">{{ ORDERSVIEW.price }}</th>
+                        <th class="ar">{{ ORDERSVIEW.amount }}</th>
                     </tr>
                 </thead>
                 <tbody *ngFor="let offer of orderOld.orderedOffers">
                     <tr>
                         <td>{{offer.name}}</td>
-                        <td>{{offer.price | curr:'2':'cents'}}</td>
-                        <td>{{offer.amount | curr:'2':'cents'}}</td>
+                        <td class="ar">{{offer.price | curr:'2':'cents'}}</td>
+                        <td class="ar">{{offer.amount | curr:'2':'cents'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -212,10 +212,10 @@
                         <th>{{ ORDERSVIEW.tender_type }}</th>
                         <th>{{ ORDERSVIEW.customer_name }}</th>
                         <th>{{ ORDERSVIEW.last_4 }}</th>
-                        <th>{{ ORDERSVIEW.amount }}</th>
-                        <th>{{ ORDERSVIEW.face_value }}</th>
-                        <th>{{ ORDERSVIEW.change }}</th>
-                        <th>{{ ORDERSVIEW.tip }}</th>
+                        <th class="ar">{{ ORDERSVIEW.amount }}</th>
+                        <th class="ar">{{ ORDERSVIEW.face_value }}</th>
+                        <th class="ar">{{ ORDERSVIEW.change }}</th>
+                        <th class="ar">{{ ORDERSVIEW.tip }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -226,10 +226,10 @@
                         </td>
                         <td class="break">{{payment.customerName}}</td>
                         <td>{{payment.last4}}</td>
-                        <td>{{payment.amount | curr:'2':'cents'}}</td>
-                        <td>{{payment.faceValue | curr:'2':'cents'}}</td>
-                        <td>{{payment.tipAmount | curr:'2':'cents'}}</td>
-                        <td>{{payment.quantity | curr:'2':'cents'}}</td>
+                        <td class="ar">{{payment.amount | curr:'2':'cents'}}</td>
+                        <td class="ar">{{payment.faceValue | curr:'2':'cents'}}</td>
+                        <td class="ar">{{payment.tipAmount | curr:'2':'cents'}}</td>
+                        <td class="ar">{{payment.quantity | curr:'2':'cents'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -249,7 +249,7 @@
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.discount_type }}</th>
-                        <th>{{ ORDERSVIEW.amount }}</th>
+                        <th class="ar">{{ ORDERSVIEW.amount }}</th>
                         <th>{{ ORDERSVIEW.reason }}</th>
                         <th>{{ ORDERSVIEW.type }}</th>
                     </tr>
@@ -257,7 +257,7 @@
                 <tbody>
                     <tr *ngFor="let discount of orderOld.discountsTimeLine">
                         <td>{{discount.discountType}}</td>
-                        <td>{{discount.discountAmount | curr:'2':'cents'}}</td>
+                        <td class="ar">{{discount.discountAmount | curr:'2':'cents'}}</td>
                         <td>{{discount.reason?.name}}</td>
                         <td>{{discount.reason?.othType}}</td>
                     </tr>
@@ -279,14 +279,14 @@
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.promotion }}</th>
-                        <th>{{ ORDERSVIEW.amount }}</th>
+                        <th class="ar">{{ ORDERSVIEW.amount }}</th>
                         <th>{{ ORDERSVIEW.redeem_code }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let promotion of orderOld.orderedPromotionsData">
                         <td>{{promotion.promotionData?.name}}</td>
-                        <td>{{promotion.discount?.amount | curr:'2':'cents'}}</td>
+                        <td class="ar">{{promotion.discount?.amount | curr:'2':'cents'}}</td>
                         <td class="break">{{promotion.promotionData?.redeemCode}}</td>
                     </tr>
                 </tbody>
@@ -307,15 +307,15 @@
                 <thead>
                     <tr>
                         <th>{{ ORDERSVIEW.item }}</th>
-                        <th>{{ ORDERSVIEW.price }}</th>
-                        <th>{{ ORDERSVIEW.amount }}</th>
+                        <th class="ar">{{ ORDERSVIEW.price }}</th>
+                        <th class="ar">{{ ORDERSVIEW.amount }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of orderOld.unasignedItems">
                         <td>{{item.name}}</td>
-                        <td>{{item.price | curr:'2':'cents'}}</td>
-                        <td>{{item.amount | curr:'2':'cents'}}</td>
+                        <td class="ar">{{item.price | curr:'2':'cents'}}</td>
+                        <td class="ar">{{item.amount | curr:'2':'cents'}}</td>
                     </tr>
                 </tbody>
             </table>

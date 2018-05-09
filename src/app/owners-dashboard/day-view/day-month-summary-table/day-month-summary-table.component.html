@@ -8,30 +8,30 @@
                 <table class="chf-tbl chf-tbl-xx-smaller chf-tbl-row-oriented">
                     <tr class="header">
                         <td i18n="@@businessDay">Business Day</td>
-                        <td i18n="@@netSales">Net Sales</td>
-                        <td><ng-container i18n="@@diners">Diners</ng-container><br>(<ng-container i18n="@@ppa">PPA</ng-container>)</td>
-                        <td i18n="@@cancellationsValue">Voids</td>
-                        <td i18n="@@operationalErrorsValue">Operational Errors</td>
-                        <td i18n="@@retentionValue">Retention</td>
-                        <td i18n="@@organizationalValue">Employees &amp; Owners</td>
+                        <td class="ar" i18n="@@netSales">Net Sales</td>
+                        <td class="ar" ><ng-container i18n="@@diners">Diners</ng-container><br>(<ng-container i18n="@@ppa">PPA</ng-container>)</td>
+                        <td class="ar" i18n="@@cancellationsValue">Voids</td>
+                        <td class="ar" i18n="@@operationalErrorsValue">Operational Errors</td>
+                        <td class="ar" i18n="@@retentionValue">Retention</td>
+                        <td class="ar" i18n="@@organizationalValue">Employees &amp; Owners</td>
                     </tr>
                     <tr>
                         <td i18n="@@total">Total</td>
-                        <td>{{mtdKPIs?.kpi.sales | curr:'0'}}</td>
-                        <td>{{mtdKPIs?.kpi.diners.count | count}}<br>({{mtdKPIs?.kpi.diners.ppa | curr:'1'}})</td>
-                        <td>{{mtdKPIs?.kpi.reductions.cancellation | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.cancellation_pct | pct:'1'}})</td>
-                        <td>{{mtdKPIs?.kpi.reductions.operational | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.operational_pct | pct:'1'}})</td>
-                        <td>{{mtdKPIs?.kpi.reductions.retention | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.retention_pct | pct:'1'}})</td>
-                        <td>{{mtdKPIs?.kpi.reductions.organizational | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.organizational_pct | pct:'1'}})</td>
+                        <td class="ar">{{mtdKPIs?.kpi.sales | curr:'0'}}</td>
+                        <td class="ar">{{mtdKPIs?.kpi.diners.count | count}}<br>({{mtdKPIs?.kpi.diners.ppa | curr:'1'}})</td>
+                        <td class="ar">{{mtdKPIs?.kpi.reductions.cancellation | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.cancellation_pct | pct:'1'}})</td>
+                        <td class="ar">{{mtdKPIs?.kpi.reductions.operational | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.operational_pct | pct:'1'}})</td>
+                        <td class="ar">{{mtdKPIs?.kpi.reductions.retention | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.retention_pct | pct:'1'}})</td>
+                        <td class="ar">{{mtdKPIs?.kpi.reductions.organizational | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.organizational_pct | pct:'1'}})</td>
                     </tr>
                     <tr *ngFor="let tuple of data">
                         <td>{{tuple.businessDay | date:'dd'}} {{tuple.dayOfWeek | date:'EEE'}}</td>
-                        <td>{{tuple.kpi.sales | curr:'0'}}</td>
-                        <td>{{tuple.kpi.diners.count | count}}<br>({{tuple.kpi.diners.ppa | curr:'1'}})</td>
-                        <td>{{tuple.kpi.reductions.cancellation | curr:'0'}}<br>({{tuple.kpi.reductions.cancellation_pct | pct:'1'}})</td>
-                        <td>{{tuple.kpi.reductions.operational | curr:'0'}}<br>({{tuple.kpi.reductions.operational_pct | pct:'1'}})</td>
-                        <td>{{tuple.kpi.reductions.retention | curr:'0'}}<br>({{tuple.kpi.reductions.retention_pct | pct:'1'}})</td>
-                        <td>{{tuple.kpi.reductions.organizational | curr:'0'}}<br>({{tuple.kpi.reductions.organizational_pct | pct:'1'}})</td>
+                        <td class="ar">{{tuple.kpi.sales | curr:'0'}}</td>
+                        <td class="ar">{{tuple.kpi.diners.count | count}}<br>({{tuple.kpi.diners.ppa | curr:'1'}})</td>
+                        <td class="ar">{{tuple.kpi.reductions.cancellation | curr:'0'}}<br>({{tuple.kpi.reductions.cancellation_pct | pct:'1'}})</td>
+                        <td class="ar">{{tuple.kpi.reductions.operational | curr:'0'}}<br>({{tuple.kpi.reductions.operational_pct | pct:'1'}})</td>
+                        <td class="ar">{{tuple.kpi.reductions.retention | curr:'0'}}<br>({{tuple.kpi.reductions.retention_pct | pct:'1'}})</td>
+                        <td class="ar">{{tuple.kpi.reductions.organizational | curr:'0'}}<br>({{tuple.kpi.reductions.organizational_pct | pct:'1'}})</td>
                     </tr>
                 </table>
             </div>

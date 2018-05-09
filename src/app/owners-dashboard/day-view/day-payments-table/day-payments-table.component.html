@@ -8,36 +8,36 @@
                 <table class="chf-tbl chf-tbl-smaller">
                     <tr class="header">
                         <td i18n="@@method">Method</td>
-                        <td i18n="@@sales2">Sales</td>
-                        <td i18n="@@refund">Refund</td>
-                        <td i18n="@@payments">Payments</td>
-                        <td i18n="@@tip">Gratuity</td>
-                        <td i18n="@@totalPayments">Total Payments</td>
+                        <td class="ar" i18n="@@sales2">Sales</td>
+                        <td class="ar" i18n="@@refund">Refund</td>
+                        <td class="ar" i18n="@@payments">Payments</td>
+                        <td class="ar" i18n="@@tip">Gratuity</td>
+                        <td class="ar" i18n="@@totalPayments">Total Payments</td>
                     </tr>
                     <tr class="totalRow">
                         <td i18n="@@total">Total</td>
-                        <td>{{data.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
-                        <td>{{data.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
-                        <td>{{data.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
-                        <td>{{data.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
-                        <td>{{data.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{data.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{data.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{data.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{data.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{data.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
                     </tr>
                     <ng-container *ngFor="let accountGroupObj of data.byAccountGroup">
                         <tr class="accountTypeRow">
                             <td>{{accountGroupObj.accountGroup}}</td>
-                            <td>{{accountGroupObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
-                            <td>{{accountGroupObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
-                            <td>{{accountGroupObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
-                            <td>{{accountGroupObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
-                            <td>{{accountGroupObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{accountGroupObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{accountGroupObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{accountGroupObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{accountGroupObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{accountGroupObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
                         </tr>
                         <tr *ngFor="let clearerNameObj of accountGroupObj.byClearerName" class="accountRow">
                             <td>{{clearerNameObj.clearerName}}</td>
-                            <td>{{clearerNameObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
-                            <td>{{clearerNameObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
-                            <td>{{clearerNameObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
-                            <td>{{clearerNameObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
-                            <td>{{clearerNameObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{clearerNameObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{clearerNameObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{clearerNameObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{clearerNameObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{clearerNameObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
                         </tr>
                     </ng-container>
                 </table>

@@ -1,8 +1,6 @@
-.month-grid {
-    /deep/.dx-header-row {
-        td {
-            text-align: inherit!important;//dx normally aligns number columns to the right but here because of the trends we align naturally (according to the app direction)
-        }
+/deep/.month-grid {
+    .dx-datagrid .dx-row.dx-header-row > td, .dx-datagrid .dx-row.dx-data-row > td {
+        font-size: 14px;
     }
 }
 

@@ -9,38 +9,38 @@
 
                     <tr class="header">
                         <td></td>
-                        <td i18n="@@netSales">Net Sales</td>
-                        <td i18n="@@tax">Tax</td>
-                        <td i18n="@@grossSales">Gross Sales</td>
-                        <td i18n="@@tip">Gratuity</td>
-                        <td i18n="@@serviceCharge">Service Charge</td>
-                        <td i18n="@@payments">Payments</td>
-                        <td i18n="@@dinersOrders">Diners / Orders</td>
-                        <td i18n="@@ppa">PPA</td>
+                        <td class="ar" i18n="@@netSales">Net Sales</td>
+                        <td class="ar" i18n="@@tax">Tax</td>
+                        <td class="ar" i18n="@@grossSales">Gross Sales</td>
+                        <td class="ar" i18n="@@tip">Gratuity</td>
+                        <td class="ar" i18n="@@serviceCharge">Service Charge</td>
+                        <td class="ar" i18n="@@payments">Payments</td>
+                        <td class="ar" i18n="@@dinersOrders">Diners / Orders</td>
+                        <td class="ar" i18n="@@ppa">PPA</td>
                     </tr>
 
                     <tr>
                         <td i18n="@@total">Total</td>
-                        <td>{{totals.netSalesAmnt | curr:'2'}}</td>
-                        <td>{{totals.taxAmnt | curr:'2'}}</td>
-                        <td>{{totals.grossSalesAmnt | curr:'2'}}</td>
-                        <td>{{totals.tipAmnt | curr:'2'}}</td>
-                        <td>{{totals.serviceChargeAmnt | curr:'2'}}</td>
-                        <td>{{totals.paymentsAmnt | curr:'2'}}</td>
-                        <td>{{totals.dinersOrdersCount | count}}</td>
-                        <td>{{totals.ppa | curr:'2'}}</td>
+                        <td class="ar">{{totals.netSalesAmnt | curr:'0'}}</td>
+                        <td class="ar">{{totals.taxAmnt | curr:'0'}}</td>
+                        <td class="ar">{{totals.grossSalesAmnt | curr:'0'}}</td>
+                        <td class="ar">{{totals.tipAmnt | curr:'0'}}</td>
+                        <td class="ar">{{totals.serviceChargeAmnt | curr:'0'}}</td>
+                        <td class="ar">{{totals.paymentsAmnt | curr:'0'}}</td>
+                        <td class="ar">{{totals.dinersOrdersCount | count}}</td>
+                        <td class="ar">{{totals.ppa | curr:'1'}}</td>
                     </tr>
 
                     <tr *ngFor="let row of data">
                         <td i18n="@@orderTypeSelect">{ row.orderType.id, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange {Media Exchange} }</td>
-                        <td>{{row.ordersKpis.netSalesAmnt | curr:'2'}}</td>
-                        <td>{{row.ordersKpis.taxAmnt | curr:'2'}}</td>
-                        <td>{{row.ordersKpis.grossSalesAmnt | curr:'2'}}</td>
-                        <td>{{row.ordersKpis.tipAmnt | curr:'2'}}</td>
-                        <td>{{row.ordersKpis.serviceChargeAmnt | curr:'2'}}</td>
-                        <td>{{row.ordersKpis.paymentsAmnt | curr:'2'}}</td>
-                        <td>{{row.ordersKpis.dinersOrdersCount | count}}</td>
-                        <td>{{row.ordersKpis.ppa | curr:'2'}}</td>
+                        <td class="ar">{{row.ordersKpis.netSalesAmnt | curr:'0'}}</td>
+                        <td class="ar">{{row.ordersKpis.taxAmnt | curr:'0'}}</td>
+                        <td class="ar">{{row.ordersKpis.grossSalesAmnt | curr:'0'}}</td>
+                        <td class="ar">{{row.ordersKpis.tipAmnt | curr:'0'}}</td>
+                        <td class="ar">{{row.ordersKpis.serviceChargeAmnt | curr:'0'}}</td>
+                        <td class="ar">{{row.ordersKpis.paymentsAmnt | curr:'0'}}</td>
+                        <td class="ar">{{row.ordersKpis.dinersOrdersCount | count}}</td>
+                        <td class="ar">{{row.ordersKpis.ppa | curr:'1'}}</td>
                     </tr>
 
                 </table>
