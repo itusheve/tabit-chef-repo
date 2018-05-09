@@ -512,7 +512,8 @@ export class OlapEp {
         sales: number,
         salesPPA: number,
         dinersPPA: number,
-        ppa: number
+        ppa: number,
+        totalPaymentsAmnt: number//new cube stuff
     }[]> {
         return new Promise<any>((res, rej)=>{
             const dateFrom: moment.Moment = o.dateFrom;
@@ -536,7 +537,8 @@ export class OlapEp {
                 {
                     ${this.measure(this.olapMappings.measureGroups.general.measures.sales)},
                     ${this.measure(this.olapMappings.measureGroups.general.measures.dinersSales)},
-                    ${this.measure(this.olapMappings.measureGroups.general.measures.dinersCount)}
+                    ${this.measure(this.olapMappings.measureGroups.general.measures.dinersCount)},
+                    ${this.measure(this.olapMappings.measureGroups.payments.measures.totalPaymentsAmnt)}
                 }
             `;
             if (o.timeType) {
@@ -592,6 +594,7 @@ export class OlapEp {
                                 const sales = Math.max(headerSales, itemsSales);
                                 const salesPPA = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.dinersSales);
                                 const dinersPPA = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.dinersCount);
+                                const totalPaymentsAmnt = this.parseMeasure(r, this.olapMappings.measureGroups.payments.measures.totalPaymentsAmnt);
 
                                 const ppa = (salesPPA ? salesPPA : 0) / (dinersPPA ? dinersPPA : 1);
 
@@ -600,7 +603,8 @@ export class OlapEp {
                                     sales: sales,
                                     salesPPA: salesPPA,
                                     dinersPPA: dinersPPA,
-                                    ppa: ppa
+                                    ppa: ppa,
+                                    totalPaymentsAmnt: totalPaymentsAmnt
                                 };
                             })
                             .sort(this.shortDayOfWeek_compareFunction);

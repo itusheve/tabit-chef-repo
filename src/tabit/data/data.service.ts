@@ -520,9 +520,11 @@ export class DataService {
                 const dailyData = dailyDataRaw.filter(ddr=>{
                     return ddr.date.isBetween(minimum, maximum, 'day', '[]');
                 }).map(ddr=>{
+                    const kpi = new KPI(ddr.sales, ddr.dinersPPA, ddr.salesPPA);
+                    kpi.totalPaymentsAmnt = ddr.totalPaymentsAmnt;
                     return {
                         businessDay: moment(ddr.date),
-                        kpi: new KPI(ddr.sales, ddr.dinersPPA, ddr.salesPPA)
+                        kpi: kpi
                     };
                 }).sort(sortByBusinessDayDesc);
 
