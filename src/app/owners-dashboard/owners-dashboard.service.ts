@@ -7,6 +7,9 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class OwnersDashboardService {
     public toolbarConfig = {
+        menuBtn: {
+            show: true,
+        },
         left: {
             back: {
                 showBtn: false,//show the btn?

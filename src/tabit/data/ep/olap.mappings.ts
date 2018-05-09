@@ -440,17 +440,17 @@ export class OlapMappings {
                                 case 'SUNDAY':
                                     return moment('0', 'e');
                                 case 'MONDAY':
-                                    return moment('0', 'e');
+                                    return moment('1', 'e');
                                 case 'TUESDAY':
-                                    return moment('0', 'e');
+                                    return moment('2', 'e');
                                 case 'WEDNESDAY':
-                                    return moment('0', 'e');
+                                    return moment('3', 'e');
                                 case 'THURSDAY':
-                                    return moment('0', 'e');
+                                    return moment('4', 'e');
                                 case 'FRIDAY':
-                                    return moment('0', 'e');
+                                    return moment('5', 'e');
                                 case 'SATURDAY':
-                                    return moment('0', 'e');
+                                    return moment('6', 'e');
                             }
                         }
                     }

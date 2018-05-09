@@ -145,6 +145,7 @@ export class DayViewComponent implements OnInit  {
     ownersDashboardService.toolbarConfig.left.back.pre = ()=>true;
     ownersDashboardService.toolbarConfig.left.back.target = '/owners-dashboard/home';
     ownersDashboardService.toolbarConfig.left.back.showBtn = true;
+    ownersDashboardService.toolbarConfig.menuBtn.show = false;
   }
 
   private render() {

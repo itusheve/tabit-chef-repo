@@ -46,7 +46,18 @@
   <mat-sidenav-content>
     <div class="flex j-sb a-center toolbar">
       <div class="flex j-start ps15" style="width:15%">
-        <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+        <button
+          *ngIf="toolbarConfig.menuBtn.show"
+          mat-icon-button
+          (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <button
+          *ngIf="toolbarConfig.left.back.showBtn"
+          mat-icon-button
+          (click)="toolbarConfig.left.back.onGoBackClicked()">
+          <mat-icon>{{env.tbtLocale==='he-IL' ? 'keyboard_arrow_right' : 'keyboard_arrow_left'}}</mat-icon>
+        </button>
       </div>
       <div class="flex d-col aj-center" style="width:70%;">
         <div class="flex a-center" style="color:white" (click)="refresh()">
@@ -57,11 +68,7 @@
         </div>
         <div *ngIf="!vat" style="color:white;font-size:12px;">(<span i18n="owners-dashboard@@excludingVAT">Data excluding VAT</span>)</div>
       </div>
-      <div class="flex j-end pe15" style="width:15%">
-        <button mat-icon-button *ngIf="toolbarConfig.left.back.showBtn" (click)="toolbarConfig.left.back.onGoBackClicked()">
-          <mat-icon>{{env.tbtLocale==='he-IL' ? 'keyboard_arrow_left' : 'keyboard_arrow_left'}}</mat-icon>
-        </button>
-      </div>
+      <div class="flex j-end pe15" style="width:15%"></div>
     </div>
     <div class="contentFixed">
       <div class="content">

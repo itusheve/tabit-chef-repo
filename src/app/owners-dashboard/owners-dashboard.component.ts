@@ -53,6 +53,7 @@ export class OwnersDashboardComponent {
     this.appVersions = appVersions;
 
     ownersDashboardService.toolbarConfig.left.back.showBtn = false;
+    ownersDashboardService.toolbarConfig.menuBtn.show = true;
 
     //bind for the view:
     this.toolbarConfig = ownersDashboardService.toolbarConfig;
