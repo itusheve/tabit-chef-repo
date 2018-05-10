@@ -83,7 +83,7 @@
         <target>פריט</target>
       </trans-unit>
       <trans-unit id="mostSoldItems" datatype="html">
-        <source>Most Sold Items</source>
+        <source>Top Selling Items by Category</source>
         <target>הפריטים הנמכרים ביותר</target>
       </trans-unit>
       <trans-unit id="mostReturnedItems" datatype="html">
@@ -101,6 +101,10 @@
       <trans-unit id="totalPayments" datatype="html">
         <source>Total Payments</source>
         <target>סה"כ תשלומים</target>
+      </trans-unit>
+      <trans-unit id="totalSales" datatype="html">
+        <source>Total Sales</source>
+        <target>סה"כ מכירות</target>
       </trans-unit>
       <trans-unit id="monthly" datatype="html">
         <source>Monthly</source>

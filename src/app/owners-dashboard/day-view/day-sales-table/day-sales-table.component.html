@@ -5,9 +5,10 @@
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center">
-                <table class="chf-tbl chf-tbl-row-oriented">
+                <table class="chf-tbl chf-tbl-row-oriented chf-tbl-smaller">
 
-                    <tr class="header">
+                    <!-- NORMAL VERSION: -->
+                    <!-- <tr class="header">
                         <td></td>
                         <td class="ar" i18n="@@netSales">Net Sales</td>
                         <td class="ar" i18n="@@tax">Tax</td>
@@ -41,6 +42,62 @@
                         <td class="ar">{{row.ordersKpis.paymentsAmnt | curr:'0'}}</td>
                         <td class="ar">{{row.ordersKpis.dinersOrdersCount | count}}</td>
                         <td class="ar">{{row.ordersKpis.ppa | curr:'1'}}</td>
+                    </tr> -->
+
+                    <!-- PIVOTED VERSION: -->
+                    <tr class="header">
+                        <td></td>
+                        <td class="ar" i18n="@@total">Total</td>
+                        <td class="ar" *ngFor="let val of pivotedData.titles" i18n="@@orderTypeSelect">{ val, select, seated {Seated} counter {Counter} ta {TA} delivery {Delivery} other {Other} returns {Returns} mediaExchange
+                        {Media Exchange} }</td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight: bold" i18n="@@totalSales">Total Sales</td>
+                        <td class="ar">{{pivotedDataTotals.totalSales | curr:'0'}}</td>
+                        <td class="ar" *ngFor="let val of pivotedData.totalSales">{{val | curr:'0'}}</td>
+                    </tr>
+
+                    <tr>
+                        <td i18n="@@netSales">Net Sales</td>
+                        <td class="ar">{{pivotedDataTotals.netSales | curr:'0'}}</td>
+                        <td class="ar" *ngFor="let val of pivotedData.netSales">{{val | curr:'0'}}</td>
+                    </tr>
+
+                    <tr>
+                        <td i18n="@@tax">Tax</td>
+                        <td class="ar">{{pivotedDataTotals.tax | curr:'0'}}</td>
+                        <td class="ar" *ngFor="let val of pivotedData.tax">{{val | curr:'0'}}</td>
+                    </tr>
+
+                    <tr>
+                        <td i18n="@@grossSales">Gross Sales</td>
+                        <td class="ar">{{pivotedDataTotals.grossSales | curr:'0'}}</td>
+                        <td class="ar" *ngFor="let val of pivotedData.grossSales">{{val | curr:'0'}}</td>
+                    </tr>
+
+                    <tr>
+                        <td i18n="@@tips">Tips</td>
+                        <td class="ar">{{pivotedDataTotals.gratuity | curr:'0'}}</td>
+                        <td class="ar" *ngFor="let val of pivotedData.gratuity">{{val | curr:'0'}}</td>
+                    </tr>
+
+                    <tr>
+                        <td i18n="@@serviceCharge">Service Charge</td>
+                        <td class="ar">{{pivotedDataTotals.serviceCharge | curr:'0'}}</td>
+                        <td class="ar" *ngFor="let val of pivotedData.serviceCharge">{{val | curr:'0'}}</td>
+                    </tr>
+
+                    <tr>
+                        <td i18n="@@dinersOrders">Diners / Orders</td>
+                        <td class="ar">{{pivotedDataTotals.dinersOrders | curr:'0'}}</td>
+                        <td class="ar" *ngFor="let val of pivotedData.dinersOrders">{{val | curr:'0'}}</td>
+                    </tr>
+
+                    <tr>
+                        <td i18n="@@ppa">PPA</td>
+                        <td class="ar">{{pivotedDataTotals.ppa | curr:'0'}}</td>
+                        <td class="ar" *ngFor="let val of pivotedData.ppa">{{val | curr:'0'}}</td>
                     </tr>
 
                 </table>

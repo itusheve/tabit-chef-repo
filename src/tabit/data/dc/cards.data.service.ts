@@ -40,10 +40,9 @@ export class CardsDataService {
             });
         }
 
-        combineLatest(this.dataService.vat$, this.dataService.previousBd$)
+        combineLatest(this.dataService.previousBd$)
             .subscribe(data => {
-                const vat = data[0];
-                const pbd = data[1];
+                const pbd = data[0];
                 Promise.all([
                     getPreviousBdData_ROS(pbd),
                     getPreviousBdData_Cube(pbd)
@@ -60,10 +59,7 @@ export class CardsDataService {
                             let dinersPPA = previousBdData_Cube.kpi.diners.count;
                             let salesPPA = previousBdData_Cube.kpi.diners.sales;
                             let ppa = previousBdData_Cube.kpi.diners.ppa;
-                            if (!vat) {
-                                ppa = ppa / 1.17;//TODO bring VAT per month from some api?
-                                sales = sales / 1.17;
-                            }
+
                             obs.next({
                                 sales: sales,
                                 diners: dinersPPA,
@@ -74,9 +70,7 @@ export class CardsDataService {
                             console.info(`previousBdData: previousBd_totalPaymentsAmnt_Cube = ${previousBd_totalPaymentsAmnt_Cube}`);
                             console.info(`previousBdData: ROS<=>CUBE totalPaymentsAmnt mismatch`);
                             let sales = previousBdData_ROS.totals.netSales / 100;
-                            if (!vat) {
-                                sales = sales / 1.17;
-                            }
+
                             obs.next({
                                 sales: sales,
                                 diners: undefined,
