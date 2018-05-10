@@ -1,14 +1,14 @@
 {
   "production":{
-    "version": "1.1.36.3",
+    "version": "1.1.36.4",
     "bundles":[
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Assistant",
-      "https://chef-cordova-prod.herokuapp.com/styles.bundle.css",
-      "https://chef-cordova-prod.herokuapp.com/inline.bundle.js",
-      "https://chef-cordova-prod.herokuapp.com/polyfills.bundle.js",
-      "https://chef-cordova-prod.herokuapp.com/scripts.bundle.js",
-      "https://chef-cordova-prod.herokuapp.com/main.bundle.js"
+      "https://chef-cordova-us.tabit.cloud/styles.bundle.css",
+      "https://chef-cordova-us.tabit.cloud/inline.bundle.js",
+      "https://chef-cordova-us.tabit.cloud/polyfills.bundle.js",
+      "https://chef-cordova-us.tabit.cloud/scripts.bundle.js",
+      "https://chef-cordova-us.tabit.cloud/main.bundle.js"
     ]
   },
   "development":{
