@@ -43,6 +43,7 @@ elif [[ "$CIRCLE_BRANCH" == "us-production-rp"  ]]; then
 elif [[ "$CIRCLE_BRANCH" == "us-production-rp-cordova"  ]]; then
   echo "On1"
   npm install --ignore-scripts
+  npm rebuild node-sass
   echo "On2"
   ng build --aot --env=prod-us --target=production --output-hashing=none
   echo "On3"
