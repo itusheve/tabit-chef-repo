@@ -51,10 +51,10 @@ export class CardsDataService {
                         const previousBdData_ROS = data[0];
                         const previousBdData_Cube = data[1];
 
-                        const previousBd_totalPaymentsAmnt_ROS = previousBdData_ROS.totals.totalPayments ? previousBdData_ROS.totals.totalPayments / 100 : 0;
-                        const previousBd_totalPaymentsAmnt_Cube = previousBdData_Cube.kpi.totalPaymentsAmnt;
+                        const previousBd_netSalesAmnt_ROS = previousBdData_ROS.totals.netSales ? previousBdData_ROS.totals.netSales / 100 : 0;
+                        const previousBd_netSalesAmnt_Cube = previousBdData_Cube.kpi.sales;
 
-                        if (Math.abs(previousBd_totalPaymentsAmnt_Cube - previousBd_totalPaymentsAmnt_ROS)<1) {
+                        if (Math.abs(previousBd_netSalesAmnt_Cube - previousBd_netSalesAmnt_ROS)<1) {
                             let sales = previousBdData_Cube.kpi.sales;
                             let dinersPPA = previousBdData_Cube.kpi.diners.count;
                             let salesPPA = previousBdData_Cube.kpi.diners.sales;
@@ -66,8 +66,8 @@ export class CardsDataService {
                                 ppa: ppa
                             });
                         } else {
-                            console.info(`previousBdData: previousBd_totalPaymentsAmnt_ROS = ${previousBd_totalPaymentsAmnt_ROS}`);
-                            console.info(`previousBdData: previousBd_totalPaymentsAmnt_Cube = ${previousBd_totalPaymentsAmnt_Cube}`);
+                            console.info(`previousBdData: previousBd_netSalesAmnt_ROS = ${previousBd_netSalesAmnt_ROS}`);
+                            console.info(`previousBdData: previousBd_netSalesAmnt_Cube = ${previousBd_netSalesAmnt_Cube}`);
                             console.info(`previousBdData: ROS<=>CUBE totalPaymentsAmnt mismatch`);
                             let sales = previousBdData_ROS.totals.netSales / 100;
 
