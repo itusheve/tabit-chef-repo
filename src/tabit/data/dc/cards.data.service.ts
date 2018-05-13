@@ -78,7 +78,6 @@ export class CardsDataService {
                                 final: false
                             });
                         }
-
                     })
                     .catch(e=>{
                         obs.next({
