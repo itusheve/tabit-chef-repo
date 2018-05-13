@@ -85,7 +85,7 @@ const tmpTranslations_ = {
         }
     },
     'en-US': {
-        exampleOrgName: 'Example Restaurant',
+        exampleOrgName: 'Demo Restaurant',
         opFailed: 'Operation has failed. please contact support.',
         areYouSureYouWish: 'Are you sure you wish',
         toLogout: 'to logout',
