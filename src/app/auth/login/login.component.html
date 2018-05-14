@@ -48,7 +48,8 @@
             </mat-form-field>
           </div>
           <button class="as-center" style="height: 50px;" mat-raised-button color="primary" (click)="login()" i18n="login@@login">Login</button>
-          <div i18n="@@forgotPassword" (click)="forgotPassword()" style=" color: #9b9b9b; text-align: center; font-size: medium; margin-top: 10px; cursor: pointer; ">Forgot Password</div>
+          <div i18n="@@forgotPassword" (click)="forgotPassword()" style="color: #9b9b9b; text-align: center; font-size: medium; margin-top: 10px; cursor: pointer; ">Forgot Password</div>
+          <div *ngIf="showChangeRegion" (click)="changeRegion()" style="color: #9b9b9b; text-align: center; font-size: medium; margin-top: 10px; cursor: pointer; ">Change Region</div>
         </form>
 
     </div>
