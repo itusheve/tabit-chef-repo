@@ -89,6 +89,7 @@ export class OrderSlipsComponent implements OnInit {
     }
 
     if (this.isUS) {
+
       // if tlog includ checks.
       if (this.orderOld.ChecksDetails && this.orderOld.ChecksDetails.length > 1) {
         this.orderOld.ChecksDetails.forEach(check => {
@@ -132,117 +133,118 @@ export class OrderSlipsComponent implements OnInit {
       });
     }
 
-    this.orderOld.deliveryNotes.forEach(dn => {
+    if (!this.isUS) {
+      this.orderOld.deliveryNotes.forEach(dn => {
 
-      if (dn.payments[0]._type === 'ChargeAccountPayment') {
+        if (dn.payments[0]._type === 'ChargeAccountPayment') {
 
-        this.slips.push({
-          id: dn.id,
-          index: index,
-          class: 'deliveryNote',
-          data: dn,
-          caption: ORDERS_VIEW.delivery_note_number + dn.number
-        });
+          this.slips.push({
+            id: dn.id,
+            index: index,
+            class: 'deliveryNote',
+            data: dn,
+            caption: ORDERS_VIEW.delivery_note_number + dn.number
+          });
+          index++;
+
+        } else if (dn.payments[0]._type === 'ChargeAccountRefund') {
+
+          this.slips.push({
+            id: dn.id,
+            index: index,
+            class: 'deliveryNoteRefund',
+            data: dn,
+            caption: ORDERS_VIEW.refund_note_number + dn.number
+          });
+          index++;
+
+        }
+      });
+
+      this.orderOld.invoices.forEach(invoice => {
+
+        switch (invoice.payments[0]._type) {
+          case 'CreditCardPayment':
+            this.slips.push({
+              id: invoice.id,
+              index: index,
+              class: 'invoice',
+              subclass: 'credit',
+              data: invoice,
+              caption: ORDERS_VIEW.invoice_number + invoice.number
+            });
+            break;
+
+          case 'CreditCardRefund':
+            this.slips.push({
+              id: invoice.id,
+              index: index,
+              class: 'refund',
+              subclass: 'credit',
+              data: invoice,
+              caption: ORDERS_VIEW.credit_invoice_number + invoice.number
+            });
+            break;
+
+          case 'CashPayment':
+            this.slips.push({
+              id: invoice.id,
+              index: index,
+              class: 'invoice',
+              subclass: 'cash',
+              data: invoice,
+              caption: ORDERS_VIEW.invoice_number + invoice.number
+            });
+            break;
+
+          case 'CashRefund':
+            this.slips.push({
+              id: invoice.id,
+              index: index,
+              class: 'refund',
+              subclass: 'cash',
+              data: invoice,
+              caption: ORDERS_VIEW.credit_invoice_number + invoice.number
+            });
+            break;
+
+          case 'GiftCard':
+            this.slips.push({
+              id: invoice.id,
+              index: index,
+              class: 'invoice',
+              subclass: 'giftcard',
+              data: invoice,
+              caption: ORDERS_VIEW.invoice_number + invoice.number
+            });
+            break;
+
+          case 'ChequePayment':
+            this.slips.push({
+              id: invoice.id,
+              index: index,
+              class: 'invoice',
+              subclass: 'cheque',
+              data: invoice,
+              caption: ORDERS_VIEW.invoice_number + invoice.number
+            });
+            break;
+
+          case 'ChequeRefund':
+            this.slips.push({
+              id: invoice.id,
+              index: index,
+              class: 'refund',
+              subclass: 'cheque',
+              data: invoice,
+              caption: ORDERS_VIEW.credit_invoice_number + invoice.number
+            });
+            break;
+
+        }
         index++;
-
-      } else if (dn.payments[0]._type === 'ChargeAccountRefund') {
-
-        this.slips.push({
-          id: dn.id,
-          index: index,
-          class: 'deliveryNoteRefund',
-          data: dn,
-          caption: ORDERS_VIEW.refund_note_number + dn.number
-        });
-        index++;
-
-      }
-    });
-
-    this.orderOld.invoices.forEach(invoice => {
-
-      switch (invoice.payments[0]._type) {
-        case 'CreditCardPayment':
-          this.slips.push({
-            id: invoice.id,
-            index: index,
-            class: 'invoice',
-            subclass: 'credit',
-            data: invoice,
-            caption: ORDERS_VIEW.invoice_number + invoice.number
-          });
-          break;
-
-        case 'CreditCardRefund':
-          this.slips.push({
-            id: invoice.id,
-            index: index,
-            class: 'refund',
-            subclass: 'credit',
-            data: invoice,
-            caption: ORDERS_VIEW.credit_invoice_number + invoice.number
-          });
-          break;
-
-        case 'CashPayment':
-          this.slips.push({
-            id: invoice.id,
-            index: index,
-            class: 'invoice',
-            subclass: 'cash',
-            data: invoice,
-            caption: ORDERS_VIEW.invoice_number + invoice.number
-          });
-          break;
-
-        case 'CashRefund':
-          this.slips.push({
-            id: invoice.id,
-            index: index,
-            class: 'refund',
-            subclass: 'cash',
-            data: invoice,
-            caption: ORDERS_VIEW.credit_invoice_number + invoice.number
-          });
-          break;
-
-        case 'GiftCard':
-          this.slips.push({
-            id: invoice.id,
-            index: index,
-            class: 'invoice',
-            subclass: 'giftcard',
-            data: invoice,
-            caption: ORDERS_VIEW.invoice_number + invoice.number
-          });
-          break;
-
-        case 'ChequePayment':
-          this.slips.push({
-            id: invoice.id,
-            index: index,
-            class: 'invoice',
-            subclass: 'cheque',
-            data: invoice,
-            caption: ORDERS_VIEW.invoice_number + invoice.number
-          });
-          break;
-
-        case 'ChequeRefund':
-          this.slips.push({
-            id: invoice.id,
-            index: index,
-            class: 'refund',
-            subclass: 'cheque',
-            data: invoice,
-            caption: ORDERS_VIEW.credit_invoice_number + invoice.number
-          });
-          break;
-
-      }
-      index++;
-    });
-
+      });
+    }
 
     this.slip = this.slips[0];
     this.invoicePrintData = this.orderDocs[this.slip.id];

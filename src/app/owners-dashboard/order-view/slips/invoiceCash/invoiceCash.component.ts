@@ -13,10 +13,10 @@ export class OrderInvoiceCashComponent implements OnInit {
   @Input() printDataOld: any;
   @Input() invoice: any;
   @Input() orderOld: any;
-  
-  constructor() {}
-  
-  ngOnInit() { 
+
+  constructor() { }
+
+  ngOnInit() {
 
   }
 
