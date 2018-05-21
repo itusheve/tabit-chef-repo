@@ -44,9 +44,9 @@ export class OrderDetailsComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    
+    this.orderOld.orderSummary.wasKickout = this.isKickout(this.orderOld);
 
-    this.order.wasKickout = this.isKickout(this.order);
-    debugger
   }
 
   checkOrderer(selectedOrder) {
