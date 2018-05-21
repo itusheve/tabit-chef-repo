@@ -98,6 +98,7 @@ const OrderViewService = (function () {
             let items = [];
             let oth = [];
 
+            debugger;
             if (offersList && offersList.length > 0) {
                 offersList.forEach(offer => {
 
@@ -119,8 +120,11 @@ const OrderViewService = (function () {
                             item.amount = translateService.getText('OTH');
                             oth.push(item)
                         } else {
-                            item.amount = utils.toFixedSafe(offer.OFFER_AMOUNT, 2)
-                            items.push(item);
+
+                            if (offer.OFFER_AMOUNT !== 0) { // if the offer amount is 0 not need to show 
+                                item.amount = utils.toFixedSafe(offer.OFFER_AMOUNT, 2)
+                                items.push(item);
+                            }
                         }
 
                         if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
@@ -133,6 +137,32 @@ const OrderViewService = (function () {
                                 })
                             });
                         }
+
+                        if (offer.EXTRA_CHARGE_LIST && offer.EXTRA_CHARGE_LIST.length > 0) {
+                            offer.EXTRA_CHARGE_LIST.forEach(extraCharge => {
+
+
+                                items.push({
+                                    isItem: true,
+                                    name: extraCharge.ITEM_NAME,
+                                    qty: null,
+                                    amount: utils.toFixedSafe(extraCharge.ITEM_AMOUNT, 2)
+                                })
+
+                                if (extraCharge.ITEM_DISCOUNTS && extraCharge.ITEM_DISCOUNTS.length > 0) {
+                                    extraCharge.ITEM_DISCOUNTS.forEach(discount => {
+                                        items.push({
+                                            isItem: true,
+                                            name: discount.DISCOUNT_NAME,
+                                            qty: null,
+                                            amount: utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                                        })
+                                    })
+                                }
+
+                            });
+                        }
+
                     }
 
                     if ([Enums.OfferTypes.ComplexOne, Enums.OfferTypes.Combo].indexOf(offer.OFFER_TYPE) > -1) {
@@ -157,8 +187,10 @@ const OrderViewService = (function () {
                         }
 
                         if (!isReturnOrder) {
+
                             if (offer.EXTRA_CHARGE_LIST && offer.EXTRA_CHARGE_LIST.length > 0) {
                                 offer.EXTRA_CHARGE_LIST.forEach(item => {
+
                                     if (item.EXTRA_CHARGE_MODIFIERS_LIST && item.EXTRA_CHARGE_MODIFIERS_LIST.length > 0) {
                                         item.EXTRA_CHARGE_MODIFIERS_LIST.forEach(modifier => {
                                             items.push({
@@ -168,7 +200,28 @@ const OrderViewService = (function () {
                                                 amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(item.ITEM_AMOUNT, 2)
                                             })
                                         })
-                                    } else {
+                                    }
+                                    else if (item.ITEM_DISCOUNTS && item.ITEM_DISCOUNTS.length > 0) {
+
+                                        items.push({
+                                            isItem: true,
+                                            name: item.ITEM_NAME,
+                                            qty: null,
+                                            amount: utils.toFixedSafe(item.ITEM_AMOUNT, 2)
+                                        })
+
+                                        if (item.ITEM_DISCOUNTS && item.ITEM_DISCOUNTS.length > 0) {
+                                            item.ITEM_DISCOUNTS.forEach(discount => {
+                                                items.push({
+                                                    isItem: true,
+                                                    name: discount.DISCOUNT_NAME,
+                                                    qty: null,
+                                                    amount: utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                                                })
+                                            })
+                                        }
+                                    }
+                                    else {
                                         items.push({
                                             isItem: true,
                                             name: item.ITEM_NAME,
@@ -176,6 +229,7 @@ const OrderViewService = (function () {
                                             amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(item.ITEM_AMOUNT, 2)
                                         })
                                     }
+
                                 });
                             }
                         }
@@ -872,8 +926,8 @@ const OrderViewService = (function () {
                 }
                 else if (_discount.rewardedResources && _discount.rewardedResources[0].orderedItem) {
                     //item discount
-                    _item = items.find(c => c._id === discount.rewardedResources[0].item);
-                    _item.discount = { amount: discount.amount, name: reward.name };
+                    _item = items.find(c => c._id === _discount.rewardedResources[0].item);
+                    _item.discount = { amount: _discount.amount, name: reward.name };
                 }
                 else if (_discount.rewardedResources && _discount.rewardedResources[0].orderedOffer) {
                     //offer discount
@@ -1481,12 +1535,15 @@ const OrderViewService = (function () {
             let result = [];
             if (order.history && order.history.length > 0) {
                 order.history.forEach(historyItem => {
-                    result.push({
-                        action: historyItem.action,
-                        data: `Device name: ${historyItem.deviceName}`,
-                        at: historyItem.at,
-                        by: _resolveUserName(historyItem.by)
-                    });
+                    if (historyItem.action === 'kickout') {
+                        result.push({
+                            action: historyItem.action,
+                            data: `Device name: ${historyItem.deviceName}`,
+                            at: historyItem.at,
+                            by: _resolveUserName(historyItem.by)
+                        });
+                    }
+
                 });
             }
             return result;

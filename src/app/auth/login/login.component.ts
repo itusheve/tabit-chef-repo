@@ -34,6 +34,8 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(1)])
   });
 
+  showChangeRegion = false;
+
   get email(): any { return this.loginForm.get('email'); }
   get password(): any { return this.loginForm.get('password'); }
 
@@ -45,6 +47,11 @@ export class LoginComponent implements OnInit {
         const mode = params.get('m');
         this.mode = (mode && mode === 's') ? 'switch' : 'normal';
       });
+
+    /* if the wrapper exposes for us the regionService, we let the user change region using it */
+    if (window.hasOwnProperty('regionService')) {
+      this.showChangeRegion = true;
+    }
   }
 
   login() {
@@ -97,6 +104,11 @@ export class LoginComponent implements OnInit {
           });
       }
     });
+  }
+
+  changeRegion() {
+    if (!window.hasOwnProperty('regionService')) return;
+    window['regionService'].resetRegionAndRefresh();
   }
 
 }

@@ -504,6 +504,10 @@
         <note priority="1" from="description">ארוחה עסקית</note>
         <note priority="1" from="meaning">slips</note>
       </trans-unit>
+        <trans-unit id="totalAmount" datatype="html">
+        <source>Total Amount</source>
+        <target>סה"כ לתשלום</target>
+      </trans-unit>
       <trans-unit id="beforeVAT" datatype="html">
         <source>Before VAT</source>
         <target>סה"כ לפני מע"מ</target>
