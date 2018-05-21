@@ -21,12 +21,12 @@
 
 
     <!-- CHANGE -->
-    <div class="row" *ngIf="data.payments[0].change?.amount">
+    <div class="row" *ngIf="printDataOld?.P_CHANGE">
         <div class="col-8">
             <span i18n="@@change">Change</span>
         </div>
         <div class="col-3">
-            <span>{{(data.payments[0].change?.amount/100) | number:'1.2-2'}}</span>
+            <span>{{printDataOld?.P_CHANGE | number:'1.2-2'}}</span>
         </div>
     </div>
 
