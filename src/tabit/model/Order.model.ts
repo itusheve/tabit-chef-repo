@@ -27,6 +27,7 @@ export class Order {
     enrichmentLevels: {
         orderDetails: boolean,
     };
+    wasKickout: boolean;
 
     constructor() {
         this.enrichmentLevels = {

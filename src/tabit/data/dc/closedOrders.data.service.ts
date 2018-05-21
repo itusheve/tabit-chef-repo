@@ -456,6 +456,10 @@ export class ClosedOrdersDataService {
         }
 
         function getTlog(order: Order) {
+
+            // let tlogId = "5b027976688d0113006673a4";
+            // order_.tlogId = tlogId;
+
             that.ds.log('closedOrdersDS: getTlog');
             return that.rosEp.get(`tlogs/${order.tlogId}`, {});
         }
@@ -468,11 +472,12 @@ export class ClosedOrdersDataService {
         function addTlogId(order: Order, businessDateStr: string) {
             return new Promise((resolve, reject) => {
                 that.rosEp.post(`documents/v2?businessDate=${businessDateStr}&number=${order.number}`)
-                    .then(data=>{
+                    .then(data => {
                         try {
                             order.tlogId = data[0]._id;
                             resolve();
                         } catch (e) {
+                            resolve();
                             reject(e);
                         }
                     });
@@ -481,11 +486,13 @@ export class ClosedOrdersDataService {
 
         /* since tlogId dim is removed, we need to add procedure here to find it using the order number + BD: */
         return addTlogId(order_, businessDateStr)
-            .then(()=>{
+            .then(() => {
+
                 that.ds.log('closedOrdersDS: enrichOrder: Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])');
                 return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)]);
             })
             .then(data => {
+
                 that.ds.log('closedOrdersDS: getLookupData: get tlog, lookupdata, billdata: done');
                 const tlog: any = data[0];
                 const lookupData: any = data[1];
@@ -551,7 +558,7 @@ export class ClosedOrdersDataService {
                             })
 
                     }
-
+                    
                     return new Promise((resolve, reject) => resolve(resultOrder));
                 }
 
