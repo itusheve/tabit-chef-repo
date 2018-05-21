@@ -407,6 +407,10 @@
         <source>Business Meal&gt;</source>
         <target>ארוחה עסקית</target>
       </trans-unit>
+        <trans-unit id="totalAmount" datatype="html">
+        <source>Total Amount</source>
+        <target>סה"כ לתשלום</target>
+      </trans-unit>
       <trans-unit id="beforeVAT" datatype="html">
         <source>Before VAT</source>
         <target>סה"כ לפני מע"מ</target>

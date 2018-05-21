@@ -98,6 +98,7 @@ const OrderViewService = (function () {
             let items = [];
             let oth = [];
 
+            debugger;
             if (offersList && offersList.length > 0) {
                 offersList.forEach(offer => {
 
@@ -119,8 +120,11 @@ const OrderViewService = (function () {
                             item.amount = translateService.getText('OTH');
                             oth.push(item)
                         } else {
-                            item.amount = utils.toFixedSafe(offer.OFFER_AMOUNT, 2)
-                            items.push(item);
+
+                            if (offer.OFFER_AMOUNT !== 0) { // if the offer amount is 0 not need to show 
+                                item.amount = utils.toFixedSafe(offer.OFFER_AMOUNT, 2)
+                                items.push(item);
+                            }
                         }
 
                         if (offer.ORDERED_OFFER_DISCOUNTS && offer.ORDERED_OFFER_DISCOUNTS.length > 0) {
@@ -1531,12 +1535,15 @@ const OrderViewService = (function () {
             let result = [];
             if (order.history && order.history.length > 0) {
                 order.history.forEach(historyItem => {
-                    result.push({
-                        action: historyItem.action,
-                        data: `Device name: ${historyItem.deviceName}`,
-                        at: historyItem.at,
-                        by: _resolveUserName(historyItem.by)
-                    });
+                    if (historyItem.action === 'kickout') {
+                        result.push({
+                            action: historyItem.action,
+                            data: `Device name: ${historyItem.deviceName}`,
+                            at: historyItem.at,
+                            by: _resolveUserName(historyItem.by)
+                        });
+                    }
+
                 });
             }
             return result;
