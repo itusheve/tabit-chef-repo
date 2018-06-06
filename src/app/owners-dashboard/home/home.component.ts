@@ -23,6 +23,15 @@ export class HomeComponent implements OnInit {
 
   // renderMonthView = true;//we postpone this a bit
 
+  testCardData: CardData = {
+    loading: false,
+    title: 'test card',
+    tag: 'test',
+    sales: 6000000000,
+    diners: 0,
+    ppa: 0
+  };
+
   currentBdCardData: CardData = {
     loading: true,
     title: '',
@@ -163,6 +172,10 @@ export class HomeComponent implements OnInit {
     } else {
       this.router.navigate(['/owners-dashboard/day', date]);
     }
+  }
+
+  showAlert(data: string) {
+    alert(data);
   }
 
 }
