@@ -4,11 +4,11 @@
     "bundles":[
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Assistant",
-      "https://chef-cordova-prod.herokuapp.com/styles.bundle.css",
-      "https://chef-cordova-prod.herokuapp.com/inline.bundle.js",
-      "https://chef-cordova-prod.herokuapp.com/polyfills.bundle.js",
-      "https://chef-cordova-prod.herokuapp.com/scripts.bundle.js",
-      "https://chef-cordova-prod.herokuapp.com/main.bundle.js"
+      "https://chef.tabit-dev.com/styles.bundle.css",
+      "https://chef.tabit-dev.com/inline.bundle.js",
+      "https://chef.tabit-dev.com/polyfills.bundle.js",
+      "https://chef.tabit-dev.com/scripts.bundle.js",
+      "https://chef.tabit-dev.com/main.bundle.js"
     ]
   },
   "development":{
