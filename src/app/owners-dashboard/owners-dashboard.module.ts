@@ -37,6 +37,7 @@ import { OrderViewComponent } from './order-view/order-view.component';
       import { OrderMediaExchangeDetailsComponent } from './order-view/slips/common/mediaExchangeDetails/mediaExchangeDetails.component';
       import { OrderSingleInvoiceDataComponent } from './order-view/slips/common/singleInvoiceData/singleInvoiceData.component';
       import { OrderGiftCardDetailsComponent } from './order-view/slips/common/giftCardDetails/giftCardDetails.component';
+      import { OrderCashPaymentFooterComponent } from './order-view/slips/common/cashPaymentFooter/cashPaymentFooter.component';
   import { OrderDetailsComponent } from './order-view/details/details.component';
 
 import { CardComponent } from '../ui/card/card.component';
@@ -157,6 +158,7 @@ import { DayMonthSummaryTableComponent } from './day-view/day-month-summary-tabl
           OrderSingleInvoiceDataComponent,
           OrderMediaExchangeDetailsComponent,
           OrderGiftCardDetailsComponent,
+          OrderCashPaymentFooterComponent,
       OrderDetailsComponent,
 
   ],
