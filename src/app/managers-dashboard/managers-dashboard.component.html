@@ -7,39 +7,17 @@
       <div>{{this.sideNavConfig.header.org?.alias || this.sideNavConfig.header.org?.name}}</div>
     </div>
     <div class="g-1 flex d-col content">
-      <mat-checkbox
-        color="primary"
-        *ngIf="this.sideNavConfig.content.showVatCb"
-        [checked]="vat"
-        (change)="vatChange($event)"
-        [indeterminate]="false"
-        [align]="'start'"
-        [disabled]="false"
-        i18n="owners-dashboard|maam@@vat">
-        VAT
-      </mat-checkbox>
-      <mat-checkbox
-        color="primary"
-        *ngIf="this.sideNavConfig.content.showDebugCb"
-        [checked]="debug"
-        (change)="debug=!debug"
-        [align]="'start'"
-        >
-        Debug
-      </mat-checkbox>
       <button class="s-0" *ngIf="this.sideNavConfig.content.showMySitesBtn" mat-raised-button [routerLink]="['/restaurants', { m: 's'}]">
         <span i18n="owners-dashboard@@mySites">My Sites</span>
       </button>
-      <button class="s-0" mat-raised-button [routerLink]="['/managers-dashboard']">
-        <span i18n="owners-dashboard@@managerDashboard">Manager Dashboard</span>
+      <button class="s-0" mat-raised-button [routerLink]="['/owners-dashboard/home']">
+        <span i18n="owners-dashboard@@ownerDashboard">Owner Dashboard</span>
       </button>
       <button class="s-0" *ngIf="this.sideNavConfig.content.showLogoutBtn" mat-raised-button (click)="logout()">
         <span i18n="owners-dashboard@@logout">Logout</span>
       </button>
-      <div *ngIf="debug" class="g-1 flex d-col" style="word-break: break-all;text-align: left;padding: 5px;background-color: white;overflow: auto;">
-        <div class="mb5" *ngFor="let logEntry of logArr" [ngStyle]="{'color': logEntry.type==='error' ? 'red' : 'black'}">{{logEntry.message}}</div>
-      </div>
-      <div class="versions s-0 flex d-col a-center" style=" margin-top: auto;">
+
+      <div class="versions s-0 flex d-col a-center" style="margin-top: auto;">
         <div>chef v{{appVersions?.chef}}</div>
         <div>chef-w v{{appVersions?.wrapper}}</div>
       </div>
@@ -68,9 +46,8 @@
     </div>
     <div class="contentFixed">
       <div class="content">
-        <router-outlet></router-outlet>
+        <h1>Hellow Hello</h1>
       </div>
     </div>
   </mat-sidenav-content>
-
 </mat-sidenav-container>
