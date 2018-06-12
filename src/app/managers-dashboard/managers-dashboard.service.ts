@@ -166,7 +166,7 @@ export class ManagersDashboardService {
       this.getDashCatalog(),
       this.rosEp.get('users', null).then(prepareUsers),
       this.rosEp.get('dashboard/timeslots', null).then(function(ret) { return _.get(ret,'[0]')}),
-      this.rosEp.get('dashboard/itemGroups', null),
+      this.rosEp.get('dashboard/itemGroups', null).then(function (ret) { return _.get(ret, '[0]') }),
       this.rosEp.get('configuration/regionalSettings', null).then(function (ret) { return _.get(ret, '[0]') }),
     ];
     return Promise.all(promises)
@@ -186,7 +186,7 @@ export class ManagersDashboardService {
           users: data.users,
           allSlots: data.allSlots,
           timeSlots: prepareDaySlots(data.allSlots),
-          itemGroups: data.itemGroups,
+          itemGroups: [],
           itemGroupsId: null,
           orders: [],
           timeOptions: [
@@ -196,6 +196,10 @@ export class ManagersDashboardService {
             { value: 'end', text: 'TIME_RANGE_TO', textSmall: 'TIME_RANGE_TO' },
           ]
         };
+        if (data.itemGroups && data.itemGroups._id) {
+          db.itemGroupsId = data.itemGroups._id;
+          db.itemGroups = data.itemGroups.itemGroups || []
+        }
 
         return that.getOrdersDate(db, db.initialTime).then(function (ret) {
           return db;
@@ -369,7 +373,7 @@ export class ManagersDashboardService {
     newOrder.diners = order.diners.length;
 
     var items = [];
-    _.each(order.orderedItems, function (i, item) {
+    _.each(order.orderedItems, function (item, i) {
       if (!item.cancellation) {
         let price = 0;
         if (item.offer) {
@@ -393,13 +397,13 @@ export class ManagersDashboardService {
 
     var total = 0;
     var totalNet = 0;
-    _.each(order.orderedOffers, function (i, offer) {
+    _.each(order.orderedOffers, function (offer) {
       var v = offer.amount || 0;
       total += v;
       if (!offer.onTheHouse) totalNet += v;
     });
 
-    _.each(order.rewards, function (i, reward) {
+    _.each(order.rewards, function (reward) {
       var discount = reward.discount;
       if (discount && discount.amount) {
         totalNet -= discount.amount;

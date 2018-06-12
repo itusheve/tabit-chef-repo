@@ -82,6 +82,14 @@ const tmpTranslations_ = {
         departments: {
             food: 'מזון',
             beverages: 'משקאות'
+        },
+        managerDash: {
+          TOTAL_NET: "TOTAL_NET",
+          TOTAL_GROSS: "TOTAL_GROSS",
+          ALLORDERS: "ALLORDERS",
+          OPENORDERS: "OPENORDERS",
+          CLOSEDORDERS: "CLOSEDORDERS",
+          Total: "Total"
         }
     },
     'en-US': {
@@ -128,6 +136,14 @@ const tmpTranslations_ = {
         departments: {
             food: '?',//TODO local
             beverages: '?'//TODO local
+        },
+        managerDash: {
+          TOTAL_NET: "TOTAL_NET",
+          TOTAL_GROSS: "TOTAL_GROSS",
+          ALLORDERS: "ALLORDERS",
+          OPENORDERS: "OPENORDERS",
+          CLOSEDORDERS: "CLOSEDORDERS",
+          Total: "Total"
         }
     }
 };
