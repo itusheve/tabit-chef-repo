@@ -110,7 +110,7 @@ export class ManagersDashboardComponent implements OnInit {
     //blockUI.stop();
   }
 
-  private generateDinersAVG () {
+  private generateDinersAVG() {
     var arr = [];
     var c = this.criteria;
     var db = this.db;
@@ -119,7 +119,9 @@ export class ManagersDashboardComponent implements OnInit {
     var totals = {
       total: 0,
       orders: 0,
-      diners: 0
+      diners: 0,
+      dinerAvg: null,
+      goalDiff: null
     };
 
     var generateItems = true;
@@ -314,9 +316,6 @@ export class ManagersDashboardComponent implements OnInit {
     c.dinersAVG = arr;
     c.itemsAVG = arrItemsAVG;
     c.ItemsSales = arrItemsSales;
-
-    console.log(c.ItemsSales)
-
   };
 
 
@@ -326,7 +325,7 @@ export class ManagersDashboardComponent implements OnInit {
   Methods
   ---------------------------------------------------------------------------------
   */
-
+  /*
   toggleNet (showNet) {
     this.critera.showNetPrices = !this.critera.showNetPrices;
     applyCriteria();
@@ -394,7 +393,7 @@ export class ManagersDashboardComponent implements OnInit {
     blockUI.start();
     $timeout(function () { $scope.applyCriteria() }, 400);
   }
-
+  * /
 
   /*
   ---------------------------------------------------------------------------------

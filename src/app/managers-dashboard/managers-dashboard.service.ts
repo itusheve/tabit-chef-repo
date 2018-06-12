@@ -83,12 +83,12 @@ export class ManagersDashboardService {
         this.sideNavConfig.header.org = org;
       });
 
-    this.getMetaData = getMetaData;
-    this.getDashCatalog = getDashCatalog;
-    this.getOrdersDate = getOrdersDate;
-    this.getOrders = getOrders;
-    this.getTransactions = getTransactions;
-    this.getDayly = getDayly;
+    //this.getMetaData = getMetaData;
+    //this.getDashCatalog = getDashCatalog;
+    //this.getOrdersDate = getOrdersDate;
+    //this.getOrders = getOrders;
+    //this.getTransactions = getTransactions;
+    //this.getDayly = getDayly;
   }
 
   /*
@@ -98,21 +98,22 @@ export class ManagersDashboardService {
   */
 
 
-  function getDashCatalog() {
+  private getDashCatalog() {
+    var that = this;
     const promises: any = [
       this.rosEp.get('menu/categories', null),
       this.rosEp.get('menu/items', null)
     ];
     return Promise.all(promises).then(function (result) {
       return {
-        itemCategories: resolveItemCategories(result[0], result[1]),
-        items: resolveItems(result[1])
+        itemCategories: that.resolveItemCategories(result[0], result[1]),
+        items: that.resolveItems(result[1])
       }
     });
   }
 
-  function resolveItemCategories(categoryTrees, itemByCategories) {
-    if (checkDepth(categoryTrees) > 2) {
+  private resolveItemCategories(categoryTrees, itemByCategories) {
+    if (this.checkDepth(categoryTrees) > 2) {
       categoryTrees = categoryTrees.reduce(function (all, cat) {
         return all.concat(cat.children || []);
       }, []);
@@ -139,15 +140,16 @@ export class ManagersDashboardService {
     return categoryTrees;
   }
 
-  function resolveItems(itemByCategories) {
+  private resolveItems(itemByCategories) {
     return itemByCategories.reduce(function (allItems, catItems) {
       return allItems.concat(catItems.items);
     }, []);
   }
 
-  function checkDepth(nodes) {
+  private checkDepth(nodes) {
+    var that = this;
     if (!nodes || nodes.length === 0) return 0;
-    var depths = nodes.map(function (node) { return checkDepth(node.children); });
+    var depths = nodes.map(function (node) { return that.checkDepth(node.children); });
     return Math.max.apply(null, depths) + 1;
   }
 
@@ -159,22 +161,23 @@ export class ManagersDashboardService {
   ---------------------------------------------------------------------------------
   */
 
-  function getMetaData() {
+
+  public getMetaData() {
     var that = this;
     let promiseMap = ["catalog", "users", "allSlots", "itemGroups", "regionalSettings"];
     const promises: any = [
       this.getDashCatalog(),
-      this.rosEp.get('users', null).then(prepareUsers),
+      this.rosEp.get('users', null).then(this.prepareUsers),
       this.rosEp.get('dashboard/timeslots', null).then(function(ret) { return _.get(ret,'[0]')}),
       this.rosEp.get('dashboard/itemGroups', null).then(function (ret) { return _.get(ret, '[0]') }),
       this.rosEp.get('configuration/regionalSettings', null).then(function (ret) { return _.get(ret, '[0]') }),
     ];
     return Promise.all(promises)
       .then((ret: any[]) => {
-        let data = {}
+        let data:any = {}
         _.each(promiseMap, (ent, index) => { data[ent] = ret[index]; });
 
-        let db = {
+        let db:any = {
           businessDate: null,
           isDateClosed: true,
           initialDate: null,
@@ -182,10 +185,10 @@ export class ManagersDashboardService {
           lastTime: null,
           regionalSettings: data.regionalSettings,
           items: data.catalog.items,
-          subCategories: prepareSubCategoris(data.catalog.itemCategories),
+          subCategories: that.prepareSubCategoris(data.catalog.itemCategories),
           users: data.users,
           allSlots: data.allSlots,
-          timeSlots: prepareDaySlots(data.allSlots),
+          timeSlots: that.prepareDaySlots(data.allSlots, null),
           itemGroups: [],
           itemGroupsId: null,
           orders: [],
@@ -207,7 +210,7 @@ export class ManagersDashboardService {
       });
   }
 
-  function prepareSubCategoris(itemCategories) {
+  private prepareSubCategoris(itemCategories) {
     let subCats = [];
     _.each(itemCategories, function (cat, i) {
       _.each(cat.children, function (subcat, j) {
@@ -224,7 +227,7 @@ export class ManagersDashboardService {
     return subCats;
   }
 
-  function prepareUsers(users) {
+  private prepareUsers(users) {
     let data = {};
     _.each(users, user => {
       data[user._id] = {
@@ -235,40 +238,44 @@ export class ManagersDashboardService {
     return data;
   }
 
-  let NN = 0;
-  function prepareDaySlots(ret) {
-    let arr = [];
+
+  private prepareDaySlots(ret, businessDate) {
+    var that = this;
+    var arr = [], NN=0;
     if (ret) {
-      let date = this.config.businessDate || new date();
-      let day = date.getDay();
-      if (ret.workHours) prepareDaySlots_slot(ret.workHours, "Work Hours", arr);
-      if (ret.shifts) prepareDaySlots_slot(ret.shifts, "Shifts", arr);
-      if (ret.menus) prepareDaySlots_slot(ret.menus, "Menus", arr);
+      var date = businessDate || new date();
+      var day = date.getDay();
+      if (ret.workHours) prepareDaySlots_slot(ret.workHours, "Work Hours");
+      if (ret.shifts) prepareDaySlots_slot(ret.shifts, "Shifts");
+      if (ret.menus) prepareDaySlots_slot(ret.menus, "Menus");
     }
+
+    function prepareDaySlots_slot(section, sName) {
+      let arrSlots = _.find(section, { 'day': day });
+      if (!arrSlots) arrSlots = _.find(section, { 'day': -1 });
+      if (arrSlots && arrSlots.slots.length) {
+        let o = {
+          name: sName,
+          slots: arrSlots.slots
+        }
+        _.each(o.slots, function (slot, i) {
+          var from = moment(slot.from);
+          var to = moment(slot.to);
+          slot._id = ++NN;
+          slot.dateFrom = from.toDate();
+          slot.timeFrom = that.parseOrderTime(from);
+          slot.dateTo = to.toDate();
+          slot.timeTo = that.parseOrderTime(to);
+          slot.dinerAvgGoalParsed = slot.dinerAvgGoal / 100;
+        });
+        arr.push(o)
+      }
+    }
+
     return arr;
   }
 
-  function prepareDaySlots_slot(section, sName, arr) {
-    let arrSlots = _.find(section, { 'day': day });
-    if (!arrSlots) arrSlots = _.find(section, { 'day': -1});
-    if (arrSlots && arrSlots.slots.length) {
-      let o = {
-        name: sName,
-        slots: arrSlots.slots
-      }
-      _.each(o.slots, function (slot, i) {
-        var from = moment(slot.from);
-        var to = moment(slot.to);
-        slot._id = ++NN;
-        slot.dateFrom = from.toDate();
-        slot.timeFrom = parseOrderTime(from);
-        slot.dateTo = to.toDate();
-        slot.timeTo = parseOrderTime(to);
-        slot.dinerAvgGoalParsed = slot.dinerAvgGoal / 100;
-      });
-      arr.push(o)
-    }
-  }
+
 
   /*
   ---------------------------------------------------------------------------------
@@ -276,7 +283,7 @@ export class ManagersDashboardService {
   ---------------------------------------------------------------------------------
   */
 
-  function getOrdersDate(db, date) {
+  public getOrdersDate(db, date) {
     if (!date) {
       var d = moment();
       date = d.format('YYYY-MM-DD')
@@ -292,12 +299,12 @@ export class ManagersDashboardService {
   };
 
 
-  function refreshOrders(db) {
+  public refreshOrders(db) {
     return this.getOrders(db, db.lastTime, null);
   };
 
 
-  function getOrders(db, fromTime, isDate) {
+  private getOrders(db, fromTime, isDate) {
     const promises: any = [
       this.getTransactions(db, fromTime, isDate),
       this.getDayly(db, fromTime, isDate)
@@ -305,8 +312,8 @@ export class ManagersDashboardService {
     return Promise.all(promises);
   }
 
-  function getTransactions(db, fromTime, isDate) {
-
+  private getTransactions(db, fromTime, isDate) {
+    var that = this;
     let _dateStr = fromTime; //.format('YYYY-MM-DD')
     if (isDate) {
       var _http = 'reports/dashboard?BusinessDate=' + encodeURIComponent(_dateStr);
@@ -316,20 +323,19 @@ export class ManagersDashboardService {
 
     db.lastTime = fromTime;
 
-    return this.rosEp.get(_http)
-      .then(function (ret) {
+    return this.rosEp.get(_http).then(function (ret) {
         if (ret) {
           if (isDate) {var retDate = ret.businessDate;}
 
           db.isDateClosed = ret.isClosed;
           if (ret.order) {
             _.each(ret.order, function (order) {
-              prepareOrder(db, order);
+              that.prepareOrder(db, order);
             });
           }
           if (ret.tlog) {
             _.each(ret.tlog, function (tOrder) {
-              prepareOrder(db, tOrder.order[0]);
+              that.prepareOrder(db, tOrder.order[0]);
             });
           }
         }
@@ -337,7 +343,7 @@ export class ManagersDashboardService {
   };
 
 
-  function prepareOrder(db, order) {
+  private prepareOrder(db, order) {
     if (order.orderType != 'Seated') {
       return;
     };
@@ -349,7 +355,7 @@ export class ManagersDashboardService {
 
     newOrder._id = order._id;
     newOrder.from = moment(order.created);
-    newOrder.fromTime = parseOrderTime(newOrder.from);
+    newOrder.fromTime = this.parseOrderTime(newOrder.from);
 
     if (newOrder.from.isAfter(db.lastTime)) {
       db.lastTime = newOrder.from;
@@ -357,7 +363,7 @@ export class ManagersDashboardService {
 
     if (order.closed) {
       newOrder.to = moment(order.closed);
-      newOrder.toTime = parseOrderTime(newOrder.to);
+      newOrder.toTime = this.parseOrderTime(newOrder.to);
       newOrder.closed = true;
     } else {
       newOrder.closed = false;
@@ -437,7 +443,7 @@ export class ManagersDashboardService {
   */
 
 
-  function getDayly(db, fromTime, isDate) {
+  public getDayly(db, fromTime, isDate) {
     let _dateStr = fromTime; //.format('YYYY-MM-DD');
     return this.rosEp.get('reports/cashdrawers?businessDate=' + encodeURIComponent(_dateStr))
       .then(function (result) {
@@ -527,8 +533,6 @@ export class ManagersDashboardService {
         db.daylyData = result;
 
 
-      }, function (a, b, c) {
-
       });
   };
 
@@ -538,7 +542,7 @@ export class ManagersDashboardService {
   ---------------------------------------------------------------------------------
   */
 
-  function parseOrderTime(_moment) {
+  private parseOrderTime(_moment:any) {
     var h = _moment.hours();
     if (h < 5) h += 24;
     return h * 60 + _moment.minutes();
