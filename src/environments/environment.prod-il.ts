@@ -7,7 +7,7 @@ export const environment = {
   },
   olapConfig: {//IL PROD CUBE
     baseUrl: 'https://analytics.tabit.cloud/olapproxy/proxy.ashx',
-    catalog: 'ssas_tabit_prod',
-    cube: 'tabit_sales',
+    catalog: 'isrProd',
+    cube: 'tlogs',
   }
 };

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 import * as moment from 'moment';
 
@@ -38,20 +38,20 @@ export class OlapMappings {
 
     public measures = {//deprecated, use measureGroups instead
         sales: {
-            il: '[Measures].[Tlog Header Total Payment Amount]',
+            il: '[Measures].[salesNetAmount]',
             us: '[Measures].[salesNetAmount]'//'Item Net Sales $'
         },
         itemsSales: {
-            il: '[Measures].[Tlog Items Net Amount]',
+            il: '[Measures].[salesNetAmount]',
             us: '[Measures].[salesNetAmount]'//Item Net Sales $
         },
         ppa: {
             sales: {
-                il: '[Measures].[PPANetAmountSeated]',
+                il: '[Measures].[dinersNetAmount]',
                 us: '[Measures].[dinersNetAmount]'
             },
             diners: {
-                il: '[Measures].[PPADinersSeated]',
+                il: '[Measures].[headerDiners]',
                 us: '[Measures].[headerDiners]'
             }
         }
@@ -62,70 +62,70 @@ export class OlapMappings {
             measures: {
                 grossSalesAmnt: {
                     path: {
-                        il: 'TBD',
+                        il: 'GrossSales',
                         us: 'GrossSales'
                     },
                     type: 'number'
                 },
                 netSalesAmnt: {
                     path: {
-                        il: 'TBD',
+                        il: 'salesNetAmount',
                         us: 'salesNetAmount'
                     },
                     type: 'number'
                 },
                 taxAmnt: {
                     path: {
-                        il: 'TBD',
+                        il: 'headerTaxs',
                         us: 'headerTaxs'
                     },
                     type: 'number'
                 },
                 tipAmnt: {
                     path: {
-                        il: 'TBD',
+                        il: 'Total Tips',
                         us: 'Total Tips'
                     },
                     type: 'number'
                 },
                 serviceChargeAmnt: {
                     path: {
-                        il: 'TBD',
+                        il: 'salesServiceCharge',
                         us: 'salesServiceCharge'
                     },
                     type: 'number'
                 },
                 paymentsAmnt: {
                     path: {
-                        il: 'TBD',
+                        il: 'calcTotalPaymentAmount',
                         us: 'calcTotalPaymentAmount'
                     },
                     type: 'number'
                 },
                 dinersSales: {
                     path: {
-                        il: 'TBD',
+                        il: 'dinersNetAmount',
                         us: 'dinersNetAmount'
                     },
                     type: 'number'
                 },
                 dinersCount: {
                     path: {
-                        il: 'TBD',
+                        il: 'headerDiners',
                         us: 'headerDiners'
                     },
                     type: 'number'
                 },
                 ppa: {// :== dinersSales / dinersCount
                     path: {
-                        il: 'TBD',
+                        il: 'calcPpaAmount',
                         us: 'calcPpaAmount'
                     },
                     type: 'number'
                 },
                 ordersCount: {
                     path: {
-                        il: 'TBD',
+                        il: 'headerOrderCount',
                         us: 'headerOrderCount'
                     },
                     type: 'number'
@@ -136,35 +136,35 @@ export class OlapMappings {
             measures: {
                 sales: {//"מכירות" DEPRECATED, only for use in the old IL cube. see 'newStructure'.
                     path: {
-                        il: 'Tlog Header Total Payment Amount',
+                        il: 'TtlItemsSales',
                         us: 'salesNetAmount'
                     },
                     type: 'number'
                 },
                 ordersCount: {//"הזמנות"
                     path: {
-                        il: 'PPAOrders',
+                        il: 'headerOrderCount',
                         us: 'headerOrderCount'
                     },
                     type: 'number'
                 },
                 dinersSales: {//"מכירות לסועד"
                     path: {
-                        il: 'PPANetAmountSeated',
+                        il: 'dinersNetAmount',
                         us: 'dinersNetAmount'
                     },
                     type: 'number'
                 },
                 dinersCount: {//"סועדים"
                     path: {
-                        il: 'PPADinersSeated',
+                        il: 'headerDiners',
                         us: 'headerDiners'
                     },
                     type: 'number'
                 },
                 dinersPPA: {//"ממוצע לסועד"
                     path: {
-                        il: 'PPA Seated',
+                        il: 'calcPpaAmount',
                         us: 'calcPpaAmount'
                     },
                     type: 'number'
@@ -175,50 +175,50 @@ export class OlapMappings {
             measures: {
                 sales: {//"מכירות פריטים"
                     path: {
-                        il: 'Tlog Items Net Amount',
+                        il: 'salesNetAmount',
                         us: 'salesNetAmount'
                     },
                     type: 'number'
                 },
                 sold: {//"נמכר"
                     path: {
-                        il: 'Tlog Items Sold',
+                        il: 'salesSold',
                         us: 'salesSold'
                     }
                 },
                 prepared: {//"הוכן"
                     path: {
-                        il: 'Tlog Items Prepared',
+                        il: 'salesPrepared',
                         us: 'salesPrepared'
                     }
                 },
                 returned: {//"הוחזר"
                     path: {
-                        il: 'Tlog Items Return',
+                        il: 'salesReturn',
                         us: 'salesReturn'
                     }
                 },
                 takalotTiful_value_pct: {//"% תקלות תפעול"
                     path: {
-                        il: '%ShoviTakalotTiful',
+                        il: '%ReductionsOperationalDiscountAmount',
                         us: '%ReductionsOperationalDiscountAmount'
                     }
                 },
                 shimurShivuk_value_pct: {//"% שימור ושיווק"
                     path: {
-                        il: '%ShoviShimurShivuk',
+                        il: '%ReductionsRetentionDiscountAmount',
                         us: '%ReductionsRetentionDiscountAmount'
                     }
                 },
                 shoviIrguni_value_pct: {//"% ארוחות עובדים"
                     path: {
-                        il: '%ShoviIrguni',
+                        il: '%ReductionsOrganizationalDiscountAmount',
                         us: '%ReductionsOrganizationalDiscountAmount'
                     }
                 },
                 cancelled_value_pct: {//"% ביטול כספי"
                     path: {
-                        il: '%CancelledAmount',
+                        il: '%ReductionsCancellationAmount',
                         us: '%ReductionsCancellationAmount'
                     }
                 }
@@ -228,28 +228,28 @@ export class OlapMappings {
             measures: {
                 cancellation: {
                     path: {
-                        il: 'Tlog Pricereductions Cancellation Amount',
+                        il: 'salesReductionsCancellationAmount',
                         us: 'salesReductionsCancellationAmount'//Voids$
                     },
                     type: 'number'
                 },
                 retention: {
                     path: {
-                        il: 'Tlog Pricereductions Retention Discount Amount',
+                        il: 'salesReductionsRetentionDiscountAmount',
                         us: 'salesReductionsRetentionDiscountAmount'
                     },
                     type: 'number'
                 },
                 operational: {//"שווי תקלות תפעול"
                     path: {
-                        il: 'Tlog Pricereductions Operational Discount Amount',
+                        il: 'salesReductionsOperationalDiscountAmount',
                         us: 'salesReductionsOperationalDiscountAmount'
                     },
                     type: 'number'
                 },
                 organizational: {
                     path: {
-                        il: 'Tlog Pricereductions Organizational Discount Amount',
+                        il: 'salesReductionsOrganizationalDiscountAmount',
                         us: 'salesReductionsOrganizationalDiscountAmount'
                     },
                     type: 'number'
@@ -260,35 +260,35 @@ export class OlapMappings {
             measures: {
                 calcSalesAmnt: {
                     path: {
-                        il: 'TBD',
+                        il: 'calcPaymentSalesAmount',
                         us: 'calcPaymentSalesAmount'
                     },
                     type: 'number'
                 },
                 refundAmnt: {
                     path: {
-                        il: 'TBD',
+                        il: 'paymentsRefund',
                         us: 'paymentsRefund'
                     },
                     type: 'number'
                 },
                 paymentsAmount: {
                     path: {
-                        il: 'TBD',
+                        il: 'paymentsPaymentAmount',
                         us: 'paymentsPaymentAmount'
                     },
                     type: 'number'
                 },
                 tipsAmnt: {
                     path: {
-                        il: 'TBD',
-                            us: 'Total Tips'
+                        il: 'Total Tips',
+                        us: 'Total Tips'
                     },
                     type: 'number'
                 },
                 totalPaymentsAmnt: {
                     path: {
-                        il: 'TBD',
+                        il: 'calcTotalPaymentAmount',
                         us: 'calcTotalPaymentAmount'
                     },
                     type: 'number'
@@ -298,7 +298,7 @@ export class OlapMappings {
         init: function () {
             function recursFun(obj) {
                 Object.keys(obj).forEach(k => {
-                    if (k!=='init') {
+                    if (k !== 'init') {
                         if (typeof obj[k] === 'object') {
                             recursFun(obj[k]);
                             obj[k].parent = obj;
@@ -306,6 +306,7 @@ export class OlapMappings {
                     }
                 });
             }
+
             recursFun(this);
             delete this.init;
             return this;
@@ -315,7 +316,7 @@ export class OlapMappings {
     public dims = {
         BusinessDate: {//v1, deprecated TODO
             hierarchy: {
-                il: '[BusinessDate]',
+                il: '[Business Date]',
                 us: '[Business Date]'
             },
             dims: {
@@ -324,35 +325,35 @@ export class OlapMappings {
                     us: '[Date Key]'
                 },
                 dateAndWeekDay: {
-                    il: '[Shortdayofweek Name]',
+                    il: '[Date With Dow]',
                     us: '[Date With Dow]'
                 },
                 yearAndMonth: {
-                    il: '[Year Month Key]',
+                    il: '[YYYYMM]',
                     us: '[YYYYMM]'//YYYYMM
                 }
             }
         },
         orderClosingTime: {//v1, deprecated TODO
             hierarchy: {
-                il: '[CloseTime]',
+                il: '[Closed Hour]',
                 us: '[Closed Hour]'
             },
             dims: {
                 time: {
-                    il: '[Time Id]',
+                    il: '[HHMM Order]',
                     us: '[HHMM Order]'
                 }
             }
         },
         firingTime: {//v1, deprecated TODO
             hierarchy: {
-                il: '[FireTime]',
+                il: '[FireOn Time]',
                 us: '[FireOn Time]'
             },
             dims: {
                 time: {
-                    il: '[Time Id]',
+                    il: '[HHMM Key]',
                     us: '[HHMM Key]'
                 }
             }
@@ -360,7 +361,7 @@ export class OlapMappings {
         businessDateV2: {//"תאריך יום עסקים"
             v: 2,
             path: {
-                il: 'BusinessDate',
+                il: 'Business Date',
                 us: 'Business Date'
             },
             attr: {
@@ -376,7 +377,7 @@ export class OlapMappings {
                 },
                 yearMonth: {//"שנה חודש"
                     path: {
-                        il: 'Year Month Key',
+                        il: 'YYYYMM',
                         us: 'YYYYMM'
                     },
                     parse: {
@@ -430,7 +431,7 @@ export class OlapMappings {
                 },
                 dayOfWeek: {//יום בשבוע
                     path: {
-                        il: 'Dayofweek Key',//'ראשון'...
+                        il: 'Week Day Name',//'ראשון'...
                         us: 'Week Day Name'//'Sunday'...
                     },
                     parse: {
@@ -460,13 +461,13 @@ export class OlapMappings {
         ordersV2: {//
             v: 2,
             path: {
-                il: 'Ordernumber',
+                il: 'orderNumber',
                 us: 'orderNumber'
             },
             attr: {
                 orderNumber: {
                     path: {
-                        il: 'Tlog Header Order Number',//'הזמנה מס <int>',
+                        il: 'Order Number',//'הזמנה מס <int>',
                         us: 'Order Number'//'#<int>'
                     },
                     parse: {
@@ -491,13 +492,13 @@ export class OlapMappings {
         serviceV2: {
             v: 2,
             path: {
-                il: 'Service',
+                il: 'Services',
                 us: 'Services'
             },
             attr: {
                 name: {
                     path: {
-                        il: 'Service Name',
+                        il: 'Service Key',
                         us: 'Service Key'
                     },
                     parse: {
@@ -510,25 +511,25 @@ export class OlapMappings {
         priceReductions: {//סיבות הנחה
             v: 2,
             path: {
-                il: 'Pricereductionreasons',
+                il: 'Reasons',
                 us: 'Reasons'
             },
             attr: {
                 subType: {//תת קבוצת החלטה
                     path: {
-                        il: 'Tlog Pricereductions Reason Sub Type',
+                        il: 'Reason Sub Type Key',
                         us: 'Reason Sub Type Key'
                     },
                     members: {
                         retention: {
                             path: {
-                                il: 'TBD',
+                                il: 'retention@OTH',
                                 us: 'retention@OTH'
                             }
                         },
                         discounts: {
                             path: {
-                                il: 'TBD',
+                                il: 'retention@Discounts',
                                 us: 'retention@Discounts'
                             }
                         }
@@ -536,13 +537,13 @@ export class OlapMappings {
                 },
                 reasonId: {//סיבות הנחה
                     path: {
-                        il: 'Tlog Pricereductions Reason Id',
+                        il: 'Reason Name',
                         us: 'Reason Name'
                     }
                 },
                 reasons: {
                     path: {
-                        il: 'Tlog Pricereductions Reason Type',//קבוצת הנחה
+                        il: 'Reason Type',//קבוצת הנחה
                         us: 'Reason Type'
                     },
                     parse: {
@@ -578,13 +579,13 @@ export class OlapMappings {
                     members: {
                         operational: {
                             path: {
-                                il: 'compensation',
+                                il: 'Compensation Actions',
                                 us: 'Compensation Actions'
                             }
                         },
                         retention: {
                             path: {
-                                il: 'retention',
+                                il: 'Retention Actions',
                                 us: 'Retention Actions'
                             }
                         }
@@ -595,7 +596,7 @@ export class OlapMappings {
         items: {//פריטים
             v: 2,
             path: {
-                il: 'Items',
+                il: 'ItemsCategories',
                 us: 'ItemsCategories'
             },
             attr: {
@@ -607,13 +608,13 @@ export class OlapMappings {
                 },
                 subDepartment: {//תת מחלקה
                     path: {
-                        il: 'Sub Department',
+                        il: 'Sub Department Id',
                         us: 'Sub Department Id'
                     }
                 },
                 item: {//פריט
                     path: {
-                        il: 'Item Group Id',
+                        il: 'Item Name',
                         us: 'Item Name'
                     }
                 }
@@ -622,19 +623,19 @@ export class OlapMappings {
         accounts: {//"אמצעי תשלום"
             v: 2,
             path: {
-                il: 'TBD',
+                il: 'Accounts',
                 us: 'Accounts'
             },
             attr: {
                 accountGroup: {//e.g. CashAccount, CreditAccount
                     path: {
-                        il: 'TBD',
+                        il: 'Type',
                         us: 'Type'
                     }
                 },
                 accountType: {//e.g. Cash, Credit, CreditCard (?)
                     path: {
-                        il: 'TBD',
+                        il: 'Name',
                         us: 'Name'
                     }
                 }
@@ -643,13 +644,13 @@ export class OlapMappings {
         clearer: {
             v: 2,
             path: {
-                il: 'TBD',
+                il: 'Clearing',
                 us: 'Clearing'
             },
             attr: {
                 clearerName: {// e.g. diners, amex...
                     path: {
-                        il: 'TBD',
+                        il: 'Clearing Name',
                         us: 'Clearing Name'
                     }
                 }
@@ -658,17 +659,18 @@ export class OlapMappings {
         orderTypeV2: {//סוג הזמנה
             v: 2,
             path: {
-                il: 'Ordertype',
+                il: 'orderType',
                 us: 'orderType'
             },
             attr: {
                 orderType: {//סוג הזמנה
                     path: {
-                        il: 'Tlog Header Ordertype',
+                        il: 'Order Type Key',
                         us: 'Order Type Key'
                     },
                     parse: {
-                        il: raw => { },//TBD //must map to the indexes in dataService.orderTypes!
+                        il: raw => {
+                        },//TBD //must map to the indexes in dataService.orderTypes!
                         us: raw => {
                             switch (raw) {//must map to the indexes in dataService.orderTypes!
                                 case 'seated':
@@ -691,37 +693,37 @@ export class OlapMappings {
                     members: {
                         seated: {
                             path: {
-                                il: 'TBD',
+                                il: 'seated',
                                 us: 'seated'
                             }
                         },
                         otc: {
                             path: {
-                                il: 'TBD',
+                                il: 'otc',
                                 us: 'otc'
                             }
                         },
                         takeaway: {
                             path: {
-                                il: 'TBD',
+                                il: 'takeaway',
                                 us: 'takeaway'
                             }
                         },
                         delivery: {
                             path: {
-                                il: 'TBD',
+                                il: 'delivery',
                                 us: 'delivery'
                             }
                         },
                         refund: {
                             path: {
-                                il: 'TBD',
+                                il: 'refund',
                                 us: 'refund'
                             }
                         },
                         mediaexchange: {
                             path: {
-                                il: 'TBD',
+                                il: 'mediaexchange',
                                 us: 'mediaexchange'
                             }
                         }
@@ -732,13 +734,13 @@ export class OlapMappings {
         source: {//מקור
             v: 2,
             path: {
-                il: 'Source',
+                il: 'Sources',
                 us: 'Sources'
             },
             attr: {
                 source: {//מקור
                     path: {
-                        il: 'Tlog Header Source',
+                        il: 'Source',
                         us: 'Source'
                     }
                 }
@@ -747,13 +749,13 @@ export class OlapMappings {
         waitersV2: {//מלצרים
             v: 2,
             path: {
-                il: 'Owners',
+                il: 'WaiterOwner',
                 us: 'WaiterOwner'
             },
             attr: {
                 waiter: {//מלצר
                     path: {
-                        il: 'Tlog Header Owner Id',
+                        il: 'Full Name',
                         us: 'Full Name'
                     }
                 }
@@ -762,13 +764,13 @@ export class OlapMappings {
         owner: {//waitersV2 is actually OWNER, but in US we have Owner, FiredBy and ApprovedBy
             v: 2,
             path: {
-                il: 'Owners',
+                il: 'WaiterOwner',
                 us: 'WaiterOwner'
             },
             attr: {
                 waiter: {//מלצר
                     path: {
-                        il: 'Tlog Header Owner Id',
+                        il: 'Full Name',
                         us: 'Full Name'
                     }
                 }
@@ -777,13 +779,13 @@ export class OlapMappings {
         firedBy: {//waitersV2 is actually OWNER, but in US we have Owner, FiredBy and ApprovedBy
             v: 2,
             path: {
-                il: 'NON EXISTING',
+                il: 'WaiterFiredBy',
                 us: 'WaiterFiredBy'
             },
             attr: {
                 waiter: {//מלצר
                     path: {
-                        il: 'NON EXISTING',
+                        il: 'User Id',
                         us: 'User Id'
                     }
                 }
@@ -792,13 +794,13 @@ export class OlapMappings {
         approvedBy: {//waitersV2 is actually OWNER, but in US we have Owner, FiredBy and ApprovedBy
             v: 2,
             path: {
-                il: 'NON EXISTING',
+                il: 'WaiterPRapprovedBy',
                 us: 'WaiterPRapprovedBy'
             },
             attr: {
                 waiter: {//מלצר
                     path: {
-                        il: 'NON EXISTING',
+                        il: 'User Id',
                         us: 'User Id'
                     }
                 }
@@ -807,13 +809,13 @@ export class OlapMappings {
         tables: {//"שולחנות"    //TODO
             v: 2,
             path: {
-                il: 'Tables',
+                il: 'tables',
                 us: 'tables'
             },
             attr: {
                 tableId: {
                     path: {
-                        il: 'Table Id',//מס שולחן
+                        il: 'Tablenumber',//מס שולחן
                         us: 'Tablenumber'//Tablenumber
                     },
                     parse: {
@@ -833,13 +835,13 @@ export class OlapMappings {
         orderOpeningDateV2: {
             v: 2,
             path: {
-                il: 'TBD',
+                il: 'Open Order Date',
                 us: 'Open Order Date'
             },
             attr: {
                 openingDate: {
                     path: {
-                        il: 'TBD',
+                        il: 'Date Key',
                         us: 'Date Key'
                     }
                 }
@@ -848,19 +850,19 @@ export class OlapMappings {
         orderOpeningTimeV2: {
             v: 2,
             path: {
-                il: 'TBD',
+                il: 'Opened Hour',
                 us: 'Opened Hour'
             },
             attr: {
                 openingTime: {
                     path: {
-                        il: 'TBD',
+                        il: 'HHMM Order',
                         us: 'HHMM Order'
                     }
                 }
             }
         },
-        init: function() {
+        init: function () {
             function recursFun(obj) {
                 Object.keys(obj).forEach(k => {
                     if (k !== 'init') {
@@ -871,6 +873,7 @@ export class OlapMappings {
                     }
                 });
             }
+
             recursFun(this);
             delete this.init;
             return this;

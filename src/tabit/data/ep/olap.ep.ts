@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Subject } from 'rxjs/Subject';
-import { environment } from '../../../environments/environment';
-import { OlapMappings } from './olap.mappings';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
+import {Subject} from 'rxjs/Subject';
+import {environment} from '../../../environments/environment';
+import {OlapMappings} from './olap.mappings';
 
 declare var Xmla4JWrapper: any;
 
@@ -60,9 +60,8 @@ export class OlapEp {
     private baseUrl = environment.olapConfig.baseUrl;
     private url$: ReplaySubject<any>;
 
-    constructor(
-        private olapMappings: OlapMappings
-    ) {}
+    constructor(private olapMappings: OlapMappings) {
+    }
 
     get url(): ReplaySubject<any> {
         if (this.url$) return this.url$;
@@ -96,17 +95,14 @@ export class OlapEp {
     private monthlyData$: ReplaySubject<any>;
 
     // query helpers
-    private smartQuery(
-        { measures, dimensions, slicers }:
-        {
-            measures?: any[],
-            dimensions?: {
-                membersConfigArr?: MembersConfig[],
-                memberConfigArr?: MemberConfig[][]
-            },
-            slicers?: MemberConfig[]
-        } = {}
-    ): Promise<any> {
+    private smartQuery({measures, dimensions, slicers}: {
+        measures?: any[],
+        dimensions?: {
+            membersConfigArr?: MembersConfig[],
+            memberConfigArr?: MemberConfig[][]
+        },
+        slicers?: MemberConfig[]
+    } = {}): Promise<any> {
         return new Promise((resolve, reject) => {
             const measuresClause = measures.map(measure => `
                         ${this.measure(measure)}
@@ -115,16 +111,16 @@ export class OlapEp {
             let dimensionsClause = '';
             if (dimensions) {
                 if (dimensions.membersConfigArr && dimensions.membersConfigArr.length) {
-                    dimensionsClause += dimensions.membersConfigArr.map(memberConfig=>`
+                    dimensionsClause += dimensions.membersConfigArr.map(memberConfig => `
                         ${this.membersNew(memberConfig)}
                     `).join(',');
                     dimensionsClause += ',';
                 }
                 if (dimensions.memberConfigArr && dimensions.memberConfigArr.length) {
-                    dimensions.memberConfigArr.forEach(memberSetConfig=>{
+                    dimensions.memberConfigArr.forEach(memberSetConfig => {
                         dimensionsClause += `
                         {
-                            ${memberSetConfig.map(memberConfig=>`
+                            ${memberSetConfig.map(memberConfig => `
                                 ${this.memberNew(memberConfig)}
                             `).join(',')}
                         }
@@ -135,7 +131,7 @@ export class OlapEp {
                 dimensionsClause = dimensionsClause.slice(0, -1);
             }
 
-            const whereClause = slicers.map(slicer=>`
+            const whereClause = slicers.map(slicer => `
                 ${this.memberNew(slicer)}
             `).join(',').slice(0, -1);
 
@@ -145,7 +141,7 @@ export class OlapEp {
                     ${measuresClause}
                 }
                 ON 0
-                ${dimensionsClause!=='' ? `
+                ${dimensionsClause !== '' ? `
                 ,
                 Non Empty(
                     ${dimensionsClause}
@@ -160,7 +156,7 @@ export class OlapEp {
 
             this.url
                 .subscribe(url => {
-                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+                    const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
 
                     xmla4j_w.executeNew(mdx)
                         .then(rowset => {
@@ -169,15 +165,15 @@ export class OlapEp {
 
                                 if (dimensions) {
                                     if (dimensions.membersConfigArr) {
-                                        dimensions.membersConfigArr.forEach(membersConfig=>{
-                                            const key = membersConfig.as ? membersConfig.as : Object.keys(membersConfig.dimAttr.parent).find(k => membersConfig.dimAttr.parent[k]===membersConfig.dimAttr);
+                                        dimensions.membersConfigArr.forEach(membersConfig => {
+                                            const key = membersConfig.as ? membersConfig.as : Object.keys(membersConfig.dimAttr.parent).find(k => membersConfig.dimAttr.parent[k] === membersConfig.dimAttr);
                                             const val = this.parseDim(r, membersConfig.dimAttr);
                                             row[key] = val;
                                         });
                                     }
 
                                     if (dimensions.memberConfigArr) {
-                                        dimensions.memberConfigArr.forEach(memberSetConfig=>{
+                                        dimensions.memberConfigArr.forEach(memberSetConfig => {
                                             const sampleMemberConfig = memberSetConfig[0];
                                             let key, val;
                                             if (sampleMemberConfig.dimAttr) {
@@ -192,7 +188,7 @@ export class OlapEp {
                                     }
                                 }
 
-                                measures.forEach(measure=>{
+                                measures.forEach(measure => {
                                     const key = Object.keys(measure.parent).find(k => measure.parent[k] === measure);
                                     const val = this.parseMeasure(r, measure);
                                     row[key] = val;
@@ -228,6 +224,7 @@ export class OlapEp {
         }
         return value;
     }
+
     // measure helpers
 
     // dim helpers
@@ -267,11 +264,12 @@ export class OlapEp {
         const raw = row[path];
         return dimAttr.hasOwnProperty('parse') ? dimAttr.parse[environment.region](raw) : raw;
     }
+
     // dim helpers
 
     private expoToNumer(input) {
         if (typeof input === 'number') return input;
-        if (input.indexOf('E')===-1) return input * 1;
+        if (input.indexOf('E') === -1) return input * 1;
         const splitted = input.split('E');
         const num = splitted[0];
         const exp = splitted[1];
@@ -287,7 +285,7 @@ export class OlapEp {
             // a date after b date
             return -1;
         }
-    }
+    };
 
 // NEW METHODS:
 
@@ -330,7 +328,7 @@ export class OlapEp {
                             ordersCount: o.ordersCount,
                             ppa: o.ppa
                         }
-                    }
+                    };
                 });
             });
     }
@@ -354,7 +352,7 @@ export class OlapEp {
             ],
             dimensions: {
                 membersConfigArr: [
-                    { dimAttr: this.olapMappings.dims.orderTypeV2.attr.orderType, as: 'orderTypeName' }
+                    {dimAttr: this.olapMappings.dims.orderTypeV2.attr.orderType, as: 'orderTypeName'}
                 ]
             },
             slicers: [
@@ -364,8 +362,8 @@ export class OlapEp {
                 }
             ]
         })
-            .then(data=>{
-                return data.map(o=>{
+            .then(data => {
+                return data.map(o => {
                     return {
                         orderTypeName: o.orderTypeName,
                         ordersKpis: {
@@ -380,7 +378,7 @@ export class OlapEp {
                             ordersCount: o.ordersCount,
                             ppa: o.ppa
                         }
-                    }
+                    };
                 });
             });
     }
@@ -405,8 +403,8 @@ export class OlapEp {
             ],
             dimensions: {
                 membersConfigArr: [
-                    { dimAttr: this.olapMappings.dims.orderTypeV2.attr.orderType, as: 'orderTypeName' },
-                    { dimAttr: this.olapMappings.dims.serviceV2.attr.name, as: 'shiftName' }
+                    {dimAttr: this.olapMappings.dims.orderTypeV2.attr.orderType, as: 'orderTypeName'},
+                    {dimAttr: this.olapMappings.dims.serviceV2.attr.name, as: 'shiftName'}
                 ]
             },
             slicers: [
@@ -433,7 +431,7 @@ export class OlapEp {
                             ordersCount: o.ordersCount,
                             ppa: o.ppa
                         }
-                    }
+                    };
                 });
             });
     }
@@ -456,15 +454,15 @@ export class OlapEp {
             }
             ON 0,
             NON EMPTY {
-                ${this.membersNew({ dimAttr: this.olapMappings.dims.businessDateV2.attr.yearMonth })}
+                ${this.membersNew({dimAttr: this.olapMappings.dims.businessDateV2.attr.yearMonth})}
             }
             ON 1
             FROM ${this.cube}
         `;
 
         this.url
-            .subscribe(url=>{
-                const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+            .subscribe(url => {
+                const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
 
                 xmla4j_w.executeNew(mdx)
                     .then(rowset => {
@@ -483,6 +481,7 @@ export class OlapEp {
                             const salesPPA = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.dinersSales);
                             const dinersPPA = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.dinersCount);
 
+                            console.log('Sales from cube', sales);
                             return {
                                 date: r.month,
                                 sales: sales,
@@ -496,9 +495,6 @@ export class OlapEp {
                     .catch(e => {
                     });
             });
-
-
-
         return this.monthlyData$;
     }
 
@@ -506,8 +502,9 @@ export class OlapEp {
         if timeTo is supplied, then only orders that were closed up to timeTo will be be retreived,
         e.g. if timeTo is 1745 than only orders that were clsed untill 17:45 will be retreived
     */
+
     // TODO smartQuery?
-    public getDailyData(o: {dateFrom:moment.Moment, dateTo:moment.Moment, timeFrom?:string, timeTo?:string, timeType?:string}): Promise<{
+    public getDailyData(o: { dateFrom: moment.Moment, dateTo: moment.Moment, timeFrom?: string, timeTo?: string, timeType?: string }): Promise<{
         date: moment.Moment,
         sales: number,
         salesPPA: number,
@@ -515,7 +512,7 @@ export class OlapEp {
         ppa: number,
         totalPaymentsAmnt: number//new cube stuff
     }[]> {
-        return new Promise<any>((res, rej)=>{
+        return new Promise<any>((res, rej) => {
             const dateFrom: moment.Moment = o.dateFrom;
             const dateTo: moment.Moment = o.dateTo;
 
@@ -581,7 +578,7 @@ export class OlapEp {
 
             this.url.take(1)
                 .subscribe(url => {
-                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+                    const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
 
                     xmla4j_w.execute(mdx)
                         .then(rowset => {
@@ -607,7 +604,7 @@ export class OlapEp {
                                     totalPaymentsAmnt: totalPaymentsAmnt
                                 };
                             })
-                            .sort(this.shortDayOfWeek_compareFunction);
+                                .sort(this.shortDayOfWeek_compareFunction);
 
                             res(treated);
 
@@ -621,6 +618,7 @@ export class OlapEp {
     /*
         returns a promise that resolves with data in months resolution
     */
+
     // TODO smartQuery
     public getDataByMonths(o: { monthFrom: moment.Moment, monthTo: moment.Moment }): Promise<any> {
         return new Promise<any>((resolve, reject) => {
@@ -632,7 +630,7 @@ export class OlapEp {
                 }
                 ON 0,
                 NON EMPTY {
-                    ${this.membersNew({ dimAttr: this.olapMappings.dims.businessDateV2.attr.yearMonth })}
+                    ${this.membersNew({dimAttr: this.olapMappings.dims.businessDateV2.attr.yearMonth})}
                 }
                 ON 1
                 FROM ${this.cube}
@@ -640,14 +638,14 @@ export class OlapEp {
 
             this.url.take(1)
                 .subscribe(url => {
-                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+                    const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
 
                     xmla4j_w.executeNew(mdx)
                         .then(rowset => {
 
                             const filtered = rowset.filter(r => {
                                 const yearMonth = this.parseDim(r, this.olapMappings.dims.businessDateV2.attr.yearMonth);
-                                if (yearMonth!==null) {
+                                if (yearMonth !== null) {
                                     r.month = yearMonth;
                                     return true;
                                 }
@@ -680,7 +678,7 @@ export class OlapEp {
         salesPPA: number,
         dinersPPA: number,
         ppa: number
-        }[]> {
+    }[]> {
         return new Promise((resolve, reject) => {
             if (!o.day) reject('day is missing');
 
@@ -701,11 +699,11 @@ export class OlapEp {
                     ${<string>this.olapMappings.measures.ppa.diners[environment.region]}
                 } ON 0,
                 NonEmptyCrossJoin(
-                    ${this.membersNew({ dimAttr: this.olapMappings.dims.ordersV2.attr.orderNumber})},
-                    ${this.membersNew({ dimAttr: this.olapMappings.dims.orderTypeV2.attr.orderType})},
-                    ${this.membersNew({ dimAttr: this.olapMappings.dims.orderOpeningDateV2.attr.openingDate})},
-                    ${this.membersNew({ dimAttr: this.olapMappings.dims.orderOpeningTimeV2.attr.openingTime})},
-                    ${this.membersNew({ dimAttr: this.olapMappings.dims.waitersV2.attr.waiter})}
+                    ${this.membersNew({dimAttr: this.olapMappings.dims.ordersV2.attr.orderNumber})},
+                    ${this.membersNew({dimAttr: this.olapMappings.dims.orderTypeV2.attr.orderType})},
+                    ${this.membersNew({dimAttr: this.olapMappings.dims.orderOpeningDateV2.attr.openingDate})},
+                    ${this.membersNew({dimAttr: this.olapMappings.dims.orderOpeningTimeV2.attr.openingTime})},
+                    ${this.membersNew({dimAttr: this.olapMappings.dims.waitersV2.attr.waiter})}
                 ) ON 1
                 FROM ${this.cube}
                 ${whereClause}
@@ -713,7 +711,7 @@ export class OlapEp {
 
             this.url.take(1)
                 .subscribe(url => {
-                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+                    const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
 
                     xmla4j_w.executeNew(mdx)
                         .then(rowset => {
@@ -730,7 +728,7 @@ export class OlapEp {
 
                                 const orderWaiter = this.parseDim(r, this.olapMappings.dims.waitersV2.attr.waiter);
 
-                                const openingTime: moment.Moment = moment(`${rawOrderDate} ${rawOrderTime}`, environment.region==='il' ? 'DD/MM/YYYY Hmm' : 'MM/DD/YYYY Hmm');
+                                const openingTime: moment.Moment = moment(`${rawOrderDate} ${rawOrderTime}`, environment.region === 'il' ? 'DD/MM/YYYY Hmm' : 'MM/DD/YYYY Hmm');
 
                                 let sales = r[this.olapMappings.measures.sales[environment.region]] || 0;
                                 let salesPPA = r[this.olapMappings.measures.ppa.sales[environment.region]] || 0;
@@ -753,7 +751,7 @@ export class OlapEp {
                                     ppa: ppa
                                 };
                             })
-                            .sort();
+                                .sort();
 
                             resolve(treated);
 
@@ -761,7 +759,6 @@ export class OlapEp {
                         .catch(e => {
                         });
                 });
-
 
 
         });
@@ -773,6 +770,7 @@ export class OlapEp {
         the product of 'order numbers' dim attr and 'price reduction reasons' dim attr on rows
         the different price reduction measures on columns
     */
+
     // TODO smartQuery
     public getOrdersPriceReductionData(day: moment.Moment): Promise<{
         orderNumber: number,
@@ -781,7 +779,7 @@ export class OlapEp {
         operational: number,
         retention: number,
         organizational: number
-        }[]> {
+    }[]> {
         return new Promise((resolve, reject) => {
             if (!day) reject('day is missing');
 
@@ -823,7 +821,7 @@ export class OlapEp {
 
             this.url.take(1)
                 .subscribe(url => {
-                    const xmla4j_w = new Xmla4JWrapper({ url: url, catalog: this.catalog });
+                    const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
 
                     xmla4j_w.executeNew(mdx)
                         .then(rowset => {
@@ -865,7 +863,7 @@ export class OlapEp {
             ],
             dimensions: {
                 membersConfigArr: [
-                    { dimAttr: this.olapMappings.dims.items.attr.subDepartment }
+                    {dimAttr: this.olapMappings.dims.items.attr.subDepartment}
                 ]
             },
             slicers: [
@@ -900,8 +898,8 @@ export class OlapEp {
             ],
             dimensions: {
                 membersConfigArr: [
-                    { dimAttr: this.olapMappings.dims.items.attr.department },
-                    { dimAttr: this.olapMappings.dims.items.attr.item }
+                    {dimAttr: this.olapMappings.dims.items.attr.department},
+                    {dimAttr: this.olapMappings.dims.items.attr.item}
                 ]
             },
             slicers: [
@@ -932,10 +930,10 @@ export class OlapEp {
             ],
             dimensions: {
                 membersConfigArr: [
-                    { dimAttr: this.olapMappings.dims.businessDateV2.attr.date },
-                    { dimAttr: this.olapMappings.dims.accounts.attr.accountGroup },
-                    { dimAttr: this.olapMappings.dims.accounts.attr.accountType },
-                    { dimAttr: this.olapMappings.dims.clearer.attr.clearerName }
+                    {dimAttr: this.olapMappings.dims.businessDateV2.attr.date},
+                    {dimAttr: this.olapMappings.dims.accounts.attr.accountGroup},
+                    {dimAttr: this.olapMappings.dims.accounts.attr.accountType},
+                    {dimAttr: this.olapMappings.dims.clearer.attr.clearerName}
                 ]
             },
             slicers: [
@@ -955,8 +953,8 @@ export class OlapEp {
                 paymentsAmount: number;//=calcSalesAmnt - refundAmnt
                 tipsAmnt: number;
                 totalPaymentsAmnt: number;//=paymentsAmount + tipsAmnt
-            }[])=>{
-                return rowset.reduce((acc, curr)=>{
+            }[]) => {
+                return rowset.reduce((acc, curr) => {
                     const key = curr.date.format('YYYY-MM-DD');
                     (acc[key] = acc[key] || []).push({
                         accountGroup: curr.accountGroup,
@@ -992,13 +990,13 @@ export class OlapEp {
             ],
             dimensions: {
                 membersConfigArr: [
-                    { dimAttr: this.olapMappings.dims.orderTypeV2.attr.orderType },
-                    { dimAttr: this.olapMappings.dims.waitersV2.attr.waiter },
-                    { dimAttr: this.olapMappings.dims.ordersV2.attr.orderNumber },
-                    { dimAttr: this.olapMappings.dims.tables.attr.tableId },
-                    { dimAttr: this.olapMappings.dims.items.attr.item },
-                    { dimAttr: this.olapMappings.dims.priceReductions.attr.subType },
-                    { dimAttr: this.olapMappings.dims.priceReductions.attr.reasonId }
+                    {dimAttr: this.olapMappings.dims.orderTypeV2.attr.orderType},
+                    {dimAttr: this.olapMappings.dims.waitersV2.attr.waiter},
+                    {dimAttr: this.olapMappings.dims.ordersV2.attr.orderNumber},
+                    {dimAttr: this.olapMappings.dims.tables.attr.tableId},
+                    {dimAttr: this.olapMappings.dims.items.attr.item},
+                    {dimAttr: this.olapMappings.dims.priceReductions.attr.subType},
+                    {dimAttr: this.olapMappings.dims.priceReductions.attr.reasonId}
                 ]
             },
             slicers: [
@@ -1030,19 +1028,19 @@ export class OlapEp {
             ],
             dimensions: {
                 membersConfigArr: [
-                    { dimAttr: this.olapMappings.dims.orderTypeV2.attr.orderType },
-                    { dimAttr: this.olapMappings.dims.source.attr.source },
-                    { dimAttr: this.olapMappings.dims.waitersV2.attr.waiter },
-                    { dimAttr: this.olapMappings.dims.ordersV2.attr.orderNumber },
-                    { dimAttr: this.olapMappings.dims.tables.attr.tableId },
-                    { dimAttr: this.olapMappings.dims.items.attr.item },
+                    {dimAttr: this.olapMappings.dims.orderTypeV2.attr.orderType},
+                    {dimAttr: this.olapMappings.dims.source.attr.source},
+                    {dimAttr: this.olapMappings.dims.waitersV2.attr.waiter},
+                    {dimAttr: this.olapMappings.dims.ordersV2.attr.orderNumber},
+                    {dimAttr: this.olapMappings.dims.tables.attr.tableId},
+                    {dimAttr: this.olapMappings.dims.items.attr.item},
                     // { dimAttr: this.olapMappings.dims.priceReductions.attr.subType },
-                    { dimAttr: this.olapMappings.dims.priceReductions.attr.reasonId }
+                    {dimAttr: this.olapMappings.dims.priceReductions.attr.reasonId}
                 ],
                 memberConfigArr: [
                     [
-                        { member: this.olapMappings.dims.priceReductions.attr.subType.members.retention },
-                        { member: this.olapMappings.dims.priceReductions.attr.subType.members.discounts }
+                        {member: this.olapMappings.dims.priceReductions.attr.subType.members.retention},
+                        {member: this.olapMappings.dims.priceReductions.attr.subType.members.discounts}
                     ]
                 ]
             },
@@ -1097,8 +1095,8 @@ export class OlapEp {
             ],
             dimensions: {
                 membersConfigArr: [
-                    { dimAttr: this.olapMappings.dims.businessDateV2.attr.date },
-                    { dimAttr: this.olapMappings.dims.businessDateV2.attr.dayOfWeek }
+                    {dimAttr: this.olapMappings.dims.businessDateV2.attr.date},
+                    {dimAttr: this.olapMappings.dims.businessDateV2.attr.dayOfWeek}
                 ]
             },
             slicers: [

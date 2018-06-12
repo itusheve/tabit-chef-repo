@@ -861,6 +861,7 @@ export class DataService {
                         result.diners = diners;
                         result.ppa = ppa;
                     }
+                    console.log(result);
                     res(result);
                 });
         });

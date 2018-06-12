@@ -1,83 +1,87 @@
-<div class="flex d-col dayView">
+<div *ngIf="region === 'il'">
 
-  <app-day-selector
-    class="widget noPadding daySelectorFixed"
-    [currentValue]="day"
-    [options]="daySelectorOptions"
-    (onDateChanged)="onDateChanged($event)"></app-day-selector>
+</div>
+<div *ngIf="region === 'us'">
+    <div class="flex d-col dayView">
 
-  <app-day-orders-table
-    class="widget"
-    style="padding-bottom: 0px;"
-    [lastViewed]="drilledOrder"
-    [orders]="orders"
-    [bdIsCurrentBd]="bdIsCurrentBd"
-    [closedOpenSalesDiff]="closedOpenSalesDiff"
-    (onOrderClicked)="onOrderClicked($event)"
-  ></app-day-orders-table>
+        <app-day-selector
+                class="widget noPadding daySelectorFixed"
+                [currentValue]="day"
+                [options]="daySelectorOptions"
+                (onDateChanged)="onDateChanged($event)"></app-day-selector>
 
-  <app-day-sales-table
-    class="widget"
-    title="Summary"
-    i18n-title="@@summary"
-    [data]="dailySummaryTblData?.data">
-  </app-day-sales-table>
+        <app-day-orders-table
+                class="widget"
+                style="padding-bottom: 0px;"
+                [lastViewed]="drilledOrder"
+                [orders]="orders"
+                [bdIsCurrentBd]="bdIsCurrentBd"
+                [closedOpenSalesDiff]="closedOpenSalesDiff"
+                (onOrderClicked)="onOrderClicked($event)"
+        ></app-day-orders-table>
 
-  <ng-container *ngFor="let tblData of byShiftSummaryTblsData">
-    <app-day-sales-table
-      *ngIf="tblData.data.length"
-      class="widget"
-      [title]="tblData?.title"
-      [data]="tblData?.data">
-    </app-day-sales-table>
-  </ng-container>
+        <app-day-sales-table
+                class="widget"
+                title="Summary"
+                i18n-title="@@summary"
+                [data]="dailySummaryTblData?.data">
+        </app-day-sales-table>
 
-  <app-day-sales-by-sub-department-table
-    class="widget"
-    [bd]="day"
-    [salesBySubDepartment]="salesBySubDepartment"
-  ></app-day-sales-by-sub-department-table>
+        <ng-container *ngFor="let tblData of byShiftSummaryTblsData">
+            <app-day-sales-table
+                    *ngIf="tblData.data.length"
+                    class="widget"
+                    [title]="tblData?.title"
+                    [data]="tblData?.data">
+            </app-day-sales-table>
+        </ng-container>
 
-  <app-most-sold-items-table
-      class="widget"
-      [itemsData]="itemsData"
-  ></app-most-sold-items-table>
+        <app-day-sales-by-sub-department-table
+                class="widget"
+                [bd]="day"
+                [salesBySubDepartment]="salesBySubDepartment"
+        ></app-day-sales-by-sub-department-table>
 
-  <app-most-returned-items-table
-    class="widget"
-    [itemsData]="itemsData"
-  ></app-most-returned-items-table>
+        <app-most-sold-items-table
+                class="widget"
+                [itemsData]="itemsData"
+        ></app-most-sold-items-table>
 
-  <!-- TODO US missing measures -->
-  <app-payments-table
-    class="widget"
-    [bd]="day"
-    [paymentsData]="paymentsData"
-  ></app-payments-table>
+        <app-most-returned-items-table
+                class="widget"
+                [itemsData]="itemsData"
+        ></app-most-returned-items-table>
 
-  <app-operational-errors-table
-    class="widget"
-    [operationalErrorsData]="operationalErrorsData"
-    [lastViewed]="drilledOrderNumber"
-    (onOrderClicked)="onOrderClicked_orderNumber($event)"
-  ></app-operational-errors-table>
+        <!-- TODO US missing measures -->
+        <app-payments-table
+                class="widget"
+                [bd]="day"
+                [paymentsData]="paymentsData"
+        ></app-payments-table>
 
-  <app-retention-table
-    class="widget"
-    [retentionData]="retentionData"
-    [lastViewed]="drilledOrderNumber"
-    (onOrderClicked)="onOrderClicked_orderNumber($event)"
-  ></app-retention-table>
+        <app-operational-errors-table
+                class="widget"
+                [operationalErrorsData]="operationalErrorsData"
+                [lastViewed]="drilledOrderNumber"
+                (onOrderClicked)="onOrderClicked_orderNumber($event)"
+        ></app-operational-errors-table>
 
-  <app-month-summary-table
-    class="widget"
-    [month]="day"
-    [mtdBusinessDaysKPIs]="mtdBusinessDaysKPIs"
-    [mtdKPIs]="mtdKPIs"
-  ></app-month-summary-table>
+        <app-retention-table
+                class="widget"
+                [retentionData]="retentionData"
+                [lastViewed]="drilledOrderNumber"
+                (onOrderClicked)="onOrderClicked_orderNumber($event)"
+        ></app-retention-table>
+
+        <app-month-summary-table
+                class="widget"
+                [month]="day"
+                [mtdBusinessDaysKPIs]="mtdBusinessDaysKPIs"
+                [mtdKPIs]="mtdKPIs"
+        ></app-month-summary-table>
+    </div>
+    <div class="flex d-col drill" *ngIf="drill">
+        <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber"></app-order-view>
+    </div>
 </div>
 
-
-<div class="flex d-col drill" *ngIf="drill">
-    <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber"></app-order-view>
-</div>

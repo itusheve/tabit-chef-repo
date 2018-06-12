@@ -51,7 +51,7 @@ export class CardsDataService {
                         const previousBdData_ROS = data[0];
                         const previousBdData_Cube = data[1];
 
-                        const previousBd_netSalesAmnt_ROS = previousBdData_ROS.totals.netSales ? previousBdData_ROS.totals.netSales / 100 : 0;
+                        const previousBd_netSalesAmnt_ROS = previousBdData_ROS.totals.netSales ? previousBdData_ROS.totals.totalPayments / 100 : 0;
                         const previousBd_netSalesAmnt_Cube = previousBdData_Cube.kpi.sales;
 
                         if (Math.abs(previousBd_netSalesAmnt_Cube - previousBd_netSalesAmnt_ROS)<1) {
