@@ -22,16 +22,12 @@ export class ManagersDashboardComponent implements OnInit {
   org: any;
   user: any;
   userInitials: string;
-  vat: boolean;
-
   toolbarConfig: any;
   sideNavConfig: any;
-
   appVersions: {
     chef: string,
     wrapper: string
   };
-
   env;
   debug: boolean;
   logArr: { type: string, message: string }[];
@@ -48,40 +44,46 @@ export class ManagersDashboardComponent implements OnInit {
     this.logArr = ds.logArr;
     this.env = environment;
     this.appVersions = appVersions;
-    managersDashboardService.toolbarConfig.left.back.showBtn = false;
-
     this.toolbarConfig = managersDashboardService.toolbarConfig;
     this.sideNavConfig = managersDashboardService.sideNavConfig;
   }
+
+  db: any;
+  ngOnInit() {
+    let that = this;
+    this.managersDashboardService.getMetaData()
+      .then((data) => {
+        that.db = data;
+      });
+  }
+
+
+  /*
+  ---------------------------------------------------------------------------------
+  Module UI
+  ---------------------------------------------------------------------------------
+  */
 
   logout() {
     let dialogRef = this.dialog.open(AreYouSureDialogComponent, {
       width: '250px',
       data: {
         title: '',
-        content: `
-          ${tmpTranslations.get('areYouSureYouWish')} ${tmpTranslations.get('toLogout')}?
-        `
+        content: `${tmpTranslations.get('areYouSureYouWish')} ${tmpTranslations.get('toLogout')}?`
       }
     });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.authService.logout()
-          .then(() => {
+        this.authService.logout().then(() => {
             this.router.navigate(['login', { m: 's' }]);
           }, () => {
           });
       }
     });
-
   }
 
   refresh() {
     location.reload();
   }
-
-
-  ngOnInit() {  }
 
 }
