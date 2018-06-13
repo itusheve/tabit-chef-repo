@@ -324,6 +324,7 @@ i.icon {
     color: rgba(0, 0, 0, 0.54);
 }
 
+@import 'tabit/styles/_bootstrap_override';
 @import 'tabit/styles/util';
 @import 'tabit/styles/flex';
 @import 'tabit/styles/frame';
@@ -351,3 +352,4 @@ snack-bar-container {
     font-family: inherit!important;
   }
 }
+

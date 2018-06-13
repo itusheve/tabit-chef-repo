@@ -1,4 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ROSEp } from '../../tabit/data/ep/ros.ep';
 import { DataService } from '../../tabit/data/data.service';
 
@@ -40,7 +41,7 @@ export class ManagersDashboardService {
       showLogoutBtn: true
     }
   };
-
+  public isHandset: boolean = false;
 
   /*
   ---------------------------------------------------------------------------------
@@ -49,11 +50,22 @@ export class ManagersDashboardService {
   */
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private dataService: DataService,
     private rosEp: ROSEp,
     private router: Router,
     private ds: DebugService
   ) {
+
+    breakpointObserver.observe([
+      Breakpoints.Handset,
+      Breakpoints.HandsetLandscape,
+      Breakpoints.HandsetPortrait
+    ]).subscribe(result => {
+      if (result.matches) {
+        this.isHandset = true;
+      }
+    });
 
     this.dataService.getOrganizations().then(orgs => {
       if (orgs.length === 1) {

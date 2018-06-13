@@ -1,0 +1,28 @@
+
+
+
+    .dash-pos-buttons{
+        position:absolute;
+        right:10px;
+        top: -12px;
+        .rtl &{
+          right:auto;
+          left:10px;
+        }
+    }
+
+
+    /*@media (max-width: 767px){
+        .dash-pos-buttons{
+            top: -35px;
+        }
+    }
+
+    @media (max-width: 1024px){
+        .rtl .nav-tabs-dash-main > li:first-child a{
+            border-right-width:0;
+        }
+        .ltr .nav-tabs-dash-main > li:first-child a{
+            border-left-width:0;
+        }
+    }*/

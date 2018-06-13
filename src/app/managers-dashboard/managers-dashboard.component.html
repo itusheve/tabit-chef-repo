@@ -1,4 +1,4 @@
-<mat-sidenav-container>
+<mat-sidenav-container class="rtl">
 
   <mat-sidenav class="flex d-col" #sidenav mode="over">
     <div class="s-0 flex d-col header">
@@ -37,14 +37,82 @@
           </button>
         </div>
       </div>
-      <div class="flex j-end pe15" style="width:20%"  i18n="@@introductionHeader">
+      <div class="flex j-end pe15" style="width:20%" i18n="@@introductionHeader">
 
       </div>
     </div>
+    <!--START CONTENT-->
     <div class="contentFixed">
       <div class="content">
-        <h1>Hellow Hello</h1>
+
+        <div class="wrapper-sm" *ngIf="MDS.isHandset"></div>
+        <div class="pos-rlt" style="margin:0 auto; max-width:1024px">
+          <ul class="nav-tabs-dash-main nav nav-tabs m-t" role="tablist">
+            <li class="nav-item text-xl">
+              <a class="nav-link" [class.active]="criteria.report == 'dayly'" (click)="criteria.report = 'dayly'">
+                <ng-container i18n="@@DASH_SALES">Dayly</ng-container>
+              </a>
+            </li>
+            <li class="nav-item text-xl">
+              <a class="nav-link" [class.active]="criteria.report == 'sales'" (click)="criteria.report = 'sales'">
+                <ng-container i18n="@@DASH_SALES">Sales</ng-container>
+              </a>
+            </li>
+          </ul>
+
+          <div class="dash-pos-buttons">
+
+
+            <button mat-fab color="primary">Primary</button>
+            <button mat-fab color="accent">Accent</button>
+            <button mat-fab color="warn">Warn</button>
+
+
+            <!--<div class="hbox">
+              <div class="hcol v-middle" *ngIf="!isSmallMedia">
+                <div class="m-far">
+                  <button class="btn btn-default btn-block no-padder-hX  btn-addon" ng-click="doBusinessDate()">
+                    <i class="fa fa-calendar"></i>
+                    <ng-container *ngIf="MDS.isDateClosed">{{MDS.businessDate | date}}</ng-container>
+                    <ng-container *ngIf="!MDS.isDateClosed" i18n="@@Today">Today</ng-container>
+                  </button>
+                </div>
+
+              </div>
+
+              <div class="hcol v-bottom text-far" *ngIf="isSmallMedia">
+                <div class="text-xs font-bold inline text-center" style="width:60px; white-space:nowrap">
+                  <ng-container *ngIf="MDS.isDateClosed">{{MDS.businessDate | date}}</ng-container>
+                  <ng-container *ngIf="!MDS.isDateClosed" i18n="@@Today">Today</ng-container>
+                </div>
+                <button class="btn btn-rounded btn-lg btn-icon btn-dark" style="width:60px; height:60px;" ng-click="doBusinessDate()">
+                  <img src="images/calendar.svg" style="width:30px; height:30px" />
+                </button>
+
+              </div>
+              <div class="hcol v-bottom text-far" style="width:65px">
+                <button class="btn btn-rounded btn-lg btn-icon btn-dark" style="width:60px; height:60px;" ng-click="doDataUpdate()" ng-disabled="MDS.isDateClosed">
+                  <img src="images/cycle.svg" [ngClass]="{'image-spin':criteria.refreshing}" style="width:40px; height:40px" />
+                </button>
+              </div>
+            </div>-->
+          </div>
+
+
+        </div>
+        <div class="pos-rlt" *ngIf="db.daylyData">
+          <app-manager-dashboard-sales *ngIf="criteria.report == 'sales'"
+               class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db">
+          </app-manager-dashboard-sales>
+          <app-manager-dashboard-dayly *ngIf="criteria.report == 'dayly'"
+                                       class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db">
+          </app-manager-dashboard-dayly>
+
+
+        </div>
+
       </div>
     </div>
+    <!--END CONTENT-->
   </mat-sidenav-content>
 </mat-sidenav-container>

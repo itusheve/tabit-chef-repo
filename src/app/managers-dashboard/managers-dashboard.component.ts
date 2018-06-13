@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatSidenavModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
+
 import { environment } from '../../environments/environment';
 
 import { DataService, tmpTranslations, appVersions } from '../../tabit/data/data.service';
@@ -36,12 +38,12 @@ export class ManagersDashboardComponent implements OnInit {
   debug: boolean;
   logArr: { type: string, message: string }[];
   criteria: any;
-  db: any;
+  db: any = {};
 
   constructor(
     private dataService: DataService,
     private authService: AuthService,
-    public managersDashboardService: ManagersDashboardService,
+    public MDS: ManagersDashboardService,
     public dialog: MatDialog,
     public router: Router,
     public route: ActivatedRoute,
@@ -50,8 +52,8 @@ export class ManagersDashboardComponent implements OnInit {
     this.logArr = ds.logArr;
     this.env = environment;
     this.appVersions = appVersions;
-    this.toolbarConfig = managersDashboardService.toolbarConfig;
-    this.sideNavConfig = managersDashboardService.sideNavConfig;
+    this.toolbarConfig = MDS.toolbarConfig;
+    this.sideNavConfig = MDS.sideNavConfig;
 
     this.criteria = {
       report: "dayly",//sales
@@ -88,7 +90,7 @@ export class ManagersDashboardComponent implements OnInit {
 
   ngOnInit() {
     let that = this;
-    this.managersDashboardService.getMetaData()
+    this.MDS.getMetaData()
       .then((data) => {
         that.db = data;
         that.criteria.itemGroups = data.itemGroups;
