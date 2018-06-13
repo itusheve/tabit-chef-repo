@@ -37,7 +37,38 @@ export class ManagersDashboardComponent implements OnInit {
   env;
   debug: boolean;
   logArr: { type: string, message: string }[];
-  criteria: any;
+  criteria: any = {
+    loaded: false,
+    report: "dayly",//sales
+    itemSelectionCollapsed: true,
+    itemSelectionMeasure: "c",
+    showNetPrices: true,
+    orderFilter: 'closed',
+    viewerMode: 'diner',
+
+    dinerAvgGoal: 2000,
+    dinerAvgGoalParsed: 20,
+    dinerAvgGoalThreshhold: 10,
+    dinerAvgGoalAlert: 5400,
+
+    timeMode: 'all',
+    dateFrom: new Date(1970, 0, 1, 6, 0, 0),
+    timeFrom: 360,
+    dateTo: new Date(1970, 0, 1, 20, 0, 0),
+    timeTo: 2400,
+    itemGroupsCounter: [1, 2, 3, 4],
+    itemGroups: [],
+    excludedUsers: [],
+    netGrossOpts: [
+      { value: true, text: tmpTranslations.get('managerDash.TOTAL_NET') },
+      { value: false, text: tmpTranslations.get('managerDash.TOTAL_GROSS') }
+    ],
+    orderFilterOpts: [
+      { value: 'all', text: tmpTranslations.get('managerDash.ALLORDERS') },
+      { value: 'open', text: tmpTranslations.get('managerDash.OPENORDERS') },
+      { value: 'closed', text: tmpTranslations.get('managerDash.CLOSEDORDERS') }
+    ]
+  }
   db: any = {};
 
   constructor(
@@ -55,48 +86,20 @@ export class ManagersDashboardComponent implements OnInit {
     this.toolbarConfig = MDS.toolbarConfig;
     this.sideNavConfig = MDS.sideNavConfig;
 
-    this.criteria = {
-      report: "dayly",//sales
-      itemSelectionCollapsed: true,
-      itemSelectionMeasure: "c",
-      showNetPrices: true,
-      orderFilter: 'closed',
-      viewerMode: 'diner',
 
-      dinerAvgGoal: 2000,
-      dinerAvgGoalParsed: 20,
-      dinerAvgGoalThreshhold: 10,
-      dinerAvgGoalAlert: 5400,
-
-      timeMode: 'all',
-      dateFrom: new Date(1970, 0, 1, 6, 0, 0),
-      timeFrom: 360,
-      dateTo: new Date(1970, 0, 1, 20, 0, 0),
-      timeTo: 2400,
-      itemGroupsCounter: [1, 2, 3, 4],
-      itemGroups: [],
-      excludedUsers: [],
-      netGrossOpts: [
-        { value: true, text: tmpTranslations.get('managerDash.TOTAL_NET') },
-        { value: false, text: tmpTranslations.get('managerDash.TOTAL_GROSS') }
-      ],
-      orderFilterOpts: [
-        { value: 'all', text: tmpTranslations.get('managerDash.ALLORDERS') },
-        { value: 'open', text: tmpTranslations.get('managerDash.OPENORDERS') },
-        { value: 'closed', text: tmpTranslations.get('managerDash.CLOSEDORDERS') }
-      ]
-    }
   }
 
   ngOnInit() {
     let that = this;
     this.MDS.getMetaData()
       .then((data) => {
+        debugger
         that.db = data;
         that.criteria.itemGroups = data.itemGroups;
         that.criteria.dinerAvgGoalParsed = _.get(data.regionalSettings, 'managerDashboard.ppaGoal') || 20;
         that.criteria.dinerAvgGoal = that.criteria.dinerAvgGoalParsed * 100;
         that.applyCriteria();
+        that.criteria.loaded = true;
       });
   }
 

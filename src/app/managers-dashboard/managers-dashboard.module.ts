@@ -8,7 +8,9 @@ import { ManagerDashboardDaylyComponent } from './manager-dashboard-dayly/manage
 
 import { ManagersDashboardService } from './managers-dashboard.service';
 import { ManagersDashboardRoutingModule } from './managers-dashboard-routing.module';
-//import { OrgsRoutingModule } from './orgs-routing.module';
+import { MDTMPTranslatePipe, MDMapListPipe, MDCurrencyFractionPipe, MDPPOKPIPipe, KPIGoalPipe} from './managers-dashboard.pipes';
+
+import { NgxInitDirective } from './managers-dashboard.directives';
 
 import {
   MatCardModule,
@@ -38,7 +40,13 @@ import {
   declarations: [
     ManagersDashboardComponent,
     ManagerDashboardSalesComponent,
-    ManagerDashboardDaylyComponent
+    ManagerDashboardDaylyComponent,
+    MDTMPTranslatePipe,
+    MDMapListPipe,
+    MDCurrencyFractionPipe,
+    MDPPOKPIPipe,
+    KPIGoalPipe,
+    NgxInitDirective
   ],
   providers: [
     ManagersDashboardService

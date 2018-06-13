@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+
+import { ManagersDashboardService } from '../managers-dashboard.service';
+
 @Component({
   selector: 'app-manager-dashboard-sales',
   templateUrl: './manager-dashboard-sales.component.html',
@@ -9,7 +12,7 @@ export class ManagerDashboardSalesComponent implements OnInit {
   @Input() db: any;
   @Input() criteria: any;
 
-  constructor() { }
+  constructor(public MDS: ManagersDashboardService) { }
 
   ngOnInit() {
   }

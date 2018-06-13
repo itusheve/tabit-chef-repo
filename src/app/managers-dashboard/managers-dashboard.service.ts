@@ -94,13 +94,6 @@ export class ManagersDashboardService {
         this.toolbarConfig.center.caption = org.alias || org.name;
         this.sideNavConfig.header.org = org;
       });
-
-    //this.getMetaData = getMetaData;
-    //this.getDashCatalog = getDashCatalog;
-    //this.getOrdersDate = getOrdersDate;
-    //this.getOrders = getOrders;
-    //this.getTransactions = getTransactions;
-    //this.getDayly = getDayly;
   }
 
   /*

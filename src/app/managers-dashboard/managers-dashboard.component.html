@@ -50,12 +50,12 @@
           <ul class="nav-tabs-dash-main nav nav-tabs m-t" role="tablist">
             <li class="nav-item text-xl">
               <a class="nav-link" [class.active]="criteria.report == 'dayly'" (click)="criteria.report = 'dayly'">
-                <ng-container i18n="@@DASH_SALES">Dayly</ng-container>
+                <ng-container i18n="manager-dash@@DaylyReport">Dayly Report</ng-container>
               </a>
             </li>
             <li class="nav-item text-xl">
               <a class="nav-link" [class.active]="criteria.report == 'sales'" (click)="criteria.report = 'sales'">
-                <ng-container i18n="@@DASH_SALES">Sales</ng-container>
+                <ng-container i18n="manager-dash@@SalesReport">Sales Report</ng-container>
               </a>
             </li>
           </ul>
@@ -100,14 +100,17 @@
 
 
         </div>
-        <div class="pos-rlt" *ngIf="db.daylyData">
-          <app-manager-dashboard-sales *ngIf="criteria.report == 'sales'"
-               class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db">
-          </app-manager-dashboard-sales>
-          <app-manager-dashboard-dayly *ngIf="criteria.report == 'dayly'"
+
+        <h2>[{{criteria.loaded}} | {{criteria.report == 'dayly'}}]</h2>
+
+        <div class="pos-rlt" *ngIf="!criteria.loaded">
+          <app-manager-dashboard-dayly *ngIf="criteria.report === 'dayly'"
                                        class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db">
           </app-manager-dashboard-dayly>
 
+          <app-manager-dashboard-sales *ngIf="criteria.report == 'sales'"
+                                       class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db">
+          </app-manager-dashboard-sales>
 
         </div>
 
