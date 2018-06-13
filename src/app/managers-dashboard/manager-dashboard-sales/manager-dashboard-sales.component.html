@@ -91,12 +91,12 @@
         <div class="hcol  text-center  v-top pos-rlt">
           <div class="numeric-cell text-xxl text-center" [ngClass]="{'text-xl':MDS.isHandset}">
 
-            <span *ngIf="!MDS.isHandset && totals.dinerAvg" class="label m-near-sm inline text-lg v-top m-t-xs hidden-xs {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
+            <span *ngIf="!MDS.isHandset && criteria.totals.dinerAvg" class="label m-near-sm inline text-lg v-top m-t-xs hidden-xs {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
                   style="border-radius:5px">
               {{criteria.totals.goalDiff | KPIGoal}}
             </span>
-            {{criteria.totals.total == 0 ? 0 : criteria.totals.dinerAvg | currencyFraction:'1.1-1'}}
-            <span *ngIf="MDS.isHandset && totals.dinerAvg" class="label m-near-sm inline text-lg v-top m-t-xs hidden-xs {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
+            {{criteria.totals.total == 0 ? 0 : criteria.totals.dinerAvg | currencyFraction:'1'}}
+            <span *ngIf="MDS.isHandset && criteria.totals.dinerAvg" class="label m-near-sm inline text-lg v-top m-t-xs hidden-xs {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
                   style="border-radius:5px">
               {{criteria.totals.goalDiff | KPIGoal}}
             </span>
@@ -112,14 +112,14 @@
 </div>
 
 
-<div class="container m-t" *ngIf="1 == 2">
+<div class="container m-t">
   <ul class="nav nav-tabs m-t" role="tablist">
-    <li role="presentation" [ngClass]="{'active':criteria.viewerMode == 'diner'}" class="text-xl">
-      <a style="margin:0 !important" ng-click="criteria.viewerMode = 'diner'">{{'By Diners' | tmpTranslate}}</a>
+    <li class="nav-item text-xl">
+      <a class="nav-link" [ngClass]="{'active':criteria.viewerMode == 'diner'}" (click)="criteria.viewerMode = 'diner'">{{'By Diners' | tmpTranslate}}</a>
     </li>
 
-    <li role="presentation" [ngClass]="{'active':criteria.viewerMode === 'items'}" class="text-xl">
-      <a style="margin:0 !important" ng-click="criteria.viewerMode = 'items'">
+    <li class="nav-item text-xl">
+      <a class="nav-link"  [ngClass]="{'active':criteria.viewerMode === 'items'}" (click)="criteria.viewerMode = 'items'">
         {{'By Items Responsibility' | tmpTranslate}}
         <button class="btn btn-default btn-lg m-near-sm hidden-xs" ng-show="criteria.viewerMode == 'items'" ng-click="criteria.itemSelectionCollapsed = !criteria.itemSelectionCollapsed"
                 style="width:35px; height:35px; padding:0;">
@@ -133,8 +133,8 @@
 
       </a>
     </li>
-    <li role="presentation" [ngClass]="{'active':criteria.viewerMode === 'itemsSales'}" class="text-xl">
-      <a style="margin:0 !important" ng-click="criteria.viewerMode = 'itemsSales'">
+    <li class="nav-item text-xl">
+      <a class="nav-link" [ngClass]="{'active':criteria.viewerMode === 'itemsSales'}" (click)="criteria.viewerMode = 'itemsSales'">
         {{'By Items Sales' | tmpTranslate}}
         <button class="btn btn-default btn-lg m-near-sm hidden-xs" ng-show="criteria.viewerMode == 'itemsSales'" ng-click="criteria.itemSelectionCollapsed = !criteria.itemSelectionCollapsed"
                 style="width:35px; height:35px; padding:0;">
@@ -168,7 +168,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let order of dinersAVG" ts-repeat [ngClass]="{'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
+              <tr *ngFor="let order of criteria.dinersAVG" ts-repeat [ngClass]="{'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
                 <td class="no-more-tables-header" *ngxInit="criteria.excludedUsers.indexOf(order.waiter) != -1 as wexcluded">
                   <div class="clearfix" ng-click="toggleWaiter(order.waiter)">
                     <a href="" class="pull-left flip thumb-xs avatar m-far">
@@ -197,7 +197,7 @@
                     {{order.goalDiff | KPIGoal:1}}
                   </span>
                   <span class="inline" style="width:40px"> <!--[ngClass]="{'text-l-t':wexcluded}"-->
-                    {{order.dinerAvg | currencyFraction:'1.1-1'}}
+                    {{order.dinerAvg | currencyFraction:'1'}}
                   </span>
 
                 </td>
@@ -279,7 +279,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let order of itemsAVG" ts-repeat [ngClass]="{'font-bold bg-light':order.isTotal, 'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
+                <tr *ngFor="let order of criteria.itemsAVG" ts-repeat [ngClass]="{'font-bold bg-light':order.isTotal, 'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
                   <td class="no-more-tables-header" *ngxInit="criteria.excludedUsers.indexOf(order.waiter) != -1 as wexcluded">
                     <div class="clearfix " ng-click="toggleWaiter(order.waiter)">
                       <a href="" class="pull-left flip thumb-xs avatar b-3x m-far">
@@ -318,7 +318,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let order of ItemsSales" ts-repeat [ngClass]="{'font-bold bg-light':order.isTotal, 'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
+                <tr *ngFor="let order of criteria.ItemsSales" ts-repeat [ngClass]="{'font-bold bg-light':order.isTotal, 'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
                   <td class="no-more-tables-header" *ngxInit="criteria.excludedUsers.indexOf(order.waiter) != -1 as wexcluded">
                     <div class="clearfix " ng-click="toggleWaiter(order.waiter)">
                       <a href="" class="pull-left flip thumb-xs avatar b-3x m-far">

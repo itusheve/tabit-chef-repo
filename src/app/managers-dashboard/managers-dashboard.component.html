@@ -97,17 +97,14 @@
               </div>
             </div>-->
           </div>
-
-
         </div>
 
-        <h2>[{{criteria.loaded}} | {{criteria.report == 'dayly'}}]</h2>
 
-        <div class="pos-rlt" *ngIf="!criteria.loaded">
-          <app-manager-dashboard-dayly *ngIf="criteria.report === 'dayly'"
+
+        <div class="pos-rlt" *ngIf="criteria.loaded">
+          <app-manager-dashboard-dayly *ngIf="criteria.report == 'dayly'"
                                        class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db">
           </app-manager-dashboard-dayly>
-
           <app-manager-dashboard-sales *ngIf="criteria.report == 'sales'"
                                        class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db">
           </app-manager-dashboard-sales>
