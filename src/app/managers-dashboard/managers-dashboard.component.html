@@ -50,12 +50,12 @@
           <ul class="nav-tabs-dash-main nav nav-tabs mt15" role="tablist">
             <li class="nav-item text-xl">
               <a class="nav-link" [class.active]="criteria.report == 'dayly'" (click)="criteria.report = 'dayly'">
-                <ng-container i18n="manager-dash@@DaylyReport">Dayly Report</ng-container>
+                <ng-container>{{'managerDash.DASH_DAYLY' | tmpTranslate }}</ng-container>
               </a>
             </li>
             <li class="nav-item text-xl">
               <a class="nav-link" [class.active]="criteria.report == 'sales'" (click)="criteria.report = 'sales'">
-                <ng-container i18n="manager-dash@@SalesReport">Sales Report</ng-container>
+                <ng-container>{{'managerDash.DASH_SALES' | tmpTranslate}}</ng-container>
               </a>
             </li>
           </ul>
@@ -63,9 +63,9 @@
           <div class="dash-pos-buttons">
 
 
-            <button mat-fab color="primary">Primary</button>
+            <!--<button mat-fab color="primary">Primary</button>
             <button mat-fab color="accent">Accent</button>
-            <button mat-fab color="warn">Warn</button>
+            <button mat-fab color="warn">Warn</button>-->
 
 
             <!--<div class="hbox">

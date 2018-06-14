@@ -144,7 +144,7 @@ export class ManagersDashboardComponent implements OnInit {
       isTotal: true,
       waiter: -9999,
       waiterName: tmpTranslations.get('managerDash.Total'),
-      photoUrl: 'images/total.svg',
+      photoUrl: 'assets/images/icons/total.svg',
       diners: 0,
       c_group_0: 0,
       c_group_1: 0,
@@ -190,12 +190,12 @@ export class ManagersDashboardComponent implements OnInit {
           if (!waiter) {
             var oWaiter = db.users[order.waiter]
             if (!oWaiter) {
-              oWaiter = { name: '[Missing]', photoUrl: 'images/person-img8.png' }
+              oWaiter = { name: '[Missing]', photoUrl: 'assets/images/icons/person.png' }
             }
             waiter = {
               waiter: order.waiter,
               waiterName: oWaiter.name,
-              photoUrl: oWaiter.photoUrl || 'images/person-img8.png',
+              photoUrl: oWaiter.photoUrl || 'assets/images/icons/person.png',
               total: 0,
               orders: 0,
               diners: 0
@@ -223,12 +223,12 @@ export class ManagersDashboardComponent implements OnInit {
             if (!waiterI) {
               var oWaiter = db.users[order.waiter]
               if (!oWaiter) {
-                oWaiter = { name: '[Missing]', photoUrl: 'images/person-img8.png' }
+                oWaiter = { name: '[Missing]', photoUrl: 'assets/images/icons/person.png' }
               }
               waiterI = {
                 waiter: order.waiter,
                 waiterName: oWaiter.name,
-                photoUrl: oWaiter.photoUrl || 'images/person-img8.png',
+                photoUrl: oWaiter.photoUrl || 'assets/images/icons/person.png',
                 total: 0,
                 orders: 0,
                 diners: 0
@@ -279,12 +279,12 @@ export class ManagersDashboardComponent implements OnInit {
                   if (!waiterS) {
                     var oWaiter = db.users[item.by]
                     if (!oWaiter) {
-                      oWaiter = { name: '[Missing]', photoUrl: 'images/person-img8.png' }
+                      oWaiter = { name: '[Missing]', photoUrl: 'assets/images/icons/person.png' }
                     }
                     waiterS = {
                       waiter: item.by,
                       waiterName: oWaiter.name,
-                      photoUrl: oWaiter.photoUrl || 'images/person-img8.png',
+                      photoUrl: oWaiter.photoUrl || 'assets/images/icons/person.png',
                     };
                     arrItemsSales.push(waiterS);
                   }

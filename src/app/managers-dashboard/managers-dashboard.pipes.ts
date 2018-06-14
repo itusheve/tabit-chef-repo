@@ -1,7 +1,8 @@
 ﻿import { Pipe, PipeTransform } from '@angular/core';
 import { DecimalPipe, PercentPipe } from '@angular/common';
 import { environment } from '../../environments/environment';
-import { currencySymbol } from '../../tabit/data/data.service';
+import { currencySymbol, tmpTranslations } from '../../tabit/data/data.service';
+
 
 @Pipe({
   name: 'tmpTranslate',
@@ -9,7 +10,8 @@ import { currencySymbol } from '../../tabit/data/data.service';
 })
 export class MDTMPTranslatePipe implements PipeTransform {
   transform(value: any): any {
-    return value;
+    let ret = tmpTranslations.get(value);
+    return ret || value;
   }
 }
 
@@ -55,9 +57,9 @@ export class MDMapListPipe implements PipeTransform {
 })
 export class MDPPOKPIPipe implements PipeTransform {
   transform(value: any, goal: number, goalAlert: number): any {
-    if (value >= goal) return 'label-success';
-    if (value <= goalAlert) return 'label-danger';
-    return 'label-warning';
+    if (value >= goal) return 'badge-success';
+    if (value <= goalAlert) return 'badge-danger';
+    return 'badge-warning';
   }
 }
 
