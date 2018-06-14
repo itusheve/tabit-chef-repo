@@ -1,5 +1,5 @@
 <div class="b-b bg-white ">
-  <div class="container padder-v-lg">
+  <div class="container pv20">
     <div class="font-bold text-base text-center m-b-sm">*{{'MESSAGES.DASH_SALES_EXP' | tmpTranslate}}</div>
     <!-- ============================================================================================
      filters
@@ -29,7 +29,7 @@
         <div class="col-sm-3  col-xs-6">
           <div class="form-group">
             <label class="text-xs">{{'Goal' | tmpTranslate}}</label>
-            <input type="text" ui-jq="TouchSpin" class="form-control input-lg text-lg no-padder text-center numeric-font" id="txtGoal"
+            <input type="text" ui-jq="TouchSpin" class="form-control input-lg text-lg no-padding text-center numeric-font" id="txtGoal"
                    name="input" ng-model="criteria.dinerAvgGoalParsed" ng-change="criteria.calcGoal()" required="required"
                    readonly data-max="1000" data-min="0" />
           </div>
@@ -39,8 +39,7 @@
           <div class="form-group">
             <label class="text-xs">{{'CHOOSE_BY_TIMES' | tmpTranslate}}</label>
             <button type="button" class="btn btn-default btn-lg btn-block" ng-click="doSettings()" style="font-size:18px;">
-              TBD
-              <!--{{(criteria.timeMode | mapList:MDS.timeOptions:'value':'textSmall') | tmpTranslate}}-->
+              {{(criteria.timeMode | mapList:db.timeOptions:'value':'textSmall') | tmpTranslate}}
               <span *ngIf="criteria.timeMode == 'start'">{{criteria.dateFrom | date:'HH:mm'}}</span>
               <span *ngIf="criteria.timeMode == 'end'">{{criteria.dateTo | date:'HH:mm'}}</span>
             </button>
@@ -53,12 +52,11 @@
 
 
     <div class="pos-rlt">
-      <div class="pos-abt bg-dark wrapper-xs text-center text-base" style="width:150px; left:50%; margin-left:-85px; border-radius:50px; top:-15px; z-index:1">{{'SEATED_ORDERS' | tmpTranslate}}</div>
+      <div class="pos-abt bg-dark text-white pa5 text-center text-base" style="width:150px; left:50%; margin-left:-85px; border-radius:50px; top:-15px; z-index:1">{{'SEATED_ORDERS' | tmpTranslate}}</div>
       <hr />
     </div>
-    <!-- ============================================================================================
-    totals
-    ============================================================================================ -->
+
+    <!-- TOTALS-->
     <div>
       <div class="hbox">
         <div class="hcol b-far text-center v-top pos-rlt">
@@ -66,8 +64,7 @@
             <span class="numeric-cell">{{criteria.totals.orders}}</span>
           </div>
           <small class="text-faded">
-            TBD
-            <!--{{criteria.orderFilter | mapList:criteria.orderFilterOpts:'value':'text'}}-->
+            {{criteria.orderFilter | mapList:criteria.orderFilterOpts:'value':'text'}}
           </small>
         </div>
 
@@ -83,20 +80,19 @@
             <span class="numeric-cell">{{criteria.totals.total | currencyFraction}}</span>
           </div>
           <small class="text-faded">
-            TBD
-            <!--{{criteria.showNetPrices | mapList:criteria.netGrossOpts:'value':'text'}}-->
+            {{criteria.showNetPrices | mapList:criteria.netGrossOpts:'value':'text'}}
           </small>
         </div>
 
         <div class="hcol  text-center  v-top pos-rlt">
           <div class="numeric-cell text-xxl text-center" [ngClass]="{'text-xl':MDS.isHandset}">
 
-            <span *ngIf="!MDS.isHandset && criteria.totals.dinerAvg" class="label m-near-sm inline text-lg v-top m-t-xs hidden-xs {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
+            <span *ngIf="!MDS.isHandset && criteria.totals.dinerAvg" class="label m-near-sm inline text-lg v-top mt5 hidden-xs {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
                   style="border-radius:5px">
               {{criteria.totals.goalDiff | KPIGoal}}
             </span>
             {{criteria.totals.total == 0 ? 0 : criteria.totals.dinerAvg | currencyFraction:'1'}}
-            <span *ngIf="MDS.isHandset && criteria.totals.dinerAvg" class="label m-near-sm inline text-lg v-top m-t-xs hidden-xs {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
+            <span *ngIf="MDS.isHandset && criteria.totals.dinerAvg" class="label m-near-sm inline text-lg v-top mt5 hidden-xs {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
                   style="border-radius:5px">
               {{criteria.totals.goalDiff | KPIGoal}}
             </span>
@@ -112,8 +108,8 @@
 </div>
 
 
-<div class="container m-t">
-  <ul class="nav nav-tabs m-t" role="tablist">
+<div class="container mt15">
+  <ul class="nav nav-tabs mt15" role="tablist">
     <li class="nav-item text-xl">
       <a class="nav-link" [ngClass]="{'active':criteria.viewerMode == 'diner'}" (click)="criteria.viewerMode = 'diner'">{{'By Diners' | tmpTranslate}}</a>
     </li>
@@ -155,7 +151,7 @@
     ============================================================================================ -->
     <div class="animated fadeInUp ng-leave-instant" *ngIf="criteria.viewerMode == 'diner'">
       <div>
-        <div class="wrapper-sm b-b b-darkgray visible-xs text-xs">{{'SORT_BY' | tmpTranslate}}</div>
+        <div class="pa10 b-b b-darkgray visible-xs text-xs">{{'SORT_BY' | tmpTranslate}}</div>
         <div class="no-more-tables block-header">
           <table class="table table-log m-b-n" ts-wrapper>
             <thead>
@@ -218,9 +214,9 @@
               item buckets
           ============================================================================================ -->
 
-          <div class="hidden-xs wrapper-sm b-b" uib-collapse="criteria.itemSelectionCollapsed">
+          <div class="hidden-xs pa10 b-b" uib-collapse="criteria.itemSelectionCollapsed">
             <div>
-              <div class="m-t-sm m-b-sm">
+              <div class="pv10">
                 <div class="row">
                   <div class="col-sm-3 " *ngFor="let cItems of criteria.itemGroups">
                     <div class="b" ng-click="generateItemsGroup(cItems,$index)">
@@ -231,19 +227,19 @@
                         <div class="cell-inner">
                           <div class="" *ngFor="let sub of cItems.subs">
                             <!--| orderBy:'fullName'-->
-                            <div class="b-b clearfix wrapper-xs" [ngClass]="{'bg-info':sub.items}" ng-click="toggleSubExpanded(cItems, sub, $event)">
+                            <div class="b-b clearfix pa5" [ngClass]="{'bg-info':sub.items}" ng-click="toggleSubExpanded(cItems, sub, $event)">
                               <span class="badge pull-right flip numeric-cell">{{sub.count}}</span>
                               {{sub.fullName}}
                             </div>
                             <div *ngIf="sub.items" uib-collapse="!sub.expanded">
-                              <div class="b-b clearfix wrapper-xs bg-light" *ngFor="let item of sub.items">
+                              <div class="b-b clearfix pa5 bg-light" *ngFor="let item of sub.items">
                                 <!--| orderBy:'name'-->
                                 <span class="badge pull-right flip numeric-cell">{{item.count}}</span>
                                 {{item.name}}
                               </div>
                             </div>
                           </div>
-                          <div class="b-b clearfix wrapper-xs" *ngFor="let item of cItems.items">
+                          <div class="b-b clearfix pa5" *ngFor="let item of cItems.items">
                             <!--| orderBy:'name'-->
                             <span class="badge pull-right flip numeric-cell">{{item.count}}</span>
                             {{item.name}}
@@ -265,7 +261,7 @@
 
           </div>
           <!--end item buckets-->
-          <div class="wrapper-sm b-b b-darkgray visible-xs text-xs">{{'SORT_BY' | tmpTranslate}}</div>
+          <div class="pa10 b-b b-darkgray visible-xs text-xs">{{'SORT_BY' | tmpTranslate}}</div>
           <div class="no-more-tables block-header">
 
 

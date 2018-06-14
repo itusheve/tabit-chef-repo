@@ -93,7 +93,6 @@ export class ManagersDashboardComponent implements OnInit {
     let that = this;
     this.MDS.getMetaData()
       .then((data) => {
-        debugger
         that.db = data;
         that.criteria.itemGroups = data.itemGroups;
         that.criteria.dinerAvgGoalParsed = _.get(data.regionalSettings, 'managerDashboard.ppaGoal') || 20;

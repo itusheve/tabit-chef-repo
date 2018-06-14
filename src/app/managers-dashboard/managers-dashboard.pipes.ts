@@ -35,7 +35,7 @@ export class MDCurrencyFractionPipe implements PipeTransform {
   pure: false
 })
 export class MDMapListPipe implements PipeTransform {
-  transform(value: any, options: any, matchField: any, valueField: any): any {
+  transform(value: any, options: any, matchField?: any, valueField?: any): any {
     if (!matchField) matchField = "value";
     if (!valueField) valueField = "text";
     if (options) {

@@ -7,10 +7,10 @@
 
 
   <div class="b-b bg-white ">
-    <div class="container padder-v-lg">
+    <div class="container pv20">
       <div class="font-bold text-base text-center" i18n="manager-dash@@DASH_DAYLY_EXP">* Data pertains to closed orders</div>
       <div class="pos-rlt">
-        <div class="pos-abt bg-dark wrapper-xs text-center text-base"
+        <div class="pos-abt bg-dark text-white pa5 text-center text-base"
              style="width:170px; left:50%; margin-left:-85px; border-radius:50px; top:-15px; z-index:1"
              i18n="manager-dash@@ALL_ORDERS">
           All Orders
@@ -54,8 +54,8 @@
   order type
   ============================================================================================ -->
 
-  <div class="container m-t" *ngIf="!db.daylyData._noData">
-    <div class="padder-v">
+  <div class="container mt15" *ngIf="!db.daylyData._noData">
+    <div class="pv15">
 
       <!--by order type-->
       <div class="row">

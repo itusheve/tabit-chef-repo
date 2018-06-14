@@ -43,11 +43,11 @@
     </div>
     <!--START CONTENT-->
     <div class="contentFixed">
-      <div class="content">
+      <div class="content dash-content">
 
-        <div class="wrapper-sm" *ngIf="MDS.isHandset"></div>
+        <!--<div class="wrapper-sm" *ngIf="MDS.isHandset"></div>-->
         <div class="pos-rlt" style="margin:0 auto; max-width:1024px">
-          <ul class="nav-tabs-dash-main nav nav-tabs m-t" role="tablist">
+          <ul class="nav-tabs-dash-main nav nav-tabs mt15" role="tablist">
             <li class="nav-item text-xl">
               <a class="nav-link" [class.active]="criteria.report == 'dayly'" (click)="criteria.report = 'dayly'">
                 <ng-container i18n="manager-dash@@DaylyReport">Dayly Report</ng-container>
