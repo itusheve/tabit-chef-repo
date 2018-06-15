@@ -48,7 +48,7 @@
       <div class="content dash-content" *ngIf="criteria.loaded">
 
         <!--<div class="wrapper-sm" *ngIf="MDS.isHandset"></div>-->
-        <div class="dash-container">
+        <div class="dash-container pos-rlt">
           <ul class="nav-tabs-dash-main nav nav-tabs mt15" role="tablist">
             <li class="nav-item text-xl">
               <a class="nav-link" [class.active]="criteria.report == 'dayly'" (click)="criteria.report = 'dayly'">
@@ -65,9 +65,12 @@
           <div class="dash-pos-buttons">
 
             <div class="cal-container me15">
-              <button class="cal-button" mat-raised-button (click)="picker.open()">
+              <button class="hidden-sm-up" mat-mini-fab color="background" (click)="picker.open()" [disabled]="db.isDateClosed || refreshing">
                 <mat-icon>event</mat-icon>
-                {{db.isDateClosed ? (db.businessDate | date) : ('managerDash.Today' | tmpTranslate)}}
+              </button>
+              <button class="cal-button hidden-xs-down" mat-raised-button (click)="picker.open()" [disabled]="db.isDateClosed || refreshing">
+                <mat-icon>event</mat-icon>
+                <span>{{db.isDateClosed ? (db.businessDate | date) : ('managerDash.Today' | tmpTranslate)}}</span>
               </button>
               <input matInput [matDatepicker]="picker" [max]="maxDate" [(ngModel)]="tmpDate" (dateChange)="businessDateChange()" placeholder="Choose a date">
               <mat-datepicker #picker></mat-datepicker>
