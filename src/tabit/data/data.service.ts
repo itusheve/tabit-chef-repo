@@ -177,7 +177,8 @@ const tmpTranslations_ = {
           "TIME_RANGE_FROM": "משעה",
           "TIME_RANGE_TO": "עד שעה",
           "ALL_DAY": "כל היום",
-          "SERVER": "מלצר"
+          "SERVER": "מלצר",
+          "Today":"היום"
         }
     },
     'en-US': {
@@ -319,7 +320,8 @@ const tmpTranslations_ = {
           "TIME_RANGE_FROM": "from hour",
           "TIME_RANGE_TO": "to hour",
           "ALL_DAY": "All Day",
-          "SERVER": "Server"
+          "SERVER": "Server",
+          "Today":"Today"
         }
     }
 };

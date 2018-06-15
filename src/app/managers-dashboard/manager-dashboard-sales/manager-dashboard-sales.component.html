@@ -1,5 +1,5 @@
 <div class="b-b bg-white ">
-  <div class="container pv20">
+  <div class="dash-container pv20">
     <div class="font-bold text-base text-center mb10">*{{'managerDash.DASH_SALES_EXP' | tmpTranslate}}</div>
     <!-- ============================================================================================
      filters
@@ -14,7 +14,7 @@
                       ng-options="opt.value as opt.text for opt in criteria.orderFilterOpts"></select>-->
 
               <select class="form-control form-control-lg" [(ngModel)]="criteria.orderFilter"
-                      ng-change="criteria.setOrderFilter(criteria.showNetPrices, true)">
+                      (change)="setOrderFilter(criteria.showNetPrices, true)">
                 <option *ngFor="let opt of criteria.orderFilterOpts" [ngValue]="opt.value">{{opt.text}}</option>
               </select>
 
@@ -30,7 +30,7 @@
                       ng-options="opt.value as opt.text for opt in criteria.netGrossOpts"></select>-->
 
               <select class="form-control form-control-lg" [(ngModel)]="criteria.showNetPrices"
-                      ng-change="criteria.toggleNetGross(criteria.showNetPrices, true)">
+                      (change)="toggleNetGross(criteria.showNetPrices, true)">
                 <option *ngFor="let opt of criteria.netGrossOpts" [ngValue]="opt.value">{{opt.text}}</option>
               </select>
 
@@ -42,7 +42,7 @@
           <div class="form-group">
             <label class="text-xs">{{'managerDash.Goal' | tmpTranslate}}</label>
             <input type="number" class="form-control form-control-lg text-center numeric-font" id="txtGoal"
-                   name="input" [(ngModel)]="criteria.dinerAvgGoalParsed" ng-change="criteria.calcGoal()"
+                   name="input" [(ngModel)]="criteria.dinerAvgGoalParsed" (change)="calcGoal()"
                    readonly max="1000" min="0" />
           </div>
         </div>
@@ -50,7 +50,7 @@
         <div class="col-sm-3  col-xs-6">
           <div class="form-group">
             <label class="text-xs">{{'managerDash.CHOOSE_BY_TIMES' | tmpTranslate}}</label>
-            <button type="button" class="btn btn-dark btn-lg btn-block" ng-click="doSettings()" style="font-size:18px;">
+            <button type="button" class="btn btn-dark btn-lg btn-block" (click)="doSettings()" style="font-size:18px;">
               {{'managerDash.' + (criteria.timeMode | mapList:db.timeOptions:'value':'textSmall') | tmpTranslate}}
               <span *ngIf="criteria.timeMode == 'start'">{{criteria.dateFrom | date:'HH:mm'}}</span>
               <span *ngIf="criteria.timeMode == 'end'">{{criteria.dateTo | date:'HH:mm'}}</span>
@@ -99,12 +99,12 @@
         <div class="hcol  text-center  v-top pos-rlt">
           <div class="numeric-cell text-xxl text-center" [ngClass]="{'text-xl':MDS.isHandset}">
 
-            <span *ngIf="!MDS.isHandset && criteria.totals.dinerAvg" class="badge m-near-sm inline text-lg v-top mt5 hidden-xs {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
+            <span *ngIf="!MDS.isHandset && criteria.totals.dinerAvg" class="badge m-near-sm inline text-lg v-top mt5 hidden-sm-down {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
                   style="border-radius:5px">
               {{criteria.totals.goalDiff | KPIGoal}}
             </span>
             {{criteria.totals.total == 0 ? 0 : criteria.totals.dinerAvg | currencyFraction:'1'}}
-            <span *ngIf="MDS.isHandset && criteria.totals.dinerAvg" class="badge m-near-sm inline text-lg v-top mt5 hidden-xs {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
+            <span *ngIf="MDS.isHandset && criteria.totals.dinerAvg" class="badge m-near-sm inline text-lg v-top mt5 hidden-sm-down {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
                   style="border-radius:5px">
               {{criteria.totals.goalDiff | KPIGoal}}
             </span>
@@ -120,8 +120,8 @@
 </div>
 
 
-<div class="container mt15">
-  <ul class="nav nav-tabs mt15" role="tablist">
+<div class="dash-container sales-container mt15">
+  <ul class="nav nav-tabs sales-tabs mt15" role="tablist">
     <li class="nav-item text-xl">
       <a class="nav-link" [ngClass]="{'active':criteria.viewerMode == 'diner'}" (click)="criteria.viewerMode = 'diner'">{{'managerDash.By Diners' | tmpTranslate}}</a>
     </li>
@@ -129,12 +129,12 @@
     <li class="nav-item text-xl">
       <a class="nav-link"  [ngClass]="{'active':criteria.viewerMode === 'items'}" (click)="criteria.viewerMode = 'items'">
         {{'managerDash.By Items Responsibility' | tmpTranslate}}
-        <button class="btn btn-default btn-lg me5 hidden-xs" *ngIf="criteria.viewerMode == 'items'" ng-click="criteria.itemSelectionCollapsed = !criteria.itemSelectionCollapsed"
+        <button class="btn btn-default btn-lg ms5 hidden-sm-down" *ngIf="criteria.viewerMode == 'items'" (click)="criteria.itemSelectionCollapsed = !criteria.itemSelectionCollapsed"
                 style="width:33px; height:30px; padding:0;">
-          <i class="fa" [ngClass]="{'fa-angle-up':!criteria.itemSelectionCollapsed,'fa-angle-down':criteria.itemSelectionCollapsed}"></i>
+          <mat-icon>{{criteria.itemSelectionCollapsed ? 'expand_more' : 'expand_less'}}</mat-icon>
         </button>
 
-        <button class="btn btn-info btn-lg me5 hidden-xs" *ngIf="criteria.viewerMode == 'items'" ng-click="criteria.toggleItemSectionMeasure()"
+        <button class="btn btn-info btn-lg ms5 hidden-sm-down" *ngIf="criteria.viewerMode == 'items'" (click)="toggleItemSectionMeasure()"
                 style="width:33px; height:30px; padding:0;">
           {{criteria.itemSelectionMeasure == 'c' ? '#' : '$'}}
         </button>
@@ -144,11 +144,11 @@
     <li class="nav-item text-xl">
       <a class="nav-link" [ngClass]="{'active':criteria.viewerMode === 'itemsSales'}" (click)="criteria.viewerMode = 'itemsSales'">
         {{'managerDash.By Items Sales' | tmpTranslate}}
-        <button class="btn btn-default btn-lg me5 hidden-xs" *ngIf="criteria.viewerMode == 'itemsSales'" ng-click="criteria.itemSelectionCollapsed = !criteria.itemSelectionCollapsed"
+        <button class="btn btn-light btn-lg ms5 hidden-sm-down" *ngIf="criteria.viewerMode == 'itemsSales'" (click)="criteria.itemSelectionCollapsed = !criteria.itemSelectionCollapsed"
                 style="width:33px; height:33px; padding:0;">
-          <i class="fa" [ngClass]="{'fa-angle-up':!criteria.itemSelectionCollapsed,'fa-angle-down':criteria.itemSelectionCollapsed}"></i>
+          <mat-icon>{{criteria.itemSelectionCollapsed ? 'expand_more' : 'expand_less'}}</mat-icon>
         </button>
-        <button class="btn btn-info btn-lg me5 hidden-xs" *ngIf="criteria.viewerMode == 'itemsSales'" ng-click="criteria.toggleItemSectionMeasure()"
+        <button class="btn btn-info btn-lg ms5 hidden-sm-down" *ngIf="criteria.viewerMode == 'itemsSales'" (click)="toggleItemSectionMeasure()"
                 style="width:33px; height:30px; padding:0;">
           {{criteria.itemSelectionMeasure == 'c' ? '#' : '$'}}
         </button>
@@ -163,7 +163,7 @@
     ============================================================================================ -->
     <div class="animated fadeInUp ng-leave-instant" *ngIf="criteria.viewerMode == 'diner'">
       <div>
-        <div class="pa10 b-b b-darkgray visible-xs text-xs">{{'managerDash.SORT_BY' | tmpTranslate}}</div>
+        <!--<div class="pa10 b-b b-darkgray visible-xs text-xs">{{'managerDash.SORT_BY' | tmpTranslate}}</div>-->
         <div class="no-more-tables block-header">
           <table class="table table-log no-margin" ts-wrapper>
             <thead>
@@ -178,8 +178,8 @@
             <tbody>
               <tr *ngFor="let order of criteria.dinersAVG" ts-repeat [ngClass]="{'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
                 <td class="no-more-tables-header" *ngxInit="criteria.excludedUsers.indexOf(order.waiter) != -1 as wexcluded">
-                  <div class="d-flex flex-row" ng-click="toggleWaiter(order.waiter)">
-                    <div class="me5">
+                  <div class="d-flex flex-row cur-pointer" (click)="toggleWaiter(order.waiter)">
+                    <div class="me5 thumb-xs avatar">
                       <img src="{{order.photoUrl}}" style="height:34px" alt="..." *ngIf="!wexcluded">
                       <img src="assets/images/icons/circle-with-cross.svg" style="height:34px" alt="..." *ngIf="wexcluded">
                     </div>
@@ -190,16 +190,16 @@
                     </div>
                   </div>
                 </td>
-                <td class="numeric-cell text-lg" data-title="{{'managerDash.Orders' | tmpTranslate}}">
+                <td class="numeric-cell text-lg" [attr.aria-label]="'managerDash.Orders' | tmpTranslate">
                   {{order.orders}}
                 </td>
-                <td class="numeric-cell text-lg" data-title="{{'managerDash.Diners' | tmpTranslate}}">
+                <td class="numeric-cell text-lg" [attr.aria-label]="'managerDash.Diners' | tmpTranslate">
                   {{order.diners}}
                 </td>
-                <td class="numeric-cell text-lg" data-title="{{'managerDash.Total' | tmpTranslate}}">
+                <td class="numeric-cell text-lg" [attr.aria-label]="'managerDash.Total' | tmpTranslate">
                   {{order.total | currencyFraction}}
                 </td>
-                <td class="numeric-cell text-lg" data-title="PPA">
+                <td class="numeric-cell text-lg" [attr.aria-label]="PPA">
                   <span class="badge me10 font-normal text-center inline text-lg  {{order.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
                         style="width:60px" style="border-radius:8px">
                     {{order.goalDiff | KPIGoal:1}}
@@ -226,24 +226,24 @@
               item buckets
           ============================================================================================ -->
 
-          <div class="hidden-xs pa10 b-b" uib-collapse="criteria.itemSelectionCollapsed">
+          <div class="hidden-sm-down pa10 b-b" [ngxCollapse]="criteria.itemSelectionCollapsed">
             <div>
               <div class="pv10">
                 <div class="row">
-                  <div class="col-sm-3 " *ngFor="let cItems of criteria.itemGroups">
+                  <div class="col-sm-3 " *ngFor="let cItems of criteria.itemGroups; let $index=index">
                     <div class="b" ng-click="generateItemsGroup(cItems,$index)">
                       <div>
-                        <button class="btn btn-dark btn-block text-ellipsis">{{cItems.name}}</button>
+                        <button class="btn btn-dark btn-block text-ellipsis no-radius">{{cItems.name}}</button>
                       </div>
                       <div>
                         <div class="cell-inner">
                           <div class="" *ngFor="let sub of cItems.subs">
                             <!--| orderBy:'fullName'-->
-                            <div class="b-b clearfix pa5" [ngClass]="{'bg-info':sub.items}" ng-click="toggleSubExpanded(cItems, sub, $event)">
+                            <div class="b-b clearfix pa5" [ngClass]="{'bg-info':sub.items}" (click)="toggleSubExpanded(cItems, sub, $event)">
                               <span class="badge pull-right flip numeric-cell">{{sub.count}}</span>
                               {{sub.fullName}}
                             </div>
-                            <div *ngIf="sub.items" uib-collapse="!sub.expanded">
+                            <div *ngIf="sub.items" [ngxCollapse]="!sub.expanded">
                               <div class="b-b clearfix pa5 bg-light" *ngFor="let item of sub.items">
                                 <!--| orderBy:'name'-->
                                 <span class="badge pull-right flip numeric-cell">{{item.count}}</span>
@@ -263,7 +263,7 @@
                   <div class="col-sm-3 " *ngIf="criteria.itemGroups.length < 4">
                     <div class="b" stylex="height:120px">
                       <div>
-                        <button class="btn btn-info btn-block" ng-click="generateItemsGroup()">{{'managerDash.Add New Group' | tmpTranslate}}</button>
+                        <button class="btn btn-info btn-block no-radius" ng-click="generateItemsGroup()">{{'managerDash.Add New Group' | tmpTranslate}}</button>
                       </div>
                     </div>
                   </div>
@@ -273,7 +273,7 @@
 
           </div>
           <!--end item buckets-->
-          <div class="pa10 b-b b-darkgray visible-xs text-xs">{{'managerDash.SORT_BY' | tmpTranslate}}</div>
+          <!--<div class="pa10 b-b b-darkgray visible-xs text-xs">{{'managerDash.SORT_BY' | tmpTranslate}}</div>-->
           <div class="no-more-tables block-header">
 
 
@@ -290,7 +290,7 @@
                 <tr *ngFor="let order of criteria.itemsAVG" ts-repeat [ngClass]="{'font-bold bg-light':order.isTotal, 'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
                   <td class="no-more-tables-header" *ngxInit="criteria.excludedUsers.indexOf(order.waiter) != -1 as wexcluded">
                     <div class="d-flex flex-row" ng-click="toggleWaiter(order.waiter)">
-                      <div class="me5">
+                      <div class="thumb-xs avatar me5">
                         <img src="{{order.photoUrl}}" style="height:34px" alt="..." *ngIf="!wexcluded">
                         <img src="assets/images/icons/circle-with-cross.svg" style="height:34px" alt="..." *ngIf="wexcluded">
                       </div>
@@ -301,10 +301,10 @@
                       </div>
                     </div>
                   </td>
-                  <td class="numeric-cell text-lg" data-title="{{'managerDash.Diners' | tmpTranslate}}">
+                  <td class="numeric-cell text-lg" [attr.aria-label]="'managerDash.Diners' | tmpTranslate">
                     {{order.diners}}
                   </td>
-                  <td class="numeric-cell text-lg" *ngFor="let group of criteria.itemGroups" data-title="{{group.name}}">
+                  <td class="numeric-cell text-lg" *ngFor="let group of criteria.itemGroups; let $index=index" [attr.aria-label]="group.name">
 
                     <!-- AVG -->
                     <span *ngIf="criteria.itemSelectionMeasure === 'c'"> {{order[criteria.itemSelectionMeasure + '_group_' + $index] }} </span>
@@ -328,8 +328,8 @@
               <tbody>
                 <tr *ngFor="let order of criteria.ItemsSales" ts-repeat [ngClass]="{'font-bold bg-light':order.isTotal, 'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
                   <td class="no-more-tables-header" *ngxInit="criteria.excludedUsers.indexOf(order.waiter) != -1 as wexcluded">
-                    <div class="clearfix " ng-click="toggleWaiter(order.waiter)">
-                      <div class="d-flex flex-row me5">
+                    <div class="d-flex flex-row" ng-click="toggleWaiter(order.waiter)">
+                      <div class="thumb-xs avatar me5">
                         <img src="{{order.photoUrl}}" style="height:34px" alt="..." *ngIf="!wexcluded">
                         <img src="assets/images/icons/circle-with-cross.svg" style="height:34px" alt="..." *ngIf="wexcluded">
                       </div>
@@ -338,7 +338,7 @@
                       </div>
                     </div>
                   </td>
-                  <td class="numeric-cell text-lg" *ngFor="let group of criteria.itemGroups" data-title="{{group.name}}">
+                  <td class="numeric-cell text-lg" *ngFor="let group of criteria.itemGroups; let $index=index" [attr.aria-label]="group.name">
 
                     <!-- AVG -->
                     <span *ngIf="criteria.itemSelectionMeasure === 'c'"> {{order[criteria.itemSelectionMeasure + '_group_' + $index] }} </span>

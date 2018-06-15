@@ -240,6 +240,9 @@ $border-style: 1px solid rgba(0, 0, 0, 0.12);
   border-color: #000;
 }
 
+.b-rouned{
+  border-radius:3px;
+}
 
 // Border-radius helpers
 @for $i from 1 through 12 {
@@ -371,6 +374,14 @@ $border-style: 1px solid rgba(0, 0, 0, 0.12);
   position: fixed;
 }
 
+.disp-inline{
+  display:inline-block;
+}
+.disp-block{
+  display:block;
+
+}
+
 .v-middle {
   vertical-align: middle !important;
 }
@@ -403,7 +414,161 @@ $border-style: 1px solid rgba(0, 0, 0, 0.12);
   }
 }
 
+.avatar {
+  position: relative;
+  display: block;
+  white-space: nowrap;
+  border-radius: 500px;
+  img {
+    width: 100%;
+    border-radius: 500px;
+  }
+}
+
+.thumb {
+  display: inline-block;
+  width: 50px;
+}
+
+.thumb-sm {
+  display: inline-block;
+  width: 40px;
+}
+
+.thumb-xs {
+  display: inline-block;
+  width: 34px;
+}
+
+.thumb-xxs {
+  display: inline-block;
+  width: 30px;
+}
+
+.thumb-wrapper {
+  padding: 2px;
+  border: 1px solid #dee5e7;
+}
+
+.thumb img,
+.thumb-xs img,
+.thumb-sm img,
+.thumb-md img,
+.thumb-lg img,
+.thumb-btn img {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
 
 
+/*
+	-------------------------------------------------------------------------------------------
+	tables
+	-------------------------------------------------------------------------------------------
+*/
+
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  padding: 8px 15px;
+  border-top: 1px solid #eaeff0;
+}
+
+.table > thead > tr > th {
+  padding: 8px 15px;
+  border-bottom: 1px solid #aaa;
+}
+
+.table-log > tbody > tr > td{
+	line-height:40px;
+	vertical-align:middle;
+	cursor:default;
+}
+.table-log > thead > tr > th{
+	line-height:40px;
+	cursor:default;
+	font-weight:normal;
+	color:#000;
+	font-size:16px;
+	vertical-align:middle;
+  border-top-width:0;
+}
 
 
+@media only screen and (max-width: 666px) {
+  .hidden-xss{display:none !important}
+
+
+    /* Force table to not be like tables anymore */
+	.no-more-tables table,
+
+	.no-more-tables tbody,
+	.no-more-tables tbody > tr > th,
+	.no-more-tables tbody > tr > td,
+	.no-more-tables tbody > tr {
+		display: block;
+	}
+
+	.no-more-tables.block-header thead,
+	.no-more-tables.block-header thead > tr,
+	.no-more-tables.block-header thead > tr > td,
+	.no-more-tables.block-header thead > tr > th{
+		display: block;
+	}
+
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	.no-more-tables thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+		display:none;
+	}
+
+	.no-more-tables tbody > tr {  }
+	.no-more-tables tbody > tr.showIfLast { display:none }
+	.no-more-tables tbody > tr >td {
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 50%;
+		white-space: normal;
+		text-align:right;
+	}
+	.rtl .no-more-tables tbody > tr > td {
+		padding-left: 0;
+		padding-right: 50%;
+		}
+	.no-more-tables tbody > tr > td.no-more-tables-header{
+		padding-left: 15px !important;
+		padding-right:15px !important;
+
+		background-color:#333;
+		color:#fff;
+		font-size:1.2em;
+	}
+
+	.no-more-tables tbody > tr > td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+		text-align:left;
+		content: attr(aria-label);
+		font-weight: bold;
+	}
+	.rtl .no-more-tables tbody > tr > td:before {
+		left:auto;
+		right:6px;
+		padding-left: 10px;
+	}
+	/*
+	Label the data
+	*/
+
+}

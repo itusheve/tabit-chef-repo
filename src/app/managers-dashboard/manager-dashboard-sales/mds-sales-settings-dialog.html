@@ -1,0 +1,28 @@
+﻿<h1 mat-dialog-title md-primary>{{'managerDash.Settings' | tmpTranslate}}</h1>
+<div mat-dialog-content class="dx-rtl">
+
+
+  <div class="text-center">
+    <mat-button-toggle-group class="no-shadow b" value="{{timeMode}}" name="timeSpan" aria-label="Time Span">
+      <mat-button-toggle value="all" (change)="setTimeMode('all')" cdkFocusInitial>{{'managerDash.ALL_DAY' | tmpTranslate}}</mat-button-toggle>
+      <mat-button-toggle value="start" (change)="setTimeMode('start')">{{'managerDash.TIME_RANGE_FROM' | tmpTranslate}}</mat-button-toggle>
+      <mat-button-toggle value="end" (change)="setTimeMode('end')">{{'managerDash.TIME_RANGE_TO' | tmpTranslate}}</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+
+  <div class="text-center pv20 mt10">
+    <div class="disp-inline">
+      <dx-date-box [(value)]="dateFrom" type="time" displayFormat="HH:mm" (onValueChanged)="calcTimes('dateFrom', $event)" *ngIf="timeMode == 'start'"></dx-date-box>
+      <dx-date-box [(value)]="dateTo" type="time" displayFormat="HH:mm" (onValueChanged)="calcTimes('dateTo', $event)" *ngIf="timeMode == 'end'"></dx-date-box>
+    </div>
+  </div>
+
+
+</div>
+<div mat-dialog-actions class="text-far">
+  <div class="flex-grow-1"></div>
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button (click)="apply()">Apply</button>
+</div>
+

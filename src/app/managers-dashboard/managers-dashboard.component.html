@@ -37,16 +37,18 @@
           </button>
         </div>
       </div>
-      <div class="flex j-end pe15" style="width:20%" i18n="@@introductionHeader">
-
-      </div>
+      <div class="flex j-end pe15" style="width:20%" i18n="@@introductionHeader"></div>
     </div>
+
+
+
+
     <!--START CONTENT-->
     <div class="contentFixed">
-      <div class="content dash-content">
+      <div class="content dash-content" *ngIf="criteria.loaded">
 
         <!--<div class="wrapper-sm" *ngIf="MDS.isHandset"></div>-->
-        <div class="pos-rlt" style="margin:0 auto; max-width:1024px">
+        <div class="dash-container">
           <ul class="nav-tabs-dash-main nav nav-tabs mt15" role="tablist">
             <li class="nav-item text-xl">
               <a class="nav-link" [class.active]="criteria.report == 'dayly'" (click)="criteria.report = 'dayly'">
@@ -62,51 +64,29 @@
 
           <div class="dash-pos-buttons">
 
+            <div class="cal-container me15">
+              <button class="cal-button" mat-raised-button (click)="picker.open()">
+                <mat-icon>event</mat-icon>
+                {{db.isDateClosed ? (db.businessDate | date) : ('managerDash.Today' | tmpTranslate)}}
+              </button>
+              <input matInput [matDatepicker]="picker" [max]="maxDate" [(ngModel)]="tmpDate" (dateChange)="businessDateChange()" placeholder="Choose a date">
+              <mat-datepicker #picker></mat-datepicker>
+            </div>
 
-            <!--<button mat-fab color="primary">Primary</button>
-            <button mat-fab color="accent">Accent</button>
-            <button mat-fab color="warn">Warn</button>-->
-
-
-            <!--<div class="hbox">
-              <div class="hcol v-middle" *ngIf="!isSmallMedia">
-                <div class="m-far">
-                  <button class="btn btn-default btn-block no-padder-hX  btn-addon" ng-click="doBusinessDate()">
-                    <i class="fa fa-calendar"></i>
-                    <ng-container *ngIf="MDS.isDateClosed">{{MDS.businessDate | date}}</ng-container>
-                    <ng-container *ngIf="!MDS.isDateClosed" i18n="@@Today">Today</ng-container>
-                  </button>
-                </div>
-
-              </div>
-
-              <div class="hcol v-bottom text-far" *ngIf="isSmallMedia">
-                <div class="text-xs font-bold inline text-center" style="width:60px; white-space:nowrap">
-                  <ng-container *ngIf="MDS.isDateClosed">{{MDS.businessDate | date}}</ng-container>
-                  <ng-container *ngIf="!MDS.isDateClosed" i18n="@@Today">Today</ng-container>
-                </div>
-                <button class="btn btn-rounded btn-lg btn-icon btn-dark" style="width:60px; height:60px;" ng-click="doBusinessDate()">
-                  <img src="images/calendar.svg" style="width:30px; height:30px" />
-                </button>
-
-              </div>
-              <div class="hcol v-bottom text-far" style="width:65px">
-                <button class="btn btn-rounded btn-lg btn-icon btn-dark" style="width:60px; height:60px;" ng-click="doDataUpdate()" ng-disabled="MDS.isDateClosed">
-                  <img src="images/cycle.svg" [ngClass]="{'image-spin':criteria.refreshing}" style="width:40px; height:40px" />
-                </button>
-              </div>
-            </div>-->
+            <button mat-mini-fab color="background" (click)="doDataUpdate()" [disabled]="db.isDateClosed || refreshing">
+              <mat-icon>refresh</mat-icon>
+            </button>
           </div>
         </div>
 
 
 
-        <div class="pos-rlt" *ngIf="criteria.loaded">
+        <div class="pos-rlt">
           <app-manager-dashboard-dayly *ngIf="criteria.report == 'dayly'"
-                                       class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db">
+                                       class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db" (actionRequest)="actionRequest($event)">
           </app-manager-dashboard-dayly>
           <app-manager-dashboard-sales *ngIf="criteria.report == 'sales'"
-                                       class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db">
+                                       class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db" (actionRequest)="actionRequest($event)">
           </app-manager-dashboard-sales>
 
         </div>

@@ -7,8 +7,8 @@
 
 
   <div class="b-b bg-white ">
-    <div class="container pv20">
-      <div class="font-bold text-base text-center" i18n="manager-dash@@DASH_DAYLY_EXP">
+    <div class="dash-container pv20">
+      <div class="font-bold text-base text-center mb10" i18n="manager-dash@@DASH_DAYLY_EXP">
         {{'managerDash.DASH_DAYLY_EXP' | tmpTranslate }}
       </div>
       <div class="pos-rlt">
@@ -45,7 +45,7 @@
           <div class="text-xxl" [ngClass]="{'text-xl':MDS.isHandset}">
             <span class="numeric-cell">{{db.daylyData.totals.totalAmount == 0 ? 0 : db.daylyData.totals.totalAmount / db.daylyData.totals.diners | number:'1.1-1'}}</span>
           </div>
-          <small class="text-faded" i18nX="manager-dash@@PPA">{{'managerDash.PPA' | tmpTranslate }}</small>
+          <small class="text-faded" i18nX="manager-dash@@PPA">PPA</small>
         </div>
       </div>
     </div>
@@ -55,13 +55,13 @@
   order type
   ============================================================================================ -->
 
-  <div class="container mt15" *ngIf="!db.daylyData._noData">
+  <div class="dash-container mt15" *ngIf="!db.daylyData._noData">
     <div class="pv15">
 
       <!--by order type-->
       <div class="row">
         <div class="col-sm-6">
-          <div class="panel panel-default">
+          <div class="bg-white b b-rouned mb20">
             <div class="block-header">
               <table class="table table-log no-margin" ts-wrapper>
                 <thead>
@@ -75,7 +75,7 @@
                 <tbody>
                   <tr *ngFor="let row of db.daylyData.ordersTotal" ts-repeat [ngClass]="{'font-bold':row.orderType == 'Seated'}">
                     <td class="text-lg" data-title="{{'managerDash.ORDER_TYPE' | tmpTranslate}}">
-                      {{((row.orderType).toUpperCase()) | tmpTranslate}}
+                      {{('managerDash.' + (row.orderType).toUpperCase()) | tmpTranslate}}
                     </td>
                     <td class="numeric-cell text-lg" data-title="{{'managerDash.Orders' | tmpTranslate}}">
                       {{row.totalCount}}
@@ -92,15 +92,15 @@
             </div>
           </div>
 
-          <div class="panel panel-default">
+          <div class="bg-white b b-rouned mb20">
             <div class="block-header">
-              <table class="table table-log mo-margin">
+              <table class="table table-log no-margin">
                 <tbody>
                   <tr>
-                    <td class="text-lg">
+                    <td class="text-lg"  style="border-top:0">
                       <span>{{'managerDash.OTH' | tmpTranslate}}</span> <small>({{'managerDash.ITEMS' | tmpTranslate}})</small>
                     </td>
-                    <td class="numeric-cell text-lg">
+                    <td class="numeric-cell text-lg"  style="border-top:0">
                       {{db.daylyData.onTheHouse.totalItems}}
                     </td>
                   </tr>
@@ -120,7 +120,7 @@
         </div>
 
         <div class="col-sm-6">
-          <div class="panel panel-default">
+          <div class="bg-white b b-rouned">
             <div class="block-header">
               <table class="table table-log no-margin" ts-wrapper>
                 <thead>

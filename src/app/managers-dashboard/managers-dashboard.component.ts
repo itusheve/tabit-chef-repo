@@ -37,6 +37,11 @@ export class ManagersDashboardComponent implements OnInit {
   env;
   debug: boolean;
   logArr: { type: string, message: string }[];
+
+
+  tmpDate: any;
+  maxDate: any = moment().toDate();
+
   criteria: any = {
     loaded: false,
     report: "dayly",//sales
@@ -107,6 +112,37 @@ export class ManagersDashboardComponent implements OnInit {
   data
   ---------------------------------------------------------------------------------
   */
+
+  actionRequest(action) {
+    switch (action.id) {
+      case "applyDelayed": this.applyDelayed(); break;
+    }
+  }
+
+  businessDateChange() {
+    let that = this;
+    this.MDS.getOrdersDate(this.db, moment(this.tmpDate))
+      .then((data) => {
+        that.applyCriteria();
+      });
+  }
+
+  refreshing: boolean = false;
+  doDataUpdate() {
+    let that = this;
+    if (this.refreshing || this.db.isDateClosed) return;
+    if (this.db.isDateClosed) return;
+    this.refreshing = true;
+    this.MDS.refreshOrders(this.db).then((data) => {
+        that.applyCriteria();
+        that.refreshing = false;
+      }
+    );
+  }
+
+  private applyDelayed() {
+    this.applyCriteria();
+  }
 
   private applyCriteria () {
     //console.log(++NN + "| " + $scope.criteria.dinerAvgGoal)
@@ -329,75 +365,8 @@ export class ManagersDashboardComponent implements OnInit {
   Methods
   ---------------------------------------------------------------------------------
   */
-  /*
-  toggleNet (showNet) {
-    this.critera.showNetPrices = !this.critera.showNetPrices;
-    applyCriteria();
-  };
 
-  dateChange() {
-    //alert(this.pendingBusinessDate)
-  }
 
-  toggleItemSectionMeasure () {
-    let criteria = this.criteria;
-    criteria.changingSales = true;
-    if (criteria.itemSelectionMeasure == 'c') {
-      criteria.itemSelectionMeasure = 'v';
-    } else {
-      criteria.itemSelectionMeasure = 'c';
-    };
-    $timeout(function () {
-      criteria.changingSales = false;
-    });
-  }
-
-  calcGoal() {
-    let criteria = this.criteria;
-    if (!criteria.dinerAvgGoalParsed || isNaN(criteria.dinerAvgGoalParsed)) {
-      criteria.dinerAvgGoalParsed = criteria.dinerAvgGoal / 100;
-    } else {
-      criteria.dinerAvgGoal = criteria.dinerAvgGoalParsed * 100;
-    }
-    criteria.dinerAvgGoalParsed = Number(criteria.dinerAvgGoalParsed);
-    var p = criteria.dinerAvgGoalThreshhold / 100;
-    criteria.dinerAvgGoalAlert = criteria.dinerAvgGoal - (p * criteria.dinerAvgGoal);
-    applyDelayed();
-  }
-
-  calcTimes(att) {
-    let criteria = this.criteria;
-    criteria.selectedSlot = null;
-    criteria.selectedSlotName = null;
-    var d = this[att];
-    if (_.isDate(d)) {
-      var md = moment(d);
-      var t = md.hours() * 60 + md.minutes();
-      this[att.replace('date', 'time')] = t;
-      applyDelayed();
-    }
-  }
-
-  toggleNetGross(val, forceToggle) {
-    let criteria = this.criteria;
-    if (!forceToggle) {
-      if (val === criteria.showNetPrices) return;
-      criteria.showNetPrices = val;
-    }
-    blockUI.start();
-    $timeout(function () { $scope.applyCriteria() }, 400);
-  }
-
-  setOrderFilter (val, forceToggle) {
-    let criteria = this.criteria;
-    if (!forceToggle) {
-      if (val === criteria.orderFilter) return;
-      criteria.orderFilter = val;
-    }
-    blockUI.start();
-    $timeout(function () { $scope.applyCriteria() }, 400);
-  }
-  * /
 
   /*
   ---------------------------------------------------------------------------------

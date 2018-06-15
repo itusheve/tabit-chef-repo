@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { ManagersDashboardService } from '../managers-dashboard.service';
 
@@ -10,8 +10,14 @@ import { ManagersDashboardService } from '../managers-dashboard.service';
 export class ManagerDashboardDaylyComponent implements OnInit {
   @Input() db: any;
   @Input() criteria: any;
+  @Output()
+  actionRequest = new EventEmitter<any>();
 
   constructor(public MDS: ManagersDashboardService) { }
+
+  doAction(action) {
+    this.actionRequest.emit(action);
+  }
 
   ngOnInit() {
 
