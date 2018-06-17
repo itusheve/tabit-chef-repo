@@ -86,7 +86,17 @@
                     </td>
                     <td class="break">{{tuple.item}}</td>
                     <td class="ar">{{tuple.operational | curr:'0'}}</td>
-                    <td>{{tuple.subType}}</td>
+                    <td i18n="@@orderSubTypeSelect">{
+                        tuple.subType,
+                        select,
+                        Discounts {Discounts}
+                        OTH {OTH}
+                        Promotions {Promotions}
+                        Returns {Returns}
+                        Voids {Voids}
+                        Unknown {Unknown}
+                        }
+                    </td>
                     <td>{{tuple.reasonId}}</td>
                 </tr>
             </table>

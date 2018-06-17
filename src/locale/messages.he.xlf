@@ -104,7 +104,7 @@
       </trans-unit>
       <trans-unit id="totalSales" datatype="html">
         <source>Total Sales</source>
-        <target>סה"כ מכירות</target>
+        <target>מכירות</target>
       </trans-unit>
       <trans-unit id="monthly" datatype="html">
         <source>Monthly</source>
@@ -172,7 +172,7 @@
       </trans-unit>
       <trans-unit id="tax" datatype="html">
         <source>Tax</source>
-        <target>מס</target>
+        <target>מע"מ</target>
       </trans-unit>
       <trans-unit id="cancellationsValue" datatype="html">
         <source>Voids</source>
@@ -283,6 +283,9 @@
       <trans-unit id="orderTypeSelect2" datatype="html">
         <target>{ tuple.orderType.id, select, seated {בישיבה} counter {דלפק} ta {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
       </trans-unit>
+      <trans-unit id="orderSubTypeSelect" datatype="html">
+        <target>{ tuple.subType, select, Discounts {הנחה} OTH {OTH} Promotions {מבצע} Returns {החזרה} Voids {ביטול} Unknown {לא ידוע} }</target>
+      </trans-unit>
       <trans-unit id="revenue" datatype="html">
         <source>Revenue</source>
         <target>הכנסות</target>
@@ -381,7 +384,7 @@
       </trans-unit>
       <trans-unit id="tips" datatype="html">
           <source>Tips</source>
-          <target>תשר</target>
+          <target>טיפ</target>
         </trans-unit>
       <trans-unit id="serviceCharge" datatype="html">
         <source>Service Charge</source>

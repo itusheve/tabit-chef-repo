@@ -8,7 +8,7 @@ import { OrderTypeVM } from './day-orders-table.component';
 })
 export class DayOrdersTableHasSalesPipe implements PipeTransform {
     transform(orderTypes: OrderTypeVM[], filter: Object): any {
-        return orderTypes.filter(i=>i.sales>0);
+        return orderTypes.filter(i=>i.sales !== 0);
     }
 }
 

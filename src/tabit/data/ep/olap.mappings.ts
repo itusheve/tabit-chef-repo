@@ -481,13 +481,13 @@ export class OlapMappings {
             attr: {
                 orderNumber: {
                     path: {
-                        il: 'Order Number',//'הזמנה מס <int>',
+                        il: 'Order Number',//'הזמנה <int>',
                         us: 'Order Number'//'#<int>'
                     },
                     parse: {
                         il: raw => {
                             try {
-                                return (raw.replace('הזמנה מס ', '') * 1);
+                                return (raw.replace('הזמנה ', '') * 1);
                             } catch (e) {
                                 return 0;
                             }
@@ -563,15 +563,15 @@ export class OlapMappings {
                     parse: {
                         il: raw => {
                             switch (raw) {
-                                case 'ביטולים':
+                                case 'Voids Actions':
                                     return 'cancellation';
-                                case 'תפעול':
+                                case 'Compensation Actions':
                                     return 'compensation';
-                                case 'שימור ושיווק':
+                                case 'Retention Actions':
                                     return 'retention';
-                                case 'ארגוני':
+                                case 'TBD':
                                     return 'organizational';
-                                case 'מבצעים':
+                                case 'TBD':
                                     return 'promotions';
                             }
                         },
