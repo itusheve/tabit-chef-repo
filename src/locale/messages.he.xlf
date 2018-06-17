@@ -278,7 +278,7 @@
         <target>ממוצע</target>
       </trans-unit>
       <trans-unit id="orderTypeSelect" datatype="html">
-        <target>{ key.id, select, seated {בישיבה} counter {דלפק} ta {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
+        <target>{ val, select, seated {בישיבה} counter {דלפק} ta {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
       </trans-unit>
       <trans-unit id="orderTypeSelect2" datatype="html">
         <target>{ tuple.orderType.id, select, seated {בישיבה} counter {דלפק} ta {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
@@ -379,6 +379,10 @@
         <source>Gratuity</source>
         <target>תשר</target>
       </trans-unit>
+      <trans-unit id="tips" datatype="html">
+          <source>Tips</source>
+          <target>תשר</target>
+        </trans-unit>
       <trans-unit id="serviceCharge" datatype="html">
         <source>Service Charge</source>
         <target>???</target>

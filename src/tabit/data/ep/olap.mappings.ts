@@ -67,9 +67,23 @@ export class OlapMappings {
                     },
                     type: 'number'
                 },
+                salesTotalAmount: {
+                    path: {
+                        il: 'headerTotalAmount',
+                        us: 'headerTotalAmount'
+                    },
+                    type: 'number'
+                },
                 netSalesAmnt: {
                     path: {
                         il: 'salesNetAmount',
+                        us: 'salesNetAmount'
+                    },
+                    type: 'number'
+                },
+                netSalesAmntWithoutVat: {
+                    path: {
+                        il: 'salesNetAmountWithOutVat',
                         us: 'salesNetAmount'
                     },
                     type: 'number'
@@ -83,7 +97,7 @@ export class OlapMappings {
                 },
                 tipAmnt: {
                     path: {
-                        il: 'Total Tips',
+                        il: 'salesTipAmountWithOutVat',
                         us: 'Total Tips'
                     },
                     type: 'number'
@@ -670,7 +684,23 @@ export class OlapMappings {
                     },
                     parse: {
                         il: raw => {
-                        },//TBD //must map to the indexes in dataService.orderTypes!
+                            switch (raw) {//must map to the indexes in dataService.orderTypes!
+                                case 'בישיבה':
+                                    return 'seated';
+                                case 'דלפק':
+                                    return 'counter';
+                                case 'לקחת':
+                                    return 'ta';
+                                case 'משלוח':
+                                    return 'delivery';
+                                case 'החזר':
+                                    return 'refund';
+                                case 'mediaexchange':
+                                    return 'mediaExchange';
+                                default:
+                                    return 'other';
+                            }
+                        },
                         us: raw => {
                             switch (raw) {//must map to the indexes in dataService.orderTypes!
                                 case 'seated':

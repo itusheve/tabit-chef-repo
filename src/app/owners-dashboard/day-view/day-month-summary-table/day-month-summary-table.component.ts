@@ -3,6 +3,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { BusinessDayKPI, CustomRangeKPI } from '../../../../tabit/data/data.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-month-summary-table',
@@ -12,6 +13,8 @@ import { BusinessDayKPI, CustomRangeKPI } from '../../../../tabit/data/data.serv
 export class DayMonthSummaryTableComponent implements OnChanges {
   loading = true;
   noData = false;
+
+  public environment;
 
   @Input() month: moment.Moment;
 
@@ -24,7 +27,9 @@ export class DayMonthSummaryTableComponent implements OnChanges {
   data: BusinessDayKPI[] = [];
 
 
-  constructor() {}
+  constructor() {
+      this.environment = environment;
+  }
 
   ngOnChanges(o: SimpleChanges) {
     if (o.mtdBusinessDaysKPIs && o.mtdBusinessDaysKPIs.currentValue) {

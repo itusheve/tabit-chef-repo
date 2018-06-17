@@ -14,6 +14,8 @@ declare var Xmla4JWrapper: any;
 
 //All sorts of KPIs for Order(s)
 export interface Orders_KPIs {
+    salesTotalAmount?: number;
+    netSalesAmntWithoutVat?: number;
     netSalesAmnt?: number;
     taxAmnt?: number;
     grossSalesAmnt?: number;
@@ -339,6 +341,8 @@ export class OlapEp {
     }[]> {
         return this.smartQuery({
             measures: [
+                this.olapMappings.measureGroups.newStructure.measures.salesTotalAmount,
+                this.olapMappings.measureGroups.newStructure.measures.netSalesAmntWithoutVat,
                 this.olapMappings.measureGroups.newStructure.measures.grossSalesAmnt,
                 this.olapMappings.measureGroups.newStructure.measures.netSalesAmnt,
                 this.olapMappings.measureGroups.newStructure.measures.taxAmnt,
@@ -367,6 +371,8 @@ export class OlapEp {
                     return {
                         orderTypeName: o.orderTypeName,
                         ordersKpis: {
+                            salesTotalAmount: o.salesTotalAmount,
+                            netSalesAmntWithoutVat: o.netSalesAmntWithoutVat,
                             netSalesAmnt: o.netSalesAmnt,
                             taxAmnt: o.taxAmnt,
                             grossSalesAmnt: o.grossSalesAmnt,
@@ -390,7 +396,9 @@ export class OlapEp {
     }[]> {
         return this.smartQuery({
             measures: [
+                this.olapMappings.measureGroups.newStructure.measures.salesTotalAmount,
                 this.olapMappings.measureGroups.newStructure.measures.grossSalesAmnt,
+                this.olapMappings.measureGroups.newStructure.measures.netSalesAmntWithoutVat,
                 this.olapMappings.measureGroups.newStructure.measures.netSalesAmnt,
                 this.olapMappings.measureGroups.newStructure.measures.taxAmnt,
                 this.olapMappings.measureGroups.newStructure.measures.tipAmnt,
@@ -420,6 +428,8 @@ export class OlapEp {
                         orderTypeName: o.orderTypeName,
                         shiftName: o.shiftName,
                         ordersKpis: {
+                            salesTotalAmount: o.salesTotalAmount,
+                            netSalesAmntWithoutVat: o.netSalesAmntWithoutVat,
                             netSalesAmnt: o.netSalesAmnt,
                             taxAmnt: o.taxAmnt,
                             grossSalesAmnt: o.grossSalesAmnt,
