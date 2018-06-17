@@ -8,6 +8,8 @@ import { ManagerDashboardDaylyComponent } from './manager-dashboard-dayly/manage
 
 import { ManagersDashboardService } from './managers-dashboard.service';
 import { ManagersDashboardRoutingModule } from './managers-dashboard-routing.module';
+
+import { BlockUIModule } from 'ng-block-ui';
 import { MDTMPTranslatePipe, MDMapListPipe, MDCurrencyFractionPipe, MDPPOKPIPipe, KPIGoalPipe} from './managers-dashboard.pipes';
 
 import { NgxInitDirective, NgxCollapseDirective } from './managers-dashboard.directives';
@@ -22,7 +24,8 @@ import {
   MatSidenavModule,
   MatIconModule,
   MatButtonModule,
-  MatButtonToggleModule
+  MatButtonToggleModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 
 import { DxDateBoxModule } from 'devextreme-angular';
@@ -35,6 +38,7 @@ import { DxDateBoxModule } from 'devextreme-angular';
 
     ManagersDashboardRoutingModule,
 
+    BlockUIModule.forRoot(),
     MatNativeDateModule,
     MatDialogModule,
     MatCardModule,
@@ -45,6 +49,7 @@ import { DxDateBoxModule } from 'devextreme-angular';
     MatIconModule,
     MatButtonModule,
     MatButtonToggleModule,
+    MatProgressSpinnerModule,
 
     DxDateBoxModule
   ],

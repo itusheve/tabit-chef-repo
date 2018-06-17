@@ -1,3 +1,5 @@
+a{cursor:pointer}
+
 /* horizontal sizing */
 * {
     &.hLarge {
@@ -577,4 +579,8 @@ $border-style: 1px solid rgba(0, 0, 0, 0.12);
 	Label the data
 	*/
 
+}
+
+.block-ui-wrapper{
+  background:rgba(0, 0, 0, 0.40) !important;
 }

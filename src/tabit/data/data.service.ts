@@ -43,6 +43,7 @@ const tmpTranslations_ = {
         opFailed: 'הפעולה נכשלה. אנא פנה לתמיכה.',
         areYouSureYouWish: 'האם אתה בטוח שברצונך',
         toLogout: 'להתנתק',
+        loading: 'טוען נתונים...',
         login: {
             userPassIncorrect: 'שם משתמש ו/או סיסמא אינם נכונים',
             passwordRestore: 'איפוס סיסמא',
@@ -186,6 +187,7 @@ const tmpTranslations_ = {
         opFailed: 'Operation has failed. please contact support.',
         areYouSureYouWish: 'Are you sure you wish',
         toLogout: 'to logout',
+        loading: "Loading...",
         login: {
             userPassIncorrect: 'Incorrect User / Password',
             passwordRestore: 'Reset Password',

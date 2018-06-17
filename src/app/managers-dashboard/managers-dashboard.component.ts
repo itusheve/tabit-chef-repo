@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatSidenavModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 import { environment } from '../../environments/environment';
 
@@ -24,6 +24,7 @@ import 'moment-timezone';
 })
 
 export class ManagersDashboardComponent implements OnInit {
+  @BlockUI() blockUI: NgBlockUI;
 
   org: any;
   user: any;
@@ -96,6 +97,7 @@ export class ManagersDashboardComponent implements OnInit {
 
   ngOnInit() {
     let that = this;
+    this.blockUI.start(tmpTranslations.get('loading'));
     this.MDS.getMetaData()
       .then((data) => {
         that.db = data;
@@ -104,6 +106,12 @@ export class ManagersDashboardComponent implements OnInit {
         that.criteria.dinerAvgGoal = that.criteria.dinerAvgGoalParsed * 100;
         that.applyCriteria();
         that.criteria.loaded = true;
+
+      }).catch(e => {
+        console.error(e);
+      })
+      .then(() => {
+        that.blockUI.stop();
       });
   }
 
@@ -119,15 +127,22 @@ export class ManagersDashboardComponent implements OnInit {
     }
   }
 
+  refreshing: boolean = false;
+
   businessDateChange() {
     let that = this;
+    this.refreshing = true;
     this.MDS.getOrdersDate(this.db, moment(this.tmpDate))
       .then((data) => {
         that.applyCriteria();
+      }).catch(e => {
+        console.error(e);
+      }).then(() => {
+        that.refreshing = false;
       });
   }
 
-  refreshing: boolean = false;
+
   doDataUpdate() {
     let that = this;
     if (this.refreshing || this.db.isDateClosed) return;
@@ -135,9 +150,12 @@ export class ManagersDashboardComponent implements OnInit {
     this.refreshing = true;
     this.MDS.refreshOrders(this.db).then((data) => {
         that.applyCriteria();
-        that.refreshing = false;
       }
-    );
+    ).catch(e => {
+      console.error(e);
+    }).then(() => {
+      that.refreshing = false;
+    });
   }
 
   private applyDelayed() {

@@ -6,7 +6,19 @@
   padding-bottom:0 !important;
 }
 
+
+.dash-pos-spinner{
+    z-index:1;
+    position:absolute;
+    right:7px;
+    top: -2px;
+    .rtl &{
+      right: auto;
+      left: 7px;
+    }
+}
 .dash-pos-buttons{
+    z-index:2;
     position:absolute;
     right:10px;
     top: 0;
