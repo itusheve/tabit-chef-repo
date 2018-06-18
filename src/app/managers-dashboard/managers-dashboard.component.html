@@ -2,11 +2,14 @@
 <mat-sidenav-container class="rtl">
 
   <mat-sidenav class="flex d-col" #sidenav mode="over">
-    <div class="s-0 flex d-col header">
+    <div class="s-0 header d-flex align-items-center">
       <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{this.sideNavConfig.header.userInitials}}</button>
-      <div class="mt10 mb10">{{this.sideNavConfig.header.user?.firstName}} {{this.sideNavConfig.header.user?.lastName}}</div>
-      <div>{{this.sideNavConfig.header.org?.alias || this.sideNavConfig.header.org?.name}}</div>
+      <div class="ps15">
+        <div class="">{{this.sideNavConfig.header.user?.firstName}} {{this.sideNavConfig.header.user?.lastName}}</div>
+        <div>{{this.sideNavConfig.header.org?.alias || this.sideNavConfig.header.org?.name}}</div>
+      </div>
     </div>
+
     <div class="g-1 flex d-col content">
       <button class="s-0" *ngIf="this.sideNavConfig.content.showMySitesBtn" mat-raised-button [routerLink]="['/restaurants', { m: 's'}]">
         <span i18n="owners-dashboard@@mySites">My Sites</span>
