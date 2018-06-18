@@ -276,10 +276,12 @@ export class MdsSalesIgroupDialog {
       _.each(cat.items, (subCat) => {
         delete subCat.expanded;
         subCat.selected = this.subsMap[subCat._id] != null;
-        if (subCat.selected) cat.expanded = true;
+        var wasSelected = false;
         _.each(subCat.items, (item) => {
           item.selected = this.itemsMap[item._id] != null;
-        })
+          if (item.selected) wasSelected;
+        });
+        if (subCat.selected || wasSelected) cat.expanded = true;
       })
     })
 
@@ -290,10 +292,29 @@ export class MdsSalesIgroupDialog {
     //this.items = _.cloneDeep(data.db.items);
   }
 
+  treeOptionChanged(e) {
+    if (e.name == 'searchValue') {
+      if (e.value == "") {
+        var tree = this.treeView;
+        this.collapseChildren(tree.instance.getNodes(), tree);
+      }
+    }
+  }
+
+  collapseChildren(nodes, tree) {
+    nodes.forEach(node => {
+      if (node.children.length) {
+        this.collapseChildren(node.children, tree);
+        tree.instance.collapseItem(node.key);
+      }
+    })
+  }
+
+
   onItemRendered(e) {
     if (e.node.level == 0) {
       e.itemElement.parentElement.querySelector('.dx-checkbox').classList.add("collapse");
-      e.itemElement.classList.add("font-bold");
+      e.itemElement.classList.add("md-tree-root");
     }
   }
 
