@@ -227,6 +227,10 @@
         <source>Filter</source>
         <target>סינון</target>
       </trans-unit>
+      <trans-unit id="searchRestaurant" datatype="html">
+        <source>Search</source>
+        <target>חפש מסעדה</target>
+      </trans-unit>
       <trans-unit id="vat" datatype="html">
         <source>VAT</source>
         <target>מע"מ</target>

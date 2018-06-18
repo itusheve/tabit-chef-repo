@@ -19,3 +19,7 @@ $tabit-app-theme: mat-light-theme($tabit-app-primary, $tabit-app-accent, $tabit-
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($tabit-app-theme);
+
+$custom-typography: mat-typography-config(
+        $font-family: 'Open Sans, sans-serif'
+);

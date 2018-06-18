@@ -26,10 +26,11 @@
       </div>
       <div class="flex d-col aj-center" style="width:70%;">
         <div class="flex a-center" style="color:white">
-          <div i18n="@@mySites">My Restaurants</div>
-          <button style="color: #c2c9d4;" mat-icon-button (click)="refresh()">
-            <mat-icon>refresh</mat-icon>
-          </button>
+            <div *ngIf="orgs && orgs.length>9" class="s-0 flex orgsFilter">
+                <mat-form-field [floatLabel]="never">
+                    <input matInput placeholder="Search" i18n-placeholder="@@searchRestaurant" (keyup)='keyUp.next($event.target.value)'>
+                </mat-form-field>
+            </div>
         </div>
       </div>
       <div class="pe15" style="width:15%"> <!-- for design purpose only --> </div>
@@ -37,11 +38,6 @@
     <div class="contentFixed">
       <div class="content">
         <div class="flex d-col orgs">
-          <div *ngIf="orgs && orgs.length>9" class="s-0 flex orgsFilter">
-            <mat-form-field>
-              <input matInput placeholder="Filter" i18n-placeholder="@@filter" (keyup)='keyUp.next($event.target.value)'>
-            </mat-form-field>
-          </div>
           <div class="g-1 flex f-wrap j-space-between mt15 orgsCards">
             <mat-card *ngIf="exampleOrg.enabled" (click)="exampleOrg.select()" [ngClass]="{'selected': exampleOrg.selected}">
               <mat-card-content>{{exampleOrg.name}}</mat-card-content>

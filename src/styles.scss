@@ -3,6 +3,8 @@
 @import "fonts";
 @import "./tabit/styles/material-theme.scss";
 
+@import '~@angular/material/theming';
+
 /* Landscape */
 @media only screen and (orientation: landscape) {
     body{
@@ -15,7 +17,7 @@ html, body {
   height: 100vh;
   padding: 0;
   margin: 0;
-  font-family: 'Assistant', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: $base-font-size;
   -webkit-font-smoothing: antialiased;
   color: $fontColor;
@@ -28,6 +30,11 @@ html, body {
 
 // TLA:
 .mat-button:hover .mat-button-focus-overlay {opacity:0!important}
+
+mat-form-field.mat-form-field {
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+}
 
 button {
   cursor: pointer;
@@ -91,7 +98,7 @@ button {
 }
 
 table {
-  font-family: 'Assistant', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: $base-font-size;
 
   &.chf-tbl {
@@ -278,15 +285,15 @@ body[dir="rtl"] {
 
 
 .dx-widget, dx-datagrid, dx-pie-chart, dx-chart {
-  font-family: 'Assistant', sans-serif !important;
+  font-family: 'Open Sans', sans-serif !important;
 }
 
 dx-chart svg text {
-  font-family: 'Assistant', sans-serif !important;
+  font-family: 'Open Sans', sans-serif !important;
 }
 
 dx-pie-chart svg text {
-  font-family: 'Assistant', sans-serif !important;
+  font-family: 'Open Sans', sans-serif !important;
 }
 
 $navigatorHeight: 50px;
@@ -409,7 +416,7 @@ snack-bar-container {
 
   simple-snack-bar {
     font-size: $base-font-size!important;
-    font-family: inherit!important;
+    font-family: 'Open Sans', sans-serif !important;
   }
 }
 
