@@ -28,7 +28,7 @@ import {
   MatProgressSpinnerModule
 } from '@angular/material';
 
-import { DxDateBoxModule } from 'devextreme-angular';
+import { DxDateBoxModule, DxTreeViewModule, DxListModule, DxTemplateModule } from 'devextreme-angular';
 
 
 @NgModule({
@@ -51,7 +51,10 @@ import { DxDateBoxModule } from 'devextreme-angular';
     MatButtonToggleModule,
     MatProgressSpinnerModule,
 
-    DxDateBoxModule
+    DxDateBoxModule,
+    DxTreeViewModule,
+    DxListModule,
+    DxTemplateModule
   ],
   entryComponents: [
     MdsSalesSettingsDialog,

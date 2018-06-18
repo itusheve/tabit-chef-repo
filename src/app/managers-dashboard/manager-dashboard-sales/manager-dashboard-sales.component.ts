@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, Inject} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, Inject, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { DxTreeViewComponent } from 'devextreme-angular';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -240,16 +241,21 @@ ITEM GROUPS DIALOG
   styleUrls: ['./mds-sales-igroup-dialog.scss']
 })
 export class MdsSalesIgroupDialog {
+  @ViewChild(DxTreeViewComponent) treeView: DxTreeViewComponent;
   o = {
     showSelected: false,
+    selectAll: 'Find...',
     catSearch: '',
     itemSearch: ''
   }
   catalog = [];
   group;
   isNew;
-  subCategories;
-  items;
+  catTree;
+  subCats;
+  subsMap;
+  itemsMap;
+
 
   constructor(
     public dialogRef: MatDialogRef<MdsSalesIgroupDialog>,
@@ -258,60 +264,69 @@ export class MdsSalesIgroupDialog {
 
     this.group = data.iGroup || { name: tmpTranslations.get('managerDash.NEWGROUP'), items: [], subs: [] }
     this.isNew = data.isNew;
-    this.subCategories = _.cloneDeep(data.db.subCategories);
-    this.items = _.cloneDeep(data.db.items);
+    this.catTree = data.db.catTree;
+    this.subCats = data.db.subCategories;
+
+    this.subsMap = _.keyBy(this.group.subs, '_id');
+    this.itemsMap = _.keyBy(this.group.items, '_id');
+
+
+    _.each(this.catTree, (cat) => {
+      delete cat.expanded;
+      _.each(cat.items, (subCat) => {
+        delete subCat.expanded;
+        subCat.selected = this.subsMap[subCat._id] != null;
+        if (subCat.selected) cat.expanded = true;
+        _.each(subCat.items, (item) => {
+          item.selected = this.itemsMap[item._id] != null;
+        })
+      })
+    })
+
+    this.o.selectAll = tmpTranslations.get('managerDash.FindEx');
+    console.log(this.group);
+
+    //this.subCategories = _.cloneDeep(data.db.subCategories);
+    //this.items = _.cloneDeep(data.db.items);
   }
 
-  filterCategories() {
-    // filter:{name:o.catSearch} | orderBy:'fullName'
-  }
-  filterItems() {
-    // | filter:{name:o.itemSearch} | orderBy:'name'
-  }
-
-  toggleSubCat (sub) {
-    let target = this.group.subs;
-    if (sub.selected) {
-      sub.selected = false;
-      for (var i = 0; i < target.length; i++) {
-        if (target[i]._id == sub._id) {
-          target.splice(i, 1);
-          break;
-        }
-      }
-    } else {
-      sub.selected = true;
-      target.push(_.cloneDeep(sub));
+  onItemRendered(e) {
+    if (e.node.level == 0) {
+      e.itemElement.parentElement.querySelector('.dx-checkbox').classList.add("collapse");
+      e.itemElement.classList.add("font-bold");
     }
   }
-  removeSubCat (_sub, index) {
-    let sub = _.find(this.subCategories, { '_id': _sub._id });
-    if (sub) sub.selected = false;
+
+  selectionChanged(e) {
+    let node = e.itemData;
+    let list = node.level == 1 ? this.group.subs : this.group.items;
+    if (node.selected) {
+      if (node.level == 1) {
+        let subCat = _.find(this.subCats, { _id: node._id });
+        if (subCat)
+          list.push(_.cloneDeep(subCat));
+      } else {
+        list.push({
+           _id: node._id, name: node.name
+        });
+      }
+    } else {
+      let index = _.findIndex(list, { _id: node._id });
+      if (index != -1) {
+        list.splice(index, 1);
+      }
+    }
+  }
+
+  removeSub(sub, index) {
     this.group.subs.splice(index, 1);
+    this.treeView.instance.unselectItem(sub._id);
   }
 
-  toggleItem (item) {
-    let target = this.group.items;
-    if (item.selected) {
-      item.selected = false;
-      for (var i = 0; i < target.length; i++) {
-        if (target[i]._id == item._id) {
-          target.splice(i, 1);
-          break;
-        }
-      }
-    } else {
-      item.selected = true;
-      target.push({ _id: item._id, name: item.name });
-    }
-  }
-
-  removeItem = (_item, index) {
-    var item = _.find(this.items, { '_id': item._id });
-    if (item) item.selected = false;
+  removeItem(item, index) {
     this.group.items.splice(index, 1);
+    this.treeView.instance.unselectItem(item._id);
   }
-
 
   apply() {
     if (this.group.name) {
@@ -330,66 +345,3 @@ export class MdsSalesIgroupDialog {
 
 }
 
-/*
-
-    $scope.toggleSubCat = function (sub) {
-        var target = $scope.group.subs;
-        if (sub.selected) {
-            sub.selected = false;
-            for (var i = 0; i < target.length; i++) {
-                if (target[i]._id == sub._id) {
-                    target.splice(i, 1);
-                    break;
-                }
-            }
-        } else {
-            sub.selected = true;
-            target.push(angular.copy(sub));
-        }
-    }
-    $scope.removeSubCat = function (sub, index) {
-        var sub = UIUtils.findByKey($scope.subCategories, '_id', sub._id);
-        if (sub) sub.selected = false;
-        $scope.group.subs.splice(index, 1);
-    }
-
-    $scope.toggleItem = function (item) {
-        var target = $scope.group.items;
-        if (item.selected) {
-            item.selected = false;
-            for (var i = 0; i < target.length; i++) {
-                if (target[i]._id == item._id) {
-                    target.splice(i, 1);
-                    break;
-                }
-            }
-        } else {
-            item.selected = true;
-            target.push({ _id: item._id, name: item.name });
-        }
-    }
-    $scope.removeItem = function (item, index) {
-        var item = UIUtils.findByKey($scope.items, '_id', item._id);
-        if (item) item.selected = false;
-        $scope.group.items.splice(index, 1);
-    }
-
-
-    $scope.apply = function (form, o) {
-        if (form.$valid) {
-            $uibModalInstance.close($scope.group);
-        }
-    };
-    $scope.doRemove = function () {
-        $rootScope.PDialog.warning({
-            text: "Are you sure?",
-            showCancelButton: true,
-            confirmButtonText: "yes!"
-        }).then(function () {
-            $uibModalInstance.close('remove');
-        });
-    };
-    $scope.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
-    };
-*/

@@ -308,20 +308,6 @@ $border-style: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .rtl {
-    .icon-chevron-left:before {
-        content: "\e717";
-    }
-    .icon-chevron-right:before {
-        content: "\e716";
-    }
-
-    .icon-arrow-right.flip:before {
-        content: "\e641";
-    }
-    .icon-arrow-left.flip:before {
-        content: "\e646";
-    }
-
     .text-near {
         text-align:right;
     }
@@ -420,6 +406,18 @@ $border-style: 1px solid rgba(0, 0, 0, 0.12);
     height: 100%;
     vertical-align: top;
   }
+}
+
+.scroll-x,
+.scroll-y {
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-y {
+  overflow-y: auto;
+}
+.scroll-x {
+  overflow-x: auto;
 }
 
 .avatar {

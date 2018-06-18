@@ -179,7 +179,11 @@ const tmpTranslations_ = {
           "TIME_RANGE_TO": "עד שעה",
           "ALL_DAY": "כל היום",
           "SERVER": "מלצר",
-          "Today":"היום"
+          "Today": "היום",
+          "FindEx": "חפש...",
+          "Cancel": "ביטול",
+          "Remove": "הסר",
+          "Apply": "בצע"
         }
     },
     'en-US': {
@@ -323,7 +327,11 @@ const tmpTranslations_ = {
           "TIME_RANGE_TO": "to hour",
           "ALL_DAY": "All Day",
           "SERVER": "Server",
-          "Today":"Today"
+          "Today": "Today",
+          "FindEx": "Find...",
+          "Cancel": "Cancel",
+          "Remove": "Remove",
+          "Apply": "Apply"
         }
     }
 };

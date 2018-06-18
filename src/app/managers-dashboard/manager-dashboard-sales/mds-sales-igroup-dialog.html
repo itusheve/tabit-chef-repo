@@ -1,134 +1,75 @@
-﻿<h1 mat-dialog-title class="md-primary">{{'managerDash.Settings' | tmpTranslate}}</h1>
-<div mat-dialog-content class="dx-rtl">
+﻿<div mat-dialog-title class="bb">
+  <div class="d-flex justify-content-between">
+      <div style="width:50px"></div>
 
-  <div class="m-b">
-    <div class="row justify-content-md-center">
-      <div class="col col-sm-6">
-        <div class="form-group">
-          <input type="text" name="groupName" class="form-control input-lg" [(ngModel)]="group.name" placeholder="{{'managerDash.GROUP_NAME' | tmpTranslate}}" maxlength="14" required>
-        </div>
+      <div class="form-group">
+        <input type="text" name="groupName" class="form-control input-lg" [(ngModel)]="group.name" placeholder="{{'managerDash.GROUP_NAME' | tmpTranslate}}" maxlength="14" required>
       </div>
-    </div>
-    <p class="text-center">{{"managerDash.SELECT_ITEMS_CAT" | tmpTranslate}}</p>
-  </div>
 
 
-  <div class="row">
-    <!--
-      items
-      -->
-    <div class="col-sm-6">
-      <div class="vbox b b-dark" style="height:700px">
-        <div class="wrapper bg-dark text-xl bg-dark lter">
-          {{"managerDash.GATEGORIES" | tmpTranslate}}
-        </div>
-
-        <div class="wrapper-xs b-b b-dark">
-          <div class="input-group m-b-xxs">
-            <input type="text" class="form-control no-border no-bg text-md" placeholder='{{"managerDash.LOCATE_GATEGORIES" | tmpTranslate}}' [(ngModel)]="o.catSearch" (change)="filterCategories()">
-            <span class="input-group-addon input-sm no-border no-bg" (click)="o.catSearch = ''" *ngIf="o.catSearch.length"><i class="icon-trash text-md m-t-xxs"></i></span>
-            <span class="input-group-addon input-sm no-border no-bg" (click)="o.catSearch = ''"><i class="icon-magnifier text-md m-t-xxs"></i></span>
-          </div>
-        </div>
-
-        <div class="row-row">
-          <div class="cell scrollable hover">
-            <div class="cell-inner">
-              <div class="list-group no-radius no-border no-bg m-b-none" style="margin-bottom:0">
-                <a *ngFor="let sub of subCategories; let $index=index" class="list-group-item list-group-item-sk1 no-select" (click)="toggleSubCat(sub)" [ngClass]="{'active': sub.selected}">
-                  <span>{{sub.cat}} - </span>
-                  <span>{{sub.name}}</span>
-                </a>
-              </div>
-
-              <!--<div class="text-center pos-abt w-full" style="top:50%;margin-top:-10px" ng-hide="(subCategories | filter:{name:o.catSearch}).length">
-                {{'לא נמצאו קטגוריות'}}
-              </div>-->
-
-            </div>
-          </div>
-        </div>
-        <div class="wrapper bg-dark text-lg bg-dark lter">
-          <span class="badge pull-right flip text-md numeric-font">{{group.subs.length}}</span>
-          {{"managerDash.CHOOSE" | tmpTranslate}}
-        </div>
-        <div class="scroll-y" style="height:174px">
-          <div class="list-group no-radius no-border no-bg m-b-none" style="margin-bottom:0">
-            <a *ngFor="let sub of group.subs; let $index=index" class="list-group-item list-group-item-sk1 no-select" (click)="removeSubCat(sub, $index)">
-              <span>{{sub.cat}} - </span>
-              <span>{{sub.name}}</span>
-            </a>
-          </div>
-          <div class="text-center wrapper text-xl text-faded" *ngIf="!group.subs.length">{{'managerDash.NO_GATEGORIES_SELECTED' | tmpTranslate}}</div>
-        </div>
-      </div>
-    </div>
-    <!--
-    end items
-    -->
-    <!--
-    categories
-    -->
-    <div class="col-sm-6">
-      <div class="vbox b b-dark" style="height:700px">
-        <div class="wrapper bg-dark text-xl bg-dark lter">
-          {{"managerDash.ITEMS" | tmpTranslate}}
-        </div>
-
-        <div class="wrapper-xs b-b b-dark">
-          <div class="input-group m-b-xxs">
-            <input type="text" class="form-control no-border no-bg text-md" placeholder="{{'managerDash.LOCATE_ITEMS' | tmpTranslate}}" [(ngModel)]="o.itemSearch" (change)="filterItems()">
-            <span class="input-group-addon input-sm no-border no-bg" (click)="o.itemSearch = ''" *ngIf="o.itemSearch.length"><i class="icon-trash text-md m-t-xxs"></i></span>
-            <span class="input-group-addon input-sm no-border no-bg" (click)="o.itemSearch = ''"><i class="icon-magnifier text-md m-t-xxs"></i></span>
-          </div>
-        </div>
-
-        <div class="row-row">
-          <div class="cell scrollable hover">
-            <div class="cell-inner">
-              <div class="list-group no-radius no-border no-bg m-b-none" style="margin-bottom:0">
-                <a *ngFor="let item of items; let $index=index" class="list-group-item list-group-item-sk1 no-select" (click)="toggleItem(item)" [ngClass]="{'active': item.selected}">
-                  <span>{{item.name}}</span>
-                </a>
-                <!--<div class="list-group-item list-group-item-sk1 font-bold text-center" ng-hide="(items | filter:{name:o.itemSearch}).length < 100">
-                  {{'מציג מאה תוצאות ראשונות'}}
-                </div>-->
-              </div>
-
-              <!--<div class="text-center pos-abt w-full" style="top:50%;margin-top:-10px" ng-hide="(items | filter:{name:o.itemSearch}).length">
-                {{'לא נמצאו פריטים'}}
-              </div>-->
-
-            </div>
-          </div>
-        </div>
-        <div class="wrapper bg-dark text-lg bg-dark lter">
-          <span class="badge pull-right flip text-md numeric-font">{{group.items.length}}</span>
-          {{"managerDash.CHOOSE" | tmpTranslate}}
-        </div>
-        <div class="scroll-y" style="height:174px">
-          <div class="list-group no-radius no-border no-bg m-b-none" style="margin-bottom:0">
-            <a *ngFor="let item of group.items; let $index=index" class="list-group-item list-group-item-sk1 no-select" (click)="removeItem(item, $index)">
-              <span>{{item.name}}</span>
-            </a>
-          </div>
-          <div class="text-center wrapper text-xl text-faded" *ngIf="!group.items.length">{{'managerDash.NO_ITEMS_SELECTED' | tmpTranslate}}</div>
-        </div>
-      </div>
-    </div>
-    <!--
-    end categories
-    -->
-
+      <button mat-icon-button (click)="cancel()">
+        <mat-icon aria-label="Close Dialog">close</mat-icon>
+      </button>
 
   </div>
-
-
 </div>
-<div mat-dialog-actions class="text-far">
+<div mat-dialog-content class="dx-rtl" style="padding-bottom:15px;">
+  <div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="scroll-y" style="max-height:500px">
+          <dx-tree-view id="cat-treeview"
+                        [items]="catTree"
+                        keyExpr="_id"
+                        searchExpr="name"
+                        searchTimeout="400"
+                        [selectAllText]="'XXX'"
+                        (onItemRendered)="onItemRendered($event)"
+                        (onItemSelectionChanged)="selectionChanged($event)"
+                        showCheckBoxesMode="normal"
+                        selectNodesRecursive="false"
+                        [searchEnabled]="true"
+                        searchMode="contains"
+                        onItemSelectionChanged="selectionChanged($event)">
+            <div *dxTemplate="let data of 'item'">
+              {{data.name}}
+            </div>
+          </dx-tree-view>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div>
+          <div class="selected-data">
+            <span>{{"managerDash.GATEGORIES" | tmpTranslate}}</span>
+            <dx-list id="checked-categories" [items]="group.subs"  [noDataText]="'managerDash.NO_GATEGORIES_SELECTED' | tmpTranslate">
+              <dxi-item *ngFor="let item of group.subs; let $index = index" (click)="removeSub(item, $index)">
+                <div class="d-flex align-items-center">
+                  <mat-icon>delete</mat-icon>
+                  <div>{{item.name}}</div>
+                </div>
+              </dxi-item>
+            </dx-list>
+          </div>
+          <div class="selected-data mt5">
+            <span>{{"managerDash.ITEMS" | tmpTranslate}}</span>
+            <dx-list id="checked-categories" [items]="group.items" [noDataText]="'managerDash.NO_ITEMS_SELECTED' | tmpTranslate">
+              <dxi-item *ngFor="let item of group.items; let $index = index" (click)="removeItem(item, $index)">
+                <div class="d-flex align-items-center">
+                  <mat-icon>delete</mat-icon>
+                  <div>{{item.name}}</div>
+                </div>
+              </dxi-item>
+            </dx-list>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions class="bt">
+  <button mat-raised-button (click)="cancel()">{{"managerDash.Cancel" | tmpTranslate}}</button>
   <div class="flex-grow-1"></div>
-  <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-raised-button (click)="remove()">Remove</button>
-  <button mat-raised-button (click)="apply()">Apply</button>
+  <button mat-raised-button color="warn" (click)="remove()">{{"managerDash.Remove" | tmpTranslate}}</button>
+  <button mat-raised-button color="primary" (click)="apply()">{{"managerDash.Apply" | tmpTranslate}}</button>
 </div>
 

@@ -129,20 +129,35 @@ export class ManagersDashboardService {
       catItemsDict[iByCat.category._id] = iByCat;
     });
 
+    let categories = [];
     categoryTrees.forEach(function (cat) {
       cat.children = cat.children || [];
-      cat.children.forEach(function (subCat) {
-        subCat.items = catItemsDict[subCat._id] && catItemsDict[subCat._id].items || [];
-        subCat.collapsed = subCat.items.length === 0;
-      });
 
-      if (catItemsDict[cat._id]) {
-        // TODO: can remove when all data has been removed from other category
-        cat.items = catItemsDict[cat._id] && catItemsDict[cat._id].items || [];
+      let subCats = [];
+
+      cat.children.forEach(function (subCat) {
+        let items = catItemsDict[subCat._id] && catItemsDict[subCat._id].items || [];
+        if (items.length) {
+          subCats.push({
+            _id: subCat._id,
+            name: subCat.name,
+            text: subCat.name,
+            items: items,
+            level: 1
+          });
+        }
+      });
+      if (subCats.length) {
+        categories.push({
+          _id: cat._id,
+          name: cat.name,
+          text: cat.name,
+          items: subCats,
+          level: 0
+        })
       }
     });
-
-    return categoryTrees;
+    return categories;
   }
 
   private resolveItems(itemByCategories) {
@@ -191,6 +206,7 @@ export class ManagersDashboardService {
           regionalSettings: data.regionalSettings,
           items: data.catalog.items,
           subCategories: that.prepareSubCategoris(data.catalog.itemCategories),
+          catTree: data.catalog.itemCategories,
           users: data.users,
           allSlots: data.allSlots,
           timeSlots: that.prepareDaySlots(data.allSlots, null),
@@ -218,10 +234,10 @@ export class ManagersDashboardService {
   private prepareSubCategoris(itemCategories) {
     let subCats = [];
     _.each(itemCategories, function (cat, i) {
-      _.each(cat.children, function (subcat, j) {
+      _.each(cat.items, function (subcat, j) {
         if (subcat.items.length) {
           subCats.push({
-            _id: subcat.id,
+            _id: subcat._id,
             name: subcat.name,
             cat: cat.name,
             fullName: cat.name + " - " + subcat.name
