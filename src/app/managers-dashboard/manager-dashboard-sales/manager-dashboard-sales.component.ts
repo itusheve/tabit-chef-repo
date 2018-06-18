@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 import { ManagersDashboardService } from '../managers-dashboard.service';
+import { tmpTranslations } from '../../../tabit/data/data.service';
 
 @Component({
   selector: 'app-manager-dashboard-sales',
@@ -124,9 +125,48 @@ export class ManagerDashboardSalesComponent implements OnInit {
     });
   }
 
+  generateItemsGroup(iGroup, index?, ev?): void {
+    let that = this;
+    let dialogRef = this.dialog.open(MdsSalesIgroupDialog, {
+      width: '600px',
+      data: {
+        db: this.db,
+        iGroup: _.cloneDeep(iGroup),
+        isNew: !iGroup
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != undefined) {
+        if (result == 'remove') {
+            that.criteria.itemGroups.splice(index, 1);
+        } else {
+            if (!iGroup) {
+              that.criteria.itemGroups.push(result);
+            } else {
+                iGroup.name = result.name;
+                iGroup.items = result.items;
+                iGroup.subs = result.subs;
+            }
+        }
+        /*
+        managerdashboard_service.saveGroups($scope.criteria.itemGroups, iGroup);
+        blockUI.start();
+        $timeout(function () { $scope.applyCriteria() }, 500);
+        */
+        that.actionRequest.emit({ id: 'applyDelayed' });
+      }
+    });
+  }
+
 
 }
 
+/*
+---------------------------------------------------------------------------------
+SETTINGS DIALOG
+---------------------------------------------------------------------------------
+*/
 
 @Component({
   selector: 'mds-sales-settings-dialog',
@@ -186,3 +226,170 @@ export class MdsSalesSettingsDialog {
   }
 
 }
+
+
+/*
+---------------------------------------------------------------------------------
+ITEM GROUPS DIALOG
+---------------------------------------------------------------------------------
+*/
+
+@Component({
+  selector: 'mds-sales-igroup-dialog',
+  templateUrl: 'mds-sales-igroup-dialog.html',
+  styleUrls: ['./mds-sales-igroup-dialog.scss']
+})
+export class MdsSalesIgroupDialog {
+  o = {
+    showSelected: false,
+    catSearch: '',
+    itemSearch: ''
+  }
+  catalog = [];
+  group;
+  isNew;
+  subCategories;
+  items;
+
+  constructor(
+    public dialogRef: MatDialogRef<MdsSalesIgroupDialog>,
+    public MDS: ManagersDashboardService,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+
+    this.group = data.iGroup || { name: tmpTranslations.get('managerDash.NEWGROUP'), items: [], subs: [] }
+    this.isNew = data.isNew;
+    this.subCategories = _.cloneDeep(data.db.subCategories);
+    this.items = _.cloneDeep(data.db.items);
+  }
+
+  filterCategories() {
+    // filter:{name:o.catSearch} | orderBy:'fullName'
+  }
+  filterItems() {
+    // | filter:{name:o.itemSearch} | orderBy:'name'
+  }
+
+  toggleSubCat (sub) {
+    let target = this.group.subs;
+    if (sub.selected) {
+      sub.selected = false;
+      for (var i = 0; i < target.length; i++) {
+        if (target[i]._id == sub._id) {
+          target.splice(i, 1);
+          break;
+        }
+      }
+    } else {
+      sub.selected = true;
+      target.push(_.cloneDeep(sub));
+    }
+  }
+  removeSubCat (_sub, index) {
+    let sub = _.find(this.subCategories, { '_id': _sub._id });
+    if (sub) sub.selected = false;
+    this.group.subs.splice(index, 1);
+  }
+
+  toggleItem (item) {
+    let target = this.group.items;
+    if (item.selected) {
+      item.selected = false;
+      for (var i = 0; i < target.length; i++) {
+        if (target[i]._id == item._id) {
+          target.splice(i, 1);
+          break;
+        }
+      }
+    } else {
+      item.selected = true;
+      target.push({ _id: item._id, name: item.name });
+    }
+  }
+
+  removeItem = (_item, index) {
+    var item = _.find(this.items, { '_id': item._id });
+    if (item) item.selected = false;
+    this.group.items.splice(index, 1);
+  }
+
+
+  apply() {
+    if (this.group.name) {
+      this.dialogRef.close(this.group);
+    }
+  }
+
+  remove() {
+    this.dialogRef.close('remove');
+  };
+
+
+  cancel() {
+    this.dialogRef.close();
+  }
+
+}
+
+/*
+
+    $scope.toggleSubCat = function (sub) {
+        var target = $scope.group.subs;
+        if (sub.selected) {
+            sub.selected = false;
+            for (var i = 0; i < target.length; i++) {
+                if (target[i]._id == sub._id) {
+                    target.splice(i, 1);
+                    break;
+                }
+            }
+        } else {
+            sub.selected = true;
+            target.push(angular.copy(sub));
+        }
+    }
+    $scope.removeSubCat = function (sub, index) {
+        var sub = UIUtils.findByKey($scope.subCategories, '_id', sub._id);
+        if (sub) sub.selected = false;
+        $scope.group.subs.splice(index, 1);
+    }
+
+    $scope.toggleItem = function (item) {
+        var target = $scope.group.items;
+        if (item.selected) {
+            item.selected = false;
+            for (var i = 0; i < target.length; i++) {
+                if (target[i]._id == item._id) {
+                    target.splice(i, 1);
+                    break;
+                }
+            }
+        } else {
+            item.selected = true;
+            target.push({ _id: item._id, name: item.name });
+        }
+    }
+    $scope.removeItem = function (item, index) {
+        var item = UIUtils.findByKey($scope.items, '_id', item._id);
+        if (item) item.selected = false;
+        $scope.group.items.splice(index, 1);
+    }
+
+
+    $scope.apply = function (form, o) {
+        if (form.$valid) {
+            $uibModalInstance.close($scope.group);
+        }
+    };
+    $scope.doRemove = function () {
+        $rootScope.PDialog.warning({
+            text: "Are you sure?",
+            showCancelButton: true,
+            confirmButtonText: "yes!"
+        }).then(function () {
+            $uibModalInstance.close('remove');
+        });
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+*/

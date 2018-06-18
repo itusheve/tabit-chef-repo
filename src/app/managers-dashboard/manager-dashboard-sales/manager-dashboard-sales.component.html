@@ -232,7 +232,7 @@
               <div class="pv10">
                 <div class="row">
                   <div class="col-sm-3 " *ngFor="let cItems of criteria.itemGroups; let $index=index">
-                    <div class="b" ng-click="generateItemsGroup(cItems,$index)">
+                    <div class="b" (click)="generateItemsGroup(cItems,$index, $event)">
                       <div>
                         <button class="btn btn-dark btn-block text-ellipsis no-radius">{{cItems.name}}</button>
                       </div>
@@ -264,7 +264,7 @@
                   <div class="col-sm-3 " *ngIf="criteria.itemGroups.length < 4">
                     <div class="b" stylex="height:120px">
                       <div>
-                        <button class="btn btn-info btn-block no-radius" ng-click="generateItemsGroup()">{{'managerDash.Add New Group' | tmpTranslate}}</button>
+                        <button class="btn btn-info btn-block no-radius" (click)="generateItemsGroup(null,null)">{{'managerDash.Add New Group' | tmpTranslate}}</button>
                       </div>
                     </div>
                   </div>

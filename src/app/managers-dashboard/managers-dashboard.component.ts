@@ -45,7 +45,7 @@ export class ManagersDashboardComponent implements OnInit {
 
   criteria: any = {
     loaded: false,
-    report: "dayly",//sales
+    report: "sales",//dayly
     itemSelectionCollapsed: true,
     itemSelectionMeasure: "c",
     showNetPrices: true,

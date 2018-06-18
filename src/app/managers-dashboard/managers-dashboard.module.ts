@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { ManagersDashboardComponent } from './managers-dashboard.component';
-import { ManagerDashboardSalesComponent, MdsSalesSettingsDialog} from './manager-dashboard-sales/manager-dashboard-sales.component';
+import { ManagerDashboardSalesComponent, MdsSalesSettingsDialog, MdsSalesIgroupDialog} from './manager-dashboard-sales/manager-dashboard-sales.component';
 import { ManagerDashboardDaylyComponent } from './manager-dashboard-dayly/manager-dashboard-dayly.component';
 
 import { ManagersDashboardService } from './managers-dashboard.service';
@@ -53,11 +53,15 @@ import { DxDateBoxModule } from 'devextreme-angular';
 
     DxDateBoxModule
   ],
-  entryComponents: [MdsSalesSettingsDialog],
+  entryComponents: [
+    MdsSalesSettingsDialog,
+    MdsSalesIgroupDialog
+  ],
   declarations: [
     ManagersDashboardComponent,
     ManagerDashboardSalesComponent,
     MdsSalesSettingsDialog,
+    MdsSalesIgroupDialog,
     ManagerDashboardDaylyComponent,
     MDTMPTranslatePipe,
     MDMapListPipe,
