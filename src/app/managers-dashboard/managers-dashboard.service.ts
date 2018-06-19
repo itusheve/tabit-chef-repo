@@ -184,32 +184,34 @@ export class ManagersDashboardService {
 
   public getMetaData() {
     var that = this;
-    let promiseMap = ["catalog", "users", "allSlots", "itemGroups", "regionalSettings"];
+    let promiseMap = ["catalog", "users", "itemGroups", "regionalSettings", "businessDate"];
     const promises: any = [
       this.getDashCatalog(),
       this.rosEp.get('users', null).then(this.prepareUsers),
-      this.rosEp.get('dashboard/timeslots', null).then(function(ret) { return _.get(ret,'[0]')}),
       this.rosEp.get('dashboard/itemGroups', null).then(function (ret) { return _.get(ret, '[0]') }),
       this.rosEp.get('configuration/regionalSettings', null).then(function (ret) { return _.get(ret, '[0]') }),
+      this.rosEp.get('businessdays/current')
     ];
     return Promise.all(promises)
       .then((ret: any[]) => {
         let data:any = {}
         _.each(promiseMap, (ent, index) => { data[ent] = ret[index]; });
 
-        let db:any = {
-          businessDate: null,
-          isDateClosed: true,
+        let db: any = {
+          currentBD: data.businessDate,
+          businessDate: data.businessDate.businessDate,
+          isDateClosed: false,
+
           initialDate: null,
           initialTime: null,
           lastTime: null,
-          regionalSettings: data.regionalSettings,
+
+          shifts: that.prepareShifts(data.regionalSettings),
+          ppaGoal: _.get(data.regionalSettingss, 'managerDashboard.ppaGoal') || 20,
           items: data.catalog.items,
           subCategories: that.prepareSubCategoris(data.catalog.itemCategories),
           catTree: data.catalog.itemCategories,
           users: data.users,
-          allSlots: data.allSlots,
-          timeSlots: that.prepareDaySlots(data.allSlots, null),
           itemGroups: [],
           itemGroupsId: null,
           orders: [],
@@ -224,8 +226,7 @@ export class ManagersDashboardService {
           db.itemGroupsId = data.itemGroups._id;
           db.itemGroups = data.itemGroups.itemGroups || []
         }
-
-        return that.getOrdersDate(db, db.initialTime).then(function (ret) {
+        return that.getCurrentOrders(db, null).then(function (ret) {
           return db;
         });
       });
@@ -259,43 +260,45 @@ export class ManagersDashboardService {
     return data;
   }
 
-
-  private prepareDaySlots(ret, businessDate) {
+  private prepareShifts(rs) {
     var that = this;
-    var arr = [], NN=0;
-    if (ret) {
-      var date = businessDate || new date();
-      var day = date.getDay();
-      if (ret.workHours) prepareDaySlots_slot(ret.workHours, "Work Hours");
-      if (ret.shifts) prepareDaySlots_slot(ret.shifts, "Shifts");
-      if (ret.menus) prepareDaySlots_slot(ret.menus, "Menus");
-    }
+    let base = _.assignIn({}, rs.ownerDashboard);
 
-    function prepareDaySlots_slot(section, sName) {
-      let arrSlots = _.find(section, { 'day': day });
-      if (!arrSlots) arrSlots = _.find(section, { 'day': -1 });
-      if (arrSlots && arrSlots.slots.length) {
-        let o = {
-          name: sName,
-          slots: arrSlots.slots
-        }
-        _.each(o.slots, function (slot, i) {
-          var from = moment(slot.from);
-          var to = moment(slot.to);
-          slot._id = ++NN;
-          slot.dateFrom = from.toDate();
-          slot.timeFrom = that.parseOrderTime(from);
-          slot.dateTo = to.toDate();
-          slot.timeTo = that.parseOrderTime(to);
-          slot.dinerAvgGoalParsed = slot.dinerAvgGoal / 100;
-        });
-        arr.push(o)
+    let ret = {
+      "morning": prepareShift(base.morningShiftName, base.morningStartTime, base.afternoonStartTime),
+      "afternoon": prepareShift(base.afternoonShiftName, base.afternoonStartTime, base.eveningStartTime),
+      "evening": prepareShift(base.eveningShiftName, base.eveningStartTime, null),
+    }
+    console.log(ret);
+    return ret;
+
+    function prepareShift(shiftName, shiftStart, shiftEnd) {
+      let o:any = {
+        name: shiftName,
+        start: shiftStart,
+        end: shiftEnd
       }
+      if (shiftStart) {
+        let d = prepareSlot(shiftStart);
+        o.mode = "start";
+        o.dateFrom = d;
+        o.timeFrom = that.parseOrderTime(moment(d));
+      }
+      if (shiftEnd) {
+        let d = prepareSlot(shiftEnd);
+        o.mode = "between";
+        o.dateTo = d;
+        o.timeTo = that.parseOrderTime(moment(d));
+      }
+      return o;
     }
 
-    return arr;
-  }
+    function prepareSlot(sSlot) {
+      let arr = sSlot.split(":");
+      return new Date(1970, 0, 1, Number(arr[0]), Number(arr[1]), 0);
 
+    }
+  }
 
 
   /*
@@ -304,65 +307,78 @@ export class ManagersDashboardService {
   ---------------------------------------------------------------------------------
   */
 
-  public getOrdersDate(db, date) {
-    if (!date) {
-      var d = moment();
-      date = d.format('YYYY-MM-DD')
-    }
-    if (date._isAMomentObject) {
-      date = date.format('YYYY-MM-DD');
-    }
-    db.businessDate = date;
-    //factory.prepareDaySlots();
-    db.isDateClosed = true;
-    db.orders = [];
-    return this.getOrders(db, date, true);
-  };
-
-
-  public refreshOrders(db) {
-    return this.getOrders(db, db.lastTime, null);
-  };
-
-
-  private getOrders(db, fromTime, isDate) {
-    const promises: any = [
-      this.getTransactions(db, fromTime, isDate),
-      this.getDayly(db, fromTime, isDate)
-    ];
-    return Promise.all(promises);
+  ordersQuery = {
+    fullOrderRequired: true,
+    //"select": "owner,openedBy,number,orderType,closed,source,orderTags,lastUpdated,created,serviceType,courses.fired,courses.notified,courses.served,courses.orderedItems",
   }
 
-  private getTransactions(db, fromTime, isDate) {
-    var that = this;
-    let _dateStr = fromTime; //.format('YYYY-MM-DD')
-    if (isDate) {
-      var _http = 'reports/dashboard?BusinessDate=' + encodeURIComponent(_dateStr);
-    } else {
-      var _http = 'reports/dashboard?lastUpdated=' + encodeURIComponent(_dateStr);
-    }
-
-    db.lastTime = fromTime;
-
-    return this.rosEp.get(_http).then(function (ret) {
-        if (ret) {
-          if (isDate) {var retDate = ret.businessDate;}
-
-          db.isDateClosed = ret.isClosed;
-          if (ret.order) {
-            _.each(ret.order, function (order) {
-              that.prepareOrder(db, order);
-            });
-          }
-          if (ret.tlog) {
-            _.each(ret.tlog, function (tOrder) {
-              that.prepareOrder(db, tOrder.order[0]);
-            });
-          }
-        }
-      });
+  public refreshOrders(db) {
+    return this.getCurrentOrders(db, db.lastTime);
   };
 
+  public getCurrentOrders (db, _fromTime) {
+    let fromTime = _fromTime || null;//window.GETREALDATE(true).subtract(factory.threshhold, 'minutes');
+    var that = this;
+    const promises: any = [
+      this.getClosedOrders(db, fromTime),
+      this.getOpenedOrders(db, fromTime)
+    ];
+    return Promise.all(promises).then(function (result:any) {
+      return result[0].concat(result[1]);
+    });
+  }
+
+  public getHistoricOrders(db) {
+    var that = this;
+    let params: any = {
+      fromBusinessDate: db.businessDate,
+      toBusinessDate: db.businessDate,
+    };
+
+    return this.rosEp.get("documents/v2", params).then(ret => {
+      var arr = [];
+      _.each(ret, function (o) {
+        arr.push(that.prepareOrder(db, o.order[0]));
+      });
+      return arr;
+    });
+  }
+
+  getOpenedOrders (db, fromTime?) {
+    var that = this;
+    let params;
+    if (fromTime) {
+      params = { lastUpdated: "$gt " + fromTime.utc().format() };
+      _.extend(params, this.ordersQuery);
+    } else {
+      params = this.ordersQuery;
+    }
+    return this.rosEp.get("orders", params).then(ret => {
+      var arr = [];
+      _.each(ret, function (o) {
+        arr.push(that.prepareOrder(db, o));
+      });
+      return arr;
+    });
+  }
+
+  getClosedOrders(db, fromTime) {
+    var that = this;
+    let params:any = {
+      fromBusinessDate: db.businessDate,
+      //toBusinessDate: factory.businessDate,
+    };
+    if (fromTime) {
+      params.lastUpdated = "$gt " + fromTime.utc().format();
+    }
+    return this.rosEp.get("documents/v2", params).then(ret => {
+      var arr = [];
+      _.each(ret, function (o) {
+        arr.push(that.prepareOrder(db, o.order[0]));
+      });
+      return arr;
+    });
+  }
 
   private prepareOrder(db, order) {
     if (order.orderType != 'Seated') {
@@ -378,8 +394,13 @@ export class ManagersDashboardService {
     newOrder.from = moment(order.created);
     newOrder.fromTime = this.parseOrderTime(newOrder.from);
 
-    if (newOrder.from.isAfter(db.lastTime)) {
-      db.lastTime = newOrder.from;
+    if (!db.lastTime) {
+      db.lastTime = moment(order.lastUpdated);
+    } else {
+      let lastUpdated = moment(order.lastUpdated);
+      if (lastUpdated.isAfter(db.lastTime)) {
+        db.lastTime = lastUpdated;
+      }
     }
 
     if (order.closed) {

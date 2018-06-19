@@ -56,12 +56,7 @@
           <div class="dash-container pos-rlt">
             <ul class="nav-tabs-dash-main nav nav-tabs mt15" role="tablist">
               <li class="nav-item text-xl">
-                <a class="nav-link" [class.active]="criteria.report == 'dayly'" (click)="criteria.report = 'dayly'">
-                  <ng-container>{{'managerDash.DASH_DAYLY' | tmpTranslate }}</ng-container>
-                </a>
-              </li>
-              <li class="nav-item text-xl">
-                <a class="nav-link" [class.active]="criteria.report == 'sales'" (click)="criteria.report = 'sales'">
+                <a class="nav-link" [class.active]="criteria.report == 'sales'">
                   <ng-container>{{'managerDash.DASH_SALES' | tmpTranslate}}</ng-container>
                 </a>
               </li>
@@ -94,13 +89,9 @@
 
 
           <div class="pos-rlt">
-            <app-manager-dashboard-dayly *ngIf="criteria.report == 'dayly'"
-                                         class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db" (actionRequest)="actionRequest($event)">
-            </app-manager-dashboard-dayly>
             <app-manager-dashboard-sales *ngIf="criteria.report == 'sales'"
                                          class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db" (actionRequest)="actionRequest($event)">
             </app-manager-dashboard-sales>
-
           </div>
 
         </div>

@@ -36,7 +36,8 @@ export class ManagersDashboardComponent implements OnInit {
     wrapper: string
   };
   env;
-  debug: boolean;
+  debug: false;
+  _moment;
   logArr: { type: string, message: string }[];
 
 
@@ -86,6 +87,7 @@ export class ManagersDashboardComponent implements OnInit {
     public route: ActivatedRoute,
     private ds: DebugService
   ) {
+    this._moment = moment;
     this.logArr = ds.logArr;
     this.env = environment;
     this.appVersions = appVersions;
@@ -102,7 +104,7 @@ export class ManagersDashboardComponent implements OnInit {
       .then((data) => {
         that.db = data;
         that.criteria.itemGroups = data.itemGroups;
-        that.criteria.dinerAvgGoalParsed = _.get(data.regionalSettings, 'managerDashboard.ppaGoal') || 20;
+        that.criteria.dinerAvgGoalParsed = data.ppaGoal || 20;
         that.criteria.dinerAvgGoal = that.criteria.dinerAvgGoalParsed * 100;
         that.applyCriteria();
         that.criteria.loaded = true;
@@ -131,15 +133,41 @@ export class ManagersDashboardComponent implements OnInit {
 
   businessDateChange() {
     let that = this;
-    this.refreshing = true;
-    this.MDS.getOrdersDate(this.db, moment(this.tmpDate))
-      .then((data) => {
-        that.applyCriteria();
-      }).catch(e => {
-        console.error(e);
-      }).then(() => {
-        that.refreshing = false;
-      });
+    //this.refreshing = true;
+
+    let cbd = this.db.currentBD.businessDate;
+    let bd = this._moment(this.tmpDate).format('YYYY-MM-DD') + 'T00:00:00.000Z';
+    this.db.businessDate = bd;
+    this.db.orders = [];
+    this.db.lastTime = null;
+
+    if (bd == cbd) {
+      this.db.isDateClosed = false;
+
+      this.MDS.getCurrentOrders(this.db, null)
+        .then((data) => {
+          that.applyCriteria();
+        }).catch(e => {
+          console.error(e);
+        }).then(() => {
+          that.refreshing = false;
+        });
+    } else {
+      this.db.isDateClosed = true;
+
+      this.MDS.getHistoricOrders(this.db)
+        .then((data) => {
+          that.applyCriteria();
+        }).catch(e => {
+          console.error(e);
+        }).then(() => {
+          that.refreshing = false;
+        });
+    }
+
+    /*
+
+    */
   }
 
 
