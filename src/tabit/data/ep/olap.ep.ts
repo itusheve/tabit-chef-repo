@@ -264,7 +264,7 @@ export class OlapEp {
     private parseDim(row: any, dimAttr: any) {
         const path = `[${dimAttr.parent.parent.path[environment.region]}].[${dimAttr.path[environment.region]}].[${dimAttr.path[environment.region]}].[MEMBER_CAPTION]`;
         const raw = row[path];
-        return dimAttr.hasOwnProperty('parse') ? dimAttr.parse[environment.region](raw) : raw;
+        return dimAttr.hasOwnProperty('parse') ? dimAttr.parse[environment.region](raw, row) : raw;
     }
 
     // dim helpers
@@ -807,6 +807,9 @@ export class OlapEp {
                     CrossJoin(
                         {
                             ${this.members(this.olapMappings.dims.priceReductions.attr.reasons)}
+                        },
+                        {
+                            ${this.members(this.olapMappings.dims.priceReductions.attr.subType)}
                         },
                         {
                             ${this.members(this.olapMappings.dims.ordersV2.attr.orderNumber)}

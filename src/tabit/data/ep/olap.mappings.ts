@@ -561,14 +561,18 @@ export class OlapMappings {
                         us: 'Reason Type'
                     },
                     parse: {
-                        il: raw => {
+                        il: (raw, row) => {
                             switch (raw) {
                                 case 'Voids Actions':
                                     return 'cancellation';
                                 case 'Compensation Actions':
                                     return 'compensation';
                                 case 'Retention Actions':
+                                    if(row["[Reasons].[Reason Sub Type Key].[Reason Sub Type Key].[MEMBER_CAPTION]"] === 'Promotions') {
+                                        return 'promotions';
+                                    }
                                     return 'retention';
+
                                 case 'TBD':
                                     return 'organizational';
                                 case 'TBD':
