@@ -55,9 +55,9 @@
           <!--<div class="wrapper-sm" *ngIf="MDS.isHandset"></div>-->
           <div class="dash-container pos-rlt">
             <ul class="nav-tabs-dash-main nav nav-tabs mt15" role="tablist">
-              <li class="nav-item text-xl">
-                <a class="nav-link" [class.active]="criteria.report == 'sales'">
-                  <ng-container>{{'managerDash.DASH_SALES' | tmpTranslate}}</ng-container>
+              <li class="nav-item text-xl" *ngFor="let st of criteria.serviceTypes">
+                <a class="nav-link" [class.active]="criteria.serviceType == st.value" (click)="setServiceType(st)">
+                  <ng-container>{{ st.text | tmpTranslate}}</ng-container>
                 </a>
               </li>
             </ul>

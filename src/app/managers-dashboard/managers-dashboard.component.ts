@@ -79,8 +79,16 @@ export class ManagersDashboardComponent implements OnInit {
       { value: 'all', text: tmpTranslations.get('managerDash.ALLORDERS') },
       { value: 'open', text: tmpTranslations.get('managerDash.OPENORDERS') },
       { value: 'closed', text: tmpTranslations.get('managerDash.CLOSEDORDERS') }
+    ],
+    serviceType: "seated",
+    showPPA: true,
+    serviceTypes: [
+      { value: "seated", text: 'orderTypes.seated', showPPA:true },
+      { value: "takeaway", text: 'orderTypes.ta', showPPA: false },
+      { value: "delivery", text: 'orderTypes.delivery', showPPA: false }
     ]
   }
+
   db: any = {};
 
   constructor(
@@ -138,6 +146,12 @@ export class ManagersDashboardComponent implements OnInit {
   }
 
   refreshing: boolean = false;
+
+  setServiceType(st) {
+    this.criteria.showPPA = st.showPPA;
+    this.criteria.serviceType = st.value;
+    this.applyDelayed();
+  }
 
   businessDateChange() {
     let that = this;
@@ -252,7 +266,7 @@ export class ManagersDashboardComponent implements OnInit {
     arrItemsSales.push(itemsSalesTotal);
 
     function isOrderRelevant(order) {
-      if (order.isStaffTable) return false;
+      if (order.isStaffTable || order.serviceType != c.serviceType) return false;
       var isIntime = false;
       let shift = c.shift;
       switch (shift.mode) {

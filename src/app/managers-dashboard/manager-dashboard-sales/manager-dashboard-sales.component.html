@@ -6,7 +6,7 @@
      filters
      ============================================================================================ -->
     <div>
-      <div class="row">
+      <div class="row justify-content-sm-center">
         <div class="col-sm-3 col-xs-6">
           <div class="form-group">
             <label class="text-xs">{{'managerDash.Orders' | tmpTranslate}}</label>
@@ -55,7 +55,7 @@
           </div>
         </div>
 
-        <div class="col-sm-3  col-xs-6">
+        <div class="col-sm-3  col-xs-6" *ngIf="criteria.showPPA">
           <div class="form-group">
             <label class="text-xs">{{'managerDash.CHOOSE_BY_TIMES' | tmpTranslate}}</label>
             <button type="button" class="btn btn-dark btn-lg btn-block" (click)="doSettings()" style="font-size:18px;">
@@ -106,7 +106,7 @@
           </small>
         </div>
 
-        <div class="hcol  text-center  v-top pos-rlt">
+        <div class="hcol  text-center  v-top pos-rlt"  *ngIf="criteria.showPPA">
           <div class="numeric-cell text-xxl text-center" [ngClass]="{'text-xl':MDS.isHandset}">
 
             <span *ngIf="!MDS.isHandset && criteria.totals.dinerAvg" class="badge m-near-sm inline text-lg v-top mt5 hidden-sm-down {{criteria.totals.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
@@ -182,7 +182,7 @@
                 <th ts-criteria="orders">{{'managerDash.Orders' | tmpTranslate}}</th>
                 <th ts-criteria="diners">{{'managerDash.Diners' | tmpTranslate}}</th>
                 <th ts-criteria="total" ts-default="descending">{{'managerDash.Total' | tmpTranslate}}</th>
-                <th ts-criteria="dinerAvg">PPA</th>
+                <th ts-criteria="dinerAvg" *ngIf="criteria.showPPA">PPA</th>
               </tr>
             </thead>
             <tbody>
@@ -209,7 +209,7 @@
                 <td class="numeric-cell text-lg" [attr.aria-label]="'managerDash.Total' | tmpTranslate">
                   {{order.total | currencyFraction}}
                 </td>
-                <td class="numeric-cell text-lg" [attr.aria-label]="PPA">
+                <td class="numeric-cell text-lg" [attr.aria-label]="PPA" *ngIf="criteria.showPPA">
                   <span class="badge me10 font-normal text-center inline text-lg  {{order.dinerAvg | PPOKPI:criteria.dinerAvgGoal:criteria.dinerAvgGoalAlert}}"
                         style="width:60px" style="border-radius:8px">
                     {{order.goalDiff | KPIGoal:1}}
@@ -246,10 +246,10 @@
                         <button class="btn btn-dark btn-block text-ellipsis no-radius">{{cItems.name}}</button>
                       </div>
                       <div>
-                        <div class="cell-inner">
+                        <div class="cell-inner scroll-y" style="max-height:180px">
                           <div class="" *ngFor="let sub of cItems.subs">
                             <!--| orderBy:'fullName'-->
-                            <div class="b-b clearfix pa5" [ngClass]="{'bg-info':sub.items}" (click)="toggleSubExpanded(cItems, sub, $event)">
+                            <div class="b-b clearfix pa5 cur-pointer" [ngClass]="{'bg-info text-white':sub.items}" (click)="toggleSubExpanded(cItems, sub, $event)">
                               <span class="badge pull-right flip numeric-cell">{{sub.count}}</span>
                               {{sub.fullName}}
                             </div>

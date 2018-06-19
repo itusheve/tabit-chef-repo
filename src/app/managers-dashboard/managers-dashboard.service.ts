@@ -382,16 +382,12 @@ export class ManagersDashboardService {
   }
 
   private prepareOrder(db, order) {
-    if (order.orderType != 'Seated') {
-      return;
-    };
     var newOrder = _.find(db.orders, { '_id': order._id });
     if (!newOrder) {
-      newOrder = {};
+      newOrder = { serviceType: order.serviceType, _id: order._id};
       db.orders.push(newOrder);
     }
 
-    newOrder._id = order._id;
     newOrder.from = moment(order.created);
     newOrder.fromTime = this.parseOrderTime(newOrder.from);
 
