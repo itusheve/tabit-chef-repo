@@ -50,7 +50,7 @@ export class ManagersDashboardComponent implements OnInit {
     itemSelectionCollapsed: true,
     itemSelectionMeasure: "c",
     showNetPrices: true,
-    orderFilter: 'closed',
+    orderFilter: 'all',
     viewerMode: 'diner',
 
     dinerAvgGoal: 2000,
@@ -66,6 +66,11 @@ export class ManagersDashboardComponent implements OnInit {
     itemGroupsCounter: [1, 2, 3, 4],
     itemGroups: [],
     excludedUsers: [],
+    timeModes: {
+      all: { mode: 'all', text: tmpTranslations.get('managerDash.ALL_DAY'), ro: true },
+      start: { mode: 'start', text: tmpTranslations.get('managerDash.TIME_RANGE_FROM'), dateFrom: new Date(1970, 0, 1, 6, 0, 0), timeFrom: 360, ro: false, sd:true},
+      end: { mode: 'end', text: tmpTranslations.get('managerDash.TIME_RANGE_TO'), dateTo: new Date(1970, 0, 1, 20, 0, 0), timeTo: 2400, ro: false, sd: true}
+    },
     netGrossOpts: [
       { value: true, text: tmpTranslations.get('managerDash.TOTAL_NET') },
       { value: false, text: tmpTranslations.get('managerDash.TOTAL_GROSS') }
@@ -106,6 +111,9 @@ export class ManagersDashboardComponent implements OnInit {
         that.criteria.itemGroups = data.itemGroups;
         that.criteria.dinerAvgGoalParsed = data.ppaGoal || 20;
         that.criteria.dinerAvgGoal = that.criteria.dinerAvgGoalParsed * 100;
+        that.criteria.timeModes = _.assignIn(that.criteria.timeModes, that.db.shifts);
+        that.criteria.shift = that.criteria.timeModes[that.criteria.timeMode];
+
         that.applyCriteria();
         that.criteria.loaded = true;
 
@@ -246,12 +254,12 @@ export class ManagersDashboardComponent implements OnInit {
     function isOrderRelevant(order) {
       if (order.isStaffTable) return false;
       var isIntime = false;
-      switch (c.timeMode) {
+      let shift = c.shift;
+      switch (shift.mode) {
         case "all": isIntime = true; break;
-        case "start": isIntime = (order.fromTime >= c.timeFrom); break;
-        case "end": isIntime = (order.toTime <= c.timeTo); break;
-        default:
-          isIntime = (order.fromTime >= c.timeFrom && (!order.toTime || order.toTime <= c.timeTo));
+        case "start": isIntime = (order.fromTime >= shift.timeFrom); break;
+        case "end": isIntime = (order.toTime <= shift.timeTo); break;
+        case "between": isIntime = (order.fromTime >= shift.timeFrom && (!order.toTime || order.toTime <= shift.timeTo)); break;
       }
 
       if (isIntime) {

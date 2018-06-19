@@ -45,7 +45,11 @@ export class ManagerDashboardSalesComponent implements OnInit {
     this.actionRequest.emit({ id: 'applyDelayed' });
   }
 
-  calcGoal() {
+  calcGoal(op?) {
+    if (op) {
+      let newOP = Math.max(this.criteria.dinerAvgGoalParsed + op, 0);
+      this.criteria.dinerAvgGoalParsed = newOP;
+    }
     let criteria = this.criteria;
     if (!criteria.dinerAvgGoalParsed || isNaN(criteria.dinerAvgGoalParsed)) {
       criteria.dinerAvgGoalParsed = criteria.dinerAvgGoal / 100;
@@ -115,12 +119,13 @@ export class ManagerDashboardSalesComponent implements OnInit {
     let that = this;
     let dialogRef = this.dialog.open(MdsSalesSettingsDialog, {
       width: '350px',
-      data: { criteria: this.criteria }
+      data: { criteria: this.criteria, db: this.db }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != undefined) {
-        _.assignIn(that.criteria, result);
+        that.criteria.timeMode = result.timeMode;
+        that.criteria.timeModes[result.shift.value] = that.criteria.shift = result.shift;
         that.actionRequest.emit({ id: 'applyDelayed' });
       }
     });
@@ -176,49 +181,36 @@ SETTINGS DIALOG
 })
 export class MdsSalesSettingsDialog {
   timeMode: string;
-  dateFrom;
-  timeFrom;
-  dateTo;
-  timeTo;
-  now: Date = new Date();
+  shifts;
 
   constructor(
     public dialogRef: MatDialogRef<MdsSalesSettingsDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     this.timeMode = this.data.criteria.timeMode;
-    this.dateFrom = this.data.criteria.dateFrom;
-    this.timeFrom = this.data.criteria.timeFrom;
-    this.dateTo = this.data.criteria.dateTo;
-    this.timeTo = this.data.criteria.timeTo;
+
+    this.shifts = [];
+    _.each(['all', 'morning', 'afternoon', 'evening', 'start', 'end'], s => {
+      let o = this.data.criteria.timeModes[s];
+      if (o) {
+        o.value = s;
+        this.shifts.push(_.cloneDeep(o));
+      }
+    });
   }
 
-  setTimeMode(val: any) {
-    this.timeMode = val;
-  }
-
-  calcTimes(att, e?) {
-    var d = this[att];
+  calcTimes(shift, att, e?) {
+    var d = shift[att];
     if (_.isDate(d)) {
       var md = moment(d);
       var t = md.hours() * 60 + md.minutes();
-      this[att.replace('date', 'time')] = t;
+      shift[att.replace('date', 'time')] = t;
     }
-  };
-
+  }
 
   apply() {
-    let ret:any = { timeMode: this.timeMode}
-    switch (this.timeMode) {
-      case "start":
-        ret.dateFrom = this.dateFrom;
-        ret.timeFrom = this.timeFrom;
-        break;
-      case "end":
-        ret.dateTo = this.dateTo;
-        ret.timeTo = this.timeTo;
-        break;
-    }
+    let shift = _.find(this.shifts, { value: this.timeMode });
+    let ret: any = { timeMode: this.timeMode, shift: shift}
     this.dialogRef.close(ret);
   }
 

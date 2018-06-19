@@ -25,7 +25,8 @@ import {
   MatIconModule,
   MatButtonModule,
   MatButtonToggleModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatRadioModule,
 } from '@angular/material';
 
 import { DxDateBoxModule, DxTreeViewModule, DxListModule, DxTemplateModule } from 'devextreme-angular';
@@ -50,6 +51,7 @@ import { DxDateBoxModule, DxTreeViewModule, DxListModule, DxTemplateModule } fro
     MatButtonModule,
     MatButtonToggleModule,
     MatProgressSpinnerModule,
+    MatRadioModule,
 
     DxDateBoxModule,
     DxTreeViewModule,

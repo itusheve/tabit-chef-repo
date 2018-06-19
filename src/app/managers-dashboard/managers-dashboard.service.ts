@@ -207,7 +207,7 @@ export class ManagersDashboardService {
           lastTime: null,
 
           shifts: that.prepareShifts(data.regionalSettings),
-          ppaGoal: _.get(data.regionalSettingss, 'managerDashboard.ppaGoal') || 20,
+          ppaGoal: _.get(data.regionalSettings, 'managerDashboard.ppaGoal') || 20,
           items: data.catalog.items,
           subCategories: that.prepareSubCategoris(data.catalog.itemCategories),
           catTree: data.catalog.itemCategories,
@@ -274,21 +274,22 @@ export class ManagersDashboardService {
 
     function prepareShift(shiftName, shiftStart, shiftEnd) {
       let o:any = {
-        name: shiftName,
-        start: shiftStart,
-        end: shiftEnd
+        ro: true,
+        text: shiftName
       }
       if (shiftStart) {
         let d = prepareSlot(shiftStart);
         o.mode = "start";
         o.dateFrom = d;
         o.timeFrom = that.parseOrderTime(moment(d));
+        o.desc = '> ' + shiftStart;
       }
       if (shiftEnd) {
         let d = prepareSlot(shiftEnd);
         o.mode = "between";
         o.dateTo = d;
         o.timeTo = that.parseOrderTime(moment(d));
+        o.desc = shiftStart + ' - ' + shiftEnd;
       }
       return o;
     }

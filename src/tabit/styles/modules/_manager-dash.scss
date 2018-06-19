@@ -5,3 +5,10 @@
   font-weight:bold;
   font-size:1.1em;
 }
+
+.mdash-tbl-settings{
+    cursor:default;
+    .mat-radio-label{
+      padding-top:8px !important;
+    }
+}
