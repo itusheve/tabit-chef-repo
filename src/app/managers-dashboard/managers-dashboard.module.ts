@@ -24,9 +24,9 @@ import {
   MatSidenavModule,
   MatIconModule,
   MatButtonModule,
-  MatButtonToggleModule,
+  MatSelectModule,
   MatProgressSpinnerModule,
-  MatRadioModule,
+  MatRadioModule
 } from '@angular/material';
 
 import { DxDateBoxModule, DxTreeViewModule, DxListModule, DxTemplateModule } from 'devextreme-angular';
@@ -49,7 +49,7 @@ import { DxDateBoxModule, DxTreeViewModule, DxListModule, DxTemplateModule } fro
     MatSidenavModule,
     MatIconModule,
     MatButtonModule,
-    MatButtonToggleModule,
+    MatSelectModule,
     MatProgressSpinnerModule,
     MatRadioModule,
 

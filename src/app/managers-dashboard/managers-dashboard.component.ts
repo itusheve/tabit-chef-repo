@@ -85,7 +85,8 @@ export class ManagersDashboardComponent implements OnInit {
     serviceTypes: [
       { value: "seated", text: 'orderTypes.seated', showPPA:true },
       { value: "takeaway", text: 'orderTypes.ta', showPPA: false },
-      { value: "delivery", text: 'orderTypes.delivery', showPPA: false }
+      { value: "delivery", text: 'orderTypes.delivery', showPPA: false },
+      { value: "counter", text: 'orderTypes.counter', showPPA: false }
     ]
   }
 
@@ -148,6 +149,7 @@ export class ManagersDashboardComponent implements OnInit {
   refreshing: boolean = false;
 
   setServiceType(st) {
+    if (!st) st = _.find(this.criteria.serviceTypes, { value: this.criteria.serviceType });
     this.criteria.showPPA = st.showPPA;
     this.criteria.serviceType = st.value;
     this.applyDelayed();
@@ -272,8 +274,8 @@ export class ManagersDashboardComponent implements OnInit {
       switch (shift.mode) {
         case "all": isIntime = true; break;
         case "start": isIntime = (order.fromTime >= shift.timeFrom); break;
-        case "end": isIntime = (order.toTime <= shift.timeTo); break;
-        case "between": isIntime = (order.fromTime >= shift.timeFrom && (!order.toTime || order.toTime <= shift.timeTo)); break;
+        case "end": isIntime = (order.fromTime <= shift.timeTo); break;
+        case "between": isIntime = (order.fromTime >= shift.timeFrom && order.fromTime <= shift.timeTo); break;
       }
 
       if (isIntime) {

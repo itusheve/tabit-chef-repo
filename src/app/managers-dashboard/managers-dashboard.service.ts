@@ -384,7 +384,8 @@ export class ManagersDashboardService {
   private prepareOrder(db, order) {
     var newOrder = _.find(db.orders, { '_id': order._id });
     if (!newOrder) {
-      newOrder = { serviceType: order.serviceType, _id: order._id};
+      newOrder = { serviceType: order.serviceType, _id: order._id };
+      if (order.serviceType == 'seated' && order.orderType == "OTC") newOrder.serviceType = 'counter';
       db.orders.push(newOrder);
     }
 
@@ -400,8 +401,15 @@ export class ManagersDashboardService {
       }
     }
 
+    order.countDiners = true;
+
     if (order.closed) {
       newOrder.to = moment(order.closed);
+
+      if (newOrder.to.diff(moment(newOrder.from), 'minutes') <= 10) {
+        order.countDiners = false;
+      }
+
       newOrder.toTime = this.parseOrderTime(newOrder.to);
       newOrder.closed = true;
     } else {

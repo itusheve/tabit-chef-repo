@@ -183,7 +183,8 @@ const tmpTranslations_ = {
           "FindEx": "חפש...",
           "Cancel": "ביטול",
           "Remove": "הסר",
-          "Apply": "בצע"
+          "Apply": "בצע",
+          "Service Type": "סוג שרות"
         }
     },
     'en-US': {
@@ -331,7 +332,8 @@ const tmpTranslations_ = {
           "FindEx": "Find...",
           "Cancel": "Cancel",
           "Remove": "Remove",
-          "Apply": "Apply"
+          "Apply": "Apply",
+          "Service Type": "Service Type"
         }
     }
 };

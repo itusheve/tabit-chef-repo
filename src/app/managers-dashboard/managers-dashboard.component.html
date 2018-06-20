@@ -53,8 +53,8 @@
         <div class="content dash-content" *ngIf="criteria.loaded">
 
           <!--<div class="wrapper-sm" *ngIf="MDS.isHandset"></div>-->
-          <div class="dash-container pos-rlt">
-            <ul class="nav-tabs-dash-main nav nav-tabs mt15" role="tablist">
+          <div class="dash-container pos-rlt" [ngClass]="{'bb mt10':MDS.isHandset}">
+            <ul class="nav-tabs-dash-main nav nav-tabs mt15" role="tablist" *ngIf="!MDS.isHandset">
               <li class="nav-item text-xl" *ngFor="let st of criteria.serviceTypes">
                 <a class="nav-link" [class.active]="criteria.serviceType == st.value" (click)="setServiceType(st)">
                   <ng-container>{{ st.text | tmpTranslate}}</ng-container>
@@ -62,13 +62,24 @@
               </li>
             </ul>
 
+            <div *ngIf="MDS.isHandset">
+              <mat-form-field>
+                <mat-select placeholder="{{'managerDash.Service Type' | tmpTranslate}}" [(value)]="criteria.serviceType" (selectionChange)="setServiceType(null)">
+                  <mat-option *ngFor="let st of criteria.serviceTypes" [value]="st.value">
+                    {{ st.text | tmpTranslate}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+
             <div class="dash-pos-spinner" *ngIf="refreshing">
               <mat-spinner diameter="45" strokeWidth="2" color="background"></mat-spinner>
             </div>
 
             <div class="dash-pos-buttons">
 
-              <div class="cal-container me15">
+              <div class="cal-container me10">
                 <button class="hidden-sm-up" mat-mini-fab color="background" (click)="picker.open()" [disabled]="refreshing">
                   <mat-icon>event</mat-icon>
                 </button>
