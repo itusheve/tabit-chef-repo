@@ -6,11 +6,11 @@
 @import '~@angular/material/theming';
 
 /* Landscape */
-@media only screen and (orientation: landscape) {
+/*@media only screen and (orientation: landscape) {
     body{
         zoom:1.1; text-size-adjust: auto
     }
-}
+}*/
 
 html, body {
   width: 100vw;
@@ -42,7 +42,7 @@ button {
 
 .widget {
   display: block;
-  padding: 15px 12px;
+  padding: 3px 16px;
   margin-bottom: 10px;
   background-color: #fff;
   color: #343E56;
@@ -346,6 +346,16 @@ i.icon {
   height: $iconSize;
   display: block;
   background-repeat: no-repeat;
+
+  &.up {
+    background-image: url(/assets/icons/up.svg);
+  }
+  &.down {
+    background-image: url(/assets/icons/down.svg);
+  }
+  &.user {
+    background-image: url(/assets/icons/user.svg);
+  }
   &.iconOperationalAndCancellations {
     background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/OperationalAndCancellation.svg);
   }

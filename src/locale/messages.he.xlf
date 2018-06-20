@@ -255,7 +255,7 @@
         <source>{VAR_SELECT, select, A {A} M {Y} }</source>
         <target>{VAR_SELECT, select, A {מ} Y {ש} }</target>
       </trans-unit>
-      <trans-unit id="9593910bf4cbd24dc68f1b0f28357cedbad07c2e" datatype="html">
+      <trans-unit id="orsLastDay" datatype="html">
         <source>{VAR_SELECT, select, currentBd {Today} previousBd {Yesterday} }</source>
         <target>{VAR_SELECT, select, currentBd {היום} previousBd {אתמול} }</target>
         <context-group purpose="location">
