@@ -39,7 +39,7 @@
           </div>
         </div>
 
-        <div class="col-sm-3  col-xs-6">
+        <div class="col-sm-3  col-xs-6" *ngIf="criteria.showPPA">
           <div class="form-group">
             <label class="text-xs">{{'managerDash.Goal' | tmpTranslate}}</label>
             <div class="input-group">
@@ -55,7 +55,7 @@
           </div>
         </div>
 
-        <div class="col-sm-3  col-xs-6" *ngIf="criteria.showPPA">
+        <div class="col-sm-3  col-xs-6">
           <div class="form-group">
             <label class="text-xs">{{'managerDash.CHOOSE_BY_TIMES' | tmpTranslate}}</label>
             <button type="button" class="btn btn-dark btn-lg btn-block" (click)="doSettings()" style="font-size:18px;">
