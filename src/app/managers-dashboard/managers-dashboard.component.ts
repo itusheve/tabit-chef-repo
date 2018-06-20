@@ -157,41 +157,42 @@ export class ManagersDashboardComponent implements OnInit {
 
   businessDateChange() {
     let that = this;
-    //this.refreshing = true;
+    setTimeout(() => {
 
-    let cbd = this.db.currentBD.businessDate;
-    let bd = this._moment(this.tmpDate).format('YYYY-MM-DD') + 'T00:00:00.000Z';
-    this.db.businessDate = bd;
-    this.db.orders = [];
-    this.db.lastTime = null;
+      let cbd = this.db.currentBD.businessDate;
+      let bd = this._moment(this.tmpDate).format('YYYY-MM-DD') + 'T00:00:00.000Z';
+      this.db.businessDate = bd;
+      this.db.orders = [];
+      this.db.lastTime = null;
 
-    if (bd == cbd) {
-      this.db.isDateClosed = false;
+      this.blockUI.start(tmpTranslations.get('loading'));
+      if (bd == cbd) {
+        this.db.isDateClosed = false;
 
-      this.MDS.getCurrentOrders(this.db, null)
-        .then((data) => {
-          that.applyCriteria();
-        }).catch(e => {
-          console.error(e);
-        }).then(() => {
-          that.refreshing = false;
-        });
-    } else {
-      this.db.isDateClosed = true;
+        this.MDS.getCurrentOrders(this.db, null)
+          .then((data) => {
+            that.applyCriteria();
+          }).catch(e => {
+            console.error(e);
+          }).then(() => {
+            that.blockUI.stop();
+            that.refreshing = false;
+          });
+      } else {
+        this.db.isDateClosed = true;
 
-      this.MDS.getHistoricOrders(this.db)
-        .then((data) => {
-          that.applyCriteria();
-        }).catch(e => {
-          console.error(e);
-        }).then(() => {
-          that.refreshing = false;
-        });
-    }
-
-    /*
-
-    */
+        this.MDS.getHistoricOrders(this.db)
+          .then((data) => {
+            that.applyCriteria();
+          }).catch(e => {
+            console.error(e);
+          }).then(() => {
+            that.blockUI.stop();
+            that.refreshing = false;
+          });
+      }
+    }, 0);
+    
   }
 
 

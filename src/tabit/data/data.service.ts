@@ -184,7 +184,8 @@ const tmpTranslations_ = {
           "Cancel": "ביטול",
           "Remove": "הסר",
           "Apply": "בצע",
-          "Service Type": "סוג שרות"
+          "Service Type": "סוג שרות",
+          "Totals": "סיכומים"
         }
     },
     'en-US': {
@@ -333,7 +334,8 @@ const tmpTranslations_ = {
           "Cancel": "Cancel",
           "Remove": "Remove",
           "Apply": "Apply",
-          "Service Type": "Service Type"
+          "Service Type": "Service Type",
+          "Totals": "Totals"
         }
     }
 };

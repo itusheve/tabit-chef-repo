@@ -334,14 +334,29 @@ export class ManagersDashboardService {
     let params: any = {
       fromBusinessDate: db.businessDate,
       toBusinessDate: db.businessDate,
+      pageSize:100
     };
 
-    return this.rosEp.get("documents/v2", params).then(ret => {
-      var arr = [];
-      _.each(ret, function (o) {
-        arr.push(that.prepareOrder(db, o.order[0]));
+    return this.rosEp.get("documents/count", params).then(count => {
+      let pages = count.pages;
+      if (pages == 0) return [];
+
+      let promises = [];
+      for (let i = 0; i < pages; i++) {
+        params.page = i + 1;
+        promises.push(that.rosEp.get("documents/v2", params))
+      }
+
+      return Promise.all(promises).then((pages: any[]) => {
+        var arr = [];
+        _.each(pages, ret => {
+          _.each(ret, function (o) {
+            arr.push(that.prepareOrder(db, o.order[0]));
+          });
+        });
+        return arr;
       });
-      return arr;
+
     });
   }
 
