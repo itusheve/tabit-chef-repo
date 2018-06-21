@@ -308,16 +308,13 @@ export class ManagersDashboardService {
   ---------------------------------------------------------------------------------
   */
 
-  ordersQuery = {
-    fullOrderRequired: true,
-    //"select": "owner,openedBy,number,orderType,closed,source,orderTags,lastUpdated,created,serviceType,courses.fired,courses.notified,courses.served,courses.orderedItems",
-  }
+
 
   public refreshOrders(db) {
     return this.getCurrentOrders(db, db.lastTime);
   };
 
-  public getCurrentOrders (db, _fromTime) {
+  public getCurrentOrders(db, _fromTime) {
     let fromTime = _fromTime || null;//window.GETREALDATE(true).subtract(factory.threshhold, 'minutes');
     var that = this;
     const promises: any = [
@@ -329,14 +326,52 @@ export class ManagersDashboardService {
     });
   }
 
+  ordersQuery = {
+    //fullOrderRequired: true,
+    "select": 'orderType,serviceType,created,lastUpdated,closed,isStaffTable,owner,diners,orderedItems,orderedOffers,rewards,courses, paymentSummary',
+    "tLogselect": 'order.orderType,order.serviceType,order.created,order.lastUpdated,order.closed,order.isStaffTable,order.owner,order.diners,order.orderedItems,order.orderedOffers,order.rewards,order.courses, order.paymentSummary'
+  }
+
   public getHistoricOrders(db) {
-    var that = this;
     let params: any = {
       fromBusinessDate: db.businessDate,
       toBusinessDate: db.businessDate,
+      select: this.ordersQuery.tLogselect,
       pageSize:100
     };
+    return this.getClosedOrdersServer(db, params);
+  }
 
+  getOpenedOrders (db, fromTime?) {
+    var that = this;
+    let params:any = {
+      select: this.ordersQuery.select
+    };
+    if (fromTime) {
+      params.lastUpdated = "$gt " + fromTime.utc().format();
+    }
+    return this.rosEp.get("orders", params).then(ret => {
+      var arr = [];
+      _.each(ret, function (o) {
+        arr.push(that.prepareOrder(db, o));
+      });
+      return arr;
+    });
+  }
+
+  getClosedOrders(db, fromTime) {
+    let params:any = {
+      fromBusinessDate: db.businessDate,
+      select: this.ordersQuery.tLogselect
+    };
+    if (fromTime) {
+      params.lastUpdated = "$gt " + fromTime.utc().format();
+    }
+    return this.getClosedOrdersServer(db, params);
+  }
+
+  getClosedOrdersServer(db, params) {
+    var that = this;
     return this.rosEp.get("documents/count", params).then(count => {
       let pages = count.pages;
       if (pages == 0) return [];
@@ -357,42 +392,6 @@ export class ManagersDashboardService {
         return arr;
       });
 
-    });
-  }
-
-  getOpenedOrders (db, fromTime?) {
-    var that = this;
-    let params;
-    if (fromTime) {
-      params = { lastUpdated: "$gt " + fromTime.utc().format() };
-      _.extend(params, this.ordersQuery);
-    } else {
-      params = this.ordersQuery;
-    }
-    return this.rosEp.get("orders", params).then(ret => {
-      var arr = [];
-      _.each(ret, function (o) {
-        arr.push(that.prepareOrder(db, o));
-      });
-      return arr;
-    });
-  }
-
-  getClosedOrders(db, fromTime) {
-    var that = this;
-    let params:any = {
-      fromBusinessDate: db.businessDate,
-      //toBusinessDate: factory.businessDate,
-    };
-    if (fromTime) {
-      params.lastUpdated = "$gt " + fromTime.utc().format();
-    }
-    return this.rosEp.get("documents/v2", params).then(ret => {
-      var arr = [];
-      _.each(ret, function (o) {
-        arr.push(that.prepareOrder(db, o.order[0]));
-      });
-      return arr;
     });
   }
 
