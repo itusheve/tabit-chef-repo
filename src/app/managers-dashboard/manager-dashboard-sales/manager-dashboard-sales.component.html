@@ -175,14 +175,14 @@
       <div>
         <!--<div class="pa10 b-b b-darkgray visible-xs text-xs">{{'managerDash.SORT_BY' | tmpTranslate}}</div>-->
         <div class="no-more-tables block-header">
-          <table class="table table-log no-margin" ts-wrapper>
+          <table class="table table-log no-margin" matSort (matSortChange)="sortData($event, 'dinersAVG')">
             <thead>
               <tr>
-                <th ts-criteria="waiterName" class="b-dark">{{'managerDash.SERVER' | tmpTranslate}}</th>
-                <th ts-criteria="orders">{{'managerDash.Orders' | tmpTranslate}}</th>
-                <th ts-criteria="diners">{{'managerDash.Diners' | tmpTranslate}}</th>
-                <th ts-criteria="total" ts-default="descending">{{'managerDash.Total' | tmpTranslate}}</th>
-                <th ts-criteria="dinerAvg" *ngIf="criteria.showPPA">PPA</th>
+                <th mat-sort-header="waiterName" class="b-dark">{{'managerDash.SERVER' | tmpTranslate}}</th>
+                <th mat-sort-header="orders">{{'managerDash.Orders' | tmpTranslate}}</th>
+                <th mat-sort-header="diners">{{'managerDash.Diners' | tmpTranslate}}</th>
+                <th mat-sort-header="total" ts-default="descending">{{'managerDash.Total' | tmpTranslate}}</th>
+                <th mat-sort-header="dinerAvg" *ngIf="criteria.showPPA">PPA</th>
               </tr>
             </thead>
             <tbody>
@@ -288,16 +288,18 @@
 
 
             <!--start items owner view mode-->
-            <table class="table table-log no-margin" ts-wrapper *ngIf="criteria.viewerMode == 'items' && !criteria.changingSales">
+            <table class="table table-log no-margin"
+                    matSort (matSortChange)="sortData($event, 'itemsAVG')"
+                   *ngIf="criteria.viewerMode == 'items' && !criteria.changingSales">
               <thead>
                 <tr>
-                  <th ts-criteria="waiterName">{{'managerDash.WAITER' | tmpTranslate}}</th>
-                  <th ts-criteria="diners" ts-default="descending">{{'managerDash.Diners' | tmpTranslate}}</th>
+                  <th mat-sort-header="waiterName">{{'managerDash.WAITER' | tmpTranslate}}</th>
+                  <th mat-sort-header="diners" ts-default="descending">{{'managerDash.Diners' | tmpTranslate}}</th>
                   <th *ngFor="let group of criteria.itemGroups">{{group.name}}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let order of criteria.itemsAVG" ts-repeat [ngClass]="{'font-bold bg-light':order.isTotal, 'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
+                <tr *ngFor="let order of criteria.itemsAVG" [ngClass]="{'font-bold bg-light':order.isTotal, 'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
                   <td class="no-more-tables-header" *ngxInit="criteria.excludedUsers.indexOf(order.waiter) != -1 as wexcluded">
                     <div class="d-flex flex-row" ng-click="toggleWaiter(order.waiter)">
                       <div class="thumb-xs avatar me5">
@@ -328,15 +330,18 @@
             </table>
             <!--end items owner view mode-->
             <!--start items sales view mode-->
-            <table class="table table-log no-margin" ts-wrapper *ngIf="criteria.viewerMode == 'itemsSales' && !criteria.changingSales">
+            <table class="table table-log no-margin"
+                   matSort (matSortChange)="sortData($event, 'ItemsSales')"
+                   *ngIf="criteria.viewerMode == 'itemsSales' && !criteria.changingSales">
               <thead>
                 <tr>
-                  <th ts-criteria="waiterName">{{'managerDash.WAITER' | tmpTranslate}}</th>
+                  <th mat-sort-header="waiterName">{{'managerDash.WAITER' | tmpTranslate}}</th>
                   <th *ngFor="let group of criteria.itemGroups">{{group.name}}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let order of criteria.ItemsSales" ts-repeat [ngClass]="{'font-bold bg-light':order.isTotal, 'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
+                <tr *ngFor="let order of criteria.ItemsSales"
+                    [ngClass]="{'font-bold bg-light':order.isTotal, 'text-l-t':criteria.excludedUsers.indexOf(order.waiter) != -1}">
                   <td class="no-more-tables-header" *ngxInit="criteria.excludedUsers.indexOf(order.waiter) != -1 as wexcluded">
                     <div class="d-flex flex-row" ng-click="toggleWaiter(order.waiter)">
                       <div class="thumb-xs avatar me5">

@@ -66,6 +66,7 @@ export class ManagersDashboardComponent implements OnInit {
     itemGroupsCounter: [1, 2, 3, 4],
     itemGroups: [],
     excludedUsers: [],
+    sort: {},
     timeModes: {
       all: { mode: 'all', text: tmpTranslations.get('managerDash.ALL_DAY'), ro: true },
       start: { mode: 'start', text: tmpTranslations.get('managerDash.TIME_RANGE_FROM'), dateFrom: new Date(1970, 0, 1, 6, 0, 0), timeFrom: 360, ro: false, sd:true},
@@ -447,9 +448,16 @@ export class ManagersDashboardComponent implements OnInit {
       }
     });
     c.totals = totals;
-    c.dinersAVG = arr;
-    c.itemsAVG = arrItemsAVG;
-    c.ItemsSales = arrItemsSales;
+    c.dinersAVG = sortRespnse(arr, 'dinersAVG');
+    c.itemsAVG = sortRespnse(arrItemsAVG, 'itemsAVG');
+    c.ItemsSales = sortRespnse(arrItemsSales, 'ItemsSales');
+
+    function sortRespnse(data, key) {
+      let sort = c.sort[key];
+      if (!sort) return data;
+      return _.orderBy(data, [sort.field], [sort.direction]);
+    }
+
   };
 
 

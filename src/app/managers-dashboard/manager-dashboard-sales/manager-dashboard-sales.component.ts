@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, Inject, ViewChild} from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, Sort} from '@angular/material';
 import { DxTreeViewComponent } from 'devextreme-angular';
 
 import * as moment from 'moment';
@@ -113,6 +113,19 @@ export class ManagerDashboardSalesComponent implements OnInit {
       _.each(group.subs, function (_sub) { delete _sub.expanded; })
       sub.expanded = true;
     }
+  }
+
+  sortData(sort: Sort, sCData) {
+    let c = this.criteria;
+    if (!sort.active || sort.direction == '') {
+      delete c.sort[sCData];
+      return;
+    }
+    c.sort[sCData] = {
+      field: sort.active,
+      direction: sort.direction
+    };
+    c[sCData] = _.orderBy(c[sCData], [sort.active], [sort.direction]);
   }
 
   doSettings(): void {
