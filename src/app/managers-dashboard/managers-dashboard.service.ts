@@ -328,8 +328,8 @@ export class ManagersDashboardService {
 
   ordersQuery = {
     //fullOrderRequired: true,
-    "select": 'orderType,serviceType,created,lastUpdated,closed,isStaffTable,owner,diners,orderedItems,orderedOffers,rewards,courses, paymentSummary',
-    "tLogselect": 'order.orderType,order.serviceType,order.created,order.lastUpdated,order.closed,order.isStaffTable,order.owner,order.diners,order.orderedItems,order.orderedOffers,order.rewards,order.courses, order.paymentSummary'
+    "select": '_id,orderType,serviceType,created,lastUpdated,closed,isStaffTable,owner,diners,orderedItems,orderedOffers,rewards,courses, paymentSummary,courses',
+    "tLogselect": 'order._id,order.orderType,order.serviceType,order.created,order.lastUpdated,order.closed,order.isStaffTable,order.owner,order.diners,order.orderedItems,order.orderedOffers,order.rewards,order.courses, order.paymentSummary, order.courses'
   }
 
   public getHistoricOrders(db) {
@@ -415,13 +415,13 @@ export class ManagersDashboardService {
       }
     }
 
-    order.countDiners = true;
+    newOrder.countDiners = order.serviceType == 'seated';
 
     if (order.closed) {
       newOrder.to = moment(order.closed);
 
-      if (newOrder.to.diff(moment(newOrder.from), 'minutes') <= 10) {
-        order.countDiners = false;
+      if (newOrder.countDiners && newOrder.to.diff(moment(newOrder.from), 'minutes') <= 10) {
+        newOrder.countDiners = false;
       }
 
       newOrder.toTime = this.parseOrderTime(newOrder.to);
@@ -429,6 +429,11 @@ export class ManagersDashboardService {
     } else {
       newOrder.closed = false;
     }
+
+    if (newOrder.countDiners && _.get(order, 'paymentSummary.totalAmount', 0) == 0) {
+      newOrder.countDiners = false;
+    }
+
     if (order.isStaffTable) {
       newOrder.isStaffTable = true;
     } else {
@@ -464,11 +469,16 @@ export class ManagersDashboardService {
 
     var total = 0;
     var totalNet = 0;
+    var isAdHocOffer;
     _.each(order.orderedOffers, function (offer) {
+      if (offer.adHocOffer) isAdHocOffer = true;
       var v = offer.amount || 0;
       total += v;
       if (!offer.onTheHouse) totalNet += v;
     });
+    if (newOrder.countDiners && isAdHocOffer && order.orderedOffers.length == 1) {
+      newOrder.countDiners = false;
+    }
 
     _.each(order.rewards, function (reward) {
       var discount = reward.discount;
@@ -493,6 +503,11 @@ export class ManagersDashboardService {
       }
       if (fired) return fired.by;
     };
+
+    if (!newOrder.countDiners) {
+      let a = 1;
+      //debugger;
+    }
 
   };
 
