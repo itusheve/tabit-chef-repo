@@ -192,7 +192,7 @@ export class ManagersDashboardComponent implements OnInit {
           });
       }
     }, 0);
-    
+
   }
 
 
@@ -226,13 +226,18 @@ export class ManagersDashboardComponent implements OnInit {
     var c = this.criteria;
     var db = this.db;
     var totalAtt = c.showNetPrices ? "totalNet" : "total";
+    var showPPA = c.showPPA;
 
     var totals = {
       total: 0,
+      totalPPA: 0,
       orders: 0,
+      ordersPPA: 0,
       diners: 0,
+      dinersPPA: 0,
+      dinersDisplay: 0,
       dinerAvg: null,
-      goalDiff: null
+      goalDiff: null,
     };
 
     var generateItems = true;
@@ -293,6 +298,8 @@ export class ManagersDashboardComponent implements OnInit {
         var isWaiterExcluded = c.excludedUsers.indexOf(order.waiter) !== -1;
         var amount = order[totalAtt]
         if (amount > 0) {
+          var countDiners = order.countDiners;
+
           var waiter = _.find(arr, { 'waiter': order.waiter });
           if (!waiter) {
             var oWaiter = db.users[order.waiter]
@@ -304,8 +311,12 @@ export class ManagersDashboardComponent implements OnInit {
               waiterName: oWaiter.name,
               photoUrl: oWaiter.photoUrl || 'assets/images/icons/person.png',
               total: 0,
+              totalPPA: 0,
               orders: 0,
-              diners: 0
+              ordersPPA: 0,
+              diners: 0,
+              dinersPPA: 0,
+              dinersDisplay: 0
             };
             arr.push(waiter);
           }
@@ -313,14 +324,26 @@ export class ManagersDashboardComponent implements OnInit {
             totals.total += amount;
             totals.orders += 1;
             totals.diners += order.diners;
-            totals.dinerAvg = Math.round(totals.total / totals.diners);
-            totals.goalDiff = totals.dinerAvg - c.dinerAvgGoal
+            if (countDiners) {
+              totals.ordersPPA += 1;
+              totals.totalPPA += amount;
+              totals.dinersPPA += order.diners;
+              totals.dinerAvg = Math.round(totals.totalPPA / totals.dinersPPA);
+              totals.goalDiff = totals.dinerAvg - c.dinerAvgGoal
+            }
+            totals.dinersDisplay = showPPA ? totals.dinersPPA : totals.diners;
           }
           waiter.total += amount;
           waiter.orders += 1;
           waiter.diners += order.diners;
-          waiter.dinerAvg = Math.round(waiter.total / waiter.diners);
-          waiter.goalDiff = waiter.dinerAvg - c.dinerAvgGoal
+          if (countDiners) {
+            waiter.ordersPPA += 1;
+            waiter.totalPPA += amount;
+            waiter.dinersPPA += order.diners;
+            waiter.dinerAvg = Math.round(waiter.totalPPA / waiter.dinersPPA);
+            waiter.goalDiff = waiter.dinerAvg - c.dinerAvgGoal;
+          }
+          waiter.dinersDisplay = showPPA ? waiter.dinersPPA : waiter.diners;
         }
 
         if (generateItems) {

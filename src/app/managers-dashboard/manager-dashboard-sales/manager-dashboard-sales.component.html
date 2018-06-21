@@ -92,7 +92,7 @@
 
         <div class="hcol b-far text-center  v-top pos-rlt">
           <div class="text-xxl" [ngClass]="{'text-xl':MDS.isHandset}">
-            <span class="numeric-cell">{{criteria.totals.diners}}</span>
+            <span class="numeric-cell">{{criteria.totals.dinersDisplay}}</span>
           </div>
           <small class="text-faded">{{'managerDash.Diners' | tmpTranslate}}</small>
         </div>
@@ -204,7 +204,7 @@
                   {{order.orders}}
                 </td>
                 <td class="numeric-cell text-lg" [attr.aria-label]="'managerDash.Diners' | tmpTranslate">
-                  {{order.diners}}
+                  {{order.dinersDisplay}}
                 </td>
                 <td class="numeric-cell text-lg" [attr.aria-label]="'managerDash.Total' | tmpTranslate">
                   {{order.total | currencyFraction}}
