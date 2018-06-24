@@ -4,7 +4,7 @@
                           rgba(0, 38, 66, 0.9),
                           rgba(0, 38, 66, 0.9)
           ),
-          url('/assets/images/background-login.png');
+          url('https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/images/background-login.png');
   background-size: cover;
   height: 100%;
   font-size: 20px;
@@ -13,7 +13,7 @@
     .logo {
       width: 100%;
       height: 120px;
-      background: url('/assets/images/tabit-chef-login.png');
+      background: url('https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/images/tabit-chef-login.png');
       background-repeat: no-repeat;
       background-position-x: center;
       background-size: contain;
