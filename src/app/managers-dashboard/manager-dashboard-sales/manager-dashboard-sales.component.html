@@ -295,7 +295,8 @@
                 <tr>
                   <th mat-sort-header="waiterName">{{'managerDash.WAITER' | tmpTranslate}}</th>
                   <th mat-sort-header="diners" ts-default="descending">{{'managerDash.Diners' | tmpTranslate}}</th>
-                  <th *ngFor="let group of criteria.itemGroups">{{group.name}}</th>
+                  <th *ngFor="let group of criteria.itemGroups; let $index = index"
+                      mat-sort-header="{{'iCount_' + $index}}">{{group.name}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -319,7 +320,7 @@
                   <td class="numeric-cell text-lg" *ngFor="let group of criteria.itemGroups; let $index=index" [attr.aria-label]="group.name">
 
                     <!-- AVG -->
-                    <span *ngIf="criteria.itemSelectionMeasure === 'c'"> {{order[criteria.itemSelectionMeasure + '_group_' + $index] }} </span>
+                    <span *ngIf="criteria.itemSelectionMeasure === 'c'"> {{order[criteria.itemSelectionMeasure + '_group_' + $index] | number:'1.0-0' }} </span>
 
                     <!-- CURRENCY -->
                     <span *ngIf="criteria.itemSelectionMeasure === 'v'"> {{order[criteria.itemSelectionMeasure + '_group_' + $index] | number:'1.2-2' }} </span>
@@ -336,7 +337,8 @@
               <thead>
                 <tr>
                   <th mat-sort-header="waiterName">{{'managerDash.WAITER' | tmpTranslate}}</th>
-                  <th *ngFor="let group of criteria.itemGroups">{{group.name}}</th>
+                  <th *ngFor="let group of criteria.itemGroups; let $index = index"
+                      mat-sort-header="{{'iCount_' + $index}}">{{group.name}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -356,7 +358,7 @@
                   <td class="numeric-cell text-lg" *ngFor="let group of criteria.itemGroups; let $index=index" [attr.aria-label]="group.name">
 
                     <!-- AVG -->
-                    <span *ngIf="criteria.itemSelectionMeasure === 'c'"> {{order[criteria.itemSelectionMeasure + '_group_' + $index] }} </span>
+                    <span *ngIf="criteria.itemSelectionMeasure === 'c'"> {{order[criteria.itemSelectionMeasure + '_group_' + $index] | number:'1.0-0' }} </span>
 
                     <!-- CURRENCY -->
                     <span *ngIf="criteria.itemSelectionMeasure === 'v'"> {{order[criteria.itemSelectionMeasure + '_group_' + $index] | number:'1.2-2' }} </span>

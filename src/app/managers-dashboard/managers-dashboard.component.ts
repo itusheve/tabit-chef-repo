@@ -144,7 +144,37 @@ export class ManagersDashboardComponent implements OnInit {
   actionRequest(action) {
     switch (action.id) {
       case "applyDelayed": this.applyDelayed(); break;
+      case "sortMdashList": this.criteria[action.key] = this.sortMdashList(action.key); break;
     }
+  }
+
+  sortMdashList(key, data?) {
+    let c = this.criteria;
+    if (!data) data = c[key] || [];
+    let sort = c.sort[key];
+    if (!sort) return data;
+    let sortField: string = sort.field;
+
+    if (sortField.indexOf('iCount_') == 0) {
+      var index = Number(sortField.split("_")[1]),
+        measure = c.itemSelectionMeasure;
+
+      _.each(data, row => {
+        row.$$sortval = row[measure + '_group_' + index];
+      });
+      sortField = '$$sortval';
+    }
+
+    let response = _.orderBy(data, sortField, [sort.direction]);
+    let totalIndex = _.findIndex(response, { isTotal: true });
+
+    if (totalIndex != -1) {
+      let row = response.splice(totalIndex, 1)[0];
+      response.unshift(row);
+    }
+
+    return response;
+
   }
 
   refreshing: boolean = false;
@@ -416,6 +446,16 @@ export class ManagersDashboardComponent implements OnInit {
                       waiter: item.by,
                       waiterName: oWaiter.name,
                       photoUrl: oWaiter.photoUrl || 'assets/images/icons/person.png',
+                      c_group_0: 0,
+                      c_group_1: 0,
+                      c_group_2: 0,
+                      c_group_3: 0,
+                      c_group_4: 0,
+                      v_group_0: 0,
+                      v_group_1: 0,
+                      v_group_2: 0,
+                      v_group_3: 0,
+                      v_group_4: 0
                     };
                     arrItemsSales.push(waiterS);
                   }
@@ -448,16 +488,9 @@ export class ManagersDashboardComponent implements OnInit {
       }
     });
     c.totals = totals;
-    c.dinersAVG = sortRespnse(arr, 'dinersAVG');
-    c.itemsAVG = sortRespnse(arrItemsAVG, 'itemsAVG');
-    c.ItemsSales = sortRespnse(arrItemsSales, 'ItemsSales');
-
-    function sortRespnse(data, key) {
-      let sort = c.sort[key];
-      if (!sort) return data;
-      return _.orderBy(data, [sort.field], [sort.direction]);
-    }
-
+    c.dinersAVG = this.sortMdashList('dinersAVG', arr);
+    c.itemsAVG = this.sortMdashList('itemsAVG', arrItemsAVG);
+    c.ItemsSales = this.sortMdashList('ItemsSales', arrItemsSales);
   };
 
 

@@ -125,7 +125,8 @@ export class ManagerDashboardSalesComponent implements OnInit {
       field: sort.active,
       direction: sort.direction
     };
-    c[sCData] = _.orderBy(c[sCData], [sort.active], [sort.direction]);
+    this.actionRequest.emit({ id: 'sortMdashList', key: sCData });
+
   }
 
   doSettings(): void {
