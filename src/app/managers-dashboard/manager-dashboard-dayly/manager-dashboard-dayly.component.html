@@ -1,0 +1,157 @@
+
+
+<div>
+  <!-- ============================================================================================
+  totals
+  ============================================================================================ -->
+
+
+  <div class="b-b bg-white  animated fadeInDown">
+    <div class="dash-container pv20">
+      <div class="font-bold text-base text-center pb10" i18n="manager-dash@@DASH_DAYLY_EXP">
+        {{'managerDash.DASH_DAYLY_EXP' | tmpTranslate }}
+      </div>
+      <div class="pos-rlt">
+        <div class="pos-abt bg-dark text-white pa5 text-center text-base"
+             style="width:170px; left:50%; margin-left:-85px; border-radius:50px; top:-15px; z-index:1">
+          {{'managerDash.ALLORDERS' | tmpTranslate }}
+        </div>
+        <hr />
+      </div>
+
+      <div class="hbox">
+        <div class="hcol b-far text-center v-top pos-rlt">
+          <div class="text-xxl" [ngClass]="{'text-xl':MDS.isHandset}">
+            <span class="numeric-cell">{{db.daylyData.totals.totalCount}}</span>
+          </div>
+          <small class="text-faded" i18nX="manager-dash@@Orders">{{'managerDash.Orders' | tmpTranslate }}</small>
+        </div>
+
+        <div class="hcol b-far text-center  v-top pos-rlt">
+          <div class="text-xxl" [ngClass]="{'text-xl':MDS.isHandset}">
+            <span class="numeric-cell">{{db.daylyData.totals.diners}}</span>
+          </div>
+          <small class="text-faded" i18nX="manager-dash@@Diners">{{'managerDash.Diners' | tmpTranslate }}</small>
+        </div>
+
+        <div class="hcol b-far text-center  v-top pos-rlt">
+          <div class="text-xxl" [ngClass]="{'text-xl':MDS.isHandset}">
+            <span class="numeric-cell">{{db.daylyData.totals.totalAmount | number:'1.0-0'}}</span>
+          </div>
+          <small class="text-faded" i18nX="manager-dash@@Total">{{'managerDash.Total' | tmpTranslate }}</small>
+        </div>
+
+        <div class="hcol text-center v-top pos-rlt">
+          <div class="text-xxl" [ngClass]="{'text-xl':MDS.isHandset}">
+            <span class="numeric-cell">{{db.daylyData.totals.totalAmount == 0 ? 0 : db.daylyData.totals.totalAmount / db.daylyData.totals.diners | number:'1.1-1'}}</span>
+          </div>
+          <small class="text-faded" i18nX="manager-dash@@PPA">PPA</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================================================
+  order type
+  ============================================================================================ -->
+
+  <div class="dash-container mt15" *ngIf="!db.daylyData._noData">
+    <div class="pv15">
+
+      <!--by order type-->
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="bg-white b b-rouned mb20">
+            <div class="block-header">
+              <table class="table table-log no-margin" ts-wrapper>
+                <thead>
+                  <tr>
+                    <th ts-criteria="orderType" class="b-dark"></th>
+                    <th ts-criteria="totalCount">{{'managerDash.Orders' | tmpTranslate}}</th>
+                    <th ts-criteria="totalAmount" style="line-height:20px">{{'managerDash.TOTAL_AMOUNT' | tmpTranslate}}</th>
+                    <th ts-criteria="pOfTotal" ts-default="descending">%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of db.daylyData.ordersTotal" ts-repeat [ngClass]="{'font-bold':row.orderType == 'Seated'}">
+                    <td class="text-lg" data-title="{{'managerDash.ORDER_TYPE' | tmpTranslate}}">
+                      {{('managerDash.' + (row.orderType).toUpperCase()) | tmpTranslate}}
+                    </td>
+                    <td class="numeric-cell text-lg" data-title="{{'managerDash.Orders' | tmpTranslate}}">
+                      {{row.totalCount}}
+                    </td>
+                    <td class="numeric-cell text-lg" data-title="{{'managerDash.TOTAL_AMOUNT' | tmpTranslate}}">
+                      {{row.amount | number:'1.0-0'}}
+                    </td>
+                    <td class="numeric-cell text-lg" data-title="{{'%' | tmpTranslate}}">
+                      {{row.pOfTotal | number:'1.1-1'}}%
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-white b b-rouned mb20">
+            <div class="block-header">
+              <table class="table table-log no-margin">
+                <tbody>
+                  <tr>
+                    <td class="text-lg"  style="border-top:0">
+                      <span>{{'managerDash.OTH' | tmpTranslate}}</span> <small>({{'managerDash.ITEMS' | tmpTranslate}})</small>
+                    </td>
+                    <td class="numeric-cell text-lg"  style="border-top:0">
+                      {{db.daylyData.onTheHouse.totalItems}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-lg">
+                      <span>{{'managerDash.CANCELATIONS' | tmpTranslate}}</span> <small>({{'managerDash.ITEMS' | tmpTranslate}})</small>
+                    </td>
+                    <td class="numeric-cell text-lg">
+                      {{db.daylyData.cancellations.totalItems}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-sm-6">
+          <div class="bg-white b b-rouned">
+            <div class="block-header">
+              <table class="table table-log no-margin" ts-wrapper>
+                <thead>
+                  <tr>
+                    <th ts-criteria="name" class="b-dark">&nbsp;</th>
+                    <th ts-criteria="gross" style="line-height:20px">{{'managerDash.INCLUDING_TAX' | tmpTranslate}}</th>
+                    <th ts-criteria="net" style="line-height:20px">{{'managerDash.EXCLUDING_TAX' | tmpTranslate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of db.daylyData.sections" ts-repeat [ngClass]="{'font-bold':row.name == 'DAYLY_TOTAL'}">
+                    <td class="text-lg" style="white-space:nowrap" data-title="{{'managerDash.NAME' | tmpTranslate}}">
+                      {{('managerDash.' + row.name) | tmpTranslate}}
+                    </td>
+                    <td class="numeric-cell text-lg" data-title="{{'managerDash.INCLUDING_TAX' | tmpTranslate}}">
+                      {{row.gross | number:'1.0-0'}}
+                    </td>
+                    <td class="numeric-cell text-lg" data-title="{{'managerDash.INCLUDING_TAX' | tmpTranslate}}">
+                      {{row.net | number:'1.0-0'}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4"></div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>

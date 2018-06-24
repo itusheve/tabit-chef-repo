@@ -1,3 +1,5 @@
+a{cursor:pointer}
+
 /* horizontal sizing */
 * {
     &.hLarge {
@@ -11,6 +13,19 @@
     }
 }
 
+.pa5 {padding: 5px; }
+.pa10 {padding: 10px; }
+.pa15 {padding: 15px; }
+.pa20 {padding: 20px; }
+.pa25 {padding: 25px; }
+
+.pb5 {padding-bottom: 5px; }
+.pb10 {padding-bottom: 10px; }
+.pb15 {padding-bottom: 15px; }
+.pb20 {padding-bottom: 20px; }
+.pb25 {padding-bottom: 25px; }
+
+
 .pl5 {padding-left: 5px; }
 .pl10 {padding-left: 10px; }
 .pl15 {padding-left: 15px; }
@@ -23,6 +38,8 @@
 .pr20 {padding-right: 20px; }
 .pr25 {padding-right: 25px; }
 .pr30 {padding-right: 30px; }
+
+
 
 .ml5 {margin-left: 5px!important; }
 .ml10 {margin-left: 10px!important; }
@@ -59,6 +76,13 @@
 .ph20 {padding-left: 20px; padding-right: 20px; }
 .ph25 {padding-left: 25px; padding-right: 25px; }
 .ph30 {padding-left: 30px; padding-right: 30px; }
+
+.pv5 {padding-top: 5px; padding-bottom: 5px; }
+.pv10 {padding-top: 10px; padding-bottom: 10px; }
+.pv15 {padding-top: 15px; padding-bottom: 15px; }
+.pv20 {padding-top: 20px; padding-bottom: 20px; }
+.pv25 {padding-top: 25px; padding-bottom: 25px; }
+.pv30 {padding-top: 30px; padding-bottom: 30px; }
 
 .mh3 {margin-left: 3px; margin-right: 3px; }
 .mh5 {margin-left: 5px; margin-right: 5px; }
@@ -142,4 +166,432 @@ body[dir="rtl"] {
     .me40 {margin-left: 40px!important; }
     .posStart {right: 0}
     .posEnd {left: 0}
+}
+
+
+/*borders*/
+
+
+
+$border-style: 1px solid rgba(0, 0, 0, 0.12);
+.border,
+.b {
+    border: $border-style;
+}
+
+.border-top,
+.bt {
+    border-top: $border-style;
+}
+
+.border-right,
+.br {
+    border-right: $border-style;
+}
+
+.border-bottom,
+.bb {
+    border-bottom: $border-style;
+}
+
+.border-left,
+.bl {
+    border-left: $border-style;
+}
+
+.border-horizontal,
+.bh {
+    border-left: $border-style;
+    border-right: $border-style;
+}
+
+.border-vertical,
+.bv {
+    border-top: $border-style;
+    border-bottom: $border-style;
+}
+
+
+.b-far{
+	border-right: $border-style;
+}
+.rtl .b-far{
+	border-right-width: 0;
+	border-left: $border-style;
+}
+
+
+.b-near{
+	border-left: $border-style;
+}
+.rtl .b-near{
+	border-left-width: 0;
+	border-right: $border-style;
+}
+
+
+.b-light {
+  border-color: #edf1f2;
+}
+
+.b-dark {
+  border-color: #333;
+}
+.b-darkgray{
+	border-color:#aaa;
+}
+.b-white {
+  border-color: #fff;
+}
+
+.b-black {
+  border-color: #000;
+}
+
+.b-rouned{
+  border-radius:3px;
+}
+
+// Border-radius helpers
+@for $i from 1 through 12 {
+
+    .brad-#{$i} {
+        border-radius: #{$i + 'px'}
+    }
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.text-xl {
+  font-size: 23px !important;
+}
+.text-xxl {
+  font-size: 30px;
+}
+.text-lg {
+  font-size: 18px;
+}
+
+.text-md {
+  font-size: 16px;
+}
+
+.text-base {
+  font-size: 14px;
+}
+
+.text-sm {
+  font-size: 13px;
+}
+
+.text-xs {
+  font-size: 12px;
+}
+
+.text-near {
+    text-align:left;
+}
+.text-far{
+    text-align:right;
+}
+.pull-near {
+    float:left;
+}
+.pull-far{
+    float:right;
+}
+
+.text-muted{
+    opacity:0.7;
+}
+
+.rtl {
+    .text-near {
+        text-align:right;
+    }
+    .text-far{
+        text-align:left;
+    }
+    .pull-near {
+        float:right;
+    }
+    .pull-far{
+        float:left;
+    }
+}
+
+
+/*cancelers*/
+
+.no-padding {
+    padding: 0 !important;
+}
+.no-margin {
+    margin: 0 !important;
+}
+.no-radius {
+    border-radius: 0 !important;
+}
+.no-shadow{
+    box-shadow:none !important;
+}
+.no-body-scroll{
+    overflow:hidden !important;
+}
+.no-select {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */
+}
+.cur-pointer{
+    cursor:pointer;
+}
+
+/*postion utilities*/
+
+.pos-rlt {
+  position: relative;
+}
+
+.pos-stc {
+  position: static !important;
+}
+
+.pos-abt {
+  position: absolute;
+}
+
+.pos-fix {
+  position: fixed;
+}
+
+.disp-inline{
+  display:inline-block;
+}
+.disp-block{
+  display:block;
+
+}
+
+.v-middle {
+  vertical-align: middle !important;
+}
+.v-top {
+  vertical-align: top !important;
+}
+.v-bottom {
+  vertical-align: bottom !important;
+}
+
+.vabsmiddle {
+	margin:0 auto;
+	position: relative;
+	top: 50%;
+	-webkit-transform:translateY(-50%);
+		transform: translateY(-50%);
+}
+
+.hbox {
+  display: table;
+  width: 100%;
+  height: 100%;
+  border-spacing: 0;
+  table-layout: fixed;
+  > .hcol {
+    display: table-cell;
+    float: none;
+    height: 100%;
+    vertical-align: top;
+  }
+}
+
+.scroll-x,
+.scroll-y {
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-y {
+  overflow-y: auto;
+}
+.scroll-x {
+  overflow-x: auto;
+}
+
+.avatar {
+  position: relative;
+  display: block;
+  white-space: nowrap;
+  border-radius: 500px;
+  img {
+    width: 100%;
+    border-radius: 500px;
+  }
+}
+
+.thumb {
+  display: inline-block;
+  width: 50px;
+}
+
+.thumb-sm {
+  display: inline-block;
+  width: 40px;
+}
+
+.thumb-xs {
+  display: inline-block;
+  width: 34px;
+}
+
+.thumb-xxs {
+  display: inline-block;
+  width: 30px;
+}
+
+.thumb-wrapper {
+  padding: 2px;
+  border: 1px solid #dee5e7;
+}
+
+.thumb img,
+.thumb-xs img,
+.thumb-sm img,
+.thumb-md img,
+.thumb-lg img,
+.thumb-btn img {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+
+/*
+	-------------------------------------------------------------------------------------------
+	tables
+	-------------------------------------------------------------------------------------------
+*/
+
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  padding: 8px 15px;
+  border-top: 1px solid #eaeff0;
+}
+
+.table > thead > tr > th {
+  padding: 8px 15px;
+  border-bottom: 1px solid #aaa;
+}
+
+.table-log > tbody > tr > td{
+	line-height:40px;
+	vertical-align:middle;
+	cursor:default;
+}
+.table-log > thead > tr > th{
+	line-height:40px;
+	cursor:default;
+	font-weight:normal;
+	color:#000;
+	font-size:16px;
+	vertical-align:middle;
+  border-top-width:0;
+  .mat-sort-header-container{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    button{
+      flex: 1;
+      &:focus{
+        outline:none;
+      }
+    }
+  }
+}
+
+
+
+
+@media only screen and (max-width: 666px) {
+  .hidden-xss{display:none !important}
+
+
+    /* Force table to not be like tables anymore */
+	.no-more-tables table,
+
+	.no-more-tables tbody,
+	.no-more-tables tbody > tr > th,
+	.no-more-tables tbody > tr > td,
+	.no-more-tables tbody > tr {
+		display: block;
+	}
+
+	.no-more-tables.block-header thead,
+	.no-more-tables.block-header thead > tr,
+	.no-more-tables.block-header thead > tr > td,
+	.no-more-tables.block-header thead > tr > th{
+		display: block;
+	}
+
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	.no-more-tables thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+		display:none;
+	}
+
+	.no-more-tables tbody > tr {  }
+	.no-more-tables tbody > tr.showIfLast { display:none }
+	.no-more-tables tbody > tr >td {
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 50%;
+		white-space: normal;
+		text-align:right;
+	}
+	.rtl .no-more-tables tbody > tr > td {
+		padding-left: 0;
+		padding-right: 50%;
+		}
+	.no-more-tables tbody > tr > td.no-more-tables-header{
+		padding-left: 15px !important;
+		padding-right:15px !important;
+
+		background-color:#333;
+		color:#fff;
+		font-size:1.2em;
+	}
+
+	.no-more-tables tbody > tr > td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+		text-align:left;
+		content: attr(aria-label);
+		font-weight: bold;
+	}
+	.rtl .no-more-tables tbody > tr > td:before {
+		left:auto;
+		right:6px;
+		padding-left: 10px;
+	}
+	/*
+	Label the data
+	*/
+
+}
+
+.block-ui-wrapper{
+  background:rgba(0, 0, 0, 0.40) !important;
 }

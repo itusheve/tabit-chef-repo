@@ -41,7 +41,8 @@
     "@angular/service-worker": "5.2.7",
     "@types/moment-timezone": "0.5.4",
     "angular2-moment": "1.8.0",
-    "bootstrap": "4.0.0",
+    "bootstrap": "4.1.1",
+    "bootstrap-v4-rtl": "4.1.1-0",
     "compression": "1.7.2",
     "core-js": "2.5.3",
     "cors": "2.8.4",
@@ -55,6 +56,7 @@
     "lodash": "4.17.5",
     "moment": "2.20.1",
     "moment-timezone": "0.5.14",
+    "ng-block-ui": "1.0.4",
     "rxjs": "5.5.6",
     "typescript": "2.4.2",
     "zone.js": "0.8.20"

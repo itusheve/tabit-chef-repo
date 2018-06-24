@@ -9,6 +9,7 @@ export class LocalizationService {
         const bodyEl = document.getElementsByTagName("BODY")[0];
         bodyEl.setAttribute('dir', environment.tbtLocale === 'he-IL' ? 'rtl' : 'ltr');
         bodyEl.setAttribute('lang', environment.tbtLocale === 'he-IL' ? 'he' : 'en');
+        if (environment.tbtLocale === 'he-IL') bodyEl.classList.add("rtl");
         // [style.direction] = "env.tbtLocale==='he-IL' ? 'rtl' : 'ltr'"//also needed? currently doesnt look so.
 
         dxConfig({

@@ -1,0 +1,50 @@
+﻿
+
+<div mat-dialog-title class="">
+  <div class="d-flex justify-content-between">
+    <div class="h3">
+      {{'managerDash.Settings' | tmpTranslate}}
+    </div>
+    <button mat-icon-button (click)="cancel()">
+      <mat-icon aria-label="Close Dialog">close</mat-icon>
+    </button>
+  </div>
+</div>
+
+<div mat-dialog-content>
+
+
+  <mat-radio-group class="example-radio-group" [(ngModel)]="timeMode">
+    <table class="table table-bordered mdash-tbl-settings">
+      <tr *ngFor="let shift of shifts" (click)="timeMode = shift.value">
+        <td class="v-middle">
+          <mat-radio-button class="example-radio-button" [value]="shift.value">
+            {{shift.text}}
+          </mat-radio-button>
+        </td>
+        <td class="v-middle">
+          <div *ngIf="shift.ro">
+            {{shift.desc || ''}}
+          </div>
+          <div *ngIf="!shift.ro">
+            <div *ngIf="shift.mode == 'start'">
+              <dx-date-box [(value)]="shift.dateFrom" type="time" width="150px" displayFormat="HH:mm" (onValueChanged)="calcTimes(shift, 'dateFrom', $event)"></dx-date-box>
+            </div>
+            <div *ngIf="shift.mode == 'end'">
+              <dx-date-box [(value)]="shift.dateTo"  type="time" width="150px" displayFormat="HH:mm" (onValueChanged)="calcTimes(shift, 'dateTo', $event)"></dx-date-box>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </mat-radio-group>
+
+
+
+</div>
+<div mat-dialog-actions  class="">
+  <button mat-raised-button (click)="cancel()">{{"managerDash.Cancel" | tmpTranslate}}</button>
+  <div class="flex-grow-1"></div>
+  <button mat-raised-button color="primary" (click)="apply()">{{"managerDash.Apply" | tmpTranslate}}</button>
+</div>
+

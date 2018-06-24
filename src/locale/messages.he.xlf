@@ -239,6 +239,14 @@
         <source>My Restaurants</source>
         <target>המסעדות שלי</target>
       </trans-unit>
+      <trans-unit id="managerDashboard" datatype="html">
+        <source>Manager Dashboard</source>
+        <target>דשבורד מנהל</target>
+      </trans-unit>
+      <trans-unit id="ownerDashboard" datatype="html">
+        <source>Owner Dashboard</source>
+        <target>דשבורד בעלים</target>
+      </trans-unit>
       <trans-unit id="logout" datatype="html">
         <source>Logout</source>
         <target>התנתק</target>

@@ -60,8 +60,11 @@ import { DebugService } from './debug.service';
 //feature modules:
 import { OrgsModule } from './orgs/orgs.module';
 import { OwnersDashboardModule } from './owners-dashboard/owners-dashboard.module';
+import { ManagersDashboardModule } from './managers-dashboard/managers-dashboard.module';
+
 import { VisibilityService } from '../tabit/utils/visibility.service';
 import { OlapMappings } from '../tabit/data/ep/olap.mappings';
+
 
 // The CLI imports the locale data for you when you use the parameter --locale with ng serve and ng build.
 if (environment.tbtLocale==='he-IL') {
@@ -74,7 +77,7 @@ if (environment.tbtLocale==='he-IL') {
     AreYouSureDialogComponent,
     ForgotPasswordDialogComponent,
     AppComponent,
-    LoginComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -88,6 +91,7 @@ if (environment.tbtLocale==='he-IL') {
     //feature modules:
     OrgsModule,
     OwnersDashboardModule,
+    ManagersDashboardModule,
 
     AppRoutingModule,//must be after the feature modules: "Each routing module augments the route configuration in the order of import."
 

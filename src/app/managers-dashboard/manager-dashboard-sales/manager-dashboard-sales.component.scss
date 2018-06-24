@@ -1,0 +1,15 @@
+
+@media only screen and (max-width: 666px) {
+  .sales-container{
+    padding:0;
+  }
+  .sales-tabs{
+    > li{
+
+      > a{
+        padding:12px 8px;
+        font-size:18px ;
+      }
+    }
+  }
+}

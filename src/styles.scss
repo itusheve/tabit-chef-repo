@@ -402,11 +402,14 @@ i.icon {
     color: rgba(0, 0, 0, 0.54);
 }
 
+@import 'tabit/styles/_bootstrap_override';
+@import 'tabit/styles/animate';
 @import 'tabit/styles/util';
+
 @import 'tabit/styles/flex';
 @import 'tabit/styles/frame';
 @import 'tabit/styles/pulse';
-
+@import 'tabit/styles/modules/_manager-dash';
 
 snack-bar-container {
   $snackTopPadding: 14px;
@@ -433,3 +436,4 @@ snack-bar-container {
 .ar {
   text-align: right;
 }
+

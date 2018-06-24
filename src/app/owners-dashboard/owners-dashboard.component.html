@@ -30,6 +30,9 @@
       <button class="s-0" *ngIf="this.sideNavConfig.content.showMySitesBtn" mat-raised-button [routerLink]="['/restaurants', { m: 's'}]">
         <span i18n="owners-dashboard@@mySites">My Sites</span>
       </button>
+      <button class="s-0" mat-raised-button [routerLink]="['/managers-dashboard']">
+        <span i18n="owners-dashboard@@managerDashboard">Manager Dashboard</span>
+      </button>
       <button class="s-0" *ngIf="this.sideNavConfig.content.showLogoutBtn" mat-raised-button (click)="logout()">
         <span i18n="owners-dashboard@@logout">Logout</span>
       </button>

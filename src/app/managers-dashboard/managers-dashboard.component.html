@@ -1,0 +1,114 @@
+
+<mat-sidenav-container class="rtl">
+
+  <mat-sidenav class="flex d-col" #sidenav mode="over">
+    <div class="s-0 header d-flex align-items-center">
+      <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{this.sideNavConfig.header.userInitials}}</button>
+      <div class="ps15">
+        <div class="">{{this.sideNavConfig.header.user?.firstName}} {{this.sideNavConfig.header.user?.lastName}}</div>
+        <div>{{this.sideNavConfig.header.org?.alias || this.sideNavConfig.header.org?.name}}</div>
+      </div>
+    </div>
+
+    <div class="g-1 flex d-col content">
+      <button class="s-0" *ngIf="this.sideNavConfig.content.showMySitesBtn" mat-raised-button [routerLink]="['/restaurants', { m: 's'}]">
+        <span i18n="owners-dashboard@@mySites">My Sites</span>
+      </button>
+      <button class="s-0" mat-raised-button [routerLink]="['/owners-dashboard/home']">
+        <span i18n="owners-dashboard@@ownerDashboard">Owner Dashboard</span>
+      </button>
+      <button class="s-0" *ngIf="this.sideNavConfig.content.showLogoutBtn" mat-raised-button (click)="logout()">
+        <span i18n="owners-dashboard@@logout">Logout</span>
+      </button>
+
+      <div class="versions s-0 flex d-col a-center" style="margin-top: auto;">
+        <div>chef v{{appVersions?.chef}}</div>
+        <div>chef-w v{{appVersions?.wrapper}}</div>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="flex j-sb a-center toolbar">
+      <div class="flex j-start ps15" style="width:20%">
+        <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+      </div>
+      <div class="flex d-col aj-center" style="width:60%;">
+        <div class="flex a-center" style="color:white" (click)="refresh()">
+          <div>{{toolbarConfig.center.caption}}</div>
+          <button *ngIf="toolbarConfig.center.showRefresh" style="color: #c2c9d4;" mat-icon-button>
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="flex j-end pe15" style="width:20%" i18n="@@introductionHeader"></div>
+    </div>
+
+
+
+
+    <!--START CONTENT-->
+    <div class="contentFixed">
+      <block-ui>
+        <div class="content dash-content" *ngIf="criteria.loaded">
+
+          <!--<div class="wrapper-sm" *ngIf="MDS.isHandset"></div>-->
+          <div class="dash-container pos-rlt" [ngClass]="{'bb mt10':MDS.isHandset}">
+            <ul class="nav-tabs-dash-main nav nav-tabs mt15" role="tablist" *ngIf="!MDS.isHandset">
+              <li class="nav-item text-xl" *ngFor="let st of criteria.serviceTypes">
+                <a class="nav-link" [class.active]="criteria.serviceType == st.value" (click)="setServiceType(st)">
+                  <ng-container>{{ st.text | tmpTranslate}}</ng-container>
+                </a>
+              </li>
+            </ul>
+
+            <div *ngIf="MDS.isHandset">
+              <mat-form-field>
+                <mat-select placeholder="{{'managerDash.Service Type' | tmpTranslate}}" [(value)]="criteria.serviceType" (selectionChange)="setServiceType(null)">
+                  <mat-option *ngFor="let st of criteria.serviceTypes" [value]="st.value">
+                    {{ st.text | tmpTranslate}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+
+            <div class="dash-pos-spinner" *ngIf="refreshing">
+              <mat-spinner diameter="45" strokeWidth="2" color="background"></mat-spinner>
+            </div>
+
+            <div class="dash-pos-buttons">
+
+              <div class="cal-container me10">
+                <button class="hidden-sm-up" mat-mini-fab color="background" (click)="picker.open()" [disabled]="refreshing">
+                  <mat-icon>event</mat-icon>
+                </button>
+                <button class="cal-button hidden-xs-down" mat-raised-button (click)="picker.open()" [disabled]="refreshing">
+                  <mat-icon>event</mat-icon>
+                  <span>{{db.isDateClosed ? (db.businessDate | date) : ('managerDash.Today' | tmpTranslate)}}</span>
+                </button>
+                <input matInput [matDatepicker]="picker" [max]="maxDate" [(ngModel)]="tmpDate" (dateChange)="businessDateChange()" placeholder="Choose a date">
+                <mat-datepicker #picker></mat-datepicker>
+              </div>
+
+              <button mat-mini-fab color="background" (click)="doDataUpdate()" [disabled]="db.isDateClosed || refreshing">
+                <mat-icon>refresh</mat-icon>
+              </button>
+            </div>
+          </div>
+
+
+
+          <div class="pos-rlt">
+            <app-manager-dashboard-sales *ngIf="criteria.report == 'sales'"
+                                         class="animated pos-out fade-in-down" [criteria]="criteria" [db]="db" (actionRequest)="actionRequest($event)">
+            </app-manager-dashboard-sales>
+          </div>
+
+        </div>
+      </block-ui>
+    </div>
+    <!--END CONTENT-->
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
