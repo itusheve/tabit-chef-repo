@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import * as moment from 'moment';
-import { Observable } from 'rxjs/Observable';
-import { zip } from 'rxjs/observable/zip';
-import { TrendModel } from '../../model/Trend.model';
-import { DataService } from '../data.service';
-import { OlapEp } from '../ep/olap.ep';
-import { Shift } from '../../model/Shift.model';
+import {Observable} from 'rxjs/Observable';
+import {zip} from 'rxjs/observable/zip';
+import {TrendModel} from '../../model/Trend.model';
+import {DataService} from '../data.service';
+import {OlapEp} from '../ep/olap.ep';
+import {Shift} from '../../model/Shift.model';
 
 
 @Injectable()
@@ -42,29 +42,43 @@ export class TrendsDataService {
                 } else {
                     timeFrom1 = '0000';
                     timeFrom2 = firstShiftStartingTime.format('HHmm');
-                    timeTo2 = '2359';
+                    timeTo2 = '2345';
                     //console.info(`Trends: Current: Last 4: Current Rest Time < First Shift Starting Time`);
                 }
-                timeTo1 = currentRestTime.format('HHmm');
+
+                timeTo1 = this.roundToClosestDimensionTime(currentRestTime);
+
                 //console.info(`Trends: Current: Last 4: query TimeFrom1: ${timeFrom1}`);
                 //console.info(`Trends: Current: Last 4: query TimeTo1: ${timeTo1}`);
                 // if (timeTo2) {
-                    //console.info(`Trends: Current: Last 4: performing Query 1 + Query 2`);
+                //console.info(`Trends: Current: Last 4: performing Query 1 + Query 2`);
                 // } else {
-                    //console.info(`Trends: Current: Last 4: performing only Query 1`);
+                //console.info(`Trends: Current: Last 4: performing only Query 1`);
                 // }
 
                 const dateFrom: moment.Moment = moment(currentBd).subtract(6, 'weeks');
                 const dateTo: moment.Moment = moment(currentBd);
 
                 const qAll = [];//TODO a high level dac should'nt call directly an EP. only data.service should.
-                qAll.push(this.olapEp.getDailyData({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime'}));
+                qAll.push(this.olapEp.getDailyData({
+                    timeFrom: timeFrom1,
+                    timeTo: timeTo1,
+                    dateFrom: dateFrom,
+                    dateTo: dateTo,
+                    timeType: 'firingTime'
+                }));
                 if (timeFrom2) {
-                    qAll.push(this.olapEp.getDailyData({ timeFrom: timeFrom2, timeTo: timeTo2, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime'}));
+                    qAll.push(this.olapEp.getDailyData({
+                        timeFrom: timeFrom2,
+                        timeTo: timeTo2,
+                        dateFrom: dateFrom,
+                        dateTo: dateTo,
+                        timeType: 'firingTime'
+                    }));
                 }
 
                 Promise.all(qAll)
-                    .then(dailyDataArr=>{
+                    .then(dailyDataArr => {
 
                         let dailyData1 = dailyDataArr[0];
                         let dailyData2;
@@ -147,9 +161,9 @@ export class TrendsDataService {
                 let timeFrom1, timeFrom2, timeTo1, timeTo2;
 
                 const currentBd: moment.Moment = data[0];
-                const shifts:Shift[] = data[1];
+                const shifts: Shift[] = data[1];
                 const currentBusinessDaySales = data[2].sales;
-                const currentRestTime:moment.Moment = moment(data[3]);
+                const currentRestTime: moment.Moment = moment(data[3]);
 
                 const firstShiftStartingTime = shifts.length ? moment(shifts[0].startTime) : moment().hour(6).minute(0).seconds(0);
 
@@ -158,17 +172,29 @@ export class TrendsDataService {
                 } else {
                     timeFrom1 = '0000';
                     timeFrom2 = firstShiftStartingTime.format('HHmm');
-                    timeTo2 = '2359';
+                    timeTo2 = '2345';
                 }
-                timeTo1 = currentRestTime.format('HHmm');
+                timeTo1 = this.roundToClosestDimensionTime(currentRestTime);
 
                 const dateFrom: moment.Moment = moment(currentBd).subtract(1, 'year').subtract(1, 'month');
                 const dateTo: moment.Moment = moment(currentBd).subtract(1, 'year').add(1, 'month');
 
                 const qAll = [];
-                qAll.push(this.olapEp.getDailyData({ timeFrom: timeFrom1, timeTo: timeTo1, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
+                qAll.push(this.olapEp.getDailyData({
+                    timeFrom: timeFrom1,
+                    timeTo: timeTo1,
+                    dateFrom: dateFrom,
+                    dateTo: dateTo,
+                    timeType: 'firingTime'
+                }));
                 if (timeFrom2) {
-                    qAll.push(this.olapEp.getDailyData({ timeFrom: timeFrom2, timeTo: timeTo2, dateFrom: dateFrom, dateTo: dateTo, timeType: 'firingTime' }));
+                    qAll.push(this.olapEp.getDailyData({
+                        timeFrom: timeFrom2,
+                        timeTo: timeTo2,
+                        dateFrom: dateFrom,
+                        dateTo: dateTo,
+                        timeType: 'firingTime'
+                    }));
                 }
 
                 Promise.all(qAll)
@@ -228,7 +254,7 @@ export class TrendsDataService {
             });
     }).publishReplay(1).refCount();
 
-    private previousBd_last4_trend$: Observable<TrendModel> = Observable.create(obs=>{
+    private previousBd_last4_trend$: Observable<TrendModel> = Observable.create(obs => {
         const trend = new TrendModel();
         trend.name = 'previousBdLast4';
         trend.description = 'previousBdLast4 description';
@@ -268,7 +294,7 @@ export class TrendsDataService {
                 }
 
                 if (found) {
-                    if (sumTotalSales===0) {
+                    if (sumTotalSales === 0) {
                         trend.status = 'nodata';
                         obs.next(trend);
                         return;
@@ -373,7 +399,7 @@ export class TrendsDataService {
                 const currentBd: moment.Moment = moment(data[0]);
                 //console.info(`Trends: MTD: Last Year: Current Business Day is: ${currentBd.format('DD/MM/YYYY')}`);
 
-                if (currentBd.date()===1) {
+                if (currentBd.date() === 1) {
                     trend.status = 'nodata';
                     obs.next(trend);
                     return;
@@ -394,8 +420,8 @@ export class TrendsDataService {
                 }
 
                 const qAll = [];
-                qAll.push(this.olapEp.getDailyData({ dateFrom: dateFrom1, dateTo: dateTo1 }));
-                qAll.push(this.olapEp.getDailyData({ dateFrom: dateFrom2, dateTo: dateTo2 }));
+                qAll.push(this.olapEp.getDailyData({dateFrom: dateFrom1, dateTo: dateTo1}));
+                qAll.push(this.olapEp.getDailyData({dateFrom: dateFrom2, dateTo: dateTo2}));
 
                 Promise.all(qAll)
                     .then(dailyDataArr => {
@@ -444,18 +470,18 @@ export class TrendsDataService {
 
     /* stream of all the trends */
     public trends$: Observable<{
-            currentBd: {
-                last4: TrendModel,
-                lastYear: TrendModel
-            },
-            previousBd: {
-                last4: TrendModel,
-                lastYear: TrendModel
-            },
-            mtd: {
-                lastYear: TrendModel
-            }
-        }> = Observable.create(obs=>{
+        currentBd: {
+            last4: TrendModel,
+            lastYear: TrendModel
+        },
+        previousBd: {
+            last4: TrendModel,
+            lastYear: TrendModel
+        },
+        mtd: {
+            lastYear: TrendModel
+        }
+    }> = Observable.create(obs => {
 
         let trends = {
             currentBd: {
@@ -472,16 +498,16 @@ export class TrendsDataService {
         };
 
 
-            //postponing the trends calculation as they are too heavy on start up
-            setTimeout(() => {
-                zip(
-                    this.currentBd_last4_trend$,
-                    this.previousBd_last4_trend$,
-                    this.currentBd_lastYear_trend$,
-                    this.previousBd_lastYear_trend$,
-                    this.mtd_lastYear_trend$,
-                )
-                .subscribe(trendsArr=>{
+        //postponing the trends calculation as they are too heavy on start up
+        setTimeout(() => {
+            zip(
+                this.currentBd_last4_trend$,
+                this.previousBd_last4_trend$,
+                this.currentBd_lastYear_trend$,
+                this.previousBd_lastYear_trend$,
+                this.mtd_lastYear_trend$,
+            )
+                .subscribe(trendsArr => {
                     trends.currentBd.last4 = trendsArr[0];
                     trends.previousBd.last4 = trendsArr[1];
                     trends.currentBd.lastYear = trendsArr[2];
@@ -490,16 +516,17 @@ export class TrendsDataService {
 
                     obs.next(trends);
                 });
-            }, 2500);
-        }).publishReplay(1).refCount();
+        }, 2500);
+    }).publishReplay(1).refCount();
 
-        constructor(private dataService: DataService, private olapEp: OlapEp) {}
+    constructor(private dataService: DataService, private olapEp: OlapEp) {
+    }
 
     /*
         the func returns a TrendModel that compares the sales of the month to the sales of the same month in previous year.
     */
     public month_lastYear_trend(month: moment.Moment): Promise<TrendModel> {
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
             const trend = new TrendModel();
             trend.name = 'completeMonthLastYear';
             trend.description = 'completeMonthLastYear description';
@@ -508,7 +535,7 @@ export class TrendsDataService {
             const prevYearMonth = moment(month).subtract(1, 'year').startOf('month');
 
             zip(this.dataService.olapDataByMonths$, this.dataService.dailyDataLimits$)
-                .subscribe(data=>{
+                .subscribe(data => {
                     const olapDataByMonths = data[0];
                     const dailyDataLimits = data[1];
 
@@ -617,8 +644,8 @@ export class TrendsDataService {
 
                     const startOfMonth = moment(cbd).startOf('month');
 
-                    this.dataService.getMonthForecastData({ calculationBd: startOfMonth })
-                        .then(startOfMonthForecastData=>{
+                    this.dataService.getMonthForecastData({calculationBd: startOfMonth})
+                        .then(startOfMonthForecastData => {
                             if (!startOfMonthForecastData) {
                                 trend.status = 'nodata';
                                 resolve(trend);
@@ -664,11 +691,11 @@ export class TrendsDataService {
 
             const qAll = [
                 this.dataService.getMonthlyData(month),
-                this.dataService.getMonthForecastData({ calculationBd: startOfMonth })
+                this.dataService.getMonthForecastData({calculationBd: startOfMonth})
             ];
 
             Promise.all(qAll)
-                .then(data=>{
+                .then(data => {
                     const monthData = data[0];
                     const forecastData = data[1];
                     if (!forecastData || !forecastData.sales || !monthData.sales) {
@@ -716,7 +743,7 @@ export class TrendsDataService {
                     const startOfMonth = moment(cbd).startOf('month');
                     const upToBd = moment(cbd).subtract(1, 'day');
 
-                    this.dataService.getMonthForecastData({ calculationBd: startOfMonth, upToBd: upToBd })
+                    this.dataService.getMonthForecastData({calculationBd: startOfMonth, upToBd: upToBd})
                         .then(startOfMonthForecastData => {
                             if (!startOfMonthForecastData || !startOfMonthForecastData.sales) {
                                 trend.status = 'nodata';
@@ -742,14 +769,14 @@ export class TrendsDataService {
                 });
 
 
-            });
+        });
     }
 
     /*
         the func returns a Promise that resolves with an object consisting of 3 TrendModels for 3 measures: sales, diners and ppa.
         for each measure, its corresponding TrendModel compares the business day's ('bd') measure against the average measure from up to 4 previous business days with the same week day.
     */
-    public bd_to_last_4_bd(bd: moment.Moment): Promise<{sales: TrendModel, diners: TrendModel, ppa: TrendModel}> {
+    public bd_to_last_4_bd(bd: moment.Moment): Promise<{ sales: TrendModel, diners: TrendModel, ppa: TrendModel }> {
         return new Promise((resolve, reject) => {
             const trend_s = new TrendModel();
             const trend_d = new TrendModel();
@@ -843,6 +870,25 @@ export class TrendsDataService {
                     });
                 });
         });
+    }
+
+    public roundToClosestDimensionTime(time: moment.Moment) {
+
+        let minutes = time.minutes();
+        if (minutes >= 52) {
+            time.minutes(45);
+        } else if(minutes < 7) {
+            time.minutes(45);
+            time.subtract(1, 'hours');
+        } else if (minutes >= 7 && minutes < 22) {
+            time.minutes(0);
+        } else if (minutes >= 22 && minutes < 37) {
+            time.minutes(15);
+        } else if (minutes >= 37 && minutes < 52) {
+            time.minutes(30);
+        }
+
+        return time.format('HHmm');
     }
 
 }
