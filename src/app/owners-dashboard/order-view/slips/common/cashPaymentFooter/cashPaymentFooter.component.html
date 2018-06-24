@@ -1,0 +1,21 @@
+<!-- PAID IN CREDIT FROM -->
+<div class="row">
+    <div class="col-8">
+        <span i18n="@@paidInCreditFrom">Paid in credit from</span>
+        <span>{{payment.ISSUER}}</span>
+    </div>
+    <div class="col-3">
+        <span *ngIf="payment.P_AMOUNT">{{(payment.P_AMOUNT ) | number:'1.2-2'}}</span>
+    </div>
+</div>
+
+<!-- PAID IN CREDIT FROM -->
+
+<div class="row" *ngIf="payment.P_CHANGE">
+    <div class="col-8">
+        <span i18n="@@change">Change</span>
+    </div>
+    <div class="col-3">
+        <span>{{payment.P_CHANGE | number:'1.2-2'}}</span>
+    </div>
+</div>

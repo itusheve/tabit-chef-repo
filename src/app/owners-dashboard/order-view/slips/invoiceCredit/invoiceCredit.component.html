@@ -6,30 +6,6 @@
 
     <hr />
 
-    <!-- PAID IN CREDIT FROM -->
-    <div class="row">
-        <div class="col-8">
-            <span i18n="@@paidInCreditFrom">Paid in credit from</span>
-            <!-- <span>{{printDataOld.ISSUER}}</span> -->
-            <span>{{data.issuerName}}</span>
-        </div>
-        <div class="col-3">
-            <span>{{(data.amount/100) | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
-
     <app-order-credit-transaction-data [printData]="invoice"></app-order-credit-transaction-data>
-
-    <!-- CHANGE -->
-    <div class="row" *ngIf="data.cashback">
-        <div class="col-8">
-            <span i18n="@@change">Change</span>
-        </div>
-        <div class="col-3">
-            <span>{{(data.cashback/100) | number:'1.2-2'}}</span>
-        </div>
-    </div>
-
 
 </div>

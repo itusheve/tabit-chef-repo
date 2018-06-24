@@ -11,6 +11,10 @@
         <span i18n="@@amount">Amount</span>:&nbsp;
         <span>{{mediaExchangeData.P_AMOUNT | number:'1.2-2'}}</span>
     </div>
+    <div *ngIf="mediaExchangeData.BALANCE_AMOUNT" class="flex bold-txt">
+        <span i18n="@@balanceAmount">Balance</span>:&nbsp;
+        <span>{{mediaExchangeData.BALANCE_AMOUNT | number:'1.2-2'}}</span>
+    </div>
     <div *ngIf="mediaExchangeData.PRINT_MESSAGE" class="flex center-txt">
         <div [innerHTML]="mediaExchangeData.PRINT_MESSAGE"></div>
     </div>

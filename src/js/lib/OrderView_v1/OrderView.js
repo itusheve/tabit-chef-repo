@@ -98,7 +98,6 @@ const OrderViewService = (function () {
             let items = [];
             let oth = [];
 
-            debugger;
             if (offersList && offersList.length > 0) {
                 offersList.forEach(offer => {
 
@@ -121,7 +120,12 @@ const OrderViewService = (function () {
                             oth.push(item)
                         } else {
 
-                            if (offer.OFFER_AMOUNT !== 0) { // if the offer amount is 0 not need to show 
+                            if (offer.OFFER_CALC_AMT !== 0) { // if the offer amount is 0 not need to show 
+                                item.amount = utils.toFixedSafe(offer.OFFER_CALC_AMT, 2)
+                                items.push(item);
+                            }
+
+                            if (offer.OPEN_PRICE) {
                                 item.amount = utils.toFixedSafe(offer.OFFER_AMOUNT, 2)
                                 items.push(item);
                             }
@@ -141,14 +145,28 @@ const OrderViewService = (function () {
                         if (offer.EXTRA_CHARGE_LIST && offer.EXTRA_CHARGE_LIST.length > 0) {
                             offer.EXTRA_CHARGE_LIST.forEach(extraCharge => {
 
+                                if (extraCharge.EXTRA_CHARGE_MODIFIERS_LIST && extraCharge.EXTRA_CHARGE_MODIFIERS_LIST.length > 0) {
+                                    extraCharge.EXTRA_CHARGE_MODIFIERS_LIST.forEach(modifier => {
+                                        items.push({
+                                            isItem: true,
+                                            name: modifier.MODIFIER_NAME,
+                                            qty: null,
+                                            amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(modifier.MODIFIER_PRICE, 2)
+                                        });
 
-                                items.push({
-                                    isItem: true,
-                                    name: extraCharge.ITEM_NAME,
-                                    qty: null,
-                                    amount: utils.toFixedSafe(extraCharge.ITEM_AMOUNT, 2)
-                                })
+                                        if (modifier.MODIFIER_DISCOUNTS && modifier.MODIFIER_DISCOUNTS.length > 0) {
+                                            modifier.MODIFIER_DISCOUNTS.forEach(discount => {
+                                                items.push({
+                                                    isItem: true,
+                                                    name: discount.DISCOUNT_NAME,
+                                                    qty: null,
+                                                    amount: item.ON_THE_HOUSE ? translateService.getText('OTH') : utils.toFixedSafe(discount.DISCOUNT_AMOUNT * -1, 2)
+                                                });
+                                            });
+                                        }
 
+                                    })
+                                }
                                 if (extraCharge.ITEM_DISCOUNTS && extraCharge.ITEM_DISCOUNTS.length > 0) {
                                     extraCharge.ITEM_DISCOUNTS.forEach(discount => {
                                         items.push({
@@ -442,7 +460,7 @@ const OrderViewService = (function () {
 
             }
 
-            if (payment.P_TENDER_TYPE === 'creditCard') {
+            if (payment.P_TENDER_TYPE === 'creditCard' || payment.P_TENDER_TYPE === 'gidtCard') {
                 paymentName = refund !== '' ? `${refund} (${payment.CARD_TYPE} ${payment.LAST_4})` : `${payment.CARD_TYPE} ${payment.LAST_4}`;
             } else {
                 paymentName = `${refund} ${payment.P_NAME}`;
@@ -1548,6 +1566,7 @@ const OrderViewService = (function () {
             }
             return result;
         }
+
 
         function _resolveTimeline(order) {
 

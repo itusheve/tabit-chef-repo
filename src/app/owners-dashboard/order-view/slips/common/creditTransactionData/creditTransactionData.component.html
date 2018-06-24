@@ -1,3 +1,15 @@
+<!-- PAID IN CREDIT FROM -->
+<div class="row">
+    <div class="col-8">
+        <span i18n="@@paidInCreditFrom">Paid in credit from</span>
+        <span>{{payment.ISSUER}}</span>
+    </div>
+    <div class="col-3">
+        <span *ngIf="payment.P_AMOUNT">{{(payment.P_AMOUNT ) | number:'1.2-2'}}</span>
+    </div>
+</div>
+
+
 <!-- LAST 4 -->
 <div class="flex j-sb d-block" *ngIf="collections.CREDIT_PAYMENTS[0].LAST_4">
     <span i18n="slips@@last4">LAST 4</span>
@@ -29,4 +41,14 @@
 <div class="flex j-sb d-block" *ngIf="collections.CREDIT_PAYMENTS[0].CONFIRMATION_NUMBER">
     <span class="text-upper" i18n="slips@@approvalNumber">Approval no.</span>
     <span>{{collections.CREDIT_PAYMENTS[0].CONFIRMATION_NUMBER}}</span>
+</div>
+
+<!-- CHANGE -->
+<div class="row" *ngIf="payment.P_CHANGE">
+    <div class="col-8">
+        <span i18n="@@change">Change</span>
+    </div>
+    <div class="col-3">
+        <span *ngIf="payment.P_CHANGE">{{(payment.P_CHANGE ) | number:'1.2-2'}}</span>
+    </div>
 </div>

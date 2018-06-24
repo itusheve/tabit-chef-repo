@@ -17,6 +17,7 @@ export class OrderMediaExchangeDetailsComponent implements OnInit {
         P_NAME: undefined,
         CARD_NUMBER: undefined,
         P_AMOUNT: undefined,
+        BALANCE_AMOUNT: undefined
     };
 
     private Enums = {
@@ -31,20 +32,17 @@ export class OrderMediaExchangeDetailsComponent implements OnInit {
 
     ngOnInit() {
 
-        var v = this.printData;
-        debugger;
-
         this.variables = this.printData.variables;
         this.collections = this.printData.collections;
 
         if (this.collections.PAYMENT_LIST && this.collections.PAYMENT_LIST.length > 0) {
             this.collections.PAYMENT_LIST.forEach(payment => {
                 if (payment.P_TENDER_TYPE === this.Enums.TENDER_TYPE.GIFT_CARD) {
-                    debugger;
                     this.mediaExchangeData.PRINT_MESSAGE = payment.PRINT_MESSAGE.replace(/\n/ig, '<br/>');
                     this.mediaExchangeData.P_NAME = payment.P_NAME;
                     this.mediaExchangeData.CARD_NUMBER = payment.CARD_NUMBER;
                     this.mediaExchangeData.P_AMOUNT = payment.P_AMOUNT;
+                    this.mediaExchangeData.BALANCE_AMOUNT = payment.BALANCE_AMOUNT;
                 }
             });
         }
