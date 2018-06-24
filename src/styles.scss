@@ -17,7 +17,7 @@ html, body {
   height: 100vh;
   padding: 0;
   margin: 0;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Assistant', sans-serif;
   font-size: $base-font-size;
   -webkit-font-smoothing: antialiased;
   color: $fontColor;
@@ -33,7 +33,7 @@ html, body {
 
 mat-form-field.mat-form-field {
   font-size: 14px;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Assistant', sans-serif;
 }
 
 button {
@@ -98,7 +98,7 @@ button {
 }
 
 table {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Assistant', sans-serif;
   font-size: $base-font-size;
 
   &.chf-tbl {
@@ -285,15 +285,15 @@ body[dir="rtl"] {
 
 
 .dx-widget, dx-datagrid, dx-pie-chart, dx-chart {
-  font-family: 'Open Sans', sans-serif !important;
+  font-family: 'Assistant', sans-serif !important;
 }
 
 dx-chart svg text {
-  font-family: 'Open Sans', sans-serif !important;
+  font-family: 'Assistant', sans-serif !important;
 }
 
 dx-pie-chart svg text {
-  font-family: 'Open Sans', sans-serif !important;
+  font-family: 'Assistant', sans-serif !important;
 }
 
 $navigatorHeight: 50px;
@@ -348,38 +348,38 @@ i.icon {
   background-repeat: no-repeat;
 
   &.up {
-    background-image: url(/assets/icons/up.svg);
+    background-image: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/up.svg);
   }
   &.down {
-    background-image: url(/assets/icons/down.svg);
+    background-image: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/down.svg);
   }
   &.user {
-    background-image: url(/assets/icons/user.svg);
+    background-image: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/user.svg);
   }
   &.iconOperationalAndCancellations {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/OperationalAndCancellation.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/OperationalAndCancellation.svg);
   }
   &.iconRetention {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Retention.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Retention.svg);
   }
   &.iconOrganizational {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Organizational.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Organizational.svg);
   }
   &.iconPromotions {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Promotion.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Promotion.svg);
   }
 
   &.iconOperationalAndCancellations_off {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/OperationalAndCancellation_off.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/OperationalAndCancellation_off.svg);
   }
   &.iconRetention_off {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Retention_off.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Retention_off.svg);
   }
   &.iconOrganizational_off {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Organizational_off.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Organizational_off.svg);
   }
   &.iconPromotions_off {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Promotion_off.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Promotion_off.svg);
   }
 }
 
@@ -429,7 +429,7 @@ snack-bar-container {
 
   simple-snack-bar {
     font-size: $base-font-size!important;
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: inherit!important;
   }
 }
 
