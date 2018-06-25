@@ -204,7 +204,7 @@ export class MdsSalesSettingsDialog {
     this.timeMode = this.data.criteria.timeMode;
 
     this.shifts = [];
-    _.each(['all', 'morning', 'afternoon', 'evening', 'start', 'end'], s => {
+    _.each(['all', 'morning', 'afternoon', 'evening', 'start', 'end', 'between'], s => {
       let o = this.data.criteria.timeModes[s];
       if (o) {
         o.value = s;

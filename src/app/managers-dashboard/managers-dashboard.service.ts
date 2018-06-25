@@ -214,13 +214,7 @@ export class ManagersDashboardService {
           users: data.users,
           itemGroups: [],
           itemGroupsId: null,
-          orders: [],
-          timeOptions: [
-            //{ value: 'between', text: 'TIME_RANGE', textSmall: 'BETWEEN' },
-            { value: 'all', text: 'ALL_DAY', textSmall: 'ALL_DAY' },
-            { value: 'start', text: 'TIME_RANGE_FROM', textSmall: 'TIME_RANGE_FROM' },
-            { value: 'end', text: 'TIME_RANGE_TO', textSmall: 'TIME_RANGE_TO' },
-          ]
+          orders: []
         };
         if (data.itemGroups && data.itemGroups._id) {
           db.itemGroupsId = data.itemGroups._id;
@@ -430,10 +424,11 @@ export class ManagersDashboardService {
       newOrder.closed = false;
     }
 
-    if (newOrder.countDiners && _.get(order, 'paymentSummary.totalAmount', 0) == 0) {
+    //only on closed
+    if (newOrder.closed && newOrder.countDiners && _.get(order, 'paymentSummary.totalAmount', 0) == 0) {
       newOrder.countDiners = false;
     }
-
+    /*TBD*/
     if (order.isStaffTable) {
       newOrder.isStaffTable = true;
     } else {
@@ -490,6 +485,11 @@ export class ManagersDashboardService {
     newOrder.totalNet = totalNet;
 
     if (newOrder.onTheHouse) newOrder.totalNet = 0;
+    if (newOrder.countDiners && newOrder.totalNet == 0) {
+      newOrder.countDiners = false;
+    }
+
+    newOrder.$order = order;
 
     function prepareOrderItemBy(iid) {
       if (!order.courses) return;
@@ -504,10 +504,7 @@ export class ManagersDashboardService {
       if (fired) return fired.by;
     };
 
-    if (!newOrder.countDiners) {
-      let a = 1;
-      //debugger;
-    }
+
 
   };
 

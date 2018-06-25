@@ -70,7 +70,8 @@ export class ManagersDashboardComponent implements OnInit {
     timeModes: {
       all: { mode: 'all', text: tmpTranslations.get('managerDash.ALL_DAY'), ro: true },
       start: { mode: 'start', text: tmpTranslations.get('managerDash.TIME_RANGE_FROM'), dateFrom: new Date(1970, 0, 1, 6, 0, 0), timeFrom: 360, ro: false, sd:true},
-      end: { mode: 'end', text: tmpTranslations.get('managerDash.TIME_RANGE_TO'), dateTo: new Date(1970, 0, 1, 20, 0, 0), timeTo: 2400, ro: false, sd: true}
+      end: { mode: 'end', text: tmpTranslations.get('managerDash.TIME_RANGE_TO'), dateTo: new Date(1970, 0, 1, 20, 0, 0), timeTo: 2400, ro: false, sd: true },
+      between: { mode: 'between', text: tmpTranslations.get('managerDash.TIME_RANGE_BETWEEN'), dateFrom: new Date(1970, 0, 1, 6, 0, 0), timeFrom: 360, dateTo: new Date(1970, 0, 1, 20, 0, 0), timeTo: 2400, ro: false, sd: true }
     },
     netGrossOpts: [
       { value: true, text: tmpTranslations.get('managerDash.TOTAL_NET') },
@@ -304,6 +305,8 @@ export class ManagersDashboardComponent implements OnInit {
     arrItemsAVG.push(itemsTotal);
     arrItemsSales.push(itemsSalesTotal);
 
+
+
     function isOrderRelevant(order) {
       if (order.isStaffTable || order.serviceType != c.serviceType) return false;
       var isIntime = false;
@@ -311,8 +314,8 @@ export class ManagersDashboardComponent implements OnInit {
       switch (shift.mode) {
         case "all": isIntime = true; break;
         case "start": isIntime = (order.fromTime >= shift.timeFrom); break;
-        case "end": isIntime = (order.fromTime <= shift.timeTo); break;
-        case "between": isIntime = (order.fromTime >= shift.timeFrom && order.fromTime <= shift.timeTo); break;
+        case "end": isIntime = (order.fromTime < shift.timeTo); break;
+        case "between": isIntime = (order.fromTime >= shift.timeFrom && order.fromTime < shift.timeTo); break;
       }
 
       if (isIntime) {
@@ -324,8 +327,11 @@ export class ManagersDashboardComponent implements OnInit {
 
     }
 
+    var orders = [];
     _.each(db.orders, function (order, i) {
       if (isOrderRelevant(order)) {
+        orders.push(order);
+
         var isWaiterExcluded = c.excludedUsers.indexOf(order.waiter) !== -1;
         var amount = order[totalAtt]
         if (amount > 0) {
@@ -491,6 +497,7 @@ export class ManagersDashboardComponent implements OnInit {
     c.dinersAVG = this.sortMdashList('dinersAVG', arr);
     c.itemsAVG = this.sortMdashList('itemsAVG', arrItemsAVG);
     c.ItemsSales = this.sortMdashList('ItemsSales', arrItemsSales);
+    console.log(JSON.stringify(orders));
   };
 
 

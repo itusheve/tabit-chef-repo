@@ -27,10 +27,11 @@
             {{shift.desc || ''}}
           </div>
           <div *ngIf="!shift.ro">
-            <div *ngIf="shift.mode == 'start'">
+            <div *ngIf="shift.mode == 'start' || shift.mode == 'between'">
               <dx-date-box [(value)]="shift.dateFrom" type="time" width="150px" displayFormat="HH:mm" (onValueChanged)="calcTimes(shift, 'dateFrom', $event)"></dx-date-box>
             </div>
-            <div *ngIf="shift.mode == 'end'">
+            <div *ngIf="shift.mode == 'between'" class="text-center font-weight-bold text-xs">{{'managerDash.To' | tmpTranslate}}</div>
+            <div *ngIf="shift.mode == 'end' || shift.mode == 'between'">
               <dx-date-box [(value)]="shift.dateTo"  type="time" width="150px" displayFormat="HH:mm" (onValueChanged)="calcTimes(shift, 'dateTo', $event)"></dx-date-box>
             </div>
           </div>

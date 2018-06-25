@@ -177,6 +177,7 @@ const tmpTranslations_ = {
           "ACTIVITY_DAYS": "ימי פעילות",
           "TIME_RANGE_FROM": "משעה",
           "TIME_RANGE_TO": "עד שעה",
+          "TIME_RANGE_BETWEEN": "בין השעות",
           "ALL_DAY": "כל היום",
           "SERVER": "מלצר",
           "Today": "היום",
@@ -185,7 +186,8 @@ const tmpTranslations_ = {
           "Remove": "הסר",
           "Apply": "בצע",
           "Service Type": "סוג שרות",
-          "Totals": "סיכומים"
+          "Totals": "סיכומים",
+          "To": "עד"
         }
     },
     'en-US': {
@@ -327,6 +329,7 @@ const tmpTranslations_ = {
           "ACTIVITY_DAYS": "Activity days",
           "TIME_RANGE_FROM": "from hour",
           "TIME_RANGE_TO": "to hour",
+          "TIME_RANGE_BETWEEN": "Between",
           "ALL_DAY": "All Day",
           "SERVER": "Server",
           "Today": "Today",
@@ -335,7 +338,8 @@ const tmpTranslations_ = {
           "Remove": "Remove",
           "Apply": "Apply",
           "Service Type": "Service Type",
-          "Totals": "Totals"
+          "Totals": "Totals",
+          "To": "To"
         }
     }
 };
