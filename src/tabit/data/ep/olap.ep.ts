@@ -70,7 +70,8 @@ export class OlapEp {
         this.url$ = new ReplaySubject<any>();
 
         const org = JSON.parse(window.localStorage.getItem('org'));
-        this.url$.next(`${this.baseUrl}?customdata=S${org.id}`);
+        const token = JSON.parse(window.localStorage.getItem('token'));
+        this.url$.next(`${this.baseUrl}?customdata=S${org.id}&token=${token.access_token}`);
 
         return this.url$;
     }

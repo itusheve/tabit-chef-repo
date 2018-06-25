@@ -190,8 +190,6 @@ export class AuthService {
                             reject(e);
                         });
                 }
-
-
             }
         });
     }
