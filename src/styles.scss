@@ -3,6 +3,15 @@
 @import "fonts";
 @import "./tabit/styles/material-theme.scss";
 
+@import '~@angular/material/theming';
+
+/* Landscape */
+/*@media only screen and (orientation: landscape) {
+    body{
+        zoom:1.1; text-size-adjust: auto
+    }
+}*/
+
 html, body {
   width: 100vw;
   height: 100vh;
@@ -22,13 +31,18 @@ html, body {
 // TLA:
 .mat-button:hover .mat-button-focus-overlay {opacity:0!important}
 
+mat-form-field.mat-form-field {
+  font-size: 14px;
+  font-family: 'Assistant', sans-serif;
+}
+
 button {
   cursor: pointer;
 }
 
 .widget {
   display: block;
-  padding: 15px 12px;
+  padding: 3px 16px;
   margin-bottom: 10px;
   background-color: #fff;
   color: #343E56;
@@ -128,11 +142,11 @@ table {
         padding: 8px 3px;
 
         &:first-child {
-          padding-right: 12px;
+          padding-left: 12px;
         }
 
         &:last-child {
-          padding-left: 12px;
+          padding-right: 12px;
         }
       }
 
@@ -145,11 +159,11 @@ table {
           padding: 8px 2px;
 
           &:first-child {
-            padding-right: 10px;
+            padding-left: 10px;
           }
 
           &:last-child {
-              padding-left: 10px;
+            padding-right: 10px;
           }
         }
       }
@@ -161,11 +175,11 @@ table {
           padding: 8px 1px;
 
           &:first-child {
-            padding-right: 8px;
+            padding-left: 8px;
           }
 
           &:last-child {
-              padding-left: 8px;
+            padding-right: 8px;
           }
         }
       }
@@ -177,11 +191,11 @@ table {
           padding: 8px 3px;
 
           &:first-child {
-            padding-right: 3px;
+            padding-left: 3px;
           }
 
           &:last-child {
-              padding-left: 3px;
+            padding-right: 3px;
           }
         }
       }
@@ -193,16 +207,15 @@ table {
           padding: 8px 0px;
 
           &:first-child {
-            padding-right: 0px;
+            padding-left: 0px;
           }
 
           &:last-child {
-              padding-left: 0px;
+            padding-right: 0px;
           }
         }
       }
     }
-
     &.chf-tbl-row-oriented {
       tr {
         td {
@@ -215,6 +228,61 @@ table {
 
   }
 }
+
+body[dir="rtl"] {
+  table.chf-tbl {
+    td, th {
+      &:first-child {
+        padding-right: 12px;
+      }
+      &:last-child {
+        padding-left: 12px;
+      }
+    }
+    &.chf-tbl-smaller {
+      td, th {
+        &:first-child {
+          padding-right: 10px;
+        }
+        &:last-child {
+            padding-left: 10px;
+        }
+      }
+    }
+    &.chf-tbl-x-smaller {
+      td, th {
+        &:first-child {
+          padding-right: 8px;
+        }
+
+        &:last-child {
+            padding-left: 8px;
+        }
+      }
+    }
+    &.chf-tbl-xx-smaller {
+      td, th {
+        &:first-child {
+          padding-right: 3px;
+        }
+        &:last-child {
+            padding-left: 3px;
+        }
+      }
+    }
+    &.chf-tbl-xxx-smaller {
+      td, th {
+        &:first-child {
+          padding-right: 0px;
+        }
+        &:last-child {
+            padding-left: 0px;
+        }
+      }
+    }
+  }
+}
+
 
 .dx-widget, dx-datagrid, dx-pie-chart, dx-chart {
   font-family: 'Assistant', sans-serif !important;
@@ -278,30 +346,40 @@ i.icon {
   height: $iconSize;
   display: block;
   background-repeat: no-repeat;
+
+  &.up {
+    background-image: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/up.svg);
+  }
+  &.down {
+    background-image: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/down.svg);
+  }
+  &.user {
+    background-image: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/user.svg);
+  }
   &.iconOperationalAndCancellations {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/OperationalAndCancellation.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/OperationalAndCancellation.svg);
   }
   &.iconRetention {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Retention.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Retention.svg);
   }
   &.iconOrganizational {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Organizational.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Organizational.svg);
   }
   &.iconPromotions {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Promotion.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Promotion.svg);
   }
 
   &.iconOperationalAndCancellations_off {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/OperationalAndCancellation_off.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/OperationalAndCancellation_off.svg);
   }
   &.iconRetention_off {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Retention_off.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Retention_off.svg);
   }
   &.iconOrganizational_off {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Organizational_off.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Organizational_off.svg);
   }
   &.iconPromotions_off {
-    background: url(https://chef-cordova-prod.herokuapp.com/assets/icons/Promotion_off.svg);
+    background: url(https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/assets/icons/Promotion_off.svg);
   }
 }
 
@@ -353,5 +431,9 @@ snack-bar-container {
     font-size: $base-font-size!important;
     font-family: inherit!important;
   }
+}
+
+.ar {
+  text-align: right;
 }
 

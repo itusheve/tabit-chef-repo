@@ -19,8 +19,6 @@ export class OrderGiftCardDetailsComponent implements OnInit {
 
     ngOnInit() {
 
-
-        debugger;
         this.isRefund = this.printData.isRefund;
         this.variables = this.printData.data.printData.variables;
         this.collections = this.printData.data.printData.collections;

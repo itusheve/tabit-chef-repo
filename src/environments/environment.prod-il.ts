@@ -6,8 +6,8 @@ export const environment = {
     baseUrl: 'https://ros-office-beta.herokuapp.com/'
   },
   olapConfig: {//IL PROD CUBE
-    baseUrl: 'https://analytics.tabit.cloud/olapproxy/proxy.ashx',
-    catalog: 'ssas_tabit_prod',
-    cube: 'tabit_sales',
+    baseUrl: 'https://analytics-dev.tabit.cloud/olapproxy/proxy.ashx',
+    catalog: 'isrProd',
+    cube: 'tlogs',
   }
 };

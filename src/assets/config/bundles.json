@@ -1,21 +1,21 @@
 {
   "production":{
-    "version": "1.0.45",
+    "version": "1.0.46",
     "bundles":[
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Assistant",
-      "https://chef.tabit-dev.com/styles.bundle.css",
-      "https://chef.tabit-dev.com/inline.bundle.js",
-      "https://chef.tabit-dev.com/polyfills.bundle.js",
-      "https://chef.tabit-dev.com/scripts.bundle.js",
-      "https://chef.tabit-dev.com/main.bundle.js"
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/styles.bundle.css",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/inline.bundle.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/polyfills.bundle.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/scripts.bundle.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/main.bundle.js"
     ]
   },
   "development":{
     "version": "1.0.4",
     "bundles":[
       "https://fonts.googleapis.com/icon?family=Material+Icons",
-      "https://fonts.googleapis.com/css?family=Roboto",
+      "https://fonts.googleapis.com/css?family=Open+Sans",
       "http://10.100.10.93:5200/inline.bundle.js",
       "http://10.100.10.93:5200/polyfills.bundle.js",
       "http://10.100.10.93:5200/styles.bundle.js",

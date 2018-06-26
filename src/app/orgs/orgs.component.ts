@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { AreYouSureDialogComponent } from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-orgs',
@@ -18,7 +19,7 @@ export class OrgsComponent implements OnInit {
     enabled: false,//whether to render the card.
     selected: false,//set to true when it is pressed. reset to false when another org is pressed.
     name: undefined,//name to display on the card
-    realOrgId: '53eb1ee2e6c77111203d8503',//TODO and in us?
+    realOrgId: environment.region === 'il' ? '53eb1ee2e6c77111203d8503' : '59c3f78cd1ea272200200880',
     select: () => {//what to do when it is pressed
       const realOrg = this.orgs.find(o => o._id === this.exampleOrg.realOrgId);
       if (realOrg) {

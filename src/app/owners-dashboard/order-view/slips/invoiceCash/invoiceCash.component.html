@@ -7,28 +7,30 @@
 
     <hr />
 
+
+    <app-order-cash-payment-footer [printData]="invoice"></app-order-cash-payment-footer>
+
     <!-- PAID IN CASH -->
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-8">
             <span i18n="@@paidInCash">Paid in cash</span>
         </div>
 
-        <!-- 'faceValue' copy from old tpl -->
         <div class="col-3" *ngIf="data?.payments[0]?.faceValue">
             <span>{{(data.payments[0].faceValue/100) | number:'1.2-2'}}</span>
         </div>
-    </div>
+    </div> -->
 
 
     <!-- CHANGE -->
-    <div class="row" *ngIf="printDataOld?.P_CHANGE">
+    <!-- <div class="row" *ngIf="printDataOld?.P_CHANGE">
         <div class="col-8">
             <span i18n="@@change">Change</span>
         </div>
         <div class="col-3">
             <span>{{printDataOld?.P_CHANGE | number:'1.2-2'}}</span>
         </div>
-    </div>
+    </div> -->
 
 
 </div>

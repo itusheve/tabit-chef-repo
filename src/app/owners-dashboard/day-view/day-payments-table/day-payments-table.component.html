@@ -5,35 +5,39 @@
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center">
-                <table class="chf-tbl chf-tbl-smaller">
+                <table class="chf-tbl chf-tbl-x-smaller">
                     <tr class="header">
-                        <td i18n="@@payment">Payment</td>
-                        <td i18n="@@daily">Daily</td>
-                        <td class="pctCell">%</td>
-                        <td i18n="@@monthly">Monthly</td>
-                        <td class="pctCell">%</td>
+                        <td i18n="@@method">Method</td>
+                        <td class="ar" i18n="@@sales2">Sales</td>
+                        <td class="ar" i18n="@@refund">Refund</td>
+                        <td class="ar" i18n="@@payments">Payments</td>
+                        <td class="ar" i18n="@@tip">Gratuity</td>
+                        <td class="ar" i18n="@@totalPayments">Total Payments</td>
                     </tr>
                     <tr class="totalRow">
-                        <td i18n="@@totalPayments">Total Payments</td>
-                        <td>{{data.totalPayments.today | curr:'0':'':'nullify'}}</td>
-                        <td class="pctCell">{{data.totalPayments.todayPct | pct:'1':'nullify'}}</td>
-                        <td>{{data.totalPayments.mtd | curr:'0':'':'nullify'}}</td>
-                        <td class="pctCell">{{data.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
+                        <td i18n="@@total">Total</td>
+                        <td class="ar">{{data.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{data.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{data.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{data.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{data.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
                     </tr>
-                    <ng-container *ngFor="let accountTypeData of data.byAccountType">
+                    <ng-container *ngFor="let accountGroupObj of data.byAccountGroup">
                         <tr class="accountTypeRow">
-                            <td>{{accountTypeData.accountType}}</td>
-                            <td>{{accountTypeData.totalPayments.today | curr:'0':'':'nullify'}}</td>
-                            <td class="pctCell">{{accountTypeData.totalPayments.todayPct | pct:'1':'nullify'}}</td>
-                            <td>{{accountTypeData.totalPayments.mtd | curr:'0':'':'nullify'}}</td>
-                            <td class="pctCell">{{accountTypeData.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
+                            <td>{{accountGroupObj.accountGroup}}</td>
+                            <td class="ar">{{accountGroupObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{accountGroupObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{accountGroupObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{accountGroupObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{accountGroupObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
                         </tr>
-                        <tr *ngFor="let accountData of accountTypeData.byAccount" class="accountRow">
-                            <td>{{accountData.account}}</td>
-                            <td>{{accountData.totalPayments.today | curr:'0':'':'nullify'}}</td>
-                            <td class="pctCell">{{accountData.totalPayments.todayPct | pct:'1':'nullify'}}</td>
-                            <td>{{accountData.totalPayments.mtd | curr:'0':'':'nullify'}}</td>
-                            <td class="pctCell">{{accountData.totalPayments.mtdPct | pct:'1':'nullify'}}</td>
+                        <tr *ngFor="let clearerNameObj of accountGroupObj.byClearerName" class="accountRow">
+                            <td>{{clearerNameObj.clearerName}}</td>
+                            <td class="ar">{{clearerNameObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{clearerNameObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{clearerNameObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{clearerNameObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
+                            <td class="ar">{{clearerNameObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
                         </tr>
                     </ng-container>
                 </table>

@@ -1,45 +1,56 @@
-<div class="flex d-col card">
-  <div class="flex ctitle">
-    <!-- <div class="flex j-start ctag" style="width:25%">{{cardData?.tag}}</div> -->
-    <div class="flex j-start ctag" style="width:25%"><span *ngIf="cardData" i18n>{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</span></div>
-    <div class="flex j-center" style="width:75%">{{cardData?.title || '&nbsp;'}}</div>
-    <div class="flex j-end" style="width:25%"></div>
-  </div>
-  <dx-load-indicator [(visible)]="!cardData || cardData.loading"></dx-load-indicator>
-  <div *ngIf="cardData && !cardData.loading" class="g-1 flex d-col cbody">
-    <div class="g-1 flex a-center j-sb cmain">
-      <div style="width:18%" class="s-0 flex j-end a-center">
-        <div *ngIf="cardData.trends && cardData.trends.right && cardData.trends.right.status==='ready'" class="flex d-col a-center trend "
-          [ngClass]="cardData.trends.right.val > 0 ? 'up' : 'down'">
-          <div class="flex label"><div class="flex letter" i18n="@@cardLetter">{ cardData.trends.right.letter, select, A {A} Y {Y} }</div><mat-icon>play_arrow</mat-icon></div>
-          <div class="figure">{{cardData.trends.right.val | percent:'1.1-1'}}</div>
-        </div>
-      </div>
-      <div style="width:60%" class="flex d-col aj-center">
-        <div class="flex aj-center csales">{{cardData.sales | curr:'0'}}</div>
-        <div class="flex aj-center" *ngIf="cardData.salesComment" style="color: red;" i18n="@@salesComment">{ cardData.salesComment, select, NotFinal {Not Final} }</div>
-      </div>
-      <div style="width:18%" class="s-0 flex a-center">
-        <div
-          *ngIf="cardData.trends && cardData.trends.left && cardData.trends.left.status==='ready'"
-          class="flex d-col a-center trend"
-          [ngClass]="cardData.trends.left.val > 0 ? 'up' : 'down'"
-          >
-          <div class="flex label"><div class="flex letter" i18n="@@cardLetter">{ cardData.trends.left.letter, select, A {A} Y {Y} }</div><mat-icon>play_arrow</mat-icon></div>
-          <div class="figure">{{cardData.trends.left.val | percent:'1.1-1'}}</div>
-        </div>
-      </div>
+<div class="card-container text-right">
+    <div class="card-header">
+        <span class="bold" *ngIf="cardData" i18n="@@orsLastDay">{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</span>
+        <span [ngClass]="cardData.tag ? 'text-gray' : 'bold'">{{cardData?.title || '&nbsp;'}}</span>
     </div>
-    <div class="flex j-sb cfooter">
-      <div class="flex d-col a-center cperson" *ngIf="cardData && cardData.diners > 0">
-        <div class="flex ctitle"><i class="icomoon-man"></i></div>
-        <div class="flex cfigure">{{cardData?.diners | number:'1.0-0'}}</div>
-      </div>
-      <div class="flex"></div>
-      <div class="flex d-col a-center cppa" *ngIf="cardData && cardData.diners > 0">
-        <div class="flex ctitle">PPA</div>
-        <div class="flex cfigure">{{cardData?.ppa | curr}}</div>
-      </div>
+    <dx-load-indicator [(visible)]="!cardData || cardData.loading"></dx-load-indicator>
+    <div *ngIf="cardData && !cardData.loading" class="card-content">
+        <div class="card-content-item flex d-col" style="width: 55%">
+            <div class="amount">{{cardData.sales | curr:'0'}}</div>
+            <div class="amount-comment" *ngIf="cardData.salesComment" style="color: red;" i18n="@@salesComment">{
+                cardData.salesComment, select, NotFinal {Not Final} }
+            </div>
+            <div class="small flex j-start" *ngIf="cardData && cardData.diners > 0">
+                <div class="flex j-start"><span><i class="icon user" style="position:relative; top:2px; width: 11px;"></i></span><span style="margin: 0 4px;" class="dark">{{cardData?.diners | number:'1.0-0'}}</span></div>
+                <div>&nbsp;</div>
+                <div>&nbsp;</div>
+                <div>&nbsp;</div>
+                <div class="flex"><span class="ppa" style="margin: 0 4px;">PPA</span><span class="dark">{{cardData?.ppa | curr}}</span></div>
+            </div>
+        </div>
+        <div class="card-content-item" style="width: 45%">
+            <div class="display-table">
+                <div class="table-row">
+                    <div class="table-cell cell50 smaller grey" *ngIf="cardData.trends && cardData.trends.right && cardData.trends.right.status==='ready'">לשנה קודמת</div>
+                    <div class="table-cell small dark">{{cardData.trends?.right?.val | percent:'1.1-1'}}</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val > 0 ? 'up' : 'down'"></i></span></div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell cell50 smaller grey" *ngIf="cardData.trends && cardData.trends.left && cardData.trends.left.status==='ready'">ממוצע 4 שב'</div>
+                    <div class="table-cell small dark">{{cardData.trends?.left?.val | percent:'1.1-1'}}</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val > 0 ? 'up' : 'down'"></i></span></div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell cell50 smaller grey">ביטולים</div>
+                    <div class="table-cell small dark">15.6%</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val < 0 ? 'up' : 'down'"></i></span></div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell cell50 smaller grey">תקלות תפעול</div>
+                    <div class="table-cell small dark">10.5%</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val > 0 ? 'up' : 'down'"></i></span></div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell cell50 smaller grey">שימור ושיווק</div>
+                    <div class="table-cell small dark">10.22%</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val < 0 ? 'up' : 'down'"></i></span></div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell cell50 smaller grey">א' עובדים</div>
+                    <div class="table-cell small dark">1.68%</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val > 0 ? 'up' : 'down'"></i></span></div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

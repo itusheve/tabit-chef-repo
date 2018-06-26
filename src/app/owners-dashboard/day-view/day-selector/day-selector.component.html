@@ -1,10 +1,10 @@
 <div class="flex" id="daySelector" style="z-index: 10">
-  <div class="dx-widget dx-calendar-navigator" style="z-index: 100">
+  <div class="flex dx-widget dx-calendar-navigator" style="z-index: 100">
     <a
-     (click)="nextDay($event)"
+     (click)="prevDay($event)"
       class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-previous-view dx-calendar-navigator-previous-month"
       style="margin: 0px 0px;z-index: 1000;"
-      [ngClass]="{'disable':disableNext}"
+      [ngClass]="{'disable':disablePrevious}"
       role="button" aria-label="chevronleft">
       <div class="dx-button-content" style="z-index:10000">
         <i class="dx-icon dx-icon-chevronleft" style="z-index: 100000"></i>
@@ -16,10 +16,10 @@
       </div>
     </a>
     <a
-     (click)="prevDay($event)"
+     (click)="nextDay($event)"
       class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-next-view dx-calendar-navigator-next-month"
-       style="margin: 0px 0px;z-index: 1000;"
-      [ngClass]="{'disable':disablePrevious}"
+      style="margin: 0px 0px;z-index: 1000;"
+      [ngClass]="{'disable':disableNext}"
       role="button" aria-label="chevronright">
       <div class="dx-button-content" style="z-index:10000">
         <i class="dx-icon dx-icon-chevronright" style="z-index: 100000"></i>

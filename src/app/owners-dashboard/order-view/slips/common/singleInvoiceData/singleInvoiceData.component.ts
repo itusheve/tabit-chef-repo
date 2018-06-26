@@ -45,6 +45,8 @@ export class OrderSingleInvoiceDataComponent implements OnInit {
             }
         }, this.isUS);
 
+
+
     }
 
 }

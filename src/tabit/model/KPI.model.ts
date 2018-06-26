@@ -2,7 +2,14 @@ import { OrderType } from './OrderType.model';
 
 /* KPIs, for example for an Order(s), for BusinessDay(s) */
 export class KPI {
+    //NEW KPIS
+    totalPaymentsAmnt?: number;
+
+    // DEPRECATED KPIS:
     sales?: number;//total order(s) sales
+
+
+
     diners?: {
         count?: number;//count of diners ("seated")
         sales?: number;//diners sales ("seated sales")

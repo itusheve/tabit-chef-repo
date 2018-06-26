@@ -1,6 +1,5 @@
 <div class="flex d-col">
-  <app-card class="mb10 widget greyAccent" [cardData]="testCardData" (click)="showAlert('Hello')" style="cursor: pointer"></app-card>
-  <app-card class="mb10 widget blueAccent" [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
+  <app-card class="mb10 widget" [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
   <app-card class="mb10 widget" [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')" style="cursor: pointer"></app-card>
   <app-card class="mb10 widget" [cardData]="mtdCardData"></app-card>
   <app-month-view (onDayRequest)="onDayRequest($event)"></app-month-view>

@@ -71,6 +71,7 @@ export class HomeComponent implements OnInit {
   ) {
 
     ownersDashboardService.toolbarConfig.left.back.showBtn = false;
+    ownersDashboardService.toolbarConfig.menuBtn.show = true;
 
     // we don't want to delay the card on the trends so we split into two calls:
     // A:

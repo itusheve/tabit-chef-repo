@@ -1,27 +1,10 @@
-<!-- <dx-calendar
-  [min]="minDateValue"
-  [max]="maxDateValue"
-  [(value)]="currentValue"
-  zoomLevel="month"
-  [showTodayButton]="true"
-  minZoomLevel='year'
-  maxZoomLevel='year'
-  >
-</dx-calendar> -->
-
-<!-- <div class="flex widget">
-  <button type="button" (click)="prevMonth()"><</button>
-  <div>{{currentValue | amDateFormat:'MMM YYYY'}}</div>
-  <button type="button" (click)="nextMonth()">></button>
-</div> -->
-
 <div class="flex">
-  <div class="dx-widget dx-calendar-navigator">
+  <div class="flex dx-widget dx-calendar-navigator">
     <a
-     (click)="nextMonth()"
+      (click)="prevMonth()"
       class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-previous-view dx-calendar-navigator-previous-month"
-       style="margin: 0px 0px;"
-      [ngClass]="{'disable':disableNext}"
+      style="margin: 0px 0px;"
+      [ngClass]="{'disable':disablePrevious}"
       role="button" aria-label="chevronleft">
       <div class="dx-button-content">
         <i class="dx-icon dx-icon-chevronleft"></i>
@@ -33,10 +16,10 @@
       </div>
     </a>
     <a
-     (click)="prevMonth()"
+      (click)="nextMonth()"
       class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-next-view dx-calendar-navigator-next-month"
-       style="margin: 0px 0px;"
-      [ngClass]="{'disable':disablePrevious}"
+      style="margin: 0px 0px;"
+      [ngClass]="{'disable':disableNext}"
       role="button" aria-label="chevronright">
       <div class="dx-button-content">
         <i class="dx-icon dx-icon-chevronright"></i>

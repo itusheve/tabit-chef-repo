@@ -41,7 +41,7 @@ export class OrderSlipsComponent implements OnInit {
   exampleOrgName: string;
   invoicePrintData: any;
 
-  isOTH: boolean = false;
+  isOTH = false;
 
   constructor() { }
 
@@ -108,7 +108,10 @@ export class OrderSlipsComponent implements OnInit {
       this.printDataOld.collections.PAYMENT_LIST.forEach(payment => {
 
         let title = 'Credit Slip';
-        if (payment.P_TENDER_TYPE === 'creditCard') {
+        if (payment.P_TENDER_TYPE === 'creditCard') title = 'Credit Slip';
+        if (payment.P_TENDER_TYPE === 'giftCard') title = 'Gift Card Slip';
+
+        if (payment.P_TENDER_TYPE === 'creditCard' || payment.P_TENDER_TYPE === 'giftCard') {
 
           if (payment.SIGNATURE_CAPTURED) {
             let paymentData = this.orderOld.payments.find(c => c._id === payment.P_ID);
