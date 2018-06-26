@@ -36,7 +36,7 @@ export class ManagersDashboardComponent implements OnInit {
     wrapper: string
   };
   env;
-  debug: false;
+  debug: boolean = true;
   _moment;
   logArr: { type: string, message: string }[];
 
@@ -306,9 +306,12 @@ export class ManagersDashboardComponent implements OnInit {
     arrItemsSales.push(itemsSalesTotal);
 
 
-
+    
     function isOrderRelevant(order) {
-      if (order.isStaffTable || order.serviceType != c.serviceType) return false;
+      if (order.isStaffTable || order.serviceType != c.serviceType) {
+        excludedOrders.push({ number: order.number, reason: order.serviceType });
+        return false;
+      }
       var isIntime = false;
       let shift = c.shift;
       switch (shift.mode) {
@@ -327,8 +330,9 @@ export class ManagersDashboardComponent implements OnInit {
 
     }
 
-    var orders = [];
+    var orders = [], excludedOrders = [];
     _.each(db.orders, function (order, i) {
+      //if (order.number == 25) debugger;
       if (isOrderRelevant(order)) {
         orders.push(order);
 
@@ -381,6 +385,8 @@ export class ManagersDashboardComponent implements OnInit {
             waiter.goalDiff = waiter.dinerAvg - c.dinerAvgGoal;
           }
           waiter.dinersDisplay = showPPA ? waiter.dinersPPA : waiter.diners;
+        } else {
+          excludedOrders.push({ number: order.number, reason: 'zero amount' });
         }
 
         if (generateItems) {
@@ -497,7 +503,13 @@ export class ManagersDashboardComponent implements OnInit {
     c.dinersAVG = this.sortMdashList('dinersAVG', arr);
     c.itemsAVG = this.sortMdashList('itemsAVG', arrItemsAVG);
     c.ItemsSales = this.sortMdashList('ItemsSales', arrItemsSales);
-    console.log(JSON.stringify(orders));
+    if (this.debug) {
+      console.log(JSON.stringify({
+        orders: orders,
+        totals: totals,
+        excluded: excludedOrders
+      }));
+    }
   };
 
 

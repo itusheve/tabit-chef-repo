@@ -322,8 +322,8 @@ export class ManagersDashboardService {
 
   ordersQuery = {
     //fullOrderRequired: true,
-    "select": '_id,orderType,serviceType,created,lastUpdated,closed,isStaffTable,owner,diners,orderedItems,orderedOffers,rewards,courses, paymentSummary,courses',
-    "tLogselect": 'order._id,order.orderType,order.serviceType,order.created,order.lastUpdated,order.closed,order.isStaffTable,order.owner,order.diners,order.orderedItems,order.orderedOffers,order.rewards,order.courses, order.paymentSummary, order.courses'
+    "select": '_id,number,orderType,serviceType,created,lastUpdated,closed,isStaffTable,owner,diners,orderedItems,orderedOffers,rewards,courses, paymentSummary,courses',
+    "tLogselect": 'order._id,order.number,order.orderType,order.serviceType,order.created,order.lastUpdated,order.closed,order.isStaffTable,order.owner,order.diners,order.orderedItems,order.orderedOffers,order.rewards,order.courses, order.paymentSummary, order.courses'
   }
 
   public getHistoricOrders(db) {
@@ -331,6 +331,7 @@ export class ManagersDashboardService {
       fromBusinessDate: db.businessDate,
       toBusinessDate: db.businessDate,
       select: this.ordersQuery.tLogselect,
+      orderBy: 'created',
       pageSize:100
     };
     return this.getClosedOrdersServer(db, params);
@@ -339,7 +340,8 @@ export class ManagersDashboardService {
   getOpenedOrders (db, fromTime?) {
     var that = this;
     let params:any = {
-      select: this.ordersQuery.select
+      select: this.ordersQuery.select,
+      orderBy: 'created',
     };
     if (fromTime) {
       params.lastUpdated = "$gt " + fromTime.utc().format();
@@ -356,6 +358,7 @@ export class ManagersDashboardService {
   getClosedOrders(db, fromTime) {
     let params:any = {
       fromBusinessDate: db.businessDate,
+      orderBy: 'created',
       select: this.ordersQuery.tLogselect
     };
     if (fromTime) {
@@ -399,6 +402,8 @@ export class ManagersDashboardService {
 
     newOrder.from = moment(order.created);
     newOrder.fromTime = this.parseOrderTime(newOrder.from);
+    newOrder.number = order.number;
+    newOrder.fromParsed = newOrder.from.format('HH:mm')
 
     if (!db.lastTime) {
       db.lastTime = moment(order.lastUpdated);
@@ -413,7 +418,7 @@ export class ManagersDashboardService {
 
     if (order.closed) {
       newOrder.to = moment(order.closed);
-
+      newOrder.toParsed = newOrder.to.format('HH:mm');
       if (newOrder.countDiners && newOrder.to.diff(moment(newOrder.from), 'minutes') <= 10) {
         newOrder.countDiners = false;
       }
