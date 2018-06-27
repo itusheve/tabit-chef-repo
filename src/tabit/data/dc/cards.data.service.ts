@@ -59,11 +59,12 @@ export class CardsDataService {
                             let dinersPPA = previousBdData_Cube.kpi.diners.count;
                             let salesPPA = previousBdData_Cube.kpi.diners.sales;
                             let ppa = previousBdData_Cube.kpi.diners.ppa;
-
+                            let reductions = previousBdData_Cube.kpi.reductions;
                             obs.next({
                                 sales: sales,
                                 diners: dinersPPA,
-                                ppa: ppa
+                                ppa: ppa,
+                                reductions: reductions
                             });
                         } else {
                             console.info(`previousBdData: previousBd_netSalesAmnt_ROS = ${previousBd_netSalesAmnt_ROS}`);
@@ -75,6 +76,7 @@ export class CardsDataService {
                                 sales: sales,
                                 diners: undefined,
                                 ppa: undefined,
+                                reductions: {},
                                 final: false
                             });
                         }
@@ -83,7 +85,8 @@ export class CardsDataService {
                         obs.next({
                             sales: 0,
                             diners: null,
-                            ppa: null
+                            ppa: null,
+                            reductions: {}
                         });
                     });
                 }

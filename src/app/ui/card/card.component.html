@@ -20,35 +20,35 @@
         </div>
         <div class="card-content-item" style="width: 45%">
             <div class="display-table">
-                <div class="table-row">
-                    <div class="table-cell cell50 smaller grey" *ngIf="cardData.trends && cardData.trends.right && cardData.trends.right.status==='ready'">לשנה קודמת</div>
-                    <div class="table-cell small dark">{{cardData.trends?.right?.val | percent:'1.1-1'}}</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val > 0 ? 'up' : 'down'"></i></span></div>
+                <div class="table-row" *ngIf="cardData.trends && cardData.trends.yearAvg && cardData.trends.yearAvg.status==='ready'">
+                    <div class="table-cell cell50 smaller grey">לשנה קודמת</div>
+                    <div class="table-cell small dark">{{cardData.trends?.yearAvg?.val | percent:'1.1-1'}}</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.yearAvg?.val > 0 ? 'up' : 'down'"></i></span></div>
                 </div>
-                <div class="table-row">
-                    <div class="table-cell cell50 smaller grey" *ngIf="cardData.trends && cardData.trends.left && cardData.trends.left.status==='ready'">ממוצע 4 שב'</div>
-                    <div class="table-cell small dark">{{cardData.trends?.left?.val | percent:'1.1-1'}}</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val > 0 ? 'up' : 'down'"></i></span></div>
+                <div class="table-row" *ngIf="cardData.trends && cardData.trends.fourWeekAvg && cardData.trends.fourWeekAvg.status==='ready'">
+                    <div class="table-cell cell50 smaller grey">ממוצע 4 שב'</div>
+                    <div class="table-cell small dark">{{cardData.trends?.fourWeekAvg?.val | percent:'1.1-1'}}</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.fourWeekAvg?.val > 0 ? 'up' : 'down'"></i></span></div>
                 </div>
-                <div class="table-row">
+                <div class="table-row" *ngIf="cardData.reductions && cardData.reductions.cancellation_pct">
                     <div class="table-cell cell50 smaller grey">ביטולים</div>
-                    <div class="table-cell small dark">15.6%</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val < 0 ? 'up' : 'down'"></i></span></div>
+                    <div class="table-cell small dark">{{cardData.reductions?.cancellation_pct | percent:'1.1-1'}}</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.reductions?.cancellation_pct <= 0 ? 'up' : 'down'"></i></span></div>
                 </div>
-                <div class="table-row">
+                <div class="table-row" *ngIf="cardData.reductions && cardData.reductions.retention_pct">
                     <div class="table-cell cell50 smaller grey">תקלות תפעול</div>
-                    <div class="table-cell small dark">10.5%</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val > 0 ? 'up' : 'down'"></i></span></div>
+                    <div class="table-cell small dark">{{cardData.reductions?.retention_pct | percent:'1.1-1'}}</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.reductions?.retention_pct <= 0 ? 'up' : 'down'"></i></span></div>
                 </div>
-                <div class="table-row">
+                <div class="table-row" *ngIf="cardData.reductions && cardData.reductions.operational_pct">
                     <div class="table-cell cell50 smaller grey">שימור ושיווק</div>
-                    <div class="table-cell small dark">10.22%</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val < 0 ? 'up' : 'down'"></i></span></div>
+                    <div class="table-cell small dark">{{cardData.reductions?.operational_pct | percent:'1.1-1'}}</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.reductions?.operational_pct <= 0 ? 'up' : 'down'"></i></span></div>
                 </div>
-                <div class="table-row">
+                <div class="table-row" *ngIf="cardData.reductions && cardData.reductions.organizational_pct">
                     <div class="table-cell cell50 smaller grey">א' עובדים</div>
-                    <div class="table-cell small dark">1.68%</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.right?.val > 0 ? 'up' : 'down'"></i></span></div>
+                    <div class="table-cell small dark">{{cardData.reductions?.organizational_pct | percent:'1.1-1'}}</div>
+                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.reductions?.organizational_pct <= 0 ? 'up' : 'down'"></i></span></div>
                 </div>
             </div>
         </div>

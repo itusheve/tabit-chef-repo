@@ -71,6 +71,7 @@ export class OlapEp {
 
         const org = JSON.parse(window.localStorage.getItem('org'));
         const token = JSON.parse(window.localStorage.getItem('token'));
+
         this.url$.next(`${this.baseUrl}?customdata=S${org.id}&token=${token.access_token}`);
 
         return this.url$;
@@ -461,7 +462,11 @@ export class OlapEp {
             {
                 ${this.measure(this.olapMappings.measureGroups.general.measures.sales)},
                 ${this.measure(this.olapMappings.measureGroups.general.measures.dinersSales)},
-                ${this.measure(this.olapMappings.measureGroups.general.measures.dinersCount)}
+                ${this.measure(this.olapMappings.measureGroups.general.measures.dinersCount)},
+                ${this.measure(this.olapMappings.measureGroups.items.measures.takalotTiful_value_pct)},
+                ${this.measure(this.olapMappings.measureGroups.items.measures.shimurShivuk_value_pct)},
+                ${this.measure(this.olapMappings.measureGroups.items.measures.shoviIrguni_value_pct)},
+                ${this.measure(this.olapMappings.measureGroups.items.measures.cancelled_value_pct)}
             }
             ON 0,
             NON EMPTY {
@@ -491,17 +496,72 @@ export class OlapEp {
                             const sales = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.sales);
                             const salesPPA = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.dinersSales);
                             const dinersPPA = this.parseMeasure(r, this.olapMappings.measureGroups.general.measures.dinersCount);
+                            const reductionsCancellationAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.takalotTiful_value_pct);
+                            const reductionsOperationalDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.shimurShivuk_value_pct);
+                            const reductionsRetentionDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.shoviIrguni_value_pct);
+                            const reductionsOrganizationalDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.cancelled_value_pct);
 
                             console.log('Sales from cube', sales);
                             return {
                                 date: r.month,
                                 sales: sales,
                                 salesPPA: salesPPA,
-                                dinersPPA: dinersPPA
+                                dinersPPA: dinersPPA,
+                                reductionsCancellationAmount: reductionsCancellationAmount,
+                                reductionsOperationalDiscountAmount: reductionsOperationalDiscountAmount,
+                                reductionsRetentionDiscountAmount: reductionsRetentionDiscountAmount,
+                                reductionsOrganizationalDiscountAmount: reductionsOrganizationalDiscountAmount
                             };
                         });
 
                         this.monthlyData$.next(treated);
+                    })
+                    .catch(e => {
+                    });
+            });
+        return this.monthlyData$;
+    }
+
+    public getKPIByMonth(dateFrom, dateTo): any {
+
+        let timeHierarchy = this.olapMappings.dims.orderClosingTime.hierarchy[environment.region];
+        let timeDim = this.olapMappings.dims.orderClosingTime.dims.time[environment.region];
+
+        const mdx = `
+            SELECT
+            {
+                ${this.measure(this.olapMappings.measureGroups.general.measures.sales)},
+                ${this.measure(this.olapMappings.measureGroups.general.measures.dinersSales)},
+                ${this.measure(this.olapMappings.measureGroups.general.measures.dinersCount)},
+                ${this.measure(this.olapMappings.measureGroups.payments.measures.totalPaymentsAmnt)},
+                ${this.measure(this.olapMappings.measureGroups.items.measures.takalotTiful_value_pct)},
+                ${this.measure(this.olapMappings.measureGroups.items.measures.shimurShivuk_value_pct)},
+                ${this.measure(this.olapMappings.measureGroups.items.measures.shoviIrguni_value_pct)},
+                ${this.measure(this.olapMappings.measureGroups.items.measures.cancelled_value_pct)}
+            }
+            ON 0,
+            NON EMPTY {
+                ${this.membersNew({dimAttr: this.olapMappings.dims.businessDateV2.attr.yearMonth})}
+            }
+            ON 1
+            FROM(
+                SELECT
+                    (
+                        [${this.olapMappings.dims.businessDateV2.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.yearMonth.path[environment.region]}].&[${dateFrom.format('YYYYMM')}]:[${this.olapMappings.dims.businessDateV2.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.yearMonth.path[environment.region]}].&[${dateTo.format('YYYYMM')}]
+                    )
+                ON 0
+                FROM ${ this.cube }
+            )
+        `;
+
+        this.url
+            .subscribe(url => {
+                const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
+
+                xmla4j_w.executeNew(mdx)
+                    .then(rowset => {
+
+
                     })
                     .catch(e => {
                     });
@@ -521,7 +581,11 @@ export class OlapEp {
         salesPPA: number,
         dinersPPA: number,
         ppa: number,
-        totalPaymentsAmnt: number//new cube stuff
+        totalPaymentsAmnt: number,
+        reductionsCancellationAmount: number,
+        reductionsOperationalDiscountAmount: number,
+        reductionsRetentionDiscountAmount: number,
+        reductionsOrganizationalDiscountAmount: number
     }[]> {
         return new Promise<any>((res, rej) => {
             const dateFrom: moment.Moment = o.dateFrom;
@@ -546,7 +610,11 @@ export class OlapEp {
                     ${this.measure(this.olapMappings.measureGroups.general.measures.sales)},
                     ${this.measure(this.olapMappings.measureGroups.general.measures.dinersSales)},
                     ${this.measure(this.olapMappings.measureGroups.general.measures.dinersCount)},
-                    ${this.measure(this.olapMappings.measureGroups.payments.measures.totalPaymentsAmnt)}
+                    ${this.measure(this.olapMappings.measureGroups.payments.measures.totalPaymentsAmnt)},
+                    ${this.measure(this.olapMappings.measureGroups.items.measures.takalotTiful_value_pct)},
+                    ${this.measure(this.olapMappings.measureGroups.items.measures.shimurShivuk_value_pct)},
+                    ${this.measure(this.olapMappings.measureGroups.items.measures.shoviIrguni_value_pct)},
+                    ${this.measure(this.olapMappings.measureGroups.items.measures.cancelled_value_pct)}
                 }
             `;
             if (o.timeType) {
@@ -606,13 +674,22 @@ export class OlapEp {
 
                                 const ppa = (salesPPA ? salesPPA : 0) / (dinersPPA ? dinersPPA : 1);
 
+                                const reductionsCancellationAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.takalotTiful_value_pct);
+                                const reductionsOperationalDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.shimurShivuk_value_pct);
+                                const reductionsRetentionDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.shoviIrguni_value_pct);
+                                const reductionsOrganizationalDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.cancelled_value_pct);
+
                                 return {
                                     date: date,
                                     sales: sales,
                                     salesPPA: salesPPA,
                                     dinersPPA: dinersPPA,
                                     ppa: ppa,
-                                    totalPaymentsAmnt: totalPaymentsAmnt
+                                    totalPaymentsAmnt: totalPaymentsAmnt,
+                                    reductionsCancellationAmount: reductionsCancellationAmount,
+                                    reductionsOperationalDiscountAmount: reductionsOperationalDiscountAmount,
+                                    reductionsRetentionDiscountAmount: reductionsRetentionDiscountAmount,
+                                    reductionsOrganizationalDiscountAmount: reductionsOrganizationalDiscountAmount
                                 };
                             })
                                 .sort(this.shortDayOfWeek_compareFunction);

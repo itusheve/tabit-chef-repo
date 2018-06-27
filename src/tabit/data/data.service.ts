@@ -1,13 +1,13 @@
 //angular
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 //rxjs
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-import { fromPromise } from 'rxjs/observable/fromPromise';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
+import {fromPromise} from 'rxjs/observable/fromPromise';
+import {combineLatest} from 'rxjs/observable/combineLatest';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/share';
@@ -18,17 +18,17 @@ import * as moment from 'moment';
 import 'moment-timezone';
 
 //models
-import { KPI } from '../model/KPI.model';
-import { Shift } from '../model/Shift.model';
+import {KPI} from '../model/KPI.model';
+import {Shift} from '../model/Shift.model';
 
 //end points
-import { OlapEp, Orders_KPIs, PaymentsKPIs } from './ep/olap.ep';
-import { ROSEp } from './ep/ros.ep';
-import { OrderType } from '../model/OrderType.model';
-import { Order } from '../model/Order.model';
-import { environment } from '../../environments/environment';
-import { Department } from '../model/Department.model';
-import { DebugService } from '../../app/debug.service';
+import {OlapEp, Orders_KPIs, PaymentsKPIs} from './ep/olap.ep';
+import {ROSEp} from './ep/ros.ep';
+import {OrderType} from '../model/OrderType.model';
+import {Order} from '../model/Order.model';
+import {environment} from '../../environments/environment';
+import {Department} from '../model/Department.model';
+import {DebugService} from '../../app/debug.service';
 //import { CategoriesDataService } from './dc/_categories.data.service';
 
 /*
@@ -85,109 +85,109 @@ const tmpTranslations_ = {
             beverages: 'משקאות'
         },
         managerDash: {
-          "ALLORDERS": "כל ההזמנות",
-          "OPENORDERS": "הזמנות פתוחות",
-          "CLOSEDORDERS": "הזמנות סגורות",
-          "Total": "סה\"כ",
-          "DAYLY_TOTAL": "סה\"כ יומי",
-          "SEATED": "בישיבה",
-          "TA": "טייק אווי",
-          "DELIVERY": "משלוחים",
-          "MEDIAEXCHANGE": "טעינת כרטיס",
-          "REFUND": "החזרים",
-          "CANCELATIONS": "ביטולים",
-          "DASH_DAYLY": "דו\"ח יומי",
-          "DASH_SALES": "מכירות",
-          "TOTAL_NET": "סה\"כ נטו",
-          "TOTAL_GROSS": "סה\"כ ברוטו",
-          "ORGANIZATION": "ארגון",
-          "Settings": "הגדרות",
-          "Orders": "הזמנות",
-          "Diners": "סועדים",
-          "Diner AVG": "ממוצע לסועד",
-          "Net": "נטו",
-          "Gross": "ברוטו",
-          "Net/Gross": "נטו/ברוטו",
-          "Goal Distance": "מרחק מהיעד",
-          "Goal": "יעד",
-          "To Time": "עד שעה",
-          "From Time": "משעה",
-          "By Diners": "ממוצע לסועד",
-          "By Items": "מכירות פריטים",
-          "By Items Responsibility": "פריטים/אחריות",
-          "By Items Sales": "פריטים/מכירות",
-          "Add New Group": "הסף קבוצה חדשה",
-          "MORNING": "בוקר",
-          "NOON": "צהרים",
-          "EVENING": "ערב",
-          "NIGHT": "לילה",
-          "Work Hours": "שעות עבודה",
-          "Shifts": "משמרות",
-          "Menus": "תפריטים",
-          "Group Name": "שם הקבוצה",
-          "Item Group Editor": "קבוצת פריטים",
-          "Show Selected": "הצג בחירה",
-          "Show All": "הצג הכל",
-          "Find Items": "אתר פריטים",
-          "NEWGROUP": "קבוצה חדשה",
-          "GROUP_NAME": "שם הקבוצה",
-          "Select Business Date": "בחר יום",
-          "SELECT_ITEMS_CAT": "בחירת מחלקות/פריטים",
-          "DAY_START": "תחילת היום",
-          "DAY_END": "סוף היום",
-          "CHOOSE": "בחירה",
-          "GATEGORY": "קטגוריה",
-          "GATEGORIES": "קטגוריות",
-          "LOCATE_GATEGORIES": "אתר קטגוריות",
-          "LOCATE_ITEMS": "אתר פריטים",
-          "NO_ITEMS_SELECTED": "לא נבחרו פריטים",
-          "NO_GATEGORIES_SELECTED": "לא נבחרו פריטים",
-          "PERIODS_RANGE": "טווח תאריכים",
-          "CHOOSE_BY_TIMES": "בחר זמנים לפי",
-          "PPA_LESS_EQUAL": "PPA קטן/שווה",
-          "PPA_MORE_EQUAL": "PPA גדול/שווה",
-          "BETWEEN": "-בין-",
-          "ALERT_BY_PERCENT": "מרחק התרעה מהיעד באחוזים",
-          "SORT_BY": "מיין לפי",
-          "ORDER_TYPE": "סוג הזמנה",
-          "ALL_ORDERS": "כל ההזמנות",
-          "SEATED_ORDERS": "הזמנות בישיבה",
-          "INCLUDING_TAX": "כולל מע\"מ",
-          "EXCLUDING_TAX": "לא כולל מע\"מ",
-          "ITEM_SALES": "מכירות פריטים",
-          "TIPS": "טיפים",
-          "DISCOUNTS_PROMOTIONS": "הנחות ומבצעים",
-          "GENERAL_REFUND": "החזר כללי",
-          "GENERAL_ITEM": "פריט כללי",
-          "DASH_DAYLY_EXP": "* הנתונים המוצגים מתיחסים להזמנות סגורות",
-          "DASH_SALES_EXP": "* לא כולל: טיפים, פריט כללי, טיפול ארגוני, והחזר כספי ללקוח. הנתונים כוללים מע\"מ",
-          "WAITER": "מלצר",
-          "TABLE": "שולחן",
-          "NUM_OF_DINERS": "מספר סועדים",
-          "TOTAL_AMOUNT": "סה\"כ",
-          "ORDER_PREVIEW": "איתור הזמנה",
-          "SEAT_TIME": "שעת ישיבה",
-          "TOTAL_AMOUNT_BILL": "סה\"כ חשבון",
-          "METHOD_OF_PAYMENT": "אמצעי תשלום",
-          "ORDER_NO": "מספר הזמנה",
-          "DATE": "תאריך",
-          "NAME": "שם",
-          "OTH": "OTH",
-          "ITEMS": "פריטים",
-          "ACTIVITY_DAYS": "ימי פעילות",
-          "TIME_RANGE_FROM": "משעה",
-          "TIME_RANGE_TO": "עד שעה",
-          "TIME_RANGE_BETWEEN": "בין השעות",
-          "ALL_DAY": "כל היום",
-          "SERVER": "מלצר",
-          "Today": "היום",
-          "FindEx": "חפש...",
-          "Cancel": "ביטול",
-          "Remove": "הסר",
-          "Apply": "בצע",
-          "Service Type": "סוג שרות",
-          "Totals": "סיכומים",
-          "To": "עד"
+            'ALLORDERS': 'כל ההזמנות',
+            'OPENORDERS': 'הזמנות פתוחות',
+            'CLOSEDORDERS': 'הזמנות סגורות',
+            'Total': 'סה"כ',
+            'DAYLY_TOTAL': 'סה"כ יומי',
+            'SEATED': 'בישיבה',
+            'TA': 'טייק אווי',
+            'DELIVERY': 'משלוחים',
+            'MEDIAEXCHANGE': 'טעינת כרטיס',
+            'REFUND': 'החזרים',
+            'CANCELATIONS': 'ביטולים',
+            'DASH_DAYLY': 'דו"ח יומי',
+            'DASH_SALES': 'מכירות',
+            'TOTAL_NET': 'סה"כ נטו',
+            'TOTAL_GROSS': 'סה"כ ברוטו',
+            'ORGANIZATION': 'ארגון',
+            'Settings': 'הגדרות',
+            'Orders': 'הזמנות',
+            'Diners': 'סועדים',
+            'Diner AVG': 'ממוצע לסועד',
+            'Net': 'נטו',
+            'Gross': 'ברוטו',
+            'Net/Gross': 'נטו/ברוטו',
+            'Goal Distance': 'מרחק מהיעד',
+            'Goal': 'יעד',
+            'To Time': 'עד שעה',
+            'From Time': 'משעה',
+            'By Diners': 'ממוצע לסועד',
+            'By Items': 'מכירות פריטים',
+            'By Items Responsibility': 'פריטים/אחריות',
+            'By Items Sales': 'פריטים/מכירות',
+            'Add New Group': 'הסף קבוצה חדשה',
+            'MORNING': 'בוקר',
+            'NOON': 'צהרים',
+            'EVENING': 'ערב',
+            'NIGHT': 'לילה',
+            'Work Hours': 'שעות עבודה',
+            'Shifts': 'משמרות',
+            'Menus': 'תפריטים',
+            'Group Name': 'שם הקבוצה',
+            'Item Group Editor': 'קבוצת פריטים',
+            'Show Selected': 'הצג בחירה',
+            'Show All': 'הצג הכל',
+            'Find Items': 'אתר פריטים',
+            'NEWGROUP': 'קבוצה חדשה',
+            'GROUP_NAME': 'שם הקבוצה',
+            'Select Business Date': 'בחר יום',
+            'SELECT_ITEMS_CAT': 'בחירת מחלקות/פריטים',
+            'DAY_START': 'תחילת היום',
+            'DAY_END': 'סוף היום',
+            'CHOOSE': 'בחירה',
+            'GATEGORY': 'קטגוריה',
+            'GATEGORIES': 'קטגוריות',
+            'LOCATE_GATEGORIES': 'אתר קטגוריות',
+            'LOCATE_ITEMS': 'אתר פריטים',
+            'NO_ITEMS_SELECTED': 'לא נבחרו פריטים',
+            'NO_GATEGORIES_SELECTED': 'לא נבחרו פריטים',
+            'PERIODS_RANGE': 'טווח תאריכים',
+            'CHOOSE_BY_TIMES': 'בחר זמנים לפי',
+            'PPA_LESS_EQUAL': 'PPA קטן/שווה',
+            'PPA_MORE_EQUAL': 'PPA גדול/שווה',
+            'BETWEEN': '-בין-',
+            'ALERT_BY_PERCENT': 'מרחק התרעה מהיעד באחוזים',
+            'SORT_BY': 'מיין לפי',
+            'ORDER_TYPE': 'סוג הזמנה',
+            'ALL_ORDERS': 'כל ההזמנות',
+            'SEATED_ORDERS': 'הזמנות בישיבה',
+            'INCLUDING_TAX': 'כולל מע"מ',
+            'EXCLUDING_TAX': 'לא כולל מע"מ',
+            'ITEM_SALES': 'מכירות פריטים',
+            'TIPS': 'טיפים',
+            'DISCOUNTS_PROMOTIONS': 'הנחות ומבצעים',
+            'GENERAL_REFUND': 'החזר כללי',
+            'GENERAL_ITEM': 'פריט כללי',
+            'DASH_DAYLY_EXP': '* הנתונים המוצגים מתיחסים להזמנות סגורות',
+            'DASH_SALES_EXP': '* לא כולל: טיפים, פריט כללי, טיפול ארגוני, והחזר כספי ללקוח. הנתונים כוללים מע"מ',
+            'WAITER': 'מלצר',
+            'TABLE': 'שולחן',
+            'NUM_OF_DINERS': 'מספר סועדים',
+            'TOTAL_AMOUNT': 'סה"כ',
+            'ORDER_PREVIEW': 'איתור הזמנה',
+            'SEAT_TIME': 'שעת ישיבה',
+            'TOTAL_AMOUNT_BILL': 'סה"כ חשבון',
+            'METHOD_OF_PAYMENT': 'אמצעי תשלום',
+            'ORDER_NO': 'מספר הזמנה',
+            'DATE': 'תאריך',
+            'NAME': 'שם',
+            'OTH': 'OTH',
+            'ITEMS': 'פריטים',
+            'ACTIVITY_DAYS': 'ימי פעילות',
+            'TIME_RANGE_FROM': 'משעה',
+            'TIME_RANGE_TO': 'עד שעה',
+            'TIME_RANGE_BETWEEN': 'בין השעות',
+            'ALL_DAY': 'כל היום',
+            'SERVER': 'מלצר',
+            'Today': 'היום',
+            'FindEx': 'חפש...',
+            'Cancel': 'ביטול',
+            'Remove': 'הסר',
+            'Apply': 'בצע',
+            'Service Type': 'סוג שרות',
+            'Totals': 'סיכומים',
+            'To': 'עד'
         }
     },
     'en-US': {
@@ -195,7 +195,7 @@ const tmpTranslations_ = {
         opFailed: 'Operation has failed. please contact support.',
         areYouSureYouWish: 'Are you sure you wish',
         toLogout: 'to logout',
-        loading: "Loading...",
+        loading: 'Loading...',
         login: {
             userPassIncorrect: 'Incorrect User / Password',
             passwordRestore: 'Reset Password',
@@ -237,117 +237,117 @@ const tmpTranslations_ = {
             beverages: '?'//TODO local
         },
         managerDash: {
-          "ALLORDERS": "All Orders",
-          "OPENORDERS": "Open Orders",
-          "CLOSEDORDERS": "Closed Orders",
-          "Total": "Total",
-          "DAYLY_TOTAL": "Daily Total",
-          "SEATED": "Seated",
-          "TA": "Take Away",
-          "DELIVERY": "Delivery",
-          "MEDIAEXCHANGE": "Media Exchange",
-          "REFUND": "Refunds",
-          "CANCELATIONS": "Cancellations",
-          "DASH_DAYLY": "Daily",
-          "DASH_SALES": "Sales",
-          "TOTAL_NET": "Total Net",
-          "TOTAL_GROSS": "Total Gross",
-          "Settings": "Settings",
-          "Orders": "Orders",
-          "Diners": "Diners",
-          "Diner AVG": "Diner AVG",
-          "Net": "Net",
-          "Gross": "Gross",
-          "Net/Gross": "Net/Gross",
-          "Goal Distance": "Goal Distance",
-          "Goal": "Goal",
-          "To Time": "To Time",
-          "From Time": "From Time",
-          "By Diners": "By Diners",
-          "By Items": "By Items",
-          "By Items Responsibility": "Items/Responsibility",
-          "By Items Sales": "Items/Sales",
-          "Add New Group": "Add New Group",
-          "MORNING": "MORNING",
-          "NOON": "NOON",
-          "EVENING": "EVENING",
-          "NIGHT": "NIGHT",
-          "Work Hours": "Work Hours",
-          "Shifts": "Shifts",
-          "Menus": "Menus",
-          "Group Name": "Group Name",
-          "Item Group Editor": "Item Groups",
-          "Show Selected": "Show Selected",
-          "Show All": "Show All",
-          "Find Items": "Find Items",
-          "NEWGROUP": "New Group",
-          "GROUP_NAME": "Group Name",
-          "Select Business Date": "Select Day",
-          "SELECT_ITEMS_CAT": "Select Categories/items",
-          "DAY_START": "Day Start",
-          "DAY_END": "Day End",
-          "CHOOSE": "Selected",
-          "GATEGORY": "Category",
-          "GATEGORIES": "Categories",
-          "LOCATE_GATEGORIES": "Locate Categories",
-          "LOCATE_ITEMS": "Locate Items",
-          "NO_ITEMS_SELECTED": "No Items Selected",
-          "NO_GATEGORIES_SELECTED": "No Categories Selected",
-          "PERIODS_RANGE": "Periods_range",
-          "CHOOSE_BY_TIMES": "Choose By Times :",
-          "PPA_LESS_EQUAL": "PPA less/equal",
-          "PPA_MORE_EQUAL": "PPA more/equal",
-          "BETWEEN": "-between-",
-          "ALERT_BY_PERCENT": "Distance from the target percentages warning",
-          "SORT_BY": "Sort By",
-          "ORDER_TYPE": "Order Type",
-          "ALL_ORDERS": "All Orders",
-          "SEATED_ORDERS": "Seated Orders",
-          "INCLUDING_TAX": "in VAT",
-          "EXCLUDING_TAX": "ex VAT",
-          "ITEM_SALES": "Item Sales",
-          "TIPS": "Tips",
-          "DISCOUNTS_PROMOTIONS": "Discounts & Promos",
-          "GENERAL_REFUND": "General Refund",
-          "GENERAL_ITEM": "General Item",
-          "ORGANIZATION": "Organization",
-          "DASH_DAYLY_EXP": "* Data pertains to closed orders",
-          "DASH_SALES_EXP": "* Not including tips, general items and refunds. Prices include VAT.",
-          "WAITER": "Server",
-          "TABLE": "table",
-          "NUM_OF_DINERS": "number of diners",
-          "TOTAL_AMOUNT": "Total amount",
-          "ORDER_PREVIEW": "Order preview",
-          "SEAT_TIME": "Seating time",
-          "TOTAL_AMOUNT_BILL": "Total amount bill",
-          "METHOD_OF_PAYMENT": "method of payment",
-          "ORDER_NO": "Order no",
-          "DATE": "Date",
-          "NAME": "Name",
-          "OTH": "OTH",
-          "ITEMS": "Items",
-          "ACTIVITY_DAYS": "Activity days",
-          "TIME_RANGE_FROM": "from hour",
-          "TIME_RANGE_TO": "to hour",
-          "TIME_RANGE_BETWEEN": "Between",
-          "ALL_DAY": "All Day",
-          "SERVER": "Server",
-          "Today": "Today",
-          "FindEx": "Find...",
-          "Cancel": "Cancel",
-          "Remove": "Remove",
-          "Apply": "Apply",
-          "Service Type": "Service Type",
-          "Totals": "Totals",
-          "To": "To"
+            'ALLORDERS': 'All Orders',
+            'OPENORDERS': 'Open Orders',
+            'CLOSEDORDERS': 'Closed Orders',
+            'Total': 'Total',
+            'DAYLY_TOTAL': 'Daily Total',
+            'SEATED': 'Seated',
+            'TA': 'Take Away',
+            'DELIVERY': 'Delivery',
+            'MEDIAEXCHANGE': 'Media Exchange',
+            'REFUND': 'Refunds',
+            'CANCELATIONS': 'Cancellations',
+            'DASH_DAYLY': 'Daily',
+            'DASH_SALES': 'Sales',
+            'TOTAL_NET': 'Total Net',
+            'TOTAL_GROSS': 'Total Gross',
+            'Settings': 'Settings',
+            'Orders': 'Orders',
+            'Diners': 'Diners',
+            'Diner AVG': 'Diner AVG',
+            'Net': 'Net',
+            'Gross': 'Gross',
+            'Net/Gross': 'Net/Gross',
+            'Goal Distance': 'Goal Distance',
+            'Goal': 'Goal',
+            'To Time': 'To Time',
+            'From Time': 'From Time',
+            'By Diners': 'By Diners',
+            'By Items': 'By Items',
+            'By Items Responsibility': 'Items/Responsibility',
+            'By Items Sales': 'Items/Sales',
+            'Add New Group': 'Add New Group',
+            'MORNING': 'MORNING',
+            'NOON': 'NOON',
+            'EVENING': 'EVENING',
+            'NIGHT': 'NIGHT',
+            'Work Hours': 'Work Hours',
+            'Shifts': 'Shifts',
+            'Menus': 'Menus',
+            'Group Name': 'Group Name',
+            'Item Group Editor': 'Item Groups',
+            'Show Selected': 'Show Selected',
+            'Show All': 'Show All',
+            'Find Items': 'Find Items',
+            'NEWGROUP': 'New Group',
+            'GROUP_NAME': 'Group Name',
+            'Select Business Date': 'Select Day',
+            'SELECT_ITEMS_CAT': 'Select Categories/items',
+            'DAY_START': 'Day Start',
+            'DAY_END': 'Day End',
+            'CHOOSE': 'Selected',
+            'GATEGORY': 'Category',
+            'GATEGORIES': 'Categories',
+            'LOCATE_GATEGORIES': 'Locate Categories',
+            'LOCATE_ITEMS': 'Locate Items',
+            'NO_ITEMS_SELECTED': 'No Items Selected',
+            'NO_GATEGORIES_SELECTED': 'No Categories Selected',
+            'PERIODS_RANGE': 'Periods_range',
+            'CHOOSE_BY_TIMES': 'Choose By Times :',
+            'PPA_LESS_EQUAL': 'PPA less/equal',
+            'PPA_MORE_EQUAL': 'PPA more/equal',
+            'BETWEEN': '-between-',
+            'ALERT_BY_PERCENT': 'Distance from the target percentages warning',
+            'SORT_BY': 'Sort By',
+            'ORDER_TYPE': 'Order Type',
+            'ALL_ORDERS': 'All Orders',
+            'SEATED_ORDERS': 'Seated Orders',
+            'INCLUDING_TAX': 'in VAT',
+            'EXCLUDING_TAX': 'ex VAT',
+            'ITEM_SALES': 'Item Sales',
+            'TIPS': 'Tips',
+            'DISCOUNTS_PROMOTIONS': 'Discounts & Promos',
+            'GENERAL_REFUND': 'General Refund',
+            'GENERAL_ITEM': 'General Item',
+            'ORGANIZATION': 'Organization',
+            'DASH_DAYLY_EXP': '* Data pertains to closed orders',
+            'DASH_SALES_EXP': '* Not including tips, general items and refunds. Prices include VAT.',
+            'WAITER': 'Server',
+            'TABLE': 'table',
+            'NUM_OF_DINERS': 'number of diners',
+            'TOTAL_AMOUNT': 'Total amount',
+            'ORDER_PREVIEW': 'Order preview',
+            'SEAT_TIME': 'Seating time',
+            'TOTAL_AMOUNT_BILL': 'Total amount bill',
+            'METHOD_OF_PAYMENT': 'method of payment',
+            'ORDER_NO': 'Order no',
+            'DATE': 'Date',
+            'NAME': 'Name',
+            'OTH': 'OTH',
+            'ITEMS': 'Items',
+            'ACTIVITY_DAYS': 'Activity days',
+            'TIME_RANGE_FROM': 'from hour',
+            'TIME_RANGE_TO': 'to hour',
+            'TIME_RANGE_BETWEEN': 'Between',
+            'ALL_DAY': 'All Day',
+            'SERVER': 'Server',
+            'Today': 'Today',
+            'FindEx': 'Find...',
+            'Cancel': 'Cancel',
+            'Remove': 'Remove',
+            'Apply': 'Apply',
+            'Service Type': 'Service Type',
+            'Totals': 'Totals',
+            'To': 'To'
         }
     }
 };
 export const tmpTranslations = {
-    get(path: string):string {
+    get(path: string): string {
         const tokens = path.split('.');
         let translation: any = tmpTranslations_[environment.tbtLocale];
-        for (let i=0;i<tokens.length;i++) {
+        for (let i = 0; i < tokens.length; i++) {
             translation = translation[tokens[i]];
         }
         return translation;
@@ -377,7 +377,6 @@ export const tmpTranslations = {
 //     }
 //     >;
 // }
-
 
 
 // DEPRECATED INTERFACES:
@@ -500,7 +499,7 @@ export class DataService {
     */
     public previousBd$: Observable<moment.Moment> = Observable.create(obs => {
         this.currentBd$
-            .subscribe(cbd=>{
+            .subscribe(cbd => {
                 const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
                 obs.next(pbd);
             });
@@ -532,9 +531,9 @@ export class DataService {
         }[]> {
             return Promise.all([
                 that.rosEp.get('configuration/regionalSettings'),
-                that.rosEp.get('configuration/regionalSettings/schema', { format: 'mongoose' })
+                that.rosEp.get('configuration/regionalSettings/schema', {format: 'mongoose'})
             ])
-                .then(data=>{
+                .then(data => {
                     let shiftsConfig: {
                         active: boolean,
                         name: string,
@@ -607,9 +606,9 @@ export class DataService {
         getShifts()
             .then(shiftsConfig => {
 
-                const shifts:Shift[] = [];
+                const shifts: Shift[] = [];
 
-                for (let i=0;i<shiftsConfig.length;i++) {
+                for (let i = 0; i < shiftsConfig.length; i++) {
                     if (shiftsConfig[i].active) {
                         const name = shiftsConfig[i].name;
                         let startTime;
@@ -625,7 +624,7 @@ export class DataService {
                 }
 
                 for (let i = 0; i < shifts.length; i++) {
-                    const nextIndex = i===shifts.length-1 ? 0 : i+1;
+                    const nextIndex = i === shifts.length - 1 ? 0 : i + 1;
                     shifts[i].endTime = moment(shifts[nextIndex].startTime);
                 }
 
@@ -649,14 +648,11 @@ export class DataService {
         this is NOT a translation service and has nothing to do with translations.
         this is a mapping of tokens from different cubes to the DataService domain
     */
-    private cubeCollection = environment.region==='il' ? 'israeliCubes' : 'usCubes';
+    private cubeCollection = environment.region === 'il' ? 'israeliCubes' : 'usCubes';
 
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
     // DEPRECATED PROPERTIES:
-
-
-
 
 
     // private olapNormalizationMaps: any = {
@@ -685,14 +681,13 @@ export class DataService {
     // };
 
 
-
     //TODO optimize this, getting two years of data once is costly (is it?)
     //maybe cache data for closed business dates?
     /*
         emits (vat inclusive) data by business days closed orders (from the Cube), up to two years ago.
         sorted by business date (descending).
     */
-    public dailyData$: Observable<BusinessDayKPI[]> = Observable.create(obs=>{
+    public dailyData$: Observable<BusinessDayKPI[]> = Observable.create(obs => {
 
         function sortByBusinessDayDesc(a: BusinessDayKPI, b: BusinessDayKPI): number {
             const diff = a.businessDay.diff(b.businessDay);
@@ -705,7 +700,7 @@ export class DataService {
             }
         }
 
-        const dateFrom: moment.Moment = moment().subtract(2, 'year').startOf('month');
+        const dateFrom: moment.Moment = moment().subtract(2, 'years').startOf('month');
         let tmp;
         try {
             tmp = moment.tz(this.region);
@@ -714,8 +709,9 @@ export class DataService {
             tmp = moment();
         }
         const dateTo: moment.Moment = tmp;
+
         this.olapEp.getDailyData({dateFrom: dateFrom, dateTo: dateTo})
-            .then(dailyDataRaw=>{
+            .then(dailyDataRaw => {
                 let minimum, maximum;
                 for (let i = 0; i < dailyDataRaw.length; i++) {
                     if (dailyDataRaw[i].sales > 0) {
@@ -729,11 +725,18 @@ export class DataService {
                         break;
                     }
                 }
-                const dailyData = dailyDataRaw.filter(ddr=>{
+                const dailyData = dailyDataRaw.filter(ddr => {
                     return ddr.date.isBetween(minimum, maximum, 'day', '[]');
-                }).map(ddr=>{
+                }).map(ddr => {
                     const kpi = new KPI(ddr.sales, ddr.dinersPPA, ddr.salesPPA);
                     kpi.totalPaymentsAmnt = ddr.totalPaymentsAmnt;
+                    kpi.reductions = {
+                        cancellation_pct: ddr.reductionsCancellationAmount,
+                        retention_pct: ddr.reductionsRetentionDiscountAmount,
+                        operational_pct: ddr.reductionsOperationalDiscountAmount,
+                        organizational_pct: ddr.reductionsOrganizationalDiscountAmount
+                    };
+
                     return {
                         businessDay: moment(ddr.date),
                         kpi: kpi
@@ -747,11 +750,11 @@ export class DataService {
     /*
         emits the minimum and maximum business dates where there are recorded sales
     */
-    public dailyDataLimits$: Observable<{ minimum: moment.Moment, maximum: moment.Moment }> = Observable.create(obs=>{
+    public dailyDataLimits$: Observable<{ minimum: moment.Moment, maximum: moment.Moment }> = Observable.create(obs => {
         this.dailyData$
-            .subscribe(dailyData=>{
+            .subscribe(dailyData => {
                 obs.next({
-                    minimum: moment(dailyData[dailyData.length-1].businessDay),
+                    minimum: moment(dailyData[dailyData.length - 1].businessDay),
                     maximum: moment(dailyData[0].businessDay)
                 });
             });
@@ -762,7 +765,7 @@ export class DataService {
     */
     public olapDataByMonths$: Observable<any> = new Observable(obs => {
         this.currentBd$.take(1)
-            .subscribe((cbd:moment.Moment)=>{
+            .subscribe((cbd: moment.Moment) => {
                 this.olapEp.getDataByMonths({
                     monthFrom: moment(cbd),
                     monthTo: moment(cbd).subtract(2, 'year').subtract(1, 'month')
@@ -779,9 +782,9 @@ export class DataService {
     */
     public currentMonthForecast$: Observable<any> = new Observable(obs => {
         this.currentBd$
-            .subscribe(cbd=>{
+            .subscribe(cbd => {
                 this.getMonthForecastData({calculationBd: cbd})
-                    .then(mfd=>{
+                    .then(mfd => {
                         obs.next(mfd);
                     });
             });
@@ -801,7 +804,8 @@ export class DataService {
         //from Cube
         function getDinersAndPPA(): Observable<{
             diners: number,
-            ppa: number
+            ppa: number,
+            reductions: any
         }> {
             return Observable.create(sub => {
                 that.currentBd$
@@ -818,15 +822,18 @@ export class DataService {
                                 if (dailyData.length) {
                                     const dinersPPA = dailyData[0].kpi.diners.count;
                                     const salesPPA = dailyData[0].kpi.diners.sales;
+                                    const reductions = dailyData[0].kpi.reductions;
                                     const ppa = (dinersPPA ? salesPPA / dinersPPA : undefined);
                                     sub.next({
                                         diners: dinersPPA,
-                                        ppa: ppa
+                                        ppa: ppa,
+                                        reductions: reductions
                                     });
                                 } else {
                                     sub.next({
                                         diners: 0,
-                                        ppa: 0
+                                        ppa: 0,
+                                        reductions: {}
                                     });
                                 }
                             });
@@ -850,33 +857,34 @@ export class DataService {
         }
 
         getSales()
-            .subscribe(data=>{
+            .subscribe(data => {
                 kpi.sales = data.sales;
                 obs.next(kpi);
             });
 
         getDinersAndPPA()
-            .subscribe(data=>{
+            .subscribe(data => {
                 kpi.diners.count = data.diners;
                 kpi.diners.ppa = data.ppa;
+                kpi.reductions = data.reductions;
                 obs.next(kpi);
             });
 
     });
 
     /* excluding today! */
-    public mtdData$: Observable<any> = new Observable(obs=>{
+    public mtdData$: Observable<any> = new Observable(obs => {
         return combineLatest(this.vat$, this.currentBd$, this.previousBd$)
             .subscribe(data => {
                 const vat = data[0];
                 const cbd = data[1];
                 const pbd = data[2];
 
-                if (cbd.date()===1) {
+                if (cbd.date() === 1) {
                     const data = {
                         sales: 0,
                         diners: 0,
-                        ppa: 0
+                        ppa: 0,
                     };
                     obs.next(data);
                     return;
@@ -884,6 +892,13 @@ export class DataService {
 
                 const dateFrom: moment.Moment = moment(pbd).startOf('month');
                 const dateTo: moment.Moment = moment(pbd);
+
+                let monthKPI = fromPromise(this.getCustomRangeKPI(dateFrom, dateTo));
+                monthKPI.subscribe(data => {
+                    obs.next({
+                        reductions: data.kpi.reductions
+                    });
+                });
 
                 this.dailyData$
                     .subscribe(dailyData => {
@@ -905,7 +920,7 @@ export class DataService {
                         const data = {
                             sales: sales,
                             diners: diners,
-                            ppa: ppa
+                            ppa: ppa,
                         };
 
                         obs.next(data);
@@ -919,19 +934,22 @@ export class DataService {
     private ordersCache: Map<string, Order[]> = new Map<string, Order[]>();
 
     /* cache of PaymentData by business date ('YYYY-MM-DD') */
-    private paymentDataCache: {[index:string]: {
-        accountGroup: string;
-        accountType: string;
-        clearerName: string;
-        date: moment.Moment;
-        paymentsKPIs: PaymentsKPIs;
-    }[]} = {};
+    private paymentDataCache: {
+        [index: string]: {
+            accountGroup: string;
+            accountType: string;
+            clearerName: string;
+            date: moment.Moment;
+            paymentsKPIs: PaymentsKPIs;
+        }[]
+    } = {};
 
     /* cache of BusinessDayKPI by business date ('YYYY-MM-DD') */
     private businessDayKPI_cache: { [index: string]: BusinessDayKPI } = {};
 
     /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService) {}
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService) {
+    }
 
     // NEW METHODS:
 
@@ -962,7 +980,7 @@ export class DataService {
             )
                 .subscribe(([shifts, kpisByOrderType_, kpisByOrderTypeByShift_]) => {
 
-                    function normalize(data, orderTypes?, shifts?):{
+                    function normalize(data, orderTypes?, shifts?): {
                         orderType: OrderType;
                         shift: Shift;
                         ordersKpis: Orders_KPIs;
@@ -996,7 +1014,7 @@ export class DataService {
                         kpisByOrderType: kpisByOrderType,
                         kpisByOrderTypeByShift: kpisByOrderTypeByShift
                     });
-            });
+                });
 
         });
     }
@@ -1005,7 +1023,7 @@ export class DataService {
     // DEPRECATED METHODS:
 
     get currentBdData$(): Observable<KPI> {
-        return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data)=>{
+        return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data) => {
             data = _.cloneDeep(data);
             if (!vat) {
                 data.diners.ppa = data.diners.ppa / 1.17;//TODO bring VAT per month from some api?
@@ -1028,7 +1046,7 @@ export class DataService {
     getOrganizations(o?): Promise<any> {
         const cacheStrategy = o && o.cacheStrategy ? o.cacheStrategy : 'cache';
 
-        if (this.organizations && cacheStrategy==='cache') return Promise.resolve(this.organizations);
+        if (this.organizations && cacheStrategy === 'cache') return Promise.resolve(this.organizations);
 
         return Promise.all([
             this.rosEp.get('organizations'),
@@ -1038,8 +1056,8 @@ export class DataService {
                 const orgs = data[0];
                 const user = data[1];
                 this.organizations = orgs
-                    .filter(o=>o.active && o.live && o.name.indexOf('HQ')===-1 && o.name.toUpperCase()!=='TABIT')
-                    .filter(o=>{
+                    .filter(o => o.active && o.live && o.name.indexOf('HQ') === -1 && o.name.toUpperCase() !== 'TABIT')
+                    .filter(o => {
                         if (user.isStaff) return true;
 
                         let membership = user.memberships.find(m => {
@@ -1047,7 +1065,7 @@ export class DataService {
                         });
 
                         if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1 || membership.responsibilities.indexOf('FINANCE') === -1) {
-                                return false;
+                            return false;
                         }
                         return true;
                     });
@@ -1056,15 +1074,17 @@ export class DataService {
     }
 
     getMonthlyData(month: moment.Moment): Promise<any> {//TODO now that olapDataByMonths is available, use it? or is it too slow?
-        return new Promise((res, rej)=>{
+        return new Promise((res, rej) => {
             this.olapEp.monthlyData
-                .subscribe(dataByMonth=>{
+                .subscribe(dataByMonth => {
                     const monthlyData = dataByMonth.find(dataItem => dataItem.date.isSame(month, 'month'));
                     const result = {
                         sales: 0,
                         diners: 0,
-                        ppa: 0
+                        ppa: 0,
+                        reductions: {}
                     };
+
                     if (monthlyData) {//months without sales wont be found.
                         const diners = monthlyData.dinersPPA;
                         const ppa = (monthlyData.salesPPA ? monthlyData.salesPPA : 0) / (diners ? diners : 1);
@@ -1072,6 +1092,12 @@ export class DataService {
                         result.sales = monthlyData.sales;
                         result.diners = diners;
                         result.ppa = ppa;
+                        result.reductions = {
+                            cancellation_pct: monthlyData.reductionsCancellationAmount,
+                            retention_pct: monthlyData.reductionsRetentionDiscountAmount,
+                            operational_pct: monthlyData.reductionsOperationalDiscountAmount,
+                            organizational_pct: monthlyData.reductionsOrganizationalDiscountAmount
+                        };
                     }
                     console.log(result);
                     res(result);
@@ -1096,124 +1122,121 @@ export class DataService {
 
         if there's not enough data to compute the forecast, the promise resolves with undefined.
      */
-    getMonthForecastData(o: { calculationBd: moment.Moment, upToBd?: moment.Moment }):
-        Promise<{
-            sales: number,
-            diners: number,
-            ppa: number
-        }> {
-            const days = 56;//8 weeks of data
-            const dateTo: moment.Moment = moment(o.calculationBd).subtract(1, 'days');
-            const dateFrom: moment.Moment = moment(dateTo).subtract(days-1, 'days');
-            const upToBd = o.upToBd ? moment(o.upToBd) : moment(o.calculationBd).endOf('month');
+    getMonthForecastData(o: { calculationBd: moment.Moment, upToBd?: moment.Moment }): Promise<{
+        sales: number,
+        diners: number,
+        ppa: number
+    }> {
+        const days = 56;//8 weeks of data
+        const dateTo: moment.Moment = moment(o.calculationBd).subtract(1, 'days');
+        const dateFrom: moment.Moment = moment(dateTo).subtract(days - 1, 'days');
+        const upToBd = o.upToBd ? moment(o.upToBd) : moment(o.calculationBd).endOf('month');
 
-            return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
 
-                this.dailyData$
-                    .subscribe(dailyData => {
+            this.dailyData$
+                .subscribe(dailyData => {
 
-                        //statsByWeekDay computation...
-                        dailyData = dailyData.filter(
-                            dayData =>
-                                dayData.businessDay.isSameOrAfter(dateFrom, 'day') &&
-                                dayData.businessDay.isSameOrBefore(dateTo, 'day')
-                        );
+                    //statsByWeekDay computation...
+                    dailyData = dailyData.filter(
+                        dayData =>
+                            dayData.businessDay.isSameOrAfter(dateFrom, 'day') &&
+                            dayData.businessDay.isSameOrBefore(dateTo, 'day')
+                    );
 
-                        if (dailyData.length < 7) {
-                            //return new Error('not enough data for forecasting');
-                            resolve(undefined);
-                            return;
-                        }
+                    if (dailyData.length < 7) {
+                        //return new Error('not enough data for forecasting');
+                        resolve(undefined);
+                        return;
+                    }
 
-                        //holidays filter - we want our stats to ignore days with 0 sales, as these may represent holidays etc.
-                        dailyData = dailyData.filter(r => r.kpi.sales > 0);
+                    //holidays filter - we want our stats to ignore days with 0 sales, as these may represent holidays etc.
+                    dailyData = dailyData.filter(r => r.kpi.sales > 0);
 
-                        // group history days by weekday, sunday = 0, monday = 1...
-                        const groupedByWeekDay = _.groupBy(dailyData, d => d.businessDay.weekday());
+                    // group history days by weekday, sunday = 0, monday = 1...
+                    const groupedByWeekDay = _.groupBy(dailyData, d => d.businessDay.weekday());
 
-                        //add 0 stats for missing week days. may happen, for example, if the above holidays filter removed all sundays, in case the rest don't work on sundays. in such cash we do wish to forecast sunday to be od 0 sales.
-                        if (_.keys(groupedByWeekDay).length < 7) {
-                            const missingDays = _.difference(['0', '1', '2', '3', '4', '5', '6'], _.keys(groupedByWeekDay));
-                            _.each(missingDays, function (day) {
-                                groupedByWeekDay[day] = [
-                                    {
-                                        kpi: {
+                    //add 0 stats for missing week days. may happen, for example, if the above holidays filter removed all sundays, in case the rest don't work on sundays. in such cash we do wish to forecast sunday to be od 0 sales.
+                    if (_.keys(groupedByWeekDay).length < 7) {
+                        const missingDays = _.difference(['0', '1', '2', '3', '4', '5', '6'], _.keys(groupedByWeekDay));
+                        _.each(missingDays, function (day) {
+                            groupedByWeekDay[day] = [
+                                {
+                                    kpi: {
+                                        sales: 0,
+                                        diners: {
                                             sales: 0,
-                                            diners: {
-                                                sales: 0,
-                                                count: 0
-                                            }
+                                            count: 0
                                         }
                                     }
-                                ];
-                            });
-                        }
-
-                        const statsByWeekDay = _.map(groupedByWeekDay, function (d) {
-                            return {
-                                sales: _.sumBy(d, 'kpi.sales') / d.length,
-                                dinersSales: _.sumBy(d, 'kpi.diners.sales') / d.length,
-                                dinersCount: _.sumBy(d, 'kpi.diners.count') / d.length
-                            };
+                                }
+                            ];
                         });
+                    }
 
-                        // calculate days left
-                        const lastHistoryDate = dailyData[0].businessDay;
-                        const daysLeftCount = upToBd.diff(lastHistoryDate, 'days');
-
-                        // push each day his avg for the last 28 days by weekday
-                        for (let i = 1; i <= daysLeftCount; i++) {
-                            const date = lastHistoryDate.clone().add(i, 'days');
-                            const dayOfWeek = date.weekday();
-                            const dayliForecast = Object.assign({}, statsByWeekDay[dayOfWeek], { businessDay: date });
-                            dailyData.push(dayliForecast);
-                        }
-
-                        //remove previous months data:
-                        const monthStart: moment.Moment = moment(o.calculationBd).startOf('month');
-                        dailyData = dailyData.filter(d => d.businessDay.isSameOrAfter(monthStart, 'day'));
-
-                        // const salesSum = _.sumBy(dailyData, 'kpi.sales');
-                        const salesSum = dailyData.reduce((acc, curr)=>{
-                            const figure = _.get(curr, 'kpi.sales', _.get(curr, 'sales'));
-                            return acc + figure;
-                        },0);
-
-                        //const dinersPPAsum = _.sumBy(dailyData, 'kpi.diners.count');
-                        const dinersCountSum = dailyData.reduce((acc, curr) => {
-                            const figure = _.get(curr, 'kpi.diners.count', _.get(curr, 'dinersCount'));
-                            return acc + figure;
-                        }, 0);
-
-                        // const salesPPAsum = _.sumBy(dailyData, 'kpi.diners.sales');
-                        const dinersSalesSum = dailyData.reduce((acc, curr) => {
-                            const figure = _.get(curr, 'kpi.diners.sales', _.get(curr, 'dinersSales'));
-                            return acc + figure;
-                        }, 0);
-
-                        const ppa = dinersSalesSum / dinersCountSum;
-
-                        const forecast = {
-                            sales: salesSum,
-                            diners: dinersCountSum,
-                            ppa: ppa
+                    const statsByWeekDay = _.map(groupedByWeekDay, function (d) {
+                        return {
+                            sales: _.sumBy(d, 'kpi.sales') / d.length,
+                            dinersSales: _.sumBy(d, 'kpi.diners.sales') / d.length,
+                            dinersCount: _.sumBy(d, 'kpi.diners.count') / d.length
                         };
-
-                        resolve(forecast);
-
                     });
 
-            });
+                    // calculate days left
+                    const lastHistoryDate = dailyData[0].businessDay;
+                    const daysLeftCount = upToBd.diff(lastHistoryDate, 'days');
+
+                    // push each day his avg for the last 28 days by weekday
+                    for (let i = 1; i <= daysLeftCount; i++) {
+                        const date = lastHistoryDate.clone().add(i, 'days');
+                        const dayOfWeek = date.weekday();
+                        const dayliForecast = Object.assign({}, statsByWeekDay[dayOfWeek], {businessDay: date});
+                        dailyData.push(dayliForecast);
+                    }
+
+                    //remove previous months data:
+                    const monthStart: moment.Moment = moment(o.calculationBd).startOf('month');
+                    dailyData = dailyData.filter(d => d.businessDay.isSameOrAfter(monthStart, 'day'));
+
+                    // const salesSum = _.sumBy(dailyData, 'kpi.sales');
+                    const salesSum = dailyData.reduce((acc, curr) => {
+                        const figure = _.get(curr, 'kpi.sales', _.get(curr, 'sales'));
+                        return acc + figure;
+                    }, 0);
+
+                    //const dinersPPAsum = _.sumBy(dailyData, 'kpi.diners.count');
+                    const dinersCountSum = dailyData.reduce((acc, curr) => {
+                        const figure = _.get(curr, 'kpi.diners.count', _.get(curr, 'dinersCount'));
+                        return acc + figure;
+                    }, 0);
+
+                    // const salesPPAsum = _.sumBy(dailyData, 'kpi.diners.sales');
+                    const dinersSalesSum = dailyData.reduce((acc, curr) => {
+                        const figure = _.get(curr, 'kpi.diners.sales', _.get(curr, 'dinersSales'));
+                        return acc + figure;
+                    }, 0);
+
+                    const ppa = dinersSalesSum / dinersCountSum;
+
+                    const forecast = {
+                        sales: salesSum,
+                        diners: dinersCountSum,
+                        ppa: ppa
+                    };
+
+                    resolve(forecast);
+
+                });
+
+        });
     }
 
 
     /*
         returns (VAT-aware) Sales by SubDepartment for the BusinessDate (bd)
      */
-    get_Sales_by_SubDepartment_for_BusinessDate(
-        fromBusinessDate: moment.Moment,
-        toBusinessDate: moment.Moment
-    ): Promise<{
+    get_Sales_by_SubDepartment_for_BusinessDate(fromBusinessDate: moment.Moment,
+                                                toBusinessDate: moment.Moment): Promise<{
         totalSales: number;
         bySubDepartment: {
             subDepartment: string;
@@ -1227,7 +1250,7 @@ export class DataService {
             const data$ = combineLatest(
                 this.vat$,
                 fromPromise(this.olapEp.get_Sales_by_Sub_Departmernt(fromBusinessDate, toBusinessDate)),
-                (vat, salesBySubDepartmentRaw) => Object.assign({}, { salesBySubDepartmentRaw: salesBySubDepartmentRaw }, { vat: vat })
+                (vat, salesBySubDepartmentRaw) => Object.assign({}, {salesBySubDepartmentRaw: salesBySubDepartmentRaw}, {vat: vat})
             );
 
             data$.subscribe(data => {
@@ -1295,7 +1318,7 @@ export class DataService {
             const data$ = combineLatest(
                 this.vat$,
                 fromPromise(this.olapEp.get_Items_data_by_BusinessDay(bd)),
-                (vat, itemsDataRaw) => Object.assign({}, { itemsDataRaw: itemsDataRaw }, { vat: vat })
+                (vat, itemsDataRaw) => Object.assign({}, {itemsDataRaw: itemsDataRaw}, {vat: vat})
             );
 
             data$.subscribe(data => {
@@ -1347,9 +1370,8 @@ export class DataService {
      resolves with a collection of 'Order's for the provided businesDate.
      //(canceled, now always bring price reductions) if withPriceReductions, each order will also be enriched with price reduction related data.
  */
-    public getOrders(
-        businessDate: moment.Moment
-        // { withPriceReductions = false }: { withPriceReductions?: boolean } = {}
+    public getOrders(businessDate: moment.Moment
+                     // { withPriceReductions = false }: { withPriceReductions?: boolean } = {}
     ): Promise<Order[]> {
         // cache check
         const bdKey = businessDate.format('YYYY-MM-DD');
@@ -1361,7 +1383,7 @@ export class DataService {
         const that = this;
 
         const pAll: any = [
-            this.olapEp.getOrders({ day: businessDate }),
+            this.olapEp.getOrders({day: businessDate}),
             this.olapEp.getOrdersPriceReductionData(businessDate)
         ];
         //if (withPriceReductions) pAll.push(this.olapEp.getOrdersPriceReductionData(businessDate));
@@ -1434,10 +1456,8 @@ export class DataService {
      @:promise
      resolves with paymentsData per businessDate for the requested businessDate range
      */
-    public getPaymentsData(
-        fromBusinessDate: moment.Moment,
-        toBusinessDate: moment.Moment
-    ): Promise<{
+    public getPaymentsData(fromBusinessDate: moment.Moment,
+                           toBusinessDate: moment.Moment): Promise<{
         [index: string]: {//index is date in the format YYYY-MM-DD
             accountGroup: string;
             accountType: string;
@@ -1462,7 +1482,7 @@ export class DataService {
         }
 
         return Promise.all(qAll)
-            .then(data=>{
+            .then(data => {
                 // populate cache
                 data.forEach(obj => {
                     Object.keys(obj).forEach(k => {
@@ -1510,7 +1530,7 @@ export class DataService {
             const data$ = combineLatest(
                 this.vat$,
                 fromPromise(this.olapEp.get_operational_errors_by_BusinessDay(bd)),
-                (vat, operationalErrorsDataRaw) => Object.assign({}, { operationalErrorsDataRaw: operationalErrorsDataRaw }, { vat: vat })
+                (vat, operationalErrorsDataRaw) => Object.assign({}, {operationalErrorsDataRaw: operationalErrorsDataRaw}, {vat: vat})
             );
 
             data$.subscribe(data => {
@@ -1580,7 +1600,7 @@ export class DataService {
             const data$ = combineLatest(
                 this.vat$,
                 fromPromise(this.olapEp.get_retention_data_by_BusinessDay(bd)),
-                (vat, retentionDataRaw) => Object.assign({}, { retentionDataRaw: retentionDataRaw }, { vat: vat })
+                (vat, retentionDataRaw) => Object.assign({}, {retentionDataRaw: retentionDataRaw}, {vat: vat})
             );
 
             data$.subscribe(data => {
@@ -1636,10 +1656,8 @@ export class DataService {
      @:promise
      resolves with BusinessDayKPI per businessDate for the requested businessDate range
      */
-    public getBusinessDaysKPIs(
-        fromBusinessDate: moment.Moment,
-        toBusinessDate: moment.Moment
-    ): Promise<{
+    public getBusinessDaysKPIs(fromBusinessDate: moment.Moment,
+                               toBusinessDate: moment.Moment): Promise<{
         [index: string]: BusinessDayKPI//index is date in the format YYYY-MM-DD
     }> {
         const qAll = [];
@@ -1674,7 +1692,7 @@ export class DataService {
                     cancelled_value_pct: number;
                 }
             }[]) => {
-                const monthsData: {[index: string]: BusinessDayKPI}[] = [];
+                const monthsData: { [index: string]: BusinessDayKPI }[] = [];
 
                 data.forEach(monthObj => {
                     const monthData: { [index: string]: BusinessDayKPI } = {};
@@ -1713,23 +1731,23 @@ export class DataService {
 
                 return monthsData;
             }).then((monthsData: { [index: string]: BusinessDayKPI }[]) => {
-                    // populate cache
-                    monthsData.forEach(monthObj => {
-                        Object.keys(monthObj).forEach(bdKey => {
-                            this.businessDayKPI_cache[bdKey] = monthObj[bdKey];
-                        });
+                // populate cache
+                monthsData.forEach(monthObj => {
+                    Object.keys(monthObj).forEach(bdKey => {
+                        this.businessDayKPI_cache[bdKey] = monthObj[bdKey];
                     });
+                });
 
-                    const returnObj: {
-                        [index: string]: BusinessDayKPI
-                    } = {};
+                const returnObj: {
+                    [index: string]: BusinessDayKPI
+                } = {};
 
-                    for (let bd = moment(fromBusinessDate); bd.isSameOrBefore(toBusinessDate, 'day'); bd.add(1, 'day')) {
-                        const bdKey = bd.format('YYYY-MM-DD');
-                        returnObj[bdKey] = this.businessDayKPI_cache[bdKey];
-                    }
+                for (let bd = moment(fromBusinessDate); bd.isSameOrBefore(toBusinessDate, 'day'); bd.add(1, 'day')) {
+                    const bdKey = bd.format('YYYY-MM-DD');
+                    returnObj[bdKey] = this.businessDayKPI_cache[bdKey];
+                }
 
-                    return returnObj;
+                return returnObj;
             });
     }
 
@@ -1737,15 +1755,13 @@ export class DataService {
     @:promise
         resolves with (VAT-aware) CustomRangeKPI
     */
-    public getCustomRangeKPI(
-        fromBusinessMonth: moment.Moment,
-        toBusinessMonth: moment.Moment
-    ): Promise<CustomRangeKPI> {
+    public getCustomRangeKPI(fromBusinessMonth: moment.Moment,
+                             toBusinessMonth: moment.Moment): Promise<CustomRangeKPI> {
         return new Promise((resolve, reject) => {
             const data$ = combineLatest(//TODO this does not work because we return a promise and not an observable!
                 this.vat$,
                 fromPromise(this.olapEp.get_kpi_data(moment(fromBusinessMonth), moment(toBusinessMonth))),
-                (vat, dataSet) => Object.assign({}, { dataSet: dataSet }, { vat: vat })
+                (vat, dataSet) => Object.assign({}, {dataSet: dataSet}, {vat: vat})
             );
 
             data$.subscribe(data => {
@@ -1765,51 +1781,51 @@ export class DataService {
                 resolve(dataSet);
             });
         })
-        .then((dataSet: {
-            sales: number;
-            dinersCount: number;
-            dinersPPA: number;
+            .then((dataSet: {
+                sales: number;
+                dinersCount: number;
+                dinersPPA: number;
 
-            cancellation: number;
-            cancelled_value_pct: number;
+                cancellation: number;
+                cancelled_value_pct: number;
 
-            retention: number;
-            shimurShivuk_value_pct: number;
+                retention: number;
+                shimurShivuk_value_pct: number;
 
-            operational: number;
-            takalotTiful_value_pct: number;
+                operational: number;
+                takalotTiful_value_pct: number;
 
-            organizational: number;
-            shoviIrguni_value_pct: number;
-        }) => {
-            const data = dataSet[0];
-            const kpi = new KPI();
-            kpi.sales = data.sales;
-            kpi.diners = {
-                count: data.dinersCount,
-                sales: 0,
-                ppa: data.dinersPPA
-            };
-            kpi.reductions = {
-                cancellation: data.cancellation,
-                cancellation_pct: data.cancelled_value_pct,
+                organizational: number;
+                shoviIrguni_value_pct: number;
+            }) => {
+                const data = dataSet[0];
+                const kpi = new KPI();
+                kpi.sales = data.sales;
+                kpi.diners = {
+                    count: data.dinersCount,
+                    sales: 0,
+                    ppa: data.dinersPPA
+                };
+                kpi.reductions = {
+                    cancellation: data.cancellation,
+                    cancellation_pct: data.cancelled_value_pct,
 
-                retention: data.retention,
-                retention_pct: data.shimurShivuk_value_pct,
+                    retention: data.retention,
+                    retention_pct: data.shimurShivuk_value_pct,
 
-                operational: data.operational,
-                operational_pct: data.takalotTiful_value_pct,
+                    operational: data.operational,
+                    operational_pct: data.takalotTiful_value_pct,
 
-                organizational: data.organizational,
-                organizational_pct: data.shoviIrguni_value_pct,
-            };
-            const customRangeKPI: CustomRangeKPI = {
-                bdFrom: moment(fromBusinessMonth),
-                bdTo: moment(toBusinessMonth),
-                kpi: kpi
-            };
-            return customRangeKPI;
-        });
+                    organizational: data.organizational,
+                    organizational_pct: data.shoviIrguni_value_pct,
+                };
+                const customRangeKPI: CustomRangeKPI = {
+                    bdFrom: moment(fromBusinessMonth),
+                    bdTo: moment(toBusinessMonth),
+                    kpi: kpi
+                };
+                return customRangeKPI;
+            });
     }
 
 }

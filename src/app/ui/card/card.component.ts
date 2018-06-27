@@ -16,6 +16,7 @@ export interface CardData {
   ppa: number;
   trends?: any;
   salesComment?: string;
+  reductions?: any;
 }
 
 @Component({
