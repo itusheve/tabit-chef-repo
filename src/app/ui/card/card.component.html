@@ -6,12 +6,12 @@
     <dx-load-indicator [(visible)]="!cardData || cardData.loading"></dx-load-indicator>
     <div *ngIf="cardData && !cardData.loading" class="card-body">
         <div class="row">
-            <div class="col-7 border-right">
+            <div class="col-6 border-right">
                 <div class="row">
                     <div class="col-12">
-                        <h3 class="text-dark">{{cardData.sales | curr:'0'}}<br/>
-                            <span *ngIf="cardData.salesComment" class="text-danger text-sm" i18n="@@salesComment">{cardData.salesComment, select, NotFinal {Not Final}}</span>
-                        </h3>
+                        <h1 class="text-dark">{{cardData.sales | curr:'0'}}<br/>
+                            <span *ngIf="cardData.salesComment" class="text-danger text-md sales-comment" i18n="@@salesComment">{cardData.salesComment, select, NotFinal {Not Final}}</span>
+                        </h1>
                     </div>
                 </div>
                 <div class="row">
@@ -62,9 +62,11 @@
         </div>
     </div>
     <div class="card-footer bg-light" *ngIf="cardData && cardData.diners > 0">
-        <div class="row">
-            <div class="col"><span><i class="icon user" style="display: inline-block"></i> {{cardData?.diners | number:'1.0-0'}}</span></div>
-            <div class="col">PPA {{cardData?.ppa | curr}}</div>
-        </div>
+            <div class="d-flex justify-content-between">
+                <div>{{cardData?.ppa | curr}} PPA</div>
+                <div>
+                    <i class="icon user diners-footer-icon" style="display: inline-block"></i> {{cardData?.diners | number:'1.0-0'}}
+                </div>
+            </div>
     </div>
 </div>
