@@ -42,6 +42,8 @@ export class KPI {
         organizational_pct?: number;
     };
 
+    reductionsLastThreeMonthsAvg?: any;
+
     // auto ppa calculation is performed iff dinersCount & dinersSales are provided
     constructor(sales?:number, dinersCount?:number, dinersSales?:number) {
         this.sales = sales;

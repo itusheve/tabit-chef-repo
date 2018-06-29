@@ -753,10 +753,12 @@ export class DataService {
     public dailyDataLimits$: Observable<{ minimum: moment.Moment, maximum: moment.Moment }> = Observable.create(obs => {
         this.dailyData$
             .subscribe(dailyData => {
-                obs.next({
-                    minimum: moment(dailyData[dailyData.length - 1].businessDay),
-                    maximum: moment(dailyData[0].businessDay)
-                });
+                if(dailyData.length) {
+                    obs.next({
+                        minimum: moment(dailyData[dailyData.length - 1].businessDay),
+                        maximum: moment(dailyData[0].businessDay)
+                    });
+                }
             });
     }).publishReplay(1).refCount();
 
@@ -837,6 +839,13 @@ export class DataService {
                                     });
                                 }
                             });
+
+                        let monthKPI = fromPromise(that.getCustomRangeKPI(moment(cbd).subtract(3, 'months'), moment(cbd).subtract(1, 'days')));
+                        monthKPI.subscribe(data => {
+                            obs.next({
+                                reductionsLastThreeMonthsAvg: data.kpi.reductions
+                            });
+                        });
                     });
             }).publishReplay(1).refCount();
         }
@@ -897,6 +906,13 @@ export class DataService {
                 monthKPI.subscribe(data => {
                     obs.next({
                         reductions: data.kpi.reductions
+                    });
+                });
+
+                let lastThreeMonthsKPIAvg = fromPromise(this.getCustomRangeKPI(moment(dateFrom).subtract(4, 'months'), moment(dateFrom).subtract(1, 'months')));
+                lastThreeMonthsKPIAvg.subscribe(data => {
+                    obs.next({
+                        reductionsLastThreeMonthsAvg: data.kpi.reductions
                     });
                 });
 
@@ -1099,7 +1115,6 @@ export class DataService {
                             organizational_pct: monthlyData.reductionsOrganizationalDiscountAmount
                         };
                     }
-                    console.log(result);
                     res(result);
                 });
         });

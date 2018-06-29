@@ -1,6 +1,8 @@
 <div class="flex d-col">
-  <app-card class="mb10 widget" [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
-  <app-card class="mb10 widget" [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')" style="cursor: pointer"></app-card>
-  <app-card class="mb10 widget" [cardData]="mtdCardData"></app-card>
-  <app-month-view (onDayRequest)="onDayRequest($event)"></app-month-view>
+    <div class="card-columns">
+        <app-card class="mb10" [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
+        <app-card class="mb10" [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')" style="cursor: pointer"></app-card>
+        <app-card class="mb10" [cardData]="mtdCardData"></app-card>
+    </div>
+    <app-month-view (onDayRequest)="onDayRequest($event)"></app-month-view>
 </div>

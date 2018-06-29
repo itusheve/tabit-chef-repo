@@ -12,6 +12,7 @@ import {DataService, tmpTranslations} from '../../../tabit/data/data.service';
 
 import {CardData} from '../../ui/card/card.component';
 import {OwnersDashboardService} from '../owners-dashboard.service';
+import {fromPromise} from 'rxjs/observable/fromPromise';
 
 @Component({
     selector: 'app-home',
@@ -29,7 +30,8 @@ export class HomeComponent implements OnInit {
         sales: 0,
         diners: 0,
         ppa: 0,
-        reductions: {}
+        reductions: {},
+        reductionsLastThreeMonthsAvg: {}
     };
 
     previousBdCardData: CardData = {
@@ -39,7 +41,8 @@ export class HomeComponent implements OnInit {
         sales: 0,
         diners: 0,
         ppa: 0,
-        reductions: {}
+        reductions: {},
+        reductionsLastThreeMonthsAvg: {}
     };
 
     mtdCardData: CardData = {
@@ -49,7 +52,8 @@ export class HomeComponent implements OnInit {
         sales: 0,
         diners: 0,
         ppa: 0,
-        reductions: {}
+        reductions: {},
+        reductionsLastThreeMonthsAvg: {}
     };
 
     private previousBdNotFinal = false;
@@ -69,11 +73,12 @@ export class HomeComponent implements OnInit {
         combineLatest(this.dataService.currentBdData$, this.dataService.currentBd$)
             .subscribe(data => {
                 const title = this.datePipe.transform(moment(data[1]).valueOf(), 'fullDate');
-                this.currentBdCardData.sales = data[0].sales;
-                this.currentBdCardData.diners = data[0].diners.count;
-                this.currentBdCardData.ppa = data[0].diners.ppa;
+                this.currentBdCardData.sales = data[0].sales || this.currentBdCardData.sales;
+                this.currentBdCardData.diners = data[0].diners ? data[0].diners.count : this.currentBdCardData.diners;
+                this.currentBdCardData.ppa = data[0].diners ? data[0].diners.ppa : this.currentBdCardData.ppa;
                 this.currentBdCardData.title = title;
-                this.currentBdCardData.reductions = data[0].reductions;
+                this.currentBdCardData.reductions = data[0].reductions || this.currentBdCardData.reductions;
+                this.currentBdCardData.reductionsLastThreeMonthsAvg = data[0].reductionsLastThreeMonthsAvg || this.currentBdCardData.reductionsLastThreeMonthsAvg;
 
                 if (typeof this.currentBdCardData.sales === 'number') {
                     this.currentBdCardData.loading = false;
@@ -94,12 +99,12 @@ export class HomeComponent implements OnInit {
         combineLatest(this.cardsDataService.previousBdData$, this.dataService.previousBd$)
             .subscribe(data => {
                 const title = this.datePipe.transform(data[1].valueOf(), 'fullDate');
-                this.previousBdCardData.diners = data[0].diners;
-                this.previousBdCardData.ppa = data[0].ppa;
-                this.previousBdCardData.sales = data[0].sales;
-                this.previousBdCardData.reductions = data[0].reductions;
+                this.previousBdCardData.diners = data[0].diners || this.previousBdCardData.diners;
+                this.previousBdCardData.ppa = data[0].ppa || this.previousBdCardData.ppa;
+                this.previousBdCardData.sales = data[0].sales || this.previousBdCardData.sales;
+                this.previousBdCardData.reductions = data[0].reductions || this.previousBdCardData.reductions;
                 this.previousBdCardData.title = title;
-
+                this.currentBdCardData.reductionsLastThreeMonthsAvg = data[0].reductionsLastThreeMonthsAvg || this.currentBdCardData.reductionsLastThreeMonthsAvg;
                 if (data[0].hasOwnProperty('final') && !data[0].final) {
                     this.previousBdCardData.salesComment = 'NotFinal';
                     this.previousBdNotFinal = true;
@@ -129,6 +134,8 @@ export class HomeComponent implements OnInit {
                 this.mtdCardData.sales = data[0].sales || this.mtdCardData.sales;
                 this.mtdCardData.title = title;
                 this.mtdCardData.reductions = data[0].reductions ? data[0].reductions : this.mtdCardData.reductions;
+                this.mtdCardData.reductionsLastThreeMonthsAvg = data[0].reductionsLastThreeMonthsAvg || this.mtdCardData.reductionsLastThreeMonthsAvg;
+
                 this.mtdCardData.loading = false;
             });
         // B:

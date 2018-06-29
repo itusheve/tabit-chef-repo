@@ -9,6 +9,7 @@ import {combineLatest} from 'rxjs/observable/combineLatest';
 import {TrendsDataService} from '../../../tabit/data/dc/trends.data.service';
 import {TrendModel} from '../../../tabit/model/Trend.model';
 import {environment} from '../../../environments/environment';
+import {fromPromise} from 'rxjs/observable/fromPromise';
 
 interface DailyTrends {
     date: moment.Moment;
@@ -58,7 +59,8 @@ export class MonthViewComponent {
         sales: 0,
         diners: 0,
         ppa: 0,
-        reductions: {}
+        reductions: {},
+        reductionsLastThreeMonthsAvg: {}
     };
 
     components = {
@@ -225,7 +227,7 @@ export class MonthViewComponent {
                         that.summaryCardData.loading = false;
 
                         Promise.all([
-                            that.dataService.getMonthlyData(month),
+                            that.dataService.getCustomRangeKPI(moment(month).subtract(4, 'months'), moment(month).subtract(1, 'months')),
                             that.trendsDataService.month_lastYear_trend(month),
                             that.trendsDataService.month_sales_to_start_of_month_forecast(month)
                         ])
@@ -233,6 +235,7 @@ export class MonthViewComponent {
                                 const lastYearTrendModel = data[1];
                                 const forecastTrendModel = data[2];
 
+                                that.summaryCardData.reductionsLastThreeMonthsAvg = data[0].kpi.reductions;
                                 that.summaryCardData.trends.fourWeekAvg = forecastTrendModel;
                                 that.summaryCardData.trends.yearAvg = lastYearTrendModel;
                             });

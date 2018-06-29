@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { DataService } from '../data.service';
 import { ROSEp } from '../ep/ros.ep';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import {fromPromise} from 'rxjs/observable/fromPromise';
 
 @Injectable()
 export class CardsDataService {
@@ -74,9 +75,6 @@ export class CardsDataService {
 
                             obs.next({
                                 sales: sales,
-                                diners: undefined,
-                                ppa: undefined,
-                                reductions: {},
                                 final: false
                             });
                         }
@@ -84,11 +82,15 @@ export class CardsDataService {
                     .catch(e=>{
                         obs.next({
                             sales: 0,
-                            diners: null,
-                            ppa: null,
-                            reductions: {}
                         });
                     });
+
+                let monthKPI = fromPromise(that.dataService.getCustomRangeKPI(moment(pbd).subtract(3, 'months'), moment(pbd).subtract(1, 'days')));
+                monthKPI.subscribe(data => {
+                    obs.next({
+                        reductionsLastThreeMonthsAvg: data.kpi.reductions
+                    });
+                });
                 }
             );
     }).publishReplay(1).refCount();

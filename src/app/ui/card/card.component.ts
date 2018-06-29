@@ -17,6 +17,7 @@ export interface CardData {
   trends?: any;
   salesComment?: string;
   reductions?: any;
+  reductionsLastThreeMonthsAvg?: any;
 }
 
 @Component({

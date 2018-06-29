@@ -1,56 +1,70 @@
-<div class="card-container text-right">
-    <div class="card-header">
-        <span class="bold" *ngIf="cardData" i18n="@@orsLastDay">{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</span>
-        <span [ngClass]="cardData.tag ? 'text-gray' : 'bold'">{{cardData?.title || '&nbsp;'}}</span>
+<div class="card bg-light dashboard-home-card">
+    <div class="card-header bg-light">
+        <span class="font-weight-bold text-dark" *ngIf="cardData" i18n="@@orsLastDay">{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</span>
+        <span [ngClass]="cardData.tag ? 'text-secondary' : 'font-weight-bold text-dark'">{{cardData?.title || '&nbsp;'}}</span>
     </div>
     <dx-load-indicator [(visible)]="!cardData || cardData.loading"></dx-load-indicator>
-    <div *ngIf="cardData && !cardData.loading" class="card-content">
-        <div class="card-content-item flex d-col" style="width: 55%">
-            <div class="amount">{{cardData.sales | curr:'0'}}</div>
-            <div class="amount-comment" *ngIf="cardData.salesComment" style="color: red;" i18n="@@salesComment">{
-                cardData.salesComment, select, NotFinal {Not Final} }
+    <div *ngIf="cardData && !cardData.loading" class="card-body">
+        <div class="row">
+            <div class="col-7 border-right">
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="text-dark">{{cardData.sales | curr:'0'}}<br/>
+                            <span *ngIf="cardData.salesComment" class="text-danger text-sm" i18n="@@salesComment">{cardData.salesComment, select, NotFinal {Not Final}}</span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-borderless table-sm sales-table">
+                            <tr *ngIf="cardData.trends && cardData.trends.yearAvg && cardData.trends.yearAvg.status==='ready'">
+                                <td><i class="icon" style="display: inline-block" [ngClass]="cardData.trends?.yearAvg?.val > 0 ? 'up' : 'down'"></i></td>
+                                <td>{{cardData.trends?.yearAvg?.val | percent:'1.1-1'}}</td>
+                                <td i18n="@@lastYear">Last year</td>
+                            </tr>
+                            <tr *ngIf="cardData.trends && cardData.trends.fourWeekAvg && cardData.trends.fourWeekAvg.status==='ready'">
+                                <td><i class="icon" style="display: inline-block" [ngClass]="cardData.trends?.fourWeekAvg?.val > 0 ? 'up' : 'down'"></i></td>
+                                <td>{{cardData.trends?.fourWeekAvg?.val | percent:'1.1-1'}}</td>
+                                <td i18n="@@fourWeekAvg">4 Week</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="small flex j-start" *ngIf="cardData && cardData.diners > 0">
-                <div class="flex j-start"><span><i class="icon user" style="position:relative; top:2px; width: 11px;"></i></span><span style="margin: 0 4px;" class="dark">{{cardData?.diners | number:'1.0-0'}}</span></div>
-                <div>&nbsp;</div>
-                <div>&nbsp;</div>
-                <div>&nbsp;</div>
-                <div class="flex"><span class="ppa" style="margin: 0 4px;">PPA</span><span class="dark">{{cardData?.ppa | curr}}</span></div>
+            <div class="col-5">
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-borderless table-sm">
+                            <tr *ngIf="cardData.reductions && cardData.reductions.cancellation_pct">
+                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg"><i class="icon" style="display: inline-block" [ngClass]="cardData.reductions?.cancellation_pct >= cardData.reductionsLastThreeMonthsAvg?.cancellation_pct ? 'up' : 'down'"></i></td>
+                                <td>{{cardData.reductions?.cancellation_pct | percent:'1.1-1'}}</td>
+                                <td i18n="@@cancellations">Cancellations</td> <!--ביטולים-->
+                            </tr>
+                            <tr *ngIf="cardData.reductions && cardData.reductions.retention_pct">
+                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg"><i class="icon" style="display: inline-block" [ngClass]="cardData.reductions?.retention_pct >= cardData.reductionsLastThreeMonthsAvg?.retention_pct ? 'up' : 'down'"></i></td>
+                                <td>{{cardData.reductions?.retention_pct | percent:'1.1-1'}}</td>
+                                <td i18n="@@retention">Retention</td>
+                            </tr>
+                            <tr *ngIf="cardData.reductions && cardData.reductions.operational_pct">
+                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg"><i class="icon" style="display: inline-block" [ngClass]="cardData.reductions?.operational_pct >= cardData.reductionsLastThreeMonthsAvg?.operational_pct ? 'up' : 'down'"></i></td>
+                                <td>{{cardData.reductions?.operational_pct | percent:'1.1-1'}}</td>
+                                <td i18n="@@operational">Operational</td> <!--ביטולים-->
+                            </tr>
+                            <tr *ngIf="cardData.reductions && cardData.reductions.organizational_pct">
+                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg"><i class="icon" style="display: inline-block" [ngClass]="cardData.reductions?.organizational_pct >= cardData.reductionsLastThreeMonthsAvg?.organizational_pct ? 'up' : 'down'"></i></td>
+                                <td>{{cardData.reductions?.organizational_pct | percent:'1.1-1'}}</td>
+                                <td i18n="@@organizational">Organizational</td> <!--ביטולים-->
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card-content-item" style="width: 45%">
-            <div class="display-table">
-                <div class="table-row" *ngIf="cardData.trends && cardData.trends.yearAvg && cardData.trends.yearAvg.status==='ready'">
-                    <div class="table-cell cell50 smaller grey">לשנה קודמת</div>
-                    <div class="table-cell small dark">{{cardData.trends?.yearAvg?.val | percent:'1.1-1'}}</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.yearAvg?.val > 0 ? 'up' : 'down'"></i></span></div>
-                </div>
-                <div class="table-row" *ngIf="cardData.trends && cardData.trends.fourWeekAvg && cardData.trends.fourWeekAvg.status==='ready'">
-                    <div class="table-cell cell50 smaller grey">ממוצע 4 שב'</div>
-                    <div class="table-cell small dark">{{cardData.trends?.fourWeekAvg?.val | percent:'1.1-1'}}</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.trends?.fourWeekAvg?.val > 0 ? 'up' : 'down'"></i></span></div>
-                </div>
-                <div class="table-row" *ngIf="cardData.reductions && cardData.reductions.cancellation_pct">
-                    <div class="table-cell cell50 smaller grey">ביטולים</div>
-                    <div class="table-cell small dark">{{cardData.reductions?.cancellation_pct | percent:'1.1-1'}}</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.reductions?.cancellation_pct <= 0 ? 'up' : 'down'"></i></span></div>
-                </div>
-                <div class="table-row" *ngIf="cardData.reductions && cardData.reductions.retention_pct">
-                    <div class="table-cell cell50 smaller grey">תקלות תפעול</div>
-                    <div class="table-cell small dark">{{cardData.reductions?.retention_pct | percent:'1.1-1'}}</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.reductions?.retention_pct <= 0 ? 'up' : 'down'"></i></span></div>
-                </div>
-                <div class="table-row" *ngIf="cardData.reductions && cardData.reductions.operational_pct">
-                    <div class="table-cell cell50 smaller grey">שימור ושיווק</div>
-                    <div class="table-cell small dark">{{cardData.reductions?.operational_pct | percent:'1.1-1'}}</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.reductions?.operational_pct <= 0 ? 'up' : 'down'"></i></span></div>
-                </div>
-                <div class="table-row" *ngIf="cardData.reductions && cardData.reductions.organizational_pct">
-                    <div class="table-cell cell50 smaller grey">א' עובדים</div>
-                    <div class="table-cell small dark">{{cardData.reductions?.organizational_pct | percent:'1.1-1'}}</div>
-                    <div class="table-cell"><span><i class="icon" [ngClass]="cardData.reductions?.organizational_pct <= 0 ? 'up' : 'down'"></i></span></div>
-                </div>
-            </div>
+    </div>
+    <div class="card-footer bg-light" *ngIf="cardData && cardData.diners > 0">
+        <div class="row">
+            <div class="col"><span><i class="icon user" style="display: inline-block"></i> {{cardData?.diners | number:'1.0-0'}}</span></div>
+            <div class="col">PPA {{cardData?.ppa | curr}}</div>
         </div>
     </div>
 </div>

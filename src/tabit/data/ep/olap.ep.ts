@@ -522,53 +522,6 @@ export class OlapEp {
         return this.monthlyData$;
     }
 
-    public getKPIByMonth(dateFrom, dateTo): any {
-
-        let timeHierarchy = this.olapMappings.dims.orderClosingTime.hierarchy[environment.region];
-        let timeDim = this.olapMappings.dims.orderClosingTime.dims.time[environment.region];
-
-        const mdx = `
-            SELECT
-            {
-                ${this.measure(this.olapMappings.measureGroups.general.measures.sales)},
-                ${this.measure(this.olapMappings.measureGroups.general.measures.dinersSales)},
-                ${this.measure(this.olapMappings.measureGroups.general.measures.dinersCount)},
-                ${this.measure(this.olapMappings.measureGroups.payments.measures.totalPaymentsAmnt)},
-                ${this.measure(this.olapMappings.measureGroups.items.measures.takalotTiful_value_pct)},
-                ${this.measure(this.olapMappings.measureGroups.items.measures.shimurShivuk_value_pct)},
-                ${this.measure(this.olapMappings.measureGroups.items.measures.shoviIrguni_value_pct)},
-                ${this.measure(this.olapMappings.measureGroups.items.measures.cancelled_value_pct)}
-            }
-            ON 0,
-            NON EMPTY {
-                ${this.membersNew({dimAttr: this.olapMappings.dims.businessDateV2.attr.yearMonth})}
-            }
-            ON 1
-            FROM(
-                SELECT
-                    (
-                        [${this.olapMappings.dims.businessDateV2.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.yearMonth.path[environment.region]}].&[${dateFrom.format('YYYYMM')}]:[${this.olapMappings.dims.businessDateV2.path[environment.region]}].[${this.olapMappings.dims.businessDateV2.attr.yearMonth.path[environment.region]}].&[${dateTo.format('YYYYMM')}]
-                    )
-                ON 0
-                FROM ${ this.cube }
-            )
-        `;
-
-        this.url
-            .subscribe(url => {
-                const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
-
-                xmla4j_w.executeNew(mdx)
-                    .then(rowset => {
-
-
-                    })
-                    .catch(e => {
-                    });
-            });
-        return this.monthlyData$;
-    }
-
     /*
         if timeTo is supplied, then only orders that were closed up to timeTo will be be retreived,
         e.g. if timeTo is 1745 than only orders that were clsed untill 17:45 will be retreived

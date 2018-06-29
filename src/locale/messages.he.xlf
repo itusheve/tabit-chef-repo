@@ -558,6 +558,30 @@
         <source>Refund</source>
         <target>החזר</target>
       </trans-unit>
+      <trans-unit id="lastYear" datatype="html">
+        <source>Last year</source>
+        <target>שנה קודמת</target>
+      </trans-unit>
+      <trans-unit id="fourWeekAvg" datatype="html">
+        <source>4 Week</source>
+        <target>ממוצע 4 שב'</target>
+      </trans-unit>
+      <trans-unit id="cancellations" datatype="html">
+        <source>Cancellations</source>
+        <target>ביטולים</target>
+      </trans-unit>
+      <trans-unit id="retention" datatype="html">
+        <source>Retention</source>
+        <target>שימור ושיווק</target>
+      </trans-unit>
+      <trans-unit id="operational" datatype="html">
+        <source>Operational</source>
+        <target>תקלות תפעול</target>
+      </trans-unit>
+      <trans-unit id="organizational" datatype="html">
+        <source>Organizational</source>
+        <target>א' עובדים</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
