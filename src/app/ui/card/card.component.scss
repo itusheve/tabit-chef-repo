@@ -3,13 +3,16 @@ dx-load-indicator {
 }
 
 .dashboard-home-card {
+  h1 {
+    font-size: 30px;
+  }
   td {
     padding: 2px;
     border: none;
-    font-size: 14px;
+    font-size: 11px;
   }
   .icon {
-    top: 5px;
+    top: 1px;
     position: relative;
   }
 
@@ -21,6 +24,12 @@ dx-load-indicator {
     position: relative;
     top: -25px;
     left: 22px;
+  }
+
+  .sales-comment-rtl {
+    position: relative;
+    top: -15px;
+    left: -1px;
   }
 
   .diners-footer-icon {

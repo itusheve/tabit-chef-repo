@@ -330,6 +330,10 @@
         <source>PPA</source>
         <target>PPA</target>
       </trans-unit>
+      <trans-unit id="ppaText" datatype="html">
+        <source>PPA</source>
+        <target>ממוצע לסועד</target>
+      </trans-unit>
       <trans-unit id="orders" datatype="html">
         <source>Orders</source>
         <target>הזמנות</target>
@@ -569,10 +573,6 @@
       <trans-unit id="cancellations" datatype="html">
         <source>Cancellations</source>
         <target>ביטולים</target>
-      </trans-unit>
-      <trans-unit id="retention" datatype="html">
-        <source>Retention</source>
-        <target>שימור ושיווק</target>
       </trans-unit>
       <trans-unit id="operational" datatype="html">
         <source>Operational</source>
