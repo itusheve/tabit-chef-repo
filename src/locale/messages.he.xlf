@@ -328,7 +328,7 @@
       </trans-unit>
       <trans-unit id="ppa" datatype="html">
         <source>PPA</source>
-        <target>PPA</target>
+        <target>ממוצע</target>
       </trans-unit>
       <trans-unit id="ppaText" datatype="html">
         <source>PPA</source>

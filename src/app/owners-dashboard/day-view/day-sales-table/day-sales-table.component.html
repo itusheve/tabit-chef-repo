@@ -83,7 +83,7 @@
                     </tr>
 
                     <tr *ngIf="environment.region === 'il'">
-                        <td i18n="@@grossSales">מחזור</td>
+                        <td>מחזור</td>
                         <td class="ar">{{pivotedDataTotals.salesTotalAmount | curr:'0'}}</td>
                         <td class="ar" *ngFor="let val of pivotedData.salesTotalAmount">{{val | curr:'0'}}</td>
                     </tr>
@@ -107,14 +107,14 @@
                     </tr>
 
                     <tr>
-                        <td i18n="@@dinersOrders">Diners / Orders</td>
-                        <td class="ar">{{pivotedDataTotals.dinersOrders | curr:'0'}}</td>
-                        <td class="ar" *ngFor="let val of pivotedData.dinersOrders">{{val | curr:'0'}}</td>
+                        <td i18n="@@diners">Diners</td>
+                        <td class="ar"><!--{{pivotedDataTotals.dinersOrders | curr:'0'}}--></td>
+                        <td class="ar" *ngFor="let val of pivotedData.dinersOrders">{{val}}</td>
                     </tr>
 
                     <tr>
                         <td i18n="@@ppa">PPA</td>
-                        <td class="ar">{{pivotedDataTotals.ppa | curr:'0'}}</td>
+                        <td class="ar"><!--{{pivotedDataTotals.ppa | curr:'0'}}--></td>
                         <td class="ar" *ngFor="let val of pivotedData.ppa">{{val | curr:'0'}}</td>
                     </tr>
 

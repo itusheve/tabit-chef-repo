@@ -38,7 +38,7 @@ export class OlapMappings {
 
     public measures = {//deprecated, use measureGroups instead
         sales: {
-            il: '[Measures].[salesNetAmount]',
+            il: '[Measures].[TtlItemsSales]',
             us: '[Measures].[salesNetAmount]'//'Item Net Sales $'
         },
         itemsSales: {
