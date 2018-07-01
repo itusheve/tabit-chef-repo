@@ -9,15 +9,16 @@ dx-load-indicator {
   td {
     padding: 2px;
     border: none;
-    font-size: 11px;
+    font-size: 14px;
   }
   .icon {
     top: 1px;
     position: relative;
+    height: 13px;
   }
 
   .sales-table {
-    width: 120px;
+    max-width: 175px;
   }
 
   .sales-comment {
@@ -33,6 +34,15 @@ dx-load-indicator {
   }
 
   .diners-footer-icon {
-    top: 8px;
+    top: 2px;
+  }
+
+  .table-padding-rtl {
+    margin-right: -8px;
+  }
+
+  .card-footer {
+    margin-left: 18px !important;
+    margin-right: 18px !important;
   }
 }
