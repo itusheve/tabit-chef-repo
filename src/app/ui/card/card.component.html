@@ -1,12 +1,12 @@
 <div class="card bg-light dashboard-home-card">
     <div class="card-header bg-light">
         <span class="font-weight-bold text-dark" *ngIf="cardData" i18n="@@orsLastDay">{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</span>
-        <span [ngClass]="cardData.tag ? 'text-secondary' : 'font-weight-bold text-dark'">{{cardData?.title || '&nbsp;'}}</span>
+        <span [ngClass]="cardData.tag ? 'text-body' : 'font-weight-bold text-dark'">{{cardData?.title || '&nbsp;'}}</span>
     </div>
     <dx-load-indicator [(visible)]="!cardData || cardData.loading"></dx-load-indicator>
     <div *ngIf="cardData && !cardData.loading" class="card-body py-2">
         <div class="row">
-            <div class="col-7" [ngClass]="region == 'il' ? 'border-left' : 'border-right'">
+            <div class="col-7" [ngClass]="this.cardData.reductions.cancellation_pct || this.cardData.reductions.retention_pct || this.cardData.reductions.organizational_pct || this.cardData.reductions.operational_pct ? (region == 'il' ? 'border-left' : 'border-right') : ''">
                 <div class="row">
                     <div class="col-12">
                         <h1 class="text-dark">
@@ -15,18 +15,18 @@
                         </h1>
                     </div>
                 </div>
-                <div class="row" style="margin-top: 12px;">
+                <div class="row" style="margin-top: 13px;">
                     <div class="col-12">
                         <table class="table table-borderless table-sm sales-table mb-0" [ngClass]="region == 'il' ? 'table-padding-rtl' : 'table-padding-ltr'">
                             <tr *ngIf="cardData.trends && cardData.trends.yearAvg && cardData.trends.yearAvg.status==='ready'">
                                 <td><mat-icon [ngClass]="cardData.trends?.yearAvg?.val > 0 ? 'up-positive' : 'down-negative'">play_arrow</mat-icon></td>
                                 <td class="text-dark">{{cardData.trends?.yearAvg?.val | percent:'1.1-1'}}</td>
-                                <td class="text-secondary" i18n="@@lastYear">Last year</td>
+                                <td class="text-body" i18n="@@lastYear">Last year</td>
                             </tr>
                             <tr *ngIf="cardData.trends && cardData.trends.fourWeekAvg && cardData.trends.fourWeekAvg.status==='ready'">
                                 <td><mat-icon [ngClass]="cardData.trends?.fourWeekAvg?.val > 0 ? 'up-positive' : 'down-negative'">play_arrow</mat-icon></td>
                                 <td class="text-dark">{{cardData.trends?.fourWeekAvg?.val | percent:'1.1-1'}}</td>
-                                <td class="text-secondary" i18n="@@fourWeekAvg">4 Week</td>
+                                <td class="text-body" i18n="@@fourWeekAvg">4 Week</td>
                             </tr>
                         </table>
                     </div>
@@ -41,28 +41,28 @@
                                     <mat-icon [ngClass]="cardData.reductions?.cancellation_pct >= cardData.reductionsLastThreeMonthsAvg?.cancellation_pct ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.reductions?.cancellation_pct | percent:'1.1-1'}}</td>
-                                <td class="text-secondary" i18n="@@cancellations">Cancellations</td> <!--ביטולים-->
+                                <td class="text-body" i18n="@@cancellations">Cancellations</td> <!--ביטולים-->
                             </tr>
                             <tr *ngIf="cardData.reductions && cardData.reductions.retention_pct">
                                 <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg">
                                     <mat-icon [ngClass]="cardData.reductions?.retention_pct >= cardData.reductionsLastThreeMonthsAvg?.retention_pct ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.reductions?.retention_pct | percent:'1.1-1'}}</td>
-                                <td class="text-secondary" i18n="@@retention">Retention</td>
+                                <td class="text-body" i18n="@@retention">Retention</td>
                             </tr>
                             <tr *ngIf="cardData.reductions && cardData.reductions.operational_pct">
                                 <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg">
                                     <mat-icon [ngClass]="cardData.reductions?.operational_pct >= cardData.reductionsLastThreeMonthsAvg?.operational_pct ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.reductions?.operational_pct | percent:'1.1-1'}}</td>
-                                <td class="text-secondary" i18n="@@operational">Operational</td> <!--ביטולים-->
+                                <td class="text-body" i18n="@@operational">Operational</td> <!--ביטולים-->
                             </tr>
                             <tr *ngIf="cardData.reductions && cardData.reductions.organizational_pct">
                                 <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg">
                                     <mat-icon [ngClass]="cardData.reductions?.organizational_pct >= cardData.reductionsLastThreeMonthsAvg?.organizational_pct ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.reductions?.organizational_pct | percent:'1.1-1'}}</td>
-                                <td class="text-secondary" i18n="@@organizational">Organizational</td> <!--ביטולים-->
+                                <td class="text-body" i18n="@@organizational">Organizational</td> <!--ביטולים-->
                             </tr>
                         </table>
                     </div>
@@ -72,7 +72,7 @@
     </div>
     <div class="card-footer bg-light py-1 px-0" *ngIf="cardData && cardData.diners > 0">
             <div class="d-flex justify-content-between">
-                <div><span class="text-dark">{{cardData?.ppa | curr}}</span> <span class="text-secondary" i18n="@@ppaText">PPA</span></div>
+                <div><span class="text-dark">{{cardData?.ppa | curr}}</span> <span class="text-body" i18n="@@ppaText">PPA</span></div>
                 <div>
                     <i class="icon user diners-footer-icon" style="display: inline-block"></i> <span  class="text-dark">{{cardData?.diners | number:'1.0-0'}}</span>
                 </div>
