@@ -167,7 +167,6 @@ export class MonthViewComponent {
                                 };
                             });
 
-                            that.monthChart.render(rowset);
                             that.monthGrid.render(rowset);
 
                         });
