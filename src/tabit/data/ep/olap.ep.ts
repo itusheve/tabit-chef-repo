@@ -627,10 +627,10 @@ export class OlapEp {
 
                                 const ppa = (salesPPA ? salesPPA : 0) / (dinersPPA ? dinersPPA : 1);
 
-                                const reductionsCancellationAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.takalotTiful_value_pct);
-                                const reductionsOperationalDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.shimurShivuk_value_pct);
-                                const reductionsRetentionDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.shoviIrguni_value_pct);
-                                const reductionsOrganizationalDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.cancelled_value_pct);
+                                const reductionsCancellationAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.cancelled_value_pct);
+                                const reductionsOperationalDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.takalotTiful_value_pct);
+                                const reductionsRetentionDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.shimurShivuk_value_pct);
+                                const reductionsOrganizationalDiscountAmount = this.parseMeasure(r, this.olapMappings.measureGroups.items.measures.shoviIrguni_value_pct);
 
                                 return {
                                     date: date,

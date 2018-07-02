@@ -1,57 +1,66 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 
 import * as moment from 'moment';
-import { Observable } from 'rxjs/Observable';
+import {Observable} from 'rxjs/Observable';
+import {environment} from '../../../../environments/environment';
+import {currencySymbol} from '../../../../tabit/data/data.service';
+
 
 @Component({
-  selector: 'app-month-selector',
-  templateUrl: './month-selector.component.html',
-  styleUrls: ['./month-selector.component.css']
+    selector: 'app-month-selector',
+    templateUrl: './month-selector.component.html',
+    styleUrls: ['./month-selector.component.css']
 })
 export class MonthSelectorComponent implements OnInit {
-  @Input() month$: Observable<moment.Moment>;
-  
-  @Input() options: {
-    minDate: moment.Moment,
-    maxDate: moment.Moment
-  };
+    @Input() month$: Observable<moment.Moment>;
 
-  month: moment.Moment;
+    @Input() options: {
+        minDate: moment.Moment,
+        maxDate: moment.Moment
+    };
 
-  @Output() onDateChanged = new EventEmitter();
+    month: moment.Moment;
 
-  disablePrevious = false;
-  disableNext = false;
+    @Output() onDateChanged = new EventEmitter();
 
-  private setDisable() {
-    if (this.month.isSame(this.options.minDate, 'month')) {
-      this.disablePrevious = true;
-    } else {
-      this.disablePrevious = false;
+    public region: any;
+
+    constructor() {
+        this.region = environment.region;
     }
 
-    if (this.month.isSame(this.options.maxDate, 'month')) {
-      this.disableNext = true;
-    } else {
-      this.disableNext = false;
+    disablePrevious = false;
+    disableNext = false;
+
+    private setDisable() {
+        if (this.month.isSame(this.options.minDate, 'month')) {
+            this.disablePrevious = true;
+        } else {
+            this.disablePrevious = false;
+        }
+
+        if (this.month.isSame(this.options.maxDate, 'month')) {
+            this.disableNext = true;
+        } else {
+            this.disableNext = false;
+        }
     }
-  }
 
-  ngOnInit() {
-    this.month$.subscribe(month=>{
-      this.month=month;
-      this.setDisable();
-    });
-  }  
+    ngOnInit() {
+        this.month$.subscribe(month => {
+            this.month = month;
+            this.setDisable();
+        });
+    }
 
-  prevMonth = ()=>{
-    if (this.month.isSame(this.options.minDate, 'month')) return;
-    this.onDateChanged.emit(moment(this.month).subtract(1, 'months'));
-  }
+    prevMonth = () => {
+        if (this.month.isSame(this.options.minDate, 'month')) return;
+        this.onDateChanged.emit(moment(this.month).subtract(1, 'months'));
+    };
 
-  nextMonth = ()=>{
-    if (this.month.isSame(this.options.maxDate, 'month')) return;
-    this.onDateChanged.emit(moment(this.month).add(1, 'months'));
-  }
+    nextMonth = () => {
+        if (this.month.isSame(this.options.maxDate, 'month')) return;
+        this.onDateChanged.emit(moment(this.month).add(1, 'months'));
+    };
 
 }

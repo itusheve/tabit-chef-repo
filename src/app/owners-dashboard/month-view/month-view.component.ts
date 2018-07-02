@@ -48,7 +48,8 @@ export class MonthViewComponent {
         sales: 0,
         diners: 0,
         ppa: 0,
-        reductions: {}
+        reductions: {},
+        type: 'forcast'
     };
 
     showSummary = false;

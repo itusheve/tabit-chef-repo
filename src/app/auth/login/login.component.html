@@ -7,7 +7,7 @@
         <!-- reactive form + material design: -->
         <form class="flex d-col" [formGroup]="loginForm" novalidate>
           <div class="flex d-col">
-            <mat-form-field style="width:100%">
+            <mat-form-field style="width:100%" floatLabel="never">
               <input
                 matInput
                 type="email"
@@ -16,6 +16,7 @@
                 formControlName="email"
                 required
                 autofocus
+                style="font-size: 25px"
                 >
               <button mat-button *ngIf="loginForm.value.email" matSuffix mat-icon-button aria-label="Clear" (click)="loginForm.patchValue({email: ''})">
                 <mat-icon>close</mat-icon>
@@ -24,7 +25,7 @@
                 <div *ngIf="email.errors.email" i18n="login@@illegalEmail">Illegal email</div>
               </mat-error>
             </mat-form-field>
-            <mat-form-field>
+            <mat-form-field floatLabel="never">
               <input
                 matInput
                 placeholder="Password"
@@ -32,6 +33,7 @@
                 [type]="hidePass ? 'password' : 'text'"
                 formControlName="password"
                 required
+                style="font-size: 25px"
                 >
               <mat-icon matSuffix (click)="hidePass = !hidePass">{{hidePass ? 'visibility' : 'visibility_off'}}</mat-icon>
               <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">

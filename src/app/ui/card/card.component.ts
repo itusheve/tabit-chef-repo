@@ -18,6 +18,7 @@ export interface CardData {
   trends?: any;
   salesComment?: string;
   reductions?: any;
+  type?: any;
   reductionsLastThreeMonthsAvg?: any;
   currency?: string;
 }
