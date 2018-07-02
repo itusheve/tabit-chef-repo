@@ -23,10 +23,17 @@ export class OwnersDashboardCurrencyPipe implements PipeTransform {
         if (cents === 'cents') {
             value = value / 100;
         }
-        let result = this.decPipe.transform(value, `1.${decimal}-${decimal}`);
+        let result = this.decPipe.transform(Math.abs(value), `1.${decimal}-${decimal}`);
         if (result) {
             if(!disableSymbol) {
-                result = `${currencySymbol}${result}`;
+                if(value < 0){
+                    result = `${currencySymbol}${result}-`;
+                } else {
+                    result = `${currencySymbol}${result}`;
+                }
+
+            } else if(value < 0) {
+                result = `-${result}`;
             }
         }
 

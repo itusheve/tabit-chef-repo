@@ -66,7 +66,7 @@ dx-load-indicator {
 
   .up-positive {
     color: #30e430;
-    text-shadow: #eeffee 0px 0px 2px;
+    font-size: 20px;
     transform: rotateZ(-90deg) translateY(-3px) translateX(-6px);
     position: relative;
     top: -6px;
@@ -74,7 +74,7 @@ dx-load-indicator {
   }
   .up-negative {
     color: #ff2121;
-    text-shadow: #eeffee 0px 0px 2px;
+    font-size: 20px;
     transform: rotateZ(-90deg) translateY(-3px) translateX(-6px);
     position: relative;
     top: -6px;
@@ -82,19 +82,19 @@ dx-load-indicator {
   }
   .down-positive {
     color: #30e430;
-    text-shadow: #eeffee 0px 0px 2px;
+    font-size: 20px;
     transform: rotateZ(90deg) translateY(-4px) translateX(-6px);
     position: relative;
     top: 1px;
-    right: 9px;
+    right: 13px;
   }
   .down-negative {
     color: #ff2121;
-    text-shadow: #f48f8f 0px 0px 2px;
+    font-size: 20px;
     order: 2;
     transform: rotateZ(90deg) translateY(-4px) translateX(-6px);
     position: relative;
     top: 1px;
-    right: 9px;
+    right: 13px;
   }
 }

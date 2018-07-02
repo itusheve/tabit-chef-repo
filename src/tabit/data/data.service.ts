@@ -1008,8 +1008,8 @@ export class DataService {
                                 if (o.shiftName) result.shift = shifts.find(s => s.name === o.shiftName);
                                 result.ordersKpis = o.ordersKpis;
                                 result.ordersKpis.ppa = (result.ordersKpis.netSalesAmnt) / (result.ordersKpis.dinersCount || result.ordersKpis.ordersCount);
-                                if(result.ordersKpis.dinersCount == 0 && result.ordersKpis.ordersCount == 0) {
-                                    result.ordersKpis.ppa = 0;
+                                if((result.ordersKpis.dinersCount == 0 && result.ordersKpis.ordersCount == 0) || result.ordersKpis.ppa < 0) {
+                                    result.ordersKpis.ppa = '';
                                 }
                                 return result;
                             });
