@@ -10,7 +10,7 @@ import { currencySymbol } from '../../tabit/data/data.service';
 export class OwnersDashboardCurrencyPipe implements PipeTransform {
     private decPipe: DecimalPipe = new DecimalPipe(environment.tbtLocale);
 
-    transform(value: any, decimal?: string, cents?: string, nullify?: string): any {
+    transform(value: any, decimal?: string, cents?: string, nullify?: string, disableSymbol?: boolean): any {
         decimal = decimal || '2';
 
         if (value===undefined || value===null) {
@@ -25,7 +25,9 @@ export class OwnersDashboardCurrencyPipe implements PipeTransform {
         }
         let result = this.decPipe.transform(value, `1.${decimal}-${decimal}`);
         if (result) {
-            result = `${currencySymbol}${result}`;
+            if(!disableSymbol) {
+                result = `${currencySymbol}${result}`;
+            }
         }
 
         return result;

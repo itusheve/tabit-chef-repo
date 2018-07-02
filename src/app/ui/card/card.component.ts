@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 //   val: number;
 // }
 import {environment} from '../../../environments/environment';
-
+import { currencySymbol } from '../../../tabit/data/data.service';
 
 export interface CardData {
   loading: boolean;
@@ -19,6 +19,7 @@ export interface CardData {
   salesComment?: string;
   reductions?: any;
   reductionsLastThreeMonthsAvg?: any;
+  currency?: string;
 }
 
 @Component({
@@ -31,9 +32,11 @@ export class CardComponent implements OnInit {
 
   @Input() cardData: CardData;
   public region: any;
+  public currency: any;
 
   constructor() {
       this.region = environment.region;
+      this.currency = currencySymbol;
   }
 
   ngOnInit() { }

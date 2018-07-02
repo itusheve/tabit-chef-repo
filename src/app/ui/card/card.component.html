@@ -9,21 +9,22 @@
             <div class="col-7" [ngClass]="region == 'il' ? 'border-left' : 'border-right'">
                 <div class="row">
                     <div class="col-12">
-                        <h1 class="text-dark">{{cardData.sales | curr:'0'}}<br/>
-                            <span *ngIf="cardData.salesComment" class="text-danger text-md" [ngClass]="region == 'il' ? 'sales-comment-rtl' : 'sales-comment'"i18n="@@salesComment">{cardData.salesComment, select, NotFinal {Not Final}}</span>
+                        <h1 class="text-dark">
+                            <span class="currency">{{currency}}</span>{{cardData.sales | curr:'0':'':'':true}}
+                            <br/><span *ngIf="cardData.salesComment" class="text-danger text-md" [ngClass]="region == 'il' ? 'sales-comment-rtl' : 'sales-comment'"i18n="@@salesComment">{cardData.salesComment, select, NotFinal {Not Final}}</span>
                         </h1>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" style="margin-top: 12px;">
                     <div class="col-12">
                         <table class="table table-borderless table-sm sales-table mb-0" [ngClass]="region == 'il' ? 'table-padding-rtl' : 'table-padding-ltr'">
                             <tr *ngIf="cardData.trends && cardData.trends.yearAvg && cardData.trends.yearAvg.status==='ready'">
-                                <td><i class="icon" style="display: inline-block" [ngClass]="cardData.trends?.yearAvg?.val > 0 ? 'up' : 'down'"></i></td>
+                                <td><mat-icon [ngClass]="cardData.trends?.yearAvg?.val > 0 ? 'up-positive' : 'down-negative'">play_arrow</mat-icon></td>
                                 <td class="text-dark">{{cardData.trends?.yearAvg?.val | percent:'1.1-1'}}</td>
                                 <td class="text-secondary" i18n="@@lastYear">Last year</td>
                             </tr>
                             <tr *ngIf="cardData.trends && cardData.trends.fourWeekAvg && cardData.trends.fourWeekAvg.status==='ready'">
-                                <td><i class="icon" style="display: inline-block" [ngClass]="cardData.trends?.fourWeekAvg?.val > 0 ? 'up' : 'down'"></i></td>
+                                <td><mat-icon [ngClass]="cardData.trends?.fourWeekAvg?.val > 0 ? 'up-positive' : 'down-negative'">play_arrow</mat-icon></td>
                                 <td class="text-dark">{{cardData.trends?.fourWeekAvg?.val | percent:'1.1-1'}}</td>
                                 <td class="text-secondary" i18n="@@fourWeekAvg">4 Week</td>
                             </tr>
@@ -33,25 +34,33 @@
             </div>
             <div class="col-5 px-2 py-0">
                 <div class="row">
-                    <div class="col-12 pt-1">
+                    <div class="col-12 pt-1 px-2">
                         <table class="table table-borderless table-sm mb-0" [ngClass]="region == 'il' ? 'table-padding-rtl' : 'table-padding-ltr'">
                             <tr *ngIf="cardData.reductions && cardData.reductions.cancellation_pct">
-                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg"><i class="icon" style="display: inline-block" [ngClass]="cardData.reductions?.cancellation_pct >= cardData.reductionsLastThreeMonthsAvg?.cancellation_pct ? 'up' : 'down'"></i></td>
+                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg">
+                                    <mat-icon [ngClass]="cardData.reductions?.cancellation_pct >= cardData.reductionsLastThreeMonthsAvg?.cancellation_pct ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
+                                </td>
                                 <td class="text-dark">{{cardData.reductions?.cancellation_pct | percent:'1.1-1'}}</td>
                                 <td class="text-secondary" i18n="@@cancellations">Cancellations</td> <!--ביטולים-->
                             </tr>
                             <tr *ngIf="cardData.reductions && cardData.reductions.retention_pct">
-                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg"><i class="icon" style="display: inline-block" [ngClass]="cardData.reductions?.retention_pct >= cardData.reductionsLastThreeMonthsAvg?.retention_pct ? 'up' : 'down'"></i></td>
+                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg">
+                                    <mat-icon [ngClass]="cardData.reductions?.retention_pct >= cardData.reductionsLastThreeMonthsAvg?.retention_pct ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
+                                </td>
                                 <td class="text-dark">{{cardData.reductions?.retention_pct | percent:'1.1-1'}}</td>
                                 <td class="text-secondary" i18n="@@retention">Retention</td>
                             </tr>
                             <tr *ngIf="cardData.reductions && cardData.reductions.operational_pct">
-                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg"><i class="icon" style="display: inline-block" [ngClass]="cardData.reductions?.operational_pct >= cardData.reductionsLastThreeMonthsAvg?.operational_pct ? 'up' : 'down'"></i></td>
+                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg">
+                                    <mat-icon [ngClass]="cardData.reductions?.operational_pct >= cardData.reductionsLastThreeMonthsAvg?.operational_pct ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
+                                </td>
                                 <td class="text-dark">{{cardData.reductions?.operational_pct | percent:'1.1-1'}}</td>
                                 <td class="text-secondary" i18n="@@operational">Operational</td> <!--ביטולים-->
                             </tr>
                             <tr *ngIf="cardData.reductions && cardData.reductions.organizational_pct">
-                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg"><i class="icon" style="display: inline-block" [ngClass]="cardData.reductions?.organizational_pct >= cardData.reductionsLastThreeMonthsAvg?.organizational_pct ? 'up' : 'down'"></i></td>
+                                <td *ngIf="cardData.reductions && cardData.reductionsLastThreeMonthsAvg">
+                                    <mat-icon [ngClass]="cardData.reductions?.organizational_pct >= cardData.reductionsLastThreeMonthsAvg?.organizational_pct ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
+                                </td>
                                 <td class="text-dark">{{cardData.reductions?.organizational_pct | percent:'1.1-1'}}</td>
                                 <td class="text-secondary" i18n="@@organizational">Organizational</td> <!--ביטולים-->
                             </tr>
