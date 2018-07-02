@@ -16,7 +16,7 @@ dx-load-indicator {
   }
 
   .currency {
-    font-size: 25px;
+    font-size: 17px;
   }
 
   td {
@@ -70,7 +70,7 @@ dx-load-indicator {
     transform: rotateZ(-90deg) translateY(-3px) translateX(-6px);
     position: relative;
     top: -6px;
-    right: 2px;
+    right: 0px;
   }
   .up-negative {
     color: #ff2121;
@@ -78,7 +78,7 @@ dx-load-indicator {
     transform: rotateZ(-90deg) translateY(-3px) translateX(-6px);
     position: relative;
     top: -6px;
-    right: 2px;
+    right: 0px;
   }
   .down-positive {
     color: #30e430;
@@ -86,7 +86,7 @@ dx-load-indicator {
     transform: rotateZ(90deg) translateY(-4px) translateX(-6px);
     position: relative;
     top: 1px;
-    right: 11px;
+    right: 9px;
   }
   .down-negative {
     color: #ff2121;
@@ -95,6 +95,6 @@ dx-load-indicator {
     transform: rotateZ(90deg) translateY(-4px) translateX(-6px);
     position: relative;
     top: 1px;
-    right: 11px;
+    right: 9px;
   }
 }

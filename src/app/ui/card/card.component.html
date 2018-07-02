@@ -6,7 +6,7 @@
     <dx-load-indicator [(visible)]="!cardData || cardData.loading"></dx-load-indicator>
     <div *ngIf="cardData && !cardData.loading" class="card-body py-2">
         <div class="row">
-            <div class="col-7" [ngClass]="this.cardData.reductions.cancellation_pct || this.cardData.reductions.retention_pct || this.cardData.reductions.organizational_pct || this.cardData.reductions.operational_pct ? (region == 'il' ? 'border-left' : 'border-right') : ''">
+            <div class="col-7 px-2" [ngClass]="this.cardData.reductions.cancellation_pct || this.cardData.reductions.retention_pct || this.cardData.reductions.organizational_pct || this.cardData.reductions.operational_pct ? (region == 'il' ? 'border-left' : 'border-right') : ''">
                 <div class="row">
                     <div class="col-12">
                         <h1 class="text-dark">

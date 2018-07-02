@@ -1003,11 +1003,15 @@ export class DataService {
                     }[] {
                         return _.cloneDeep(data)
                             .map(o => {
-                                const ro: any = {};
-                                if (o.orderTypeName) ro.orderType = orderTypes[o.orderTypeName];
-                                if (o.shiftName) ro.shift = shifts.find(s => s.name === o.shiftName);
-                                ro.ordersKpis = o.ordersKpis;
-                                return ro;
+                                const result: any = {};
+                                if (o.orderTypeName) result.orderType = orderTypes[o.orderTypeName];
+                                if (o.shiftName) result.shift = shifts.find(s => s.name === o.shiftName);
+                                result.ordersKpis = o.ordersKpis;
+                                result.ordersKpis.ppa = (result.ordersKpis.netSalesAmnt) / (result.ordersKpis.dinersCount || result.ordersKpis.ordersCount);
+                                if(result.ordersKpis.dinersCount == 0 && result.ordersKpis.ordersCount == 0) {
+                                    result.ordersKpis.ppa = 0;
+                                }
+                                return result;
                             });
                     }
 
