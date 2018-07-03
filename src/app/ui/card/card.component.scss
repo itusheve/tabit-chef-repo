@@ -1,7 +1,3 @@
-dx-load-indicator {
-  align-self: center;
-}
-
 .dashboard-home-card {
   h1 {
     font-size: 36px;
@@ -9,7 +5,14 @@ dx-load-indicator {
 
   .header-day-indicator {
     position: absolute;
+  }
+
+  .il-day-indicator {
     right:15px;
+  }
+
+  .us-day-indicator {
+    left:15px;
   }
 
   .text-dark {
@@ -42,7 +45,6 @@ dx-load-indicator {
   .sales-comment {
     position: relative;
     top: -25px;
-    left: 22px;
   }
 
   .sales-comment-rtl {
