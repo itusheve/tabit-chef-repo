@@ -539,8 +539,8 @@ $border-style: 1px solid rgba(0, 0, 0, 0.12);
 	/* Hide table headers (but not display: none;, for accessibility) */
 	.no-more-tables thead tr {
 		position: absolute;
-		top: -9999px;
-		left: -9999px;
+		/*top: -9999px;
+		left: -9999px;*/
 		display:none;
 	}
 
