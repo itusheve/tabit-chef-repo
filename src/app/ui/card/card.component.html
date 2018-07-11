@@ -1,17 +1,19 @@
-<div class="card bg-light dashboard-home-card shadow">
+<div class="card bg-light dashboard-home-card shadow-card">
     <div class="card-header bg-light text-center py-1" style="font-size: 18px;">
         <span class="text-body header-day-indicator" [ngClass]="region == 'il' ? 'float-right il-day-indicator' : 'float-left us-day-indicator'" *ngIf="cardData" i18n="@@orsLastDay">{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</span>
         <span class="font-weight-bold text-dark">{{cardData?.title || '&nbsp;'}}</span>
     </div>
-    <dx-load-indicator [(visible)]="!cardData || cardData.loading"></dx-load-indicator>
-    <div *ngIf="cardData && !cardData.loading" class="card-body py-2">
-        <div class="row">
+    <div class="card-body py-2">
+        <div  *ngIf="!cardData || cardData.loading" class="text-center">
+            <dx-load-indicator [(visible)]="!cardData || cardData.loading"></dx-load-indicator>
+        </div>
+        <div *ngIf="cardData && !cardData.loading" class="row">
             <div class="col px-2" [ngClass]="cardData.reductionsLastThreeMonthsAvg?.retention_pct || this.cardData.reductions.cancellation_pct || this.cardData.reductions.retention_pct || this.cardData.reductions.organizational_pct || this.cardData.reductions.operational_pct ? (region == 'il' ? 'border-left' : 'border-right') : ''">
                 <div class="row">
                     <div class="col-12">
                         <h1 class="text-dark">
                             <span class="currency">{{currency}}</span>{{cardData.sales | curr:'0':'':'':true}}
-                            <br/><span *ngIf="cardData.salesComment" class="text-danger text-md" [ngClass]="region == 'il' ? 'sales-comment-rtl' : 'sales-comment'"i18n="@@salesComment">{cardData.salesComment, select, NotFinal {Not Final}}</span>
+                            <br/><span *ngIf="cardData.salesComment" class="text-danger text-md" [ngClass]="region == 'il' ? 'sales-comment-rtl' : 'sales-comment'">cardData.salesComment</span>
                         </h1>
                     </div>
                 </div>

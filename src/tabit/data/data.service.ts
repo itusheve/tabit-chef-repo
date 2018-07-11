@@ -449,6 +449,61 @@ export class DataService {
 
     public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';//'America/Chicago' / 'Asia/Jerusalem'
 
+    public database$: Observable<any> = Observable.create(obs => {
+        let org = JSON.parse(window.localStorage.getItem('org'));
+        //let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
+        let data = null;
+        if (data) {
+            obs.next(data);
+        } else {
+            this.olapEp.getDatabase()
+                .then(data => {
+
+                    let transformed = _.keyBy(data, month => month.YearMonth);
+                    let latestMonth = 0;
+                    _.forEach(transformed, month => {
+                        month.days = _.keyBy(month.Daily, day => day.date);
+                        if (month.YearMonth > latestMonth) {
+                            latestMonth = month.YearMonth;
+                            transformed.latestMonth = month.YearMonth;
+                        }
+
+                        let latestDayNumber = 0;
+                        _.forEach(month.days, day => {
+                            let dayNumber = parseInt(moment(day.date).format('D'));
+                            if (dayNumber > latestDayNumber) {
+                                latestDayNumber = dayNumber;
+                                month.latestDay = day.date;
+                            }
+                        });
+
+                        delete month.Daily;
+                    });
+
+                    window.localStorage.setItem(org.id + '-database', JSON.stringify(transformed));
+                    obs.next(transformed);
+                });
+        }
+    });
+
+    get lastBusinessDay$(): Observable<any> {
+        return combineLatest(this.database$, (data) => {
+            let latestMonth = data[data.latestMonth];
+            return latestMonth.days[latestMonth.latestDay];
+        });
+    }
+
+    get currentMonth$(): Observable<any> {
+        return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data) => {
+            data = _.cloneDeep(data);
+            if (!vat) {
+                data.diners.ppa = data.diners.ppa / 1.17;//TODO bring VAT per month from some api?
+                data.sales = data.sales / 1.17;
+            }
+            return data;
+        });
+    }
+
     /*
         emits a moment with tz data, so using format() will provide the time of the restaurant, e.g. m.format() := 2018-02-27T18:57:13+02:00
         relies on the local machine time to be correct.
@@ -505,7 +560,7 @@ export class DataService {
             });
     }).publishReplay(1).refCount();
 
-    public dashboardData$: Observable<any> = Observable.create(obs => {
+    public LatestBusinessDayDashboardData$: Observable<any> = Observable.create(obs => {
         this.currentBd$
             .subscribe(cbd => {
                 cbd = moment(cbd);
@@ -753,7 +808,7 @@ export class DataService {
     public dailyDataLimits$: Observable<{ minimum: moment.Moment, maximum: moment.Moment }> = Observable.create(obs => {
         this.dailyData$
             .subscribe(dailyData => {
-                if(dailyData.length) {
+                if (dailyData.length) {
                     obs.next({
                         minimum: moment(dailyData[dailyData.length - 1].businessDay),
                         maximum: moment(dailyData[0].businessDay)
@@ -1008,7 +1063,7 @@ export class DataService {
                                 if (o.shiftName) result.shift = shifts.find(s => s.name === o.shiftName);
                                 result.ordersKpis = o.ordersKpis;
                                 result.ordersKpis.ppa = (result.ordersKpis.netSalesAmnt) / (result.ordersKpis.dinersCount || result.ordersKpis.ordersCount);
-                                if((result.ordersKpis.dinersCount == 0 && result.ordersKpis.ordersCount == 0) || result.ordersKpis.ppa < 0) {
+                                if ((result.ordersKpis.dinersCount == 0 && result.ordersKpis.ordersCount == 0) || result.ordersKpis.ppa < 0) {
                                     result.ordersKpis.ppa = '';
                                 }
                                 return result;
