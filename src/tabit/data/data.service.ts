@@ -20,6 +20,7 @@ import 'moment-timezone';
 //models
 import {KPI} from '../model/KPI.model';
 import {Shift} from '../model/Shift.model';
+import {Database} from '../model/Database.model';
 
 //end points
 import {OlapEp, Orders_KPIs, PaymentsKPIs} from './ep/olap.ep';
@@ -451,58 +452,40 @@ export class DataService {
 
     public database$: Observable<any> = Observable.create(obs => {
         let org = JSON.parse(window.localStorage.getItem('org'));
-        //let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
-        let data = null;
+        let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
         if (data) {
-            obs.next(data);
-        } else {
-            this.olapEp.getDatabase()
-                .then(data => {
+            obs.next(new Database(data));
+        }
 
-                    let transformed = _.keyBy(data, month => month.YearMonth);
-                    let latestMonth = 0;
-                    _.forEach(transformed, month => {
-                        month.days = _.keyBy(month.Daily, day => day.date);
-                        if (month.YearMonth > latestMonth) {
-                            latestMonth = month.YearMonth;
-                            transformed.latestMonth = month.YearMonth;
+        this.olapEp.getDatabase()
+            .then(data => {
+
+                let transformed = _.keyBy(data, month => month.YearMonth);
+                let latestMonth = 0;
+                _.forEach(transformed, month => {
+                    month.days = _.keyBy(month.Daily, day => day.date);
+                    if (month.YearMonth > latestMonth) {
+                        latestMonth = month.YearMonth;
+                        transformed.latestMonth = month.YearMonth;
+                    }
+
+                    let latestDayNumber = 0;
+                    _.forEach(month.days, day => {
+                        let dayNumber = parseInt(moment(day.date).format('D'));
+                        if (dayNumber > latestDayNumber) {
+                            latestDayNumber = dayNumber;
+                            month.latestDay = day.date;
                         }
-
-                        let latestDayNumber = 0;
-                        _.forEach(month.days, day => {
-                            let dayNumber = parseInt(moment(day.date).format('D'));
-                            if (dayNumber > latestDayNumber) {
-                                latestDayNumber = dayNumber;
-                                month.latestDay = day.date;
-                            }
-                        });
-
-                        delete month.Daily;
                     });
 
-                    window.localStorage.setItem(org.id + '-database', JSON.stringify(transformed));
-                    obs.next(transformed);
+                    delete month.Daily;
                 });
-        }
-    });
 
-    get lastBusinessDay$(): Observable<any> {
-        return combineLatest(this.database$, (data) => {
-            let latestMonth = data[data.latestMonth];
-            return latestMonth.days[latestMonth.latestDay];
-        });
-    }
+                window.localStorage.setItem(org.id + '-database', JSON.stringify(transformed));
+                obs.next(new Database(transformed));
+            });
 
-    get currentMonth$(): Observable<any> {
-        return combineLatest(this.vat$, this.todayDataVatInclusive$, (vat, data) => {
-            data = _.cloneDeep(data);
-            if (!vat) {
-                data.diners.ppa = data.diners.ppa / 1.17;//TODO bring VAT per month from some api?
-                data.sales = data.sales / 1.17;
-            }
-            return data;
-        });
-    }
+    }).publishReplay(1).refCount();
 
     /*
         emits a moment with tz data, so using format() will provide the time of the restaurant, e.g. m.format() := 2018-02-27T18:57:13+02:00
@@ -910,7 +893,7 @@ export class DataService {
             sales: number
         }> {
             return Observable.create(sub => {
-                that.dashboardData$
+                that.LatestBusinessDayDashboardData$
                     .subscribe(data => {
                         const sales = data.today.totalSales;
                         sub.next({

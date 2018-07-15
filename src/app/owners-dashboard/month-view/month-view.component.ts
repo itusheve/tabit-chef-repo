@@ -198,6 +198,7 @@ export class MonthViewComponent {
                         that.forecastCardData.title = title;
                         that.forecastCardData.loading = false;
                         that.forecastCardData.trends = {};
+                        that.forecastCardData.noSeparator = true;
 
                         that.trendsDataService.month_forecast_to_last_year_trend()
                             .then((month_forecast_to_last_year_trend: TrendModel) => {

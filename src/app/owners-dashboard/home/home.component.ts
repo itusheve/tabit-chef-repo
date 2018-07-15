@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {DecimalPipe, PercentPipe, DatePipe} from '@angular/common';
 
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 import {combineLatest} from 'rxjs/observable/combineLatest';
 
@@ -56,8 +57,6 @@ export class HomeComponent implements OnInit {
         reductionsLastThreeMonthsAvg: {}
     };
 
-    testData: any;
-
     private previousBdNotFinal = false;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
@@ -69,52 +68,23 @@ export class HomeComponent implements OnInit {
 
         ownersDashboardService.toolbarConfig.left.back.showBtn = false;
         ownersDashboardService.toolbarConfig.menuBtn.show = true;
-
-
-        combineLatest(this.dataService.mtdData$, this.dataService.currentBd$)
-            .subscribe(data => {
-                const title = `${this.datePipe.transform(data[1].valueOf(), 'MMMM')} ${tmpTranslations.get('home.mtd')}`;
-                this.mtdCardData.diners = data[0].diners || this.mtdCardData.diners;
-                this.mtdCardData.ppa = data[0].ppa || this.mtdCardData.ppa;
-                this.mtdCardData.sales = data[0].sales || this.mtdCardData.sales;
-                this.mtdCardData.title = title;
-                this.mtdCardData.reductions = data[0].reductions ? data[0].reductions : this.mtdCardData.reductions;
-                this.mtdCardData.reductionsLastThreeMonthsAvg = data[0].reductionsLastThreeMonthsAvg || this.mtdCardData.reductionsLastThreeMonthsAvg;
-
-                this.mtdCardData.loading = false;
-            });
-        combineLatest(this.trendsDataService.trends$)
-            .subscribe(data => {
-                const trends = data[0];
-                this.mtdCardData.trends = {
-                    yearAvg: trends.mtd.lastYear
-                };
-                this.trendsDataService.partial_month_forecast_to_start_of_month_partial_month_forecast()
-                    .then(partial_month_forecast_to_start_of_month_partial_month_forecast => {
-                        this.mtdCardData.trends.fourWeekAvg = partial_month_forecast_to_start_of_month_partial_month_forecast;
-                    });
-            });
-
-        combineLatest(this.trendsDataService.trends$)
-            .subscribe(data => {
-                const trends = data[0];
-                this.mtdCardData.trends = {
-                    yearAvg: trends.mtd.lastYear
-                };
-            });
     }
 
     ngOnInit() {
         window.scrollTo(0, 0);
-        this.getLatestBusinessDate();
-        this.getPreviousBusinessDate();
+        this.getLatestBusinessDayData();
+        this.getPreviousBusinessDayData();
+        this.getMonthToDateData();
     }
 
-    getLatestBusinessDate(): void {
-        combineLatest(this.dataService.lastBusinessDay$, this.dataService.LatestBusinessDayDashboardData$)
+    getLatestBusinessDayData(): void {
+        combineLatest(this.dataService.database$, this.dataService.LatestBusinessDayDashboardData$)
             .subscribe(data => {
-                let aggregatedData = data[0];
+                let database = data[0];
                 let liveData = data[1];
+
+                let dates = database.getDates();
+                let aggregatedData = database.getDay(dates.latest.year, dates.latest.month, dates.latest.day);
                 let totalSales = aggregatedData.amount;
                 let operationalDataDay = moment(liveData.today.businessDate).format('D');
                 let aggregatedDataDay = moment(aggregatedData.date).format('D');
@@ -126,7 +96,6 @@ export class HomeComponent implements OnInit {
                     }
                 }
 
-
                 if (currentDay !== operationalDataDay) {
                     this.currentBdCardData.salesComment = 'EOD not performed';
                 }
@@ -136,8 +105,8 @@ export class HomeComponent implements OnInit {
                 this.currentBdCardData.diners = aggregatedData.diners;
                 this.currentBdCardData.ppa = aggregatedData.ppa;
                 this.currentBdCardData.title = title;
-                this.currentBdCardData.reductions = '';
-                this.currentBdCardData.reductionsLastThreeMonthsAvg = '';
+                /*this.currentBdCardData.reductions = '';
+                this.currentBdCardData.reductionsLastThreeMonthsAvg = '';*/
                 /*fourWeekAvg: trends.currentBd.last4;
                 yearAvg: trends.currentBd.lastYear;*/
                 if (typeof this.currentBdCardData.sales === 'number') {
@@ -146,25 +115,49 @@ export class HomeComponent implements OnInit {
             });
     }
 
-    getPreviousBusinessDate(): void {
-        combineLatest(this.dataService.database$)
-            .subscribe(data => {
-                //let previousBusinessDate = data.getLastDate;
-                const title = this.datePipe.transform(data[1].valueOf(), 'fullDate');
-                this.previousBdCardData.diners = data[0].diners || this.previousBdCardData.diners;
-                this.previousBdCardData.ppa = data[0].ppa || this.previousBdCardData.ppa;
-                this.previousBdCardData.sales = data[0].sales || this.previousBdCardData.sales;
-                this.previousBdCardData.reductions = data[0].reductions || this.previousBdCardData.reductions;
+    getPreviousBusinessDayData(): void {
+        this.dataService.database$
+            .subscribe(database => {
+                let currentBusinessDay = database.getCurrentBusinessDay();
+
+                let previousDay = _.clone(currentBusinessDay).subtract(1, 'days');
+                let day = database.getDay(previousDay.year(), previousDay.month() + 1, previousDay.date());
+
+                const title = this.datePipe.transform(day.date.valueOf(), 'fullDate');
+
+                this.previousBdCardData.diners = day.diners;
+                this.previousBdCardData.ppa = day.ppa;
+                this.previousBdCardData.sales = day.amount;
                 this.previousBdCardData.title = title;
-                this.currentBdCardData.reductionsLastThreeMonthsAvg = data[0].reductionsLastThreeMonthsAvg || this.currentBdCardData.reductionsLastThreeMonthsAvg;
+
+                //this.previousBdCardData.reductions = data[0].reductions || this.previousBdCardData.reductions;
+                //this.currentBdCardData.reductionsLastThreeMonthsAvg = data[0].reductionsLastThreeMonthsAvg || this.currentBdCardData.reductionsLastThreeMonthsAvg;
                 /*fourWeekAvg: trends.previousBd.last4,
                     yearAvg: trends.previousBd.lastYear*/
-                if (data[0].hasOwnProperty('final') && !data[0].final) {
+                /*if (day.hasOwnProperty('final') && !data[0].final) {
                     this.previousBdCardData.salesComment = 'NotFinal';
                     this.previousBdNotFinal = true;
-                }
+                }*/
 
                 this.previousBdCardData.loading = false;
+            });
+    }
+
+    getMonthToDateData(): void {
+        this.dataService.database$
+            .subscribe(database => {
+
+                let month = database.getCurrentMonth();
+
+                const title = `${this.datePipe.transform(month.latestDay.valueOf(), 'MMMM')} ${tmpTranslations.get('home.mtd')}`;
+                this.mtdCardData.diners = month.diners;
+                this.mtdCardData.ppa = month.ppa;
+                this.mtdCardData.sales = month.amount;
+                this.mtdCardData.title = title;
+                /*this.mtdCardData.reductions = data[0].reductions ? data[0].reductions : this.mtdCardData.reductions;
+                this.mtdCardData.reductionsLastThreeMonthsAvg = data[0].reductionsLastThreeMonthsAvg || this.mtdCardData.reductionsLastThreeMonthsAvg;
+                */
+                this.mtdCardData.loading = false;
             });
     }
 
