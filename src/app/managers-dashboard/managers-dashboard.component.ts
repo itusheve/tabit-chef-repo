@@ -338,7 +338,7 @@ export class ManagersDashboardComponent implements OnInit {
 
         var isWaiterExcluded = c.excludedUsers.indexOf(order.waiter) !== -1;
         var amount = order[totalAtt]
-        if (amount > 0) {
+        if (amount !== 0) {
           var countDiners = order.countDiners;
 
           var waiter = _.find(arr, { 'waiter': order.waiter });
@@ -386,6 +386,7 @@ export class ManagersDashboardComponent implements OnInit {
           }
           waiter.dinersDisplay = showPPA ? waiter.dinersPPA : waiter.diners;
         } else {
+          totals.orders += 1;
           excludedOrders.push({ number: order.number, reason: 'zero amount' });
         }
 
