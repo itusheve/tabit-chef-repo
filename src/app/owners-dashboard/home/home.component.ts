@@ -14,6 +14,7 @@ import {DataService, tmpTranslations} from '../../../tabit/data/data.service';
 import {CardData} from '../../ui/card/card.component';
 import {OwnersDashboardService} from '../owners-dashboard.service';
 import {fromPromise} from 'rxjs/observable/fromPromise';
+import {TrendModel} from '../../../tabit/model/Trend.model';
 
 @Component({
     selector: 'app-home',
@@ -31,8 +32,7 @@ export class HomeComponent implements OnInit {
         sales: 0,
         diners: 0,
         ppa: 0,
-        reductions: {},
-        reductionsLastThreeMonthsAvg: {}
+        aggregations: {},
     };
 
     previousBdCardData: CardData = {
@@ -42,8 +42,7 @@ export class HomeComponent implements OnInit {
         sales: 0,
         diners: 0,
         ppa: 0,
-        reductions: {},
-        reductionsLastThreeMonthsAvg: {}
+        aggregations: {},
     };
 
     mtdCardData: CardData = {
@@ -53,8 +52,19 @@ export class HomeComponent implements OnInit {
         sales: 0,
         diners: 0,
         ppa: 0,
-        reductions: {},
-        reductionsLastThreeMonthsAvg: {}
+        aggregations: {},
+    };
+
+    showForecast: boolean;
+    forecastCardData: CardData = {
+        loading: true,
+        title: '',
+        tag: '',
+        sales: 0,
+        diners: 0,
+        ppa: 0,
+        aggregations: {},
+        type: 'forcast'
     };
 
     private previousBdNotFinal = false;
@@ -71,10 +81,12 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.showForecast = false;
         window.scrollTo(0, 0);
         this.getLatestBusinessDayData();
         this.getPreviousBusinessDayData();
         this.getMonthToDateData();
+        this.getForcastData();
     }
 
     getLatestBusinessDayData(): void {
@@ -84,10 +96,10 @@ export class HomeComponent implements OnInit {
                 let liveData = data[1];
 
                 let dates = database.getDates();
-                let aggregatedData = database.getDay(dates.latest.year, dates.latest.month, dates.latest.day);
-                let totalSales = aggregatedData.amount;
+                let day = database.getDay(dates.latest);
+                let totalSales = day.amount;
                 let operationalDataDay = moment(liveData.today.businessDate).format('D');
-                let aggregatedDataDay = moment(aggregatedData.date).format('D');
+                let aggregatedDataDay = moment(day.date).format('D');
                 let currentDay = moment().format('D');
 
                 if (liveData.today) {
@@ -100,15 +112,13 @@ export class HomeComponent implements OnInit {
                     this.currentBdCardData.salesComment = 'EOD not performed';
                 }
 
-                const title = this.datePipe.transform(moment(aggregatedData.date).valueOf(), 'fullDate');
+                const title = this.datePipe.transform(moment(day.date).valueOf(), 'fullDate');
                 this.currentBdCardData.sales = totalSales;
-                this.currentBdCardData.diners = aggregatedData.diners;
-                this.currentBdCardData.ppa = aggregatedData.ppa;
+                this.currentBdCardData.diners = day.diners;
+                this.currentBdCardData.ppa = day.ppa;
                 this.currentBdCardData.title = title;
-                /*this.currentBdCardData.reductions = '';
-                this.currentBdCardData.reductionsLastThreeMonthsAvg = '';*/
-                /*fourWeekAvg: trends.currentBd.last4;
-                yearAvg: trends.currentBd.lastYear;*/
+                this.currentBdCardData.aggregations = day.aggregations;
+
                 if (typeof this.currentBdCardData.sales === 'number') {
                     this.currentBdCardData.loading = false;
                 }
@@ -121,7 +131,7 @@ export class HomeComponent implements OnInit {
                 let currentBusinessDay = database.getCurrentBusinessDay();
 
                 let previousDay = _.clone(currentBusinessDay).subtract(1, 'days');
-                let day = database.getDay(previousDay.year(), previousDay.month() + 1, previousDay.date());
+                let day = database.getDay(previousDay);
 
                 const title = this.datePipe.transform(day.date.valueOf(), 'fullDate');
 
@@ -129,11 +139,8 @@ export class HomeComponent implements OnInit {
                 this.previousBdCardData.ppa = day.ppa;
                 this.previousBdCardData.sales = day.amount;
                 this.previousBdCardData.title = title;
+                this.previousBdCardData.aggregations = day.aggregations;
 
-                //this.previousBdCardData.reductions = data[0].reductions || this.previousBdCardData.reductions;
-                //this.currentBdCardData.reductionsLastThreeMonthsAvg = data[0].reductionsLastThreeMonthsAvg || this.currentBdCardData.reductionsLastThreeMonthsAvg;
-                /*fourWeekAvg: trends.previousBd.last4,
-                    yearAvg: trends.previousBd.lastYear*/
                 /*if (day.hasOwnProperty('final') && !data[0].final) {
                     this.previousBdCardData.salesComment = 'NotFinal';
                     this.previousBdNotFinal = true;
@@ -154,10 +161,40 @@ export class HomeComponent implements OnInit {
                 this.mtdCardData.ppa = month.ppa;
                 this.mtdCardData.sales = month.amount;
                 this.mtdCardData.title = title;
-                /*this.mtdCardData.reductions = data[0].reductions ? data[0].reductions : this.mtdCardData.reductions;
-                this.mtdCardData.reductionsLastThreeMonthsAvg = data[0].reductionsLastThreeMonthsAvg || this.mtdCardData.reductionsLastThreeMonthsAvg;
-                */
+                this.mtdCardData.aggregations = month.aggregations;
+
                 this.mtdCardData.loading = false;
+            });
+    }
+
+    getForcastData(): void {
+        this.dataService.currentMonthForecast$
+            .subscribe(data => {
+                // dat ais undefined if not enough data for forecasting
+                if (!data) {
+                    this.showForecast = false;
+                    return;
+                }
+                this.showForecast = true;
+                let month = moment().startOf('month');
+                const title = `${this.datePipe.transform(month, 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
+                this.forecastCardData.diners = data.diners;
+                this.forecastCardData.ppa = data.ppa;
+                this.forecastCardData.sales = data.sales;
+                this.forecastCardData.title = title;
+                this.forecastCardData.loading = false;
+                this.forecastCardData.trends = {};
+                this.forecastCardData.noSeparator = true;
+
+                this.trendsDataService.month_forecast_to_last_year_trend()
+                    .then((month_forecast_to_last_year_trend: TrendModel) => {
+                        this.forecastCardData.trends.yearAvg = month_forecast_to_last_year_trend;
+                    });
+
+                this.trendsDataService.month_forecast_to_start_of_month_forecast()
+                    .then((month_forecast_to_start_of_month_forecast: TrendModel) => {
+                        this.forecastCardData.trends.fourWeekAvg = month_forecast_to_start_of_month_forecast;
+                    });
             });
     }
 
@@ -178,9 +215,5 @@ export class HomeComponent implements OnInit {
         } else {
             this.router.navigate(['/owners-dashboard/day', date]);
         }
-    }
-
-    showAlert(data: string) {
-        alert(data);
     }
 }

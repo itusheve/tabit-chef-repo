@@ -451,6 +451,16 @@ export class DataService {
     public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';//'America/Chicago' / 'Asia/Jerusalem'
 
     public database$: Observable<any> = Observable.create(obs => {
+
+        /* TODO: Get more accurate data from ROS
+        this.rosEp.get('businessdays/current', {})
+            .then(data => {
+                const cbd: moment.Moment = moment(`${data.businessDate.substring(0, 10)}T00:00:00`);
+                obs.next(cbd);
+            });
+        */
+
+
         let org = JSON.parse(window.localStorage.getItem('org'));
         let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
         if (data) {
@@ -462,12 +472,55 @@ export class DataService {
 
                 let transformed = _.keyBy(data, month => month.YearMonth);
                 let latestMonth = 0;
+
                 _.forEach(transformed, month => {
-                    month.days = _.keyBy(month.Daily, day => day.date);
+
+                    let orderedDays = _.orderBy(month.Daily, function (day) {
+                        return moment(day.date).format('D');
+                    }, 'desc');
+
+                    month.days = orderedDays;
+                    delete month.Daily;
                     if (month.YearMonth > latestMonth) {
                         latestMonth = month.YearMonth;
                         transformed.latestMonth = month.YearMonth;
                     }
+
+                    month.aggregations = {
+                        reductions: {
+                            cancellations: {
+                                highest: 0,
+                                lowest: 0,
+                                amount: month.prVoid,
+                                threeMonthAvg: month.last3prVoid
+                            },
+                            operational: {
+                                highest: 0,
+                                lowest: 0,
+                                amount: month.prOperational,
+                                threeMonthAvg: month.last3prOperational
+                            },
+                            retention: {
+                                highest: 0,
+                                lowest: 0,
+                                amount: month.prRetentionDiscount,
+                                threeMonthAvg: month.last3prRetentionDiscount
+                            },
+                            employee: {
+                                highest: 0,
+                                lowest: 0,
+                                amount: month.prEmployee,
+                                threeMonthAvg: month.last3prEmployee
+                            }
+                        },
+                        sales: {
+                            highest: 0,
+                            lowest: 0,
+                            amount: month.amount,
+                            fourWeekAvg: month.amount,
+                            yearAvg: month.amount,
+                        }
+                    };
 
                     let latestDayNumber = 0;
                     _.forEach(month.days, day => {
@@ -476,9 +529,61 @@ export class DataService {
                             latestDayNumber = dayNumber;
                             month.latestDay = day.date;
                         }
-                    });
 
-                    delete month.Daily;
+                        if(moment(day.date).isBefore(moment(transformed.lowestDate))) {
+                            transformed.lowestDate = month.latestDay;
+                        }
+
+                        day.aggregations = {
+                            reductions: {
+                                cancellations: {
+                                    amount: 0.02,
+                                    fourWeekAvg: 0.012,
+                                    yearAvg: 0.03,
+                                    threeMonthAvg: 0.02
+                                },
+                                operational: {
+                                    amount: 0.06,
+                                    fourWeekAvg: 0.05,
+                                    yearAvg: 0.03,
+                                    threeMonthAvg: 0.02
+                                },
+                                retention: {
+                                    amount: 0.04,
+                                    fourWeekAvg: 0.02,
+                                    yearAvg: 0.01,
+                                    threeMonthAvg: 0.02
+                                },
+                                employee: {
+                                    amount: 0.014,
+                                    fourWeekAvg: 0.01,
+                                    yearAvg: 0.015,
+                                    threeMonthAvg: 0.02
+                                }
+                            },
+                            sales: {
+                                amount: day.amount,
+                                fourWeekAvg: (day.amount - 1000),
+                                yearAvg: (day.amount + 1000)
+                            }
+                        };
+
+                        month.aggregations.reductions.cancellations.highest = _.max([day.aggregations.reductions.cancellations.yearAvg, day.aggregations.reductions.cancellations.fourWeekAvg, day.aggregations.reductions.cancellations.amount, month.aggregations.reductions.cancellations.highest]);
+                        month.aggregations.reductions.cancellations.lowest = _.min([day.aggregations.reductions.cancellations.yearAvg, day.aggregations.reductions.cancellations.fourWeekAvg, day.aggregations.reductions.cancellations.amount, month.aggregations.reductions.cancellations.lowest]);
+
+                        month.aggregations.reductions.operational.highest = _.max([day.aggregations.reductions.operational.yearAvg, day.aggregations.reductions.operational.fourWeekAvg, day.aggregations.reductions.operational.amount, month.aggregations.reductions.operational.highest]);
+                        month.aggregations.reductions.operational.lowest = _.min([day.aggregations.reductions.operational.yearAvg, day.aggregations.reductions.operational.fourWeekAvg, day.aggregations.reductions.operational.amount, month.aggregations.reductions.operational.lowest]);
+
+                        month.aggregations.reductions.retention.highest = _.max([day.aggregations.reductions.retention.yearAvg, day.aggregations.reductions.retention.fourWeekAvg, day.aggregations.reductions.retention.amount, month.aggregations.reductions.retention.highest]);
+                        month.aggregations.reductions.retention.lowest = _.min([day.aggregations.reductions.retention.yearAvg, day.aggregations.reductions.retention.fourWeekAvg, day.aggregations.reductions.retention.amount, month.aggregations.reductions.retention.lowest]);
+
+                        month.aggregations.reductions.employee.highest = _.max([day.aggregations.reductions.employee.yearAvg, day.aggregations.reductions.employee.fourWeekAvg, day.aggregations.reductions.employee.amount, month.aggregations.reductions.employee.highest]);
+                        month.aggregations.reductions.employee.lowest = _.min([day.aggregations.reductions.employee.yearAvg, day.aggregations.reductions.employee.fourWeekAvg, day.aggregations.reductions.employee.amount, month.aggregations.reductions.employee.lowest]);
+
+                        month.aggregations.sales.highest = _.max([day.aggregations.sales.yearAvg, day.aggregations.sales.fourWeekAvg, day.aggregations.sales.amount, month.aggregations.sales.highest]);
+                        month.aggregations.sales.lowest = _.min([day.aggregations.sales.yearAvg, day.aggregations.sales.fourWeekAvg, day.aggregations.sales.amount, month.aggregations.sales.lowest]);
+
+                    });
                 });
 
                 window.localStorage.setItem(org.id + '-database', JSON.stringify(transformed));
@@ -524,13 +629,10 @@ export class DataService {
     */
     // TODO possible optimization - guess the currentBd, and only if its wrong emit fixed, so later op could happen quicker, e.g. dashboardData$ that brings today's sales (the most important data to show)
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
-        this.rosEp.get('businessdays/current', {})
-            .then(data => {
-                const cbd: moment.Moment = moment(`${data.businessDate.substring(0, 10)}T00:00:00`);
-                obs.next(cbd);
-            });
-
-    }).publishReplay(1).refCount();
+        this.database$.subscribe(database => {
+            obs.next(database.getCurrentBusinessDay());
+        });
+    });
 
     /*
         emits the Previous Business Date ("pbd") which is the day before the Current Business Day ("cbd")

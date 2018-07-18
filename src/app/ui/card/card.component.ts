@@ -17,9 +17,8 @@ export interface CardData {
     ppa: number;
     trends?: any;
     salesComment?: string;
-    reductions?: any;
+    aggregations?: any;
     type?: any;
-    reductionsLastThreeMonthsAvg?: any;
     currency?: string;
     noSeparator?: boolean;
 }

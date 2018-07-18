@@ -4,6 +4,17 @@
     }
 }
 
+.month-grid {
+  .progress {
+    overflow: visible;
+
+    .progress-bar-ticker {
+      position: relative;
+      height: 18px;
+      top: -1px;
+    }
+  }
+}
 
 .trend {
     transform: scale(0.7);//scaling compared to the card trend components

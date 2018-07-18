@@ -10,13 +10,11 @@ export class Database {
     constructor(data:any) {
         this._data = data;
         let latestMonth = data[data.latestMonth];
+        let firstMonth = data[data.firstMonth];
         this._dates = {
             today: moment(),
-            latest: {
-                year: latestMonth.YearMonth.toString().slice(0, 4),
-                month: latestMonth.YearMonth.toString().slice(-2),
-                day: latestMonth.latestDay.toString().slice(-2)
-            }
+            latest: moment(latestMonth.latestDay),
+            lowest: moment(this._data.lowestDate)
         };
     }
 
@@ -25,8 +23,7 @@ export class Database {
     }
 
     public getCurrentBusinessDay() {
-        let latest = this._dates.latest;
-        return moment(latest.year + '-' + latest.month + '-' + latest.day);
+        return this._dates.latest;
     }
 
     public getCurrentMonth() {
@@ -37,25 +34,21 @@ export class Database {
         return this._data;
     }
 
-    public getDay(year, month, day) {
-        year = year.toString();
-        month = month.toString();
-        day = day.toString();
-        if(day.length === 1) {
-            day = '0' + day;
-        }
-
-        if(month.length === 1) {
-            month = '0' + month;
-        }
-
-        if(!this._data[year + month] || !this._data[year + month].days) {
+    public getDay(date: moment.Moment) {
+        let monthData = this.getMonth(date);
+        if(!monthData || !monthData.days) {
             return null;
         }
-        return this._data[year + month].days[year + '-' + month + '-' + day];
+
+        let day = _.find(monthData.days, { 'date': date.format('YYYY-MM-DD') });
+        return day;
     }
 
-    public getMonth(year, month) {
-        return this._data[year + month];
+    public getMonth(date: moment.Moment) {
+        return this._data[date.format('YYYYMM')];
+    }
+
+    public getLowestDate() {
+        return this._dates.lowest;
     }
 }
