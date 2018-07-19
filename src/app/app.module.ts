@@ -69,7 +69,7 @@ import 'hammerjs';//https://material.angular.io/guide/getting-started
 import 'hammer-timejs';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 
-class MyHammerConfig extends HammerGestureConfig {
+export class MyHammerConfig extends HammerGestureConfig {
   public buildHammer(element: HTMLElement): any {
     return new (window as any).Hammer(element, { touchAction: 'pan-y' });
   }
