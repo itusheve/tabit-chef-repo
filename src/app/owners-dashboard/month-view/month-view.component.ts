@@ -56,7 +56,7 @@ export class MonthViewComponent implements OnInit {
 
     ngOnInit() {
         this.onDateChanged(moment());
-        combineLatest(this.month$, this.dataService.currentBd$, this.dataService.database$)
+        combineLatest(this.month$, this.dataService.currentRestTime$, this.dataService.database$)
             .subscribe(data => {
                 this.update(data[0], data[1], data[2]);
             });

@@ -60,7 +60,7 @@ export class MonthGridComponent implements OnInit {
 
     getProgressBarBackground() {
         if (this.category === 'sales') {
-            return 'bg-success';
+            return 'bg-info';
         }
         else if (this.category === 'cancellations') {
             return 'bg-danger';
@@ -69,7 +69,7 @@ export class MonthGridComponent implements OnInit {
             return 'bg-warning';
         }
         else if (this.category === 'operational') {
-            return 'bg-info';
+            return 'bg-success';
         }
         else if (this.category === 'employee') {
             return 'bg-primary';
@@ -78,7 +78,7 @@ export class MonthGridComponent implements OnInit {
 
     getTextColor(categoryClicked) {
         if (this.category === 'sales' && categoryClicked === 'sales') {
-            return 'text-success';
+            return 'text-info';
         }
         else if (this.category === 'cancellations' && categoryClicked === 'cancellations') {
             return 'text-danger';
@@ -87,7 +87,7 @@ export class MonthGridComponent implements OnInit {
             return 'text-warning';
         }
         else if (this.category === 'operational' && categoryClicked === 'operational') {
-            return 'text-info';
+            return 'text-success';
         }
         else if (this.category === 'employee' && categoryClicked === 'employee') {
             return 'text-primary';

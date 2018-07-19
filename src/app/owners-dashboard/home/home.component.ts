@@ -90,13 +90,20 @@ export class HomeComponent implements OnInit {
     }
 
     getLatestBusinessDayData(): void {
-        combineLatest(this.dataService.database$, this.dataService.LatestBusinessDayDashboardData$)
+        combineLatest(this.dataService.database$, this.dataService.LatestBusinessDayDashboardData$, this.dataService.currentRestTime$)
             .subscribe(data => {
                 let database = data[0];
                 let liveData = data[1];
+                let restaurantTime = data[2];
 
-                let dates = database.getDates();
-                let day = database.getDay(dates.latest);
+                let day = database.getDay(restaurantTime);
+
+                if(!day) {
+                    this.currentBdCardData.sales = 0;
+                    this.currentBdCardData.salesComment = 'noData';
+                    this.currentBdCardData.loading = false;
+                    return;
+                }
                 let totalSales = day.amount;
                 let operationalDataDay = moment(liveData.today.businessDate).format('D');
                 let aggregatedDataDay = moment(day.date).format('D');
@@ -109,7 +116,7 @@ export class HomeComponent implements OnInit {
                 }
 
                 if (currentDay !== operationalDataDay) {
-                    this.currentBdCardData.salesComment = 'EOD not performed';
+                    this.currentBdCardData.salesComment = 'eod';
                 }
 
                 const title = this.datePipe.transform(moment(day.date).valueOf(), 'fullDate');
@@ -126,11 +133,12 @@ export class HomeComponent implements OnInit {
     }
 
     getPreviousBusinessDayData(): void {
-        this.dataService.database$
-            .subscribe(database => {
-                let currentBusinessDay = database.getCurrentBusinessDay();
+        combineLatest(this.dataService.database$, this.dataService.currentRestTime$)
+            .subscribe(data => {
+                let database = data[0];
+                let restaurantTime = data[1];
 
-                let previousDay = _.clone(currentBusinessDay).subtract(1, 'days');
+                let previousDay = moment(restaurantTime).subtract(1, 'days');
                 let day = database.getDay(previousDay);
 
                 const title = this.datePipe.transform(day.date.valueOf(), 'fullDate');
@@ -200,7 +208,7 @@ export class HomeComponent implements OnInit {
 
     onDayRequest(date: string) {
         if (date === 'currentBD') {
-            this.dataService.currentBd$.take(1).subscribe(cbd => {
+            this.dataService.currentRestTime$.take(1).subscribe(cbd => {
                 date = cbd.format('YYYY-MM-DD');
                 this.router.navigate(['/owners-dashboard/day', date]);
             });

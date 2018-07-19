@@ -4,12 +4,12 @@
             <li class="list-group-item p-0 m-0">
                 <div class="col-12 font-weight-bold mx-0 p-0" style="font-size: 18px;">
                     <div class="row mx-0 p-0 justify-content-center">
-                        <div class="btn-group w-100">
+                        <div class="btn-group w-100 category-picker">
                             <span class="btn btn-light rounded-0 w-25 border" [ngClass]="getTextColor('sales')" (click)="changeCategory('sales')"><i class="material-icons">attach_money</i></span>
-                            <span class="btn btn-light w-25 border" [ngClass]="getTextColor('cancellations')" (click)="changeCategory('cancellations')"><i class="material-icons">cancel</i></span>
-                            <span class="btn btn-light w-25 border" [ngClass]="getTextColor('operational')" (click)="changeCategory('operational')"><i class="material-icons">build</i></span>
-                            <span class="btn btn-light w-25 border" [ngClass]="getTextColor('retention')" (click)="changeCategory('retention')"><i class="material-icons">card_giftcard</i></span>
-                            <span class="btn btn-light rounded-0 w-25 border" [ngClass]="getTextColor('employee')" (click)="changeCategory('employee')"><i class="material-icons">pregnant_woman</i></span>
+                            <span class="btn btn-light w-25 border" (click)="changeCategory('cancellations')"><i class="icon" [ngClass]="category === 'cancellations' ? 'iconOperationalAndCancellations' : 'iconOperationalAndCancellations_off'"></i></span>
+                            <span class="btn btn-light w-25 border" (click)="changeCategory('operational')"><i class="icon" [ngClass]="category === 'operational' ? 'iconPromotions' : 'iconPromotions_off'"></i></span>
+                            <span class="btn btn-light w-25 border" (click)="changeCategory('retention')"><i class="icon" [ngClass]="category === 'retention' ? 'iconRetention' : 'iconRetention_off'"></i></span>
+                            <span class="btn btn-light rounded-0 w-25 border" (click)="changeCategory('employee')"><i class="icon" [ngClass]="category === 'employee' ? 'iconOrganizational' : 'iconOrganizational_off'"></i></span>
                         </div>
                     </div>
                     <div class="row m-0 p-0">

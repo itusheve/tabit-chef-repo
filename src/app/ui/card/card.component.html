@@ -13,19 +13,19 @@
                     <div class="col-12">
                         <h1 class="text-dark">
                             <span class="currency">{{currency}}</span>{{cardData.sales | curr:'0':'':'':true}}
-                            <br/><span *ngIf="cardData.salesComment" class="text-danger text-md" [ngClass]="region == 'il' ? 'sales-comment-rtl' : 'sales-comment'">cardData.salesComment</span>
+                            <br/><span *ngIf="cardData.salesComment" class="text-danger text-md" [ngClass]="region == 'il' ? 'sales-comment-rtl' : 'sales-comment'" i18n="@@salesComment">{cardData.salesComment, select, eod {Awaiting EOD} notFinal {Not Final}}</span>
                         </h1>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 5px;">
                     <div class="col-12">
                         <table class="table table-borderless table-sm sales-table mb-0" [ngClass]="region == 'il' ? 'table-padding-rtl' : 'table-padding-ltr'">
-                            <tr *ngIf="cardData.aggregations.sales.yearAvg">
+                            <tr *ngIf="cardData.aggregations.sales?.yearAvg">
                                 <td><mat-icon [ngClass]="cardData.aggregations.sales.yearAvg > cardData.aggregations.sales.amount ? 'up-positive' : 'down-negative'">play_arrow</mat-icon></td>
                                 <td class="text-dark">{{(1 - cardData.aggregations.sales.amount / cardData.aggregations.sales.yearAvg ) | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@lastYear">Last year</td>
                             </tr>
-                            <tr *ngIf="cardData.aggregations.sales.fourWeekAvg">
+                            <tr *ngIf="cardData.aggregations.sales?.fourWeekAvg">
                                 <td><mat-icon [ngClass]="cardData.aggregations.sales.fourWeekAvg > cardData.aggregations.sales.amount ? 'up-positive' : 'down-negative'">play_arrow</mat-icon></td>
                                 <td class="text-dark">{{(1 - cardData.aggregations.sales.amount / cardData.aggregations.sales.fourWeekAvg ) | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@fourWeekAvg">4 Week</td>
@@ -38,29 +38,29 @@
                 <div class="row">
                     <div class="col-12 pt-1 px-2">
                         <table class="table table-borderless table-sm mb-0" [ngClass]="region == 'il' ? 'table-padding-rtl' : 'table-padding-ltr'">
-                            <tr>
-                                <td *ngIf="cardData.aggregations.reductions.cancellations">
+                            <tr *ngIf="cardData.aggregations.reductions?.cancellations">
+                                <td>
                                     <mat-icon [ngClass]="cardData.aggregations.reductions.cancellations.amount >= cardData.aggregations.reductions.cancellations.threeMonthAvg ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.aggregations.reductions.cancellations.amount || 0 | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@cancellations">Cancellations</td>
                             </tr>
-                            <tr>
-                                <td *ngIf="cardData.aggregations.reductions.operational">
+                            <tr *ngIf="cardData.aggregations.reductions?.operational">
+                                <td>
                                     <mat-icon [ngClass]="cardData.aggregations.reductions.operational.amount >= cardData.aggregations.reductions.operational.threeMonthAvg ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.aggregations.reductions.operational.amount || 0 | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@operational">Operational</td>
                             </tr>
-                            <tr>
-                                <td *ngIf="cardData.aggregations.reductions.retention">
+                            <tr *ngIf="cardData.aggregations.reductions?.retention">
+                                <td>
                                     <mat-icon [ngClass]="cardData.aggregations.reductions.retention.amount >= cardData.aggregations.reductions.retention.threeMonthAvg ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.aggregations.reductions.retention.amount || 0 | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@retention">Retention</td>
                             </tr>
-                            <tr>
-                                <td *ngIf="cardData.aggregations.reductions.employee">
+                            <tr *ngIf="cardData.aggregations.reductions?.employee">
+                                <td>
                                     <mat-icon [ngClass]="cardData.aggregations.reductions.employee.amount >= cardData.aggregations.reductions.employee.threeMonthAvg ? 'up-negative' : 'down-positive'">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.aggregations.reductions.employee.amount || 0 | percent:'1.1-1'}}</td>

@@ -452,15 +452,6 @@ export class DataService {
 
     public database$: Observable<any> = Observable.create(obs => {
 
-        /* TODO: Get more accurate data from ROS
-        this.rosEp.get('businessdays/current', {})
-            .then(data => {
-                const cbd: moment.Moment = moment(`${data.businessDate.substring(0, 10)}T00:00:00`);
-                obs.next(cbd);
-            });
-        */
-
-
         let org = JSON.parse(window.localStorage.getItem('org'));
         let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
         if (data) {
@@ -476,7 +467,7 @@ export class DataService {
                 _.forEach(transformed, month => {
 
                     let orderedDays = _.orderBy(month.Daily, function (day) {
-                        return moment(day.date).format('D');
+                        return moment(day.date).date();
                     }, 'desc');
 
                     month.days = orderedDays;
@@ -638,7 +629,7 @@ export class DataService {
         emits the Previous Business Date ("pbd") which is the day before the Current Business Day ("cbd")
     */
     public previousBd$: Observable<moment.Moment> = Observable.create(obs => {
-        this.currentBd$
+        this.currentRestTime$
             .subscribe(cbd => {
                 const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
                 obs.next(pbd);

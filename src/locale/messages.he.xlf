@@ -255,13 +255,13 @@
         <source>Data excluding VAT</source>
         <target>הנתונים ללא מע"מ</target>
       </trans-unit>
-      <trans-unit id="salesComment" datatype="html">
-        <source>{VAR_SELECT, select, NotFinal {Not Final} }</source>
-        <target>{VAR_SELECT, select, NotFinal {לא סופי} }</target>
-      </trans-unit>
       <trans-unit id="cardLetter" datatype="html">
         <source>{VAR_SELECT, select, A {A} M {Y} }</source>
         <target>{VAR_SELECT, select, A {מ} Y {ש} }</target>
+      </trans-unit>
+      <trans-unit id="salesComment" datatype="html">
+       <source>{VAR_SELECT, select, eod {Awaiting EOD} notFinal {Not Final} noData {Still processing data}}</source>
+       <target>{VAR_SELECT, select, eod {לא בוצע סוף יום} notFinal {לא סופי} noData {בתהליך עדכון מידע}}</target>
       </trans-unit>
       <trans-unit id="orsLastDay" datatype="html">
         <source>{VAR_SELECT, select, currentBd {Today} previousBd {Yesterday} }</source>
