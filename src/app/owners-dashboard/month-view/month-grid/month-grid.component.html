@@ -3,7 +3,7 @@
         <ul class="list-group p-0">
             <li class="list-group-item p-0 m-0">
                 <div class="col-12 font-weight-bold mx-0 p-0" style="font-size: 18px;">
-                    <div class="row mx-0 p-0 justify-content-center">
+                    <div class="row mx-0 p-0 justify-content-center" style="direction: rtl">
                         <div class="btn-group w-100 category-picker">
                             <span class="btn btn-light rounded-0 w-25 border" [ngClass]="getTextColor('sales')" (click)="changeCategory('sales')"><i class="material-icons">attach_money</i></span>
                             <span class="btn btn-light w-25 border" (click)="changeCategory('cancellations')"><i class="icon" [ngClass]="category === 'cancellations' ? 'iconOperationalAndCancellations' : 'iconOperationalAndCancellations_off'"></i></span>

@@ -1,6 +1,6 @@
-<mat-sidenav-container>
+<mat-sidenav-container (swiperight)="sidenav.close()">
 
-  <mat-sidenav class="flex d-col" #sidenav mode="over">
+  <mat-sidenav class="flex d-col" #sidenav mode="over" (swiperight)="sidenav.close()">
     <div class="s-0 flex d-col header">
       <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{this.sideNavConfig.header.userInitials}}</button>
       <div class="mt10 mb10">{{this.sideNavConfig.header.user?.firstName}} {{this.sideNavConfig.header.user?.lastName}}</div>
@@ -47,7 +47,7 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <div class="flex j-sb a-center toolbar">
+    <div class="flex j-sb a-center toolbar" (swipeleft)="sidenav.open()">
       <div class="flex j-start ps15" style="width:15%">
         <button
           *ngIf="toolbarConfig.menuBtn.show"
@@ -74,7 +74,7 @@
       <div class="flex j-end pe15" style="width:15%"></div>
     </div>
     <div class="contentFixed">
-      <div class="content">
+      <div class="content" (swipeleft)="sidenav.open()">
         <router-outlet></router-outlet>
       </div>
     </div>
