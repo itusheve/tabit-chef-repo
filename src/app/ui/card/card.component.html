@@ -74,7 +74,7 @@
     </div>
     <div class="card-footer bg-light py-1 px-0" *ngIf="cardData && cardData.diners > 0">
             <div class="d-flex justify-content-between">
-                <div><span class="text-dark">{{cardData?.ppa | curr}}</span> <span class="text-body" i18n="@@ppaText">PPA</span></div>
+                <div><span class="text-dark" [innerHtml]="cardData?.ppa | currency"></span> <span class="text-body" i18n="@@ppaText">PPA</span></div>
                 <div>
                     <i class="icon user diners-footer-icon" style="display: inline-block"></i> <span  class="text-dark">{{cardData?.diners | number:'1.0-0'}}</span>
                 </div>

@@ -14,8 +14,8 @@
                     </div>
                     <div class="row m-0 p-0">
                         <div class="btn-group w-100">
-                            <span class="btn btn-lg btn-light rounded-0 w-50 border" [ngClass]="avgPeriodComparator === 'year' ? 'active' : ''" (click)="changeAvgPeriodComparator('year')">שנה קודמת</span>
-                            <span class="btn btn-lg btn-light rounded-0 w-50 border" [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''" (click)="changeAvgPeriodComparator('month')">4 שב'</span>
+                            <span class="btn btn-lg btn-light rounded-0 w-50 border" [ngClass]="avgPeriodComparator === 'year' ? 'active' : ''" (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear">Prev. Year</span>
+                            <span class="btn btn-lg btn-light rounded-0 w-50 border" [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''" (click)="changeAvgPeriodComparator('month')" i18n="@@fourWeek">4 Week</span>
                         </div>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="col-3 px-0">
-                        <span *ngIf="category === 'sales'">{{getGaugeValue(day) | curr:'0':'':'':false}}</span>
+                        <span *ngIf="category === 'sales'" [innerHtml]="getGaugeValue(day) | currency:'0':'':'':false"></span>
                         <span *ngIf="category !== 'sales'">{{getGaugeValue(day) | pct }}</span>
                     </div>
                 </div>

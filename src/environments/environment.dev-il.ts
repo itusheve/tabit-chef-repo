@@ -4,7 +4,7 @@ export const environment = {
   tbtLocale: 'he-IL',//
   rosConfig: {//IL 'BETA' 'REPORTS'
     // baseUrl: 'https://inpact-int.herokuapp.com/',
-      baseUrl: 'https://ros-beta.tabit.cloud/'//BETA
+      baseUrl: 'https://ros-rp-beta.tabit.cloud/'//BETA
     // baseUrl: 'https://ros-report-prd.herokuapp.com/'//PROD
   },
   olapConfig: {//IL PROD CUBE

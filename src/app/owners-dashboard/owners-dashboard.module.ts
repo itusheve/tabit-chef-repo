@@ -6,7 +6,8 @@ import {OwnersDashboardService} from './owners-dashboard.service';
 import {
     OwnersDashboardCurrencyPipe,
     OwnersDashboardCountPipe,
-    OwnersDashboardPercentPipe
+    OwnersDashboardPercentPipe,
+    CurrencyPipe
 } from './owners-dashboard.pipes';
 
 import {HomeComponent} from './home/home.component';
@@ -114,6 +115,7 @@ import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/
     declarations: [
         OwnersDashboardComponent,
         OwnersDashboardCurrencyPipe,
+        CurrencyPipe,
         OwnersDashboardPercentPipe,
         OwnersDashboardCountPipe,
 

@@ -59,11 +59,11 @@ export class MonthSelectorComponent implements OnInit {
     prevMonth = () => {
         if (this.month.isSame(this.options.minDate, 'month')) return;
         this.onDateChanged.emit(moment(this.month).subtract(1, 'months'));
-    };
+    }
 
     nextMonth = () => {
         if (this.month.isSame(this.options.maxDate, 'month')) return;
         this.onDateChanged.emit(moment(this.month).add(1, 'months'));
-    };
+    }
 
 }

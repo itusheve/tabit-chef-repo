@@ -398,6 +398,14 @@
         <note priority="1" from="description">שולחן</note>
         <note priority="1" from="meaning">slips</note>
       </trans-unit>
+      <trans-unit id="previousYear" datatype="html">
+              <source>Prev. Year</source>
+              <target>שנה קודמת</target>
+            </trans-unit>
+            <trans-unit id="fourWeek" datatype="html">
+                <source>4 Week</source>
+                <target>4 שב'</target>
+              </trans-unit>
       <trans-unit id="tip" datatype="html">
         <source>Gratuity</source>
         <target>תשר</target>
