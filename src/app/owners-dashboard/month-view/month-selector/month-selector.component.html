@@ -1,29 +1,30 @@
 <div class="flex">
-  <div class="flex dx-widget dx-calendar-navigator">
-    <a
-      (click)="region == 'il' ? nextMonth() : prevMonth()"
-      class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-previous-view dx-calendar-navigator-previous-month"
-      style="margin: 0px 0px;"
-      [ngClass]="region == 'il' ? {'disable':disableNext} : {'disable':disablePrevious}"
-      role="button" aria-label="chevronleft">
-      <div class="dx-button-content">
-        <i class="dx-icon dx-icon-chevronleft"></i>
-      </div>
-    </a>
-    <a class="dx-calendar-caption-button dx-button dx-button-normal dx-widget dx-button-has-text" role="button" aria-label="">
-      <div class="dx-button-content">
-        <span class="dx-button-text" style="font-size: 18px;">{{month | date:'MMMM yyyy'}}</span>
-      </div>
-    </a>
-    <a
-      (click)="region == 'il' ? prevMonth() : nextMonth()"
-      class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-next-view dx-calendar-navigator-next-month"
-      style="margin: 0px 0px;"
-      [ngClass]="region == 'il' ? {'disable':disablePrevious} : {'disable':disableNext}"
-      role="button" aria-label="chevronright">
-      <div class="dx-button-content">
-        <i class="dx-icon dx-icon-chevronright"></i>
-      </div>
-    </a>
-  </div>
+    <div class="flex dx-widget dx-calendar-navigator">
+        <a
+                (click)="region == 'il' ? nextMonth() : prevMonth()"
+                class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-previous-view dx-calendar-navigator-previous-month"
+                style="margin: 0px 0px;"
+                [ngClass]="region == 'il' ? {'disable':disableNext} : {'disable':disablePrevious}"
+                role="button" aria-label="chevronleft">
+            <div class="dx-button-content">
+                <i class="dx-icon dx-icon-chevronleft"></i>
+            </div>
+        </a>
+        <a class="dx-calendar-caption-button dx-button dx-button-normal dx-widget dx-button-has-text" role="button"
+           aria-label="">
+            <div class="dx-button-content">
+                <span class="dx-button-text" style="font-size: 18px;">{{month | date:'MMMM yyyy'}}</span><span class="dx-button-text text-lowercase mx-2" i18n="@@monthSelectorFinalIndication">{final, select, final {Final} notFinal {Not final}}</span>
+            </div>
+        </a>
+        <a
+                (click)="region == 'il' ? prevMonth() : nextMonth()"
+                class="dx-button dx-button-normal dx-widget dx-button-has-icon dx-calendar-navigator-next-view dx-calendar-navigator-next-month"
+                style="margin: 0px 0px;"
+                [ngClass]="region == 'il' ? {'disable':disablePrevious} : {'disable':disableNext}"
+                role="button" aria-label="chevronright">
+            <div class="dx-button-content">
+                <i class="dx-icon dx-icon-chevronright"></i>
+            </div>
+        </a>
+    </div>
 </div>

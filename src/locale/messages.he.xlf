@@ -263,6 +263,10 @@
        <source>{VAR_SELECT, select, eod {Awaiting EOD} notFinal {Not Final} noData {Still processing data}}</source>
        <target>{VAR_SELECT, select, eod {לא בוצע סוף יום} notFinal {לא סופי} noData {בתהליך עדכון מידע}}</target>
       </trans-unit>
+      <trans-unit id="monthSelectorFinalIndication" datatype="html">
+       <source>{VAR_SELECT, select, final {Final} notFinal {Not Final}}</source>
+       <target>{VAR_SELECT, select, final {סופי} notFinal {עד כה}}</target>
+      </trans-unit>
       <trans-unit id="orsLastDay" datatype="html">
         <source>{VAR_SELECT, select, currentBd {Today} previousBd {Yesterday} }</source>
         <target>{VAR_SELECT, select, currentBd {היום} previousBd {אתמול} }</target>
