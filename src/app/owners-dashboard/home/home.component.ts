@@ -121,6 +121,7 @@ export class HomeComponent implements OnInit {
                 }
 
                 const title = this.datePipe.transform(moment(restaurantTime).valueOf(), 'fullDate');
+
                 this.currentBdCardData.sales = totalSales;
                 this.currentBdCardData.diners = day.diners;
                 this.currentBdCardData.ppa = day.ppa;
@@ -184,7 +185,8 @@ export class HomeComponent implements OnInit {
                     this.showForecast = false;
                     return;
                 }
-                this.showForecast = true;
+
+                this.showForecast = false; // true
                 let month = moment().startOf('month');
                 const title = `${this.datePipe.transform(month, 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
                 this.forecastCardData.diners = data.diners;

@@ -6,8 +6,8 @@ export const environment = {
         baseUrl: 'https://us-ros-rp.tabit.cloud/'
     },
     olapConfig: {//US PROD CUBE
-        baseUrl: 'https://analytics-us.tabit.cloud/olapproxy/proxy.ashx',
-        sqlServerProxy: 'https://analytics.tabit.cloud/olapproxy/handler.ashx',
+        baseUrl: 'https://analytics-us.tabit.cloud/proxyV2/us-prd/proxy.ashx',
+        sqlServerProxy: 'https://analytics-us.tabit.cloud/olapproxy/handler.ashx',
         catalog: 'usaProd',
         cube: 'tlogs',
     }

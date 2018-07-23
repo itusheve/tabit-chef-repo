@@ -577,6 +577,14 @@ export class DataService {
                     });
                 });
 
+                //get holidays
+                //got projection // goals
+                //iterate transformed again and add averages
+                _.forEach(transformed, month => {
+
+                });
+
+
                 window.localStorage.setItem(org.id + '-database', JSON.stringify(transformed));
                 obs.next(new Database(transformed));
             });
