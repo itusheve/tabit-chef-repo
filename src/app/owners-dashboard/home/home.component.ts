@@ -99,17 +99,18 @@ export class HomeComponent implements OnInit {
                 let day = database.getDay(restaurantTime);
 
                 if(!day) {
-                    this.currentBdCardData.sales = 0;
-                    this.currentBdCardData.salesComment = 'noData';
-                    this.currentBdCardData.loading = false;
-                    return;
+                    day = {
+                        amount: 0,
+                        date: database.getCurrentBusinessDay(),
+                        aggregations: {}
+                    };
                 }
                 let totalSales = day.amount;
                 let operationalDataDay = moment(liveData.today.businessDate).format('D');
                 let aggregatedDataDay = moment(day.date).format('D');
                 let currentDay = moment().format('D');
 
-                if (liveData.today) {
+                if (liveData.today && currentDay === operationalDataDay) {
                     if (operationalDataDay >= aggregatedDataDay) {
                         totalSales = liveData.today.totalSales;
                     }
@@ -119,7 +120,7 @@ export class HomeComponent implements OnInit {
                     this.currentBdCardData.salesComment = 'eod';
                 }
 
-                const title = this.datePipe.transform(moment(day.date).valueOf(), 'fullDate');
+                const title = this.datePipe.transform(moment(restaurantTime).valueOf(), 'fullDate');
                 this.currentBdCardData.sales = totalSales;
                 this.currentBdCardData.diners = day.diners;
                 this.currentBdCardData.ppa = day.ppa;
