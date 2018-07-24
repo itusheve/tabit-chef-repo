@@ -554,8 +554,8 @@ export class DataService {
                             },
                             sales: {
                                 amount: day.amount,
-                                fourWeekAvg: (day.amount - 1000),
-                                yearAvg: (day.amount + 1000)
+                                fourWeekAvg: 0,
+                                yearAvg: 0
                             }
                         };
 
@@ -581,7 +581,52 @@ export class DataService {
                 //got projection // goals
                 //iterate transformed again and add averages
                 _.forEach(transformed, month => {
+                    _.forEach(month.days, day => {
+                        _.forEach([
+                            {
+                                date: moment(day.date),
+                                key: 'fourWeekAvg'
+                            },
+                            {
+                                date: moment(day.date).subtract(1, 'years'),
+                                key: 'yearAvg'
+                            }
 
+                        ], config => {
+                            let sum = 0;
+                            let notFound = 0;
+                            let i = 0;
+                            let stop = false;
+                            while(i < 4 && !stop) {
+                                config.date.subtract(7, 'days');
+
+                                let monthData = transformed[config.date.format('YYYYMM')];
+                                if(monthData && monthData.days) {
+                                    let previousDayData = _.find(monthData.days, { 'date': config.date.format('YYYY-MM-DD') });
+                                    if(previousDayData) {
+                                        sum += previousDayData.amount;
+                                        i++;
+                                    }
+                                    else {
+                                        notFound++;
+                                        if(notFound >= 2){
+                                            stop = true;
+                                        }
+                                    }
+                                }
+                                else {
+                                    notFound++;
+                                    if(notFound >= 2){
+                                        stop = true;
+                                    }
+                                }
+                            }
+
+                            if(i) {
+                                day.aggregations.sales[config.key] = sum / i;
+                            }
+                        });
+                    });
                 });
 
 
