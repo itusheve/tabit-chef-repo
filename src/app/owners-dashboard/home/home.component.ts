@@ -143,7 +143,12 @@ export class HomeComponent implements OnInit {
                 let previousDay = moment(restaurantTime).subtract(1, 'days');
                 let day = database.getDay(previousDay);
 
-                const title = this.datePipe.transform(day.date.valueOf(), 'fullDate');
+                const title = this.datePipe.transform(previousDay.date.valueOf(), 'fullDate');
+                if(!day) {
+                    this.previousBdCardData.salesComment = 'noData';
+                    this.previousBdNotFinal = true;
+                    this.previousBdCardData.loading = false;
+                }
 
                 this.previousBdCardData.diners = day.diners;
                 this.previousBdCardData.ppa = day.ppa;
