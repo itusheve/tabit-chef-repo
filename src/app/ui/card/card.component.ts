@@ -21,6 +21,8 @@ export interface CardData {
     type?: any;
     currency?: string;
     noSeparator?: boolean;
+    averages?: any;
+    reductions?: any;
 }
 
 @Component({

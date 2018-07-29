@@ -76,15 +76,45 @@ export class MonthViewComponent implements OnInit {
         this.monthGrid.month = monthlyData;
     }
 
-    updateSummary(month, currentBd: moment.Moment, database) {
-        const isCurrentMonth = month.isSame(currentBd, 'month');
+    updateSummary(date, currentBd: moment.Moment, database) {
+        const isCurrentMonth = date.isSame(currentBd, 'month');
 
-        let monthlyData = database.getMonth(month);
+        let month = database.getMonth(date);
 
-        this.summaryCardData.diners = monthlyData.diners;
-        this.summaryCardData.ppa = monthlyData.ppa;
-        this.summaryCardData.sales = monthlyData.amount;
-        this.summaryCardData.aggregations = monthlyData.aggregations;
+        this.summaryCardData.diners = month.diners;
+        this.summaryCardData.ppa = month.ppa;
+        this.summaryCardData.sales = month.amount;
+
+        this.summaryCardData.averages = {
+            yearly: {
+                percentage: (month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1,
+                positive: month.aggregations.sales.weekAvg > month.aggregations.sales.lastYearWeekAvg
+            },
+            weekly: { //compare to our sales forecast
+                percentage: (month.aggregations.sales.amount / month.forecast.sales.amount) - 1,
+                positive: month.aggregations.sales.amount > month.forecast.sales.amount
+            }
+        };
+
+        this.summaryCardData.reductions = {
+            cancellations: {
+                percentage: month.aggregations.reductions.cancellations.amount / month.aggregations.sales.amount,
+                positive: month.aggregations.reductions.cancellations.amount < month.aggregations.reductions.cancellations.threeMonthAvg
+            },
+            employee: {
+                percentage: month.aggregations.reductions.employee.amount / month.aggregations.sales.amount,
+                positive: month.aggregations.reductions.employee.amount < month.aggregations.reductions.employee.threeMonthAvg
+            },
+            operational: {
+                percentage: month.aggregations.reductions.operational.amount / month.aggregations.sales.amount,
+                positive: month.aggregations.reductions.operational.amount < month.aggregations.reductions.operational.threeMonthAvg
+            },
+            retention: {
+                percentage: month.aggregations.reductions.retention.amount / month.aggregations.sales.amount,
+                positive: month.aggregations.reductions.retention.amount < month.aggregations.reductions.retention.threeMonthAvg
+            }
+
+        };
 
         this.summaryCardData.loading = false;
     }

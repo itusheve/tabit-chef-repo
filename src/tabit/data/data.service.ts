@@ -1449,6 +1449,7 @@ export class DataService {
                     let excluded = !!excludedDates[day.date];
 
                     month.forecast.ppa.amount += day.aggregations.indicators.ppa.fourWeekAvg;
+
                     if (currentDate.isSame(moment(day.date), 'month')) {
                         month.forecast.sales.amount += day.amount;
                         month.forecast.diners.count += day.diners;
@@ -1476,12 +1477,14 @@ export class DataService {
                 if (currentDate.isSame(endOfMonth, 'month')) {
                     while (currentDate.isSameOrBefore(endOfMonth, 'day')) {
                         let weekday = currentDate.weekday();
-                        month.forecast.sales += month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count;
-                        month.forecast.diners += month.aggregations.days[weekday].diners.count / month.aggregations.days[weekday].count;
-                        month.forecast.ppa += month.aggregations.days[weekday].ppa.amount / month.aggregations.days[weekday].count;
+                        month.forecast.sales.amount += month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count;
+                        month.forecast.diners.count += month.aggregations.days[weekday].diners.count / month.aggregations.days[weekday].count;
+                        month.forecast.ppa.amount += month.aggregations.days[weekday].ppa.amount / month.aggregations.days[weekday].count;
                         currentDate.add(1, 'days');
                     }
                 }
+
+                month.forecast.ppa.amount = (month.forecast.ppa.amount / currentDate.subtract(2, 'days').daysInMonth());
             }
         });
 

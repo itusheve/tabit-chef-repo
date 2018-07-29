@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit {
         diners: 0,
         ppa: 0,
         aggregations: {},
-        type: 'forcast'
+        type: 'forecast'
     };
 
     private previousBdNotFinal = false;
@@ -86,7 +86,7 @@ export class HomeComponent implements OnInit {
         this.getLatestBusinessDayData();
         this.getPreviousBusinessDayData();
         this.getMonthToDateData();
-        this.getForcastData();
+        this.getForecastData();
     }
 
     getLatestBusinessDayData(): void {
@@ -126,7 +126,38 @@ export class HomeComponent implements OnInit {
                 this.currentBdCardData.diners = day.diners;
                 this.currentBdCardData.ppa = day.ppa;
                 this.currentBdCardData.title = title;
-                this.currentBdCardData.aggregations = day.aggregations;
+
+                this.currentBdCardData.averages = {
+                    yearly: {
+                        percentage: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1,
+                        positive: day.aggregations.sales.amount > day.aggregations.sales.yearAvg
+                    },
+                    weekly: {
+                        percentage: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) - 1,
+                        positive: day.aggregations.sales.amount > day.aggregations.sales.fourWeekAvg
+                    }
+
+                };
+
+                this.currentBdCardData.reductions = {
+                    cancellations: {
+                        percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.cancellations.amount < day.aggregations.reductions.cancellations.threeMonthAvg
+                    },
+                    employee: {
+                        percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.employee.amount < day.aggregations.reductions.employee.threeMonthAvg
+                    },
+                    operational: {
+                        percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.operational.amount < day.aggregations.reductions.operational.threeMonthAvg
+                    },
+                    retention: {
+                        percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.retention.amount < day.aggregations.reductions.retention.threeMonthAvg
+                    }
+
+                };
 
                 if (typeof this.currentBdCardData.sales === 'number') {
                     this.currentBdCardData.loading = false;
@@ -143,7 +174,7 @@ export class HomeComponent implements OnInit {
                 let previousDay = moment(restaurantTime).subtract(1, 'days');
                 let day = database.getDay(previousDay);
 
-                const title = this.datePipe.transform(previousDay.date.valueOf(), 'fullDate');
+                const title = this.datePipe.transform(previousDay.valueOf(), 'fullDate');
                 if(!day) {
                     this.previousBdCardData.salesComment = 'noData';
                     this.previousBdNotFinal = true;
@@ -154,7 +185,38 @@ export class HomeComponent implements OnInit {
                 this.previousBdCardData.ppa = day.ppa;
                 this.previousBdCardData.sales = day.amount;
                 this.previousBdCardData.title = title;
-                this.previousBdCardData.aggregations = day.aggregations;
+
+                this.previousBdCardData.averages = {
+                    yearly: {
+                        percentage: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1,
+                        positive: day.aggregations.sales.amount > day.aggregations.sales.yearAvg
+                    },
+                    weekly: {
+                        percentage: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) - 1,
+                        positive: day.aggregations.sales.amount > day.aggregations.sales.fourWeekAvg
+                    }
+
+                };
+
+                this.previousBdCardData.reductions = {
+                    cancellations: {
+                        percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.cancellations.amount < day.aggregations.reductions.cancellations.threeMonthAvg
+                    },
+                    employee: {
+                        percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.employee.amount < day.aggregations.reductions.employee.threeMonthAvg
+                    },
+                    operational: {
+                        percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.operational.amount < day.aggregations.reductions.operational.threeMonthAvg
+                    },
+                    retention: {
+                        percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.retention.amount < day.aggregations.reductions.retention.threeMonthAvg
+                    }
+
+                };
 
                 /*if (day.hasOwnProperty('final') && !data[0].final) {
                     this.previousBdCardData.salesComment = 'NotFinal';
@@ -176,41 +238,77 @@ export class HomeComponent implements OnInit {
                 this.mtdCardData.ppa = month.ppa;
                 this.mtdCardData.sales = month.amount;
                 this.mtdCardData.title = title;
-                this.mtdCardData.aggregations = month.aggregations;
+
+                this.mtdCardData.averages = {
+                    yearly: {
+                        percentage: (month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1,
+                        positive: month.aggregations.sales.weekAvg > month.aggregations.sales.lastYearWeekAvg
+                    },
+                    weekly: { //compare to our sales forecast
+                        percentage: (month.aggregations.sales.amount / month.forecast.sales.amount) - 1,
+                        positive: month.aggregations.sales.amount > month.forecast.sales.amount
+                    }
+                };
+
+                this.mtdCardData.reductions = {
+                    cancellations: {
+                        percentage: month.aggregations.reductions.cancellations.amount / month.aggregations.sales.amount,
+                        positive: month.aggregations.reductions.cancellations.amount < month.aggregations.reductions.cancellations.threeMonthAvg
+                    },
+                    employee: {
+                        percentage: month.aggregations.reductions.employee.amount / month.aggregations.sales.amount,
+                        positive: month.aggregations.reductions.employee.amount < month.aggregations.reductions.employee.threeMonthAvg
+                    },
+                    operational: {
+                        percentage: month.aggregations.reductions.operational.amount / month.aggregations.sales.amount,
+                        positive: month.aggregations.reductions.operational.amount < month.aggregations.reductions.operational.threeMonthAvg
+                    },
+                    retention: {
+                        percentage: month.aggregations.reductions.retention.amount / month.aggregations.sales.amount,
+                        positive: month.aggregations.reductions.retention.amount < month.aggregations.reductions.retention.threeMonthAvg
+                    }
+
+                };
 
                 this.mtdCardData.loading = false;
             });
     }
 
-    getForcastData(): void {
-        this.dataService.currentMonthForecast$
-            .subscribe(data => {
-                // dat ais undefined if not enough data for forecasting
-                if (!data) {
+    getForecastData(): void {
+        this.dataService.database$
+            .subscribe(database => {
+
+                let month = database.getCurrentMonth();
+                if(moment().date() < 6) {
                     this.showForecast = false;
                     return;
                 }
 
-                this.showForecast = false; // true
-                let month = moment().startOf('month');
-                const title = `${this.datePipe.transform(month, 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
-                this.forecastCardData.diners = data.diners;
-                this.forecastCardData.ppa = data.ppa;
-                this.forecastCardData.sales = data.sales;
+                this.forecastCardData.averages = {yearly: {}, weekly: {}};
+
+
+                let lastYearMonth = database.getMonth(moment().subtract(1,'year'));
+                if(lastYearMonth) {
+                    this.forecastCardData.averages.yearly = {
+                        percentage: (month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount) - 1,
+                        positive: month.forecast.sales.amount > lastYearMonth.aggregations.sales.amount
+                    };
+                }
+
+                this.showForecast = true;
+                const title = `${this.datePipe.transform( moment().startOf('month'), 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
+                this.forecastCardData.diners = month.forecast.diners.count;
+                this.forecastCardData.ppa = month.forecast.ppa.amount;
+                this.forecastCardData.sales = month.forecast.sales.amount;
                 this.forecastCardData.title = title;
                 this.forecastCardData.loading = false;
-                this.forecastCardData.trends = {};
                 this.forecastCardData.noSeparator = true;
 
-                this.trendsDataService.month_forecast_to_last_year_trend()
-                    .then((month_forecast_to_last_year_trend: TrendModel) => {
-                        this.forecastCardData.trends.yearAvg = month_forecast_to_last_year_trend;
-                    });
+                /*this.forecastCardData.averages.weekly = {
+                    percentage: 1 - (month.forecast.sales.amount / month.aggregations.sales.amount),
+                    positive: month.aggregations.sales.amount > month.forecast.sales.amount
+                };*/
 
-                this.trendsDataService.month_forecast_to_start_of_month_forecast()
-                    .then((month_forecast_to_start_of_month_forecast: TrendModel) => {
-                        this.forecastCardData.trends.fourWeekAvg = month_forecast_to_start_of_month_forecast;
-                    });
             });
     }
 

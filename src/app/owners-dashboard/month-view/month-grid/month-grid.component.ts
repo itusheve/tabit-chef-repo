@@ -115,7 +115,7 @@ export class MonthGridComponent implements OnInit {
         }
     }
 
-    getGaugeComperator(day) {
+    getGaugeComparator(day) {
         let value = 0;
         if (this.avgPeriodComparator === 'month') {
             if (this.category === 'sales') {
@@ -156,13 +156,18 @@ export class MonthGridComponent implements OnInit {
     }
 
     getProgressBarWidth(day) {
+        let avg = this.getGaugeComparator(day);
+        let highest = this.getHighestIndicator();
 
+        if(avg > highest) {
+            return (avg / highest * 100) - 2;
+        }
 
-        return (this.getGaugeComperator(day) / this.getHighestIndicator() * 100);
+        return (avg / highest * 100) - 2;
     }
 
     getRemainingWidth(day) {
-        if(this.getGaugeComperator(day) > this.getGaugeValue(day)) {
+        if(this.getGaugeComparator(day) > this.getGaugeValue(day)) {
             return 0;
         }
 
