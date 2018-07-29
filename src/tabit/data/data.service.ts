@@ -1050,6 +1050,7 @@ export class DataService {
                         lowest: 0,
                         amount: month.rCancellation,
                         amountBeforeVat: month.rCancellationBV,
+                        percentage: month.rCancellation / month.amount,
                         threeMonthAvg: 0
                     },
                     operational: {
@@ -1057,6 +1058,7 @@ export class DataService {
                         lowest: 0,
                         amount: month.rOperationalDiscount,
                         amountBeforeVat: month.rOperationalDiscountBV,
+                        percentage: month.rOperationalDiscount / month.amount,
                         threeMonthAvg: 0
                     },
                     retention: {
@@ -1064,6 +1066,7 @@ export class DataService {
                         lowest: 0,
                         amount: month.rRetentionDiscount,
                         amountBeforeVat: month.rRetentionDiscountBV,
+                        percentage: month.rRetentionDiscount / month.amount,
                         threeMonthAvg: 0
                     },
                     employee: {
@@ -1071,6 +1074,7 @@ export class DataService {
                         lowest: 0,
                         amount: month.rEmployees,
                         amountBeforeVat: month.rEmployeesBV,
+                        percentage: month.rEmployees / month.amount,
                         threeMonthAvg: 0
                     }
                 },
@@ -1291,6 +1295,7 @@ export class DataService {
                         cancellations: {
                             amount: day.rCancellation,
                             amountBeforeVat: day.rCancellationBV,
+                            percentage: day.rCancellation / day.amount,
                             fourWeekAvg: 0,
                             yearAvg: 0,
                             threeMonthAvg: 0
@@ -1298,6 +1303,7 @@ export class DataService {
                         operational: {
                             amount: day.rOperationalDiscount,
                             amountBeforeVat: day.rOperationalDiscountBV,
+                            percentage: day.rOperationalDiscount / day.amount,
                             fourWeekAvg: 0,
                             yearAvg: 0,
                             threeMonthAvg: 0
@@ -1305,6 +1311,7 @@ export class DataService {
                         retention: {
                             amount: day.rRetentionDiscount,
                             amountBeforeVat: day.rRetentionDiscountBV,
+                            percentage: day.rRetentionDiscount / day.amount,
                             fourWeekAvg: 0,
                             yearAvg: 0,
                             threeMonthAvg: 0
@@ -1312,6 +1319,7 @@ export class DataService {
                         employee: {
                             amount: day.rEmployees,
                             amountBeforeVat: day.rEmployeesBV,
+                            percentage: day.rEmployees / day.amount,
                             fourWeekAvg: 0,
                             yearAvg: 0,
                             threeMonthAvg: 0
@@ -1359,14 +1367,17 @@ export class DataService {
                         date: moment(day.date).subtract(3, 'months'),
                         key: 'threeMonthAvg'
                     }
-
                 ], config => {
 
                     let totals = {
                         reductions: {
+                            cancellationsPercentage: 0,
                             cancellations: 0,
+                            operationalPercentage: 0,
                             operational: 0,
+                            retentionPercentage: 0,
                             retention: 0,
+                            employeePercentage: 0,
                             employee: 0
                         },
                         sales: 0,
@@ -1394,10 +1405,19 @@ export class DataService {
                                     totals.sales += previousDayData.amount;
                                     totals.indicators.ppa += previousDayData.ppa;
                                     totals.indicators.diners += previousDayData.diners;
+
+                                    totals.reductions.cancellationsPercentage += previousDayData.aggregations.reductions.cancellations.amount / previousDayData.amount;
                                     totals.reductions.cancellations += previousDayData.aggregations.reductions.cancellations.amount;
+
+                                    totals.reductions.operationalPercentage += previousDayData.aggregations.reductions.operational.amount / previousDayData.amount;
                                     totals.reductions.operational += previousDayData.aggregations.reductions.operational.amount;
+
+                                    totals.reductions.retentionPercentage += previousDayData.aggregations.reductions.retention.amount / previousDayData.amount;
                                     totals.reductions.retention += previousDayData.aggregations.reductions.retention.amount;
+
+                                    totals.reductions.employeePercentage += previousDayData.aggregations.reductions.employee.amount / previousDayData.amount;
                                     totals.reductions.employee += previousDayData.aggregations.reductions.employee.amount;
+
                                     i++;
                                 }
                                 else {
@@ -1418,25 +1438,33 @@ export class DataService {
                         day.aggregations.sales[config.key] = totals.sales / i;
                         day.aggregations.indicators.diners[config.key] = totals.indicators.diners / i;
                         day.aggregations.indicators.ppa[config.key] = totals.indicators.ppa / i;
+
+                        day.aggregations.reductions.cancellations[config.key + 'Percentage'] = totals.reductions.cancellationsPercentage / i;
                         day.aggregations.reductions.cancellations[config.key] = totals.reductions.cancellations / i;
+
+                        day.aggregations.reductions.operational[config.key + 'Percentage'] = totals.reductions.operationalPercentage / i;
                         day.aggregations.reductions.operational[config.key] = totals.reductions.operational / i;
+
+                        day.aggregations.reductions.retention[config.key + 'Percentage'] = totals.reductions.retentionPercentage / i;
                         day.aggregations.reductions.retention[config.key] = totals.reductions.retention / i;
+
+                        day.aggregations.reductions.employee[config.key + 'Percentage'] = totals.reductions.employeePercentage / i;
                         day.aggregations.reductions.employee[config.key] = totals.reductions.employee / i;
                     }
                 });
 
                 //get highest and lowest values of sales and reductions
-                month.aggregations.reductions.cancellations.highest = _.max([day.aggregations.reductions.cancellations.yearAvg, day.aggregations.reductions.cancellations.fourWeekAvg, day.aggregations.reductions.cancellations.amount, month.aggregations.reductions.cancellations.highest]);
-                month.aggregations.reductions.cancellations.lowest = _.min([day.aggregations.reductions.cancellations.yearAvg, day.aggregations.reductions.cancellations.fourWeekAvg, day.aggregations.reductions.cancellations.amount, month.aggregations.reductions.cancellations.lowest]);
+                month.aggregations.reductions.cancellations.highest = _.max([day.aggregations.reductions.cancellations.percentage, month.aggregations.reductions.cancellations.highest]);
+                month.aggregations.reductions.cancellations.lowest = _.min([day.aggregations.reductions.cancellations.percentage, month.aggregations.reductions.cancellations.lowest]);
 
-                month.aggregations.reductions.operational.highest = _.max([day.aggregations.reductions.operational.yearAvg, day.aggregations.reductions.operational.fourWeekAvg, day.aggregations.reductions.operational.amount, month.aggregations.reductions.operational.highest]);
-                month.aggregations.reductions.operational.lowest = _.min([day.aggregations.reductions.operational.yearAvg, day.aggregations.reductions.operational.fourWeekAvg, day.aggregations.reductions.operational.amount, month.aggregations.reductions.operational.lowest]);
+                month.aggregations.reductions.operational.highest = _.max([day.aggregations.reductions.operational.percentage, month.aggregations.reductions.operational.highest]);
+                month.aggregations.reductions.operational.lowest = _.min([day.aggregations.reductions.operational.percentage, month.aggregations.reductions.operational.lowest]);
 
-                month.aggregations.reductions.retention.highest = _.max([day.aggregations.reductions.retention.yearAvg, day.aggregations.reductions.retention.fourWeekAvg, day.aggregations.reductions.retention.amount, month.aggregations.reductions.retention.highest]);
-                month.aggregations.reductions.retention.lowest = _.min([day.aggregations.reductions.retention.yearAvg, day.aggregations.reductions.retention.fourWeekAvg, day.aggregations.reductions.retention.amount, month.aggregations.reductions.retention.lowest]);
+                month.aggregations.reductions.retention.highest = _.max([day.aggregations.reductions.retention.percentage, month.aggregations.reductions.retention.highest]);
+                month.aggregations.reductions.retention.lowest = _.min([day.aggregations.reductions.retention.percentage, month.aggregations.reductions.retention.lowest]);
 
-                month.aggregations.reductions.employee.highest = _.max([day.aggregations.reductions.employee.yearAvg, day.aggregations.reductions.employee.fourWeekAvg, day.aggregations.reductions.employee.amount, month.aggregations.reductions.employee.highest]);
-                month.aggregations.reductions.employee.lowest = _.min([day.aggregations.reductions.employee.yearAvg, day.aggregations.reductions.employee.fourWeekAvg, day.aggregations.reductions.employee.amount, month.aggregations.reductions.employee.lowest]);
+                month.aggregations.reductions.employee.highest = _.max([day.aggregations.reductions.employee.percentage, month.aggregations.reductions.employee.highest]);
+                month.aggregations.reductions.employee.lowest = _.min([day.aggregations.reductions.employee.percentage, month.aggregations.reductions.employee.lowest]);
 
                 month.aggregations.sales.highest = _.max([day.aggregations.sales.yearAvg, day.aggregations.sales.fourWeekAvg, day.aggregations.sales.amount, month.aggregations.sales.highest]);
                 month.aggregations.sales.lowest = _.min([day.aggregations.sales.yearAvg, day.aggregations.sales.fourWeekAvg, day.aggregations.sales.amount, month.aggregations.sales.lowest]);
