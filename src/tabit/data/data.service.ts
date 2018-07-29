@@ -1487,47 +1487,51 @@ export class DataService {
 
         //calculate weekAvg of month
         _.forEach(database, month => {
-            _.each(month.aggregations.days, weekDay => {
-                month.aggregations.sales.weekAvg += weekDay.sales.amount / weekDay.count;
-                month.aggregations.indicators.diners.weekAvg += weekDay.diner.count / weekDay.count;
-                month.aggregations.indicators.ppa.weekAvg += weekDay.ppa.amount / weekDay.count;
-            });
+            if(month.aggregations) {
+                _.each(month.aggregations.days, weekDay => {
+                    month.aggregations.sales.weekAvg += weekDay.sales.amount / weekDay.count;
+                    month.aggregations.indicators.diners.weekAvg += weekDay.diners.count / weekDay.count;
+                    month.aggregations.indicators.ppa.weekAvg += weekDay.ppa.amount / weekDay.count;
+                });
+            }
         });
 
 
         _.forEach(database, month => {
-            let date = moment(month.latestDay);
-            let lastYearMonth = database[moment(date).subtract(1, 'years').format('YYYYMM')];
-            if(lastYearMonth) {
-                month.aggregations.sales.lastYearWeekAvg = lastYearMonth.aggregations.sales.weekAvg;
-                month.aggregations.indicators.diners.weekAvg = lastYearMonth.aggregations.indicators.diners.weekAvg;
-                month.aggregations.indicators.ppa.weekAvg += lastYearMonth.aggregations.indicators.ppa.weekAvg;
-            }
-
-            //go back 3 months and calculate reductions 3 month average
-            let i = 1;
-            let stop = false;
-            while(i < 4 && !stop){
-                let previousMonth = database[moment(date).subtract(i, 'months').format('YYYYMM')];
-                if(previousMonth) {
-                    _.each(previousMonth.aggregations.days, aggregatedDay => {
-                        month.aggregations.reductions.cancellations.threeMonthAvg = aggregatedDay.reductions.cancellations.amount / aggregatedDay.count;
-                        month.aggregations.reductions.employee.threeMonthAvg = aggregatedDay.reductions.employee.amount / aggregatedDay.count;
-                        month.aggregations.reductions.operational.threeMonthAvg = aggregatedDay.reductions.operational.amount / aggregatedDay.count;
-                        month.aggregations.reductions.retention.threeMonthAvg = aggregatedDay.reductions.retention.amount / aggregatedDay.count;
-                    });
-
-                    i++;
+            if(month.aggregations) {
+                let date = moment(month.latestDay);
+                let lastYearMonth = database[moment(date).subtract(1, 'years').format('YYYYMM')];
+                if(lastYearMonth) {
+                    month.aggregations.sales.lastYearWeekAvg = lastYearMonth.aggregations.sales.weekAvg;
+                    month.aggregations.indicators.diners.lastYearWeekAvg = lastYearMonth.aggregations.indicators.diners.weekAvg;
+                    month.aggregations.indicators.ppa.lastYearWeekAvg += lastYearMonth.aggregations.indicators.ppa.weekAvg;
                 }
-                else {
-                    stop = true;
-                }
-            }
 
-            month.aggregations.reductions.cancellations.threeMonthAvg = month.aggregations.reductions.cancellations.threeMonthAvg / i;
-            month.aggregations.reductions.employee.threeMonthAvg = month.aggregations.reductions.employee.threeMonthAvg / i;
-            month.aggregations.reductions.operational.threeMonthAvg = month.aggregations.reductions.operational.threeMonthAvg / i;
-            month.aggregations.reductions.retention.threeMonthAvg = month.aggregations.reductions.retention.threeMonthAvg / i;
+                //go back 3 months and calculate reductions 3 month average
+                let i = 1;
+                let stop = false;
+                while(i < 4 && !stop){
+                    let previousMonth = database[moment(date).subtract(i, 'months').format('YYYYMM')];
+                    if(previousMonth) {
+                        _.each(previousMonth.aggregations.days, aggregatedDay => {
+                            month.aggregations.reductions.cancellations.threeMonthAvg += aggregatedDay.reductions.cancellations.amount;
+                            month.aggregations.reductions.employee.threeMonthAvg += aggregatedDay.reductions.employee.amount;
+                            month.aggregations.reductions.operational.threeMonthAvg += aggregatedDay.reductions.operational.amount;
+                            month.aggregations.reductions.retention.threeMonthAvg += aggregatedDay.reductions.retention.amount;
+                        });
+
+                        i++;
+                    }
+                    else {
+                        stop = true;
+                    }
+                }
+
+                month.aggregations.reductions.cancellations.threeMonthAvg = month.aggregations.reductions.cancellations.threeMonthAvg / i;
+                month.aggregations.reductions.employee.threeMonthAvg = month.aggregations.reductions.employee.threeMonthAvg / i;
+                month.aggregations.reductions.operational.threeMonthAvg = month.aggregations.reductions.operational.threeMonthAvg / i;
+                month.aggregations.reductions.retention.threeMonthAvg = month.aggregations.reductions.retention.threeMonthAvg / i;
+            }
         });
 
         window.localStorage.setItem(org.id + '-database', JSON.stringify(database));
