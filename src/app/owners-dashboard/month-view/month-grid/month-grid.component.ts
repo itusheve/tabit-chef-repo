@@ -76,6 +76,24 @@ export class MonthGridComponent implements OnInit {
         }
     }
 
+    getProgressBarColor() {
+        if (this.category === 'sales') {
+            return '#17a2b8';
+        }
+        else if (this.category === 'cancellations') {
+            return '#dc3545';
+        }
+        else if (this.category === 'retention') {
+            return '#ffc107';
+        }
+        else if (this.category === 'operational') {
+            return '#28a745';
+        }
+        else if (this.category === 'employee') {
+            return '#007bff';
+        }
+    }
+
     getTextColor(categoryClicked) {
         if (this.category === 'sales' && categoryClicked === 'sales') {
             return 'text-info';

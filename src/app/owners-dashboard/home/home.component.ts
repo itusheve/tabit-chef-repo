@@ -102,7 +102,11 @@ export class HomeComponent implements OnInit {
                     day = {
                         amount: 0,
                         date: database.getCurrentBusinessDay(),
-                        aggregations: {}
+                        aggregations: {
+                            sales: {},
+                            reductions: {},
+                            indicators: {}
+                        }
                     };
                 }
                 let totalSales = day.amount;
@@ -136,28 +140,29 @@ export class HomeComponent implements OnInit {
                         percentage: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) - 1,
                         positive: day.aggregations.sales.amount > day.aggregations.sales.fourWeekAvg
                     }
-
                 };
 
-                this.currentBdCardData.reductions = {
-                    cancellations: {
-                        percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.cancellations.amount < day.aggregations.reductions.cancellations.threeMonthAvg
-                    },
-                    employee: {
-                        percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.employee.amount < day.aggregations.reductions.employee.threeMonthAvg
-                    },
-                    operational: {
-                        percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.operational.amount < day.aggregations.reductions.operational.threeMonthAvg
-                    },
-                    retention: {
-                        percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.retention.amount < day.aggregations.reductions.retention.threeMonthAvg
-                    }
+                if(day.aggregations.reductions.length) {
+                    this.currentBdCardData.reductions = {
+                        cancellations: {
+                            percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
+                            positive: day.aggregations.reductions.cancellations.amount < day.aggregations.reductions.cancellations.threeMonthAvg
+                        },
+                        employee: {
+                            percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
+                            positive: day.aggregations.reductions.employee.amount < day.aggregations.reductions.employee.threeMonthAvg
+                        },
+                        operational: {
+                            percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
+                            positive: day.aggregations.reductions.operational.amount < day.aggregations.reductions.operational.threeMonthAvg
+                        },
+                        retention: {
+                            percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
+                            positive: day.aggregations.reductions.retention.amount < day.aggregations.reductions.retention.threeMonthAvg
+                        }
 
-                };
+                    };
+                }
 
                 if (typeof this.currentBdCardData.sales === 'number') {
                     this.currentBdCardData.loading = false;

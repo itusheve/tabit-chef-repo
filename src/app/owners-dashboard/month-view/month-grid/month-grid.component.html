@@ -5,42 +5,63 @@
                 <div class="col-12 font-weight-bold mx-0 p-0" style="font-size: 18px;">
                     <div class="row mx-0 p-0 justify-content-center" style="direction: rtl">
                         <div class="btn-group w-100 category-picker">
-                            <span class="btn btn-light rounded-0 w-25 border" [ngClass]="getTextColor('sales')" (click)="changeCategory('sales')"><i class="material-icons">attach_money</i></span>
-                            <span class="btn btn-light w-25 border" (click)="changeCategory('cancellations')"><i class="icon" [ngClass]="category === 'cancellations' ? 'iconOperationalAndCancellations' : 'iconOperationalAndCancellations_off'"></i></span>
-                            <span class="btn btn-light w-25 border" (click)="changeCategory('operational')"><i class="icon" [ngClass]="category === 'operational' ? 'iconPromotions' : 'iconPromotions_off'"></i></span>
-                            <span class="btn btn-light w-25 border" (click)="changeCategory('retention')"><i class="icon" [ngClass]="category === 'retention' ? 'iconRetention' : 'iconRetention_off'"></i></span>
-                            <span class="btn btn-light rounded-0 w-25 border" (click)="changeCategory('employee')"><i class="icon" [ngClass]="category === 'employee' ? 'iconOrganizational' : 'iconOrganizational_off'"></i></span>
+                            <span class="btn btn-light rounded-0 w-25 border" [ngClass]="getTextColor('sales')"
+                                  (click)="changeCategory('sales')"><i class="material-icons">attach_money</i></span>
+                            <span class="btn btn-light w-25 border" (click)="changeCategory('cancellations')"><i
+                                    class="icon"
+                                    [ngClass]="category === 'cancellations' ? 'iconOperationalAndCancellations' : 'iconOperationalAndCancellations_off'"></i></span>
+                            <span class="btn btn-light w-25 border" (click)="changeCategory('operational')"><i
+                                    class="icon"
+                                    [ngClass]="category === 'operational' ? 'iconPromotions' : 'iconPromotions_off'"></i></span>
+                            <span class="btn btn-light w-25 border" (click)="changeCategory('retention')"><i
+                                    class="icon"
+                                    [ngClass]="category === 'retention' ? 'iconRetention' : 'iconRetention_off'"></i></span>
+                            <span class="btn btn-light rounded-0 w-25 border" (click)="changeCategory('employee')"><i
+                                    class="icon"
+                                    [ngClass]="category === 'employee' ? 'iconOrganizational' : 'iconOrganizational_off'"></i></span>
                         </div>
                     </div>
                     <div class="row m-0 p-0">
                         <div class="btn-group w-100">
-                            <span class="btn btn-lg btn-light rounded-0 w-50 border" [ngClass]="avgPeriodComparator === 'year' ? 'active' : ''" (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear">Prev. Year</span>
-                            <span class="btn btn-lg btn-light rounded-0 w-50 border" [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''" (click)="changeAvgPeriodComparator('month')" i18n="@@fourWeek">4 Week</span>
+                            <span class="btn btn-lg btn-light rounded-0 w-50 border"
+                                  [ngClass]="avgPeriodComparator === 'year' ? 'active' : ''"
+                                  (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear">Prev. Year</span>
+                            <span class="btn btn-lg btn-light rounded-0 w-50 border"
+                                  [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''"
+                                  (click)="changeAvgPeriodComparator('month')" i18n="@@fourWeek">4 Week</span>
                         </div>
                     </div>
                 </div>
             </li>
-            <li *ngFor="let day of days" class="list-group-item" >
+            <li *ngFor="let day of days" class="list-group-item">
                 <div class="row flex a-center" (click)="rowClickHandler(day)" style="cursor: pointer">
 
                     <div class="col-3">
                         {{day.date | date: 'dd'}} {{day.date | date: 'EEE'}}
                     </div>
                     <div class="col-6">
-                        <div class="progress rounded-0">
-                            <div [style.width]="getProgressBarWidth(day) + '%'"
-                                 class="progress-bar rounded-0" [ngClass]="getProgressBarBackground()" role="progressbar"
-                                 >
-                            </div>
-                            <div [style.width]="'2%'" class="progress-bar-ticker progress-bar rounded-0 bg-dark" role="progressbar"></div>
-                            <div [style.width]="getRemainingWidth(day) + '%'"
-                                 class="progress-bar rounded-0" [ngClass]="getProgressBarBackground()" role="progressbar"
-                                 >
-                            </div>
-                        </div>
+                        <dx-linear-gauge
+                                id="gauge"
+                                [subvalues]="[getGaugeComparator(day)]">
+                            <dxo-animation duration="1000" enabled="true" easing="easeOutCubic"></dxo-animation>
+                            <dxo-size height="35"></dxo-size>
+                            <dxo-subvalue-indicator
+                                    type="triangleMarker"
+                                    color="#f05b41">
+                            </dxo-subvalue-indicator>
+                            <dxo-range-container [offset]="0">
+                                <dxi-range [startValue]="0" [endValue]="getGaugeValue(day)"
+                                           [color]="getProgressBarColor()"></dxi-range>
+                            </dxo-range-container>
+                            <dxo-scale
+                                    [startValue]="0"
+                                    [endValue]="getHighestIndicator()">
+                            </dxo-scale>
+                        </dx-linear-gauge>
                     </div>
                     <div class="col-3 px-0">
-                        <span *ngIf="category === 'sales'" [innerHtml]="getGaugeValue(day) | currency:'0':'':'':false"></span>
+                        <span *ngIf="category === 'sales'"
+                              [innerHtml]="getGaugeValue(day) | currency:'0':'':'':false"></span>
                         <span *ngIf="category !== 'sales'">{{getGaugeValue(day) | pct }}</span>
                     </div>
                 </div>

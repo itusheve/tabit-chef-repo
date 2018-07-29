@@ -1340,28 +1340,10 @@ export class DataService {
                         }
                     }
                 };
-
-                //get highest and lowest values of sales and reductions
-                month.aggregations.reductions.cancellations.highest = _.max([day.aggregations.reductions.cancellations.yearAvg, day.aggregations.reductions.cancellations.fourWeekAvg, day.aggregations.reductions.cancellations.amount, month.aggregations.reductions.cancellations.highest]);
-                month.aggregations.reductions.cancellations.lowest = _.min([day.aggregations.reductions.cancellations.yearAvg, day.aggregations.reductions.cancellations.fourWeekAvg, day.aggregations.reductions.cancellations.amount, month.aggregations.reductions.cancellations.lowest]);
-
-                month.aggregations.reductions.operational.highest = _.max([day.aggregations.reductions.operational.yearAvg, day.aggregations.reductions.operational.fourWeekAvg, day.aggregations.reductions.operational.amount, month.aggregations.reductions.operational.highest]);
-                month.aggregations.reductions.operational.lowest = _.min([day.aggregations.reductions.operational.yearAvg, day.aggregations.reductions.operational.fourWeekAvg, day.aggregations.reductions.operational.amount, month.aggregations.reductions.operational.lowest]);
-
-                month.aggregations.reductions.retention.highest = _.max([day.aggregations.reductions.retention.yearAvg, day.aggregations.reductions.retention.fourWeekAvg, day.aggregations.reductions.retention.amount, month.aggregations.reductions.retention.highest]);
-                month.aggregations.reductions.retention.lowest = _.min([day.aggregations.reductions.retention.yearAvg, day.aggregations.reductions.retention.fourWeekAvg, day.aggregations.reductions.retention.amount, month.aggregations.reductions.retention.lowest]);
-
-                month.aggregations.reductions.employee.highest = _.max([day.aggregations.reductions.employee.yearAvg, day.aggregations.reductions.employee.fourWeekAvg, day.aggregations.reductions.employee.amount, month.aggregations.reductions.employee.highest]);
-                month.aggregations.reductions.employee.lowest = _.min([day.aggregations.reductions.employee.yearAvg, day.aggregations.reductions.employee.fourWeekAvg, day.aggregations.reductions.employee.amount, month.aggregations.reductions.employee.lowest]);
-
-                month.aggregations.sales.highest = _.max([day.aggregations.sales.yearAvg, day.aggregations.sales.fourWeekAvg, day.aggregations.sales.amount, month.aggregations.sales.highest]);
-                month.aggregations.sales.lowest = _.min([day.aggregations.sales.yearAvg, day.aggregations.sales.fourWeekAvg, day.aggregations.sales.amount, month.aggregations.sales.lowest]);
-
             });
         });
 
         _.forEach(database, month => {
-
             let currentDate = moment();
             _.forEach(month.days, day => {
                 _.forEach([
@@ -1442,6 +1424,23 @@ export class DataService {
                         day.aggregations.reductions.employee[config.key] = totals.reductions.employee / i;
                     }
                 });
+
+                //get highest and lowest values of sales and reductions
+                month.aggregations.reductions.cancellations.highest = _.max([day.aggregations.reductions.cancellations.yearAvg, day.aggregations.reductions.cancellations.fourWeekAvg, day.aggregations.reductions.cancellations.amount, month.aggregations.reductions.cancellations.highest]);
+                month.aggregations.reductions.cancellations.lowest = _.min([day.aggregations.reductions.cancellations.yearAvg, day.aggregations.reductions.cancellations.fourWeekAvg, day.aggregations.reductions.cancellations.amount, month.aggregations.reductions.cancellations.lowest]);
+
+                month.aggregations.reductions.operational.highest = _.max([day.aggregations.reductions.operational.yearAvg, day.aggregations.reductions.operational.fourWeekAvg, day.aggregations.reductions.operational.amount, month.aggregations.reductions.operational.highest]);
+                month.aggregations.reductions.operational.lowest = _.min([day.aggregations.reductions.operational.yearAvg, day.aggregations.reductions.operational.fourWeekAvg, day.aggregations.reductions.operational.amount, month.aggregations.reductions.operational.lowest]);
+
+                month.aggregations.reductions.retention.highest = _.max([day.aggregations.reductions.retention.yearAvg, day.aggregations.reductions.retention.fourWeekAvg, day.aggregations.reductions.retention.amount, month.aggregations.reductions.retention.highest]);
+                month.aggregations.reductions.retention.lowest = _.min([day.aggregations.reductions.retention.yearAvg, day.aggregations.reductions.retention.fourWeekAvg, day.aggregations.reductions.retention.amount, month.aggregations.reductions.retention.lowest]);
+
+                month.aggregations.reductions.employee.highest = _.max([day.aggregations.reductions.employee.yearAvg, day.aggregations.reductions.employee.fourWeekAvg, day.aggregations.reductions.employee.amount, month.aggregations.reductions.employee.highest]);
+                month.aggregations.reductions.employee.lowest = _.min([day.aggregations.reductions.employee.yearAvg, day.aggregations.reductions.employee.fourWeekAvg, day.aggregations.reductions.employee.amount, month.aggregations.reductions.employee.lowest]);
+
+                month.aggregations.sales.highest = _.max([day.aggregations.sales.yearAvg, day.aggregations.sales.fourWeekAvg, day.aggregations.sales.amount, month.aggregations.sales.highest]);
+                month.aggregations.sales.lowest = _.min([day.aggregations.sales.yearAvg, day.aggregations.sales.fourWeekAvg, day.aggregations.sales.amount, month.aggregations.sales.lowest]);
+
 
 
                 if (!moment(day.date).isSame(moment(), 'day')) {
