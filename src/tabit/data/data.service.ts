@@ -1050,7 +1050,7 @@ export class DataService {
                         lowest: 0,
                         amount: month.rCancellation,
                         amountBeforeVat: month.rCancellationBV,
-                        percentage: month.rCancellation / month.amount,
+                        percentage: month.rCancellation / (month.amount - month.salesTipAmount + month.rCancellation),
                         threeMonthAvg: 0
                     },
                     operational: {
@@ -1058,7 +1058,7 @@ export class DataService {
                         lowest: 0,
                         amount: month.rOperationalDiscount,
                         amountBeforeVat: month.rOperationalDiscountBV,
-                        percentage: month.rOperationalDiscount / month.amount,
+                        percentage: month.rOperationalDiscount / (month.amount - month.salesTipAmount + month.rOperationalDiscount),
                         threeMonthAvg: 0
                     },
                     retention: {
@@ -1066,7 +1066,7 @@ export class DataService {
                         lowest: 0,
                         amount: month.rRetentionDiscount,
                         amountBeforeVat: month.rRetentionDiscountBV,
-                        percentage: month.rRetentionDiscount / month.amount,
+                        percentage: month.rRetentionDiscount / (month.amount - month.salesTipAmount + month.rRetentionDiscount),
                         threeMonthAvg: 0
                     },
                     employee: {
@@ -1074,7 +1074,7 @@ export class DataService {
                         lowest: 0,
                         amount: month.rEmployees,
                         amountBeforeVat: month.rEmployeesBV,
-                        percentage: month.rEmployees / month.amount,
+                        percentage: month.rEmployees / (month.amount - month.salesTipAmount + month.rEmployees),
                         threeMonthAvg: 0
                     }
                 },
@@ -1295,7 +1295,7 @@ export class DataService {
                         cancellations: {
                             amount: day.rCancellation,
                             amountBeforeVat: day.rCancellationBV,
-                            percentage: day.rCancellation / day.amount,
+                            percentage: day.rCancellation / (day.amount - day.salesTipAmount + day.rCancellation),
                             fourWeekAvg: 0,
                             yearAvg: 0,
                             threeMonthAvg: 0
@@ -1303,7 +1303,7 @@ export class DataService {
                         operational: {
                             amount: day.rOperationalDiscount,
                             amountBeforeVat: day.rOperationalDiscountBV,
-                            percentage: day.rOperationalDiscount / day.amount,
+                            percentage: day.rOperationalDiscount / (day.amount - day.salesTipAmount + day.rOperationalDiscount),
                             fourWeekAvg: 0,
                             yearAvg: 0,
                             threeMonthAvg: 0
@@ -1311,7 +1311,7 @@ export class DataService {
                         retention: {
                             amount: day.rRetentionDiscount,
                             amountBeforeVat: day.rRetentionDiscountBV,
-                            percentage: day.rRetentionDiscount / day.amount,
+                            percentage: day.rRetentionDiscount / (day.amount - day.salesTipAmount + day.rRetentionDiscount),
                             fourWeekAvg: 0,
                             yearAvg: 0,
                             threeMonthAvg: 0
@@ -1319,7 +1319,7 @@ export class DataService {
                         employee: {
                             amount: day.rEmployees,
                             amountBeforeVat: day.rEmployeesBV,
-                            percentage: day.rEmployees / day.amount,
+                            percentage: day.rEmployees / (day.amount - day.salesTipAmount + day.rEmployees),
                             fourWeekAvg: 0,
                             yearAvg: 0,
                             threeMonthAvg: 0
@@ -1406,16 +1406,16 @@ export class DataService {
                                     totals.indicators.ppa += previousDayData.ppa;
                                     totals.indicators.diners += previousDayData.diners;
 
-                                    totals.reductions.cancellationsPercentage += previousDayData.aggregations.reductions.cancellations.amount / previousDayData.amount;
+                                    totals.reductions.cancellationsPercentage += previousDayData.aggregations.reductions.cancellations.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.cancellations.amount);
                                     totals.reductions.cancellations += previousDayData.aggregations.reductions.cancellations.amount;
 
-                                    totals.reductions.operationalPercentage += previousDayData.aggregations.reductions.operational.amount / previousDayData.amount;
+                                    totals.reductions.operationalPercentage += previousDayData.aggregations.reductions.operational.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.operational.amount);
                                     totals.reductions.operational += previousDayData.aggregations.reductions.operational.amount;
 
-                                    totals.reductions.retentionPercentage += previousDayData.aggregations.reductions.retention.amount / previousDayData.amount;
+                                    totals.reductions.retentionPercentage += previousDayData.aggregations.reductions.retention.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.retention.amount);
                                     totals.reductions.retention += previousDayData.aggregations.reductions.retention.amount;
 
-                                    totals.reductions.employeePercentage += previousDayData.aggregations.reductions.employee.amount / previousDayData.amount;
+                                    totals.reductions.employeePercentage += previousDayData.aggregations.reductions.employee.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.employee.amount);
                                     totals.reductions.employee += previousDayData.aggregations.reductions.employee.amount;
 
                                     i++;

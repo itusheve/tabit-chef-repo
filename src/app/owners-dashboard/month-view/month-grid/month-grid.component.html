@@ -40,24 +40,9 @@
                         {{day.date | date: 'dd'}} {{day.date | date: 'EEE'}}
                     </div>
                     <div class="col-6">
-                        <dx-linear-gauge
-                                id="gauge"
-                                [subvalues]="[getGaugeComparator(day)]">
-                            <dxo-animation enabled="false"></dxo-animation>
-                            <dxo-size height="35"></dxo-size>
-                            <dxo-subvalue-indicator
-                                    type="triangleMarker"
-                                    color="#f05b41">
-                            </dxo-subvalue-indicator>
-                            <dxo-range-container [offset]="0">
-                                <dxi-range [startValue]="0" [endValue]="getGaugeValue(day)"
-                                           [color]="getProgressBarColor()"></dxi-range>
-                            </dxo-range-container>
-                            <dxo-scale
-                                    [startValue]="0"
-                                    [endValue]="getHighestIndicator()">
-                            </dxo-scale>
-                        </dx-linear-gauge>
+                        <div class="progress rounded-0" [style.width]="getProgressBarWidth(day) < 100 ? '90%' : '100%'">
+                            <div class="progress-bar progress-bar-animated rounded-0" [ngClass]="getProgressBarBackground(day)" role="progressbar" [style.width]="getProgressBarWidth(day) + '%'">{{getValueInPrecentage(day)}}%</div>
+                        </div>
                     </div>
                     <div class="col-3 px-0">
                         <span *ngIf="category === 'sales'"

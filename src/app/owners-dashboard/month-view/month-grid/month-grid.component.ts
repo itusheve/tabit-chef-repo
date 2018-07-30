@@ -58,7 +58,7 @@ export class MonthGridComponent implements OnInit {
         this.categoryTitle = categoryName;
     }
 
-    getProgressBarBackground() {
+    /*getProgressBarBackground() {
         if (this.category === 'sales') {
             return 'bg-info';
         }
@@ -74,6 +74,27 @@ export class MonthGridComponent implements OnInit {
         else if (this.category === 'employee') {
             return 'bg-primary';
         }
+    }*/
+
+    getProgressBarBackground(day) {
+        let value = this.getValueInPrecentage(day);
+        if (value === 0) {
+            return 'bg-secondary';
+        }
+        if (value <= 80) {
+            return this.category === 'sales' ? 'bg-danger' : 'bg-success-dark';
+        }
+        else if (value <= 90) {
+            return this.category === 'sales' ? 'bg-warning' : 'bg-success';
+        }
+        else if (value <= 110) {
+            return this.category === 'sales' ? 'bg-success' : 'bg-warning';
+        }
+        else if (value > 110) {
+            return this.category === 'sales' ? 'bg-success-dark' : 'bg-danger';
+        }
+
+        return 'bg-primary';
     }
 
     getProgressBarColor() {
@@ -173,23 +194,32 @@ export class MonthGridComponent implements OnInit {
         return value;
     }
 
-    getProgressBarWidth(day) {
+    getValueInPrecentage(day) {
         let avg = this.getGaugeComparator(day);
-        let highest = this.getHighestIndicator();
-
-        if(avg > highest) {
-            return (avg / highest * 100) - 2;
+        let value = this.getGaugeValue(day);
+        if(avg == 0) {
+            avg = 1;
         }
 
-        return (avg / highest * 100) - 2;
+        if(this.category === 'sales') {
+
+        }
+
+        return Math.round(value / avg * 100);
     }
 
-    getRemainingWidth(day) {
-        if(this.getGaugeComparator(day) > this.getGaugeValue(day)) {
-            return 0;
+    getProgressBarWidth(day) {
+        let width = this.getValueInPrecentage(day);
+        if(width  === 0) {
+            width = 100;
+        }
+        else if(width < 18) {
+            width = 18;
+        }
+        else if(width > 130) {
+            width = 120;
         }
 
-        let width = (this.getProgressBarWidth(day)) - (this.getGaugeValue(day) / this.getHighestIndicator() * 100);
-        return Math.abs(width);
+        return width;
     }
 }
