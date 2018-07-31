@@ -82,16 +82,19 @@ export class MonthGridComponent implements OnInit {
             return 'bg-secondary';
         }
         if (value <= 80) {
-            return this.category === 'sales' ? 'bg-danger' : 'bg-success-dark';
+            return this.category === 'sales' ? 'bg-danger-dark' : 'bg-success-dark';
         }
         else if (value <= 90) {
-            return this.category === 'sales' ? 'bg-warning' : 'bg-success';
+            return this.category === 'sales' ? 'bg-danger' : 'bg-success';
         }
-        else if (value <= 110) {
-            return this.category === 'sales' ? 'bg-success' : 'bg-warning';
+        else if (value <= 100) {
+            return this.category === 'sales' ? 'bg-warning' : 'bg-warning';
+        }
+        else if (value < 110) {
+            return this.category === 'sales' ? 'bg-success' : 'bg-danger';
         }
         else if (value > 110) {
-            return this.category === 'sales' ? 'bg-success-dark' : 'bg-danger';
+            return this.category === 'sales' ? 'bg-success-dark' : 'bg-danger-dark';
         }
 
         return 'bg-primary';
