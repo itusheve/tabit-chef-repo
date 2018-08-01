@@ -37,7 +37,7 @@
                 <div class="row flex a-center" (click)="rowClickHandler(day)" style="cursor: pointer">
 
                     <div class="col-3">
-                        {{day.date | date: 'dd'}} {{day.date | date: 'EEE'}}
+                        {{day.date | date: 'dd'}} {{day.date | date: 'EEE'}}<i *ngIf="day.isExcluded" class="material-icons text-danger" style="font-size: 12px; position: absolute; top: 11px;">donut_large</i>
                     </div>
                     <div class="col-6">
                         <div class="progress rounded-0" [style.width]="getProgressBarWidth(day) < 100 ? '90%' : '100%'">
