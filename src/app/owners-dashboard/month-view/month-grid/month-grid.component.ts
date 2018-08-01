@@ -20,7 +20,7 @@ export class MonthGridComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.changeAvgPeriodComparator('year');
+        this.changeAvgPeriodComparator('month');
         this.changeCategory('sales');
     }
 
@@ -93,7 +93,7 @@ export class MonthGridComponent implements OnInit {
         else if (value < 110) {
             return this.category === 'sales' ? 'bg-success' : 'bg-danger';
         }
-        else if (value > 110) {
+        else if (value => 110) {
             return this.category === 'sales' ? 'bg-success-dark' : 'bg-danger-dark';
         }
 
@@ -200,12 +200,8 @@ export class MonthGridComponent implements OnInit {
     getValueInPrecentage(day) {
         let avg = this.getGaugeComparator(day);
         let value = this.getGaugeValue(day);
-        if(avg == 0) {
-            avg = 1;
-        }
-
-        if(this.category === 'sales') {
-
+        if(!avg) {
+            return 0;
         }
 
         return Math.round(value / avg * 100);

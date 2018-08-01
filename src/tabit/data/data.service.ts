@@ -1573,8 +1573,8 @@ export class DataService {
             }
         });
 
-        database.performance = perf;
         window.localStorage.setItem(org.id + '-database', JSON.stringify(database));
+        window.localStorage.setItem('performance', JSON.stringify(perf));
         obs.next(new Database(database));
 
     }).publishReplay(1).refCount();

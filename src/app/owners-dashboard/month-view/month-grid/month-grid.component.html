@@ -24,11 +24,11 @@
                     <div class="row m-0 p-0">
                         <div class="btn-group w-100">
                             <span class="btn btn-lg btn-light rounded-0 w-50 border"
-                                  [ngClass]="avgPeriodComparator === 'year' ? 'active' : ''"
-                                  (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear">Prev. Year</span>
-                            <span class="btn btn-lg btn-light rounded-0 w-50 border"
                                   [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''"
                                   (click)="changeAvgPeriodComparator('month')" i18n="@@fourWeek">4 Week</span>
+                            <span class="btn btn-lg btn-light rounded-0 w-50 border"
+                                  [ngClass]="avgPeriodComparator === 'year' ? 'active' : ''"
+                                  (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear">Prev. Year</span>
                         </div>
                     </div>
                 </div>

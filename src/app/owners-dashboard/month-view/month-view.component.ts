@@ -63,8 +63,8 @@ export class MonthViewComponent implements OnInit {
             date.subtract(10, 'days');
             this.month$.next(date.startOf('month'));
         }
+        this.onDateChanged(date);
 
-        this.onDateChanged(moment());
         combineLatest(this.month$, this.dataService.currentRestTime$, this.dataService.database$)
             .subscribe(data => {
                 this.update(data[0], data[1], data[2]);
@@ -75,7 +75,7 @@ export class MonthViewComponent implements OnInit {
     updateGrid(month, database) {
         let monthlyData = database.getMonth(month);
 
-        if (monthlyData.amount === 0) {
+        if (!monthlyData || monthlyData.amount === 0) {
             return;
         }
 
@@ -102,11 +102,11 @@ export class MonthViewComponent implements OnInit {
 
         this.summaryCardData.averages = {
             yearly: {
-                percentage: (month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1,
+                percentage: month.aggregations.sales.lastYearWeekAvg ? ((month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1) : 0,
                 positive: month.aggregations.sales.weekAvg > month.aggregations.sales.lastYearWeekAvg
             },
             weekly: { //compare to our sales forecast
-                percentage: (month.aggregations.sales.amount / month.forecast.sales.amount) - 1,
+                percentage: month.forecast.sales.amount ? ((month.aggregations.sales.amount / month.forecast.sales.amount) - 1) : 0,
                 positive: month.aggregations.sales.amount > month.forecast.sales.amount
             }
         };

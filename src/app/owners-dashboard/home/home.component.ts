@@ -133,7 +133,7 @@ export class HomeComponent implements OnInit {
 
                 this.currentBdCardData.averages = {
                     yearly: {
-                        percentage: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1,
+                        percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
                         positive: day.aggregations.sales.amount > day.aggregations.sales.yearAvg
                     },
                     weekly: {
@@ -193,7 +193,7 @@ export class HomeComponent implements OnInit {
 
                 this.previousBdCardData.averages = {
                     yearly: {
-                        percentage: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1,
+                        percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
                         positive: day.aggregations.sales.amount > day.aggregations.sales.yearAvg
                     },
                     weekly: {
@@ -246,7 +246,7 @@ export class HomeComponent implements OnInit {
 
                 this.mtdCardData.averages = {
                     yearly: {
-                        percentage: (month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1,
+                        percentage: month.aggregations.sales.lastYearWeekAvg ? ((month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1) : 0,
                         positive: month.aggregations.sales.weekAvg > month.aggregations.sales.lastYearWeekAvg
                     },
                     weekly: { //compare to our sales forecast
@@ -295,7 +295,7 @@ export class HomeComponent implements OnInit {
                 let lastYearMonth = database.getMonth(moment().subtract(1,'year'));
                 if(lastYearMonth) {
                     this.forecastCardData.averages.yearly = {
-                        percentage: (month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount) - 1,
+                        percentage: lastYearMonth.aggregations.sales.amount ? ((month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount) - 1) : 0,
                         positive: month.forecast.sales.amount > lastYearMonth.aggregations.sales.amount
                     };
                 }
