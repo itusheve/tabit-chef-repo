@@ -968,17 +968,26 @@ export class DataService {
         let org = JSON.parse(window.localStorage.getItem('org'));
         let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
         if (data) {
-            obs.next(new Database(data));
+            //obs.next(new Database(data));
         }
 
+        let perf = {
+            olap: 0,
+            ros: 0,
+            loop: 0
+        };
+        let t0 = performance.now();
         let olapData = await this.olapEp.getDatabase();
+        let t1 = performance.now();
+        perf.olap = t1 - t0;
         let rosCalendars = await this.rosEp.get('dynamic-organization-storage/calendar?x-explain=true&withParents=1');
-
+        perf.ros = performance.now() - t1;
         let excludedDates = this.getExcludedDates(rosCalendars, org.id);
         let database = _.keyBy(olapData, month => month.YearMonth);
 
         let latestMonth = 0;
 
+        let t2 = performance.now();
         _.forEach(database, month => {
 
             //order days and move into new ver name.
@@ -1350,6 +1359,7 @@ export class DataService {
                 };
             });
         });
+        perf.loop = performance.now() - t2;
 
         _.forEach(database, month => {
             let currentDate = moment();
@@ -1564,6 +1574,7 @@ export class DataService {
             }
         });
 
+        database.performance = perf;
         window.localStorage.setItem(org.id + '-database', JSON.stringify(database));
         obs.next(new Database(database));
 
