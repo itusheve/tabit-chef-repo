@@ -1285,6 +1285,10 @@ export class DataService {
             //itrrate days in month and prepare data
             let latestDayNumber = 0;
             _.forEach(month.days, day => {
+
+                day.isExcluded = !!excludedDates[moment(day.date).format('YYYY-MM-DD')];
+
+
                 let dayNumber = parseInt(moment(day.date).format('D'), 10);
 
                 //get latest day of month
@@ -1403,36 +1407,30 @@ export class DataService {
                     while (i < 4 && !stop) {
                         config.date.subtract(7, 'days');
 
-                        //if(config.date.ignore) {continue;}
                         let monthData = database[config.date.format('YYYYMM')];
                         if (monthData && monthData.days) {
                             let previousDayData = _.find(monthData.days, {'date': config.date.format('YYYY-MM-DD')});
-                            if (excludedDates[config.date.format('YYYY-MM-DD')]) {
-                                previousDayData.isExcluded = true;
+                            if (previousDayData && !previousDayData.isExcluded) {
+                                totals.sales += previousDayData.amount;
+                                totals.indicators.ppa += previousDayData.ppa;
+                                totals.indicators.diners += previousDayData.diners;
+
+                                totals.reductions.cancellationsPercentage += previousDayData.aggregations.reductions.cancellations.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.cancellations.amount);
+                                totals.reductions.cancellations += previousDayData.aggregations.reductions.cancellations.amount;
+
+                                totals.reductions.operationalPercentage += previousDayData.aggregations.reductions.operational.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.operational.amount);
+                                totals.reductions.operational += previousDayData.aggregations.reductions.operational.amount;
+
+                                totals.reductions.retentionPercentage += previousDayData.aggregations.reductions.retention.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.retention.amount);
+                                totals.reductions.retention += previousDayData.aggregations.reductions.retention.amount;
+
+                                totals.reductions.employeePercentage += previousDayData.aggregations.reductions.employee.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.employee.amount);
+                                totals.reductions.employee += previousDayData.aggregations.reductions.employee.amount;
+
+                                i++;
                             }
                             else {
-                                if (previousDayData) {
-                                    totals.sales += previousDayData.amount;
-                                    totals.indicators.ppa += previousDayData.ppa;
-                                    totals.indicators.diners += previousDayData.diners;
-
-                                    totals.reductions.cancellationsPercentage += previousDayData.aggregations.reductions.cancellations.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.cancellations.amount);
-                                    totals.reductions.cancellations += previousDayData.aggregations.reductions.cancellations.amount;
-
-                                    totals.reductions.operationalPercentage += previousDayData.aggregations.reductions.operational.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.operational.amount);
-                                    totals.reductions.operational += previousDayData.aggregations.reductions.operational.amount;
-
-                                    totals.reductions.retentionPercentage += previousDayData.aggregations.reductions.retention.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.retention.amount);
-                                    totals.reductions.retention += previousDayData.aggregations.reductions.retention.amount;
-
-                                    totals.reductions.employeePercentage += previousDayData.aggregations.reductions.employee.amount / (previousDayData.amount - previousDayData.salesTipAmount + previousDayData.aggregations.reductions.employee.amount);
-                                    totals.reductions.employee += previousDayData.aggregations.reductions.employee.amount;
-
-                                    i++;
-                                }
-                                else {
-                                    notFound++;
-                                }
+                                notFound++;
                             }
                         }
                         else {
@@ -1482,8 +1480,6 @@ export class DataService {
 
                 if (!moment(day.date).isSame(moment(), 'day')) {
 
-                    let excluded = !!excludedDates[day.date];
-
                     month.forecast.ppa.amount += day.aggregations.indicators.ppa.fourWeekAvg;
 
                     if (currentDate.isSame(moment(day.date), 'month')) {
@@ -1497,14 +1493,14 @@ export class DataService {
 
                     let weekday = moment(day.date).weekday();
                     month.aggregations.days[weekday].count += 1;
-                    month.aggregations.days[weekday].sales.amount += excluded ? day.aggregations.sales.fourWeekAvg : day.amount;
-                    month.aggregations.days[weekday].diners.count += excluded ? day.aggregations.indicators.diners.fourWeekAvg : day.diners;
-                    month.aggregations.days[weekday].ppa.amount += excluded ? day.aggregations.indicators.ppa.fourWeekAvg : day.ppa;
+                    month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.aggregations.sales.fourWeekAvg : day.amount;
+                    month.aggregations.days[weekday].diners.count += day.isExcluded ? day.aggregations.indicators.diners.fourWeekAvg : day.diners;
+                    month.aggregations.days[weekday].ppa.amount += day.isExcluded ? day.aggregations.indicators.ppa.fourWeekAvg : day.ppa;
 
-                    month.aggregations.days[weekday].reductions.cancellations.amount += excluded ? day.aggregations.reductions.cancellations.fourWeekAvg : day.rCancellation;
-                    month.aggregations.days[weekday].reductions.operational.amount += excluded ? day.aggregations.reductions.operational.fourWeekAvg : day.rOperationalDiscount;
-                    month.aggregations.days[weekday].reductions.retention.amount += excluded ? day.aggregations.reductions.retention.fourWeekAvg : day.rRetentionDiscount;
-                    month.aggregations.days[weekday].reductions.employee.amount += excluded ? day.aggregations.reductions.employee.fourWeekAvg : day.rEmployees;
+                    month.aggregations.days[weekday].reductions.cancellations.amount += day.isExcluded ? day.aggregations.reductions.cancellations.fourWeekAvg : day.rCancellation;
+                    month.aggregations.days[weekday].reductions.operational.amount += day.isExcluded ? day.aggregations.reductions.operational.fourWeekAvg : day.rOperationalDiscount;
+                    month.aggregations.days[weekday].reductions.retention.amount += day.isExcluded ? day.aggregations.reductions.retention.fourWeekAvg : day.rRetentionDiscount;
+                    month.aggregations.days[weekday].reductions.employee.amount += day.isExcluded ? day.aggregations.reductions.employee.fourWeekAvg : day.rEmployees;
                 }
             });
 
@@ -2478,6 +2474,8 @@ export class DataService {
                 excludedDates[moment(day.date).format('YYYY-MM-DD')] = true;
             }
         });
+
+        window.localStorage.setItem(organizationId + '-excluded-dates', excludedDates.join());
 
         return excludedDates;
     }
