@@ -1480,7 +1480,6 @@ export class DataService {
                 month.aggregations.sales.lowest = _.min([day.aggregations.sales.yearAvg, day.aggregations.sales.fourWeekAvg, day.aggregations.sales.amount, month.aggregations.sales.lowest]);
 
 
-
                 if (!moment(day.date).isSame(moment(), 'day')) {
 
                     let excluded = !!excludedDates[day.date];
@@ -1509,7 +1508,7 @@ export class DataService {
                 }
             });
 
-            if(month.days) {
+            if (month.days && month.days.length) {
                 let endOfMonth = moment(month.days[0].date).endOf('month');
                 if (currentDate.isSame(endOfMonth, 'month')) {
                     while (currentDate.isSameOrBefore(endOfMonth, 'day')) {
@@ -1527,7 +1526,7 @@ export class DataService {
 
         //calculate weekAvg of month
         _.forEach(database, month => {
-            if(month.aggregations) {
+            if (month.aggregations) {
                 _.each(month.aggregations.days, weekDay => {
                     month.aggregations.sales.weekAvg += weekDay.sales.amount / weekDay.count;
                     month.aggregations.indicators.diners.weekAvg += weekDay.diners.count / weekDay.count;
@@ -1538,10 +1537,10 @@ export class DataService {
 
 
         _.forEach(database, month => {
-            if(month.aggregations) {
+            if (month.aggregations) {
                 let date = moment(month.latestDay);
                 let lastYearMonth = database[moment(date).subtract(1, 'years').format('YYYYMM')];
-                if(lastYearMonth) {
+                if (lastYearMonth) {
                     month.aggregations.sales.lastYearWeekAvg = lastYearMonth.aggregations.sales.weekAvg;
                     month.aggregations.indicators.diners.lastYearWeekAvg = lastYearMonth.aggregations.indicators.diners.weekAvg;
                     month.aggregations.indicators.ppa.lastYearWeekAvg += lastYearMonth.aggregations.indicators.ppa.weekAvg;
@@ -1550,9 +1549,9 @@ export class DataService {
                 //go back 3 months and calculate reductions 3 month average
                 let i = 1;
                 let stop = false;
-                while(i < 4 && !stop){
+                while (i < 4 && !stop) {
                     let previousMonth = database[moment(date).subtract(i, 'months').format('YYYYMM')];
-                    if(previousMonth) {
+                    if (previousMonth) {
                         _.each(previousMonth.aggregations.days, aggregatedDay => {
                             month.aggregations.reductions.cancellations.threeMonthAvg += aggregatedDay.reductions.cancellations.amount;
                             month.aggregations.reductions.employee.threeMonthAvg += aggregatedDay.reductions.employee.amount;

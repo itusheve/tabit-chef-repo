@@ -57,6 +57,13 @@ export class MonthViewComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        let date = moment();
+        if(moment().date() === 1) {
+            date.subtract(10, 'days');
+            this.month$.next(date.startOf('month'));
+        }
+
         this.onDateChanged(moment());
         combineLatest(this.month$, this.dataService.currentRestTime$, this.dataService.database$)
             .subscribe(data => {
@@ -129,26 +136,21 @@ export class MonthViewComponent implements OnInit {
 
     update(month, currentBd: moment.Moment, database) {
         this.month = month;
-
         this.monthSelectorOptions = {
             minDate: moment(database.getLowestDate()),
             maxDate: moment()
         };
 
         const isCurrentMonth = month.isSame(currentBd, 'month');
-
-        if (isCurrentMonth && currentBd.date() === 1){
-            this.monthSelectorOptions.maxDate = moment().subtract(1, 'days');
-            this.renderGrid = false;
-        } else {
-            this.renderGrid = true;
-        }
+        if (isCurrentMonth && currentBd.date() === 1) this.renderGrid = false;
+        else this.renderGrid = true;
 
         if (this.renderGrid) {
             this.updateGrid(month, database);
         }
 
         this.updateSummary(month, currentBd, database);
+
     }
 
     /* if chart / grid date is clicked */
