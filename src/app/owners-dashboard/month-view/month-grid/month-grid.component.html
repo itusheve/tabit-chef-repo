@@ -28,11 +28,12 @@
                                   (click)="changeAvgPeriodComparator('month')" i18n="@@fourWeek">4 Week</span>
                             <span class="btn btn-lg btn-light rounded-0 w-50 border"
                                   [ngClass]="avgPeriodComparator === 'year' ? 'active' : ''"
-                                  (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear">Prev. Year</span>
+                                  (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear" >Prev. Year</span>
                         </div>
                     </div>
                 </div>
             </li>
+            <li class="list-group-item text-center"><span i18n="@@categoryTitle">{{categoryTitle}}</span></li>
             <li *ngFor="let day of days" class="list-group-item">
                 <div class="row flex a-center" (click)="rowClickHandler(day)" style="cursor: pointer">
 
@@ -41,7 +42,7 @@
                     </div>
                     <div class="col-6">
                         <div class="progress rounded-0" [style.width]="getProgressBarWidth(day) < 100 ? '90%' : '100%'">
-                            <div class="progress-bar progress-bar-animated rounded-0" [ngClass]="getProgressBarBackground(day)" role="progressbar" [style.width]="getProgressBarWidth(day) + '%'">{{getValueInPrecentage(day)}}%</div>
+                            <div class="progress-bar progress-bar-animated rounded-0" [ngClass]="getProgressBarBackground(day)" role="progressbar" [style.width]="getProgressBarWidth(day) + '%'">{{getValueInPercentage(day)}}%</div>
                         </div>
                     </div>
                     <div class="col-3 px-0">

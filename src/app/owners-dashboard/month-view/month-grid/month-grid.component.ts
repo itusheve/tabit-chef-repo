@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import * as moment from 'moment';
-
+import { tmpTranslations } from '../../../../tabit/data/data.service';
 @Component({
     selector: 'app-month-grid',
     templateUrl: './month-grid.component.html',
@@ -20,8 +20,8 @@ export class MonthGridComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.changeAvgPeriodComparator('month');
-        this.changeCategory('sales');
+        //this.changeAvgPeriodComparator('month');
+        //this.changeCategory('sales');
     }
 
     rowClickHandler(day) {
@@ -55,7 +55,7 @@ export class MonthGridComponent implements OnInit {
 
     changeCategory(categoryName) {
         this.category = categoryName;
-        this.categoryTitle = categoryName;
+        this.categoryTitle = tmpTranslations.get('monthViewFilters.' + categoryName);
     }
 
     /*getProgressBarBackground() {
@@ -77,7 +77,7 @@ export class MonthGridComponent implements OnInit {
     }*/
 
     getProgressBarBackground(day) {
-        let value = this.getValueInPrecentage(day);
+        let value = this.getValueInPercentage(day);
         if (value === 0) {
             return 'bg-secondary';
         }
@@ -197,7 +197,7 @@ export class MonthGridComponent implements OnInit {
         return value;
     }
 
-    getValueInPrecentage(day) {
+    getValueInPercentage(day) {
         let avg = this.getGaugeComparator(day);
         let value = this.getGaugeValue(day);
         if(!avg) {
@@ -208,7 +208,7 @@ export class MonthGridComponent implements OnInit {
     }
 
     getProgressBarWidth(day) {
-        let width = this.getValueInPrecentage(day);
+        let width = this.getValueInPercentage(day);
         if(width  === 0) {
             width = 100;
         }

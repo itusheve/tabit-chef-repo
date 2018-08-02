@@ -85,6 +85,13 @@ const tmpTranslations_ = {
             food: 'מזון',
             beverages: 'משקאות'
         },
+        monthViewFilters: {
+            sales: 'מכירות',
+            cancellations: 'ביטולים',
+            operational: 'תפעול',
+            retention: 'שימור ושיווק',
+            employee: 'ארוחות עובדים',
+        },
         managerDash: {
             'ALLORDERS': 'כל ההזמנות',
             'OPENORDERS': 'הזמנות פתוחות',
@@ -237,6 +244,13 @@ const tmpTranslations_ = {
         departments: {
             food: '?',//TODO local
             beverages: '?'//TODO local
+        },
+        monthViewFilters: {
+            sales: 'Sales',
+            cancellations: 'Cancellations',
+            operational: 'Operational Discounts',
+            retention: 'Retention Discounts',
+            employee: 'Employee Meals',
         },
         managerDash: {
             'ALLORDERS': 'All Orders',
