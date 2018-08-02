@@ -322,8 +322,8 @@ export class ManagersDashboardService {
 
   ordersQuery = {
     //fullOrderRequired: true,
-    "select": '_id,number,orderType,serviceType,created,lastUpdated,closed,isStaffTable,owner,diners,orderedItems,orderedOffers,rewards,courses, paymentSummary,courses',
-    "tLogselect": 'order._id,order.number,order.orderType,order.serviceType,order.created,order.lastUpdated,order.closed,order.isStaffTable,order.owner,order.diners,order.orderedItems,order.orderedOffers,order.rewards,order.courses, order.paymentSummary, order.courses'
+      "select": '_id,number,orderType,serviceType,created,lastUpdated,closed,isStaffTable,owner,diners,orderedItems,orderedOffers,rewards,courses, paymentSummary,courses,source',
+      "tLogselect": 'order._id,order.number,order.orderType,order.serviceType,order.created,order.lastUpdated,order.closed,order.isStaffTable,order.owner,order.diners,order.orderedItems,order.orderedOffers,order.rewards,order.courses, order.paymentSummary,order.courses,order.source'
   }
 
   public getHistoricOrders(db) {
@@ -404,6 +404,7 @@ export class ManagersDashboardService {
     newOrder.fromTime = this.parseOrderTime(newOrder.from);
     newOrder.number = order.number;
     newOrder.fromParsed = newOrder.from.format('HH:mm')
+    newOrder.source = order.source;
 
     if (!db.lastTime) {
       db.lastTime = moment(order.lastUpdated);

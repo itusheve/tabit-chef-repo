@@ -187,7 +187,8 @@ const tmpTranslations_ = {
           "Apply": "בצע",
           "Service Type": "סוג שרות",
           "Totals": "סיכומים",
-          "To": "עד"
+          "To": "עד",
+          "online": "Online"
         }
     },
     'en-US': {
@@ -339,7 +340,8 @@ const tmpTranslations_ = {
             'Apply': 'Apply',
             'Service Type': 'Service Type',
             'Totals': 'Totals',
-            'To': 'To'
+            'To': 'To',
+            "online": "Online"
         }
     }
 };

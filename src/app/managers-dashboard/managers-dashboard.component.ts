@@ -36,7 +36,7 @@ export class ManagersDashboardComponent implements OnInit {
     wrapper: string
   };
   env;
-  debug: boolean = true;
+  debug: boolean = false;
   _moment;
   logArr: { type: string, message: string }[];
 
@@ -345,7 +345,8 @@ export class ManagersDashboardComponent implements OnInit {
           if (!waiter) {
             var oWaiter = db.users[order.waiter]
             if (!oWaiter) {
-              oWaiter = { name: '[Missing]', photoUrl: 'assets/images/icons/person.png' }
+                
+                oWaiter = { name: tmpTranslations.get('managerDash.' + order.source), photoUrl: 'assets/images/icons/person.png' }
             }
             waiter = {
               waiter: order.waiter,
@@ -397,7 +398,7 @@ export class ManagersDashboardComponent implements OnInit {
             if (!waiterI) {
               var oWaiter = db.users[order.waiter]
               if (!oWaiter) {
-                oWaiter = { name: '[Missing]', photoUrl: 'assets/images/icons/person.png' }
+                  oWaiter = { name: tmpTranslations.get('managerDash.' + order.source), photoUrl: 'assets/images/icons/person.png' }
               }
               waiterI = {
                 waiter: order.waiter,
@@ -453,7 +454,7 @@ export class ManagersDashboardComponent implements OnInit {
                   if (!waiterS) {
                     var oWaiter = db.users[item.by]
                     if (!oWaiter) {
-                      oWaiter = { name: '[Missing]', photoUrl: 'assets/images/icons/person.png' }
+                        oWaiter = { name: tmpTranslations.get('managerDash.' + order.source), photoUrl: 'assets/images/icons/person.png' }
                     }
                     waiterS = {
                       waiter: item.by,
