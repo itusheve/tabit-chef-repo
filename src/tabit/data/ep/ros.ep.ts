@@ -47,4 +47,18 @@ export class ROSEp {
                 );
         });
     }
+
+    put(url, payload?): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.httpClient.put(this.rosBaseUrl + url, payload || {})
+                .subscribe(
+                (results: any) => {
+                    resolve(results);
+                },
+                (err) => {
+                    this.ds.err(`ROSEp: ${JSON.stringify(err)}`);
+                }
+                );
+        });
+    }
 }

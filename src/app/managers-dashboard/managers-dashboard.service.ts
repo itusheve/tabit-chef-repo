@@ -181,7 +181,6 @@ export class ManagersDashboardService {
   ---------------------------------------------------------------------------------
   */
 
-
   public getMetaData() {
     var that = this;
     let promiseMap = ["catalog", "users", "itemGroups", "regionalSettings", "businessDate"];
@@ -193,9 +192,13 @@ export class ManagersDashboardService {
       this.rosEp.get('businessdays/current')
     ];
     return Promise.all(promises)
-      .then((ret: any[]) => {
+        .then((ret: any[]) => {
+            
         let data:any = {}
         _.each(promiseMap, (ent, index) => { data[ent] = ret[index]; });
+        _.each(_.get(data, 'itemGroups.itemGroups'), ig => {
+            if (!ig.serviceType) ig.serviceType = 'seated';
+        });
 
         let db: any = {
           currentBD: data.businessDate,
@@ -295,6 +298,45 @@ export class ManagersDashboardService {
     }
   }
 
+  /*
+  ---------------------------------------------------------------------------------
+  GROUPS FUNCTIONS
+  ---------------------------------------------------------------------------------
+  */
+
+  public saveGroups (db:any, groups:any, changedGroup:any) {
+      var saveGroups = _.cloneDeep(groups);
+      _.each(saveGroups, function (itemGroup) {
+          _.each(itemGroup.items, function (item) {
+              delete item.count;
+          });
+          _.each(itemGroup.subs, function (sub) {
+              delete sub.count;
+              delete sub.items;
+          });
+      });
+      let data:any = {
+          itemGroups: saveGroups
+      }
+
+      let _http = 'dashboard/itemGroups';
+      let promise: any;
+      if (db.itemGroupsId) {
+          data.itemGroupsId = db.itemGroupsId;
+          _http += "/" + encodeURIComponent(db.itemGroupsId);
+          promise = this.rosEp.put(_http, data)
+      } else {
+          promise = this.rosEp.post(_http, data)
+      }
+
+      let that = this;
+      promise.then((response) => {
+          if (response && response._id) {
+              db.itemGroupsId = response._id;
+          }
+      });
+
+  };
 
   /*
   ---------------------------------------------------------------------------------

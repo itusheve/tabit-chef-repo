@@ -239,7 +239,7 @@
             <div>
               <div class="pv10">
                 <div class="row">
-                  <div class="col-sm-3 " *ngFor="let cItems of criteria.itemGroups; let $index=index">
+                  <div class="col-sm-3 " *ngFor="let cItems of criteria.itemGroupsFiltered; let $index=index">
                     <div class="b" (click)="generateItemsGroup(cItems,$index, $event)">
                       <div>
                         <button class="btn btn-dark btn-block text-ellipsis no-radius">{{cItems.name}}</button>
@@ -269,7 +269,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-sm-3 " *ngIf="criteria.itemGroups.length < 4">
+                  <div class="col-sm-3 " *ngIf="criteria.itemGroupsFiltered.length < 4">
                     <div class="b" stylex="height:120px">
                       <div>
                         <button class="btn btn-info btn-block no-radius" (click)="generateItemsGroup(null,null)">{{'managerDash.Add New Group' | tmpTranslate}}</button>
@@ -294,7 +294,7 @@
                 <tr>
                   <th mat-sort-header="waiterName">{{'managerDash.WAITER' | tmpTranslate}}</th>
                   <th mat-sort-header="diners" ts-default="descending">{{'managerDash.Diners' | tmpTranslate}}</th>
-                  <th *ngFor="let group of criteria.itemGroups; let $index = index"
+                  <th *ngFor="let group of criteria.itemGroupsFiltered; let $index = index"
                       mat-sort-header="{{'iCount_' + $index}}">{{group.name}}</th>
                 </tr>
               </thead>
@@ -316,7 +316,7 @@
                   <td class="numeric-cell text-lg" [attr.aria-label]="'managerDash.Diners' | tmpTranslate">
                     {{order.diners}}
                   </td>
-                  <td class="numeric-cell text-lg" *ngFor="let group of criteria.itemGroups; let $index=index" [attr.aria-label]="group.name">
+                  <td class="numeric-cell text-lg" *ngFor="let group of criteria.itemGroupsFiltered; let $index=index" [attr.aria-label]="group.name">
 
                     <!-- AVG -->
                     <span *ngIf="criteria.itemSelectionMeasure === 'c'"> {{order[criteria.itemSelectionMeasure + '_group_' + $index] | number:'1.0-0' }} </span>
@@ -336,7 +336,7 @@
               <thead>
                 <tr>
                   <th mat-sort-header="waiterName">{{'managerDash.WAITER' | tmpTranslate}}</th>
-                  <th *ngFor="let group of criteria.itemGroups; let $index = index"
+                  <th *ngFor="let group of criteria.itemGroupsFiltered; let $index = index"
                       mat-sort-header="{{'iCount_' + $index}}">{{group.name}}</th>
                 </tr>
               </thead>
@@ -354,7 +354,7 @@
                       </div>
                     </div>
                   </td>
-                  <td class="numeric-cell text-lg" *ngFor="let group of criteria.itemGroups; let $index=index" [attr.aria-label]="group.name">
+                  <td class="numeric-cell text-lg" *ngFor="let group of criteria.itemGroupsFiltered; let $index=index" [attr.aria-label]="group.name">
 
                     <!-- AVG -->
                     <span *ngIf="criteria.itemSelectionMeasure === 'c'"> {{order[criteria.itemSelectionMeasure + '_group_' + $index] | number:'1.0-0' }} </span>

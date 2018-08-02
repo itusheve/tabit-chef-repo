@@ -161,7 +161,9 @@ export class ManagerDashboardSalesComponent implements OnInit {
         if (result == 'remove') {
             that.criteria.itemGroups.splice(index, 1);
         } else {
+            
             if (!iGroup) {
+                result.serviceType = that.criteria.serviceType;
               that.criteria.itemGroups.push(result);
             } else {
                 iGroup.name = result.name;
@@ -169,11 +171,8 @@ export class ManagerDashboardSalesComponent implements OnInit {
                 iGroup.subs = result.subs;
             }
         }
-        /*
-        managerdashboard_service.saveGroups($scope.criteria.itemGroups, iGroup);
-        blockUI.start();
-        $timeout(function () { $scope.applyCriteria() }, 500);
-        */
+        //this.criteria.itemGroupsFiltered = _.filter(this.criteria.itemGroups, { serviceType: this.criteria.serviceType });
+        that.MDS.saveGroups(that.db, that.criteria.itemGroups, iGroup);
         that.actionRequest.emit({ id: 'applyDelayed' });
       }
     });

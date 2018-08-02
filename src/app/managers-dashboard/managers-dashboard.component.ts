@@ -65,6 +65,7 @@ export class ManagersDashboardComponent implements OnInit {
     timeTo: 2400,
     itemGroupsCounter: [1, 2, 3, 4],
     itemGroups: [],
+    itemGroupsFiltered: [],
     excludedUsers: [],
     sort: {},
     timeModes: {
@@ -120,6 +121,8 @@ export class ManagersDashboardComponent implements OnInit {
       .then((data) => {
         that.db = data;
         that.criteria.itemGroups = data.itemGroups;
+        that.criteria.itemGroupsFiltered = that.criteria.itemGroups;
+        //that.criteria.itemGroupsFiltered = _.filter(that.criteria.itemGroups, { serviceType: that.criteria.serviceType });
         that.criteria.dinerAvgGoalParsed = data.ppaGoal || 20;
         that.criteria.dinerAvgGoal = that.criteria.dinerAvgGoalParsed * 100;
         that.criteria.timeModes = _.assignIn(that.criteria.timeModes, that.db.shifts);
@@ -184,6 +187,7 @@ export class ManagersDashboardComponent implements OnInit {
     if (!st) st = _.find(this.criteria.serviceTypes, { value: this.criteria.serviceType });
     this.criteria.showPPA = st.showPPA;
     this.criteria.serviceType = st.value;
+    //this.criteria.itemGroupsFiltered = _.filter(this.criteria.itemGroups, { serviceType: this.criteria.serviceType });
     this.applyDelayed();
   }
 
@@ -275,7 +279,7 @@ export class ManagersDashboardComponent implements OnInit {
     var generateItems = true;
     var arrItemsAVG = [];
     var arrItemsSales = [];
-    _.each(c.itemGroups, function (itemGroup, j) {
+    _.each(c.itemGroupsFiltered, function (itemGroup, j) {
       _.each(itemGroup.items, function (item, k) {
         item.count = 0;
       });
@@ -413,7 +417,7 @@ export class ManagersDashboardComponent implements OnInit {
 
             waiterI.diners += order.diners;
             if (!isWaiterExcluded) itemsTotal.diners += order.diners;
-            _.each(c.itemGroups, function (itemGroup, j) {
+            _.each(c.itemGroupsFiltered, function (itemGroup, j) {
               var count = 0;
               var price = 0;
               var gName = 'group_' + j;
