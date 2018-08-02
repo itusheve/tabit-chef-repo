@@ -4,6 +4,46 @@
     }
 }
 
+.bg-success-dark {
+  background-color: #1f8437;
+}
+
+.bg-danger-dark {
+  background-color: #a02632;
+}
+
+.progress {
+  height: 20px;
+}
+
+.progress-bar {
+  font-size: 14px;
+}
+
+.month-grid {
+
+  .category-picker {
+    .icon {
+      position: relative;
+      top: 6px;
+      right: 12px;
+    }
+
+    .material-icons {
+      position: relative;
+      top: 4px;
+    }
+  }
+  .progress {
+    overflow: visible;
+
+    .progress-bar-ticker {
+      position: relative;
+      height: 20px;
+      top: -2px;
+    }
+  }
+}
 
 .trend {
     transform: scale(0.7);//scaling compared to the card trend components

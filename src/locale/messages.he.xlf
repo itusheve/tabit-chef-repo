@@ -136,7 +136,7 @@
       </trans-unit>
       <trans-unit id="operationalErrors" datatype="html">
         <source>Operational Errors</source>
-        <target>תקלות תפעול</target>
+        <target>תק' תפעול</target>
       </trans-unit>
       <trans-unit id="operationalErrorsByServer" datatype="html">
         <source>Item Returns, OTH and Discounts by Server</source>
@@ -144,7 +144,7 @@
       </trans-unit>
       <trans-unit id="operationalReductionsValue" datatype="html">
         <source>Operational Reductions Value</source>
-        <target>שווי תקלות תפעול</target>
+        <target>שווי תק' תפעול</target>
       </trans-unit>
       <trans-unit id="retention" datatype="html">
         <source>Retention</source>
@@ -180,7 +180,7 @@
       </trans-unit>
       <trans-unit id="operationalErrorsValue" datatype="html">
         <source>Operational Errors</source>
-        <target>תקלות תפעול</target>
+        <target>תק' תפעול</target>
       </trans-unit>
       <trans-unit id="retentionValue" datatype="html">
         <source>Retention</source>
@@ -255,13 +255,17 @@
         <source>Data excluding VAT</source>
         <target>הנתונים ללא מע"מ</target>
       </trans-unit>
-      <trans-unit id="salesComment" datatype="html">
-        <source>{VAR_SELECT, select, NotFinal {Not Final} }</source>
-        <target>{VAR_SELECT, select, NotFinal {לא סופי} }</target>
-      </trans-unit>
       <trans-unit id="cardLetter" datatype="html">
         <source>{VAR_SELECT, select, A {A} M {Y} }</source>
         <target>{VAR_SELECT, select, A {מ} Y {ש} }</target>
+      </trans-unit>
+      <trans-unit id="salesComment" datatype="html">
+       <source>{VAR_SELECT, select, eod {Awaiting EOD} notFinal {Not Final} noData {Still processing data}}</source>
+       <target>{VAR_SELECT, select, eod {לא בוצע סוף יום} notFinal {לא סופי} noData {בתהליך עדכון מידע}}</target>
+      </trans-unit>
+      <trans-unit id="monthSelectorFinalIndication" datatype="html">
+       <source>{VAR_SELECT, select, final {Final} notFinal {Not Final}}</source>
+       <target>{VAR_SELECT, select, final {סופי} notFinal {עד כה}}</target>
       </trans-unit>
       <trans-unit id="orsLastDay" datatype="html">
         <source>{VAR_SELECT, select, currentBd {Today} previousBd {Yesterday} }</source>
@@ -394,6 +398,14 @@
         <note priority="1" from="description">שולחן</note>
         <note priority="1" from="meaning">slips</note>
       </trans-unit>
+      <trans-unit id="previousYear" datatype="html">
+              <source>Prev. Year</source>
+              <target>שנה קודמת</target>
+            </trans-unit>
+            <trans-unit id="fourWeek" datatype="html">
+                <source>4 Week</source>
+                <target>4 שב'</target>
+              </trans-unit>
       <trans-unit id="tip" datatype="html">
         <source>Gratuity</source>
         <target>תשר</target>
@@ -576,7 +588,7 @@
       </trans-unit>
       <trans-unit id="operational" datatype="html">
         <source>Operational</source>
-        <target>תקלות תפעול</target>
+        <target>תק' תפעול</target>
       </trans-unit>
       <trans-unit id="organizational" datatype="html">
         <source>Organizational</source>

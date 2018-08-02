@@ -7,6 +7,7 @@ import {ReplaySubject} from 'rxjs/ReplaySubject';
 import {Subject} from 'rxjs/Subject';
 import {environment} from '../../../environments/environment';
 import {OlapMappings} from './olap.mappings';
+import {HttpHeaders, HttpClient} from '@angular/common/http';
 
 declare var Xmla4JWrapper: any;
 
@@ -60,9 +61,37 @@ export class OlapEp {
     private catalog = environment.olapConfig.catalog;
     private cube = environment.olapConfig.cube;
     private baseUrl = environment.olapConfig.baseUrl;
+    private sqlServerProxy = environment.olapConfig.sqlServerProxy;
     private url$: ReplaySubject<any>;
 
-    constructor(private olapMappings: OlapMappings) {
+    constructor(private olapMappings: OlapMappings, private httpClient: HttpClient) {
+    }
+
+    public getDatabase(): Promise<any> {
+        return new Promise((resolve, reject) => {
+
+            let org = JSON.parse(window.localStorage.getItem('org'));
+            let token = JSON.parse(window.localStorage.getItem('token'));
+            let headers = new HttpHeaders({'Content-Type':'application/json'});
+
+            this.httpClient.post(`${this.sqlServerProxy}?customdata=S${org.id}&token=${token.access_token}&Action=chef-get-data-by-organization`, {
+                    siteId: org.id,
+                    action: 'tabitChefSiteHomePage'
+                },
+                {
+                    headers: headers,
+                    responseType: 'json',
+                    withCredentials: false
+                })
+                .subscribe(
+                    (results: any) => {
+                        resolve(results);
+                    },
+                    (err) => {
+                        console.log(`Handler Proxy Error: ${JSON.stringify(err)}`);
+                    }
+                );
+        });
     }
 
     get url(): ReplaySubject<any> {

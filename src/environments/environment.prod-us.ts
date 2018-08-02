@@ -1,13 +1,14 @@
 export const environment = {
-  production: true,
-  region: 'us',
-  tbtLocale: 'en-US',
-  rosConfig: {//US 'PROD' 'REPORTS'
-    baseUrl: 'https://us-ros-rp.tabit.cloud/'
-  },
-  olapConfig: {//US PROD CUBE
-    baseUrl: 'https://analytics-us.tabit.cloud/olapproxy/proxy.ashx',
-    catalog: 'usaProd',
-    cube: 'tlogs',
-  }
+    production: true,
+    region: 'us',
+    tbtLocale: 'en-US',
+    rosConfig: {//US 'PROD' 'REPORTS'
+        baseUrl: 'https://us-ros-rp.tabit.cloud/'
+    },
+    olapConfig: {//US PROD CUBE
+        baseUrl: 'https://analytics-us.tabit.cloud/olapproxy/proxy.ashx',
+        sqlServerProxy: 'https://analytics.tabit.cloud/olapproxy/handler.ashx',
+        catalog: 'usaProd',
+        cube: 'tlogs',
+    }
 };

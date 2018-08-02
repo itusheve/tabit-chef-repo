@@ -1,102 +1,56 @@
-<div class="flex d-col a-stretch month-grid">
-  <dx-load-indicator class="as-center" *ngIf="!dxGrid.show"></dx-load-indicator>
-  <dx-data-grid
-    *ngIf="dxGrid.show"
-    (onRowClick)="rowClickHandler($event)"
-    [dataSource]="dxGrid.dataSource"
-    [columnAutoWidth]="true"
-    [showColumnLines]="false"
+<div class="card p-0 month-grid">
+    <div class="col-12 p-0">
+        <ul class="list-group p-0">
+            <li class="list-group-item p-0 m-0">
+                <div class="col-12 font-weight-bold mx-0 p-0" style="font-size: 18px;">
+                    <div class="row mx-0 p-0 justify-content-center" style="direction: rtl">
+                        <div class="btn-group w-100 category-picker">
+                            <span class="btn btn-light rounded-0 w-25 border" [ngClass]="getTextColor('sales')"
+                                  (click)="changeCategory('sales')"><i class="material-icons">attach_money</i></span>
+                            <span class="btn btn-light w-25 border" (click)="changeCategory('cancellations')"><i
+                                    class="icon"
+                                    [ngClass]="category === 'cancellations' ? 'iconOperationalAndCancellations' : 'iconOperationalAndCancellations_off'"></i></span>
+                            <span class="btn btn-light w-25 border" (click)="changeCategory('operational')"><i
+                                    class="icon"
+                                    [ngClass]="category === 'operational' ? 'iconPromotions' : 'iconPromotions_off'"></i></span>
+                            <span class="btn btn-light w-25 border" (click)="changeCategory('retention')"><i
+                                    class="icon"
+                                    [ngClass]="category === 'retention' ? 'iconRetention' : 'iconRetention_off'"></i></span>
+                            <span class="btn btn-light rounded-0 w-25 border" (click)="changeCategory('employee')"><i
+                                    class="icon"
+                                    [ngClass]="category === 'employee' ? 'iconOrganizational' : 'iconOrganizational_off'"></i></span>
+                        </div>
+                    </div>
+                    <div class="row m-0 p-0">
+                        <div class="btn-group w-100">
+                            <span class="btn btn-lg btn-light rounded-0 w-50 border"
+                                  [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''"
+                                  (click)="changeAvgPeriodComparator('month')" i18n="@@fourWeek">4 Week</span>
+                            <span class="btn btn-lg btn-light rounded-0 w-50 border"
+                                  [ngClass]="avgPeriodComparator === 'year' ? 'active' : ''"
+                                  (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear">Prev. Year</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li *ngFor="let day of days" class="list-group-item">
+                <div class="row flex a-center" (click)="rowClickHandler(day)" style="cursor: pointer">
 
-    noDataText="No Data"
-    i18n-noDataText="@@noData"
-
-    rowTemplate="rowTemplateName"
-
-    >
-    <dxo-paging [enabled]="false"></dxo-paging>
-    <dxo-sorting
-      ascendingText="Sort Ascending"
-      i18n-ascendingText="@@sortAscending"
-
-      descendingText="Sort Descending"
-      i18n-descendingText="@@sortDescending"
-
-      clearText="Clear Sort"
-      i18n-clearText="@@clearSort"
-      >
-    </dxo-sorting>
-
-    <dxi-column
-      caption="Day"
-      i18n-caption="@@day"
-      dataField="dateFormatted">
-    </dxi-column>
-    <dxi-column
-      caption='Total'
-      i18n-caption="@@total"
-      alignment="right"
-      dataField="sales"
-      dataType="number">
-    </dxi-column>
-    <dxi-column caption=''></dxi-column>
-    <dxi-column
-      caption="Diners"
-      i18n-caption="@@diners"
-       alignment="right"
-      dataField="dinersPPA"
-      format="#,###">
-    </dxi-column>
-    <dxi-column caption=''></dxi-column>
-    <dxi-column
-      caption="PPA"
-      i18n-caption="@@ppa"
-       alignment="right"
-      dataField="ppa">
-    </dxi-column>
-    <dxi-column caption=''></dxi-column>
-
-    <tbody *dxTemplate="let data of 'rowTemplateName'">
-      <tr class="dx-row dx-data-row dx-row-lines">
-        <td>{{data.data.dateFormatted}}</td>
-
-        <td style="text-align: right;"> {{data.data.sales | curr:'0'}}</td>
-
-        <td>
-          <div *ngIf="data.data.dailyTrends.trends.sales.status==='ready'" class="flex d-col a-center trend" [ngClass]="data.data.dailyTrends.trends.sales.val > 0 ? 'up' : 'down'">
-            <div class="flex label">
-              <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.sales.letter, select, A {A} Y {Y} }</div>
-              <mat-icon>play_arrow</mat-icon>
-            </div>
-            <div class="figure">{{data.data.dailyTrends.trends.sales.val | percent:'1.1-1'}}</div>
-          </div>
-        </td>
-
-        <td style="text-align: right;">{{data.data.dinersPPA | number : '1.0-0'}}</td>
-
-        <td>
-            <div *ngIf="data.data.dailyTrends.trends.diners.status==='ready'" class="flex d-col a-center trend" [ngClass]="data.data.dailyTrends.trends.diners.val > 0 ? 'up' : 'down'">
-              <div class="flex label">
-                <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.diners.letter, select, A {A} Y {Y} }</div>
-                <mat-icon>play_arrow</mat-icon>
-              </div>
-              <div class="figure">{{data.data.dailyTrends.trends.diners.val | percent:'1.1-1'}}</div>
-            </div>
-        </td>
-
-        <td style="text-align: right;">{{data.data.ppa | curr}}</td>
-
-        <td>
-            <div *ngIf="data.data.dailyTrends.trends.ppa.status==='ready'" class="flex d-col a-center trend" [ngClass]="data.data.dailyTrends.trends.ppa.val > 0 ? 'up' : 'down'">
-              <div class="flex label">
-                <div class="flex letter" i18n="@@cardLetter">{ data.data.dailyTrends.trends.ppa.letter, select, A {A} Y {Y} }</div>
-                <mat-icon>play_arrow</mat-icon>
-              </div>
-              <div class="figure">{{data.data.dailyTrends.trends.ppa.val | percent:'1.1-1'}}</div>
-            </div>
-        </td>
-
-      </tr>
-    </tbody>
-
-  </dx-data-grid>
+                    <div class="col-3">
+                        {{day.date | date: 'dd'}} {{day.date | date: 'EEE'}}<i *ngIf="day.isExcluded" class="material-icons text-danger" style="font-size: 12px; position: absolute; top: 11px;">donut_large</i>
+                    </div>
+                    <div class="col-6">
+                        <div class="progress rounded-0" [style.width]="getProgressBarWidth(day) < 100 ? '90%' : '100%'">
+                            <div class="progress-bar progress-bar-animated rounded-0" [ngClass]="getProgressBarBackground(day)" role="progressbar" [style.width]="getProgressBarWidth(day) + '%'">{{getValueInPrecentage(day)}}%</div>
+                        </div>
+                    </div>
+                    <div class="col-3 px-0">
+                        <span *ngIf="category === 'sales'"
+                              [innerHtml]="getGaugeValue(day) | currency:'0':'':'':false"></span>
+                        <span *ngIf="category !== 'sales'">{{getGaugeValue(day) | pct }}</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>

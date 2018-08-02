@@ -65,6 +65,15 @@ import { ManagersDashboardModule } from './managers-dashboard/managers-dashboard
 import { VisibilityService } from '../tabit/utils/visibility.service';
 import { OlapMappings } from '../tabit/data/ep/olap.mappings';
 
+import 'hammerjs';//https://material.angular.io/guide/getting-started
+import 'hammer-timejs';
+import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
+
+export class MyHammerConfig extends HammerGestureConfig {
+  public buildHammer(element: HTMLElement): any {
+    return new (window as any).Hammer(element, { touchAction: 'pan-y' });
+  }
+}
 
 // The CLI imports the locale data for you when you use the parameter --locale with ng serve and ng build.
 if (environment.tbtLocale==='he-IL') {
@@ -106,6 +115,10 @@ if (environment.tbtLocale==='he-IL') {
     MatGridListModule,
   ],
   providers: [
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: MyHammerConfig
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: (as: AuthService) => function () {

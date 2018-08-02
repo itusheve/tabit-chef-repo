@@ -20,6 +20,7 @@ export class MonthSelectorComponent implements OnInit {
     };
 
     month: moment.Moment;
+    final: string;
 
     @Output() onDateChanged = new EventEmitter();
 
@@ -49,18 +50,20 @@ export class MonthSelectorComponent implements OnInit {
     ngOnInit() {
         this.month$.subscribe(month => {
             this.month = month;
+            this.final = moment().format('YYYYM') > this.month.format('YYYYM') ? 'final' : 'notFinal';
             this.setDisable();
         });
+
     }
 
     prevMonth = () => {
         if (this.month.isSame(this.options.minDate, 'month')) return;
         this.onDateChanged.emit(moment(this.month).subtract(1, 'months'));
-    };
+    }
 
     nextMonth = () => {
         if (this.month.isSame(this.options.maxDate, 'month')) return;
         this.onDateChanged.emit(moment(this.month).add(1, 'months'));
-    };
+    }
 
 }
