@@ -20,12 +20,12 @@
                 <div class="row" style="margin-top: 5px;">
                     <div class="col-12">
                         <table class="table table-borderless table-sm sales-table mb-0" [ngClass]="region == 'il' ? 'table-padding-rtl' : 'table-padding-ltr'">
-                            <tr *ngIf="cardData.averages.yearly?.percentage">
+                            <tr *ngIf="cardData.averages?.yearly?.percentage">
                                 <td><mat-icon [ngClass]="cardData.averages.yearly.positive ? 'up-positive' : 'down-negative'">play_arrow</mat-icon></td>
                                 <td class="text-dark">{{(cardData.averages.yearly.percentage ) | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@lastYear">Last year</td>
                             </tr>
-                            <tr *ngIf="cardData.averages.weekly?.percentage">
+                            <tr *ngIf="cardData.averages?.weekly?.percentage">
                                 <td><mat-icon [ngClass]="cardData.averages.weekly.positive ? 'up-positive' : 'down-negative'">play_arrow</mat-icon></td>
                                 <td class="text-dark">{{(cardData.averages.weekly.percentage) | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@fourWeekAvg">4 Week</td>

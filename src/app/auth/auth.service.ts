@@ -113,7 +113,6 @@ export class AuthService {
 
                 //look for token, user and possibly an org
                 let token = JSON.parse(window.localStorage.getItem('token'));
-
                 let tokeFromSession = window.sessionStorage.getItem('userToken');
 
                 if (!token && tokeFromSession) { //try getting from session storage (PAD logic)
@@ -129,7 +128,7 @@ export class AuthService {
                 let user = JSON.parse(window.localStorage.getItem('user'));
                 let org = JSON.parse(window.localStorage.getItem('org'));
 
-                if(!user) {
+                if(!user && token) {
                     user = await this.httpClient.get(`${this.rosBaseUrl}${meUrl}`).toPromise();
                     window.localStorage.setItem('user', JSON.stringify(user));
                 }

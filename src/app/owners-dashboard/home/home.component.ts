@@ -185,43 +185,44 @@ export class HomeComponent implements OnInit {
                     this.previousBdNotFinal = true;
                     this.previousBdCardData.loading = false;
                 }
+                else {
+                    this.previousBdCardData.diners = day.diners;
+                    this.previousBdCardData.ppa = day.ppa;
+                    this.previousBdCardData.sales = day.amount;
+                    this.previousBdCardData.averages = {
+                        yearly: {
+                            percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
+                            positive: day.aggregations.sales.amount > day.aggregations.sales.yearAvg
+                        },
+                        weekly: {
+                            percentage: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) - 1,
+                            positive: day.aggregations.sales.amount > day.aggregations.sales.fourWeekAvg
+                        }
 
-                this.previousBdCardData.diners = day.diners;
-                this.previousBdCardData.ppa = day.ppa;
-                this.previousBdCardData.sales = day.amount;
+                    };
+
+                    this.previousBdCardData.reductions = {
+                        cancellations: {
+                            percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
+                            positive: day.aggregations.reductions.cancellations.amount < day.aggregations.reductions.cancellations.threeMonthAvg
+                        },
+                        employee: {
+                            percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
+                            positive: day.aggregations.reductions.employee.amount < day.aggregations.reductions.employee.threeMonthAvg
+                        },
+                        operational: {
+                            percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
+                            positive: day.aggregations.reductions.operational.amount < day.aggregations.reductions.operational.threeMonthAvg
+                        },
+                        retention: {
+                            percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
+                            positive: day.aggregations.reductions.retention.amount < day.aggregations.reductions.retention.threeMonthAvg
+                        }
+
+                    };
+                }
+
                 this.previousBdCardData.title = title;
-
-                this.previousBdCardData.averages = {
-                    yearly: {
-                        percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
-                        positive: day.aggregations.sales.amount > day.aggregations.sales.yearAvg
-                    },
-                    weekly: {
-                        percentage: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) - 1,
-                        positive: day.aggregations.sales.amount > day.aggregations.sales.fourWeekAvg
-                    }
-
-                };
-
-                this.previousBdCardData.reductions = {
-                    cancellations: {
-                        percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.cancellations.amount < day.aggregations.reductions.cancellations.threeMonthAvg
-                    },
-                    employee: {
-                        percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.employee.amount < day.aggregations.reductions.employee.threeMonthAvg
-                    },
-                    operational: {
-                        percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.operational.amount < day.aggregations.reductions.operational.threeMonthAvg
-                    },
-                    retention: {
-                        percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.retention.amount < day.aggregations.reductions.retention.threeMonthAvg
-                    }
-
-                };
 
                 /*if (day.hasOwnProperty('final') && !data[0].final) {
                     this.previousBdCardData.salesComment = 'NotFinal';
