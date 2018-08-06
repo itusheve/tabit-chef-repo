@@ -20,8 +20,8 @@ export class MonthGridComponent implements OnInit {
     }
 
     ngOnInit() {
-        //this.changeAvgPeriodComparator('month');
-        //this.changeCategory('sales');
+        this.changeAvgPeriodComparator('month');
+        this.changeCategory('sales');
     }
 
     rowClickHandler(day) {
