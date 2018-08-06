@@ -23,8 +23,6 @@ export class LoginComponent implements OnInit {
     public dialog: MatDialog
   ) { }
 
-  //TODO: side menu add X and enable sliding off
-
   mode: string;// normal (selecting org and continuing to app), switch (changing an org, restart should occur)
 
   hidePass = true;

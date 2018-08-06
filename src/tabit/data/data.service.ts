@@ -1704,13 +1704,13 @@ export class DataService {
                 this.organizations = orgs
                     .filter(o => o.active && o.live && o.name.indexOf('HQ') === -1 && o.name.toUpperCase() !== 'TABIT')
                     .filter(o => {
-                        if (user.isStaff) return true;
+                        //if (user.isStaff) return true;
 
                         let membership = user.memberships.find(m => {
                             return m.organization === o.id && m.active;
                         });
 
-                        if (!membership || !membership.responsibilities || membership.responsibilities.indexOf('ANALYTICS_VIEW') === -1 || membership.responsibilities.indexOf('FINANCE') === -1) {
+                        if (!membership || !membership.responsibilities || ( membership.responsibilities.indexOf('CHEF') === -1 && membership.role !== 'manager')) {
                             return false;
                         }
                         return true;

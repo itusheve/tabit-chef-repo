@@ -111,7 +111,17 @@ export class OrgsComponent implements OnInit {
         if (this.mode === 'normal') {
             this.authService.selectOrg(org)
                 .then(() => {
-                    this.router.navigate(['owners-dashboard/home']);
+                    let user = JSON.parse(window.localStorage.getItem('user'));
+                    let membership = user.memberships.find(m => {
+                        return m.organization === org.id && m.active;
+                    });
+
+                    if (membership && membership.responsibilities && membership.responsibilities.indexOf('CHEF') !== -1) {
+                        this.router.navigate(['owners-dashboard/home']);
+                    }
+                    else if (membership.role === 'manager') {
+                        this.router.navigate(['managers-dashboard']);
+                    }
                 })
                 .catch(e => {
                     this.snackBar.open('unauthorized', null, {
