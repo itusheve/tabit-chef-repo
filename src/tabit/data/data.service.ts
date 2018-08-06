@@ -1525,9 +1525,9 @@ export class DataService {
                 if (currentDate.isSame(endOfMonth, 'month')) {
                     while (currentDate.isSameOrBefore(endOfMonth, 'day')) {
                         let weekday = currentDate.weekday();
-                        month.forecast.sales.amount += month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count;
-                        month.forecast.diners.count += month.aggregations.days[weekday].diners.count / month.aggregations.days[weekday].count;
-                        month.forecast.ppa.amount += month.aggregations.days[weekday].ppa.amount / month.aggregations.days[weekday].count;
+                        month.forecast.sales.amount += (month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count) || 0;
+                        month.forecast.diners.count += (month.aggregations.days[weekday].diners.count / month.aggregations.days[weekday].count) || 0;
+                        month.forecast.ppa.amount += (month.aggregations.days[weekday].ppa.amount / month.aggregations.days[weekday].count) || 0;
                         currentDate.add(1, 'days');
                     }
                 }
