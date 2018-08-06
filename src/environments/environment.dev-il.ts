@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    managerDashboardMode: true,
+    managerDashboardMode: false,
     region: 'il',
     tbtLocale: 'he-IL',//
     rosConfig: {//IL 'BETA' 'REPORTS'
