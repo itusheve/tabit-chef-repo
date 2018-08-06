@@ -2,13 +2,13 @@
 import { Routes, RouterModule } from '@angular/router';
 
 import { ManagersDashboardComponent } from './managers-dashboard.component';
-import { OrgGuard } from '../auth/org-guard.service';
+import { ManagersOrgGuard } from '../auth/managers-org-guard.service';
 
 const managersDashboardRoutes: Routes = [
   {
     path: 'managers-dashboard',
     component: ManagersDashboardComponent,
-    canActivate: [OrgGuard]
+    canActivate: [ManagersOrgGuard]
   }
 ];
 

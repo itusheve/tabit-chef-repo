@@ -5,13 +5,14 @@ import { LoginComponent } from './auth/login/login.component';
 import { OrgsComponent } from './orgs/orgs.component';
 import { UserGuard } from './auth/user-guard.service';
 import { OrgGuard } from './auth/org-guard.service';
+import {environment} from '../environments/environment';
 
 const appRoutes: Routes = [
   {
     path: 'login',
     component: LoginComponent
   },
-  { path: '**', redirectTo: '/owners-dashboard/home' }
+  { path: '**', redirectTo: environment.managerDashboardMode ? '/managers-dashboard' : '/owners-dashboard/home'}
 ];
 
 @NgModule({

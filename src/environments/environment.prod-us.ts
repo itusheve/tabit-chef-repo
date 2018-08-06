@@ -1,5 +1,6 @@
 export const environment = {
     production: true,
+    managerDashboardMode: false,
     region: 'us',
     tbtLocale: 'en-US',
     rosConfig: {//US 'PROD' 'REPORTS'

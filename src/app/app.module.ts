@@ -53,6 +53,7 @@ import { ForgotPasswordDialogComponent } from '../tabit/ui/dialogs/forgot-passwo
 import { AuthService } from './auth/auth.service';
 import { UserGuard } from './auth/user-guard.service';
 import { OrgGuard } from './auth/org-guard.service';
+import { ManagersOrgGuard } from './auth/managers-org-guard.service';
 
 import { LocalizationService } from './localization.service';
 import { DebugService } from './debug.service';
@@ -143,6 +144,7 @@ if (environment.tbtLocale==='he-IL') {
     AuthService,
     UserGuard,
     OrgGuard,
+    ManagersOrgGuard,
     LocalizationService,
     DebugService,
 

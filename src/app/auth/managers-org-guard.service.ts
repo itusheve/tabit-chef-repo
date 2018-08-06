@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 import {environment} from '../../environments/environment';
 
 @Injectable()
-export class OrgGuard implements CanActivate, CanActivateChild {
+export class ManagersOrgGuard implements CanActivate, CanActivateChild {
     constructor(private authService: AuthService, private router: Router) { }
 
     canActivate(
@@ -15,7 +15,7 @@ export class OrgGuard implements CanActivate, CanActivateChild {
         return this.authService.isOrgAuthed()
             .then(
             (authenticated: boolean) => {
-                if (authenticated && !environment.managerDashboardMode) return true;
+                if (authenticated) return true;
                 this.router.navigate(['/restaurants']);
                 return false;
             }
@@ -29,7 +29,7 @@ export class OrgGuard implements CanActivate, CanActivateChild {
         return this.authService.isOrgAuthed()
             .then(
             (authenticated: boolean) => {
-                if (authenticated && !environment.managerDashboardMode) return true;
+                if (authenticated) return true;
                 this.router.navigate(['/restaurants']);
                 return false;
             }

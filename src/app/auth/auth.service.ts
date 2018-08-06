@@ -42,7 +42,7 @@ export class AuthService {
                 let membership = user.memberships.find(m => {
                     return m.organization === org.id && m.active;
                 });
-                if (!membership || !membership.responsibilities || (membership.responsibilities.indexOf('CHEF') === -1 && membership.role !== 'manager')) {
+                if (!user.isStaff && (!membership || !membership.responsibilities || (membership.responsibilities.indexOf('CHEF') === -1 && membership.role !== 'manager'))) {
                     // not allowed
                     reject('');
                 }
@@ -163,10 +163,10 @@ export class AuthService {
 
                                                 window.localStorage.setItem('user', JSON.stringify(user));
 
-                                                /*if (user.isStaff) {
+                                                if (user.isStaff) {
                                                     this.ds.log('  authSvc: async checking user responsibilities: user isStaff: skipping');
                                                     return;
-                                                }*/
+                                                }
 
                                                 //TODO DRY with getOrganizations, refactor to a common func
                                                 let membership = user.memberships.find(m => {

@@ -116,10 +116,10 @@ export class OrgsComponent implements OnInit {
                         return m.organization === org.id && m.active;
                     });
 
-                    if (membership && membership.responsibilities && membership.responsibilities.indexOf('CHEF') !== -1) {
+                    if ((membership && membership.responsibilities && membership.responsibilities.indexOf('CHEF') !== -1 || user.isStaff) && !this.env.managerDashboardMode) {
                         this.router.navigate(['owners-dashboard/home']);
                     }
-                    else if (membership.role === 'manager') {
+                    else if ((membership && membership.role === 'manager') || user.isStaff) {
                         this.router.navigate(['managers-dashboard']);
                     }
                 })
