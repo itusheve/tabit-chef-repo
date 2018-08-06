@@ -284,11 +284,6 @@ export class HomeComponent implements OnInit {
             .subscribe(database => {
 
                 let month = database.getCurrentMonth();
-                if(moment().date() < 6) {
-                    this.showForecast = false;
-                    return;
-                }
-
                 this.forecastCardData.averages = {yearly: {}, weekly: {}};
 
 
@@ -300,7 +295,6 @@ export class HomeComponent implements OnInit {
                     };
                 }
 
-                this.showForecast = true;
                 const title = `${this.datePipe.transform( moment().startOf('month'), 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
                 this.forecastCardData.diners = month.forecast.diners.count;
                 this.forecastCardData.ppa = month.forecast.ppa.amount;
@@ -309,6 +303,7 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.loading = false;
                 this.forecastCardData.noSeparator = true;
 
+                this.showForecast = true;
                 /*this.forecastCardData.averages.weekly = {
                     percentage: 1 - (month.forecast.sales.amount / month.aggregations.sales.amount),
                     positive: month.aggregations.sales.amount > month.forecast.sales.amount
