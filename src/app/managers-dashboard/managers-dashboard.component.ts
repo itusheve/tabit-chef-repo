@@ -121,8 +121,8 @@ export class ManagersDashboardComponent implements OnInit {
       .then((data) => {
         that.db = data;
         that.criteria.itemGroups = data.itemGroups;
-        that.criteria.itemGroupsFiltered = that.criteria.itemGroups;
-        //that.criteria.itemGroupsFiltered = _.filter(that.criteria.itemGroups, { serviceType: that.criteria.serviceType });
+        //that.criteria.itemGroupsFiltered = that.criteria.itemGroups;
+        that.criteria.itemGroupsFiltered = _.filter(that.criteria.itemGroups, { serviceType: that.criteria.serviceType });
         that.criteria.dinerAvgGoalParsed = data.ppaGoal || 20;
         that.criteria.dinerAvgGoal = that.criteria.dinerAvgGoalParsed * 100;
         that.criteria.timeModes = _.assignIn(that.criteria.timeModes, that.db.shifts);
@@ -187,7 +187,7 @@ export class ManagersDashboardComponent implements OnInit {
     if (!st) st = _.find(this.criteria.serviceTypes, { value: this.criteria.serviceType });
     this.criteria.showPPA = st.showPPA;
     this.criteria.serviceType = st.value;
-    //this.criteria.itemGroupsFiltered = _.filter(this.criteria.itemGroups, { serviceType: this.criteria.serviceType });
+    this.criteria.itemGroupsFiltered = _.filter(this.criteria.itemGroups, { serviceType: this.criteria.serviceType });
     this.applyDelayed();
   }
 
