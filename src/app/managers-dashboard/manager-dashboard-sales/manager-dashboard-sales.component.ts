@@ -171,7 +171,7 @@ export class ManagerDashboardSalesComponent implements OnInit {
                 iGroup.subs = result.subs;
             }
         }
-        //this.criteria.itemGroupsFiltered = _.filter(this.criteria.itemGroups, { serviceType: this.criteria.serviceType });
+        that.criteria.itemGroupsFiltered = _.filter(this.criteria.itemGroups, { serviceType: this.criteria.serviceType });
         that.MDS.saveGroups(that.db, that.criteria.itemGroups, iGroup);
         that.actionRequest.emit({ id: 'applyDelayed' });
       }
