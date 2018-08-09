@@ -1,7 +1,7 @@
 {
-  "production":{
+  "production": {
     "version": "1.0.68",
-    "bundles":[
+    "bundles": [
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Assistant",
       "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/styles.bundle.css",
@@ -11,9 +11,9 @@
       "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/main.bundle.js"
     ]
   },
-  "development":{
+  "development": {
     "version": "1.0.68",
-    "bundles":[
+    "bundles": [
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Open+Sans",
       "http://10.100.10.93:5200/inline.bundle.js",
