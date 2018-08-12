@@ -15,6 +15,7 @@
                             <span class="currency">{{currency}}</span>{{cardData.sales | curr:'0':'':'':true}}
                             <br/><span *ngIf="cardData.salesComment" class="text-danger text-md" [ngClass]="region == 'il' ? 'sales-comment-rtl' : 'sales-comment'" i18n="@@salesComment">{cardData.salesComment, select, eod {Awaiting EOD} notFinal {Not Final}}</span>
                         </h1>
+                        <div *ngIf="cardData.holiday" class="font-weight-light" style="font-size: 12px;">{{cardData.holiday}}</div>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 5px;">

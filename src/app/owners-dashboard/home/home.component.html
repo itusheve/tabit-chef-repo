@@ -1,7 +1,7 @@
 <div class="flex d-col">
     <div class="card-columns">
         <app-card class="mb10" [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
-        <app-card class="mb10" [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')" style="cursor: pointer"></app-card>
+        <app-card *ngIf="showPreviousDay" class="mb10" [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')" style="cursor: pointer"></app-card>
         <app-card *ngIf="showForecast" class="mb10" [cardData]="forecastCardData"></app-card>
     </div>
     <app-month-view (onDayRequest)="onDayRequest($event)"></app-month-view>

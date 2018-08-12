@@ -90,7 +90,7 @@ const tmpTranslations_ = {
             cancellations: 'ביטולים',
             operational: 'תפעול',
             retention: 'שימור ושיווק',
-            employee: 'ארוחות עובדים',
+            employee: 'עובדים',
         },
         managerDash: {
             'ALLORDERS': 'כל ההזמנות',
@@ -195,8 +195,8 @@ const tmpTranslations_ = {
             'Apply': 'בצע',
             'Service Type': 'סוג שרות',
             'Totals': 'סיכומים',
-          "To": "עד",
-          "online": "Online"
+            'To': 'עד',
+            'online': 'Online'
         }
     },
     'en-US': {
@@ -356,7 +356,7 @@ const tmpTranslations_ = {
             'Service Type': 'Service Type',
             'Totals': 'Totals',
             'To': 'To',
-            "online": "Online"
+            'online': 'Online'
         }
     }
 };
@@ -520,13 +520,13 @@ export class DataService {
     }).publishReplay(1).refCount();
 
     public LatestBusinessDayDashboardData$: Observable<any> = Observable.create(obs => {
-        this.currentBd$
-            .subscribe(cbd => {
-                cbd = moment(cbd);
+        this.currentRestTime$
+            .subscribe(currentRestTime => {
+                currentRestTime = moment(currentRestTime);
                 const params = {
                     //daysOfHistory: 1,//0 returns everything...
                     today: 1,//Johnny said to use this
-                    to: cbd.format('YYYY-MM-DD')
+                    to: currentRestTime.format('YYYY-MM-DD')
                 };
                 this.rosEp.get('reports/owner-dashboard', params)
                     .then(data => {
@@ -1023,7 +1023,7 @@ export class DataService {
             month.forecast = {
                 sales: {amount: 0, netAmount: 0, netAmountBeforeVat: 0},
                 diners: {count: 0},
-                ppa: {amount: 0},
+                ppa: {amount: 0, count: 0},
                 reductions: {
                     cancellations: {
                         amount: 0,
@@ -1302,8 +1302,10 @@ export class DataService {
             let latestDayNumber = 0;
             _.forEach(month.days, day => {
 
-                day.isExcluded = !!excludedDates[moment(day.date).format('YYYY-MM-DD')];
-
+                if (excludedDates[moment(day.date).format('YYYY-MM-DD')]) {
+                    day.isExcluded = true;
+                    day.holiday = excludedDates[moment(day.date).format('YYYY-MM-DD')];
+                }
 
                 let dayNumber = parseInt(moment(day.date).format('D'), 10);
 
@@ -1314,8 +1316,8 @@ export class DataService {
                 }
 
                 //get lowest data of all days in database
-                if (moment(day.date).isBefore(moment(database.lowestDate))) {
-                    database.lowestDate = month.latestDay;
+                if (moment(day.date).isBefore(moment(database.lowestDate), 'days')) {
+                    database.lowestDate = day.date;
                 }
 
                 //prepare day structure //TODO: move to class
@@ -1380,10 +1382,11 @@ export class DataService {
             });
         });
         perf.loop = performance.now() - t2;
-
+        let totalsDaysCount = 0;
         _.forEach(database, month => {
             let currentDate = moment();
             _.forEach(month.days, day => {
+                totalsDaysCount++;
                 _.forEach([
                     {
                         date: moment(day.date),
@@ -1496,7 +1499,11 @@ export class DataService {
 
                 if (!moment(day.date).isSame(moment(), 'day')) {
 
-                    month.forecast.ppa.amount += day.aggregations.indicators.ppa.fourWeekAvg;
+                    if (day.aggregations.indicators.ppa.fourWeekAvg) {
+                        month.forecast.ppa.amount += day.aggregations.indicators.ppa.fourWeekAvg;
+                        month.forecast.ppa.count += 1;
+                    }
+
 
                     if (currentDate.isSame(moment(day.date), 'month')) {
                         month.forecast.sales.amount += day.amount;
@@ -1527,12 +1534,30 @@ export class DataService {
                         let weekday = currentDate.weekday();
                         month.forecast.sales.amount += (month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count) || 0;
                         month.forecast.diners.count += (month.aggregations.days[weekday].diners.count / month.aggregations.days[weekday].count) || 0;
-                        month.forecast.ppa.amount += (month.aggregations.days[weekday].ppa.amount / month.aggregations.days[weekday].count) || 0;
+
+                        if (month.aggregations.days[weekday].ppa.amount && month.aggregations.days[weekday].count) {
+                            month.forecast.ppa.amount += (month.aggregations.days[weekday].ppa.amount / month.aggregations.days[weekday].count) || 0;
+                            month.forecast.ppa.count += 1;
+                        }
+
+                        if (month.aggregations.days[weekday].count === 0) {
+                            let previousMonth = database[moment(currentDate).subtract(1, 'months').format('YYYYMM')];
+                            if (previousMonth) {
+                                month.forecast.sales.amount += (previousMonth.aggregations.days[weekday].sales.amount / previousMonth.aggregations.days[weekday].count) || 0;
+                                month.forecast.diners.count += (previousMonth.aggregations.days[weekday].diners.count / previousMonth.aggregations.days[weekday].count) || 0;
+
+                                if (previousMonth.aggregations.days[weekday].ppa.amount && previousMonth.aggregations.days[weekday].count) {
+                                    month.forecast.ppa.amount += (previousMonth.aggregations.days[weekday].ppa.amount / previousMonth.aggregations.days[weekday].count) || 0;
+                                    month.forecast.ppa.count += 1;
+                                }
+                            }
+                        }
+
                         currentDate.add(1, 'days');
                     }
                 }
 
-                month.forecast.ppa.amount = (month.forecast.ppa.amount / currentDate.subtract(2, 'days').daysInMonth());
+                month.forecast.ppa.amount = (month.forecast.ppa.amount / month.forecast.ppa.count);
             }
         });
 
@@ -1710,7 +1735,7 @@ export class DataService {
                             return m.organization === o.id && m.active;
                         });
 
-                        if (!membership || !membership.responsibilities || ( membership.responsibilities.indexOf('CHEF') === -1 && membership.role !== 'manager')) {
+                        if (!membership || !membership.responsibilities || (membership.responsibilities.indexOf('CHEF') === -1 && membership.role !== 'manager')) {
                             return false;
                         }
                         return true;
@@ -2476,22 +2501,22 @@ export class DataService {
     private getExcludedDates(calendars, organizationId) {
         let organizationalCalendar = _.find(calendars, {organization: organizationId}) || {};
 
-        let calendar = {};
+        let masterCalendar = {};
         _.each(calendars, calendar => {
             if (calendar.organization !== organizationId) {
-                _.assign(calendar, calendar.calendar);
+                _.assign(masterCalendar, calendar.calendar);
             }
         });
-        _.assign(calendar, organizationalCalendar.calendar);
+        _.assign(masterCalendar, organizationalCalendar.calendar);
 
         let excludedDates = [];
-        _.each(calendar, day => {
+        _.each(masterCalendar, day => {
             if (day.behavior === 'IgnoreDate') {
-                excludedDates[moment(day.date).format('YYYY-MM-DD')] = true;
+                excludedDates[moment(day.date).format('YYYY-MM-DD')] = day.holiday;
             }
         });
 
-        window.localStorage.setItem(organizationId + '-excluded-dates', excludedDates.join());
+        window.localStorage.setItem(organizationId + '-excluded-dates', JSON.stringify(excludedDates));
 
         return excludedDates;
     }

@@ -23,6 +23,7 @@ export interface CardData {
     noSeparator?: boolean;
     averages?: any;
     reductions?: any;
+    holiday?: string;
 }
 
 @Component({

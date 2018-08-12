@@ -10,13 +10,17 @@ import { tmpTranslations } from '../../../../tabit/data/data.service';
 export class MonthGridComponent implements OnInit {
 
     @Output() onDateClicked = new EventEmitter();
+    currentDate: string;
     days: any;
     month: any;
     avgPeriodComparator: string;
     category: string;
     categoryTitle: string;
+    tmpTranslations: any;
 
     constructor() {
+        let currentDate = moment().format('YYYY-MM-DD');
+        this.tmpTranslations = tmpTranslations;
     }
 
     ngOnInit() {
@@ -120,19 +124,19 @@ export class MonthGridComponent implements OnInit {
 
     getTextColor(categoryClicked) {
         if (this.category === 'sales' && categoryClicked === 'sales') {
-            return 'text-info';
+            return 'category-active text-info';
         }
         else if (this.category === 'cancellations' && categoryClicked === 'cancellations') {
-            return 'text-danger';
+            return 'category-active text-danger';
         }
         else if (this.category === 'retention' && categoryClicked === 'retention') {
-            return 'text-warning';
+            return 'category-active text-warning';
         }
         else if (this.category === 'operational' && categoryClicked === 'operational') {
-            return 'text-success';
+            return 'category-active text-success';
         }
         else if (this.category === 'employee' && categoryClicked === 'employee') {
-            return 'text-primary';
+            return 'category-active text-primary';
         }
         else {
             return '';

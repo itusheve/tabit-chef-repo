@@ -33,6 +33,16 @@
       position: relative;
       top: 4px;
     }
+
+    .btn {
+      width: 16%;
+      transition: width 300ms ease-out;
+    }
+
+    .category-active {
+      width: 40%;
+      transition: width 300ms ease-out;
+    }
   }
   .progress {
     overflow: visible;

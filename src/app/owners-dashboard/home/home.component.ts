@@ -68,6 +68,7 @@ export class HomeComponent implements OnInit {
     };
 
     private previousBdNotFinal = false;
+    public showPreviousDay = false;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private cardsDataService: CardsDataService,
@@ -120,15 +121,17 @@ export class HomeComponent implements OnInit {
                     }
                 }
 
-                if (currentDay !== operationalDataDay) {
+                if (liveData.today.totalSales === 0) {
                     this.currentBdCardData.salesComment = 'eod';
                 }
+
+                this.currentBdCardData.holiday = day.holiday;
 
                 const title = this.datePipe.transform(moment(restaurantTime).valueOf(), 'fullDate');
 
                 this.currentBdCardData.sales = totalSales;
-                this.currentBdCardData.diners = day.diners;
-                this.currentBdCardData.ppa = day.ppa;
+                this.currentBdCardData.diners = day.diners || liveData.today.totalDiners;
+                this.currentBdCardData.ppa = day.ppa || liveData.today.ppa;
                 this.currentBdCardData.title = title;
 
                 this.currentBdCardData.averages = {
@@ -181,11 +184,14 @@ export class HomeComponent implements OnInit {
 
                 const title = this.datePipe.transform(previousDay.valueOf(), 'fullDate');
                 if(!day) {
+                    this.showPreviousDay = false;
                     this.previousBdCardData.salesComment = 'noData';
                     this.previousBdNotFinal = true;
                     this.previousBdCardData.loading = false;
                 }
                 else {
+                    this.showPreviousDay = true;
+                    this.previousBdCardData.holiday = day.holiday;
                     this.previousBdCardData.diners = day.diners;
                     this.previousBdCardData.ppa = day.ppa;
                     this.previousBdCardData.sales = day.amount;
@@ -304,7 +310,7 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.loading = false;
                 this.forecastCardData.noSeparator = true;
 
-                this.showForecast = true;
+                this.showForecast = moment().diff(moment(database.getLowestDate()), 'days') > 8; //do not show forecast for new businesses with less than 8 days of data
                 /*this.forecastCardData.averages.weekly = {
                     percentage: 1 - (month.forecast.sales.amount / month.aggregations.sales.amount),
                     positive: month.aggregations.sales.amount > month.forecast.sales.amount
