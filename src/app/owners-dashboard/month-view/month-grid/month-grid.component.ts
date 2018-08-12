@@ -219,7 +219,7 @@ export class MonthGridComponent implements OnInit {
         else if(width < 18) {
             width = 18;
         }
-        else if(width > 130) {
+        else if(width > 120) {
             width = 120;
         }
 

@@ -5,15 +5,15 @@
                 <div class="col-12 font-weight-bold mx-0 p-0" style="font-size: 18px;">
                     <div class="row mx-0 p-0 justify-content-center" style="direction: rtl">
                         <div class="btn-group w-100 category-picker">
-                            <span class="btn btn-light rounded-0 border" [ngClass]="getTextColor('sales')"
+                            <span class="btn btn-lg btn-light rounded-0 border" [ngClass]="getTextColor('sales')"
                                   (click)="changeCategory('sales')">{{tmpTranslations.get('monthViewFilters.sales')}}</span>
-                            <span class="btn btn-light border" [ngClass]="getTextColor('cancellations')"
+                            <span class="btn btn-lg btn-light border" [ngClass]="getTextColor('cancellations')"
                                   (click)="changeCategory('cancellations')">{{tmpTranslations.get('monthViewFilters.cancellations')}}</span>
-                            <span class="btn btn-light border" [ngClass]="getTextColor('operational')"
+                            <span class="btn btn-lg btn-light border" [ngClass]="getTextColor('operational')"
                                   (click)="changeCategory('operational')">{{tmpTranslations.get('monthViewFilters.operational')}}</span>
-                            <span class="btn btn-light border" [ngClass]="getTextColor('retention')"
+                            <span class="btn btn-lg btn-light border" [ngClass]="getTextColor('retention')"
                                   (click)="changeCategory('retention')">{{tmpTranslations.get('monthViewFilters.retention')}}</span>
-                            <span class="btn btn-light rounded-0 border" [ngClass]="getTextColor('employee')"
+                            <span class="btn btn-lg btn-light rounded-0 border" style="width: 21%" [ngClass]="getTextColor('employee')"
                                   (click)="changeCategory('employee')">{{tmpTranslations.get('monthViewFilters.employee')}}</span>
                         </div>
                     </div>
@@ -29,33 +29,41 @@
                     </div>
                 </div>
             </li>
-            <li *ngFor="let day of days" class="list-group-item">
+            <li *ngFor="let day of days" class="list-group-item" style="height: 62px;">
                 <div *ngIf="day.date !== currentDate" class="row flex a-center" (click)="rowClickHandler(day)"
                      style="cursor: pointer">
-
-                    <div class="col-3 px-2">
+                    <div class="col-3 px-1" style="max-width: 18% !important;">
                         <div>{{day.date | date: 'dd'}} {{day.date | date: 'EEE'}}</div>
                     </div>
-                    <div class="col-6 px-2">
+                    <div class="col-8 px-1" style="max-width: 64% !important;">
                         <div class="progress rounded-0" style="width: 85%; height: 6px;">
-                            <div class="progress-bar progress-bar-animated rounded-0" role="progressbar" style="width: 100%; background-color: #e9ecef"></div>
+                            <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
+                                 style="width: 100%; background-color: #e9ecef"></div>
                         </div>
                         <div class="progress rounded-0"
-                             [style.width]="getValueInPercentage(day) <= 100 ? '85%' : (85 + ((getValueInPercentage(day) - 100) * 0.2)) + '%'">
+                             [style.width]="getValueInPercentage(day) <= 100 ? '85%' : (85 + ((getProgressBarWidth(day) - 100)) * 0.85) + '%'">
                             <div class="progress-bar progress-bar-animated rounded-0"
                                  [ngClass]="getProgressBarBackground(day)" role="progressbar"
-                                 [style.width]="getValueInPercentage(day) >= 100 ? '100%' : getProgressBarWidth(day) + '%'">{{getValueInPercentage(day)}}%
+                                 [style.width]="getValueInPercentage(day) >= 100 ? '100%' : getProgressBarWidth(day) + '%'">
+                                <span *ngIf="category === 'sales'"
+                                      [innerHtml]="getGaugeComparator(day) | currency:'0':'':'':false"></span>
+                                <span *ngIf="category !== 'sales'">{{getGaugeComparator(day) | pct : 1 }}</span>
                             </div>
                         </div>
                         <div class="progress rounded-0" style="width: 85%; height: 6px;">
-                            <div class="progress-bar progress-bar-animated rounded-0" role="progressbar" style="width: 100%; background-color: #e9ecef"></div>
+                            <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
+                                 style="width: 100%; background-color: #e9ecef"></div>
                         </div>
-                        <div *ngIf="day.isExcluded" class="font-weight-light text-info" style="font-size: 12px;">{{day.holiday}}</div>
                     </div>
-                    <div class="col-3 px-2">
+                    <div class="col-3 px-1" style="max-width: 18% !important;">
                         <span *ngIf="category === 'sales'"
                               [innerHtml]="getGaugeValue(day) | currency:'0':'':'':false"></span>
                         <span *ngIf="category !== 'sales'">{{getGaugeValue(day) | pct : 1 }}</span>
+                    </div>
+                </div>
+                <div *ngIf="day.isExcluded" class="row">
+                    <div iv class="col-12 px-1">
+                        <span class="font-weight-light text-info" style="font-size: 14px; position:relative;top:-4px;">{{day.holiday}}</span>
                     </div>
                 </div>
             </li>

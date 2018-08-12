@@ -35,13 +35,9 @@
     }
 
     .btn {
-      width: 16%;
-      transition: width 300ms ease-out;
-    }
-
-    .category-active {
-      width: 40%;
-      transition: width 300ms ease-out;
+      width: 20%;
+      padding: 12px 4px;
+      font-size: 14px;
     }
   }
   .progress {
