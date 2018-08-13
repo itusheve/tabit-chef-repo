@@ -332,7 +332,8 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.averages = {yearly: {}, weekly: {}};
 
 
-                let lastYearMonth = database.getMonth(moment().subtract(1,'year'));
+                let lastYearMonth = database.getMonth(moment().subtract(1,'years'));
+                let previousMonth = database.getMonth(moment().subtract(1,'months'));
                 if(lastYearMonth) {
                     this.forecastCardData.averages.yearly = {
                         percentage: lastYearMonth.aggregations.sales.amount ? ((month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount) - 1) : 0,
@@ -348,12 +349,12 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.loading = false;
                 this.forecastCardData.noSeparator = true;
 
-                this.showForecast = moment().diff(moment(database.getLowestDate()), 'days') > 8; //do not show forecast for new businesses with less than 8 days of data
-                /*this.forecastCardData.averages.weekly = {
-                    percentage: 1 - (month.forecast.sales.amount / month.aggregations.sales.amount),
-                    positive: month.aggregations.sales.amount > month.forecast.sales.amount
-                };*/
+                this.forecastCardData.averages.weekly = {
+                    percentage: 1 - (month.forecast.sales.amount / previousMonth.forecast.sales.amount),
+                    positive: month.forecast.sales.amount > previousMonth.forecast.sales.amount
+                };
 
+                this.showForecast = moment().diff(moment(database.getLowestDate()), 'days') > 8; //do not show forecast for new businesses with less than 8 days of data
             });
     }
 

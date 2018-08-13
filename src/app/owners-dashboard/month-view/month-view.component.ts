@@ -88,6 +88,7 @@ export class MonthViewComponent implements OnInit {
         const isCurrentMonth = date.isSame(currentBd, 'month');
 
         let month = database.getMonth(date);
+        let previousMonth = database.getMonth(moment().subtract(1,'months'));
 
         if(!month) {
             this.showSummary = false;
@@ -104,9 +105,9 @@ export class MonthViewComponent implements OnInit {
                 percentage: month.aggregations.sales.lastYearWeekAvg ? ((month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1) : 0,
                 positive: month.aggregations.sales.weekAvg > month.aggregations.sales.lastYearWeekAvg
             },
-            weekly: { //compare to our sales forecast
-                percentage: month.forecast.sales.amount ? ((month.aggregations.sales.amount / month.forecast.sales.amount) - 1) : 0,
-                positive: month.aggregations.sales.amount > month.forecast.sales.amount
+            weekly: {
+                percentage: previousMonth.aggregations.sales.weekAvg ? ((month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg) - 1) : 0,
+                positive: month.aggregations.sales.weekAvg > previousMonth.aggregations.sales.weekAvg
             }
         };
 

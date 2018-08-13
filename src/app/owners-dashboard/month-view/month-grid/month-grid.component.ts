@@ -89,15 +89,18 @@ export class MonthGridComponent implements OnInit {
             return this.category === 'sales' ? 'bg-danger-dark' : 'bg-success-dark';
         }
         else if (value <= 90) {
-            return this.category === 'sales' ? 'bg-danger' : 'bg-success';
+            return this.category === 'sales' ? 'bg-danger' : 'bg-success-dark';
         }
         else if (value <= 100) {
-            return this.category === 'sales' ? 'bg-warning text-dark' : 'bg-warning text-dark';
+            return this.category === 'sales' ? 'bg-warning text-dark' : 'bg-success';
         }
         else if (value < 110) {
-            return this.category === 'sales' ? 'bg-success' : 'bg-danger';
+            return this.category === 'sales' ? 'bg-success' : 'bg-warning text-dark';
         }
-        else if (value => 110) {
+        else if (value >= 110) {
+            return this.category === 'sales' ? 'bg-success-dark' : 'bg-danger';
+        }
+        else if (value >= 120) {
             return this.category === 'sales' ? 'bg-success-dark' : 'bg-danger-dark';
         }
 
@@ -219,8 +222,8 @@ export class MonthGridComponent implements OnInit {
         else if(width < 18) {
             width = 18;
         }
-        else if(width > 120) {
-            width = 120;
+        else if(width > 115) {
+            width = 115;
         }
 
         return width;
