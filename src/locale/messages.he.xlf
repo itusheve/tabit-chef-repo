@@ -401,10 +401,14 @@
       <trans-unit id="previousYear" datatype="html">
               <source>Prev. Year</source>
               <target>שנה קודמת</target>
-            </trans-unit>
-            <trans-unit id="fourWeek" datatype="html">
+      </trans-unit>
+      <trans-unit id="projection" datatype="html">
+              <source>Projection</source>
+              <target>תחזית מכירות</target>
+      </trans-unit>
+      <trans-unit id="fourWeek" datatype="html">
                 <source>4 Week</source>
-                <target>4 שב'</target>
+                <target>4 שבועות</target>
               </trans-unit>
       <trans-unit id="tip" datatype="html">
         <source>Gratuity</source>

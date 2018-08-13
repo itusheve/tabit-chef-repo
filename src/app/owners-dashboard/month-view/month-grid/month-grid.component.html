@@ -17,14 +17,15 @@
                                   (click)="changeCategory('employee')">{{tmpTranslations.get('monthViewFilters.employee')}}</span>
                         </div>
                     </div>
-                    <div class="row m-0 p-0">
-                        <div class="btn-group w-100">
-                            <span class="btn btn-lg btn-light rounded-0 w-50 border"
+                    <div class="row m-0 p-0" style="font-size: 18px;">
+                        <div class="btn-group w-100 average-picker">
+                            <span class="btn btn-lg btn-light rounded-0 border"
                                   [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''"
                                   (click)="changeAvgPeriodComparator('month')" i18n="@@fourWeek">4 Week</span>
-                            <span class="btn btn-lg btn-light rounded-0 w-50 border"
+                            <span class="btn btn-lg btn-light rounded-0 border"
                                   [ngClass]="avgPeriodComparator === 'year' ? 'active' : ''"
                                   (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear">Prev. Year</span>
+                            <span class="btn btn-lg btn-light rounded-0 border disabled" i18n="@@projection">Projection</span>
                         </div>
                     </div>
                 </div>
@@ -35,27 +36,20 @@
                     <div class="col-3 px-1" style="max-width: 18% !important;">
                         <div>{{day.date | date: 'dd'}} {{day.date | date: 'EEE'}}</div>
                     </div>
-                    <div class="col-8 px-1" style="max-width: 64% !important;">
+                    <div class="col-8 px-1" style="max-width: 63% !important;">
                         <div class="progress rounded-0" style="width: 85%; height: 6px;">
                             <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
                                  style="width: 100%; background-color: #e9ecef"></div>
                         </div>
-                        <div class="progress rounded-0"
-                             [style.width]="getValueInPercentage(day) <= 100 ? '85%' : (85 + ((getProgressBarWidth(day) - 100)) * 0.85) + '%'">
-                            <div class="progress-bar progress-bar-animated rounded-0"
-                                 [ngClass]="getProgressBarBackground(day)" role="progressbar"
-                                 [style.width]="getValueInPercentage(day) >= 100 ? '100%' : getProgressBarWidth(day) + '%'">
-                                <span *ngIf="category === 'sales'"
-                                      [innerHtml]="getGaugeComparator(day) | currency:'0':'':'':false"></span>
-                                <span *ngIf="category !== 'sales'">{{getGaugeComparator(day) | pct : 1 }}</span>
-                            </div>
+                        <div class="progress rounded-0" [style.width]="getValueInPercentage(day) <= 100 ? '85%' : (85 + ((getProgressBarWidth(day) - 100)) * 0.85) + '%'">
+                            <div class="progress-bar progress-bar-animated rounded-0" [ngClass]="getProgressBarBackground(day)" role="progressbar" [style.width]="getValueInPercentage(day) >= 100 ? '100%' : getProgressBarWidth(day) + '%'" style="font-size: 16px;">{{getValueInPercentage(day)}}%</div>
                         </div>
                         <div class="progress rounded-0" style="width: 85%; height: 6px;">
                             <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
                                  style="width: 100%; background-color: #e9ecef"></div>
                         </div>
                     </div>
-                    <div class="col-3 px-1" style="max-width: 18% !important;">
+                    <div class="col-3 px-1" style="max-width: 19% !important;">
                         <span *ngIf="category === 'sales'"
                               [innerHtml]="getGaugeValue(day) | currency:'0':'':'':false"></span>
                         <span *ngIf="category !== 'sales'">{{getGaugeValue(day) | pct : 1 }}</span>

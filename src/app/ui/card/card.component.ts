@@ -24,6 +24,7 @@ export interface CardData {
     averages?: any;
     reductions?: any;
     holiday?: string;
+    statusClass?: string;
 }
 
 @Component({

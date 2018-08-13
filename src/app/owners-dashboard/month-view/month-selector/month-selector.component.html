@@ -11,7 +11,7 @@
             </div>
         </a>
         <a class="dx-calendar-caption-button dx-button dx-button-normal dx-widget dx-button-has-text" role="button"
-           aria-label="">
+           aria-label="" [ngClass]="backgroundClass">
             <div class="dx-button-content">
                 <span class="dx-button-text" style="font-size: 18px;">{{month | date:'MMMM yyyy'}}</span><span class="dx-button-text text-lowercase mx-2" i18n="@@monthSelectorFinalIndication">{final, select, final {Final} notFinal {Not final}}</span>
             </div>

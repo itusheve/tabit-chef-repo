@@ -167,6 +167,25 @@ export class HomeComponent implements OnInit {
                     };
                 }
 
+                if(this.currentBdCardData.averages.weekly.percentage) {
+                    let value = day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg * 100;
+                    if (value <= 80) {
+                        this.currentBdCardData.statusClass = 'bg-danger';
+                    }
+                    else if (value <= 90) {
+                        this.currentBdCardData.statusClass = 'bg-danger';
+                    }
+                    else if (value <= 100) {
+                        this.currentBdCardData.statusClass = 'bg-warning';
+                    }
+                    else if (value < 110) {
+                        this.currentBdCardData.statusClass = 'bg-success';
+                    }
+                    else if (value => 110) {
+                        this.currentBdCardData.statusClass = 'bg-success';
+                    }
+                }
+
                 if (typeof this.currentBdCardData.sales === 'number') {
                     this.currentBdCardData.loading = false;
                 }
@@ -226,6 +245,25 @@ export class HomeComponent implements OnInit {
                         }
 
                     };
+
+                    if(this.previousBdCardData.averages.weekly.percentage) {
+                        let value = day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg * 100;
+                        if (value <= 80) {
+                            this.previousBdCardData.statusClass = 'bg-danger-dark';
+                        }
+                        else if (value <= 90) {
+                            this.previousBdCardData.statusClass = 'bg-danger';
+                        }
+                        else if (value <= 100) {
+                            this.previousBdCardData.statusClass = 'bg-warning';
+                        }
+                        else if (value < 110) {
+                            this.previousBdCardData.statusClass = 'bg-success';
+                        }
+                        else if (value => 110) {
+                            this.previousBdCardData.statusClass = 'bg-success-dark';
+                        }
+                    }
                 }
 
                 this.previousBdCardData.title = title;

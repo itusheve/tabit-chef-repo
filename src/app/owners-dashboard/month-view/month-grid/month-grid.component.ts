@@ -92,7 +92,7 @@ export class MonthGridComponent implements OnInit {
             return this.category === 'sales' ? 'bg-danger' : 'bg-success';
         }
         else if (value <= 100) {
-            return this.category === 'sales' ? 'bg-warning' : 'bg-warning';
+            return this.category === 'sales' ? 'bg-warning text-dark' : 'bg-warning text-dark';
         }
         else if (value < 110) {
             return this.category === 'sales' ? 'bg-success' : 'bg-danger';

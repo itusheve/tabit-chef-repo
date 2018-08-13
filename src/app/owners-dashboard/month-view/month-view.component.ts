@@ -35,7 +35,7 @@ export class MonthViewComponent implements OnInit {
     month: moment.Moment;
     monthSelectorOptions: {
         minDate: moment.Moment,
-        maxDate: moment.Moment
+        maxDate: moment.Moment,
     };
 
     renderGrid = true;
@@ -57,7 +57,6 @@ export class MonthViewComponent implements OnInit {
     }
 
     ngOnInit() {
-
         let date = moment();
         if(moment().date() === 1) {
             date.subtract(10, 'days');
@@ -136,9 +135,10 @@ export class MonthViewComponent implements OnInit {
 
     update(month, currentBd: moment.Moment, database) {
         this.month = month;
+
         this.monthSelectorOptions = {
             minDate: moment(database.getLowestDate()),
-            maxDate: moment()
+            maxDate: moment(),
         };
 
         const isCurrentMonth = month.isSame(currentBd, 'month');
