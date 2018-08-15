@@ -1616,7 +1616,15 @@ export class DataService {
                 }
             });
 
+            let localStorage = window.localStorage;
+            let keys = Object.keys(localStorage);
+            _.forEach(keys, key => {
+                if (key.indexOf('database') !== -1) {
+                    localStorage.removeItem(key);
+                }
+            });
             window.localStorage.setItem(org.id + '-database', JSON.stringify(database));
+
             window.localStorage.setItem('performance', JSON.stringify(perf));
             obs.next(new Database(database));
         });
