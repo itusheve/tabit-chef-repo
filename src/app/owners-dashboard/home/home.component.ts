@@ -15,6 +15,7 @@ import {CardData} from '../../ui/card/card.component';
 import {OwnersDashboardService} from '../owners-dashboard.service';
 import {fromPromise} from 'rxjs/observable/fromPromise';
 import {TrendModel} from '../../../tabit/model/Trend.model';
+import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
 
 @Component({
     selector: 'app-home',
@@ -69,6 +70,7 @@ export class HomeComponent implements OnInit {
 
     private previousBdNotFinal = false;
     public showPreviousDay = false;
+    public tabitHelper;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private cardsDataService: CardsDataService,
@@ -77,6 +79,7 @@ export class HomeComponent implements OnInit {
                 private router: Router,
                 private datePipe: DatePipe) {
 
+        this.tabitHelper = new TabitHelper();
         ownersDashboardService.toolbarConfig.left.back.showBtn = false;
         ownersDashboardService.toolbarConfig.menuBtn.show = true;
     }
@@ -169,21 +172,7 @@ export class HomeComponent implements OnInit {
 
                 if(this.currentBdCardData.averages.weekly.percentage) {
                     let value = day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg * 100;
-                    if (value <= 80) {
-                        this.currentBdCardData.statusClass = 'bg-danger';
-                    }
-                    else if (value <= 90) {
-                        this.currentBdCardData.statusClass = 'bg-danger';
-                    }
-                    else if (value <= 100) {
-                        this.currentBdCardData.statusClass = 'bg-warning';
-                    }
-                    else if (value < 110) {
-                        this.currentBdCardData.statusClass = 'bg-success';
-                    }
-                    else if (value => 110) {
-                        this.currentBdCardData.statusClass = 'bg-success';
-                    }
+                    this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value);
                 }
 
                 if (typeof this.currentBdCardData.sales === 'number') {
@@ -248,21 +237,7 @@ export class HomeComponent implements OnInit {
 
                     if(this.previousBdCardData.averages.weekly.percentage) {
                         let value = day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg * 100;
-                        if (value <= 80) {
-                            this.previousBdCardData.statusClass = 'bg-danger-dark';
-                        }
-                        else if (value <= 90) {
-                            this.previousBdCardData.statusClass = 'bg-danger';
-                        }
-                        else if (value <= 100) {
-                            this.previousBdCardData.statusClass = 'bg-warning';
-                        }
-                        else if (value < 110) {
-                            this.previousBdCardData.statusClass = 'bg-success';
-                        }
-                        else if (value => 110) {
-                            this.previousBdCardData.statusClass = 'bg-success-dark';
-                        }
+                        this.previousBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value);
                     }
                 }
 

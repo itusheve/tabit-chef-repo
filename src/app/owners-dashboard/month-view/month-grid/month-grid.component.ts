@@ -1,6 +1,9 @@
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import * as moment from 'moment';
 import { tmpTranslations } from '../../../../tabit/data/data.service';
+import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
+
+
 @Component({
     selector: 'app-month-grid',
     templateUrl: './month-grid.component.html',
@@ -18,9 +21,12 @@ export class MonthGridComponent implements OnInit {
     categoryTitle: string;
     tmpTranslations: any;
 
+    private tabitHelper;
+
     constructor() {
         let currentDate = moment().format('YYYY-MM-DD');
         this.tmpTranslations = tmpTranslations;
+        this.tabitHelper = new TabitHelper();
     }
 
     ngOnInit() {
@@ -82,29 +88,7 @@ export class MonthGridComponent implements OnInit {
 
     getProgressBarBackground(day) {
         let value = this.getValueInPercentage(day);
-        if (value === 0) {
-            return 'bg-secondary';
-        }
-        if (value <= 80) {
-            return this.category === 'sales' ? 'bg-danger-dark' : 'bg-success-dark';
-        }
-        else if (value <= 90) {
-            return this.category === 'sales' ? 'bg-danger' : 'bg-success-dark';
-        }
-        else if (value <= 100) {
-            return this.category === 'sales' ? 'bg-warning text-dark' : 'bg-success';
-        }
-        else if (value < 110) {
-            return this.category === 'sales' ? 'bg-success' : 'bg-warning text-dark';
-        }
-        else if (value >= 110) {
-            return this.category === 'sales' ? 'bg-success-dark' : 'bg-danger';
-        }
-        else if (value >= 120) {
-            return this.category === 'sales' ? 'bg-success-dark' : 'bg-danger-dark';
-        }
-
-        return 'bg-primary';
+        return this.tabitHelper.getColorClassByPercentage(value);
     }
 
     getProgressBarColor() {
