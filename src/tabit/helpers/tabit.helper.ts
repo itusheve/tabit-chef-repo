@@ -11,25 +11,25 @@ export class TabitHelper {
             return 'bg-secondary';
         }
         if (percentage <= 80) {
-            return reverse ? 'bg-danger-dark' : 'bg-success-dark';
+            return reverse ? 'bg-danger-dark text-white' : 'bg-success-dark text-white';
         }
         else if (percentage <= 90) {
-            return reverse ? 'bg-danger' : 'bg-success-dark';
+            return reverse ? 'bg-danger text-white' : 'bg-success-dark text-white';
         }
         else if (percentage <= 100) {
-            return reverse ? 'bg-warning text-dark' : 'bg-success';
+            return reverse ? 'bg-warning text-dark' : 'bg-success text-white';
         }
         else if (percentage < 110) {
-            return reverse ? 'bg-success' : 'bg-warning text-dark';
+            return reverse ? 'bg-success text-white' : 'bg-warning text-dark';
         }
         else if (percentage >= 110) {
-            return reverse ? 'bg-success-dark' : 'bg-danger';
+            return reverse ? 'bg-success-dark text-white' : 'bg-danger text-white';
         }
         else if (percentage >= 120) {
-            return reverse ? 'bg-success-dark' : 'bg-danger-dark';
+            return reverse ? 'bg-success-dark text-white' : 'bg-danger-dark text-white';
         }
 
-        return 'bg-primary';
+        return 'bg-secondary text-white';
     }
 }
 

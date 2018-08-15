@@ -979,7 +979,7 @@ export class DataService {
 
     /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
     public calendar$: Observable<any> = Observable.create(async obs => {
-        obs.next({});
+        //obs.next({});
         let rosCalendars = await this.rosEp.get('dynamic-organization-storage/calendar?x-explain=true&withParents=1');
         obs.next(rosCalendars);
     });

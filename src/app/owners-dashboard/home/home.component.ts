@@ -171,8 +171,8 @@ export class HomeComponent implements OnInit {
                 }
 
                 if(this.currentBdCardData.averages.weekly.percentage) {
-                    let value = day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg * 100;
-                    this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value);
+                    let value = (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) * 100;
+                    this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }
 
                 if (typeof this.currentBdCardData.sales === 'number') {
@@ -236,8 +236,8 @@ export class HomeComponent implements OnInit {
                     };
 
                     if(this.previousBdCardData.averages.weekly.percentage) {
-                        let value = day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg * 100;
-                        this.previousBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value);
+                        let value = (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) * 100;
+                        this.previousBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                     }
                 }
 
@@ -325,11 +325,16 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.noSeparator = true;
 
                 this.forecastCardData.averages.weekly = {
-                    percentage: 1 - (month.forecast.sales.amount / previousMonth.forecast.sales.amount),
+                    percentage: (month.forecast.sales.amount / previousMonth.forecast.sales.amount) - 1,
                     positive: month.forecast.sales.amount > previousMonth.forecast.sales.amount
                 };
 
                 this.showForecast = moment().diff(moment(database.getLowestDate()), 'days') > 8; //do not show forecast for new businesses with less than 8 days of data
+
+                if(this.forecastCardData.averages.weekly.percentage) {
+                    let value = (month.forecast.sales.amount / previousMonth.forecast.sales.amount) * 100;
+                    this.forecastCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
+                }
             });
     }
 

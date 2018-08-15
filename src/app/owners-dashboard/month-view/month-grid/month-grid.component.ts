@@ -13,7 +13,7 @@ import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 export class MonthGridComponent implements OnInit {
 
     @Output() onDateClicked = new EventEmitter();
-    currentDate: string;
+    public currentDate: string;
     days: any;
     month: any;
     avgPeriodComparator: string;
@@ -24,7 +24,7 @@ export class MonthGridComponent implements OnInit {
     private tabitHelper;
 
     constructor() {
-        let currentDate = moment().format('YYYY-MM-DD');
+        this.currentDate = moment().format('YYYY-MM-DD');
         this.tmpTranslations = tmpTranslations;
         this.tabitHelper = new TabitHelper();
     }
@@ -111,19 +111,19 @@ export class MonthGridComponent implements OnInit {
 
     getTextColor(categoryClicked) {
         if (this.category === 'sales' && categoryClicked === 'sales') {
-            return 'category-active text-info';
+            return 'active';
         }
         else if (this.category === 'cancellations' && categoryClicked === 'cancellations') {
-            return 'category-active text-danger';
+            return 'active';
         }
         else if (this.category === 'retention' && categoryClicked === 'retention') {
-            return 'category-active text-warning';
+            return 'active';
         }
         else if (this.category === 'operational' && categoryClicked === 'operational') {
-            return 'category-active text-success';
+            return 'active';
         }
         else if (this.category === 'employee' && categoryClicked === 'employee') {
-            return 'category-active text-primary';
+            return 'active';
         }
         else {
             return '';

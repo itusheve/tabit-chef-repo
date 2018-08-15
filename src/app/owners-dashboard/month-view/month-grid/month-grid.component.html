@@ -5,33 +5,33 @@
                 <div class="col-12 font-weight-bold mx-0 p-0" style="font-size: 18px;">
                     <div class="row mx-0 p-0 justify-content-center" style="direction: rtl">
                         <div class="btn-group w-100 category-picker">
-                            <span class="btn btn-lg btn-light rounded-0 border" [ngClass]="getTextColor('sales')"
+                            <span class="btn btn-lg btn-outline-info rounded-0 border" [ngClass]="getTextColor('sales')"
                                   (click)="changeCategory('sales')">{{tmpTranslations.get('monthViewFilters.sales')}}</span>
-                            <span class="btn btn-lg btn-light border" [ngClass]="getTextColor('cancellations')"
+                            <span class="btn btn-lg btn-outline-info border" [ngClass]="getTextColor('cancellations')"
                                   (click)="changeCategory('cancellations')">{{tmpTranslations.get('monthViewFilters.cancellations')}}</span>
-                            <span class="btn btn-lg btn-light border" [ngClass]="getTextColor('operational')"
+                            <span class="btn btn-lg btn-outline-info border" [ngClass]="getTextColor('operational')"
                                   (click)="changeCategory('operational')">{{tmpTranslations.get('monthViewFilters.operational')}}</span>
-                            <span class="btn btn-lg btn-light border" [ngClass]="getTextColor('retention')"
+                            <span class="btn btn-lg btn-outline-info border" [ngClass]="getTextColor('retention')"
                                   (click)="changeCategory('retention')">{{tmpTranslations.get('monthViewFilters.retention')}}</span>
-                            <span class="btn btn-lg btn-light rounded-0 border" style="width: 21%" [ngClass]="getTextColor('employee')"
+                            <span class="btn btn-lg btn-outline-info rounded-0 border" style="width: 21%" [ngClass]="getTextColor('employee')"
                                   (click)="changeCategory('employee')">{{tmpTranslations.get('monthViewFilters.employee')}}</span>
                         </div>
                     </div>
                     <div class="row m-0 p-0" style="font-size: 18px;">
                         <div class="btn-group w-100 average-picker">
-                            <span class="btn btn-lg btn-light rounded-0 border"
+                            <span class="btn btn-lg btn-outline-secondary rounded-0 border"
                                   [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''"
                                   (click)="changeAvgPeriodComparator('month')" i18n="@@fourWeek">4 Week</span>
-                            <span class="btn btn-lg btn-light rounded-0 border"
+                            <span class="btn btn-lg btn-outline-secondary rounded-0 border"
                                   [ngClass]="avgPeriodComparator === 'year' ? 'active' : ''"
                                   (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear">Prev. Year</span>
-                            <span class="btn btn-lg btn-light rounded-0 border disabled" i18n="@@projection">Projection</span>
+                            <span class="btn btn-lg btn-outline-secondary rounded-0 border disabled" i18n="@@projection">Projection</span>
                         </div>
                     </div>
                 </div>
             </li>
             <li *ngFor="let day of days" class="list-group-item" style="height: 62px;">
-                <div *ngIf="day.date !== currentDate" class="row flex a-center" (click)="rowClickHandler(day)"
+                <div class="row flex a-center" (click)="rowClickHandler(day)"
                      style="cursor: pointer">
                     <div class="col-3 px-1" style="max-width: 18% !important;">
                         <div>{{day.date | date: 'dd'}} {{day.date | date: 'EEE'}}</div>

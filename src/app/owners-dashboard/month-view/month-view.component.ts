@@ -80,7 +80,9 @@ export class MonthViewComponent implements OnInit {
 
         let days = _.values(monthlyData.days);
 
-        this.monthGrid.days = days;
+        let currentDate = moment();
+
+        this.monthGrid.days = _.filter(days, function(day) { return day.date !== currentDate.format('YYYY-MM-DD'); });
         this.monthGrid.month = monthlyData;
     }
 
