@@ -195,7 +195,9 @@ export class MonthGridComponent implements OnInit {
             return 0;
         }
 
-        return Math.round(value / avg * 100);
+        let percentage = value / avg * 100;
+
+        return percentage.toFixed(1);
     }
 
     getProgressBarWidth(day) {

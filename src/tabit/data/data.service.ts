@@ -979,9 +979,23 @@ export class DataService {
 
     /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
     public calendar$: Observable<any> = Observable.create(async obs => {
-        //obs.next({});
-        let rosCalendars = await this.rosEp.get('dynamic-organization-storage/calendar?x-explain=true&withParents=1');
+        let org = JSON.parse(window.localStorage.getItem('org'));
+        let rosCalendars = JSON.parse(window.localStorage.getItem(org.id + '-calendar'));
+        if (rosCalendars) {
+            obs.next(rosCalendars);
+        }
+
+        rosCalendars = await this.rosEp.get('dynamic-organization-storage/calendar?x-explain=true&withParents=1');
         obs.next(rosCalendars);
+
+        let localStorage = window.localStorage;
+        let keys = Object.keys(localStorage);
+        _.forEach(keys, key => {
+            if (key.indexOf('calendar') !== -1) {
+                localStorage.removeItem(key);
+            }
+        });
+        window.localStorage.setItem(org.id + '-calendar', JSON.stringify(rosCalendars));
     });
 
     public database$: Observable<any> = Observable.create(async obs => {
@@ -1407,7 +1421,6 @@ export class DataService {
                             key: 'threeMonthAvg'
                         }
                     ], config => {
-
                         let totals = {
                             reductions: {
                                 cancellationsPercentage: 0,
@@ -1462,7 +1475,7 @@ export class DataService {
                                 notFound++;
                             }
 
-                            if (notFound >= 2) {
+                            if (notFound > 2) {
                                 stop = true;
                             }
                         }
