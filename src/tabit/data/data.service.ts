@@ -1008,14 +1008,14 @@ export class DataService {
             //obs.next(new Database(data));
         }*/
 
-        let olapData = await this.olapEp.getDatabase();
-        obs.next(olapData);
+        let olapYearlyData = await this.olapEp.getDatabase();
+        obs.next(olapYearlyData);
     });
 
     public database$: Observable<any> = Observable.create(async obs => {
         combineLatest(this.olapYearlyData$, this.calendar$).subscribe(async streamData => {
             let org = JSON.parse(window.localStorage.getItem('org'));
-            let olapData = _.cloneDeep(streamData[0]);      
+            let olapYearlyData = _.cloneDeep(streamData[0]);
             let rosCalendars = _.cloneDeep(streamData[1]);
 
             let perf = {
@@ -1025,7 +1025,7 @@ export class DataService {
             };
 
             let excludedDates = this.getExcludedDates(rosCalendars, org.id);
-            let database = _.keyBy(olapData, month => month.YearMonth);
+            let database = _.keyBy(olapYearlyData, month => month.YearMonth);
 
             let latestMonth = 0;
 
@@ -1597,7 +1597,6 @@ export class DataService {
                 }
             });
 
-
             _.forEach(database, month => {
                 if (month.aggregations) {
                     let date = moment(month.latestDay);
@@ -1650,6 +1649,7 @@ export class DataService {
     }).publishReplay(1).refCount();
 
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService) {
+
     }
 
     // NEW METHODS:
