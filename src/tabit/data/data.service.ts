@@ -985,38 +985,44 @@ export class DataService {
             obs.next(rosCalendars);
         }
 
-        rosCalendars = await this.rosEp.get('dynamic-organization-storage/calendar?x-explain=true&withParents=1');
-        obs.next(rosCalendars);
+        let context = this;
+        setTimeout(async function () {
+            rosCalendars = await context.rosEp.get('dynamic-organization-storage/calendar?x-explain=true&withParents=1');
+            obs.next(rosCalendars);
 
-        let localStorage = window.localStorage;
-        let keys = Object.keys(localStorage);
-        _.forEach(keys, key => {
-            if (key.indexOf('calendar') !== -1) {
-                localStorage.removeItem(key);
-            }
-        });
-        window.localStorage.setItem(org.id + '-calendar', JSON.stringify(rosCalendars));
+            let localStorage = window.localStorage;
+            let keys = Object.keys(localStorage);
+            _.forEach(keys, key => {
+                if (key.indexOf('calendar') !== -1) {
+                    localStorage.removeItem(key);
+                }
+            });
+            window.localStorage.setItem(org.id + '-calendar', JSON.stringify(rosCalendars));
+        }, 5000);
+
+    });
+
+    public olapYearlyData$: Observable<any> = Observable.create(async obs => {
+        /*let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
+        if (data) {
+            //obs.next(new Database(data));
+        }*/
+
+        let olapData = await this.olapEp.getDatabase();
+        obs.next(olapData);
     });
 
     public database$: Observable<any> = Observable.create(async obs => {
-        this.calendar$.subscribe(async rosCalendars => {
+        combineLatest(this.olapYearlyData$, this.calendar$).subscribe(async streamData => {
             let org = JSON.parse(window.localStorage.getItem('org'));
-            /*let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
-            if (data) {
-                //obs.next(new Database(data));
-            }*/
+            let olapData = _.cloneDeep(streamData[0]);      
+            let rosCalendars = _.cloneDeep(streamData[1]);
 
             let perf = {
                 olap: 0,
                 ros: 0,
                 loop: 0
             };
-            let t0 = performance.now();
-            let olapData = await this.olapEp.getDatabase();
-            let t1 = performance.now();
-            perf.olap = t1 - t0;
-
-            perf.ros = performance.now() - t1;
 
             let excludedDates = this.getExcludedDates(rosCalendars, org.id);
             let database = _.keyBy(olapData, month => month.YearMonth);
