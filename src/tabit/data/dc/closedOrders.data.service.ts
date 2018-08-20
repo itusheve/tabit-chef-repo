@@ -555,7 +555,7 @@ export class ClosedOrdersDataService {
                                 });
 
                                 return new Promise((resolve, reject) => resolve(resultOrder));
-                            })
+                            });
 
                     }
                     

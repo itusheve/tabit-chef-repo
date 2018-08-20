@@ -94,6 +94,34 @@ export class OlapEp {
         });
     }
 
+    public getDailyReport(date: moment.Moment): Promise<any> {
+        return new Promise((resolve, reject) => {
+
+            let org = JSON.parse(window.localStorage.getItem('org'));
+            let token = JSON.parse(window.localStorage.getItem('token'));
+            let headers = new HttpHeaders({'Content-Type':'application/json'});
+
+            this.httpClient.post(`${this.sqlServerProxy}?customdata=S${org.id}&token=${token.access_token}&Action=chef-get-data-by-organization`, {
+                    siteId: org.id,
+                    action: 'tabitChefSiteDaily',
+                    businessDate: date.format('YYYYMMDD')
+                },
+                {
+                    headers: headers,
+                    responseType: 'json',
+                    withCredentials: false
+                })
+                .subscribe(
+                    (results: any) => {
+                        resolve(results);
+                    },
+                    (err) => {
+                        console.log(`Handler Proxy Error: ${JSON.stringify(err)}`);
+                    }
+                );
+        });
+    }
+
     get url(): ReplaySubject<any> {
         if (this.url$) return this.url$;
         this.url$ = new ReplaySubject<any>();

@@ -5,7 +5,8 @@
             class="widget noPadding daySelectorFixed"
             [currentValue]="day"
             [options]="daySelectorOptions"
-            (onDateChanged)="onDateChanged($event)"></app-day-selector>
+            (onDateChanged)="onDateChanged($event)">
+    </app-day-selector>
 
     <app-day-orders-table
             class="widget"
@@ -41,12 +42,12 @@
 
     <app-most-sold-items-table
             class="widget"
-            [itemsData]="itemsData"
+            [itemsData]="mostSoldItems"
     ></app-most-sold-items-table>
 
     <app-most-returned-items-table
             class="widget"
-            [itemsData]="itemsData"
+            [itemsData]="mostReturnedItems"
     ></app-most-returned-items-table>
 
     <!-- TODO US missing measures -->
@@ -73,11 +74,10 @@
     <app-month-summary-table
             class="widget"
             [month]="day"
-            [mtdBusinessDaysKPIs]="mtdBusinessDaysKPIs"
-            [mtdKPIs]="mtdKPIs"
+            [mtdBusinessData]="mtdBusinessData"
     ></app-month-summary-table>
 </div>
 <div class="flex d-col drill" *ngIf="drill">
-    <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber"></app-order-view>
+    <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber" [order]="drilledOrder" [orders]="orders"></app-order-view>
 </div>
 

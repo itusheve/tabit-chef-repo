@@ -60,9 +60,9 @@ export class DaySalesTableComponent implements OnChanges {
 
             this.pivotedDataTotals = {};
 
-            this.data.forEach(element => {
+            /*this.data.forEach(element => {
                 element.ordersKpis.dinersOrdersCount = element.orderType.id === 'seated' ? element.ordersKpis.dinersCount : element.ordersKpis.ordersCount;
-            });
+            });*/
 
             //NORMAL VERSION:
 
@@ -101,31 +101,20 @@ export class DaySalesTableComponent implements OnChanges {
 
             //PIVOTED VERSION:
             this.data.forEach(row => {
-                this.pivotedData.titles.push(row.orderType.id);
-                this.pivotedData.salesTotalAmount.push(row.ordersKpis.salesTotalAmount);
-                this.pivotedData.netSalesWithoutVat.push(row.ordersKpis.netSalesAmntWithoutVat);
-                this.pivotedData.totalSales.push(row.ordersKpis.paymentsAmnt);
-                this.pivotedData.netSales.push(row.ordersKpis.netSalesAmnt);
-                this.pivotedData.tax.push(row.ordersKpis.taxAmnt);
-                this.pivotedData.grossSales.push(row.ordersKpis.grossSalesAmnt);
-                this.pivotedData.gratuity.push(row.ordersKpis.tipAmnt);
-                this.pivotedData.serviceCharge.push(row.ordersKpis.serviceChargeAmnt);
-                this.pivotedData.dinersOrders.push(row.ordersKpis.dinersOrdersCount);
-                this.pivotedData.ppa.push(row.ordersKpis.ppa);
+                this.pivotedData.titles.push(row.orderType);
+                this.pivotedData.salesTotalAmount.push(row['Item Net Sales $']);
+                this.pivotedData.netSalesWithoutVat.push(row['Item Net Sales $']);
+                this.pivotedData.totalSales.push(row['Item Net Sales $']);
+                this.pivotedData.netSales.push(row['Item Net Sales $']);
+                this.pivotedData.tax.push(row.Tax);
+                this.pivotedData.grossSales.push(row['Gross Sales $']);
+                this.pivotedData.gratuity.push(row.Tip);
+                this.pivotedData.serviceCharge.push(row.Tip);
+                this.pivotedData.dinersOrders.push(row.Orders);
+                this.pivotedData.ppa.push(row['PPA $']);
             });
 
-            this.pivotedDataTotals.salesTotalAmount = this.pivotedData.salesTotalAmount.reduce((acc, curr) => (acc += curr, acc), 0);
-            this.pivotedDataTotals.netSalesWithoutVat = this.pivotedData.netSalesWithoutVat.reduce((acc, curr) => (acc += curr, acc), 0);
-            this.pivotedDataTotals.totalSales = this.pivotedData.totalSales.reduce((acc, curr) => (acc += curr, acc), 0);
-            this.pivotedDataTotals.netSales = this.pivotedData.netSales.reduce((acc, curr) => (acc += curr, acc), 0);
-            this.pivotedDataTotals.tax = this.pivotedData.tax.reduce((acc, curr) => (acc += curr, acc), 0);
-            this.pivotedDataTotals.totalSales = this.pivotedData.grossSales.reduce((acc, curr) => (acc += curr, acc), 0);
-            this.pivotedDataTotals.gratuity = this.pivotedData.gratuity.reduce((acc, curr) => (acc += curr, acc), 0);
-            this.pivotedDataTotals.serviceCharge = this.pivotedData.serviceCharge.reduce((acc, curr) => (acc += curr, acc), 0);
-            this.pivotedDataTotals.dinersOrders = this.pivotedData.dinersOrders.reduce((acc, curr) => (acc += curr, acc), 0);
-            this.pivotedDataTotals.ppa = this.pivotedData.ppa.reduce((acc, curr) => (acc += curr, acc), 0);
-
-            if (this.pivotedDataTotals.totalSales === 0 && this.pivotedDataTotals.totalSales === 0 && this.pivotedDataTotals.dinersOrders === 0) {
+            if (!this.pivotedData) {
                 this.noData = true;
             }
 

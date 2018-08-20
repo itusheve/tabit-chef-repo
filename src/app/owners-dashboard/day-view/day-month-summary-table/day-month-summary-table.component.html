@@ -5,7 +5,7 @@
             <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-center">
-                <table *ngIf="environment.region === 'us'" class="chf-tbl chf-tbl-xxx-smaller chf-tbl-row-oriented">
+                <table class="chf-tbl chf-tbl-xxx-smaller chf-tbl-row-oriented">
                     <tr class="header">
                         <td i18n="@@businessDay">Business Day</td>
                         <td class="ar" i18n="@@netSales">Net Sales</td>
@@ -17,50 +17,21 @@
                     </tr>
                     <tr>
                         <td i18n="@@total">Total</td>
-                        <td class="ar">{{mtdKPIs?.kpi.sales | curr:'0'}}</td>
-                        <td class="ar">{{mtdKPIs?.kpi.diners.count | count}}<br>({{mtdKPIs?.kpi.diners.ppa | curr:'1'}})</td>
-                        <td class="ar">{{mtdKPIs?.kpi.reductions.cancellation | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.cancellation_pct | pct:'1'}})</td>
-                        <td class="ar">{{mtdKPIs?.kpi.reductions.operational | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.operational_pct | pct:'1'}})</td>
-                        <td class="ar">{{mtdKPIs?.kpi.reductions.retention | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.retention_pct | pct:'1'}})</td>
-                        <td class="ar">{{mtdKPIs?.kpi.reductions.organizational | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.organizational_pct | pct:'1'}})</td>
+                        <td class="ar">{{mtdBusinessData.totals.netSales | curr:'0'}}</td>
+                        <td class="ar">{{mtdBusinessData.totals.dinesrs}}<br>({{mtdBusinessData.totals.ppaAmount | curr:'1'}})</td>
+                        <td class="ar">{{mtdBusinessData.totals.CancellationAmount | curr:'0'}}<br>({{mtdBusinessData.totals.CancellationAmount / mtdBusinessData.totals.netSales | pct:'1'}})</td>
+                        <td class="ar">{{mtdBusinessData.totals.OperationalDiscountAmount | curr:'0'}}<br>({{mtdBusinessData.totals.OperationalDiscountAmount / mtdBusinessData.totals.netSales | pct:'1'}})</td>
+                        <td class="ar">{{mtdBusinessData.totals.RetentionDiscountAmount | curr:'0'}}<br>({{mtdBusinessData.totals.RetentionDiscountAmount / mtdBusinessData.totals.netSales | pct:'1'}})</td>
+                        <td class="ar">{{mtdBusinessData.totals.OrganizationalDiscountAmount | curr:'0'}}<br>({{mtdBusinessData.totals.OrganizationalDiscountAmount / mtdBusinessData.totals.netSales | pct:'1'}})</td>
                     </tr>
-                    <tr *ngFor="let tuple of data">
-                        <td>{{tuple.businessDay | date:'dd'}} {{tuple.dayOfWeek | date:'EEE'}}</td>
-                        <td class="ar">{{tuple.kpi.sales | curr:'0'}}</td>
-                        <td class="ar">{{tuple.kpi.diners.count | count}}<br>({{tuple.kpi.diners.ppa | curr:'1'}})</td>
-                        <td class="ar">{{tuple.kpi.reductions.cancellation | curr:'0'}}<br>({{tuple.kpi.reductions.cancellation_pct | pct:'1'}})</td>
-                        <td class="ar">{{tuple.kpi.reductions.operational | curr:'0'}}<br>({{tuple.kpi.reductions.operational_pct | pct:'1'}})</td>
-                        <td class="ar">{{tuple.kpi.reductions.retention | curr:'0'}}<br>({{tuple.kpi.reductions.retention_pct | pct:'1'}})</td>
-                        <td class="ar">{{tuple.kpi.reductions.organizational | curr:'0'}}<br>({{tuple.kpi.reductions.organizational_pct | pct:'1'}})</td>
-                    </tr>
-                </table>
-                <table *ngIf="environment.region === 'il'" class="chf-tbl chf-tbl-xx-smaller chf-tbl-row-oriented">
-                    <tr class="header">
-                        <td i18n="@@businessDay">Business Day</td>
-                        <td i18n="@@netSales">Net Sales</td>
-                        <td><ng-container i18n="@@diners">Diners</ng-container><br>(<ng-container i18n="@@ppa">PPA</ng-container>)</td>
-                        <td i18n="@@cancellationsValue">Voids</td>
-                        <td i18n="@@operationalErrorsValue">Operational Errors</td>
-                        <td i18n="@@retentionValue">Retention</td>
-                        <td i18n="@@organizationalValue">Employees &amp; Owners</td>
-                    </tr>
-                    <tr>
-                        <td i18n="@@total">Total</td>
-                        <td>{{mtdKPIs?.kpi.sales | curr:'0'}}</td>
-                        <td>{{mtdKPIs?.kpi.diners.count | count}}<br>({{mtdKPIs?.kpi.diners.ppa | curr:'1'}})</td>
-                        <td>{{mtdKPIs?.kpi.reductions.cancellation | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.cancellation_pct | pct:'1'}})</td>
-                        <td>{{mtdKPIs?.kpi.reductions.operational | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.operational_pct | pct:'1'}})</td>
-                        <td>{{mtdKPIs?.kpi.reductions.retention | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.retention_pct | pct:'1'}})</td>
-                        <td>{{mtdKPIs?.kpi.reductions.organizational | curr:'0'}}<br>({{mtdKPIs.kpi.reductions.organizational_pct | pct:'1'}})</td>
-                    </tr>
-                    <tr *ngFor="let tuple of data">
-                        <td>{{tuple.businessDay | date:'dd/MM'}} {{tuple.dayOfWeek}}</td>
-                        <td>{{tuple.kpi.sales | curr:'0'}}</td>
-                        <td>{{tuple.kpi.diners.count | count}}<br>({{tuple.kpi.diners.ppa | curr:'1'}})</td>
-                        <td>{{tuple.kpi.reductions.cancellation | curr:'0'}}<br>({{tuple.kpi.reductions.cancellation_pct | pct:'1'}})</td>
-                        <td>{{tuple.kpi.reductions.operational | curr:'0'}}<br>({{tuple.kpi.reductions.operational_pct | pct:'1'}})</td>
-                        <td>{{tuple.kpi.reductions.retention | curr:'0'}}<br>({{tuple.kpi.reductions.retention_pct | pct:'1'}})</td>
-                        <td>{{tuple.kpi.reductions.organizational | curr:'0'}}<br>({{tuple.kpi.reductions.organizational_pct | pct:'1'}})</td>
+                    <tr *ngFor="let tuple of mtdBusinessData.businessDays">
+                        <td>{{tuple.businessDate}}</td>
+                        <td class="ar">{{tuple.netSales | curr:'0'}}</td>
+                        <td class="ar">{{tuple.dinesrs}}<br>({{tuple.ppaAmount | curr:'1'}})</td>
+                        <td class="ar">{{tuple.CancellationAmount | curr:'0'}}<br>({{tuple.CancellationAmount / tuple.netSales | pct:'1'}})</td>
+                        <td class="ar">{{tuple.OperationalDiscountAmount | curr:'0'}}<br>({{tuple.OperationalDiscountAmount / tuple.netSales | pct:'1'}})</td>
+                        <td class="ar">{{tuple.RetentionDiscountAmount | curr:'0'}}<br>({{tuple.RetentionDiscountAmount / tuple.netSales | pct:'1'}})</td>
+                        <td class="ar">{{tuple.OrganizationalDiscountAmount | curr:'0'}}<br>({{tuple.OrganizationalDiscountAmount / tuple.netSales | pct:'1'}})</td>
                     </tr>
                 </table>
             </div>

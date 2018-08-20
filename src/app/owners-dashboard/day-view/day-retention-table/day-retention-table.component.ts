@@ -13,7 +13,6 @@ export class DayRetentionTableComponent implements OnChanges {
 
   @Input() retentionData: {
     orderType: OrderType;
-    source: string;
     waiter: string;
     orderNumber: number;
     tableId: string;

@@ -88,7 +88,7 @@ const tmpTranslations_ = {
         monthViewFilters: {
             sales: 'מכירות',
             cancellations: 'ביטולים',
-            operational: 'תפעול',
+            operational: 'בעיות תפעול',
             retention: 'שימור ושיווק',
             employee: 'עובדים',
         },
@@ -646,6 +646,9 @@ export class DataService {
             });
     }).publishReplay(1).refCount();
 
+    /**
+     *  Do not delete?
+     * */
     public orderTypes: { [index: string]: OrderType } = {
         seated: new OrderType('seated', 0),
         counter: new OrderType('counter', 1),
@@ -1653,7 +1656,6 @@ export class DataService {
     }
 
     // NEW METHODS:
-
     /*
         returns BD_Orders_KPIs for the BusinessDate (bd)
     */
@@ -1722,6 +1724,10 @@ export class DataService {
                 });
 
         });
+    }
+
+    getDailyReport(day: moment.Moment) {
+        return this.olapEp.getDailyReport(day);
     }
 
     // DEPRECATED METHODS:

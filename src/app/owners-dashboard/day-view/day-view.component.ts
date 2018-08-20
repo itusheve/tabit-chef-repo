@@ -84,7 +84,19 @@ export class DayViewComponent implements OnInit {
         }
     };
 
-    public itemsData: {
+    public mostSoldItems: {
+        byItem: {
+            department: string;
+            item: string;
+            sales: number;
+            sold: number;
+            prepared: number;
+            returned: number;
+            operational: number;
+        }[]
+    };
+
+    public mostReturnedItems: {
         byItem: {
             department: string;
             item: string;
@@ -97,7 +109,7 @@ export class DayViewComponent implements OnInit {
     };
 
     public paymentsData: {
-        [index: string]: {
+        payments: {
             accountGroup: string;
             accountType: string;
             clearerName: string;
@@ -119,7 +131,6 @@ export class DayViewComponent implements OnInit {
 
     public retentionData: {
         orderType: OrderType;
-        source: string;
         waiter: string;
         orderNumber: number;
         tableId: string;
@@ -129,11 +140,7 @@ export class DayViewComponent implements OnInit {
         retention: number;
     }[];
 
-    public mtdBusinessDaysKPIs: {
-        [index: string]: BusinessDayKPI
-    };
-
-    public mtdKPIs: CustomRangeKPI;
+    public mtdBusinessData: any;
 
     public bdIsCurrentBd: boolean;
     public closedOpenSalesDiff: number;
@@ -151,31 +158,80 @@ export class DayViewComponent implements OnInit {
         this.region = environment.region;
     }
 
+    extractOrders(dailyReport): Order[] {
+        if (!dailyReport) {
+            return [];
+        }
+
+        let orders = [];
+        let tlogs = dailyReport.tlogs;
+        let tlogsReductions = dailyReport.tlogsReduction;
+
+        let i = 1;
+        _.forEach(tlogs, tlog => {
+            let order = new Order();
+            order.id = i++;
+            order.number = tlog.orderNumber;
+            order.orderType = new OrderType(tlog.orderType, 1);
+
+            order.sales = tlog.totalPaymentAmount;
+            order.tlogId = tlog.tlogId;
+            order.waiter = tlog.firstName + ' ' + tlog.lastName;
+            order.openingTime = moment(tlog.opened);
+            order.priceReductions = {
+                cancellation: 0,
+                discountsAndOTH: 0,
+                employees: 0,
+                promotions: 0
+            };
+
+            _.map(tlogsReductions, reduction => {
+                if (reduction.tlogId === order.tlogId) {
+                    if (reduction.reasonType === 'cancellation') {
+                        order.priceReductions.cancellation = 1;
+                    }
+                    else if (reduction.reasonType === 'operational') {
+                        order.priceReductions.promotions = 1; //promotions is old cube -> retention is new cube. makes no sense at all.
+                    }
+                    else if (reduction.reasonType === 'retention') {
+                        order.priceReductions.discountsAndOTH = 1;
+                    }
+                    else if (reduction.reasonType === 'organizational') {
+                        order.priceReductions.employees = 1;
+                    }
+                }
+            });
+
+            orders.push(order);
+        });
+        return orders;
+    }
+
     private render() {
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
-        const data$ = combineLatest(
-            this.dataService.shifts$,
-            this.dataService.dailyDataLimits$,
-            this.dataService.currentBd$,
-            (shifts: Shift[], dailyDataLimits: any, currentBd: moment.Moment) => Object.assign({}, {shifts: shifts}, {dailyDataLimits: dailyDataLimits}, {currentBd: currentBd})
-        );
+        this.dataService.database$.subscribe(async database => {
 
-        data$.subscribe(data => {
+            let dailyReport = await this.dataService.getDailyReport(this.day);
+            if (!dailyReport) {
+                return;
+            }
 
-            const cbd: moment.Moment = moment(data.currentBd);
+            const cbd: moment.Moment = moment();
             this.bdIsCurrentBd = false;
             this.closedOpenSalesDiff = undefined;
 
             this.daySelectorOptions = {
-                minDate: moment(data.dailyDataLimits.minimum),
-                maxDate: moment(data.currentBd)
+                minDate: moment(database.getLowestDate()),
+                maxDate: moment(moment())
             };
 
-            this.orders = undefined;
+            //TODO: get open order from ROS and compare to write open orders amount for current BD only. see example below:
+            /*const diff = totalOpenSales - totalClosedSales;
+            if (diff > 0) this.closedOpenSalesDiff = diff;*/
 
-            this.closedOrdersDataService.getOrders(this.day)
+            /*this.closedOrdersDataService.getOrders(this.day)
                 .then((orders: Order[]) => {
                     this.orders = orders;
 
@@ -189,77 +245,157 @@ export class DayViewComponent implements OnInit {
                                 if (diff > 0) this.closedOpenSalesDiff = diff;
                             });
                     }
-                });
+                });*/
 
 
-            this.dataService.getBusinessDateKPIs(this.day)
-                .then(KPIs => {
-                    this.dailySummaryTblData = {
-                        title: '',
-                        data: KPIs.kpisByOrderType
-                    };
+            this.orders = this.extractOrders(dailyReport);
 
-                    this.byShiftSummaryTblsData = [];
-                    data.shifts.forEach(shift => {
-                        this.byShiftSummaryTblsData.push({
-                            title: shift.name,
-                            data: []
-                        });
+            this.dailySummaryTblData = {
+                title: '',
+                data: _.filter(dailyReport.services, service => service.service === 'סיכום יומי')
+            };
+
+            this.byShiftSummaryTblsData = [
+                this.dailySummaryTblData = {
+                    title: 'צהריים',
+                    data: _.filter(dailyReport.services, service => service.service === 'צהריים')
+                },
+                this.dailySummaryTblData = {
+                    title: 'ערב',
+                    data: _.filter(dailyReport.services, service => service.service === 'ערב')
+                },
+                this.dailySummaryTblData = {
+                    title: 'לילה',
+                    data: _.filter(dailyReport.services, service => service.service === 'לילה')
+                }
+            ];
+
+            this.salesBySubDepartment = {
+                thisBd: {
+                    totalSales: 0,
+                    bySubDepartment: []
+                },
+                thisWeek: {
+                    totalSales: 0,
+                    bySubDepartment: []
+                },
+                thisMonth: {
+                    totalSales: 0,
+                    bySubDepartment: []
+                },
+                thisYear: {
+                    totalSales: 0,
+                    bySubDepartment: []
+                },
+            };
+
+            _.forEach(dailyReport.categories, category => {
+                if (!category.subDepartment) {
+                    this.salesBySubDepartment.thisBd.totalSales = category.businessDate;
+                    this.salesBySubDepartment.thisWeek.totalSales = category.week;
+                    this.salesBySubDepartment.thisMonth.totalSales = category.month;
+                    this.salesBySubDepartment.thisYear.totalSales = category.year;
+                }
+                else {
+                    this.salesBySubDepartment.thisBd.bySubDepartment.push({
+                        subDepartment: category.subDepartment,
+                        sales: category.businessDate
                     });
-
-                    KPIs.kpisByOrderTypeByShift.forEach(tuple => {
-                        const obj = this.byShiftSummaryTblsData.find(o => o.title === tuple.shift.name);
-                        if (!obj) this.ds.err(`dayView: cant find ${tuple.shift.name}`);
-                        if (obj) {
-                            obj.data.push(tuple);
-                        }
+                    this.salesBySubDepartment.thisWeek.bySubDepartment.push({
+                        subDepartment: category.subDepartment,
+                        sales: category.week
                     });
-                });
+                    this.salesBySubDepartment.thisMonth.bySubDepartment.push({
+                        subDepartment: category.subDepartment,
+                        sales: category.month
+                    });
+                    this.salesBySubDepartment.thisYear.bySubDepartment.push({
+                        subDepartment: category.subDepartment,
+                        sales: category.year
+                    });
+                }
+            });
 
-            Promise.all([
-                this.dataService.get_Sales_by_SubDepartment_for_BusinessDate(this.day, this.day),
-                this.dataService.get_Sales_by_SubDepartment_for_BusinessDate(moment(this.day).startOf('week'), this.day),
-                this.dataService.get_Sales_by_SubDepartment_for_BusinessDate(moment(this.day).startOf('month'), this.day),
-                this.dataService.get_Sales_by_SubDepartment_for_BusinessDate(moment(this.day).startOf('year'), this.day)
-            ])
-                .then(data => {
-                    this.salesBySubDepartment = {
-                        thisBd: data[0],
-                        thisWeek: data[1],
-                        thisMonth: data[2],
-                        thisYear: data[3]
-                    };
-                });
+            this.mostSoldItems = {byItem: []};
+            _.forEach(dailyReport.mostPopularItems, item => {
+                this.mostSoldItems.byItem.push(
+                    {
+                        department: item.DepartmentId,
+                        item: item.ItemName,
+                        sales: item.salesNetAmount,
+                        sold: item.salesSold,
+                        prepared: 0,
+                        returned: 0,
+                        operational: 0
+                    }
+                );
+            });
 
-            this.dataService.get_Items_data_for_BusinessDate(this.day)
-                .then(data => {
-                    this.itemsData = data;
-                });
+            this.mostReturnedItems = {byItem: []};
+            _.forEach(dailyReport.mostReturnItems, item => {
+                this.mostReturnedItems.byItem.push(
+                    {
+                        department: item.DepartmentId,
+                        item: item.ItemName,
+                        sales: 0,
+                        sold: 0,
+                        prepared: item.salesPrepared,
+                        returned: item.salesReturn,
+                        operational: item.salesReductionsOperationalDiscountAmount
+                    }
+                );
+            });
 
-            this.dataService.getPaymentsData(moment(this.day), moment(this.day))
-                .then(paymentsData => {
-                    this.paymentsData = paymentsData;
+            this.paymentsData = {payments: []};
+            _.forEach(dailyReport.payments, payment => {
+                this.paymentsData.payments.push({
+                    accountGroup: payment.Type,
+                    accountType: payment.Payments,
+                    date: this.day,
+                    clearerName: payment.Clearing,
+                    paymentsKPIs: {
+                        calcSalesAmnt: payment.SalesAmount,
+                        refundAmnt: payment.RefundAmount,
+                        paymentsAmount: payment.PaymentsAmount,
+                        tipsAmnt: payment.TipsAmount,
+                        totalPaymentsAmnt: payment.TtlpaymentsAmount
+                    }
                 });
+            });
 
-            this.dataService.get_operational_errors_by_BusinessDay(this.day)
-                .then(operationalErrorsData => {
-                    this.operationalErrorsData = operationalErrorsData;
+            this.operationalErrorsData = [];
+            _.forEach(dailyReport.operationalReduction, record => {
+                this.operationalErrorsData.push({
+                    orderType: {id: record.orderType, rank: 1},
+                    waiter: record.WaiterPRapprovedBy,
+                    orderNumber: record.OrderNumber.match(/\d/g).join(''),
+                    tableId: record.Tablenumber,
+                    item: record.ItemName,
+                    subType: record.ReasonType,
+                    reasonId: record.ReasonName,
+                    operational: record.ReductionsOperationalDiscountAmount
                 });
+            });
 
-            this.dataService.get_retention_data_by_BusinessDay(this.day)
-                .then(retentionData => {
-                    this.retentionData = retentionData;
+            this.retentionData = [];
+            _.forEach(dailyReport.marketingRetentionReasons, retention => {
+                this.retentionData.push({
+                    orderType: {id: retention.orderType, rank: 1},
+                    waiter: retention.WaiterPRapprovedBy,
+                    orderNumber: retention.OrderNumber.match(/\d/g).join(''),
+                    tableId: retention.Tablenumber,
+                    item: retention.ItemName,
+                    subType: retention.ReasonType,
+                    reasonId: retention.ReasonName,
+                    retention: retention.Amount
                 });
+            });
 
-            Promise.all([
-                this.dataService.getBusinessDaysKPIs(moment(this.day).startOf('month'), moment(this.day)),
-                this.dataService.getCustomRangeKPI(moment(this.day).startOf('month'), moment(this.day))
-            ])
-                .then(data => {
-                    this.mtdBusinessDaysKPIs = data[0];
-                    this.mtdKPIs = data[1];
-                });
-
+            let totals = _.filter(dailyReport.monthly, record => !record.businessDate);
+            this.mtdBusinessData = {
+                totals: totals[0],
+                businessDays: _.filter(dailyReport.monthly, record => !!record.businessDate)
+            };
         });
     }
 

@@ -18,37 +18,21 @@ export class DayMonthSummaryTableComponent implements OnChanges {
 
   @Input() month: moment.Moment;
 
-  @Input() mtdBusinessDaysKPIs: {
-    [index: string]: BusinessDayKPI
-  };
-  @Input() mtdKPIs: CustomRangeKPI;
-
-
-  data: BusinessDayKPI[] = [];
-
+  @Input() mtdBusinessData: any;
 
   constructor() {
       this.environment = environment;
   }
 
   ngOnChanges(o: SimpleChanges) {
-    if (o.mtdBusinessDaysKPIs && o.mtdBusinessDaysKPIs.currentValue) {
+    if (o.mtdBusinessData && o.mtdBusinessData.currentValue) {
       this.loading = true;
       this.noData = false;
 
-      this.data = [];
-
-      Object.keys(this.mtdBusinessDaysKPIs).forEach(k=>{
-        if (this.mtdBusinessDaysKPIs[k]) {
-          this.data.push(this.mtdBusinessDaysKPIs[k]);
-        }
-      });
-
-      this.data.sort((a, b)=>{
-        if (a.businessDay.isBefore(b.businessDay)) return 1;
+      /*this.mtdBusinessData.businessDays.sort((a, b)=>{
+        if (moment(a.businessDate).isBefore(moment(b.businessDate))) return 1;
         return -1;
-      });
-
+      });*/
 
       this.loading = false;
     }
