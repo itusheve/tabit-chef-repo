@@ -42,7 +42,8 @@ export class DayViewComponent implements OnInit {
     drilledOrder: Order;
     drilledOrderNumber: number;
 
-    public hasData = true;
+    public hasData: boolean;
+    public hasNoDataForToday: boolean;
 
     public region: string;
 
@@ -210,6 +211,7 @@ export class DayViewComponent implements OnInit {
     }
 
     private render() {
+        this.hasData = false;
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
@@ -226,10 +228,12 @@ export class DayViewComponent implements OnInit {
             let dailyReport = await this.dataService.getDailyReport(this.day);
             if (!dailyReport) {
                 this.hasData = false;
+                this.hasNoDataForToday = true;
                 return;
             }
 
             this.hasData = true;
+            this.hasNoDataForToday = false;
 
             this.closedOpenSalesDiff = undefined;
 
@@ -439,6 +443,7 @@ export class DayViewComponent implements OnInit {
     // }
 
     onDateChanged(dateM: moment.Moment) {
+        this.hasData = false;
         const date = dateM.format('YYYY-MM-DD');
         this.router.navigate(['/owners-dashboard/day', date]);
     }

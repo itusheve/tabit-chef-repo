@@ -598,6 +598,14 @@
         <source>Organizational</source>
         <target>א' עובדים</target>
       </trans-unit>
+      <trans-unit id="fetching" datatype="html">
+        <source>Fetching</source>
+        <target>טוען נתונים</target>
+      </trans-unit>
+      <trans-unit id="noDataAvailableForToday" datatype="html">
+        <source>No data available for today.</source>
+        <target>לא קיים מידע ליום המבוקש.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

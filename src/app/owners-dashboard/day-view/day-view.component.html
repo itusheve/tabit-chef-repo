@@ -7,7 +7,24 @@
             (onDateChanged)="onDateChanged($event)">
     </app-day-selector>
     <div *ngIf="!hasData">
-        No data
+        <div class="card">
+            <div class="card-body bg-white">
+                <div *ngIf="hasNoDataForToday">
+                    <div>
+                        <div class="text-center" i18n="@@noDataAvailableForToday">No data available for today</div>
+                    </div>
+                </div>
+                <div *ngIf="!hasNoDataForToday">
+                    <div>
+                        <div class="text-center">
+                            <dx-load-indicator class="text-center"></dx-load-indicator>
+                        </div>
+                        <p class="text-center saving"><span i18n="@@fetching">Fetching</span><span>.</span><span>.</span><span>.</span></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
     <div *ngIf="hasData">
         <app-day-orders-table

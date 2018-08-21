@@ -1771,8 +1771,35 @@ export class DataService {
         });
     }
 
-    getDailyReport(day: moment.Moment) {
-        return this.olapEp.getDailyReport(day);
+    async getDailyReport(day: moment.Moment) {
+        let org = JSON.parse(window.localStorage.getItem('org'));
+        let reportsByDay = JSON.parse(window.localStorage.getItem(org.id + '-daily-reports'));
+        if(!reportsByDay) {
+            reportsByDay = [];
+        }
+
+        let dailyReport = _.find(reportsByDay, {date: day.format('YYYYMMDD')});
+        if(dailyReport && moment(dailyReport.datetime, 'YYYY-MM-DD HH:mm').isSameOrBefore(moment().subtract(10, 'minutes'))) {
+            return dailyReport.data;
+        }
+        else {
+            let report = await this.olapEp.getDailyReport(day);
+            if(reportsByDay.length >= 10) {
+                reportsByDay.splice(0, 1);
+            }
+
+            reportsByDay.push({date: day.format('YYYYMMDD'), datetime: day.format('YYYY-MM-DD HH:mm'), data: report});
+
+            let localStorage = window.localStorage;
+            let keys = Object.keys(localStorage);
+            _.forEach(keys, key => {
+                if (key.indexOf('daily-reports') !== -1) {
+                    localStorage.removeItem(key);
+                }
+            });
+            window.localStorage.setItem(org.id + '-daily-reports', JSON.stringify(reportsByDay));
+            return report;
+        }
     }
 
     // DEPRECATED METHODS:
