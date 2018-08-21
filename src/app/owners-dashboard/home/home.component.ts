@@ -87,101 +87,98 @@ export class HomeComponent implements OnInit {
     ngOnInit() {
         this.showForecast = false;
         window.scrollTo(0, 0);
-        this.getLatestBusinessDayData();
-        this.getPreviousBusinessDayData();
+        this.getTodayData();
+        this.getTodayOlapData();
+        this.getYesterdayData();
         this.getMonthToDateData();
         this.getForecastData();
     }
 
-    getLatestBusinessDayData(): void {
-        combineLatest(this.dataService.database$, this.dataService.LatestBusinessDayDashboardData$, this.dataService.currentRestTime$)
+    getTodayData(): void {
+        combineLatest(this.dataService.LatestBusinessDayDashboardData$, this.dataService.olapToday$)
+        .subscribe(data => {
+            let realtimeData = data[0];
+            let day = data[1];
+
+            let totalSales = 0;
+
+            let realtimeDataDate = moment(realtimeData.today.businessDate);
+            let today = moment();
+
+            if (realtimeData.today && realtimeDataDate.day() === today.day()) {
+                totalSales = realtimeData.today.totalSales;
+            }
+
+            day.aggregations.sales.amount = totalSales || day.aggregations.sales.amount;
+
+            if (realtimeData.today.totalSales === 0) {
+                this.currentBdCardData.salesComment = 'eod';
+            }
+
+            this.currentBdCardData.sales = totalSales;
+            this.currentBdCardData.diners = realtimeData.today.totalDiners;
+            this.currentBdCardData.ppa = realtimeData.today.ppa;
+
+            this.currentBdCardData.title = this.datePipe.transform(moment(day.date).valueOf(), 'fullDate');
+
+            this.currentBdCardData.averages = {
+                /*yearly: {
+                    percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
+                    positive: day.aggregations.sales.amount > day.aggregations.sales.yearAvg
+                },*/
+                weekly: {
+                    percentage: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) - 1,
+                    positive: day.aggregations.sales.amount > day.aggregations.sales.fourWeekAvg
+                }
+            };
+
+            if (day.aggregations.reductions) {
+                this.currentBdCardData.reductions = {
+                    cancellations: {
+                        percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.cancellations.amount < day.aggregations.reductions.cancellations.fourWeekAvg
+                    },
+                    employee: {
+                        percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.employee.amount < day.aggregations.reductions.employee.fourWeekAvg
+                    },
+                    operational: {
+                        percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.operational.amount < day.aggregations.reductions.operational.fourWeekAvg
+                    },
+                    retention: {
+                        percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
+                        positive: day.aggregations.reductions.retention.amount < day.aggregations.reductions.retention.fourWeekAvg
+                    }
+
+                };
+            }
+
+            if (this.currentBdCardData.averages.weekly.percentage) {
+                let value = (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) * 100;
+                this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
+            }
+
+            if (typeof this.currentBdCardData.sales === 'number') {
+                this.currentBdCardData.loading = false;
+            }
+        });
+    }
+
+    getTodayOlapData(): void {
+        combineLatest(this.dataService.database$, this.dataService.currentRestTime$)
             .subscribe(data => {
                 let database = data[0];
-                let liveData = data[1];
-                let restaurantTime = data[2];
+                let restaurantTime = data[1];
 
                 let day = database.getDay(restaurantTime);
-
-                if(!day) {
-                    day = {
-                        amount: 0,
-                        date: database.getCurrentBusinessDay(),
-                        aggregations: {
-                            sales: {},
-                            reductions: {},
-                            indicators: {}
-                        }
-                    };
-                }
-                let totalSales = day.amount;
-                let operationalDataDay = moment(liveData.today.businessDate).format('D');
-                let aggregatedDataDay = moment(day.date).format('D');
-                let currentDay = moment().format('D');
-
-                if (liveData.today && currentDay === operationalDataDay) {
-                    if (operationalDataDay >= aggregatedDataDay) {
-                        totalSales = liveData.today.totalSales;
-                    }
-                }
-
-                if (liveData.today.totalSales === 0) {
-                    this.currentBdCardData.salesComment = 'eod';
-                }
-
-                this.currentBdCardData.holiday = day.holiday;
-
-                const title = this.datePipe.transform(moment(restaurantTime).valueOf(), 'fullDate');
-
-                this.currentBdCardData.sales = totalSales;
-                this.currentBdCardData.diners = day.diners || liveData.today.totalDiners;
-                this.currentBdCardData.ppa = day.ppa || liveData.today.ppa;
-                this.currentBdCardData.title = title;
-
-                this.currentBdCardData.averages = {
-                    yearly: {
-                        percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
-                        positive: day.aggregations.sales.amount > day.aggregations.sales.yearAvg
-                    },
-                    weekly: {
-                        percentage: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) - 1,
-                        positive: day.aggregations.sales.amount > day.aggregations.sales.fourWeekAvg
-                    }
-                };
-
-                if(day.aggregations.reductions.length) {
-                    this.currentBdCardData.reductions = {
-                        cancellations: {
-                            percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
-                            positive: day.aggregations.reductions.cancellations.amount < day.aggregations.reductions.cancellations.threeMonthAvg
-                        },
-                        employee: {
-                            percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
-                            positive: day.aggregations.reductions.employee.amount < day.aggregations.reductions.employee.threeMonthAvg
-                        },
-                        operational: {
-                            percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
-                            positive: day.aggregations.reductions.operational.amount < day.aggregations.reductions.operational.threeMonthAvg
-                        },
-                        retention: {
-                            percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
-                            positive: day.aggregations.reductions.retention.amount < day.aggregations.reductions.retention.threeMonthAvg
-                        }
-
-                    };
-                }
-
-                if(this.currentBdCardData.averages.weekly.percentage) {
-                    let value = (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) * 100;
-                    this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
-                }
-
-                if (typeof this.currentBdCardData.sales === 'number') {
-                    this.currentBdCardData.loading = false;
+                if(day) {
+                    this.currentBdCardData.holiday = day.holiday;
                 }
             });
     }
 
-    getPreviousBusinessDayData(): void {
+    getYesterdayData(): void {
         combineLatest(this.dataService.database$, this.dataService.currentRestTime$)
             .subscribe(data => {
                 let database = data[0];
@@ -191,7 +188,7 @@ export class HomeComponent implements OnInit {
                 let day = database.getDay(previousDay);
 
                 const title = this.datePipe.transform(previousDay.valueOf(), 'fullDate');
-                if(!day) {
+                if (!day) {
                     this.showPreviousDay = false;
                     this.previousBdCardData.salesComment = 'noData';
                     this.previousBdNotFinal = true;
@@ -235,7 +232,7 @@ export class HomeComponent implements OnInit {
 
                     };
 
-                    if(this.previousBdCardData.averages.weekly.percentage) {
+                    if (this.previousBdCardData.averages.weekly.percentage) {
                         let value = (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) * 100;
                         this.previousBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                     }
@@ -307,20 +304,19 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.averages = {yearly: {}, weekly: {}};
 
 
-                let lastYearMonth = database.getMonth(moment().subtract(1,'years'));
-                let previousMonth = database.getMonth(moment().subtract(1,'months'));
-                if(lastYearMonth) {
+                let lastYearMonth = database.getMonth(moment().subtract(1, 'years'));
+                let previousMonth = database.getMonth(moment().subtract(1, 'months'));
+                if (lastYearMonth) {
                     this.forecastCardData.averages.yearly = {
                         percentage: lastYearMonth.aggregations.sales.amount ? ((month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount) - 1) : 0,
                         positive: month.forecast.sales.amount > lastYearMonth.aggregations.sales.amount
                     };
                 }
 
-                const title = `${this.datePipe.transform( moment().startOf('month'), 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
+                this.forecastCardData.title = `${this.datePipe.transform(moment().startOf('month'), 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
                 this.forecastCardData.diners = month.forecast.diners.count;
                 this.forecastCardData.ppa = month.forecast.ppa.amount;
                 this.forecastCardData.sales = month.forecast.sales.amount;
-                this.forecastCardData.title = title;
                 this.forecastCardData.loading = false;
                 this.forecastCardData.noSeparator = true;
 
@@ -331,7 +327,7 @@ export class HomeComponent implements OnInit {
 
                 this.showForecast = moment().diff(moment(database.getLowestDate()), 'days') > 8; //do not show forecast for new businesses with less than 8 days of data
 
-                if(this.forecastCardData.averages.weekly.percentage) {
+                if (this.forecastCardData.averages.weekly.percentage) {
                     let value = (month.forecast.sales.amount / previousMonth.forecast.sales.amount) * 100;
                     this.forecastCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }

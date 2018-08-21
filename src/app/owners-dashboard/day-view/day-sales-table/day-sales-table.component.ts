@@ -58,48 +58,6 @@ export class DaySalesTableComponent implements OnChanges {
                 ppa: []
             };
 
-            this.pivotedDataTotals = {};
-
-            /*this.data.forEach(element => {
-                element.ordersKpis.dinersOrdersCount = element.orderType.id === 'seated' ? element.ordersKpis.dinersCount : element.ordersKpis.ordersCount;
-            });*/
-
-            //NORMAL VERSION:
-
-            // this.totals = {
-            //   netSalesAmnt: 0,
-            //   taxAmnt: 0,
-            //   grossSalesAmnt: 0,
-            //   tipAmnt: 0,
-            //   serviceChargeAmnt: 0,
-            //   paymentsAmnt: 0,
-            //   dinersSales: 0,
-            //   dinersCount: 0,
-            //   ordersCount: 0,
-            //   ppa: undefined,
-            //   dinersOrdersCount: 0
-            // };
-
-            // this.data.forEach(row => {
-            //   this.totals.netSalesAmnt += row.ordersKpis.netSalesAmnt;
-            //   this.totals.taxAmnt += row.ordersKpis.taxAmnt;
-            //   this.totals.grossSalesAmnt += row.ordersKpis.grossSalesAmnt;
-            //   this.totals.tipAmnt += row.ordersKpis.tipAmnt;
-            //   this.totals.serviceChargeAmnt += row.ordersKpis.serviceChargeAmnt;
-            //   this.totals.paymentsAmnt += row.ordersKpis.paymentsAmnt;
-            //   this.totals.dinersSales += row.ordersKpis.dinersSales;
-            //   this.totals.dinersCount += row.ordersKpis.dinersCount;
-            //   this.totals.ordersCount += row.ordersKpis.ordersCount;
-            //   this.totals.dinersOrdersCount += row.ordersKpis.dinersOrdersCount;
-            // });
-
-            // this.totals.ppa = this.totals.netSalesAmnt / this.totals.dinersOrdersCount;
-
-            // if (this.totals.netSalesAmnt === 0 && this.totals.paymentsAmnt === 0) {
-            //   this.noData = true;
-            // }
-
-            //PIVOTED VERSION:
             this.data.forEach(row => {
                 this.pivotedData.titles.push(row.orderType);
                 this.pivotedData.salesTotalAmount.push(row['Item Net Sales $']);

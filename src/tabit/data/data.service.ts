@@ -1015,6 +1015,51 @@ export class DataService {
         obs.next(olapYearlyData);
     });
 
+    public olapToday$: Observable<any> = Observable.create(async obs => {
+        this.currentRestTime$.subscribe(async currentDateTime => {
+            let olapTodayData = await this.olapEp.getToday(currentDateTime);
+
+            let today = _.find(olapTodayData, {type: 'today'});
+            let fourWeekAvg = _.find(olapTodayData, {type: 'avg4weeks'});
+
+            if (!today) {
+                return;
+            }
+
+            let day = {
+                amount: today.sales,
+                date: currentDateTime,
+                aggregations: {
+                    sales: {
+                        amount: today.sales,
+                        fourWeekAvg: fourWeekAvg.sales
+                    },
+                    reductions: {
+                        cancellations: {
+                            amount: today.Voids,
+                            fourWeekAvg: fourWeekAvg.Voids
+                        },
+                        employee: {
+                            amount: today.Employees,
+                            fourWeekAvg: fourWeekAvg.Employees
+                        },
+                        operational: {
+                            amount: today.Operational,
+                            fourWeekAvg: fourWeekAvg.Operational
+                        },
+                        retention: {
+                            amount: today.RetentionDiscount,
+                            fourWeekAvg: fourWeekAvg.RetentionDiscount
+                        }
+                    },
+                    indicators: {}
+                }
+            };
+            obs.next(day);
+
+        });
+    });
+
     public database$: Observable<any> = Observable.create(async obs => {
         combineLatest(this.olapYearlyData$, this.calendar$).subscribe(async streamData => {
             let org = JSON.parse(window.localStorage.getItem('org'));

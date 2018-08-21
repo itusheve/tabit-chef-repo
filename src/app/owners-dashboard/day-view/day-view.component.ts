@@ -42,6 +42,8 @@ export class DayViewComponent implements OnInit {
     drilledOrder: Order;
     drilledOrderNumber: number;
 
+    public hasData = true;
+
     public region: string;
 
     // for the pie chart
@@ -213,19 +215,23 @@ export class DayViewComponent implements OnInit {
 
         this.dataService.database$.subscribe(async database => {
 
-            let dailyReport = await this.dataService.getDailyReport(this.day);
-            if (!dailyReport) {
-                return;
-            }
-
-            const cbd: moment.Moment = moment();
-            this.bdIsCurrentBd = false;
-            this.closedOpenSalesDiff = undefined;
-
             this.daySelectorOptions = {
                 minDate: moment(database.getLowestDate()),
                 maxDate: moment(moment())
             };
+
+            const cbd: moment.Moment = moment();
+            this.bdIsCurrentBd = false;
+
+            let dailyReport = await this.dataService.getDailyReport(this.day);
+            if (!dailyReport) {
+                this.hasData = false;
+                return;
+            }
+
+            this.hasData = true;
+
+            this.closedOpenSalesDiff = undefined;
 
             //TODO: get open order from ROS and compare to write open orders amount for current BD only. see example below:
             /*const diff = totalOpenSales - totalClosedSales;
@@ -256,15 +262,15 @@ export class DayViewComponent implements OnInit {
             };
 
             this.byShiftSummaryTblsData = [
-                this.dailySummaryTblData = {
+                {
                     title: 'צהריים',
                     data: _.filter(dailyReport.services, service => service.service === 'צהריים')
                 },
-                this.dailySummaryTblData = {
+                {
                     title: 'ערב',
                     data: _.filter(dailyReport.services, service => service.service === 'ערב')
                 },
-                this.dailySummaryTblData = {
+                {
                     title: 'לילה',
                     data: _.filter(dailyReport.services, service => service.service === 'לילה')
                 }

@@ -11,6 +11,8 @@ import {TrendsDataService} from '../../../tabit/data/dc/trends.data.service';
 import {TrendModel} from '../../../tabit/model/Trend.model';
 import {environment} from '../../../environments/environment';
 import {fromPromise} from 'rxjs/observable/fromPromise';
+import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
+
 
 interface DailyTrends {
     date: moment.Moment;
@@ -51,9 +53,11 @@ export class MonthViewComponent implements OnInit {
     };
 
     public showSummary;
+    public tabitHelper;
 
-    constructor(private dataService: DataService) {
+    constructor(private dataService: DataService, private datePipe: DatePipe) {
         this.showSummary = false;
+        this.tabitHelper = new TabitHelper();
     }
 
     ngOnInit() {
@@ -133,6 +137,12 @@ export class MonthViewComponent implements OnInit {
 
         };
 
+        if (this.summaryCardData.averages.weekly.percentage) {
+            let value = (month.aggregations.sales.amount / month.aggregations.sales.weekAvg) * 100;
+            this.summaryCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
+        }
+
+        this.summaryCardData.title = `${this.datePipe.transform(moment(month.latestDay), 'MMMM')}`;
         this.summaryCardData.loading = false;
     }
 
