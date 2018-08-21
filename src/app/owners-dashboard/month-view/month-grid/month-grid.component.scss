@@ -18,6 +18,11 @@
 
 .month-grid {
 
+  .btn:active:not(.active), .btn:hover:not(.active), .btn:visited:not(.active) {
+    background-color: white;
+    color: #6c757d;
+  }
+
   .btn {
     white-space: normal;
     font-size: 16px;
@@ -42,6 +47,11 @@
     width: 100%;
     display: flex;
     justify-content: space-evenly;
+
+    .btn:active:not(.active), .btn:hover:not(.active), .btn:visited:not(.active) {
+      background-color: white;
+      color: #17a2b8;
+    }
 
     .btn {
       width: 18%;
