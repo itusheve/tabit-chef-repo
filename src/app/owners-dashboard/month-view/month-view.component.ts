@@ -79,6 +79,8 @@ export class MonthViewComponent implements OnInit {
         let monthlyData = database.getMonth(month);
 
         if (!monthlyData || monthlyData.amount === 0) {
+            this.monthGrid.days = [];
+            this.monthGrid.month = {};
             return;
         }
 
@@ -140,6 +142,9 @@ export class MonthViewComponent implements OnInit {
         if (this.summaryCardData.averages.weekly.percentage) {
             let value = (month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg) * 100;
             this.summaryCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
+        }
+        else {
+            this.summaryCardData.statusClass = '';
         }
 
         this.summaryCardData.title = `${this.datePipe.transform(moment(month.latestDay), 'MMMM')}`;
