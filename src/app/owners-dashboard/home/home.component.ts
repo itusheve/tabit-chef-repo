@@ -109,8 +109,6 @@ export class HomeComponent implements OnInit {
                 totalSales = realtimeData.today.totalSales;
             }
 
-            day.aggregations.sales.amount = totalSales || day.aggregations.sales.amount;
-
             if (realtimeData.today.totalSales === 0) {
                 this.currentBdCardData.salesComment = 'eod';
             }

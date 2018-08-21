@@ -138,7 +138,7 @@ export class MonthViewComponent implements OnInit {
         };
 
         if (this.summaryCardData.averages.weekly.percentage) {
-            let value = (month.aggregations.sales.amount / month.aggregations.sales.weekAvg) * 100;
+            let value = (month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg) * 100;
             this.summaryCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
         }
 
