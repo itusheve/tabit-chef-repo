@@ -4,7 +4,7 @@
             <li class="list-group-item p-0 m-0">
                 <div class="col-12 mx-0 p-0">
                     <div class="row m-2" style="direction: rtl">
-                        <div class="category-picker">
+                        <div class="btn-group category-picker">
                             <span class="btn btn-lg btn-outline-info" [ngClass]="getTextColor('sales')"
                                   (click)="changeCategory('sales')">{{tmpTranslations.get('monthViewFilters.sales')}}</span>
                             <span class="btn btn-lg btn-outline-info" [ngClass]="getTextColor('cancellations')"
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="row m-2">
-                        <div class="average-picker">
+                        <div class="btn-group average-picker">
                             <span class="btn btn-lg btn-outline-secondary"
                                   [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''"
                                   (click)="changeAvgPeriodComparator('month')" i18n="@@fourWeek">4 Week</span>
