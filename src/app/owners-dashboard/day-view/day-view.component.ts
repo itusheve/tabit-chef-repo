@@ -147,6 +147,7 @@ export class DayViewComponent implements OnInit {
 
     public bdIsCurrentBd: boolean;
     public closedOpenSalesDiff: number;
+    public openOrders: {totalAmount: number};
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private closedOrdersDataService: ClosedOrdersDataService,
@@ -181,12 +182,30 @@ export class DayViewComponent implements OnInit {
             order.tlogId = tlog.tlogId;
             order.waiter = tlog.firstName + ' ' + tlog.lastName;
             order.openingTime = moment(tlog.opened);
+
             order.priceReductions = {
                 cancellation: 0,
                 discountsAndOTH: 0,
                 employees: 0,
                 promotions: 0
             };
+            let reductions = tlog.icons ? tlog.icons.split(',') : [];
+            if(reductions.length) {
+                _.forEach(reductions, reduction => {
+                    if(reduction === 'promotions') {
+                        order.priceReductions.promotions = 1;
+                    }
+                    else if (reduction === 'retention') {
+                        order.priceReductions.discountsAndOTH = 1;
+                    }
+                    else if (reduction === 'waste') {
+                        order.priceReductions.cancellation = 1;
+                    }
+                    else if (reduction === 'employees') {
+                        order.priceReductions.employees = 1;
+                    }
+                });
+            }
 
             _.map(tlogsReductions, reduction => {
                 if (reduction.tlogId === order.tlogId) {
@@ -215,7 +234,9 @@ export class DayViewComponent implements OnInit {
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
-        this.dataService.database$.subscribe(async database => {
+        combineLatest(this.dataService.database$, this.dataService.LatestBusinessDayDashboardData$).subscribe(async data => {
+            let database = data[0];
+            let dashboardData = data[1];
 
             this.daySelectorOptions = {
                 minDate: moment(database.getLowestDate()),
@@ -235,28 +256,11 @@ export class DayViewComponent implements OnInit {
             this.hasData = true;
             this.hasNoDataForToday = false;
 
-            this.closedOpenSalesDiff = undefined;
-
-            //TODO: get open order from ROS and compare to write open orders amount for current BD only. see example below:
-            /*const diff = totalOpenSales - totalClosedSales;
-            if (diff > 0) this.closedOpenSalesDiff = diff;*/
-
-            /*this.closedOrdersDataService.getOrders(this.day)
-                .then((orders: Order[]) => {
-                    this.orders = orders;
-
-                    if (cbd.isSame(this.day, 'day')) {
-                        this.bdIsCurrentBd = true;
-                        this.dataService.todayDataVatInclusive$
-                            .subscribe((kpi: KPI) => {
-                                const totalClosedSales = this.orders.reduce((acc, curr) => (acc += curr.sales, acc), 0);
-                                const totalOpenSales = kpi.sales || 0;
-                                const diff = totalOpenSales - totalClosedSales;
-                                if (diff > 0) this.closedOpenSalesDiff = diff;
-                            });
-                    }
-                });*/
-
+            this.openOrders = {totalAmount: undefined};
+            if(moment().isSame(this.day, 'day')) {
+                this.openOrders.totalAmount = _.get(dashboardData, 'today.openOrders.totalSalesAmount');
+                this.bdIsCurrentBd = true;
+            }
 
             this.orders = this.extractOrders(dailyReport);
 

@@ -23,7 +23,7 @@
                                   [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''"
                                   (click)="changeAvgPeriodComparator('month')" i18n="@@fourWeek">4 Week</span>
                             <span class="btn btn-lg btn-outline-secondary"
-                                  [ngClass]="avgPeriodComparator === 'year' ? 'active' : ''"
+                                  [ngClass]="{'active': avgPeriodComparator === 'year', 'disabled': !hasYearlyAvg}"
                                   (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear">Prev. Year</span>
                             <span class="btn btn-lg btn-outline-secondary disabled" i18n="@@projection">Projection</span>
                         </div>

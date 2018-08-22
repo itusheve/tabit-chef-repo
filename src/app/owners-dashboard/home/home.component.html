@@ -1,8 +1,30 @@
 <div class="flex d-col">
     <div class="card-columns">
         <app-card class="mb10" [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
-        <app-card *ngIf="showPreviousDay" class="mb10" [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')" style="cursor: pointer"></app-card>
-        <app-card *ngIf="showForecast" class="mb10" [cardData]="forecastCardData"></app-card>
+        <app-card *ngIf="!loadingOlapData && showPreviousDay" class="mb10" [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')" style="cursor: pointer"></app-card>
+        <app-card *ngIf="!loadingOlapData && showForecast" class="mb10" [cardData]="forecastCardData"></app-card>
+
+        <div *ngIf="loadingOlapData">
+            <div class="card">
+                <div class="card-body bg-white">
+                    <div *ngIf="OlapFailed">
+                        <div>
+                            <div class="text-center" i18n="@@processingData">We are processing your data, please check back in a few minutes.</div>
+                        </div>
+                    </div>
+                    <div *ngIf="!OlapFailed">
+                        <div>
+                            <div class="text-center">
+                                <dx-load-indicator class="text-center"></dx-load-indicator>
+                            </div>
+                            <p class="text-center saving"><span i18n="@@fetchingLatestAnalyticsData">Fetching latest analytics data</span><span>.</span><span>.</span><span>.</span></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
-    <app-month-view (onDayRequest)="onDayRequest($event)"></app-month-view>
+    <app-month-view *ngIf="!loadingOlapData" (onDayRequest)="onDayRequest($event)"></app-month-view>
 </div>

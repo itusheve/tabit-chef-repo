@@ -60,7 +60,7 @@ export class DaySalesTableComponent implements OnChanges {
 
             this.data.forEach(row => {
                 this.pivotedData.titles.push(row.orderType);
-                this.pivotedData.salesTotalAmount.push(row['Item Net Sales $']);
+                this.pivotedData.salesTotalAmount.push(row['Gross Sales $']);
                 this.pivotedData.netSalesWithoutVat.push(row['Item Net Sales $']);
                 this.pivotedData.totalSales.push(row['Item Net Sales $']);
                 this.pivotedData.netSales.push(row['Item Net Sales $']);

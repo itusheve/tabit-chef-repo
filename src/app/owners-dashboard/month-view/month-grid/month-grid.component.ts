@@ -3,7 +3,6 @@ import * as moment from 'moment';
 import { tmpTranslations } from '../../../../tabit/data/data.service';
 import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 
-
 @Component({
     selector: 'app-month-grid',
     templateUrl: './month-grid.component.html',
@@ -20,6 +19,7 @@ export class MonthGridComponent implements OnInit {
     category: string;
     categoryTitle: string;
     tmpTranslations: any;
+    hasYearlyAvg: boolean;
 
     private tabitHelper;
 
@@ -39,6 +39,10 @@ export class MonthGridComponent implements OnInit {
     }
 
     changeAvgPeriodComparator(value) {
+        if(value === 'year' && !this.hasYearlyAvg) {
+            return;
+        }
+
         this.avgPeriodComparator = value;
     }
 

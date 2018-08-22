@@ -6,6 +6,7 @@
             [options]="daySelectorOptions"
             (onDateChanged)="onDateChanged($event)">
     </app-day-selector>
+
     <div *ngIf="!hasData">
         <div class="card">
             <div class="card-body bg-white">
@@ -26,6 +27,7 @@
             </div>
         </div>
     </div>
+
     <div *ngIf="hasData">
         <app-day-orders-table
                 class="widget"
@@ -33,7 +35,7 @@
                 [lastViewed]="drilledOrder"
                 [orders]="orders"
                 [bdIsCurrentBd]="bdIsCurrentBd"
-                [closedOpenSalesDiff]="closedOpenSalesDiff"
+                [openOrders]="openOrders"
                 (onOrderClicked)="onOrderClicked($event)"
         ></app-day-orders-table>
 

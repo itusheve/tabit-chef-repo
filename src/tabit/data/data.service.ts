@@ -1066,6 +1066,11 @@ export class DataService {
             let olapYearlyData = _.cloneDeep(streamData[0]);
             let rosCalendars = _.cloneDeep(streamData[1]);
 
+            if(olapYearlyData.error) {
+                obs.next(olapYearlyData);
+                return;
+            }
+
             let perf = {
                 olap: 0,
                 ros: 0,

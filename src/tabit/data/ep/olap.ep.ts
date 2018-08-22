@@ -119,6 +119,7 @@ export class OlapEp {
                     },
                     (err) => {
                         console.log(`Handler Proxy Error: ${JSON.stringify(err)}`);
+                        resolve({error: err});
                     }
                 );
         });

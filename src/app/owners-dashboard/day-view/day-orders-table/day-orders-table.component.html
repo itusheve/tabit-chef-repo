@@ -1,10 +1,6 @@
 <div class="flex d-col a-stretch">
     <div class="title">
         <ng-container i18n="@@orders">Orders</ng-container>
-        <ng-container *ngIf="bdIsCurrentBd" style="font-size:14px;">
-            <br>
-            <ng-container i18n="@@openOrders">Open Orders</ng-container>: {{closedOpenSalesDiff | curr:'0'}}
-        </ng-container>
     </div>
     <div class="body flex d-col">
         <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
@@ -12,7 +8,19 @@
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-stretch">
                 <mat-accordion *ngIf="byOrderTypes">
-                    <mat-expansion-panel expanded="false" hideToggle="true" (closed)="panelClosed()" *ngFor="let orderType of byOrderTypes | hasSales">
+                    <mat-expansion-panel expanded="false" hideToggle="true" *ngIf="bdIsCurrentBd" [disabled]="true">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <ng-container i18n="@@openOrders">Open Orders</ng-container>
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                <div class="flex a-center">
+                                    <div class="ar" style="width:70px">{{openOrders.totalAmount | curr:'0'}}</div>
+                                </div>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel expanded="false" hideToggle="false" (closed)="panelClosed()" *ngFor="let orderType of byOrderTypes | hasSales">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{orderType.caption}}

@@ -88,8 +88,20 @@ export class MonthViewComponent implements OnInit {
 
         let currentDate = moment();
 
-        this.monthGrid.days = _.filter(days, function(day) { return day.date !== currentDate.format('YYYY-MM-DD'); });
+        this.monthGrid.hasYearlyAvg = false;
+        this.monthGrid.days = [];
+        _.each(days, day => {
+            if(day.date !== currentDate.format('YYYY-MM-DD')) {
+                this.monthGrid.days.push(day);
+                if(day.aggregations.sales.yearAvg) {
+                    this.monthGrid.hasYearlyAvg = true;
+                }
+            }
+        });
+
         this.monthGrid.month = monthlyData;
+
+
     }
 
     updateSummary(date, currentBd: moment.Moment, database) {

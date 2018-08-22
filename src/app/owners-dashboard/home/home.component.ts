@@ -71,6 +71,9 @@ export class HomeComponent implements OnInit {
     private previousBdNotFinal = false;
     public showPreviousDay = false;
     public tabitHelper;
+    public loadingOlapData: boolean;
+    public OlapFailed: boolean;
+    public olapError: any;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private cardsDataService: CardsDataService,
@@ -85,6 +88,8 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.loadingOlapData = true;
+        this.OlapFailed = false;
         this.showForecast = false;
         window.scrollTo(0, 0);
         this.getTodayData();
@@ -182,6 +187,14 @@ export class HomeComponent implements OnInit {
                 let database = data[0];
                 let restaurantTime = data[1];
 
+                if(database.error) {
+                    this.OlapFailed = true;
+                    this.olapError = database.error;
+                    return;
+                }
+
+                this.loadingOlapData = false;
+
                 let previousDay = moment(restaurantTime).subtract(1, 'days');
                 let day = database.getDay(previousDay);
 
@@ -250,6 +263,9 @@ export class HomeComponent implements OnInit {
     getMonthToDateData(): void {
         this.dataService.database$
             .subscribe(database => {
+                if(database.error) {
+                    return;
+                }
 
                 let month = database.getCurrentMonth();
 

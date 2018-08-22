@@ -25,7 +25,7 @@ export class DayOrdersTableComponent implements OnChanges {
   @Input() orders: Order[];
   @Input() lastViewed: Order;
   @Input() bdIsCurrentBd: boolean;
-  @Input() closedOpenSalesDiff: number;
+  @Input() openOrders: {totalAmount: number};
   @Output() onOrderClicked = new EventEmitter();
 
   public byOrderTypes: OrderTypeVM[];
