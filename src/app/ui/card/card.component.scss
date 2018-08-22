@@ -71,34 +71,16 @@
     height: 26px;
   }
 
-  .up-positive {
-    color: #30e430;
+  .up {
     font-size: 20px;
     transform: rotateZ(-90deg) translateY(-3px) translateX(-6px);
     position: relative;
     top: -6px;
     right: 0px;
   }
-  .up-negative {
-    color: #ff2121;
+
+  .down {
     font-size: 20px;
-    transform: rotateZ(-90deg) translateY(-3px) translateX(-6px);
-    position: relative;
-    top: -6px;
-    right: 0px;
-  }
-  .down-positive {
-    color: #30e430;
-    font-size: 20px;
-    transform: rotateZ(90deg) translateY(-4px) translateX(-6px);
-    position: relative;
-    top: 1px;
-    right: 13px;
-  }
-  .down-negative {
-    color: #ff2121;
-    font-size: 20px;
-    order: 2;
     transform: rotateZ(90deg) translateY(-4px) translateX(-6px);
     position: relative;
     top: 1px;

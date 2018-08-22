@@ -7,6 +7,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 // }
 import {environment} from '../../../environments/environment';
 import {currencySymbol} from '../../../tabit/data/data.service';
+import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
 
 export interface CardData {
     loading: boolean;
@@ -38,13 +39,31 @@ export class CardComponent implements OnInit {
     @Input() cardData: CardData;
     public region: any;
     public currency: any;
+    public tabitHelper: TabitHelper;
 
     constructor() {
         this.region = environment.region;
         this.currency = currencySymbol;
+        this.tabitHelper = new TabitHelper();
     }
 
     ngOnInit() {
     }
 
+    getPercentageCssClass(change, isUpPositive) {
+        let cssClass = this.tabitHelper.getTextClassByPercentage(change * 100, isUpPositive);
+        if(isUpPositive && change > 1) {
+            cssClass += ' up';
+        }
+        else if(!isUpPositive && change < 1) {
+            cssClass += ' down';
+        }
+        else if(!isUpPositive && change > 1) {
+            cssClass += ' up';
+        }
+        else {
+            cssClass += ' down';
+        }
+        return cssClass;
+    }
 }

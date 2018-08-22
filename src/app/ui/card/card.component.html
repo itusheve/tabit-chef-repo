@@ -22,12 +22,12 @@
                     <div class="col-12">
                         <table class="table table-borderless table-sm sales-table mb-0" [ngClass]="region == 'il' ? 'table-padding-rtl' : 'table-padding-ltr'">
                             <tr *ngIf="cardData.averages?.yearly?.percentage">
-                                <td><mat-icon *ngIf="cardData.averages.yearly.percentage" [ngClass]="cardData.averages.yearly.positive ? 'up-positive' : 'down-negative'">play_arrow</mat-icon></td>
+                                <td><mat-icon *ngIf="cardData.averages.yearly.percentage" [ngClass]="getPercentageCssClass(cardData.averages.yearly.change, true)">play_arrow</mat-icon></td>
                                 <td class="text-dark">{{(cardData.averages.yearly.percentage) | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@lastYear">Last year</td>
                             </tr>
                             <tr *ngIf="cardData.averages?.weekly">
-                                <td><mat-icon *ngIf="cardData.averages.weekly.percentage" [ngClass]="cardData.averages.weekly.positive ? 'up-positive' : 'down-negative'">play_arrow</mat-icon></td>
+                                <td><mat-icon *ngIf="cardData.averages.weekly.percentage" [ngClass]="getPercentageCssClass(cardData.averages.weekly.change, true)">play_arrow</mat-icon></td>
                                 <td class="text-dark">{{(cardData.averages.weekly.percentage || 0) | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@fourWeekAvg">4 Week</td>
                             </tr>
@@ -41,28 +41,28 @@
                         <table class="table table-borderless table-sm mb-0" [ngClass]="region == 'il' ? 'table-padding-rtl' : 'table-padding-ltr'">
                             <tr *ngIf="cardData.reductions?.cancellations">
                                 <td>
-                                    <mat-icon [ngClass]="cardData.reductions.cancellations.positive ? 'down-positive' : 'up-negative'">play_arrow</mat-icon>
+                                    <mat-icon [ngClass]="getPercentageCssClass(cardData.reductions.cancellations.change, false)">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.reductions.cancellations.percentage || 0 | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@cancellations">Cancellations</td>
                             </tr>
                             <tr *ngIf="cardData.reductions?.operational">
                                 <td>
-                                    <mat-icon [ngClass]="cardData.reductions.operational.positive ? 'down-positive' : 'up-negative'">play_arrow</mat-icon>
+                                    <mat-icon [ngClass]="getPercentageCssClass(cardData.reductions.operational.change, false)">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.reductions.operational.percentage || 0 | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@operational">Operational</td>
                             </tr>
                             <tr *ngIf="cardData.reductions?.retention">
                                 <td>
-                                    <mat-icon [ngClass]="cardData.reductions.retention.positive ? 'down-positive' : 'up-negative'">play_arrow</mat-icon>
+                                    <mat-icon [ngClass]="getPercentageCssClass(cardData.reductions.retention.change, false)">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.reductions.retention.percentage || 0 | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@retention">Retention</td>
                             </tr>
                             <tr *ngIf="cardData.reductions?.employee">
                                 <td>
-                                    <mat-icon [ngClass]="cardData.reductions.employee.positive ? 'down-positive' : 'up-negative'">play_arrow</mat-icon>
+                                    <mat-icon [ngClass]="getPercentageCssClass(cardData.reductions.employee.change, false)">play_arrow</mat-icon>
                                 </td>
                                 <td class="text-dark">{{cardData.reductions.employee.percentage || 0 | percent:'1.1-1'}}</td>
                                 <td class="text-body" i18n="@@organizational">Organizational</td>

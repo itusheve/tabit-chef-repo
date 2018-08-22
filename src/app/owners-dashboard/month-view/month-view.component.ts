@@ -123,32 +123,31 @@ export class MonthViewComponent implements OnInit {
         this.summaryCardData.averages = {
             yearly: {
                 percentage: month.aggregations.sales.lastYearWeekAvg ? ((month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1) : 0,
-                positive: month.aggregations.sales.weekAvg > month.aggregations.sales.lastYearWeekAvg
+                change: month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg
             },
             weekly: {
                 percentage: previousMonth.aggregations.sales.weekAvg ? ((month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg) - 1) : 0,
-                positive: month.aggregations.sales.weekAvg > previousMonth.aggregations.sales.weekAvg
+                change: month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg
             }
         };
 
         this.summaryCardData.reductions = {
             cancellations: {
                 percentage: month.aggregations.reductions.cancellations.amount / month.aggregations.sales.amount,
-                positive: month.aggregations.reductions.cancellations.amount < month.aggregations.reductions.cancellations.threeMonthAvg
+                change: month.aggregations.reductions.cancellations.amount / month.aggregations.reductions.cancellations.threeMonthAvg
             },
             employee: {
                 percentage: month.aggregations.reductions.employee.amount / month.aggregations.sales.amount,
-                positive: month.aggregations.reductions.employee.amount < month.aggregations.reductions.employee.threeMonthAvg
+                change: month.aggregations.reductions.employee.amount / month.aggregations.reductions.employee.threeMonthAvg
             },
             operational: {
                 percentage: month.aggregations.reductions.operational.amount / month.aggregations.sales.amount,
-                positive: month.aggregations.reductions.operational.amount < month.aggregations.reductions.operational.threeMonthAvg
+                change: month.aggregations.reductions.operational.amount / month.aggregations.reductions.operational.threeMonthAvg
             },
             retention: {
                 percentage: month.aggregations.reductions.retention.amount / month.aggregations.sales.amount,
-                positive: month.aggregations.reductions.retention.amount < month.aggregations.reductions.retention.threeMonthAvg
+                change: month.aggregations.reductions.retention.amount / month.aggregations.reductions.retention.threeMonthAvg
             }
-
         };
 
         if (this.summaryCardData.averages.weekly.percentage) {

@@ -101,71 +101,70 @@ export class HomeComponent implements OnInit {
 
     getTodayData(): void {
         combineLatest(this.dataService.LatestBusinessDayDashboardData$, this.dataService.olapToday$)
-        .subscribe(data => {
-            let realtimeData = data[0];
-            let day = data[1];
+            .subscribe(data => {
+                let realtimeData = data[0];
+                let day = data[1];
 
-            let totalSales = 0;
+                let totalSales = 0;
 
-            let realtimeDataDate = moment(realtimeData.today.businessDate);
-            let today = moment();
+                let realtimeDataDate = moment(realtimeData.today.businessDate);
+                let today = moment();
 
-            if (realtimeData.today && realtimeDataDate.day() === today.day()) {
-                totalSales = realtimeData.today.totalSales;
-            }
-
-            if (realtimeData.today.totalSales === 0) {
-                this.currentBdCardData.salesComment = 'eod';
-            }
-
-            this.currentBdCardData.sales = totalSales;
-            this.currentBdCardData.diners = realtimeData.today.totalDiners;
-            this.currentBdCardData.ppa = realtimeData.today.ppa;
-
-            this.currentBdCardData.title = this.datePipe.transform(moment(day.date).valueOf(), 'fullDate');
-
-            this.currentBdCardData.averages = {
-                /*yearly: {
-                    percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
-                    positive: day.aggregations.sales.amount > day.aggregations.sales.yearAvg
-                },*/
-                weekly: {
-                    percentage: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) - 1,
-                    positive: day.aggregations.sales.amount > day.aggregations.sales.fourWeekAvg
+                if (realtimeData.today && realtimeDataDate.day() === today.day()) {
+                    totalSales = realtimeData.today.totalSales;
                 }
-            };
 
-            if (day.aggregations.reductions) {
-                this.currentBdCardData.reductions = {
-                    cancellations: {
-                        percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.cancellations.amount < day.aggregations.reductions.cancellations.fourWeekAvg
-                    },
-                    employee: {
-                        percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.employee.amount < day.aggregations.reductions.employee.fourWeekAvg
-                    },
-                    operational: {
-                        percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.operational.amount < day.aggregations.reductions.operational.fourWeekAvg
-                    },
-                    retention: {
-                        percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
-                        positive: day.aggregations.reductions.retention.amount < day.aggregations.reductions.retention.fourWeekAvg
+                if (realtimeData.today.totalSales === 0) {
+                    this.currentBdCardData.salesComment = 'eod';
+                }
+
+                this.currentBdCardData.sales = totalSales;
+                this.currentBdCardData.diners = realtimeData.today.totalDiners;
+                this.currentBdCardData.ppa = realtimeData.today.ppa;
+
+                this.currentBdCardData.title = this.datePipe.transform(moment(day.date).valueOf(), 'fullDate');
+
+                this.currentBdCardData.averages = {
+                    /*yearly: {
+                        percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
+                        change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
+                    },*/
+                    weekly: {
+                        percentage: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) - 1,
+                        change: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg)
                     }
-
                 };
-            }
 
-            if (this.currentBdCardData.averages.weekly.percentage) {
-                let value = (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) * 100;
-                this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
-            }
+                if (day.aggregations.reductions) {
+                    this.currentBdCardData.reductions = {
+                        cancellations: {
+                            percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
+                            change: (day.aggregations.reductions.cancellations.amount / day.aggregations.reductions.cancellations.fourWeekAvg)
+                        },
+                        employee: {
+                            percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
+                            change: (day.aggregations.reductions.employee.amount / day.aggregations.reductions.employee.fourWeekAvg)
+                        },
+                        operational: {
+                            percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
+                            change: (day.aggregations.reductions.operational.amount / day.aggregations.reductions.operational.fourWeekAvg)
+                        },
+                        retention: {
+                            percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
+                            change: (day.aggregations.reductions.retention.amount / day.aggregations.reductions.retention.fourWeekAvg)
+                        }
+                    };
+                }
 
-            if (typeof this.currentBdCardData.sales === 'number') {
-                this.currentBdCardData.loading = false;
-            }
-        });
+                if (this.currentBdCardData.averages.weekly.percentage) {
+                    let value = (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) * 100;
+                    this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
+                }
+
+                if (typeof this.currentBdCardData.sales === 'number') {
+                    this.currentBdCardData.loading = false;
+                }
+            });
     }
 
     getTodayOlapData(): void {
@@ -175,7 +174,7 @@ export class HomeComponent implements OnInit {
                 let restaurantTime = data[1];
 
                 let day = database.getDay(restaurantTime);
-                if(day) {
+                if (day) {
                     this.currentBdCardData.holiday = day.holiday;
                 }
             });
@@ -187,7 +186,7 @@ export class HomeComponent implements OnInit {
                 let database = data[0];
                 let restaurantTime = data[1];
 
-                if(database.error) {
+                if (database.error) {
                     this.OlapFailed = true;
                     this.olapError = database.error;
                     return;
@@ -214,31 +213,30 @@ export class HomeComponent implements OnInit {
                     this.previousBdCardData.averages = {
                         yearly: {
                             percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
-                            positive: day.aggregations.sales.amount > day.aggregations.sales.yearAvg
+                            change: day.aggregations.sales.amount / day.aggregations.sales.yearAvg
                         },
                         weekly: {
                             percentage: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) - 1,
-                            positive: day.aggregations.sales.amount > day.aggregations.sales.fourWeekAvg
+                            change: day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg
                         }
-
                     };
 
                     this.previousBdCardData.reductions = {
                         cancellations: {
-                            percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
-                            positive: day.aggregations.reductions.cancellations.amount < day.aggregations.reductions.cancellations.threeMonthAvg
+                            percentage: day.aggregations.reductions.cancellations.percentage,
+                            change: (day.aggregations.reductions.cancellations.amount / day.aggregations.reductions.cancellations.fourWeekAvg)
                         },
                         employee: {
-                            percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
-                            positive: day.aggregations.reductions.employee.amount < day.aggregations.reductions.employee.threeMonthAvg
+                            percentage: day.aggregations.reductions.employee.percentage,
+                            change: (day.aggregations.reductions.employee.amount / day.aggregations.reductions.employee.fourWeekAvg)
                         },
                         operational: {
-                            percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
-                            positive: day.aggregations.reductions.operational.amount < day.aggregations.reductions.operational.threeMonthAvg
+                            percentage: day.aggregations.reductions.operational.percentage,
+                            change: (day.aggregations.reductions.operational.amount / day.aggregations.reductions.operational.fourWeekAvg)
                         },
                         retention: {
-                            percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
-                            positive: day.aggregations.reductions.retention.amount < day.aggregations.reductions.retention.threeMonthAvg
+                            percentage: day.aggregations.reductions.retention.percentage,
+                            change: (day.aggregations.reductions.retention.amount / day.aggregations.reductions.retention.fourWeekAvg)
                         }
 
                     };
@@ -263,7 +261,7 @@ export class HomeComponent implements OnInit {
     getMonthToDateData(): void {
         this.dataService.database$
             .subscribe(database => {
-                if(database.error) {
+                if (database.error) {
                     return;
                 }
 
@@ -278,32 +276,31 @@ export class HomeComponent implements OnInit {
                 this.mtdCardData.averages = {
                     yearly: {
                         percentage: month.aggregations.sales.lastYearWeekAvg ? ((month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1) : 0,
-                        positive: month.aggregations.sales.weekAvg > month.aggregations.sales.lastYearWeekAvg
+                        change: month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg
                     },
                     weekly: { //compare to our sales forecast
                         percentage: (month.aggregations.sales.amount / month.forecast.sales.amount) - 1,
-                        positive: month.aggregations.sales.amount > month.forecast.sales.amount
+                        change: month.aggregations.sales.amount / month.forecast.sales.amount
                     }
                 };
 
                 this.mtdCardData.reductions = {
                     cancellations: {
-                        percentage: month.aggregations.reductions.cancellations.amount / month.aggregations.sales.amount,
-                        positive: month.aggregations.reductions.cancellations.amount < month.aggregations.reductions.cancellations.threeMonthAvg
+                        percentage: month.aggregations.reductions.cancellations.percentage,
+                        change: (month.aggregations.reductions.cancellations.amount / month.aggregations.reductions.cancellations.threeMonthAvg)
                     },
                     employee: {
-                        percentage: month.aggregations.reductions.employee.amount / month.aggregations.sales.amount,
-                        positive: month.aggregations.reductions.employee.amount < month.aggregations.reductions.employee.threeMonthAvg
+                        percentage: month.aggregations.reductions.employee.percentage,
+                        change: (month.aggregations.reductions.employee.amount / month.aggregations.reductions.employee.threeMonthAvg)
                     },
                     operational: {
-                        percentage: month.aggregations.reductions.operational.amount / month.aggregations.sales.amount,
-                        positive: month.aggregations.reductions.operational.amount < month.aggregations.reductions.operational.threeMonthAvg
+                        percentage: month.aggregations.reductions.operational.percentage,
+                        change: (month.aggregations.reductions.operational.amount / month.aggregations.reductions.operational.threeMonthAvg)
                     },
                     retention: {
-                        percentage: month.aggregations.reductions.retention.amount / month.aggregations.sales.amount,
-                        positive: month.aggregations.reductions.retention.amount < month.aggregations.reductions.retention.threeMonthAvg
+                        percentage: month.aggregations.reductions.retention.percentage,
+                        change: (month.aggregations.reductions.retention.amount / month.aggregations.reductions.retention.threeMonthAvg)
                     }
-
                 };
 
                 this.mtdCardData.loading = false;
@@ -323,7 +320,7 @@ export class HomeComponent implements OnInit {
                 if (lastYearMonth) {
                     this.forecastCardData.averages.yearly = {
                         percentage: lastYearMonth.aggregations.sales.amount ? ((month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount) - 1) : 0,
-                        positive: month.forecast.sales.amount > lastYearMonth.aggregations.sales.amount
+                        change: month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount
                     };
                 }
 
@@ -336,7 +333,7 @@ export class HomeComponent implements OnInit {
 
                 this.forecastCardData.averages.weekly = {
                     percentage: (month.forecast.sales.amount / previousMonth.forecast.sales.amount) - 1,
-                    positive: month.forecast.sales.amount > previousMonth.forecast.sales.amount
+                    change: month.forecast.sales.amount / previousMonth.forecast.sales.amount
                 };
 
                 this.showForecast = moment().diff(moment(database.getLowestDate()), 'days') > 8; //do not show forecast for new businesses with less than 8 days of data

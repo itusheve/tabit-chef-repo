@@ -7,7 +7,7 @@
             (onDateChanged)="onDateChanged($event)">
     </app-day-selector>
 
-    <div *ngIf="!hasData">
+    <div [hidden]="hasData">
         <div class="card">
             <div class="card-body bg-white">
                 <div *ngIf="hasNoDataForToday">
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <div *ngIf="hasData">
+    <div [hidden]="!hasData">
         <app-day-orders-table
                 class="widget"
                 style="padding-bottom: 0px;"

@@ -31,5 +31,31 @@ export class TabitHelper {
 
         return 'bg-secondary text-white';
     }
+
+    public getTextClassByPercentage(percentage: number, reverse: boolean) {
+        if (percentage === 0) {
+            return 'text-secondary';
+        }
+        if (percentage <= 80) {
+            return reverse ? 'text-danger-dark' : 'text-success-dark';
+        }
+        else if (percentage <= 90) {
+            return reverse ? 'text-danger' : 'text-success-dark';
+        }
+        else if (percentage <= 100) {
+            return reverse ? 'text-warning' : 'text-success';
+        }
+        else if (percentage < 110) {
+            return reverse ? 'text-success' : 'text-warning';
+        }
+        else if (percentage >= 110) {
+            return reverse ? 'text-success-dark' : 'text-danger';
+        }
+        else if (percentage >= 120) {
+            return reverse ? 'text-success-dark' : 'text-danger-dark';
+        }
+
+        return 'text-secondary';
+    }
 }
 

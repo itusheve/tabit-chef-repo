@@ -160,6 +160,7 @@ export class DayViewComponent implements OnInit {
         ownersDashboardService.toolbarConfig.left.back.showBtn = true;
         ownersDashboardService.toolbarConfig.menuBtn.show = false;
         this.region = environment.region;
+        this.hasData = false;
     }
 
     extractOrders(dailyReport): Order[] {
@@ -207,23 +208,6 @@ export class DayViewComponent implements OnInit {
                 });
             }
 
-            _.map(tlogsReductions, reduction => {
-                if (reduction.tlogId === order.tlogId) {
-                    if (reduction.reasonType === 'cancellation') {
-                        order.priceReductions.cancellation = 1;
-                    }
-                    else if (reduction.reasonType === 'operational') {
-                        order.priceReductions.promotions = 1; //promotions is old cube -> retention is new cube. makes no sense at all.
-                    }
-                    else if (reduction.reasonType === 'retention') {
-                        order.priceReductions.discountsAndOTH = 1;
-                    }
-                    else if (reduction.reasonType === 'organizational') {
-                        order.priceReductions.employees = 1;
-                    }
-                }
-            });
-
             orders.push(order);
         });
         return orders;
@@ -252,9 +236,6 @@ export class DayViewComponent implements OnInit {
                 this.hasNoDataForToday = true;
                 return;
             }
-
-            this.hasData = true;
-            this.hasNoDataForToday = false;
 
             this.openOrders = {totalAmount: undefined};
             if(moment().isSame(this.day, 'day')) {
@@ -410,6 +391,13 @@ export class DayViewComponent implements OnInit {
                 totals: totals[0],
                 businessDays: _.filter(dailyReport.monthly, record => !!record.businessDate)
             };
+
+            let that = this;
+            setTimeout(() => {
+                that.hasData = true;
+                that.hasNoDataForToday = false;
+            }, 300);
+
         });
     }
 
@@ -447,9 +435,11 @@ export class DayViewComponent implements OnInit {
     // }
 
     onDateChanged(dateM: moment.Moment) {
+        //const date = dateM.format('YYYY-MM-DD');
         this.hasData = false;
-        const date = dateM.format('YYYY-MM-DD');
-        this.router.navigate(['/owners-dashboard/day', date]);
+        this.day = dateM;
+        this.render();
+        //this.router.navigate(['/owners-dashboard/day', date]);
     }
 
     onGoToOrders(filter, type) {
