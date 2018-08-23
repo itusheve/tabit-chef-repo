@@ -138,19 +138,19 @@ export class HomeComponent implements OnInit {
                 if (day.aggregations.reductions) {
                     this.currentBdCardData.reductions = {
                         cancellations: {
-                            percentage: day.aggregations.reductions.cancellations.amount / day.aggregations.sales.amount,
+                            percentage: day.aggregations.reductions.cancellations.amount / (day.aggregations.sales.amount + day.aggregations.reductions.cancellations.amount),
                             change: (day.aggregations.reductions.cancellations.amount / day.aggregations.reductions.cancellations.fourWeekAvg)
                         },
                         employee: {
-                            percentage: day.aggregations.reductions.employee.amount / day.aggregations.sales.amount,
+                            percentage: day.aggregations.reductions.employee.amount / (day.aggregations.sales.amount + day.aggregations.reductions.employee.amount),
                             change: (day.aggregations.reductions.employee.amount / day.aggregations.reductions.employee.fourWeekAvg)
                         },
                         operational: {
-                            percentage: day.aggregations.reductions.operational.amount / day.aggregations.sales.amount,
+                            percentage: day.aggregations.reductions.operational.amount / (day.aggregations.sales.amount + day.aggregations.reductions.operational.amount),
                             change: (day.aggregations.reductions.operational.amount / day.aggregations.reductions.operational.fourWeekAvg)
                         },
                         retention: {
-                            percentage: day.aggregations.reductions.retention.amount / day.aggregations.sales.amount,
+                            percentage: day.aggregations.reductions.retention.amount / (day.aggregations.sales.amount + day.aggregations.reductions.retention.amount),
                             change: (day.aggregations.reductions.retention.amount / day.aggregations.reductions.retention.fourWeekAvg)
                         }
                     };
@@ -224,7 +224,7 @@ export class HomeComponent implements OnInit {
                     this.previousBdCardData.reductions = {
                         cancellations: {
                             percentage: day.aggregations.reductions.cancellations.percentage,
-                            change: (day.aggregations.reductions.cancellations.amount / day.aggregations.reductions.cancellations.fourWeekAvg)
+                            change: (day.aggregations.reductions.cancellations.amount / day.aggregations.reductions.cancellations.generalAvg)
                         },
                         employee: {
                             percentage: day.aggregations.reductions.employee.percentage,
@@ -232,7 +232,7 @@ export class HomeComponent implements OnInit {
                         },
                         operational: {
                             percentage: day.aggregations.reductions.operational.percentage,
-                            change: (day.aggregations.reductions.operational.amount / day.aggregations.reductions.operational.fourWeekAvg)
+                            change: (day.aggregations.reductions.operational.amount / day.aggregations.reductions.operational.generalAvg)
                         },
                         retention: {
                             percentage: day.aggregations.reductions.retention.percentage,

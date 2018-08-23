@@ -177,13 +177,13 @@ export class MonthGridComponent implements OnInit {
                 value = day.aggregations.sales.fourWeekAvg;
             }
             else if (this.category === 'cancellations') {
-                value = day.aggregations.reductions.cancellations.fourWeekAvg;
+                value = day.aggregations.reductions.cancellations.generalAvg;
             }
             else if (this.category === 'retention') {
                 value = day.aggregations.reductions.retention.fourWeekAvg;
             }
             else if (this.category === 'operational') {
-                value = day.aggregations.reductions.operational.fourWeekAvg;
+                value = day.aggregations.reductions.operational.generalAvg;
             }
             else if (this.category === 'employee') {
                 value = day.aggregations.reductions.employee.fourWeekAvg;
@@ -194,13 +194,13 @@ export class MonthGridComponent implements OnInit {
                 value = day.aggregations.sales.yearAvg;
             }
             else if (this.category === 'cancellations') {
-                value = day.aggregations.reductions.cancellations.yearAvg;
+                value = day.aggregations.reductions.cancellations.generalYearAvg;
             }
             else if (this.category === 'retention') {
                 value = day.aggregations.reductions.retention.yearAvg;
             }
             else if (this.category === 'operational') {
-                value = day.aggregations.reductions.operational.yearAvg;
+                value = day.aggregations.reductions.operational.generalYearAvg;
             }
             else if (this.category === 'employee') {
                 value = day.aggregations.reductions.employee.yearAvg;
