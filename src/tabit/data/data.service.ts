@@ -1000,7 +1000,15 @@ export class DataService {
                     localStorage.removeItem(key);
                 }
             });
-            window.localStorage.setItem(org.id + '-calendar', JSON.stringify(rosCalendars));
+
+            try {
+                window.localStorage.setItem(org.id + '-calendar', JSON.stringify(rosCalendars));
+            } catch(domException) {
+                if (domException.name === 'QuotaExceededError' ||
+                    domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                    //log something here
+                }
+            }
         }, 5000);
 
     });
@@ -1694,9 +1702,16 @@ export class DataService {
                     localStorage.removeItem(key);
                 }
             });
-            window.localStorage.setItem(org.id + '-database', JSON.stringify(database));
 
-            window.localStorage.setItem('performance', JSON.stringify(perf));
+            try {
+                window.localStorage.setItem(org.id + '-database', JSON.stringify(database));
+            } catch(domException) {
+                if (domException.name === 'QuotaExceededError' ||
+                    domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                    //log something here
+                }
+            }
+
             obs.next(new Database(database));
         });
     }).publishReplay(1).refCount();
@@ -1802,7 +1817,14 @@ export class DataService {
                     localStorage.removeItem(key);
                 }
             });
-            window.localStorage.setItem(org.id + '-daily-reports', JSON.stringify(reportsByDay));
+            try {
+                window.localStorage.setItem(org.id + '-daily-reports', JSON.stringify(reportsByDay));
+            } catch(domException) {
+                if (domException.name === 'QuotaExceededError' ||
+                    domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                    //log something here
+                }
+            }
             return report;
         }
     }
