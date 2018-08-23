@@ -133,20 +133,20 @@ export class MonthViewComponent implements OnInit {
 
         this.summaryCardData.reductions = {
             cancellations: {
-                percentage: month.aggregations.reductions.cancellations.amount / month.aggregations.sales.amount,
-                change: month.aggregations.reductions.cancellations.amount / month.aggregations.reductions.cancellations.threeMonthAvg
+                percentage: month.aggregations.reductions.cancellations.percentage,
+                change: month.aggregations.reductions.cancellations.percentage / month.aggregations.reductions.cancellations.threeMonthAvgPercentage
             },
             employee: {
-                percentage: month.aggregations.reductions.employee.amount / month.aggregations.sales.amount,
-                change: month.aggregations.reductions.employee.amount / month.aggregations.reductions.employee.threeMonthAvg
+                percentage: month.aggregations.reductions.employee.percentage,
+                change: month.aggregations.reductions.employee.percentage / month.aggregations.reductions.employee.threeMonthAvgPercentage
             },
             operational: {
-                percentage: month.aggregations.reductions.operational.amount / month.aggregations.sales.amount,
-                change: month.aggregations.reductions.operational.amount / month.aggregations.reductions.operational.threeMonthAvg
+                percentage: month.aggregations.reductions.operational.percentage,
+                change: month.aggregations.reductions.operational.percentage / month.aggregations.reductions.operational.threeMonthAvgPercentage
             },
             retention: {
-                percentage: month.aggregations.reductions.retention.amount / month.aggregations.sales.amount,
-                change: month.aggregations.reductions.retention.amount / month.aggregations.reductions.retention.threeMonthAvg
+                percentage: month.aggregations.reductions.retention.percentage,
+                change: month.aggregations.reductions.retention.percentage / month.aggregations.reductions.retention.threeMonthAvgPercentage
             }
         };
 

@@ -5,15 +5,15 @@
                 <div class="col-12 mx-0 p-0">
                     <div class="row m-2" style="direction: rtl">
                         <div class="btn-group category-picker">
-                            <span class="btn btn-lg btn-outline-info" [ngClass]="getTextColor('sales')"
+                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('sales')"
                                   (click)="changeCategory('sales')">{{tmpTranslations.get('monthViewFilters.sales')}}</span>
-                            <span class="btn btn-lg btn-outline-info" [ngClass]="getTextColor('cancellations')"
+                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('cancellations')"
                                   (click)="changeCategory('cancellations')">{{tmpTranslations.get('monthViewFilters.cancellations')}}</span>
-                            <span class="btn btn-lg btn-outline-info" [ngClass]="getTextColor('operational')"
+                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('operational')"
                                   (click)="changeCategory('operational')">{{tmpTranslations.get('monthViewFilters.operational')}}</span>
-                            <span class="btn btn-lg btn-outline-info" [ngClass]="getTextColor('retention')"
+                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('retention')"
                                   (click)="changeCategory('retention')">{{tmpTranslations.get('monthViewFilters.retention')}}</span>
-                            <span class="btn btn-lg btn-outline-info" [ngClass]="getTextColor('employee')"
+                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('employee')"
                                   (click)="changeCategory('employee')">{{tmpTranslations.get('monthViewFilters.employee')}}</span>
                         </div>
                     </div>
@@ -33,26 +33,28 @@
             <li *ngFor="let day of days" class="list-group-item" style="height: 62px;">
                 <div class="row flex a-center" (click)="rowClickHandler(day)"
                      style="cursor: pointer">
-                    <div class="col-3 px-1" style="max-width: 18% !important;">
+                    <div class="col-3 px-1" style="max-width: 17% !important;">
                         <div>{{day.date | date: 'dd'}} {{day.date | date: 'EEE'}}</div>
                     </div>
-                    <div class="col-8 px-1" style="max-width: 63% !important;">
+                    <div class="col-8 px-1" style="max-width: 60% !important;">
                         <div class="progress rounded-0" style="width: 85%; height: 6px;">
                             <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
                                  style="width: 100%; background-color: #e9ecef"></div>
                         </div>
-                        <div class="progress rounded-0" [style.width]="getValueInPercentage(day) <= 100 ? '85%' : (85 + ((getProgressBarWidth(day) - 100)) * 0.85) + '%'">
-                            <div class="progress-bar progress-bar-animated rounded-0" [ngClass]="getProgressBarBackground(day)" role="progressbar" [style.width]="getValueInPercentage(day) >= 100 ? '100%' : getProgressBarWidth(day) + '%'" style="font-size: 16px;">{{getValueInPercentage(day).toFixed(1)}}%</div>
+                        <div class="progress rounded-0" [style.width]="getProgressBarContainerWidth(day) + '%'">
+                            <div class="progress-bar progress-bar-animated rounded-0" [ngClass]="getProgressBarBackground(day)" role="progressbar" [style.width]="getProgressBarWidth(day) + '%'" style="font-size: 16px;">{{getPercentage(day).toFixed(2)}}%</div>
                         </div>
                         <div class="progress rounded-0" style="width: 85%; height: 6px;">
                             <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
                                  style="width: 100%; background-color: #e9ecef"></div>
                         </div>
                     </div>
-                    <div class="col-3 px-1" style="max-width: 19% !important;">
-                        <span *ngIf="category === 'sales'"
-                              [innerHtml]="getGaugeValue(day) | currency:'0':'':'':false"></span>
-                        <span *ngIf="category !== 'sales'">{{getGaugePercentage(day) | pct : 1 }}</span>
+                    <div class="col-3 px-1" style="max-width: 23% !important;">
+                        <span *ngIf="category === 'sales'" [innerHtml]="getDayValue(day) | currency:'0':'':'':false"></span>
+                        <span *ngIf="category !== 'sales'">{{getDayValue(day) | pct : 2 }}</span>
+                        <div style="font-size: 14px">
+                            (<span *ngIf="category === 'sales'" [innerHtml]="getAvgValue(day) | currency:'0':'':'':false"></span><span *ngIf="category !== 'sales'">{{getAvgValue(day) | pct : 2 }}</span>)
+                        </div>
                     </div>
                 </div>
                 <div *ngIf="day.isExcluded" class="row">

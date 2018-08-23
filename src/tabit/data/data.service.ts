@@ -1035,30 +1035,29 @@ export class DataService {
             }
 
             let day = {
-                amount: today.sales,
+                netAmount: today.salesNetAmount,
                 date: currentDateTime,
                 aggregations: {
                     sales: {
-                        netAmount: 0,
-                        amount: today.sales,
-                        fourWeekAvg: fourWeekAvg.sales
+                        netAmount: today.salesNetAmount,
+                        fourWeekAvgNet: fourWeekAvg.salesNetAmount
                     },
                     reductions: {
                         cancellations: {
-                            amount: today.Voids,
-                            fourWeekAvg: fourWeekAvg.Voids
+                            percentage: today.Voids / (today.salesNetAmount + today.Voids),
+                            fourWeekAvgPercentage: fourWeekAvg.Voids / (fourWeekAvg.salesNetAmount + fourWeekAvg.Voids)
                         },
                         employee: {
-                            amount: today.Employees,
-                            fourWeekAvg: fourWeekAvg.Employees
+                            percentage: today.Employees / (today.salesNetAmount + today.Employees),
+                            fourWeekAvgPercentage: fourWeekAvg.Employees / (fourWeekAvg.salesNetAmount + fourWeekAvg.Employees)
                         },
                         operational: {
-                            amount: today.Operational,
-                            fourWeekAvg: fourWeekAvg.Operational
+                            percentage: today.Operational / (today.salesNetAmount + today.Operational),
+                            fourWeekAvgPercentage: fourWeekAvg.Operational / (fourWeekAvg.salesNetAmount + fourWeekAvg.Operational)
                         },
                         retention: {
-                            amount: today.RetentionDiscount,
-                            fourWeekAvg: fourWeekAvg.RetentionDiscount
+                            percentage: today.RetentionDiscount / (today.salesNetAmount + today.RetentionDiscount),
+                            fourWeekAvgPercentage: fourWeekAvg.RetentionDiscount / (fourWeekAvg.salesNetAmount + fourWeekAvg.RetentionDiscount)
                         }
                     },
                     indicators: {}
@@ -1164,7 +1163,8 @@ export class DataService {
                             amount: month.rCancellation,
                             amountBeforeVat: month.rCancellationBV,
                             percentage: month.rCancellation / (month.salesNetAmount + month.rCancellation),
-                            threeMonthAvg: 0
+                            threeMonthAvg: 0,
+                            threeMonthAvgPercentage: 0
                         },
                         operational: {
                             highest: 0,
@@ -1172,7 +1172,8 @@ export class DataService {
                             amount: month.rOperationalDiscount,
                             amountBeforeVat: month.rOperationalDiscountBV,
                             percentage: month.rOperationalDiscount / (month.salesNetAmount + month.rOperationalDiscount),
-                            threeMonthAvg: 0
+                            threeMonthAvg: 0,
+                            threeMonthAvgPercentage: 0
                         },
                         retention: {
                             highest: 0,
@@ -1180,7 +1181,8 @@ export class DataService {
                             amount: month.rRetentionDiscount,
                             amountBeforeVat: month.rRetentionDiscountBV,
                             percentage: month.rRetentionDiscount / (month.salesNetAmount + month.rRetentionDiscount),
-                            threeMonthAvg: 0
+                            threeMonthAvg: 0,
+                            threeMonthAvgPercentage: 0
                         },
                         employee: {
                             highest: 0,
@@ -1188,7 +1190,8 @@ export class DataService {
                             amount: month.rEmployees,
                             amountBeforeVat: month.rEmployeesBV,
                             percentage: month.rEmployees / (month.salesNetAmount + month.rEmployees),
-                            threeMonthAvg: 0
+                            threeMonthAvg: 0,
+                            threeMonthAvgPercentage: 0
                         }
                     },
                     sales: {
@@ -1201,6 +1204,7 @@ export class DataService {
                         tipsBeforeVat: month.salesTipAmountWithOutVat,
                         weekAvg: 0,
                         lastYearWeekAvg: 0,
+                        threeMonthAvgNet: 0
                     },
                     indicators: {
                         diners: {
@@ -1490,24 +1494,24 @@ export class DataService {
                     totalsDaysCount++;
                     _.forEach([
                         {
-                            date: moment(day.date).subtract(1, 'years'),
-                            key: 'generalAvg'
-                        },
-                        {
                             date: moment(day.date),
-                            key: 'generalYearAvg'
+                            key: 'generalAvg'
                         },
                         {
                             date: moment(day.date),
                             key: 'fourWeekAvg'
                         },
                         {
-                            date: moment(day.date).subtract(1, 'years'),
-                            key: 'yearAvg'
-                        },
-                        {
                             date: moment(day.date).subtract(3, 'months'),
                             key: 'threeMonthAvg'
+                        },
+                        {
+                            date: moment(day.date).subtract(1, 'years'),
+                            key: 'generalYearAvg'
+                        },
+                        {
+                            date: moment(day.date).subtract(1, 'years'),
+                            key: 'yearAvg'
                         }
                     ], config => {
                         let totals = {
@@ -1554,16 +1558,16 @@ export class DataService {
                                     totals.indicators.ppa += previousDayData.ppa;
                                     totals.indicators.diners += previousDayData.diners;
 
-                                    totals.reductions.cancellationsPercentage += previousDayData.aggregations.reductions.cancellations.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.cancellations.amount);
+                                    //totals.reductions.cancellationsPercentage += previousDayData.aggregations.reductions.cancellations.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.cancellations.amount);
                                     totals.reductions.cancellations += previousDayData.aggregations.reductions.cancellations.amount;
 
-                                    totals.reductions.operationalPercentage += previousDayData.aggregations.reductions.operational.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.operational.amount);
+                                    //totals.reductions.operationalPercentage += previousDayData.aggregations.reductions.operational.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.operational.amount);
                                     totals.reductions.operational += previousDayData.aggregations.reductions.operational.amount;
 
-                                    totals.reductions.retentionPercentage += previousDayData.aggregations.reductions.retention.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.retention.amount);
+                                    //totals.reductions.retentionPercentage += previousDayData.aggregations.reductions.retention.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.retention.amount);
                                     totals.reductions.retention += previousDayData.aggregations.reductions.retention.amount;
 
-                                    totals.reductions.employeePercentage += previousDayData.aggregations.reductions.employee.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.employee.amount);
+                                    //totals.reductions.employeePercentage += previousDayData.aggregations.reductions.employee.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.employee.amount);
                                     totals.reductions.employee += previousDayData.aggregations.reductions.employee.amount;
 
                                     i++;
@@ -1716,6 +1720,8 @@ export class DataService {
                                 month.aggregations.reductions.employee.threeMonthAvg += aggregatedDay.reductions.employee.amount;
                                 month.aggregations.reductions.operational.threeMonthAvg += aggregatedDay.reductions.operational.amount;
                                 month.aggregations.reductions.retention.threeMonthAvg += aggregatedDay.reductions.retention.amount;
+
+                                month.aggregations.sales.threeMonthAvgNet += aggregatedDay.sales.netAmount;
                             });
 
                             i++;
@@ -1729,6 +1735,12 @@ export class DataService {
                     month.aggregations.reductions.employee.threeMonthAvg = month.aggregations.reductions.employee.threeMonthAvg / i;
                     month.aggregations.reductions.operational.threeMonthAvg = month.aggregations.reductions.operational.threeMonthAvg / i;
                     month.aggregations.reductions.retention.threeMonthAvg = month.aggregations.reductions.retention.threeMonthAvg / i;
+                    month.aggregations.sales.threeMonthAvgNet = month.aggregations.sales.threeMonthAvgNet / i;
+
+                    month.aggregations.reductions.cancellations.threeMonthAvgPercentage = month.aggregations.reductions.cancellations.threeMonthAvg / (month.aggregations.sales.threeMonthAvgNet + month.aggregations.reductions.cancellations.threeMonthAvg);
+                    month.aggregations.reductions.employee.threeMonthAvgPercentage = month.aggregations.reductions.employee.threeMonthAvg / (month.aggregations.sales.threeMonthAvgNet + month.aggregations.reductions.employee.threeMonthAvg);
+                    month.aggregations.reductions.operational.threeMonthAvgPercentage = month.aggregations.reductions.operational.threeMonthAvg / (month.aggregations.sales.threeMonthAvgNet + month.aggregations.reductions.operational.threeMonthAvg);
+                    month.aggregations.reductions.retention.threeMonthAvgPercentage = month.aggregations.reductions.retention.threeMonthAvg / (month.aggregations.sales.threeMonthAvgNet + month.aggregations.reductions.retention.threeMonthAvg);
                 }
             });
 

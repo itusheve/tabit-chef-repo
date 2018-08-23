@@ -136,7 +136,7 @@
       </trans-unit>
       <trans-unit id="operationalErrors" datatype="html">
         <source>Operational Errors</source>
-        <target>תק' תפעול</target>
+        <target>בעיות תפעול</target>
       </trans-unit>
       <trans-unit id="operationalErrorsByServer" datatype="html">
         <source>Item Returns, OTH and Discounts by Server</source>
@@ -144,7 +144,7 @@
       </trans-unit>
       <trans-unit id="operationalReductionsValue" datatype="html">
         <source>Operational Reductions Value</source>
-        <target>שווי תק' תפעול</target>
+        <target>שווי בעיות תפעול</target>
       </trans-unit>
       <trans-unit id="retention" datatype="html">
         <source>Retention</source>
@@ -180,7 +180,7 @@
       </trans-unit>
       <trans-unit id="operationalErrorsValue" datatype="html">
         <source>Operational Errors</source>
-        <target>תק' תפעול</target>
+        <target>בעיות תפעול</target>
       </trans-unit>
       <trans-unit id="retentionValue" datatype="html">
         <source>Retention</source>
@@ -592,7 +592,7 @@
       </trans-unit>
       <trans-unit id="operational" datatype="html">
         <source>Operational</source>
-        <target>תק' תפעול</target>
+        <target>בעיות תפעול</target>
       </trans-unit>
       <trans-unit id="organizational" datatype="html">
         <source>Organizational</source>
