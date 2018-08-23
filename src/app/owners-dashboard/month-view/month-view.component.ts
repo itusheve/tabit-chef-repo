@@ -126,8 +126,8 @@ export class MonthViewComponent implements OnInit {
                 change: month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg
             },
             weekly: {
-                percentage: previousMonth.aggregations.sales.weekAvg ? ((month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg) - 1) : 0,
-                change: month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg
+                percentage: previousMonth && previousMonth.aggregations.sales.weekAvg ? ((month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg) - 1) : 0,
+                change: previousMonth ? (month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg) : 0
             }
         };
 

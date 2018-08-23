@@ -332,8 +332,8 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.noSeparator = true;
 
                 this.forecastCardData.averages.weekly = {
-                    percentage: (month.forecast.sales.amount / previousMonth.forecast.sales.amount) - 1,
-                    change: month.forecast.sales.amount / previousMonth.forecast.sales.amount
+                    percentage: previousMonth ? ((month.forecast.sales.amount / previousMonth.forecast.sales.amount) - 1) : 0,
+                    change: previousMonth ? (month.forecast.sales.amount / previousMonth.forecast.sales.amount) : 0
                 };
 
                 this.showForecast = moment().diff(moment(database.getLowestDate()), 'days') > 8; //do not show forecast for new businesses with less than 8 days of data
