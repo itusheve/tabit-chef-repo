@@ -1040,7 +1040,9 @@ export class DataService {
                 aggregations: {
                     sales: {
                         netAmount: today.salesNetAmount,
-                        fourWeekAvgNet: fourWeekAvg.salesNetAmount
+                        amount: today.grossSales,
+                        fourWeekAvgNet: fourWeekAvg.salesNetAmount,
+                        fourWeekAvg: fourWeekAvg.grossSales,
                     },
                     reductions: {
                         cancellations: {
@@ -1848,7 +1850,7 @@ export class DataService {
         }
 
         let dailyReport = _.find(reportsByDay, {date: day.format('YYYYMMDD')});
-        if(dailyReport && moment(dailyReport.datetime, 'YYYY-MM-DD HH:mm').isSameOrBefore(moment().subtract(10, 'minutes'))) {
+        if(dailyReport && moment(dailyReport.datetime, 'YYYY-MM-DD HH:mm').isSameOrAfter(moment().subtract(10, 'minutes'))) {
             return dailyReport.data;
         }
         else {
@@ -1857,7 +1859,7 @@ export class DataService {
                 reportsByDay.splice(0, 1);
             }
 
-            reportsByDay.push({date: day.format('YYYYMMDD'), datetime: day.format('YYYY-MM-DD HH:mm'), data: report});
+            reportsByDay.push({date: day.format('YYYYMMDD'), datetime: moment().format('YYYY-MM-DD HH:mm'), data: report});
 
             let localStorage = window.localStorage;
             let keys = Object.keys(localStorage);

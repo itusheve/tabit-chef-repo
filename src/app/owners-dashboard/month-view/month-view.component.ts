@@ -68,14 +68,14 @@ export class MonthViewComponent implements OnInit {
         }
         this.onDateChanged(date);
 
-        combineLatest(this.month$, this.dataService.currentRestTime$, this.dataService.database$)
+        combineLatest(this.month$, this.dataService.currentRestTime$, this.dataService.database$, this.dataService.vat$)
             .subscribe(data => {
-                this.update(data[0], data[1], data[2]);
+                this.update(data[0], data[1], data[2], data[3]);
             });
     }
 
 
-    updateGrid(month, database) {
+    updateGrid(month, database, incTax) {
         let monthlyData = database.getMonth(month);
 
         if (!monthlyData || monthlyData.amount === 0) {
@@ -104,11 +104,11 @@ export class MonthViewComponent implements OnInit {
 
     }
 
-    updateSummary(date, currentBd: moment.Moment, database) {
+    updateSummary(date, currentBd: moment.Moment, database, incTax) {
         const isCurrentMonth = date.isSame(currentBd, 'month');
 
         let month = database.getMonth(date);
-        let previousMonth = database.getMonth(moment().subtract(1,'months'));
+        let previousMonth = database.getMonth(moment(month.latestDay).subtract(1,'months'));
 
         if(!month) {
             this.showSummary = false;
@@ -162,7 +162,7 @@ export class MonthViewComponent implements OnInit {
         this.summaryCardData.loading = false;
     }
 
-    update(month, currentBd: moment.Moment, database) {
+    update(month, currentBd: moment.Moment, database, incTax) {
         this.month = month;
 
         this.monthSelectorOptions = {
@@ -175,10 +175,10 @@ export class MonthViewComponent implements OnInit {
         else this.renderGrid = true;
 
         if (this.renderGrid) {
-            this.updateGrid(month, database);
+            this.updateGrid(month, database, incTax);
         }
 
-        this.updateSummary(month, currentBd, database);
+        this.updateSummary(month, currentBd, database, incTax);
 
     }
 

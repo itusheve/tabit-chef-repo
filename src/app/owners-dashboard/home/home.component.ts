@@ -88,6 +88,7 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
+
         this.loadingOlapData = true;
         this.OlapFailed = false;
         this.showForecast = false;
@@ -95,32 +96,35 @@ export class HomeComponent implements OnInit {
         this.getTodayData();
         this.getTodayOlapData();
         this.getYesterdayData();
-        this.getMonthToDateData();
+        //this.getMonthToDateData();
         this.getForecastData();
     }
 
     getTodayData(): void {
-        combineLatest(this.dataService.LatestBusinessDayDashboardData$, this.dataService.olapToday$)
+        combineLatest(this.dataService.LatestBusinessDayDashboardData$, this.dataService.olapToday$, this.dataService.vat$)
             .subscribe(data => {
                 let realtimeData = data[0];
                 let day = data[1];
+                let incTax = data[2];
 
                 let totalSales = 0;
+                let totalSalesWithoutTax = 0;
 
                 let realtimeDataDate = moment(realtimeData.today.businessDate);
                 let today = moment();
 
                 if (realtimeData.today && realtimeDataDate.day() === today.day()) {
                     totalSales = realtimeData.today.totalSales;
+                    totalSalesWithoutTax = realtimeData.today.totalSalesBeforeTax;
                 }
 
                 if (realtimeData.today.totalSales === 0) {
                     this.currentBdCardData.salesComment = 'eod';
                 }
 
-                this.currentBdCardData.sales = totalSales;
+                this.currentBdCardData.sales = incTax ? totalSales : totalSalesWithoutTax;
                 this.currentBdCardData.diners = realtimeData.today.totalDiners;
-                this.currentBdCardData.ppa = realtimeData.today.ppa;
+                this.currentBdCardData.ppa = incTax ? realtimeData.today.ppa : realtimeData.today.ppaBeforeTax;
 
                 this.currentBdCardData.title = this.datePipe.transform(moment(day.date).valueOf(), 'fullDate');
 
@@ -130,8 +134,8 @@ export class HomeComponent implements OnInit {
                         change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
                     },*/
                     weekly: {
-                        percentage: (day.aggregations.sales.netAmount / day.aggregations.sales.fourWeekAvgNet) - 1,
-                        change: (day.aggregations.sales.netAmount / day.aggregations.sales.fourWeekAvgNet)
+                        percentage: (totalSales / day.aggregations.sales.fourWeekAvg) - 1,
+                        change: (totalSales / day.aggregations.sales.fourWeekAvg)
                     }
                 };
 
@@ -181,10 +185,11 @@ export class HomeComponent implements OnInit {
     }
 
     getYesterdayData(): void {
-        combineLatest(this.dataService.database$, this.dataService.currentRestTime$)
+        combineLatest(this.dataService.database$, this.dataService.currentRestTime$, this.dataService.vat$)
             .subscribe(data => {
                 let database = data[0];
                 let restaurantTime = data[1];
+                let incVat = data[2];
 
                 if (database.error) {
                     this.OlapFailed = true;
@@ -208,8 +213,8 @@ export class HomeComponent implements OnInit {
                     this.showPreviousDay = true;
                     this.previousBdCardData.holiday = day.holiday;
                     this.previousBdCardData.diners = day.diners;
-                    this.previousBdCardData.ppa = day.ppa;
-                    this.previousBdCardData.sales = day.amount;
+                    this.previousBdCardData.ppa = incVat ? day.ppa : day.ppaWithoutVat;
+                    this.previousBdCardData.sales = incVat ? day.amount : day.amountWithoutVat;
                     this.previousBdCardData.averages = {
                         yearly: {
                             percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
