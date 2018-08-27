@@ -107,12 +107,11 @@ export class MonthViewComponent implements OnInit {
 
     updateSummary(date, currentBd: moment.Moment, database, incTax) {
         let month = database.getMonth(date);
-        let previousMonth = database.getMonth(moment(month.latestDay).subtract(1,'months'));
-
         if(!month) {
             this.showSummary = false;
             return;
         }
+        let previousMonth = database.getMonth(moment(month.latestDay).subtract(1,'months'));
 
         this.showSummary = true;
         this.summaryCardData.diners = month.diners;
