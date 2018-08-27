@@ -43,28 +43,28 @@
                                 <td>
                                     <mat-icon [ngClass]="getPercentageCssClass(cardData.reductions.cancellations.change, false)">play_arrow</mat-icon>
                                 </td>
-                                <td class="text-dark">{{cardData.reductions.cancellations.percentage || 0 | pct: 2}}</td>
+                                <td class="text-dark">{{cardData.reductions.cancellations.percentage || 0 | pct: 1}}</td>
                                 <td class="text-body" i18n="@@cancellations">Cancellations</td>
                             </tr>
                             <tr *ngIf="cardData.reductions?.operational">
                                 <td>
                                     <mat-icon [ngClass]="getPercentageCssClass(cardData.reductions.operational.change, false)">play_arrow</mat-icon>
                                 </td>
-                                <td class="text-dark">{{cardData.reductions.operational.percentage || 0 | pct: 2}}</td>
+                                <td class="text-dark">{{cardData.reductions.operational.percentage || 0 | pct: 1}}</td>
                                 <td class="text-body" i18n="@@operational">Operational</td>
                             </tr>
                             <tr *ngIf="cardData.reductions?.retention">
                                 <td>
                                     <mat-icon [ngClass]="getPercentageCssClass(cardData.reductions.retention.change, false)">play_arrow</mat-icon>
                                 </td>
-                                <td class="text-dark">{{cardData.reductions.retention.percentage || 0 | pct: 2}}</td>
+                                <td class="text-dark">{{cardData.reductions.retention.percentage || 0 | pct: 1}}</td>
                                 <td class="text-body" i18n="@@retention">Retention</td>
                             </tr>
                             <tr *ngIf="cardData.reductions?.employee">
                                 <td>
                                     <mat-icon [ngClass]="getPercentageCssClass(cardData.reductions.employee.change, false)">play_arrow</mat-icon>
                                 </td>
-                                <td class="text-dark">{{cardData.reductions.employee.percentage || 0 | pct: 2}}</td>
+                                <td class="text-dark">{{cardData.reductions.employee.percentage || 0 | pct: 1}}</td>
                                 <td class="text-body" i18n="@@organizational">Organizational</td>
                             </tr>
                         </table>

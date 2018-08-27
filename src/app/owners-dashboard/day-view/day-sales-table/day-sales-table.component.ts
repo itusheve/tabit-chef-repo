@@ -28,7 +28,8 @@ export class DaySalesTableComponent implements OnChanges {
         grossSales: number[],
         gratuity: number[],
         serviceCharge: number[],
-        dinersOrders: number[],
+        diners: number[],
+        orders: number[],
         ppa: number[]
     };
 
@@ -54,7 +55,8 @@ export class DaySalesTableComponent implements OnChanges {
                 grossSales: [],
                 gratuity: [],
                 serviceCharge: [],
-                dinersOrders: [],
+                diners: [],
+                orders: [],
                 ppa: []
             };
 
@@ -68,7 +70,8 @@ export class DaySalesTableComponent implements OnChanges {
                 this.pivotedData.grossSales.push(row['Gross Sales $']);
                 this.pivotedData.gratuity.push(row.Tip);
                 this.pivotedData.serviceCharge.push(row.Tip);
-                this.pivotedData.dinersOrders.push(row.Orders);
+                this.pivotedData.orders.push(row.Orders);
+                this.pivotedData.diners.push(row.Diners);
                 this.pivotedData.ppa.push(row['PPA $']);
             });
 

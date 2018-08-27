@@ -1095,6 +1095,8 @@ export class DataService {
             let t2 = performance.now();
             _.forEach(database, month => {
 
+                month.amountWithoutVat = month.salesNetAmountWithOutVat;
+                month.amount = month.salesNetAmount;
                 //order days and move into new ver name.
                 let orderedDays = _.orderBy(month.Daily, function (day) {
                     return moment(day.date).date();
@@ -1110,9 +1112,9 @@ export class DataService {
 
                 //prepare month structure TODO: move to class
                 month.forecast = {
-                    sales: {amount: 0, netAmount: 0, netAmountBeforeVat: 0},
+                    sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
                     diners: {count: 0},
-                    ppa: {amount: 0, count: 0},
+                    ppa: {amount: 0, amountWithoutVat: 0, count: 0},
                     reductions: {
                         cancellations: {
                             amount: 0,
@@ -1134,9 +1136,9 @@ export class DataService {
                 };
 
                 month.weeklyAverage = {
-                    sales: {amount: 0, netAmount: 0, netAmountBeforeVat: 0},
+                    sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
                     diners: {count: 0},
-                    ppa: {amount: 0},
+                    ppa: {amount: 0, amountWithoutVat: 0},
                     reductions: {
                         cancellations: {
                             amount: 0,
@@ -1200,8 +1202,9 @@ export class DataService {
                         highest: 0,
                         lowest: 0,
                         amount: month.amount,
+                        amountWithoutVat: month.amountWithoutVat,
                         netAmount: month.salesNetAmount, //amount - tips
-                        netAmountBeforeVat: month.salesNetAmountWithOutVat,
+                        netAmountWithoutVat: month.salesNetAmountWithOutVat,
                         tips: month.salesTipAmount,
                         tipsBeforeVat: month.salesTipAmountWithOutVat,
                         weekAvg: 0,
@@ -1216,15 +1219,16 @@ export class DataService {
                         },
                         ppa: {
                             amount: 0,
+                            amountWithoutVat: 0,
                             weekAvg: 0,
                             lastYearWeekAvg: 0,
                         }
                     },
                     days: {
                         0: {
-                            sales: {amount: 0, netAmount: 0, netAmountBeforeVat: 0},
+                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
                             diners: {count: 0},
-                            ppa: {amount: 0},
+                            ppa: {amount: 0, amountWithoutVat: 0},
                             count: 0,
                             reductions: {
                                 cancellations: {
@@ -1246,9 +1250,9 @@ export class DataService {
                             }
                         },
                         1: {
-                            sales: {amount: 0, netAmount: 0, netAmountBeforeVat: 0},
+                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
                             diners: {count: 0},
-                            ppa: {amount: 0},
+                            ppa: {amount: 0, amountWithoutVat: 0},
                             count: 0,
                             reductions: {
                                 cancellations: {
@@ -1270,9 +1274,9 @@ export class DataService {
                             }
                         },
                         2: {
-                            sales: {amount: 0, netAmount: 0, netAmountBeforeVat: 0},
+                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
                             diners: {count: 0},
-                            ppa: {amount: 0},
+                            ppa: {amount: 0, amountWithoutVat: 0},
                             count: 0,
                             reductions: {
                                 cancellations: {
@@ -1294,9 +1298,9 @@ export class DataService {
                             }
                         },
                         3: {
-                            sales: {amount: 0, netAmount: 0, netAmountBeforeVat: 0},
+                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
                             diners: {count: 0},
-                            ppa: {amount: 0},
+                            ppa: {amount: 0, amountWithoutVat: 0},
                             count: 0,
                             reductions: {
                                 cancellations: {
@@ -1318,9 +1322,9 @@ export class DataService {
                             }
                         },
                         4: {
-                            sales: {amount: 0, netAmount: 0, netAmountBeforeVat: 0},
+                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
                             diners: {count: 0},
-                            ppa: {amount: 0},
+                            ppa: {amount: 0, amountWithoutVat: 0},
                             count: 0,
                             reductions: {
                                 cancellations: {
@@ -1342,9 +1346,9 @@ export class DataService {
                             }
                         },
                         5: {
-                            sales: {amount: 0, netAmount: 0, netAmountBeforeVat: 0},
+                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
                             diners: {count: 0},
-                            ppa: {amount: 0},
+                            ppa: {amount: 0, amountWithoutVat: 0},
                             count: 0,
                             reductions: {
                                 cancellations: {
@@ -1366,9 +1370,9 @@ export class DataService {
                             }
                         },
                         6: {
-                            sales: {amount: 0, netAmount: 0, netAmountBeforeVat: 0},
+                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
                             diners: {count: 0},
-                            ppa: {amount: 0},
+                            ppa: {amount: 0, amountWithoutVat: 0},
                             count: 0,
                             reductions: {
                                 cancellations: {
@@ -1395,6 +1399,9 @@ export class DataService {
                 //itrrate days in month and prepare data
                 let latestDayNumber = 0;
                 _.forEach(month.days, day => {
+
+                    day.amount = day.salesNetAmount;
+                    day.amountWithoutVat = day.salesNetAmountWithOutVat;
 
                     if (excludedDates[moment(day.date).format('YYYY-MM-DD')]) {
                         day.isExcluded = true;
@@ -1460,8 +1467,9 @@ export class DataService {
                         },
                         sales: {
                             amount: day.amount,
+                            amountWithoutVat: day.amountWithoutVat,
                             netAmount: day.salesNetAmount,
-                            netAmountBeforeVat: day.salesNetAmountWithOutVat,
+                            netAmountWithoutVat: day.salesNetAmountWithOutVat,
                             fourWeekAvg: 0,
                             fourWeekAvgNet: 0,
                             yearAvg: 0,
@@ -1480,6 +1488,7 @@ export class DataService {
                             },
                             ppa: {
                                 amount: day.ppa,
+                                amountWithoutVat: day.ppaWithoutVat,
                                 fourWeekAvg: 0,
                                 yearAvg: 0,
                                 threeMonthAvg: 0
@@ -1528,10 +1537,12 @@ export class DataService {
                                 employee: 0
                             },
                             sales: 0,
+                            salesWithoutVat: 0,
                             netSales: 0,
                             indicators: {
                                 diners: 0,
-                                ppa: 0
+                                ppa: 0,
+                                ppaWithoutVat: 0
                             }
                         };
 
@@ -1556,8 +1567,10 @@ export class DataService {
                                 let previousDayData = _.find(monthData.days, {'date': config.date.format('YYYY-MM-DD')});
                                 if (previousDayData && (skipExcluded || !previousDayData.isExcluded)) {
                                     totals.sales += previousDayData.amount;
+                                    totals.salesWithoutVat += previousDayData.amountWithoutVat;
                                     totals.netSales += previousDayData.salesNetAmount;
                                     totals.indicators.ppa += previousDayData.ppa;
+                                    totals.indicators.ppaWithoutVat += previousDayData.ppaWithoutVat;
                                     totals.indicators.diners += previousDayData.diners;
 
                                     //totals.reductions.cancellationsPercentage += previousDayData.aggregations.reductions.cancellations.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.cancellations.amount);
@@ -1590,9 +1603,11 @@ export class DataService {
                         if (i) {
                             day.aggregations.sales[config.key] = totals.sales / i;
                             day.aggregations.sales[config.key + 'Net'] = totals.netSales / i;
+                            day.aggregations.sales[config.key + 'WithoutVat'] = totals.salesWithoutVat / i;
 
                             day.aggregations.indicators.diners[config.key] = totals.indicators.diners / i;
                             day.aggregations.indicators.ppa[config.key] = totals.indicators.ppa / i;
+                            day.aggregations.indicators.ppa[config.key + 'WithoutVat'] = totals.indicators.ppaWithoutVat / i;
 
                             //day.aggregations.reductions.cancellations[config.key + 'Percentage'] = totals.reductions.cancellationsPercentage / i;
                             day.aggregations.reductions.cancellations[config.key] = totals.reductions.cancellations / i;
@@ -1629,25 +1644,30 @@ export class DataService {
 
                         if (day.aggregations.indicators.ppa.fourWeekAvg) {
                             month.forecast.ppa.amount += day.aggregations.indicators.ppa.fourWeekAvg;
+                            month.forecast.ppa.amountWithoutVat += day.aggregations.indicators.ppa.fourWeekAvgWithoutVat;
                             month.forecast.ppa.count += 1;
                         }
 
 
                         if (currentDate.isSame(moment(day.date), 'month')) {
                             month.forecast.sales.amount += day.amount;
+                            month.forecast.sales.amountWithoutVat += day.amountWithoutVat;
                             month.forecast.diners.count += day.diners;
                         }
                         else {
                             month.forecast.sales.amount += day.aggregations.sales.fourWeekAvg;
+                            month.forecast.sales.amountWithoutVat += day.aggregations.sales.fourWeekAvgWithoutVat;
                             month.forecast.diners.count += day.aggregations.indicators.diners.fourWeekAvg;
                         }
 
                         let weekday = moment(day.date).weekday();
                         month.aggregations.days[weekday].count += 1;
                         month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.aggregations.sales.fourWeekAvg : day.amount;
+                        month.aggregations.days[weekday].sales.amountWithoutVat += day.isExcluded ? day.aggregations.sales.fourWeekAvgWithoutVat : day.amountWithoutVat;
                         month.aggregations.days[weekday].sales.netAmount += day.isExcluded ? day.aggregations.sales.fourWeekAvgNet : day.salesNetAmount;
                         month.aggregations.days[weekday].diners.count += day.isExcluded ? day.aggregations.indicators.diners.fourWeekAvg : day.diners;
                         month.aggregations.days[weekday].ppa.amount += day.isExcluded ? day.aggregations.indicators.ppa.fourWeekAvg : day.ppa;
+                        month.aggregations.days[weekday].ppa.amountWithoutVat += day.isExcluded ? day.aggregations.indicators.ppa.fourWeekAvgWithoutVat : day.ppaWithoutVat;
 
                         month.aggregations.days[weekday].reductions.cancellations.amount += day.isExcluded ? day.aggregations.reductions.cancellations.fourWeekAvg : day.rCancellation;
                         month.aggregations.days[weekday].reductions.operational.amount += day.isExcluded ? day.aggregations.reductions.operational.fourWeekAvg : day.rOperationalDiscount;
@@ -1662,10 +1682,12 @@ export class DataService {
                         while (currentDate.isSameOrBefore(endOfMonth, 'day')) {
                             let weekday = currentDate.weekday();
                             month.forecast.sales.amount += (month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count) || 0;
+                            month.forecast.sales.amountWithoutVat += (month.aggregations.days[weekday].sales.amountWithoutVat / month.aggregations.days[weekday].count) || 0;
                             month.forecast.diners.count += (month.aggregations.days[weekday].diners.count / month.aggregations.days[weekday].count) || 0;
 
                             if (month.aggregations.days[weekday].ppa.amount && month.aggregations.days[weekday].count) {
                                 month.forecast.ppa.amount += (month.aggregations.days[weekday].ppa.amount / month.aggregations.days[weekday].count) || 0;
+                                month.forecast.ppa.amountWithoutVat += (month.aggregations.days[weekday].ppa.amountWithoutVat / month.aggregations.days[weekday].count) || 0;
                                 month.forecast.ppa.count += 1;
                             }
 
@@ -1673,10 +1695,12 @@ export class DataService {
                                 let previousMonth = database[moment(currentDate).subtract(1, 'months').format('YYYYMM')];
                                 if (previousMonth) {
                                     month.forecast.sales.amount += (previousMonth.aggregations.days[weekday].sales.amount / previousMonth.aggregations.days[weekday].count) || 0;
+                                    month.forecast.sales.amountWithoutVat += (previousMonth.aggregations.days[weekday].sales.amountWithoutVat / previousMonth.aggregations.days[weekday].count) || 0;
                                     month.forecast.diners.count += (previousMonth.aggregations.days[weekday].diners.count / previousMonth.aggregations.days[weekday].count) || 0;
 
                                     if (previousMonth.aggregations.days[weekday].ppa.amount && previousMonth.aggregations.days[weekday].count) {
                                         month.forecast.ppa.amount += (previousMonth.aggregations.days[weekday].ppa.amount / previousMonth.aggregations.days[weekday].count) || 0;
+                                        month.forecast.ppa.amountWithoutVat += (previousMonth.aggregations.days[weekday].ppa.amountWithoutVat / previousMonth.aggregations.days[weekday].count) || 0;
                                         month.forecast.ppa.count += 1;
                                     }
                                 }
@@ -1687,6 +1711,7 @@ export class DataService {
                     }
 
                     month.forecast.ppa.amount = (month.forecast.ppa.amount / month.forecast.ppa.count);
+                    month.forecast.ppa.amountWithoutVat = (month.forecast.ppa.amountWithoutVat / month.forecast.ppa.count);
                 }
             });
 

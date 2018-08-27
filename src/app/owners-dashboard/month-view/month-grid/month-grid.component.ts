@@ -14,6 +14,7 @@ export class MonthGridComponent implements OnInit {
     @Output() onDateClicked = new EventEmitter();
     public currentDate: string;
     days: any;
+    incTax: boolean;
     month: any;
     avgPeriodComparator: string;
     category: string;
@@ -119,7 +120,7 @@ export class MonthGridComponent implements OnInit {
 
     getDayValue(day) {
         if (this.category === 'sales') {
-            return day.aggregations.sales.amount;
+            return this.incTax ? day.aggregations.sales.amount : day.aggregations.sales.amountWithoutVat;
         }
         else if (this.category === 'cancellations') {
             return day.aggregations.reductions.cancellations.percentage;
@@ -137,7 +138,7 @@ export class MonthGridComponent implements OnInit {
 
     getDayAmount(day) {
         if (this.category === 'sales') {
-            return day.aggregations.sales.amount;
+            return this.incTax ? day.aggregations.sales.amount : day.aggregations.sales.amountWithoutVat;
         }
         else if (this.category === 'cancellations') {
             return day.aggregations.reductions.cancellations.percentage;
@@ -197,7 +198,7 @@ export class MonthGridComponent implements OnInit {
         let value = 0;
         if (this.avgPeriodComparator === 'month') {
             if (this.category === 'sales') {
-                value = day.aggregations.sales.fourWeekAvg;
+                value = this.incTax ? day.aggregations.sales.fourWeekAvg : day.aggregations.sales.fourWeekAvgWithoutVat;
             }
             else if (this.category === 'cancellations') {
                 value = day.aggregations.reductions.cancellations.generalAvg / (day.aggregations.sales.generalAvgNet + day.aggregations.reductions.cancellations.generalAvg);
@@ -214,7 +215,7 @@ export class MonthGridComponent implements OnInit {
         }
         else if (this.avgPeriodComparator === 'year') {
             if (this.category === 'sales') {
-                value = day.aggregations.sales.yearAvg;
+                value = this.incTax ? day.aggregations.sales.yearAvg : day.aggregations.sales.yearAvgWithoutVat;
             }
             else if (this.category === 'cancellations') {
                 value = day.aggregations.reductions.cancellations.generalYearAvg / (day.aggregations.sales.generalYearAvgNet + day.aggregations.reductions.cancellations.generalYearAvg);

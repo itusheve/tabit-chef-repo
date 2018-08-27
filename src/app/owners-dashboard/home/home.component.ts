@@ -96,7 +96,6 @@ export class HomeComponent implements OnInit {
         this.getTodayData();
         this.getTodayOlapData();
         this.getYesterdayData();
-        //this.getMonthToDateData();
         this.getForecastData();
     }
 
@@ -134,7 +133,7 @@ export class HomeComponent implements OnInit {
                         change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
                     },*/
                     weekly: {
-                        percentage: (totalSales / day.aggregations.sales.fourWeekAvg) - 1,
+                        percentage: totalSales ? ((totalSales / day.aggregations.sales.fourWeekAvg) - 1) : 0,
                         change: (totalSales / day.aggregations.sales.fourWeekAvg)
                     }
                 };
@@ -191,9 +190,9 @@ export class HomeComponent implements OnInit {
                 let restaurantTime = data[1];
                 let incVat = data[2];
 
-                if (database.error) {
+                if (!database || database.error) {
                     this.OlapFailed = true;
-                    this.olapError = database.error;
+                    this.olapError = database && database.error;
                     return;
                 }
 
@@ -263,58 +262,11 @@ export class HomeComponent implements OnInit {
             });
     }
 
-    getMonthToDateData(): void {
-        this.dataService.database$
-            .subscribe(database => {
-                if (database.error) {
-                    return;
-                }
-
-                let month = database.getCurrentMonth();
-
-                const title = `${this.datePipe.transform(month.latestDay.valueOf(), 'MMMM')} ${tmpTranslations.get('home.mtd')}`;
-                this.mtdCardData.diners = month.diners;
-                this.mtdCardData.ppa = month.ppa;
-                this.mtdCardData.sales = month.amount;
-                this.mtdCardData.title = title;
-
-                this.mtdCardData.averages = {
-                    yearly: {
-                        percentage: month.aggregations.sales.lastYearWeekAvg ? ((month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1) : 0,
-                        change: month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg
-                    },
-                    weekly: { //compare to our sales forecast
-                        percentage: (month.aggregations.sales.amount / month.forecast.sales.amount) - 1,
-                        change: month.aggregations.sales.amount / month.forecast.sales.amount
-                    }
-                };
-
-                this.mtdCardData.reductions = {
-                    cancellations: {
-                        percentage: month.aggregations.reductions.cancellations.percentage,
-                        change: (month.aggregations.reductions.cancellations.percentage / (month.aggregations.reductions.cancellations.threeMonthAvgPercentage))
-                    },
-                    employee: {
-                        percentage: month.aggregations.reductions.employee.percentage,
-                        change: (month.aggregations.reductions.employee.percentage / month.aggregations.reductions.employee.threeMonthAvgPercentage)
-                    },
-                    operational: {
-                        percentage: month.aggregations.reductions.operational.percentage,
-                        change: (month.aggregations.reductions.operational.percentage / month.aggregations.reductions.operational.threeMonthAvgPercentage)
-                    },
-                    retention: {
-                        percentage: month.aggregations.reductions.retention.percentage,
-                        change: (month.aggregations.reductions.retention.percentage / month.aggregations.reductions.retention.threeMonthAvgPercentage)
-                    }
-                };
-
-                this.mtdCardData.loading = false;
-            });
-    }
-
     getForecastData(): void {
-        this.dataService.database$
-            .subscribe(database => {
+        combineLatest(this.dataService.database$, this.dataService.vat$)
+            .subscribe(data => {
+                let database = data[0];
+                let incTax = data[1];
 
                 let month = database.getCurrentMonth();
                 this.forecastCardData.averages = {yearly: {}, weekly: {}};
@@ -331,8 +283,8 @@ export class HomeComponent implements OnInit {
 
                 this.forecastCardData.title = `${this.datePipe.transform(moment().startOf('month'), 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
                 this.forecastCardData.diners = month.forecast.diners.count;
-                this.forecastCardData.ppa = month.forecast.ppa.amount;
-                this.forecastCardData.sales = month.forecast.sales.amount;
+                this.forecastCardData.ppa = incTax ? month.forecast.ppa.amount : month.forecast.ppa.amountWithoutVat;
+                this.forecastCardData.sales = incTax ? month.forecast.sales.amount : month.forecast.sales.amountWithoutVat;
                 this.forecastCardData.loading = false;
                 this.forecastCardData.noSeparator = true;
 

@@ -88,6 +88,7 @@ export class MonthViewComponent implements OnInit {
 
         let currentDate = moment();
 
+        this.monthGrid.incTax = incTax;
         this.monthGrid.hasYearlyAvg = false;
         this.monthGrid.days = [];
         _.each(days, day => {
@@ -105,8 +106,6 @@ export class MonthViewComponent implements OnInit {
     }
 
     updateSummary(date, currentBd: moment.Moment, database, incTax) {
-        const isCurrentMonth = date.isSame(currentBd, 'month');
-
         let month = database.getMonth(date);
         let previousMonth = database.getMonth(moment(month.latestDay).subtract(1,'months'));
 
@@ -117,8 +116,8 @@ export class MonthViewComponent implements OnInit {
 
         this.showSummary = true;
         this.summaryCardData.diners = month.diners;
-        this.summaryCardData.ppa = month.ppa;
-        this.summaryCardData.sales = month.amount;
+        this.summaryCardData.ppa = incTax ? month.ppa : month.ppaWithoutVat;
+        this.summaryCardData.sales = incTax ? month.amount : month.amountWithoutVat;
 
         this.summaryCardData.averages = {
             yearly: {
