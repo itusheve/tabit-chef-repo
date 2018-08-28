@@ -1,104 +1,103 @@
-import { Component, Inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import {Component, Inject} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
-import { environment } from '../../environments/environment';
+import {environment} from '../../environments/environment';
 
-import { DataService, tmpTranslations, appVersions } from '../../tabit/data/data.service';
-import { AuthService } from '../auth/auth.service';
-import { OwnersDashboardService } from './owners-dashboard.service';
+import {DataService, tmpTranslations, appVersions} from '../../tabit/data/data.service';
+import {AuthService} from '../auth/auth.service';
+import {OwnersDashboardService} from './owners-dashboard.service';
 
-import { AreYouSureDialogComponent } from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
-import { DebugService } from '../debug.service';
+import {AreYouSureDialogComponent} from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
+import {DebugService} from '../debug.service';
 
 @Component({
-  templateUrl: './owners-dashboard.component.html',
-  styleUrls: ['./owners-dashboard.component.scss']
+    templateUrl: './owners-dashboard.component.html',
+    styleUrls: ['./owners-dashboard.component.scss']
 })
 export class OwnersDashboardComponent {
 
-  org: any;
-  user: any;
-  userInitials: string;
-  vat: boolean;
+    org: any;
+    user: any;
+    userInitials: string;
+    vat: boolean;
 
-  toolbarConfig: any;
-  sideNavConfig: any;
+    toolbarConfig: any;
+    sideNavConfig: any;
 
-  appVersions: {
-    chef: string,
-    wrapper: string
-  };
+    appVersions: {
+        chef: string,
+        wrapper: string
+    };
 
-  env;
+    env;
 
-  debug: boolean;
+    debug: boolean;
 
-  logArr: { type: string, message: string }[];
+    logArr: { type: string, message: string }[];
 
-  constructor(
-    private dataService: DataService,
-    private authService: AuthService,
-    public ownersDashboardService: OwnersDashboardService,
-    public dialog: MatDialog,
-    public router: Router,
-    public route: ActivatedRoute,
-    private ds: DebugService
-  ) {
+    constructor(
+        private dataService: DataService,
+        private authService: AuthService,
+        public ownersDashboardService: OwnersDashboardService,
+        public dialog: MatDialog,
+        public router: Router,
+        public route: ActivatedRoute,
+        private ds: DebugService
+    ) {
 
-    this.logArr = ds.logArr;
+        this.logArr = ds.logArr;
 
-    this.env = environment;
+        this.env = environment;
 
-    this.appVersions = appVersions;
+        this.appVersions = appVersions;
 
-    ownersDashboardService.toolbarConfig.left.back.showBtn = false;
-    ownersDashboardService.toolbarConfig.menuBtn.show = true;
+        ownersDashboardService.toolbarConfig.left.back.showBtn = false;
+        ownersDashboardService.toolbarConfig.menuBtn.show = true;
 
-    //bind for the view:
-    this.toolbarConfig = ownersDashboardService.toolbarConfig;
-    this.sideNavConfig = ownersDashboardService.sideNavConfig;
+        //bind for the view:
+        this.toolbarConfig = ownersDashboardService.toolbarConfig;
+        this.sideNavConfig = ownersDashboardService.sideNavConfig;
 
-    dataService.vat$.subscribe((vat: boolean) => {
-      this.vat = vat;
-    });
-  }
+        dataService.vat$.subscribe((vat: boolean) => {
+            this.vat = vat;
+        });
+    }
 
-  vatChange(event) {
-    setTimeout(() => {
-      this.dataService.vat$.next(event.checked);
-    }, 300);
-  }
+    vatChange(event) {
+        setTimeout(() => {
+            this.dataService.vat$.next(event.checked);
+        }, 300);
+    }
 
-  changeRest() {
-    //TODO hide the switch rest button if only one rest exists
-  }
+    refresh(event) {
+        this.dataService.refresh$.next('force');
+    }
 
-  logout() {
-    let dialogRef = this.dialog.open(AreYouSureDialogComponent, {
-      width: '250px',
-      data: {
-        title: '',
-        content: `
+    changeRest() {
+        //TODO hide the switch rest button if only one rest exists
+    }
+
+    logout() {
+        let dialogRef = this.dialog.open(AreYouSureDialogComponent, {
+            width: '250px',
+            data: {
+                title: '',
+                content: `
           ${tmpTranslations.get('areYouSureYouWish')} ${tmpTranslations.get('toLogout')}?
         `
-      }
-    });
+            }
+        });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.authService.logout()
-          .then(() => {
-            this.router.navigate(['login', { m: 's' }]);
-          }, () => {
-          });
-      }
-    });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.authService.logout()
+                    .then(() => {
+                        this.router.navigate(['login', {m: 's'}]);
+                    }, () => {
+                    });
+            }
+        });
 
-  }
-
-  refresh() {
-    location.reload();
-  }
-
+    }
 }

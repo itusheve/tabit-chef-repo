@@ -88,8 +88,13 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.dataService.refresh$.subscribe((refresh) => {
+            if(refresh === 'force') {
+                this.loadingOlapData = true;
+                this.currentBdCardData.loading = true;
+            }
+        });
 
-        this.loadingOlapData = true;
         this.OlapFailed = false;
         this.showForecast = false;
         window.scrollTo(0, 0);
@@ -186,6 +191,8 @@ export class HomeComponent implements OnInit {
     getYesterdayData(): void {
         combineLatest(this.dataService.database$, this.dataService.currentRestTime$, this.dataService.vat$)
             .subscribe(data => {
+                this.previousBdCardData.loading = true;
+                this.loadingOlapData = true;
                 let database = data[0];
                 let restaurantTime = data[1];
                 let incVat = data[2];
@@ -265,6 +272,7 @@ export class HomeComponent implements OnInit {
     getForecastData(): void {
         combineLatest(this.dataService.database$, this.dataService.vat$)
             .subscribe(data => {
+                this.forecastCardData.loading = true;
                 let database = data[0];
                 let incTax = data[1];
 

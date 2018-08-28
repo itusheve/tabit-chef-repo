@@ -520,8 +520,9 @@ export class DataService {
     }).publishReplay(1).refCount();
 
     public LatestBusinessDayDashboardData$: Observable<any> = Observable.create(obs => {
-        this.currentRestTime$
-            .subscribe(currentRestTime => {
+        combineLatest(this.currentRestTime$, this.refresh$)
+            .subscribe(data => {
+                let currentRestTime = data[0];
                 currentRestTime = moment(currentRestTime);
                 const params = {
                     //daysOfHistory: 1,//0 returns everything...
@@ -668,6 +669,8 @@ export class DataService {
     private cubeCollection = environment.region === 'il' ? 'israeliCubes' : 'usCubes';
 
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+
+    public refresh$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
     // DEPRECATED PROPERTIES:
 
@@ -982,92 +985,99 @@ export class DataService {
 
     /* cache of BusinessMonthKPI by business month ('YYYY-MM-DD') */
     public calendar$: Observable<any> = Observable.create(async obs => {
-        let org = JSON.parse(window.localStorage.getItem('org'));
-        let rosCalendars = JSON.parse(window.localStorage.getItem(org.id + '-calendar'));
-        if (rosCalendars) {
-            obs.next(rosCalendars);
-        }
-
-        let context = this;
-        setTimeout(async function () {
-            rosCalendars = await context.rosEp.get('dynamic-organization-storage/calendar?x-explain=true&withParents=1');
-            obs.next(rosCalendars);
-
-            let localStorage = window.localStorage;
-            let keys = Object.keys(localStorage);
-            _.forEach(keys, key => {
-                if (key.indexOf('calendar') !== -1) {
-                    localStorage.removeItem(key);
-                }
-            });
-
-            try {
-                window.localStorage.setItem(org.id + '-calendar', JSON.stringify(rosCalendars));
-            } catch(domException) {
-                if (domException.name === 'QuotaExceededError' ||
-                    domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-                    //log something here
+        this.refresh$.subscribe(refresh => {
+            let org = JSON.parse(window.localStorage.getItem('org'));
+            let rosCalendars;
+            if(refresh !== 'force') {
+                rosCalendars = JSON.parse(window.localStorage.getItem(org.id + '-calendar'));
+                if (rosCalendars) {
+                    obs.next(rosCalendars);
                 }
             }
-        }, 5000);
 
+            let context = this;
+            setTimeout(async function () {
+                rosCalendars = await context.rosEp.get('dynamic-organization-storage/calendar?x-explain=true&withParents=1');
+                obs.next(rosCalendars);
+
+                let localStorage = window.localStorage;
+                let keys = Object.keys(localStorage);
+                _.forEach(keys, key => {
+                    if (key.indexOf('calendar') !== -1) {
+                        localStorage.removeItem(key);
+                    }
+                });
+
+                try {
+                    window.localStorage.setItem(org.id + '-calendar', JSON.stringify(rosCalendars));
+                } catch (domException) {
+                    if (domException.name === 'QuotaExceededError' ||
+                        domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                        //log something here
+                    }
+                }
+            }, refresh !== 'force' ? 2000 : 0);
+        });
     });
 
     public olapYearlyData$: Observable<any> = Observable.create(async obs => {
+        this.refresh$.subscribe(async event => {
+            let olapYearlyData = await this.olapEp.getDatabase();
+            obs.next(olapYearlyData);
+        });
         /*let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
         if (data) {
             //obs.next(new Database(data));
         }*/
-
-        let olapYearlyData = await this.olapEp.getDatabase();
-        obs.next(olapYearlyData);
     });
 
     public olapToday$: Observable<any> = Observable.create(async obs => {
-        this.currentRestTime$.subscribe(async currentDateTime => {
-            let olapTodayData = await this.olapEp.getToday(currentDateTime);
+        combineLatest(this.currentRestTime$, this.refresh$)
+            .subscribe(async data => {
+                let currentDateTime = data[0];
+                let olapTodayData = await this.olapEp.getToday(currentDateTime);
 
-            let today = _.find(olapTodayData, {type: 'today'});
-            let fourWeekAvg = _.find(olapTodayData, {type: 'avg4weeks'});
+                let today = _.find(olapTodayData, {type: 'today'});
+                let fourWeekAvg = _.find(olapTodayData, {type: 'avg4weeks'});
 
-            if (!today) {
-                return;
-            }
-
-            let day = {
-                netAmount: today.salesNetAmount,
-                date: currentDateTime,
-                aggregations: {
-                    sales: {
-                        netAmount: today.salesNetAmount,
-                        amount: today.grossSales,
-                        fourWeekAvgNet: fourWeekAvg.salesNetAmount,
-                        fourWeekAvg: fourWeekAvg.grossSales,
-                    },
-                    reductions: {
-                        cancellations: {
-                            percentage: today.Voids / (today.salesNetAmount + today.Voids),
-                            fourWeekAvgPercentage: fourWeekAvg.Voids / (fourWeekAvg.salesNetAmount + fourWeekAvg.Voids)
-                        },
-                        employee: {
-                            percentage: today.Employees / (today.salesNetAmount + today.Employees),
-                            fourWeekAvgPercentage: fourWeekAvg.Employees / (fourWeekAvg.salesNetAmount + fourWeekAvg.Employees)
-                        },
-                        operational: {
-                            percentage: today.Operational / (today.salesNetAmount + today.Operational),
-                            fourWeekAvgPercentage: fourWeekAvg.Operational / (fourWeekAvg.salesNetAmount + fourWeekAvg.Operational)
-                        },
-                        retention: {
-                            percentage: today.RetentionDiscount / (today.salesNetAmount + today.RetentionDiscount),
-                            fourWeekAvgPercentage: fourWeekAvg.RetentionDiscount / (fourWeekAvg.salesNetAmount + fourWeekAvg.RetentionDiscount)
-                        }
-                    },
-                    indicators: {}
+                if (!today) {
+                    return;
                 }
-            };
-            obs.next(day);
 
-        });
+                let day = {
+                    netAmount: today.salesNetAmount,
+                    date: currentDateTime,
+                    aggregations: {
+                        sales: {
+                            netAmount: today.salesNetAmount,
+                            amount: today.grossSales,
+                            fourWeekAvgNet: fourWeekAvg.salesNetAmount,
+                            fourWeekAvg: fourWeekAvg.grossSales,
+                        },
+                        reductions: {
+                            cancellations: {
+                                percentage: today.Voids / (today.salesNetAmount + today.Voids),
+                                fourWeekAvgPercentage: fourWeekAvg.Voids / (fourWeekAvg.salesNetAmount + fourWeekAvg.Voids)
+                            },
+                            employee: {
+                                percentage: today.Employees / (today.salesNetAmount + today.Employees),
+                                fourWeekAvgPercentage: fourWeekAvg.Employees / (fourWeekAvg.salesNetAmount + fourWeekAvg.Employees)
+                            },
+                            operational: {
+                                percentage: today.Operational / (today.salesNetAmount + today.Operational),
+                                fourWeekAvgPercentage: fourWeekAvg.Operational / (fourWeekAvg.salesNetAmount + fourWeekAvg.Operational)
+                            },
+                            retention: {
+                                percentage: today.RetentionDiscount / (today.salesNetAmount + today.RetentionDiscount),
+                                fourWeekAvgPercentage: fourWeekAvg.RetentionDiscount / (fourWeekAvg.salesNetAmount + fourWeekAvg.RetentionDiscount)
+                            }
+                        },
+                        indicators: {}
+                    }
+                };
+                obs.next(day);
+
+            });
     });
 
     public database$: Observable<any> = Observable.create(async obs => {
@@ -1076,7 +1086,7 @@ export class DataService {
             let olapYearlyData = _.cloneDeep(streamData[0]);
             let rosCalendars = _.cloneDeep(streamData[1]);
 
-            if(olapYearlyData.error) {
+            if (olapYearlyData.error) {
                 obs.next(olapYearlyData);
                 return;
             }
@@ -1553,7 +1563,7 @@ export class DataService {
                         let numberOfDaysToIncludeInAverage = 4;
                         let compareToSameDayOfWeek = true;
                         let skipExcluded = true;
-                        if(config.key === 'generalAvg' || config.key === 'generalYearAvg') {
+                        if (config.key === 'generalAvg' || config.key === 'generalYearAvg') {
                             numberOfDaysToIncludeInAverage = 30;
                             compareToSameDayOfWeek = false;
                             skipExcluded = false;
@@ -1675,15 +1685,15 @@ export class DataService {
                     }
                 });
 
-                if(month.aggregations && month.aggregations.days) {
+                if (month.aggregations && month.aggregations.days) {
                     _.forEach(month.aggregations.days, (day, weekDay) => {
                         let prevoiusWeekDay = moment(month.latestDay).subtract(1, 'months').day(weekDay);
                         let notFound = 0;
-                        if(day.count < 4 && notFound < 6) {
+                        if (day.count < 4 && notFound < 6) {
                             let previousMonth = database[prevoiusWeekDay.format('YYYYMM')];
-                            if(previousMonth && previousMonth.days) {
+                            if (previousMonth && previousMonth.days) {
                                 let previousDayData = _.find(previousMonth.days, {'date': prevoiusWeekDay.format('YYYY-MM-DD')});
-                                if(previousDayData && !previousDayData.isExcluded) {
+                                if (previousDayData && !previousDayData.isExcluded) {
                                     day.count += 1;
                                     day.sales.amount += previousDayData.amount;
                                     day.sales.amountWithoutVat += previousDayData.amountWithoutVat;
@@ -1694,7 +1704,7 @@ export class DataService {
 
                                     day.reductions.cancellations.amount += previousDayData.rCancellation;
                                     day.reductions.operational.amount += previousDayData.rOperationalDiscount;
-                                    day.reductions.retention.amount +=previousDayData.rRetentionDiscount;
+                                    day.reductions.retention.amount += previousDayData.rRetentionDiscount;
                                     day.reductions.employee.amount += previousDayData.rEmployees;
                                 }
                                 else {
@@ -1814,7 +1824,7 @@ export class DataService {
 
             try {
                 window.localStorage.setItem(org.id + '-database', JSON.stringify(database));
-            } catch(domException) {
+            } catch (domException) {
                 if (domException.name === 'QuotaExceededError' ||
                     domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
                     //log something here
@@ -1900,24 +1910,28 @@ export class DataService {
         });
     }
 
-    async getDailyReport(day: moment.Moment) {
+    async getDailyReport(day: moment.Moment, forceRefresh) {
         let org = JSON.parse(window.localStorage.getItem('org'));
         let reportsByDay = JSON.parse(window.localStorage.getItem(org.id + '-daily-reports'));
-        if(!reportsByDay) {
+        if (!reportsByDay) {
             reportsByDay = [];
         }
 
         let dailyReport = _.find(reportsByDay, {date: day.format('YYYYMMDD')});
-        if(dailyReport && moment(dailyReport.datetime, 'YYYY-MM-DD HH:mm').isSameOrAfter(moment().subtract(10, 'minutes'))) {
+        if (forceRefresh !== 'force' && dailyReport && moment(dailyReport.datetime, 'YYYY-MM-DD HH:mm').isSameOrAfter(moment().subtract(10, 'minutes'))) {
             return dailyReport.data;
         }
         else {
             let report = await this.olapEp.getDailyReport(day);
-            if(reportsByDay.length >= 10) {
+            if (reportsByDay.length >= 10) {
                 reportsByDay.splice(0, 1);
             }
 
-            reportsByDay.push({date: day.format('YYYYMMDD'), datetime: moment().format('YYYY-MM-DD HH:mm'), data: report});
+            reportsByDay.push({
+                date: day.format('YYYYMMDD'),
+                datetime: moment().format('YYYY-MM-DD HH:mm'),
+                data: report
+            });
 
             let localStorage = window.localStorage;
             let keys = Object.keys(localStorage);
@@ -1928,7 +1942,7 @@ export class DataService {
             });
             try {
                 window.localStorage.setItem(org.id + '-daily-reports', JSON.stringify(reportsByDay));
-            } catch(domException) {
+            } catch (domException) {
                 if (domException.name === 'QuotaExceededError' ||
                     domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
                     //log something here

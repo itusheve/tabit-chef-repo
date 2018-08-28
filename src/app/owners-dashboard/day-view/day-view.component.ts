@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/switchMap';
 import {combineLatest} from 'rxjs/observable/combineLatest';
+import {zip} from 'rxjs/observable/zip';
 import {Order} from '../../../tabit/model/Order.model';
 import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
 import {Shift} from '../../../tabit/model/Shift.model';
@@ -15,7 +16,6 @@ import {KPI} from '../../../tabit/model/KPI.model';
 import {Orders_KPIs, PaymentsKPIs} from '../../../tabit/data/ep/olap.ep';
 import {DebugService} from '../../debug.service';
 import {environment} from '../../../environments/environment';
-
 
 export interface SalesTableRow {
     orderType: OrderType;
@@ -147,7 +147,7 @@ export class DayViewComponent implements OnInit {
 
     public bdIsCurrentBd: boolean;
     public closedOpenSalesDiff: number;
-    public openOrders: {totalAmount: number};
+    public openOrders: { totalAmount: number };
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private closedOrdersDataService: ClosedOrdersDataService,
@@ -191,9 +191,9 @@ export class DayViewComponent implements OnInit {
                 promotions: 0
             };
             let reductions = tlog.icons ? tlog.icons.split(',') : [];
-            if(reductions.length) {
+            if (reductions.length) {
                 _.forEach(reductions, reduction => {
-                    if(reduction === 'promotions') {
+                    if (reduction === 'promotions') {
                         order.priceReductions.promotions = 1;
                     }
                     else if (reduction === 'retention') {
@@ -218,9 +218,10 @@ export class DayViewComponent implements OnInit {
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
-        combineLatest(this.dataService.database$, this.dataService.LatestBusinessDayDashboardData$).subscribe(async data => {
+        zip(this.dataService.database$, this.dataService.LatestBusinessDayDashboardData$, this.dataService.refresh$).subscribe(async data => {
             let database = data[0];
             let dashboardData = data[1];
+            let forceRefresh = data[2];
 
             this.daySelectorOptions = {
                 minDate: moment(database.getLowestDate()),
@@ -230,7 +231,7 @@ export class DayViewComponent implements OnInit {
             const cbd: moment.Moment = moment();
             this.bdIsCurrentBd = false;
 
-            let dailyReport = await this.dataService.getDailyReport(this.day);
+            let dailyReport = await this.dataService.getDailyReport(this.day, forceRefresh);
             if (!dailyReport) {
                 this.hasData = false;
                 this.hasNoDataForToday = true;
@@ -238,7 +239,7 @@ export class DayViewComponent implements OnInit {
             }
 
             this.openOrders = {totalAmount: undefined};
-            if(moment().isSame(this.day, 'day')) {
+            if (moment().isSame(this.day, 'day')) {
                 this.openOrders.totalAmount = _.get(dashboardData, 'today.openOrders.totalSalesAmount');
                 this.bdIsCurrentBd = true;
             }
@@ -401,45 +402,30 @@ export class DayViewComponent implements OnInit {
         });
     }
 
-
-    tmp(e) {
-        console.info('gotcha!');
-        e.stopPropagation();
-    }
-
     //TODO on iOS when touching the circle it disappears
 
     ngOnInit() {
         window.scrollTo(0, 0);
 
+        this.dataService.refresh$.subscribe(refresh => {
+            this.hasData = false;
+            this.dailySummaryTblData = undefined;
+            this.byShiftSummaryTblsData = undefined;
+        });
+
         this.route.paramMap
             .subscribe((params: ParamMap) => {
                 const dateStr = params.get('businessDate');
-                // if (dateStr) {
                 this.day = moment(dateStr);
-                // }
-                //  else {
-                //   this.day = moment().subtract(1, 'day');
-                // }
                 this.render();
             });
     }
 
-    // ngAfterViewInit() {
-    // this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByTagName('mat-sidenav-content')[0])
-    // this.visibilityService.monitorVisibility(<any>document.getElementsByClassName('daySelectorNotFixed')[0], <any>document.getElementsByClassName('willItWork')[0])
-    //   .subscribe(visible => {
-    //     console.info(`visible: ${visible}`);
-    //     this.daySelectorVisible = visible;
-    //   });
-    // }
 
     onDateChanged(dateM: moment.Moment) {
-        //const date = dateM.format('YYYY-MM-DD');
         this.hasData = false;
         this.day = dateM;
         this.render();
-        //this.router.navigate(['/owners-dashboard/day', date]);
     }
 
     onGoToOrders(filter, type) {
