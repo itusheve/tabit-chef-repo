@@ -7,7 +7,6 @@ import * as moment from 'moment';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CardData} from '../../ui/card/card.component';
 import {combineLatest} from 'rxjs/observable/combineLatest';
-import {TrendsDataService} from '../../../tabit/data/dc/trends.data.service';
 import {TrendModel} from '../../../tabit/model/Trend.model';
 import {environment} from '../../../environments/environment';
 import {fromPromise} from 'rxjs/observable/fromPromise';

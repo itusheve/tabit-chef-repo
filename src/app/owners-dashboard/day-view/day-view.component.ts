@@ -1,14 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {DataService, BusinessDayKPI, CustomRangeKPI} from '../../../tabit/data/data.service';
+import {DataService} from '../../../tabit/data/data.service';
 import {Router, ActivatedRoute, ParamMap} from '@angular/router';
+import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/switchMap';
-import {combineLatest} from 'rxjs/observable/combineLatest';
 import {zip} from 'rxjs/observable/zip';
 import {Order} from '../../../tabit/model/Order.model';
-import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
 import {OrderType} from '../../../tabit/model/OrderType.model';
 import {OwnersDashboardService} from '../owners-dashboard.service';
 import {Orders_KPIs, PaymentsKPIs} from '../../../tabit/data/ep/olap.ep';
@@ -148,8 +147,8 @@ export class DayViewComponent implements OnInit {
     public openOrders: { totalAmount: number };
 
     constructor(private ownersDashboardService: OwnersDashboardService,
-                private closedOrdersDataService: ClosedOrdersDataService,
                 private dataService: DataService,
+                private closedOrdersDataService: ClosedOrdersDataService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private ds: DebugService) {

@@ -3,8 +3,6 @@ import {Router} from '@angular/router';
 import {DatePipe} from '@angular/common';
 import * as moment from 'moment';
 import {combineLatest} from 'rxjs/observable/combineLatest';
-import {CardsDataService} from '../../../tabit/data/dc/cards.data.service';
-import {TrendsDataService} from '../../../tabit/data/dc/trends.data.service';
 import {DataService, tmpTranslations} from '../../../tabit/data/data.service';
 import {CardData} from '../../ui/card/card.component';
 import {OwnersDashboardService} from '../owners-dashboard.service';
@@ -58,8 +56,6 @@ export class HomeComponent implements OnInit {
     public olapError: any;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
-                private cardsDataService: CardsDataService,
-                private trendsDataService: TrendsDataService,
                 private dataService: DataService,
                 private router: Router,
                 private datePipe: DatePipe) {

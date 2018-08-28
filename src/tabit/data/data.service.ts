@@ -365,6 +365,8 @@ export const appVersions = (document as any).tbtAppVersions;
 @Injectable()
 export class DataService {
 
+    private ordersCache: Map<string, Order[]> = new Map<string, Order[]>();
+
     private organizations: any[];
 
     public organization$: Observable<any> = Observable.create(obs => {
@@ -1384,5 +1386,85 @@ export class DataService {
             }
         });
         return excludedDates;
+    }
+
+    public getOrders(businessDate: moment.Moment
+                     // { withPriceReductions = false }: { withPriceReductions?: boolean } = {}
+    ): Promise<Order[]> {
+        // cache check
+        const bdKey = businessDate.format('YYYY-MM-DD');
+        if (this.ordersCache.has(bdKey)) {
+            return Promise.resolve(this.ordersCache.get(bdKey));
+        }
+
+        //not cached:
+        const that = this;
+
+        const pAll: any = [
+            this.olapEp.getOrders({day: businessDate}),
+            this.olapEp.getOrdersPriceReductionData(businessDate)
+        ];
+        //if (withPriceReductions) pAll.push(this.olapEp.getOrdersPriceReductionData(businessDate));
+
+        return Promise.all(pAll)
+            .then((data: any[]) => {
+                const ordersRaw: any[] = data[0];
+                const priceReductionsRaw: any[] = data[1];
+
+                const orders: Order[] = [];
+                for (let i = 0; i < ordersRaw.length; i++) {
+                    const order: Order = new Order();
+                    order.id = i;
+                    order.waiter = ordersRaw[i].waiter;
+                    order.openingTime = ordersRaw[i].openingTime;
+                    order.number = ordersRaw[i].orderNumber;
+
+                    // normalize olapData:
+                    //order.orderType = this.olapNormalizationMaps[this.cubeCollection]['orderType'][ordersRaw[i].orderTypeCaption.toUpperCase()];
+                    order.orderType = this.orderTypes[ordersRaw[i].orderTypeCaption];
+                    // end of normalizeOlapData
+
+                    // order.orderTypeId = '';//this.dataService.orderTypes.find(ot => ot.caption === ordersRaw[i].orderTypeCaption)['id'];
+                    order.sales = ordersRaw[i].sales;
+                    order.diners = ordersRaw[i].dinersPPA;
+                    order.ppa = ordersRaw[i].ppa;
+
+                    const orderPriceReductionsRaw_aggregated = {
+                        cancellation: 0,//summarises: {dim:cancellations,measure:cancellations} AND {dim:operational,measure:operational}   heb: ביטולים
+                        discountsAndOTH: 0,//{dim:retention,measure:retention}  heb: שימור ושיווק
+                        employees: 0,//{dim:organizational,measure:organizational}  heb: עובדים
+                        promotions: 0,//{dim:promotions,measure:retention}  heb: מבצעים
+                    };
+
+                    priceReductionsRaw
+                        .filter(pr => pr.orderNumber === order.number)
+                        .forEach(o => {
+                            const dim = o.reductionReason;
+                            switch (dim) {
+                                case 'cancellation':
+                                case 'compensation':
+                                    orderPriceReductionsRaw_aggregated.cancellation += (o.cancellation + o.operational);
+                                    break;
+                                case 'retention':
+                                    orderPriceReductionsRaw_aggregated.discountsAndOTH += o.retention;
+                                    break;
+                                case 'organizational':
+                                    orderPriceReductionsRaw_aggregated.employees += o.organizational;
+                                    break;
+                                case 'promotions':
+                                    orderPriceReductionsRaw_aggregated.promotions += o.retention;
+                                    break;
+                            }
+                        });
+
+                    order.priceReductions = orderPriceReductionsRaw_aggregated;
+
+                    orders.push(order);
+                }
+
+                this.ordersCache.set(bdKey, orders);
+
+                return orders;
+            });
     }
 }

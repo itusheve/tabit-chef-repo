@@ -39,10 +39,6 @@ import { PeripheralsDataService } from '../tabit/data/dc/_peripherals.data.servi
 import { PromotionsDataService } from '../tabit/data/dc/_promotions.data.service';
 import { TablesDataService } from '../tabit/data/dc/_tables.data.service';
 import { CheckDataService } from '../tabit/data/dc/_checks.data.service';
-
-import { CardsDataService } from '../tabit/data/dc/cards.data.service';
-import { ClosedOrdersDataService } from '../tabit/data/dc/closedOrders.data.service';
-import { TrendsDataService } from '../tabit/data/dc/trends.data.service';
 import { DataService } from '../tabit/data/data.service';
 
 import { AppComponent } from './app.component';
@@ -162,10 +158,6 @@ if (environment.tbtLocale==='he-IL') {
     PromotionsDataService,
     TablesDataService,
     CheckDataService,
-
-    CardsDataService,
-    ClosedOrdersDataService,
-    TrendsDataService,
     ROSEp,
     OlapEp,
     OlapMappings

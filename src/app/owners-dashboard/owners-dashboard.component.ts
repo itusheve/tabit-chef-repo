@@ -70,7 +70,7 @@ export class OwnersDashboardComponent implements OnInit {
         }, 300);
     }
 
-    refresh(event) {
+    refresh() {
         this.dataService.refresh$.next('force');
     }
 
@@ -104,7 +104,7 @@ export class OwnersDashboardComponent implements OnInit {
     ngOnInit() {
         let context = this;
         document.addEventListener('refreshData', function (event) {
-            context.refresh(event);
+            context.refresh();
         });
     }
 }
