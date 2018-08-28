@@ -612,7 +612,7 @@
       </trans-unit>
       <trans-unit id="fetchingLatestAnalyticsData" datatype="html">
         <source>Fetching latest analytics data</source>
-        <target>מעדכן נתוני בינה עסקית</target>
+        <target>מעדכן נתונים</target>
       </trans-unit>
       <trans-unit id="processingData" datatype="html">
         <source>We are processing your data, please check back in a few minutes.</source>

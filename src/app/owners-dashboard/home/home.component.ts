@@ -66,6 +66,9 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.loadingOlapData = true;
+        this.currentBdCardData.loading = true;
+
         this.dataService.refresh$.subscribe((refresh) => {
             if(refresh === 'force') {
                 this.loadingOlapData = true;

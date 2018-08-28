@@ -340,7 +340,7 @@ export class ClosedOrdersDataService {
         private ds: DebugService
     ) {
 
-        const isUS = environment.region === 'us' ? true : false //controls behaviour
+        const isUS = environment.region === 'us' ? true : false; //controls behaviour
 
         this.orderViewService = new OrderViewService({
             local: environment.tbtLocale,//controls translations, accepts 'he-IL' / 'en-US'
