@@ -168,7 +168,11 @@
       </trans-unit>
       <trans-unit id="netSales" datatype="html">
         <source>Net Sales</source>
-        <target>מכירות נטו</target>
+        <target>מכירות</target>
+      </trans-unit>
+      <trans-unit id="salesWithTax" datatype="html">
+        <source>Sales + Tax</source>
+        <target>מכירות + מע"מ</target>
       </trans-unit>
       <trans-unit id="tax" datatype="html">
         <source>Tax</source>

@@ -159,8 +159,8 @@ export class HomeComponent implements OnInit {
                     };
                 }
 
-                if (this.currentBdCardData.averages.weekly.percentage) {
-                    let value = (day.aggregations.sales.netAmount / day.aggregations.sales.fourWeekAvgNet) * 100;
+                if (this.currentBdCardData.averages.weekly.change) {
+                    let value = (this.currentBdCardData.averages.weekly.change) * 100;
                     this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }
 

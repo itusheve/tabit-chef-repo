@@ -1584,7 +1584,6 @@ export class DataService {
 
                                     //totals.reductions.employeePercentage += previousDayData.aggregations.reductions.employee.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.employee.amount);
                                     totals.reductions.employee += previousDayData.aggregations.reductions.employee.amount;
-
                                     i++;
                                 }
                                 else {
@@ -1595,7 +1594,7 @@ export class DataService {
                                 notFound++;
                             }
 
-                            if (notFound > 2) {
+                            if (notFound > 4) {
                                 stop = true;
                             }
                         }
@@ -1675,6 +1674,40 @@ export class DataService {
                         month.aggregations.days[weekday].reductions.employee.amount += day.isExcluded ? day.aggregations.reductions.employee.fourWeekAvg : day.rEmployees;
                     }
                 });
+
+                if(month.aggregations && month.aggregations.days) {
+                    _.forEach(month.aggregations.days, (day, weekDay) => {
+                        let prevoiusWeekDay = moment(month.latestDay).subtract(1, 'months').day(weekDay);
+                        let notFound = 0;
+                        if(day.count < 4 && notFound < 6) {
+                            let previousMonth = database[prevoiusWeekDay.format('YYYYMM')];
+                            if(previousMonth && previousMonth.days) {
+                                let previousDayData = _.find(previousMonth.days, {'date': prevoiusWeekDay.format('YYYY-MM-DD')});
+                                if(previousDayData && !previousDayData.isExcluded) {
+                                    day.count += 1;
+                                    day.sales.amount += previousDayData.amount;
+                                    day.sales.amountWithoutVat += previousDayData.amountWithoutVat;
+                                    day.sales.netAmount += previousDayData.salesNetAmount;
+                                    day.diners.count += previousDayData.diners;
+                                    day.ppa.amount += previousDayData.ppa;
+                                    day.ppa.amountWithoutVat += previousDayData.ppaWithoutVat;
+
+                                    day.reductions.cancellations.amount += previousDayData.rCancellation;
+                                    day.reductions.operational.amount += previousDayData.rOperationalDiscount;
+                                    day.reductions.retention.amount +=previousDayData.rRetentionDiscount;
+                                    day.reductions.employee.amount += previousDayData.rEmployees;
+                                }
+                                else {
+                                    notFound++;
+                                }
+                            }
+                            else {
+                                notFound++;
+                            }
+                            prevoiusWeekDay.subtract(7, 'days');
+                        }
+                    });
+                }
 
                 if (month.days && month.days.length) {
                     let endOfMonth = moment(month.days[0].date).endOf('month');
