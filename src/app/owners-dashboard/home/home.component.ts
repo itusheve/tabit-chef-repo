@@ -1,20 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {DecimalPipe, PercentPipe, DatePipe} from '@angular/common';
-
+import {DatePipe} from '@angular/common';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-
 import {combineLatest} from 'rxjs/observable/combineLatest';
-
 import {CardsDataService} from '../../../tabit/data/dc/cards.data.service';
 import {TrendsDataService} from '../../../tabit/data/dc/trends.data.service';
 import {DataService, tmpTranslations} from '../../../tabit/data/data.service';
-
 import {CardData} from '../../ui/card/card.component';
 import {OwnersDashboardService} from '../owners-dashboard.service';
-import {fromPromise} from 'rxjs/observable/fromPromise';
-import {TrendModel} from '../../../tabit/model/Trend.model';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
 
 @Component({

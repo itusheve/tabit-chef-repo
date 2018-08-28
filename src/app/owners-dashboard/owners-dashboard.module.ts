@@ -17,11 +17,9 @@ import {MomentModule} from 'angular2-moment';
 import {MonthViewComponent} from './month-view/month-view.component';
 import {MonthSelectorComponent} from './month-view/month-selector/month-selector.component';
 import {MonthGridComponent} from './month-view/month-grid/month-grid.component';
-import {MonthChartComponent} from './month-view/month-chart/month-chart.component';
 
 import {DayViewComponent} from './day-view/day-view.component';
 import {DaySelectorComponent} from './day-view/day-selector/day-selector.component';
-import {DayPieChartComponent} from './day-view/day-pie-chart/day-pie-chart.component';
 import {DayOrdersTableComponent} from './day-view/day-orders-table/day-orders-table.component';
 import {DayOrdersTableHasSalesPipe, DayOrdersTableFilterPipe} from './day-view/day-orders-table/pipes';
 
@@ -67,17 +65,13 @@ import {
 // import { locale, loadMessages } from 'devextreme/localization'; //https://github.com/DevExpress/devextreme-examples/tree/17_2/intl-angular
 import {DxButtonModule} from 'devextreme-angular';
 import {DxCalendarModule} from 'devextreme-angular';
-import {DxChartModule} from 'devextreme-angular';
-import {DxPieChartModule} from 'devextreme-angular';
 import {DxDataGridModule} from 'devextreme-angular';
 import {DxLoadIndicatorModule} from 'devextreme-angular';
-import {DxLinearGaugeModule} from 'devextreme-angular';
 
 import 'devextreme-intl';
 import {OrderCashRefundComponent} from './order-view/slips/_cashRefund/cashRefund.component';
 import {OrderChequeRefundComponent} from './order-view/slips/_chequeRefund/chequeRefund.component';
 import {OrderCreditRefundComponent} from './order-view/slips/_creditRefund/creditRefund.component';
-import {environment} from '../../environments/environment';
 import {DaySalesTableComponent} from './day-view/day-sales-table/day-sales-table.component';
 import {DaySalesBySubDepartmentTableComponent} from './day-view/day-sales-by-sub-department-table/day-sales-by-sub-department-table.component';
 import {DayMostSoldItemsTableComponent} from './day-view/day-most-sold-items-table/day-most-sold-items-table.component';
@@ -105,12 +99,8 @@ import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/
 
         DxButtonModule,
         DxCalendarModule,
-        DxChartModule,
-        DxPieChartModule,
         DxDataGridModule,
-        DxLoadIndicatorModule,
-        DxLinearGaugeModule
-
+        DxLoadIndicatorModule
     ],
     declarations: [
         OwnersDashboardComponent,
@@ -127,11 +117,8 @@ import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/
         MonthViewComponent,
         MonthSelectorComponent,
         MonthGridComponent,
-        MonthChartComponent,
-
         DayViewComponent,
         DaySelectorComponent,
-        DayPieChartComponent,
         DayOrdersTableComponent,
         DayOrdersTableHasSalesPipe,
         DayOrdersTableFilterPipe,
@@ -143,9 +130,6 @@ import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/
         DayOperationalErrorsTableComponent,
         DayRetentionTableComponent,
         DayMonthSummaryTableComponent,
-        // DaySalesTypeTableComponent,
-        // DayDinersTableComponent,
-        // DayShiftsComponent,
 
         OrderViewComponent,
         OrderSlipsComponent,
@@ -169,7 +153,6 @@ import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/
         OrderGiftCardDetailsComponent,
         OrderCashPaymentFooterComponent,
         OrderDetailsComponent,
-
     ],
     providers: [
         OwnersDashboardService
