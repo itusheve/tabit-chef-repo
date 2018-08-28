@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 
@@ -15,7 +15,7 @@ import {DebugService} from '../debug.service';
     templateUrl: './owners-dashboard.component.html',
     styleUrls: ['./owners-dashboard.component.scss']
 })
-export class OwnersDashboardComponent {
+export class OwnersDashboardComponent implements OnInit {
 
     org: any;
     user: any;
@@ -99,5 +99,12 @@ export class OwnersDashboardComponent {
             }
         });
 
+    }
+
+    ngOnInit() {
+        let context = this;
+        document.addEventListener('refreshData', function (event) {
+            context.refresh(event);
+        });
     }
 }
