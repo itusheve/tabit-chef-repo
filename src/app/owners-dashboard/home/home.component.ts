@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {DatePipe} from '@angular/common';
 import * as moment from 'moment';
-import * as _ from 'lodash';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {CardsDataService} from '../../../tabit/data/dc/cards.data.service';
 import {TrendsDataService} from '../../../tabit/data/dc/trends.data.service';
@@ -19,7 +18,6 @@ import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
 })
 export class HomeComponent implements OnInit {
 
-    // renderMonthView = true;//we postpone this a bit
     currentBdCardData: CardData = {
         loading: true,
         title: '',
@@ -34,16 +32,6 @@ export class HomeComponent implements OnInit {
         loading: true,
         title: '',
         tag: 'previousBd',
-        sales: 0,
-        diners: 0,
-        ppa: 0,
-        aggregations: {},
-    };
-
-    mtdCardData: CardData = {
-        loading: true,
-        title: '',
-        tag: '',
         sales: 0,
         diners: 0,
         ppa: 0,
