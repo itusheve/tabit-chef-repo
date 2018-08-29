@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import {Observable} from 'rxjs/Observable';
 import {environment} from '../../../../environments/environment';
 import {currencySymbol} from '../../../../tabit/data/data.service';
+import {CardData} from '../../../ui/card/card.component';
 
 
 @Component({
@@ -13,6 +14,7 @@ import {currencySymbol} from '../../../../tabit/data/data.service';
 })
 export class MonthSelectorComponent implements OnInit {
     @Input() month$: Observable<moment.Moment>;
+    @Input() cardData: CardData;
 
     @Input() options: {
         minDate: moment.Moment,

@@ -1,7 +1,9 @@
 <div class="flex d-col">
-  <app-card class="mb-1" *ngIf="showSummary" [cardData]="summaryCardData"></app-card>
-  <app-month-selector *ngIf="monthSelectorOptions" class="widget noPadding mb-1" #monthSelector [month$]="month$" [options]="monthSelectorOptions" (onDateChanged)="onDateChanged($event)"></app-month-selector>
-  <app-month-grid [hidden]="!renderGrid" #monthGrid (onDateClicked)="onDateClicked2($event)"></app-month-grid>
+    <app-month-selector *ngIf="monthSelectorOptions" class="widget noPadding" #monthSelector [month$]="month$"
+                        [options]="monthSelectorOptions" [cardData]="summaryCardData"
+                        (onDateChanged)="onDateChanged($event)" style="margin-bottom: 1px;"></app-month-selector>
+    <app-card *ngIf="showSummary" [cardData]="summaryCardData" style="margin-bottom: 1px;"></app-card>
+    <app-month-grid [hidden]="!renderGrid" #monthGrid (onDateClicked)="onDateClicked2($event)"></app-month-grid>
 </div>
 
 

@@ -9,7 +9,6 @@ import {CardData} from '../../ui/card/card.component';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {TrendModel} from '../../../tabit/model/Trend.model';
 import {environment} from '../../../environments/environment';
-import {fromPromise} from 'rxjs/observable/fromPromise';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
 
 
@@ -155,7 +154,6 @@ export class MonthViewComponent implements OnInit {
             this.summaryCardData.statusClass = '';
         }
 
-        this.summaryCardData.title = `${this.datePipe.transform(moment(month.latestDay), 'MMMM')}`;
         this.summaryCardData.loading = false;
     }
 
