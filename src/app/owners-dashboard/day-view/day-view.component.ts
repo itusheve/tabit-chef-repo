@@ -7,6 +7,8 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/switchMap';
 import {zip} from 'rxjs/observable/zip';
+import {combineLatest} from 'rxjs/observable/combineLatest';
+import {Subject} from 'rxjs/Subject';
 import {Order} from '../../../tabit/model/Order.model';
 import {OrderType} from '../../../tabit/model/OrderType.model';
 import {OwnersDashboardService} from '../owners-dashboard.service';
@@ -27,6 +29,7 @@ export interface SalesTableRow {
 export class DayViewComponent implements OnInit {
 
     day: moment.Moment;
+
     daySelectorOptions: {
         minDate: moment.Moment,
         maxDate: moment.Moment
@@ -145,6 +148,7 @@ export class DayViewComponent implements OnInit {
     public bdIsCurrentBd: boolean;
     public closedOpenSalesDiff: number;
     public openOrders: { totalAmount: number };
+    private day$ = new Subject<moment.Moment>();
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private dataService: DataService,
@@ -167,7 +171,6 @@ export class DayViewComponent implements OnInit {
 
         let orders = [];
         let tlogs = dailyReport.tlogs;
-        let tlogsReductions = dailyReport.tlogsReduction;
 
         let i = 1;
         _.forEach(tlogs, tlog => {
@@ -215,30 +218,30 @@ export class DayViewComponent implements OnInit {
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
-        zip(this.dataService.database$, this.dataService.LatestBusinessDayDashboardData$, this.dataService.refresh$).subscribe(async data => {
-            let database = data[0];
-            let dashboardData = data[1];
-            let forceRefresh = data[2];
-
+        this.dataService.database$.subscribe(database => {
             this.daySelectorOptions = {
                 minDate: moment(database.getLowestDate()),
                 maxDate: moment(moment())
             };
+        });
 
-            const cbd: moment.Moment = moment();
-            this.bdIsCurrentBd = false;
-
-            let dailyReport = await this.dataService.getDailyReport(this.day, forceRefresh);
-            if (!dailyReport) {
-                this.hasData = false;
-                this.hasNoDataForToday = true;
-                return;
-            }
-
+        this.dataService.LatestBusinessDayDashboardData$.subscribe(dashboardData => {
             this.openOrders = {totalAmount: undefined};
             if (moment().isSame(this.day, 'day')) {
                 this.openOrders.totalAmount = _.get(dashboardData, 'today.openOrders.totalSalesAmount');
                 this.bdIsCurrentBd = true;
+            }
+        });
+
+        combineLatest(this.day$, this.dataService.refresh$).subscribe(async data => {
+
+            let dayDate = data[0];
+            this.bdIsCurrentBd = false;
+            let dailyReport = await this.dataService.getDailyReport(dayDate);
+            if (!dailyReport) {
+                this.hasData = false;
+                this.hasNoDataForToday = true;
+                return;
             }
 
             this.orders = this.extractOrders(dailyReport);
@@ -344,7 +347,7 @@ export class DayViewComponent implements OnInit {
                 this.paymentsData.payments.push({
                     accountGroup: payment.Type,
                     accountType: payment.Payments,
-                    date: this.day,
+                    date: dayDate,
                     clearerName: payment.Clearing,
                     paymentsKPIs: {
                         calcSalesAmnt: payment.SalesAmount,
@@ -395,7 +398,6 @@ export class DayViewComponent implements OnInit {
                 that.hasData = true;
                 that.hasNoDataForToday = false;
             }, 300);
-
         });
     }
 
@@ -403,6 +405,7 @@ export class DayViewComponent implements OnInit {
 
     ngOnInit() {
         window.scrollTo(0, 0);
+        this.render();
 
         this.dataService.refresh$.subscribe(refresh => {
             this.hasData = false;
@@ -414,7 +417,7 @@ export class DayViewComponent implements OnInit {
             .subscribe((params: ParamMap) => {
                 const dateStr = params.get('businessDate');
                 this.day = moment(dateStr);
-                this.render();
+                this.day$.next(moment(dateStr));
             });
     }
 
@@ -422,7 +425,7 @@ export class DayViewComponent implements OnInit {
     onDateChanged(dateM: moment.Moment) {
         this.hasData = false;
         this.day = dateM;
-        this.render();
+        this.day$.next(dateM);
     }
 
     onGoToOrders(filter, type) {
@@ -431,7 +434,7 @@ export class DayViewComponent implements OnInit {
 
     /* called directly by different tables with order number */
     onOrderClicked_orderNumber(orderNumber: number) {
-        const order = this.orders.find(o => o.number === orderNumber);
+        let order = this.orders.find(o => o.number == orderNumber);
         if (order) {
             this.onOrderClicked(order);
         }

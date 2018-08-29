@@ -380,14 +380,7 @@ export class DataService {
     public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';//'America/Chicago' / 'Asia/Jerusalem'
 
     public currentRestTime$: Observable<moment.Moment> = Observable.create(obs => {
-        let tmp;
-        try {
-            tmp = moment.tz(this.region);
-        } catch (e) {
-            console.error(e, 'tmp = moment.tz(this.region);', this.region);
-            tmp = moment();
-        }
-        obs.next(tmp);
+        obs.next(this.getCurrentRestTime());
     });
 
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
@@ -408,9 +401,9 @@ export class DataService {
     }).publishReplay(1).refCount();
 
     public LatestBusinessDayDashboardData$: Observable<any> = Observable.create(obs => {
-        combineLatest(this.currentRestTime$, this.refresh$)
-            .subscribe(data => {
-                let currentRestTime = data[0];
+        this.refresh$
+            .subscribe(refresh => {
+                let currentRestTime = this.getCurrentRestTime();
                 currentRestTime = moment(currentRestTime);
                 const params = {
                     //daysOfHistory: 1,//0 returns everything...
@@ -489,9 +482,9 @@ export class DataService {
     });
 
     public olapToday$: Observable<any> = Observable.create(async obs => {
-        combineLatest(this.currentRestTime$, this.refresh$)
-            .subscribe(async data => {
-                let currentDateTime = data[0];
+        this.refresh$
+            .subscribe(async refresh => {
+                let currentDateTime = this.getCurrentRestTime();
                 let olapTodayData = await this.olapEp.getToday(currentDateTime);
 
                 let today = _.find(olapTodayData, {type: 'today'});
@@ -1296,26 +1289,28 @@ export class DataService {
 
     }
 
-    async getDailyReport(day: moment.Moment, forceRefresh) {
+    async getDailyReport(day: moment.Moment) {
         let org = JSON.parse(window.localStorage.getItem('org'));
-        let reportsByDay = JSON.parse(window.localStorage.getItem(org.id + '-daily-reports'));
-        if (!reportsByDay) {
-            reportsByDay = [];
+        let reportsCache = JSON.parse(window.localStorage.getItem(org.id + '-daily-reports'));
+        if (!reportsCache) {
+            reportsCache = [];
         }
 
-        let dailyReport = _.find(reportsByDay, {date: day.format('YYYYMMDD')});
-        if (forceRefresh !== 'force' && dailyReport && moment(dailyReport.datetime, 'YYYY-MM-DD HH:mm').isSameOrAfter(moment().subtract(10, 'minutes'))) {
+        let now = moment();
+
+        let dailyReport = _.find(reportsCache, {date: day.format('YYYYMMDD')});
+        if (!day.isSame(now, 'days') && dailyReport && moment(dailyReport.createTime, 'YYYY-MM-DD HH:mm').isSameOrAfter(now.subtract(10, 'minutes'))) {
             return dailyReport.data;
         }
         else {
             let report = await this.olapEp.getDailyReport(day);
-            if (reportsByDay.length >= 10) {
-                reportsByDay.splice(0, 1);
+            if (reportsCache.length >= 10) {
+                reportsCache.splice(0, 1);
             }
 
-            reportsByDay.push({
+            reportsCache.push({
                 date: day.format('YYYYMMDD'),
-                datetime: moment().format('YYYY-MM-DD HH:mm'),
+                createTime: moment().format('YYYY-MM-DD HH:mm'),
                 data: report
             });
 
@@ -1327,7 +1322,7 @@ export class DataService {
                 }
             });
             try {
-                window.localStorage.setItem(org.id + '-daily-reports', JSON.stringify(reportsByDay));
+                window.localStorage.setItem(org.id + '-daily-reports', JSON.stringify(reportsCache));
             } catch (domException) {
                 if (domException.name === 'QuotaExceededError' ||
                     domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
@@ -1466,5 +1461,17 @@ export class DataService {
 
                 return orders;
             });
+    }
+
+    public getCurrentRestTime() {
+        let time;
+        try {
+            time = moment.tz(this.region);
+        } catch (e) {
+            console.error(e, 'tmp = moment.tz(this.region);', this.region);
+            time = moment();
+        }
+
+        return time;
     }
 }

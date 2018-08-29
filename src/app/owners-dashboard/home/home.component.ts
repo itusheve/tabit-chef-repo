@@ -69,20 +69,24 @@ export class HomeComponent implements OnInit {
         this.loadingOlapData = true;
         this.currentBdCardData.loading = true;
 
+        this.OlapFailed = false;
+        this.showForecast = false;
+        window.scrollTo(0, 0);
+
+        this.initRefreshSubscriber();
+        this.getTodayData();
+        this.getTodayOlapData();
+        this.getYesterdayData();
+        this.getForecastData();
+    }
+
+    initRefreshSubscriber(): void {
         this.dataService.refresh$.subscribe((refresh) => {
             if(refresh === 'force') {
                 this.loadingOlapData = true;
                 this.currentBdCardData.loading = true;
             }
         });
-
-        this.OlapFailed = false;
-        this.showForecast = false;
-        window.scrollTo(0, 0);
-        this.getTodayData();
-        this.getTodayOlapData();
-        this.getYesterdayData();
-        this.getForecastData();
     }
 
     getTodayData(): void {
@@ -157,10 +161,9 @@ export class HomeComponent implements OnInit {
     }
 
     getTodayOlapData(): void {
-        combineLatest(this.dataService.database$, this.dataService.currentRestTime$)
-            .subscribe(data => {
-                let database = data[0];
-                let restaurantTime = data[1];
+        this.dataService.database$
+            .subscribe(database => {
+                let restaurantTime = this.dataService.getCurrentRestTime();
 
                 let day = database.getDay(restaurantTime);
                 if (day) {
