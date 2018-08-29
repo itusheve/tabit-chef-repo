@@ -42,7 +42,7 @@
                                  style="width: 100%; background-color: #e9ecef"></div>
                         </div>
                         <div class="progress rounded-0" [style.width]="getProgressBarContainerWidth(day) + '%'">
-                            <div class="progress-bar progress-bar-animated rounded-0" [ngClass]="getProgressBarBackground(day)" role="progressbar" [style.width]="getProgressBarWidth(day) + '%'" style="font-size: 16px;">{{getPercentage(day).toFixed(2)}}%</div>
+                            <div class="progress-bar progress-bar-animated rounded-0" [ngClass]="getProgressBarBackground(day)" role="progressbar" [style.width]="getProgressBarWidth(day) + '%'" style="font-size: 16px;">{{getPercentage(day).toFixed(1)}}%</div>
                         </div>
                         <div class="progress rounded-0" style="width: 85%; height: 6px;">
                             <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
