@@ -30,7 +30,8 @@ export class DaySalesTableComponent implements OnChanges {
         serviceCharge: number[],
         diners: number[],
         orders: number[],
-        ppa: number[]
+        ppa: number[],
+        hasTips: boolean
     };
 
     pivotedDataTotals: any;
@@ -57,22 +58,35 @@ export class DaySalesTableComponent implements OnChanges {
                 serviceCharge: [],
                 diners: [],
                 orders: [],
-                ppa: []
+                ppa: [],
+                hasTips: false
             };
 
             this.data.forEach(row => {
-                this.pivotedData.titles.push(row.orderType);
-                this.pivotedData.salesTotalAmount.push(row['Gross Sales $']);
-                this.pivotedData.totalSales.push(row['Item Net Sales $']);
-                this.pivotedData.netSales.push(row['salesNetAmount']);
-                this.pivotedData.netSalesWithoutVat.push(row['salesNetAmountWithOutVat']);
-                this.pivotedData.tax.push(row.Tax);
-                this.pivotedData.grossSales.push(row['Gross Sales $']);
-                this.pivotedData.gratuity.push(row.Tip);
-                this.pivotedData.serviceCharge.push(row.Tip);
-                this.pivotedData.orders.push(row.Orders);
-                this.pivotedData.diners.push(row.Diners);
-                this.pivotedData.ppa.push(row['PPA $']);
+
+                if(row.Tip) {
+                    this.pivotedData.hasTips = true;
+                }
+
+                let diners = null;
+                if(row.dataType) {
+                    diners = row.dataType === 'seated' ? row.Diners : row.Orders;
+                }
+
+                if(row['salesNetAmount']) {
+                    this.pivotedData.titles.push(row.orderType);
+                    this.pivotedData.salesTotalAmount.push(row['Gross Sales $']);
+                    this.pivotedData.totalSales.push(row['salesNetAmount']);
+                    this.pivotedData.netSales.push(row['salesNetAmount']);
+                    this.pivotedData.netSalesWithoutVat.push(row['salesNetAmountWithOutVat']);
+                    this.pivotedData.tax.push(row.Tax);
+                    this.pivotedData.grossSales.push(row['Gross Sales $']);
+                    this.pivotedData.gratuity.push(row.Tip);
+                    this.pivotedData.serviceCharge.push(row.Tip);
+                    //this.pivotedData.orders.push(row.Orders);
+                    this.pivotedData.diners.push(diners);
+                    this.pivotedData.ppa.push(row.dataType ? row['PPA $'] : null);
+                }
             });
 
             if (!this.pivotedData) {

@@ -4,7 +4,6 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 import {ReplaySubject} from 'rxjs/ReplaySubject';
-import {Subject} from 'rxjs/Subject';
 import {environment} from '../../../environments/environment';
 import {OlapMappings} from './olap.mappings';
 import {HttpHeaders, HttpClient} from '@angular/common/http';

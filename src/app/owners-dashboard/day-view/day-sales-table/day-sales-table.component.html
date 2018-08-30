@@ -17,11 +17,11 @@
                     </tr>
 
                     <tr>
-                        <td style="font-weight: bold" i18n="@@salesWithTax">Sales + Tax</td>
+                        <td style="font-weight: bold; width:70px;white-space: normal;" i18n="@@salesWithTax">Sales + Tax</td>
                         <td class="ar" *ngFor="let val of pivotedData.netSales">{{val | curr:'0'}}</td>
                     </tr>
 
-                    <tr *ngIf="environment.region === 'il'">
+                    <tr *ngIf="pivotedData.hasTips && environment.region === 'il'">
                         <td i18n="@@tips">Tips</td>
                         <td class="ar" *ngFor="let val of pivotedData.gratuity">{{val | curr:'0'}}</td>
                     </tr>
@@ -47,13 +47,8 @@
                     </tr>
 
                     <tr>
-                        <td i18n="@@diners">Diners</td>
+                        <td i18n="@@dinersOrders">Diners / Orders</td>
                         <td class="ar" *ngFor="let val of pivotedData.diners">{{val}}</td>
-                    </tr>
-
-                    <tr>
-                        <td i18n="@@orders">Orders</td>
-                        <td class="ar" *ngFor="let val of pivotedData.orders">{{val}}</td>
                     </tr>
 
                     <tr>

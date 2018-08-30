@@ -24,6 +24,7 @@ import {OrderType} from '../model/OrderType.model';
 import {Order} from '../model/Order.model';
 import {environment} from '../../environments/environment';
 import {DebugService} from '../../app/debug.service';
+import {LogzioService} from '../../app/logzio.service';
 
 const tmpTranslations_ = {
     'he-IL': {
@@ -438,7 +439,7 @@ export class DataService {
         this.refresh$.subscribe(refresh => {
             let org = JSON.parse(window.localStorage.getItem('org'));
             let rosCalendars;
-            if(refresh !== 'force') {
+            if (refresh !== 'force') {
                 rosCalendars = JSON.parse(window.localStorage.getItem(org.id + '-calendar'));
                 if (rosCalendars) {
                     obs.next(rosCalendars);
@@ -447,8 +448,13 @@ export class DataService {
 
             let context = this;
             setTimeout(async function () {
+
+                let perfStartTime = performance.now();
+
                 rosCalendars = await context.rosEp.get('dynamic-organization-storage/calendar?x-explain=true&withParents=1');
                 obs.next(rosCalendars);
+
+                context.logz.log('chef', 'getDatabase', {'timing': performance.now() - perfStartTime});
 
                 let localStorage = window.localStorage;
                 let keys = Object.keys(localStorage);
@@ -472,8 +478,13 @@ export class DataService {
 
     public olapYearlyData$: Observable<any> = Observable.create(async obs => {
         this.refresh$.subscribe(async event => {
+            let perfStartTime = performance.now();
+
             let olapYearlyData = await this.olapEp.getDatabase();
             obs.next(olapYearlyData);
+
+            this.logz.log('chef', 'getDatabase', {'timing': performance.now() - perfStartTime});
+
         });
         /*let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
         if (data) {
@@ -536,7 +547,7 @@ export class DataService {
             let olapYearlyData = _.cloneDeep(streamData[0]);
             let rosCalendars = _.cloneDeep(streamData[1]);
 
-            if (olapYearlyData.error) {
+            if (!olapYearlyData || olapYearlyData.error) {
                 obs.next(olapYearlyData);
                 return;
             }
@@ -1285,7 +1296,7 @@ export class DataService {
         });
     }).publishReplay(1).refCount();
 
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService) {
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService, private logz: LogzioService) {
 
     }
 
@@ -1303,7 +1314,14 @@ export class DataService {
             return dailyReport.data;
         }
         else {
+            let perfStartTime = performance.now();
             let report = await this.olapEp.getDailyReport(day);
+            this.logz.log('chef', 'getDailyReport', {'timing': performance.now() - perfStartTime});
+
+            if(dailyReport) {
+                reportsCache = _.filter(reportsCache, function(report) { return report.date !== dailyReport.date; });
+            }
+
             if (reportsCache.length >= 10) {
                 reportsCache.splice(0, 1);
             }

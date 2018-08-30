@@ -53,6 +53,7 @@ import {ManagersOrgGuard} from './auth/managers-org-guard.service';
 
 import {LocalizationService} from './localization.service';
 import {DebugService} from './debug.service';
+import {LogzioService} from './logzio.service';
 
 //feature modules:
 import {OrgsModule} from './orgs/orgs.module';
@@ -143,6 +144,7 @@ if (environment.tbtLocale === 'he-IL') {
         ManagersOrgGuard,
         LocalizationService,
         DebugService,
+        LogzioService,
 
         // Utils:
         VisibilityService,

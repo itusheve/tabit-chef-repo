@@ -6,37 +6,37 @@
             <table class="chf-tbl chf-tbl-row-oriented chf-tbl-x-smaller" *ngIf="data">
 
                 <tr class="header">
-                    <td i18n="@@category" (click)="sort('category')">
+                    <td (click)="sort('category')">
                         <div class="flex a-center">
-                            <div i18n="@@">Category</div>
+                            <div i18n="@@category">Category</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='category' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='category' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
                     </td>
-                    <td i18n="@@daily" (click)="sort('thisBd')">
-                        <div class="flex a-center j-end">
-                            <div i18n="@@">Daily</div>
+                    <td (click)="sort('thisBd')">
+                        <div class="flex a-center">
+                            <div i18n="@@daily">Daily</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisBd' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisBd' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
                     </td>
-                    <td i18n="@@thisWeek" (click)="sort('thisWeek')">
-                        <div class="flex a-center j-end">
-                            <div i18n="@@">This Week</div>
+                    <td (click)="sort('thisWeek')">
+                        <div class="flex a-center">
+                            <div i18n="@@thisWeek">This Week</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisWeek' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisWeek' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
                     </td>
-                    <td i18n="@@thisMonth" (click)="sort('thisMonth')">
-                        <div class="flex a-center j-end">
-                            <div i18n="@@">This Month</div>
+                    <td (click)="sort('thisMonth')">
+                        <div class="flex a-center">
+                            <div i18n="@@thisMonth">This Month</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisMonth' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisMonth' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
                     </td>
-                    <td i18n="@@thisYear" (click)="sort('thisYear')">
-                        <div class="flex a-center j-end">
-                            <div i18n="@@">This Year</div>
+                    <td (click)="sort('thisYear')">
+                        <div class="flex a-center">
+                            <div i18n="@@thisYear">This Year</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisYear' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisYear' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>

@@ -8,6 +8,7 @@ import {Subject} from 'rxjs/Subject';
 import {zip} from 'rxjs/observable/zip';
 import {environment} from '../../environments/environment';
 import {DebugService} from '../debug.service';
+import {LogzioService} from '../logzio.service';
 
 const loginUrl = 'oauth2/token';
 const meUrl = 'account/me';
@@ -17,7 +18,8 @@ export class AuthService {
     private rosBaseUrl = environment.rosConfig.baseUrl;
 
     constructor(private httpClient: HttpClient,
-                private ds: DebugService) {
+                private ds: DebugService,
+                private logz: LogzioService) {
     }
 
     private authState = 0;//0: anon, 1: user mode, 2: org mode
@@ -53,6 +55,9 @@ export class AuthService {
                         this.authState = 2;
                         resolve();
                     });
+
+                this.logz.log('chef', 'changeOrganization', {'user': user.email, 'org': org.id});
+
             } else {
                 reject();
             }
@@ -95,6 +100,7 @@ export class AuthService {
                                         window.localStorage.setItem('user', JSON.stringify(user));
                                         this.authState = 1;
                                         resolve();
+                                        this.logz.log('chef', 'login', {'user': user['email']});
                                     },
                                     e => {
                                         //reverse process upon error
