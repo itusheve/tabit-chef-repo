@@ -283,6 +283,9 @@
       <trans-unit id="summary" datatype="html">
         <target>סיכום</target>
       </trans-unit>
+      <trans-unit id="closedSummary" datatype="html">
+        <target>סיכום הזמנות סגורות</target>
+      </trans-unit>
       <trans-unit id="orderType2" datatype="html">
         <target>סוג הזמנה</target>
       </trans-unit>

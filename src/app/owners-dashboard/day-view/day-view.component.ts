@@ -225,18 +225,11 @@ export class DayViewComponent implements OnInit {
             };
         });
 
-        this.dataService.LatestBusinessDayDashboardData$.subscribe(dashboardData => {
-            this.openOrders = {totalAmount: undefined};
-            if (moment().isSame(this.day, 'day')) {
-                this.openOrders.totalAmount = _.get(dashboardData, 'today.openOrders.totalSalesAmount');
-                this.bdIsCurrentBd = true;
-            }
-        });
+        combineLatest(this.dataService.LatestBusinessDayDashboardData$, this.day$, this.dataService.refresh$).subscribe(async data => {
 
-        combineLatest(this.day$, this.dataService.refresh$).subscribe(async data => {
+            let dashboardData = data[0];
+            let dayDate = data[1];
 
-            let dayDate = data[0];
-            this.bdIsCurrentBd = false;
             let dailyReport = await this.dataService.getDailyReport(dayDate);
             if (!dailyReport) {
                 this.hasData = false;
@@ -250,6 +243,17 @@ export class DayViewComponent implements OnInit {
                 title: '',
                 data: _.filter(dailyReport.services, service => service.service === 'סיכום יומי')
             };
+
+
+            this.openOrders = {totalAmount: undefined};
+            if(!moment().isSame(dayDate, 'day')) {
+                this.bdIsCurrentBd = false;
+            }
+            else {
+                let olapTotals = _.filter(this.dailySummaryTblData.data, data => data.dataType === '');
+                this.openOrders.totalAmount = _.get(dashboardData, 'today.totalSales') - _.get(olapTotals[0], 'salesNetAmount');
+                this.bdIsCurrentBd = true;
+            }
 
             this.byShiftSummaryTblsData = [
                 {

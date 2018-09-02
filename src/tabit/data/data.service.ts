@@ -1292,7 +1292,19 @@ export class DataService {
                 }
             }
 
-            obs.next(new Database(database));
+            let result = new Database(database);
+
+            let today = moment();
+            let currentMonth = result.getMonth(today);
+            let currentDay = result.getDay(today);
+            currentMonth.salesNetAmount = currentMonth.salesNetAmount - currentDay.salesNetAmount;
+            currentMonth.salesNetAmountWithOutVat = currentMonth.salesNetAmountWithOutVat - currentDay.salesNetAmountWithOutVat;
+            currentMonth.salesTipAmount = currentMonth.salesTipAmount - currentDay.salesTipAmount;
+            currentMonth.salesTipAmountWithOutVat = currentMonth.salesTipAmountWithOutVat - currentDay.salesTipAmountWithOutVat;
+            currentMonth.amount = currentMonth.amount - currentDay.amount;
+            currentMonth.amountWithoutVat = currentMonth.amountWithoutVat - currentDay.amountWithoutVat;
+
+            obs.next(result);
         });
     }).publishReplay(1).refCount();
 
