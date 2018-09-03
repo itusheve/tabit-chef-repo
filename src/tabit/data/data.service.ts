@@ -1148,12 +1148,15 @@ export class DataService {
 
                 if (month.aggregations && month.aggregations.days) {
                     _.forEach(month.aggregations.days, (day, weekDay) => {
-                        let prevoiusWeekDay = moment(month.latestDay).subtract(1, 'months').day(weekDay);
+                        if(month.YearMonth == '201809') {
+                            console.log('here');
+                        }
+                        let previousMonthWeekDay = moment(month.latestDay).subtract(1, 'months').endOf('month').day(weekDay);
                         let notFound = 0;
-                        if (day.count < 4 && notFound < 6) {
-                            let previousMonth = database[prevoiusWeekDay.format('YYYYMM')];
+                        while(day.count < 4 && notFound < 6) {
+                            let previousMonth = database[previousMonthWeekDay.format('YYYYMM')];
                             if (previousMonth && previousMonth.days) {
-                                let previousDayData = _.find(previousMonth.days, {'date': prevoiusWeekDay.format('YYYY-MM-DD')});
+                                let previousDayData = _.find(previousMonth.days, {'date': previousMonthWeekDay.format('YYYY-MM-DD')});
                                 if (previousDayData && !previousDayData.isExcluded) {
                                     day.count += 1;
                                     day.sales.amount += previousDayData.amount;
@@ -1175,7 +1178,7 @@ export class DataService {
                             else {
                                 notFound++;
                             }
-                            prevoiusWeekDay.subtract(7, 'days');
+                            previousMonthWeekDay.subtract(7, 'days');
                         }
                     });
                 }
