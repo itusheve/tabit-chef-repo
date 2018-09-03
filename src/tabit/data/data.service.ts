@@ -1330,8 +1330,10 @@ export class DataService {
             let report = await this.olapEp.getDailyReport(day);
             this.logz.log('chef', 'getDailyReport', {'timing': performance.now() - perfStartTime});
 
-            if(dailyReport) {
-                reportsCache = _.filter(reportsCache, function(report) { return report.date !== dailyReport.date; });
+            if (dailyReport) {
+                reportsCache = _.filter(reportsCache, function (report) {
+                    return report.date !== dailyReport.date;
+                });
             }
 
             if (reportsCache.length >= 10) {
@@ -1360,6 +1362,91 @@ export class DataService {
                 }
             }
             return report;
+        }
+    }
+
+    async getDailySalesByHours(day: moment.Moment) {
+        let org = JSON.parse(window.localStorage.getItem('org'));
+        let reportsCache = JSON.parse(window.localStorage.getItem(org.id + '-daily-sales-by-hour'));
+        if (!reportsCache) {
+            reportsCache = [];
+        }
+
+        let now = moment();
+
+        let dailySalesReport = _.find(reportsCache, {date: day.format('YYYYMMDD')});
+        if (!day.isSame(now, 'days') && dailySalesReport && moment(dailySalesReport.createTime, 'YYYY-MM-DD HH:mm').isSameOrAfter(now.subtract(10, 'minutes'))) {
+            return dailySalesReport.data;
+        }
+        else {
+            let perfStartTime = performance.now();
+            let dailySalesByHour = await this.olapEp.getDailySalesByHourReport(day);
+
+            let result = [];
+            _.forEach(dailySalesByHour, dailySales => {
+                let hour = parseInt(dailySales.hour, 10);
+                if(hour < 6) {
+                    hour = hour + 30;
+                }
+                if (dailySales.salesNetAmount) {
+                    if (!result[hour]) {
+                        result[hour] = {};
+                    }
+
+                    result[hour].hour = dailySales.hour;
+
+                    if (moment(dailySales.date).isSame(day)) {
+                        result[hour].salesNetAmount = dailySales.salesNetAmount;
+                    }
+                    else {
+                        if (!result[hour].salesNetAmountAvg) {
+                            result[hour].salesNetAmountAvg = 0;
+                            result[hour].days = 0;
+                        }
+                        if(result[hour].days < 4) {
+                            result[hour].salesNetAmountAvg += dailySales.salesNetAmount;
+                            result[hour].days++;
+                        }
+                    }
+                }
+            });
+
+            let newResult = _.values(_.compact(result));
+
+            this.logz.log('chef', 'getDailySalesByHours', {'timing': performance.now() - perfStartTime});
+
+            if (dailySalesReport) {
+                reportsCache = _.filter(reportsCache, function (report) {
+                    return report.date !== dailySalesReport.date;
+                });
+            }
+
+            if (reportsCache.length >= 10) {
+                reportsCache.splice(0, 1);
+            }
+
+            reportsCache.push({
+                date: day.format('YYYYMMDD'),
+                createTime: moment().format('YYYY-MM-DD HH:mm'),
+                data: newResult
+            });
+
+            let localStorage = window.localStorage;
+            let keys = Object.keys(localStorage);
+            _.forEach(keys, key => {
+                if (key.indexOf('daily-reports') !== -1) {
+                    localStorage.removeItem(key);
+                }
+            });
+            try {
+                window.localStorage.setItem(org.id + '-daily-sales-by-hour', JSON.stringify(reportsCache));
+            } catch (domException) {
+                if (domException.name === 'QuotaExceededError' ||
+                    domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                    //log something here
+                }
+            }
+            return newResult;
         }
     }
 

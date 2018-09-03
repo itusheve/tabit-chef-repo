@@ -1,0 +1,41 @@
+<div class="flex d-col">
+    <div class="title">מכירות לפי שעה \ ממוצע 4 שב'</div>
+    <div class="flex d-col body">
+        <div class="col-12 p-0">
+            <ul class="list-group p-0" *ngIf="data">
+                <ng-container *ngFor="let day of data">
+                    <li class="list-group-item" *ngIf="day.salesNetAmount">
+                        <div class="row flex a-center" style="cursor: pointer">
+                            <div class="col-3 px-1" style="max-width: 17% !important;">
+                                <div>{{day.hour}}</div>
+                            </div>
+                            <div class="col-8 px-1" style="max-width: 60% !important;">
+                                <div class="progress rounded-0" style="width: 85%; height: 6px;">
+                                    <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
+                                         style="width: 100%; background-color: #e9ecef"></div>
+                                </div>
+                                <div class="progress rounded-0" [style.width]="getProgressBarContainerWidth(day) + '%'">
+                                    <div class="progress-bar progress-bar-animated rounded-0"
+                                         [ngClass]="getProgressBarBackground(day)" role="progressbar"
+                                         [style.width]="getProgressBarWidth(day) + '%'" style="font-size: 16px;">
+                                        {{getPercentage(day).toFixed(1)}}%
+                                    </div>
+                                </div>
+                                <div class="progress rounded-0" style="width: 85%; height: 6px;">
+                                    <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
+                                         style="width: 100%; background-color: #e9ecef"></div>
+                                </div>
+                            </div>
+                            <div class="col-3 px-1" style="max-width: 23% !important;">
+                                <span [innerHtml]="day.salesNetAmount | currency:'0':'':'':false"></span>
+                                <div style="font-size: 14px">
+                                    (<span [innerHtml]="getAvgValue(day) | currency:'0':'':'':false"></span>)
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
+    </div>
+</div>

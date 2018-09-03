@@ -144,6 +144,7 @@ export class DayViewComponent implements OnInit {
     }[];
 
     public mtdBusinessData: any;
+    public salesByHour: any;
 
     public bdIsCurrentBd: boolean;
     public closedOpenSalesDiff: number;
@@ -405,11 +406,16 @@ export class DayViewComponent implements OnInit {
         });
     }
 
-    //TODO on iOS when touching the circle it disappears
+    private renderChart() {
+        combineLatest(this.day$, this.dataService.refresh$).subscribe(async day => {
+            this.salesByHour = await this.dataService.getDailySalesByHours(day[0]);
+        });
+    }
 
     ngOnInit() {
         window.scrollTo(0, 0);
         this.render();
+        this.renderChart();
 
         this.dataService.refresh$.subscribe(refresh => {
             this.hasData = false;
@@ -421,7 +427,7 @@ export class DayViewComponent implements OnInit {
             .subscribe((params: ParamMap) => {
                 const dateStr = params.get('businessDate');
                 this.day = moment(dateStr);
-                this.day$.next(moment(dateStr));
+                this.day$.next(this.day);
             });
     }
 
@@ -429,7 +435,7 @@ export class DayViewComponent implements OnInit {
     onDateChanged(dateM: moment.Moment) {
         this.hasData = false;
         this.day = dateM;
-        this.day$.next(dateM);
+        this.day$.next(this.day);
     }
 
     onGoToOrders(filter, type) {
@@ -438,7 +444,7 @@ export class DayViewComponent implements OnInit {
 
     /* called directly by different tables with order number */
     onOrderClicked_orderNumber(orderNumber: number) {
-        let order = this.orders.find(o => o.number == orderNumber);
+        let order = this.orders.find(o => o.number == orderNumber); // leave as is
         if (order) {
             this.onOrderClicked(order);
         }

@@ -80,6 +80,7 @@ import {DayPaymentsTableComponent} from './day-view/day-payments-table/day-payme
 import {DayOperationalErrorsTableComponent} from './day-view/day-operational-errors-table/day-operational-errors-table.component';
 import {DayRetentionTableComponent} from './day-view/day-retention-table/day-retention-table.component';
 import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/day-month-summary-table.component';
+import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sales.component';
 
 @NgModule({
     imports: [
@@ -130,6 +131,7 @@ import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/
         DayOperationalErrorsTableComponent,
         DayRetentionTableComponent,
         DayMonthSummaryTableComponent,
+        DayHourlySalesComponent,
 
         OrderViewComponent,
         OrderSlipsComponent,
