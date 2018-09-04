@@ -1,32 +1,33 @@
 <div class="flex d-col">
     <div class="title" i18n="@@mostReturnedItems">Most Returned Items</div>
-    <div class="flex d-col body">
-        <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
-        <div *ngIf="!loading">
-            <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
-            <div *ngIf="!noData" class="flex d-col a-center">
-                <table class="chf-tbl chf-tbl-smaller chf-tbl-row-oriented">
-                    <tr class="header">
-                        <td i18n="@@department">Department</td>
-                        <td i18n="@@item">Item</td>
-                        <td class="ar" i18n="@@prepared">Prepared</td>
-                        <td class="ar" i18n="@@returned">Returned</td>
-                        <td class="ar" i18n="@@operationalReductionsValue">Operational Reductions Value</td>
+    <mat-accordion>
+        <mat-expansion-panel expanded="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <ng-container i18n="@@mostReturnedItems">Most Returned Items</ng-container>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table class="chf-tbl chf-tbl-smaller chf-tbl-row-oriented">
+                <tr class="header">
+                    <td i18n="@@department">Department</td>
+                    <td i18n="@@item">Item</td>
+                    <td class="ar" i18n="@@prepared">Prepared</td>
+                    <td class="ar" i18n="@@returned">Returned</td>
+                    <td class="ar" i18n="@@operationalReductionsValue">Operational Reductions Value</td>
+                </tr>
+                <ng-container *ngFor="let departmentData of data">
+                    <tr *ngFor="let dataObj of departmentData.topItems">
+                        <td>{{departmentData.department}}</td>
+                        <td class="break">{{dataObj.itemName}}</td>
+                        <td class="ar">{{dataObj.itemPrepared | count}}</td>
+                        <td class="ar">
+                            <div>{{dataObj.itemReturned | count}}</div>
+                            <div>({{dataObj.itemReturnedPct | pct:'1'}})</div>
+                        </td>
+                        <td class="ar">{{dataObj.itemReturnValue | curr:'0'}}</td>
                     </tr>
-                    <ng-container *ngFor="let departmentData of data">
-                        <tr *ngFor="let dataObj of departmentData.topItems">
-                            <td>{{departmentData.department}}</td>
-                            <td class="break">{{dataObj.itemName}}</td>
-                            <td class="ar">{{dataObj.itemPrepared | count}}</td>
-                            <td class="ar">
-                                <div>{{dataObj.itemReturned | count}}</div>
-                                <div>({{dataObj.itemReturnedPct | pct:'1'}})</div>
-                            </td>
-                            <td class="ar">{{dataObj.itemReturnValue | curr:'0'}}</td>
-                        </tr>
-                    </ng-container>
-                </table>
-            </div>
-        </div>
-    </div>
+                </ng-container>
+            </table>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>

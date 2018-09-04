@@ -1,44 +1,66 @@
 <div class="flex d-col">
-    <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
-    <div class="flex d-col" *ngIf="!loading">
-        <div class="title" i18n="@@categories">Categories</div>
-        <div class="flex body">
+    <div class="title" i18n="@@categories">Categories</div>
+    <mat-accordion>
+        <mat-expansion-panel expanded="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <ng-container i18n="@@categories">Categories</ng-container>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
             <table class="chf-tbl chf-tbl-row-oriented chf-tbl-x-smaller" *ngIf="data">
-
                 <tr class="header">
                     <td (click)="sort('category')">
                         <div class="flex a-center">
                             <div i18n="@@category">Category</div>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='category' && sortDir==='desc'">arrow_drop_down</mat-icon>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='category' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='category' && sortDir==='desc'">
+                                arrow_drop_down
+                            </mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='category' && sortDir==='asc'">
+                                arrow_drop_up
+                            </mat-icon>
                         </div>
                     </td>
                     <td (click)="sort('thisBd')">
                         <div class="flex a-center">
                             <div i18n="@@daily">Daily</div>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisBd' && sortDir==='desc'">arrow_drop_down</mat-icon>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisBd' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisBd' && sortDir==='desc'">
+                                arrow_drop_down
+                            </mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisBd' && sortDir==='asc'">arrow_drop_up
+                            </mat-icon>
                         </div>
                     </td>
                     <td (click)="sort('thisWeek')">
                         <div class="flex a-center">
                             <div i18n="@@thisWeek">This Week</div>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisWeek' && sortDir==='desc'">arrow_drop_down</mat-icon>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisWeek' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisWeek' && sortDir==='desc'">
+                                arrow_drop_down
+                            </mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisWeek' && sortDir==='asc'">
+                                arrow_drop_up
+                            </mat-icon>
                         </div>
                     </td>
                     <td (click)="sort('thisMonth')">
                         <div class="flex a-center">
                             <div i18n="@@thisMonth">This Month</div>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisMonth' && sortDir==='desc'">arrow_drop_down</mat-icon>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisMonth' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisMonth' && sortDir==='desc'">
+                                arrow_drop_down
+                            </mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisMonth' && sortDir==='asc'">
+                                arrow_drop_up
+                            </mat-icon>
                         </div>
                     </td>
                     <td (click)="sort('thisYear')">
                         <div class="flex a-center">
                             <div i18n="@@thisYear">This Year</div>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisYear' && sortDir==='desc'">arrow_drop_down</mat-icon>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisYear' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisYear' && sortDir==='desc'">
+                                arrow_drop_down
+                            </mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisYear' && sortDir==='asc'">
+                                arrow_drop_up
+                            </mat-icon>
                         </div>
                     </td>
                 </tr>
@@ -74,16 +96,20 @@
                 <tr>
                     <td i18n="@@total">Total</td>
                     <td class="ar">{{data.totalSales.thisBdSales | curr:'0'}}
-                        <br>({{1 | pct:'1'}})</td>
+                        <br>({{1 | pct:'1'}})
+                    </td>
                     <td class="ar">{{data.totalSales.thisWeekSales | curr:'0'}}
-                        <br>({{1 | pct:'1'}})</td>
+                        <br>({{1 | pct:'1'}})
+                    </td>
                     <td class="ar">{{data.totalSales.thisMonthSales | curr:'0'}}
-                        <br>({{1 | pct:'1'}})</td>
+                        <br>({{1 | pct:'1'}})
+                    </td>
                     <td class="ar">{{data.totalSales.thisYearSales | curr:'0'}}
-                        <br>({{1 | pct:'1'}})</td>
+                        <br>({{1 | pct:'1'}})
+                    </td>
                 </tr>
 
             </table>
-        </div>
-    </div>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>

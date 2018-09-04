@@ -1,4 +1,6 @@
 @import '../../../tabit/styles/config/frame';
+@import '../../../tabit/styles/config/colors';
+
 
 // :host {
 //     position: relative;//for the drill that is absolute positioned
@@ -6,71 +8,108 @@
 //     height: 100%;
 // }
 
+::ng-deep.mat-expansion-panel {
+  ::ng-deep.mat-expansion-panel-header {
+    font-family: inherit!important;
+    font-size: 16px!important;
+    font-weight: bold!important;
+    padding: 0 12px!important;
+    background-color: #fff;
+    &:first-child {
+      border-bottom: 1px solid #B5C1CE;
+    }
+    ::ng-deep.mat-panel-title {
+      color: $fontColor!important;
+      flex-grow: 0!important;
+    }
+    ::ng-deep.mat-panel-description {
+      font-weight: normal!important;
+      color: $fontColor!important;
+    }
+  }
+
+  ::ng-deep.mat-expansion-panel-header.mat-expanded,
+  .mat-expansion-panel-header.mat-expanded:hover,
+  .mat-expansion-panel-header:hover,
+  .mat-expansion-panel:hover {
+    background: #B5C1CE !important;
+  }
+
+  ::ng-deep .mat-expansion-panel {
+    background: #B5C1CE !important;
+  }
+
+  ::ng-deep .mat-expansion-panel-body {
+    padding: 0 0 10px 0!important;
+  }
+}
+
+
 .widget {
-    z-index: 1;
+  z-index: 1;
 }
 
 .dayView {
-    padding-top: $secondaryToolbarHeight;
-    app-day-selector {
-        &.daySelectorFixed {
-            position: fixed;
-            top: $toolbarHeight;
-            @media #{$iphone-X-portrait-mq} {
-                top: $iphone-X-notch-px + $toolbarHeight;
-            }
-            @media #{$iphone-6-7-8-portrait-mq} {
-                top: $iphone-6-7-8-status-bar-px + $toolbarHeight;
-            }
-            @media #{$iphone-6-7-8-plus-portrait-mq} {
-                top: $iphone-6-7-8-plus-status-bar-px + $toolbarHeight;
-            }
-            @media #{$ipad-portrait-mq} {
-                top: $ipad-status-bar-px + $toolbarHeight;
-            }
-            left: 0;
-            right: 0;
-            height: $secondaryToolbarHeight;
-            z-index: 10000;
-            display: block;
-        }
+  padding-top: $secondaryToolbarHeight;
+  app-day-selector {
+    &.daySelectorFixed {
+      position: fixed;
+      top: $toolbarHeight;
+      @media #{$iphone-X-portrait-mq} {
+        top: $iphone-X-notch-px + $toolbarHeight;
+      }
+      @media #{$iphone-6-7-8-portrait-mq} {
+        top: $iphone-6-7-8-status-bar-px + $toolbarHeight;
+      }
+      @media #{$iphone-6-7-8-plus-portrait-mq} {
+        top: $iphone-6-7-8-plus-status-bar-px + $toolbarHeight;
+      }
+      @media #{$ipad-portrait-mq} {
+        top: $ipad-status-bar-px + $toolbarHeight;
+      }
+      left: 0;
+      right: 0;
+      height: $secondaryToolbarHeight;
+      z-index: 10000;
+      display: block;
     }
+  }
 
 }
 
 .drill {
-    z-index: 10000;
-    position:absolute;
-    top:0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    padding-top: $toolbarHeight;
-    @media #{$iphone-X-portrait-mq} {
-        padding-top: $iphone-X-notch-px + $toolbarHeight;
-    }
-    @media #{$iphone-6-7-8-portrait-mq} {
-        padding-top: $iphone-6-7-8-status-bar-px + $toolbarHeight;
-    }
-    @media #{$iphone-6-7-8-plus-portrait-mq} {
-        padding-top: $iphone-6-7-8-plus-status-bar-px + $toolbarHeight;
-    }
-    @media #{$ipad-portrait-mq} {
-        padding-top: $ipad-status-bar-px + $toolbarHeight;
-    }
-    background-color: #edf1f2;
-    overflow: hidden;
-    // -webkit-overflow-scrolling: touch;This caused bad behaviour with the fixed order-view - on ios user was able to scroll to see the view beneath. removing this solved the problem, and momentum scrolling is still working on ios.
+  z-index: 10000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding-top: $toolbarHeight;
+  @media #{$iphone-X-portrait-mq} {
+    padding-top: $iphone-X-notch-px + $toolbarHeight;
+  }
+  @media #{$iphone-6-7-8-portrait-mq} {
+    padding-top: $iphone-6-7-8-status-bar-px + $toolbarHeight;
+  }
+  @media #{$iphone-6-7-8-plus-portrait-mq} {
+    padding-top: $iphone-6-7-8-plus-status-bar-px + $toolbarHeight;
+  }
+  @media #{$ipad-portrait-mq} {
+    padding-top: $ipad-status-bar-px + $toolbarHeight;
+  }
+  background-color: #edf1f2;
+  overflow: hidden;
+  // -webkit-overflow-scrolling: touch;This caused bad behaviour with the fixed order-view - on ios user was able to scroll to see the view beneath. removing this solved the problem, and momentum scrolling is still working on ios.
 }
 
 .widget {
-    padding: 0;
+  padding: 0;
 }
 
-/deep/.widget {
-    .body {
-        padding: 0px;
-    }
+/deep/ .widget {
+  .body {
+    padding: 0px;
+  }
 }
 
 @keyframes blink {

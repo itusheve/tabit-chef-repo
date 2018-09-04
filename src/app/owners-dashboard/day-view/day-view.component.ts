@@ -99,6 +99,21 @@ export class DayViewComponent implements OnInit {
         }[]
     };
 
+    public mostSoldItemsByShift: {
+        title: string;
+        mostSoldItems: {
+            byItem: {
+                department: string;
+                item: string;
+                sales: number;
+                sold: number;
+                prepared: number;
+                returned: number;
+                operational: number;
+            }[]
+        }
+    }[];
+
     public mostReturnedItems: {
         byItem: {
             department: string;
@@ -247,7 +262,7 @@ export class DayViewComponent implements OnInit {
 
 
             this.openOrders = {totalAmount: undefined};
-            if(!moment().isSame(dayDate, 'day')) {
+            if (!moment().isSame(dayDate, 'day')) {
                 this.bdIsCurrentBd = false;
             }
             else {
@@ -330,6 +345,27 @@ export class DayViewComponent implements OnInit {
                         operational: 0
                     }
                 );
+            });
+
+            this.mostSoldItemsByShift = [];
+            let shifts = _.groupBy(dailyReport.mostPopularItemsByShift, 'serviceKey');
+            _.forEach(shifts, (items, shiftName) => {
+                this.mostSoldItemsByShift.push({
+                    title: shiftName,
+                    mostSoldItems: {
+                        byItem: _.map(items, item => {
+                            return {
+                                department: item.DepartmentId,
+                                item: item.ItemName,
+                                sales: item.salesNetAmount,
+                                sold: item.salesSold,
+                                prepared: 0,
+                                returned: 0,
+                                operational: 0
+                            };
+                        })
+                    }
+                });
             });
 
             this.mostReturnedItems = {byItem: []};

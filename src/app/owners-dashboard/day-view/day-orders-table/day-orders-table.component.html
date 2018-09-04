@@ -8,7 +8,7 @@
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData" class="flex d-col a-stretch">
                 <mat-accordion *ngIf="byOrderTypes">
-                    <mat-expansion-panel expanded="false" hideToggle="true" *ngIf="bdIsCurrentBd" [disabled]="true">
+                    <mat-expansion-panel expanded="false" hideToggle="true" *ngIf="bdIsCurrentBd">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 <ng-container i18n="@@openOrders">Open Orders</ng-container>

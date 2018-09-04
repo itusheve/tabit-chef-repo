@@ -1148,9 +1148,6 @@ export class DataService {
 
                 if (month.aggregations && month.aggregations.days) {
                     _.forEach(month.aggregations.days, (day, weekDay) => {
-                        if(month.YearMonth == '201809') {
-                            console.log('here');
-                        }
                         let previousMonthWeekDay = moment(month.latestDay).subtract(1, 'months').endOf('month').day(weekDay);
                         let notFound = 0;
                         while(day.count < 4 && notFound < 6) {

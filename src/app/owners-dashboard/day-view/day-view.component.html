@@ -29,10 +29,7 @@
     </div>
 
     <div [hidden]="!hasData">
-        <app-day-hourly-sales
-                class="widget"
-                [data]="salesByHour">
-        </app-day-hourly-sales>
+
         <app-day-orders-table
                 class="widget"
                 style="padding-bottom: 0px;"
@@ -43,21 +40,47 @@
                 (onOrderClicked)="onOrderClicked($event)"
         ></app-day-orders-table>
 
-        <app-day-sales-table
-                class="widget"
-                title="Closed orders summary"
-                i18n-title="@@closedSummary"
-                [data]="dailySummaryTblData?.data">
-        </app-day-sales-table>
 
-        <ng-container *ngFor="let tblData of byShiftSummaryTblsData">
-            <app-day-sales-table
-                    *ngIf="tblData.data.length"
-                    class="widget"
-                    [title]="tblData?.title"
-                    [data]="tblData?.data">
-            </app-day-sales-table>
-        </ng-container>
+        <div class="widget">
+            <div class="flex d-col">
+                <div class="title" i18n="@@sales2">Sales</div>
+                <div class="flex d-col body">
+                    <mat-expansion-panel expanded="true">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <ng-container i18n="@@salesByHour">Sales vs 4week Avg</ng-container>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-day-hourly-sales
+                                [data]="salesByHour">
+                        </app-day-hourly-sales>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel expanded="true">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <ng-container i18n="@@closedSummary">Closed orders summary</ng-container>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-day-sales-table
+                                [data]="dailySummaryTblData?.data">
+                        </app-day-sales-table>
+                    </mat-expansion-panel>
+                    <ng-container *ngFor="let tblData of byShiftSummaryTblsData">
+                        <mat-expansion-panel expanded="true" *ngIf="tblData.data.length">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <ng-container>{{tblData?.title}}</ng-container>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <app-day-sales-table
+                                    [title]="tblData?.title"
+                                    [data]="tblData?.data">
+                            </app-day-sales-table>
+                        </mat-expansion-panel>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
 
         <app-day-sales-by-sub-department-table
                 class="widget"
@@ -65,10 +88,41 @@
                 [salesBySubDepartment]="salesBySubDepartment"
         ></app-day-sales-by-sub-department-table>
 
-        <app-most-sold-items-table
-                class="widget"
-                [itemsData]="mostSoldItems"
-        ></app-most-sold-items-table>
+        <!--Most sold items -->
+
+        <div class="widget">
+            <div class="flex d-col">
+                <div class="title" i18n="@@mostSoldItems">Top Selling Items by Category</div>
+                <div class="flex d-col body">
+                    <mat-accordion>
+                        <mat-expansion-panel expanded="false">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <ng-container i18n="@@allDay">All day</ng-container>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <app-most-sold-items-table
+                                    class="widget"
+                                    [itemsData]="mostSoldItems"
+                            ></app-most-sold-items-table>
+                        </mat-expansion-panel>
+                        <ng-container *ngFor="let tblData of mostSoldItemsByShift">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <ng-container>{{tblData.title}}</ng-container>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <app-most-sold-items-table
+                                        class="widget"
+                                        [itemsData]="tblData.mostSoldItems"
+                                ></app-most-sold-items-table>
+                            </mat-expansion-panel>
+                        </ng-container>
+                    </mat-accordion>
+                </div>
+            </div>
+        </div>
 
         <app-most-returned-items-table
                 class="widget"

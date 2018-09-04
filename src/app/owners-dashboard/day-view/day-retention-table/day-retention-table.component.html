@@ -1,13 +1,14 @@
 <div class="flex d-col">
-    <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
-    <div class="flex d-col" *ngIf="!loading">
-        <div class="title">
-            <ng-container i18n="@@retention">Retention</ng-container>&nbsp;-&nbsp;<ng-container i18n="@@retentionByServer">Manual Operations by Server</ng-container>
-        </div>
-        <div class="title">
-            {{retentionData.length}}&nbsp;<ng-container i18n="@@actionsWorth">Actions worth</ng-container>&nbsp;{{totalValue | curr:'0'}}
-        </div>
-        <div class="flex d-col body">
+    <div class="title">
+        <ng-container i18n="@@retention">Retention</ng-container>&nbsp;-&nbsp;<ng-container i18n="@@retentionByServer">Manual Operations by Server</ng-container>
+    </div>
+    <mat-accordion>
+        <mat-expansion-panel expanded="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{retentionData.length}}&nbsp;<ng-container i18n="@@actionsWorth">Actions worth</ng-container>&nbsp;{{totalValue | curr:'0'}}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
             <table class="chf-tbl chf-tbl-smaller chf-tbl-row-oriented">
                 <tr class="header">
                     <td (click)="sort('waiter')">
@@ -57,10 +58,10 @@
                     </td>
                 </tr>
                 <tr
-                    *ngFor="let tuple of retentionData"
-                    (click)="orderClicked(tuple.orderNumber)"
-                     [ngClass]="{'lastViewed': lastViewed===tuple.orderNumber}"
-                    >
+                        *ngFor="let tuple of retentionData"
+                        (click)="orderClicked(tuple.orderNumber)"
+                        [ngClass]="{'lastViewed': lastViewed===tuple.orderNumber}"
+                >
                     <td>{{tuple.waiter}}</td>
                     <td>
                         <span *ngIf="tuple.tableId!==''">
@@ -100,6 +101,6 @@
                     <td>{{tuple.reasonId}}</td>
                 </tr>
             </table>
-        </div>
-    </div>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>

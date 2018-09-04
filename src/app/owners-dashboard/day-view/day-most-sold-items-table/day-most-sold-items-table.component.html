@@ -1,27 +1,19 @@
-<div class="flex d-col">
-    <div class="title" i18n="@@mostSoldItems">Top Selling Items by Category</div>
-    <div class="flex d-col body">
-        <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
-        <div *ngIf="!loading">
-            <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
-            <div *ngIf="!noData" class="flex d-col a-center widget-data">
-                <table class="chf-tbl chf-tbl-smaller chf-tbl-row-oriented">
-                    <tr class="header">
-                        <td i18n="@@department">Department</td>
-                        <td i18n="@@item">Item</td>
-                        <td class="ar" i18n="@@sales2">Sales</td>
-                        <td class="ar" i18n="@@sold">Sold</td>
-                    </tr>
-                    <ng-container *ngFor="let departmentData of data">
-                        <tr *ngFor="let dataObj of departmentData.topItems">
-                            <td>{{departmentData.department}}</td>
-                            <td class="break">{{dataObj.itemName}}</td>
-                            <td class="ar">{{dataObj.itemSales | curr:'0'}}</td>
-                            <td class="ar">{{dataObj.itemSold | count}}</td>
-                        </tr>
-                    </ng-container>
-                </table>
-            </div>
-        </div>
-    </div>
+<div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
+<div *ngIf="!noData">
+    <table class="chf-tbl chf-tbl-smaller chf-tbl-row-oriented">
+        <tr class="header">
+            <td i18n="@@department">Department</td>
+            <td i18n="@@item">Item</td>
+            <td class="ar" i18n="@@sales2">Sales</td>
+            <td class="ar" i18n="@@sold">Sold</td>
+        </tr>
+        <ng-container *ngFor="let departmentData of data">
+            <tr *ngFor="let dataObj of departmentData.topItems">
+                <td>{{departmentData.department}}</td>
+                <td class="break">{{dataObj.itemName}}</td>
+                <td class="ar">{{dataObj.itemSales | curr:'0'}}</td>
+                <td class="ar">{{dataObj.itemSold | count}}</td>
+            </tr>
+        </ng-container>
+    </table>
 </div>

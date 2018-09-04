@@ -1,47 +1,48 @@
 <div class="flex d-col">
     <div class="title" i18n="@@payments">Payments</div>
-    <div class="flex d-col body">
-        <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
-        <div *ngIf="!loading">
-            <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
-            <div *ngIf="!noData" class="flex d-col a-center">
-                <table class="chf-tbl chf-tbl-x-smaller">
-                    <tr class="header">
-                        <td i18n="@@method">Method</td>
-                        <td class="ar" i18n="@@sales2">Sales</td>
-                        <td class="ar" i18n="@@refund">Refund</td>
-                        <td class="ar" i18n="@@payments">Payments</td>
-                        <td class="ar" i18n="@@tip">Gratuity</td>
-                        <td class="ar" i18n="@@totalPayments">Total Payments</td>
+    <mat-accordion>
+        <mat-expansion-panel expanded="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <ng-container i18n="@@payments">Payments</ng-container>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table class="chf-tbl chf-tbl-x-smaller">
+                <tr class="header">
+                    <td i18n="@@method">Method</td>
+                    <td class="ar" i18n="@@sales2">Sales</td>
+                    <td class="ar" i18n="@@refund">Refund</td>
+                    <td class="ar" i18n="@@payments">Payments</td>
+                    <td class="ar" i18n="@@tip">Gratuity</td>
+                    <td class="ar" i18n="@@totalPayments">Total Payments</td>
+                </tr>
+                <tr class="totalRow">
+                    <td i18n="@@total">Total</td>
+                    <td class="ar">{{data.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
+                    <td class="ar">{{data.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
+                    <td class="ar">{{data.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
+                    <td class="ar">{{data.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
+                    <td class="ar">{{data.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
+                </tr>
+                <ng-container *ngFor="let accountGroupObj of data.byAccountGroup">
+                    <tr class="accountTypeRow">
+                        <td>{{accountGroupObj.accountGroup}}</td>
+                        <td class="ar">{{accountGroupObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{accountGroupObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{accountGroupObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{accountGroupObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{accountGroupObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
                     </tr>
-                    <tr class="totalRow">
-                        <td i18n="@@total">Total</td>
-                        <td class="ar">{{data.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{data.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{data.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{data.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{data.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
+                    <tr *ngFor="let clearerNameObj of accountGroupObj.byClearerName" class="accountRow">
+                        <td>{{clearerNameObj.clearerName}}</td>
+                        <td class="ar">{{clearerNameObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{clearerNameObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{clearerNameObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{clearerNameObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
+                        <td class="ar">{{clearerNameObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
                     </tr>
-                    <ng-container *ngFor="let accountGroupObj of data.byAccountGroup">
-                        <tr class="accountTypeRow">
-                            <td>{{accountGroupObj.accountGroup}}</td>
-                            <td class="ar">{{accountGroupObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
-                            <td class="ar">{{accountGroupObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
-                            <td class="ar">{{accountGroupObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
-                            <td class="ar">{{accountGroupObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
-                            <td class="ar">{{accountGroupObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
-                        </tr>
-                        <tr *ngFor="let clearerNameObj of accountGroupObj.byClearerName" class="accountRow">
-                            <td>{{clearerNameObj.clearerName}}</td>
-                            <td class="ar">{{clearerNameObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
-                            <td class="ar">{{clearerNameObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
-                            <td class="ar">{{clearerNameObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
-                            <td class="ar">{{clearerNameObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
-                            <td class="ar">{{clearerNameObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
-                        </tr>
-                    </ng-container>
-                </table>
-            </div>
-        </div>
-    </div>
+                </ng-container>
+            </table>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>

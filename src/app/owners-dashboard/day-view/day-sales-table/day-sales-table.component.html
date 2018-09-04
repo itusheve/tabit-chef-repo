@@ -1,62 +1,51 @@
-<div class="flex d-col">
-    <div class="title">{{title}}</div>
-    <div class="flex body d-col">
-        <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
-        <div *ngIf="!loading">
-            <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
-            <div *ngIf="!noData" class="flex d-col a-center">
-                <table class="chf-tbl chf-tbl-row-oriented chf-tbl-smaller">
-                    <tr class="header">
-                        <td></td>
-                        <td class="ar" *ngFor="let title of pivotedData.titles">{{title}}</td>
-                    </tr>
+<table class="chf-tbl chf-tbl-row-oriented chf-tbl-smaller">
+    <tr class="header">
+        <td></td>
+        <td class="ar" *ngFor="let title of pivotedData.titles">{{title}}</td>
+    </tr>
 
-                    <tr>
-                        <td style="font-weight: bold" i18n="@@netSales">Net Sales</td>
-                        <td class="ar" *ngFor="let val of pivotedData.netSalesWithoutVat">{{val | curr:'0'}}</td>
-                    </tr>
+    <tr>
+        <td style="font-weight: bold" i18n="@@netSales">Net Sales</td>
+        <td class="ar" *ngFor="let val of pivotedData.netSalesWithoutVat">{{val | curr:'0'}}</td>
+    </tr>
 
-                    <tr>
-                        <td style="font-weight: bold; width:70px;white-space: normal;" i18n="@@salesWithTax">Sales + Tax</td>
-                        <td class="ar" *ngFor="let val of pivotedData.netSales">{{val | curr:'0'}}</td>
-                    </tr>
+    <tr>
+        <td style="font-weight: bold; width:70px;white-space: normal;" i18n="@@salesWithTax">Sales + Tax</td>
+        <td class="ar" *ngFor="let val of pivotedData.netSales">{{val | curr:'0'}}</td>
+    </tr>
 
-                    <tr *ngIf="pivotedData.hasTips && environment.region === 'il'">
-                        <td i18n="@@tips">Tips</td>
-                        <td class="ar" *ngFor="let val of pivotedData.gratuity">{{val | curr:'0'}}</td>
-                    </tr>
+    <tr *ngIf="pivotedData.hasTips && environment.region === 'il'">
+        <td i18n="@@tips">Tips</td>
+        <td class="ar" *ngFor="let val of pivotedData.gratuity">{{val | curr:'0'}}</td>
+    </tr>
 
-                    <tr *ngIf="environment.region === 'il'">
-                        <td>מחזור</td>
-                        <td class="ar" *ngFor="let val of pivotedData.salesTotalAmount">{{val | curr:'0'}}</td>
-                    </tr>
+    <tr *ngIf="environment.region === 'il'">
+        <td>מחזור</td>
+        <td class="ar" *ngFor="let val of pivotedData.salesTotalAmount">{{val | curr:'0'}}</td>
+    </tr>
 
-                    <tr *ngIf="environment.region === 'us'">
-                        <td i18n="@@grossSales">Gross Sales</td>
-                        <td class="ar" *ngFor="let val of pivotedData.grossSales">{{val | curr:'0'}}</td>
-                    </tr>
+    <tr *ngIf="environment.region === 'us'">
+        <td i18n="@@grossSales">Gross Sales</td>
+        <td class="ar" *ngFor="let val of pivotedData.grossSales">{{val | curr:'0'}}</td>
+    </tr>
 
-                    <tr *ngIf="environment.region === 'us'">
-                        <td i18n="@@tips">Tips</td>
-                        <td class="ar" *ngFor="let val of pivotedData.gratuity">{{val | curr:'0'}}</td>
-                    </tr>
+    <tr *ngIf="environment.region === 'us'">
+        <td i18n="@@tips">Tips</td>
+        <td class="ar" *ngFor="let val of pivotedData.gratuity">{{val | curr:'0'}}</td>
+    </tr>
 
-                    <tr *ngIf="environment.region === 'us'">
-                        <td i18n="@@serviceCharge">Service Charge</td>
-                        <td class="ar" *ngFor="let val of pivotedData.serviceCharge">{{val | curr:'0'}}</td>
-                    </tr>
+    <tr *ngIf="environment.region === 'us'">
+        <td i18n="@@serviceCharge">Service Charge</td>
+        <td class="ar" *ngFor="let val of pivotedData.serviceCharge">{{val | curr:'0'}}</td>
+    </tr>
 
-                    <tr>
-                        <td i18n="@@dinersOrders">Diners / Orders</td>
-                        <td class="ar" *ngFor="let val of pivotedData.diners">{{val}}</td>
-                    </tr>
+    <tr>
+        <td i18n="@@dinersOrders">Diners / Orders</td>
+        <td class="ar" *ngFor="let val of pivotedData.diners">{{val}}</td>
+    </tr>
 
-                    <tr>
-                        <td i18n="@@ppa">PPA</td>
-                        <td class="ar" *ngFor="let val of pivotedData.ppa">{{val | curr:'1'}}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+    <tr>
+        <td i18n="@@ppa">PPA</td>
+        <td class="ar" *ngFor="let val of pivotedData.ppa">{{val | curr:'1'}}</td>
+    </tr>
+</table>

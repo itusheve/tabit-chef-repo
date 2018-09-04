@@ -86,6 +86,10 @@
         <source>Top Selling Items by Category</source>
         <target>הפריטים הנמכרים ביותר</target>
       </trans-unit>
+      <trans-unit id="allDay" datatype="html">
+              <source>All day</source>
+              <target>כל היום</target>
+            </trans-unit>
       <trans-unit id="mostReturnedItems" datatype="html">
         <source>Most Returned Items</source>
         <target>הפריטים המוחזרים ביותר</target>
@@ -105,6 +109,10 @@
       <trans-unit id="totalSales" datatype="html">
         <source>Total Sales</source>
         <target>מכירות</target>
+      </trans-unit>
+      <trans-unit id="salesByHour" datatype="html">
+        <source>Sales vs 4week Avg</source>
+        <target>מכירות לפי שעה \ ממוצע 4 שב'</target>
       </trans-unit>
       <trans-unit id="monthly" datatype="html">
         <source>Monthly</source>
