@@ -6,8 +6,7 @@
         <dx-load-indicator class="as-center" *ngIf="loading"></dx-load-indicator>
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
-            <div *ngIf="!noData" class="flex d-col a-stretch">
-                <mat-accordion *ngIf="byOrderTypes">
+            <div *ngIf="!noData && byOrderTypes" class="flex d-col a-stretch">
                     <mat-expansion-panel expanded="false" hideToggle="true" *ngIf="bdIsCurrentBd">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
@@ -106,9 +105,7 @@
                                 </td>
                             </tr>
                         </table>
-
                     </mat-expansion-panel>
-                </mat-accordion>
             </div>
         </div>
     </div>

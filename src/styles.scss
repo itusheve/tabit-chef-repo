@@ -10,18 +10,21 @@
     }
 }*/
 
-$blue:    #1565C0;
+$blue:    rgb(34, 168, 204);
 $indigo:  #3949AB;
-$purple:  #8E24AA;
+$purple:  rgb(206, 54, 235);
 $pink:    #D81B60;
-$red:     #E53935;
-$orange:  #600;
-$yellow:  #FFCA28;
-$green:   #43A047;
+$red:     rgb(191, 57, 44);
+$darkRed: #9B2114;
+$orange:  rgb(245, 113, 35);
+$yellow:  rgb(253, 208, 0);
+$green:   rgb(0, 191, 13);
 $teal:    #00897B;
 $cyan:    #00ACC1;
 $grey-600:#757575;
 $grey-800:#424242;
+$darkGreen: rgb(76, 142, 0);
+$titleColor: rgb(76, 142, 0);
 
 @import "~bootstrap/scss/bootstrap";
 
@@ -62,19 +65,19 @@ button {
 }
 
 .bg-success-dark {
-  background-color: #2E7D32;
+  background-color: $darkGreen;
 }
 
 .text-success-dark {
-  color: #2E7D32 !important;
+  color: $darkGreen !important;
 }
 
 .bg-danger-dark {
-  background-color: #C62828;
+  background-color: $darkRed;
 }
 
 .text-danger-dark {
-  color: #C62828 !important;
+  color: $darkRed !important;
 }
 
 .widget {
@@ -112,7 +115,7 @@ button {
   .title {
     font-size: 20px;
     color: white;
-    background-color: #424242;
+    background-color: $titleColor;
     text-align: center;
     padding: 10px;
     box-shadow: 0 0px 8px 2px rgba(0, 0, 0, 0.2);
