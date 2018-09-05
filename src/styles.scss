@@ -10,6 +10,21 @@
     }
 }*/
 
+$blue:    #1565C0;
+$indigo:  #3949AB;
+$purple:  #8E24AA;
+$pink:    #D81B60;
+$red:     #E53935;
+$orange:  #600;
+$yellow:  #FDD835;
+$green:   #43A047;
+$teal:    #00897B;
+$cyan:    #00ACC1;
+$grey-600:#757575;
+$grey-800:#424242;
+
+@import "~bootstrap/scss/bootstrap";
+
 html, body {
   width: 100vw;
   height: 100vh;
@@ -47,19 +62,19 @@ button {
 }
 
 .bg-success-dark {
-  background-color: #1f8437;
+  background-color: #2E7D32;
 }
 
 .text-success-dark {
-  color: #1f8437 !important;
+  color: #2E7D32 !important;
 }
 
 .bg-danger-dark {
-  background-color: #a02632;
+  background-color: #C62828;
 }
 
 .text-danger-dark {
-  color: #a02632 !important;
+  color: #C62828 !important;
 }
 
 .widget {
@@ -67,7 +82,7 @@ button {
   padding: 3px 16px;
   margin-bottom: 10px;
   background-color: #fff;
-  color: #343E56;
+  color: #BDBDBD;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
 
   &.fullWidth {
@@ -75,7 +90,7 @@ button {
   }
 
   &.blueAccent {
-    background-color: #3A5675;
+    background-color: #1565C0;
     color: #fff;
 
     dx-load-indicator {
@@ -97,7 +112,7 @@ button {
   .title {
     font-size: 20px;
     color: white;
-    background-color: #3a5675;
+    background-color: #424242;
     text-align: center;
     padding: 10px;
     box-shadow: 0 0px 8px 2px rgba(0, 0, 0, 0.2);

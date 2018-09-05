@@ -78,6 +78,10 @@
         <source>Category</source>
         <target>קטגוריה</target>
       </trans-unit>
+      <trans-unit id="salesByCategory" datatype="html">
+        <source>Sales by category</source>
+        <target>מכירות לפי קטגוריה</target>
+      </trans-unit>
       <trans-unit id="item" datatype="html">
         <source>Item</source>
         <target>פריט</target>
@@ -97,6 +101,14 @@
       <trans-unit id="payments" datatype="html">
         <source>Payments</source>
         <target>תשלומים</target>
+      </trans-unit>
+      <trans-unit id="paymentsReport" datatype="html">
+        <source>Payments report</source>
+        <target>דו"ח תשלומים</target>
+      </trans-unit>
+      <trans-unit id="budget" datatype="html">
+        <source>budget</source>
+        <target>תקציב</target>
       </trans-unit>
       <trans-unit id="payment" datatype="html">
         <source>Payment</source>
