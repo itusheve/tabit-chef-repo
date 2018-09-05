@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { Observable } from 'rxjs/Observable';
-import { zip } from 'rxjs/observable/zip';
+import { Observable ,  zip } from 'rxjs';
 
 import { Order } from '../../model/Order.model';
 

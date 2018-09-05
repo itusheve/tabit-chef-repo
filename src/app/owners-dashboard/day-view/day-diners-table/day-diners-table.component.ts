@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 // import { DecimalPipe } from '@angular/common';
 import * as _ from 'lodash';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 // @Component({
 //   selector: 'app-day-diners-table',

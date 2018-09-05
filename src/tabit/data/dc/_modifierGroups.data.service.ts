@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ROSEp } from '../ep/ros.ep';
 
 import * as _ from 'lodash';
 import { DebugService } from '../../../app/debug.service';
+import {publishReplay, refCount} from 'rxjs/operators';
 
 @Injectable()
 export class ModifierGroupsDataService {
@@ -27,7 +28,10 @@ export class ModifierGroupsDataService {
                     allModifiersRaw: allModifiersRaw
                 });
             });
-    }).publishReplay(1).refCount();
+    }).pipe(
+        publishReplay(1),
+        refCount()
+    );
 
     constructor(
         private rosEp: ROSEp,

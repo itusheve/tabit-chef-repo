@@ -7,6 +7,8 @@
 //     display: block;
 //     height: 100%;
 // }
+$titleColor: rgb(76, 142, 0);
+$matAccordionHeaderColor: #fff;
 
 ::ng-deep.mat-expansion-panel {
   ::ng-deep.mat-expansion-panel-header {
@@ -16,7 +18,7 @@
     padding: 0 12px!important;
     background-color: #fff;
     &:first-child {
-      border-bottom: 1px solid #E0E0E0;
+      border-bottom: 1px solid $matAccordionHeaderColor;
     }
     ::ng-deep.mat-panel-title {
       color: $fontColor!important;
@@ -28,6 +30,10 @@
     }
   }
 
+  .mat-expansion-panel-spacing {
+    margin: 0px 0px;
+  }
+
   .mat-expansion-panel-header-description {
     color: $fontColor!important;
   }
@@ -36,15 +42,15 @@
   .mat-expansion-panel-header.mat-expanded:hover,
   .mat-expansion-panel-header:hover,
   .mat-expansion-panel:hover {
-    background: #E0E0E0 !important;
+    background: $matAccordionHeaderColor !important;
   }
 
   ::ng-deep .mat-expansion-panel {
-    background: #E0E0E0 !important;
+    background: $matAccordionHeaderColor !important;
   }
 
   ::ng-deep .mat-expansion-panel-body {
-    padding: 0 0 10px 0!important;
+    padding: 0px !important;
   }
 }
 
@@ -78,7 +84,6 @@
       display: block;
     }
   }
-
 }
 
 .drill {

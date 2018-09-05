@@ -25,7 +25,7 @@ elif [[ "$CIRCLE_BRANCH" == "master" ]]; then
 elif [[ "$CIRCLE_BRANCH" == "ecs-dev" ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
-  ng build --prod --build-optimizer --env=dev-il --output-hashing=none --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he
+  ng build --configuration=prod-il --prod --build-optimizer
   chmod +x _s3/s3-push-dev.sh
   S3_BUCKET="chef.tabit-dev.com" _s3/s3-push-dev.sh
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
@@ -34,7 +34,7 @@ elif [[ "$CIRCLE_BRANCH" == "us-production-rp"  ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
   echo "On2"
-  ng build --aot --env=prod-us --target=production --output-hashing=none
+  ng build --configuration=prod-us --prod --build-optimizer
   echo "On3"
   chmod +x _s3/s3-push-us-prod.sh
   echo "On4"
@@ -45,7 +45,7 @@ elif [[ "$CIRCLE_BRANCH" == "us-production-rp-cordova"  ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
   echo "On2"
-  ng build --aot --env=prod-us --target=production --output-hashing=none
+  ng build --configuration=prod-us --prod --build-optimizer
   echo "On3"
   chmod +x _s3/s3-push-us-prod.sh
   echo "On4"
@@ -54,42 +54,42 @@ elif [[ "$CIRCLE_BRANCH" == "us-production-rp-cordova"  ]]; then
 elif [[ "$CIRCLE_BRANCH" == "us-production-rp-beta" ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
-  ng build --aot --env=prod-us --target=production --output-hashing=none
+  ng build --configuration=prod-us --prod --build-optimizer
   chmod +x _s3/s3-push-us-prod.sh
   S3_BUCKET="us-chefbeta.tabit.cloud" _s3/s3-push-us-prod.sh
   echo "On verification branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "ecs-us-staging" ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
-  ng build --aot --env=prod-us --target=production --output-hashing=none
+  ng build --configuration=prod-us --prod --build-optimizer
   chmod +x _s3/s3-push-us-stage.sh
   S3_BUCKET="us-chef.tabit-stage.com" _s3/s3-push-us-stage.sh
   echo "On ecs-us-staging branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "ecs-il-staging" ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
-  ng build --aot --env=prod-il --target=production --output-hashing=none --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he
+  ng build --configuration=prod-il --prod --build-optimizer
   chmod +x _s3/s3-push-il-stage.sh
   S3_BUCKET="il-chef.tabit-stage.com" _s3/s3-push-il-stage.sh
   echo "On ecs-il-staging branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "ecs-il-int" ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
-  ng build --aot --env=prod-il --target=production --output-hashing=none --i18nFile=src/locale/messages.he.xlf --i18nFormat=xlf --locale=he
+  ng build --configuration=prod-il --prod --build-optimizer
   chmod +x _s3/s3-push-il-int.sh
   S3_BUCKET="il-int-chef.tabit-stage.com" _s3/s3-push-il-int.sh
   echo "On ecs-il-int branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "ecs-us-int" ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
-  ng build --aot --env=prod-us --target=production --output-hashing=none
+  ng build --configuration=prod-us --prod --build-optimizer
   chmod +x _s3/s3-push-us-int.sh
   S3_BUCKET="us-int-chef.tabit-stage.com" _s3/s3-push-us-int.sh
   echo "On verification branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "ecs-us-demo" ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
-  ng build --aot --env=prod-us --target=production --output-hashing=none
+  ng build --configuration=prod-us --prod --build-optimizer
   chmod +x _s3/s3-push-us-demo.sh
   S3_BUCKET="us-demo-chef.tabit-stage.com" _s3/s3-push-us-demo.sh
   echo "On verification branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"

@@ -1,6 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {DecimalPipe, PercentPipe, DatePipe} from '@angular/common';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 // export interface Trend {
 //   show: boolean;
 //   val: number;

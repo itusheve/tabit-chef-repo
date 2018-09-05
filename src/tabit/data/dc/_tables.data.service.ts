@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ROSEp } from '../ep/ros.ep';
 import { DebugService } from '../../../app/debug.service';
+import {publishReplay, refCount} from 'rxjs/operators';
 
 @Injectable()
 export class TablesDataService {
@@ -18,7 +19,10 @@ export class TablesDataService {
                     tablesRaw: tablesRaw
                 });
             });
-    }).publishReplay(1).refCount();
+    }).pipe(
+        publishReplay(1),
+        refCount()
+    );
 
     constructor(
         private rosEp: ROSEp,

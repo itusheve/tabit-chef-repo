@@ -13,7 +13,6 @@
         [checked]="vat"
         (change)="vatChange($event)"
         [indeterminate]="false"
-        [align]="'start'"
         [disabled]="false"
         i18n="owners-dashboard|maam@@vat">
         VAT
@@ -23,7 +22,6 @@
         *ngIf="this.sideNavConfig.content.showDebugCb"
         [checked]="debug"
         (change)="debug=!debug"
-        [align]="'start'"
         >
         Debug
       </mat-checkbox>

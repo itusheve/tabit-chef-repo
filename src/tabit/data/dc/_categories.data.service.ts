@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ROSEp } from '../ep/ros.ep';
+import {publishReplay, refCount} from 'rxjs/operators';
+
 
 import * as _ from 'lodash';
 import { DebugService } from '../../../app/debug.service';
@@ -64,7 +66,7 @@ export class CategoriesDataService {
                     // mainCategoriesRaw: mainCategoriesRaw
                 });
             });
-    }).publishReplay(1).refCount();
+    }).pipe(publishReplay(1), refCount());
 
     constructor(
         private rosEp: ROSEp,

@@ -1,3 +1,6 @@
+import {Observable, BehaviorSubject} from 'rxjs';
+import {catchError, take, filter, switchMap} from 'rxjs/operators';
+import {throwError as observableThrowError} from 'rxjs/internal/observable/throwError';
 import {
     HttpRequest,
     HttpHandler,
@@ -10,14 +13,9 @@ import {
     HttpUserEvent,
     HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { AuthService } from './auth.service';
-import { Injectable, Injector } from '@angular/core';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/take';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { DebugService } from '../debug.service';
+import {AuthService} from './auth.service';
+import {Injectable, Injector} from '@angular/core';
+import {DebugService} from '../debug.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -46,7 +44,7 @@ export class TokenInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
         this.authService = this.injector.get(AuthService);
 
-        if (request.url.indexOf('oauth2')>-1) return next.handle(request);
+        if (request.url.indexOf('oauth2') > -1) return next.handle(request);
 
         const that = this;
 
@@ -60,24 +58,26 @@ export class TokenInterceptor implements HttpInterceptor {
 
         this.ds.log(`tokenInterceptor: request intercepted: adding token: ${that.authService.authToken}`);
         return next.handle(that.addToken(request, that.authService.authToken))
-            .catch(error => {
-                this.ds.log(`tokenInterceptor: intercept: catched error`);
-                if (error instanceof HttpErrorResponse) {
-                    this.ds.log(`tokenInterceptor: intercept: catched error (1)`);
-                    switch ((<HttpErrorResponse>error).status) {
-                        case 400:
-                            //TODO (general bad request the server couldnt understand)
-                            this.ds.err(`tokenInterceptor: intercept: catched error (1): 400 ${JSON.stringify(request)}`);
-                            return Observable.throw(error);
-                        case 401:
-                            this.ds.log(`tokenInterceptor: intercept: catched error (1): 401`);
-                            return that.handle401Error(request, next);
+            .pipe(
+                catchError(error => {
+                    this.ds.log(`tokenInterceptor: intercept: catched error`);
+                    if (error instanceof HttpErrorResponse) {
+                        this.ds.log(`tokenInterceptor: intercept: catched error (1)`);
+                        switch ((<HttpErrorResponse>error).status) {
+                            case 400:
+                                //TODO (general bad request the server couldnt understand)
+                                this.ds.err(`tokenInterceptor: intercept: catched error (1): 400 ${JSON.stringify(request)}`);
+                                return observableThrowError(error);
+                            case 401:
+                                this.ds.log(`tokenInterceptor: intercept: catched error (1): 401`);
+                                return that.handle401Error(request, next);
+                        }
+                    } else {
+                        this.ds.err(`tokenInterceptor: intercept: catched error (2)`);
+                        return observableThrowError(error);
                     }
-                } else {
-                    this.ds.err(`tokenInterceptor: intercept: catched error (2)`);
-                    return Observable.throw(error);
-                }
-            });
+                })
+            );
     }
 
     handle401Error(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
@@ -91,7 +91,7 @@ export class TokenInterceptor implements HttpInterceptor {
             // comes back from the refreshToken call.
             this.tokenSubject.next(null);
 
-            return Observable.create(sub=>{
+            return Observable.create(sub => {
                 return this.authService.refreshToken()
                     .then((newAccessToken: string) => {
                         if (newAccessToken) {
@@ -118,13 +118,14 @@ export class TokenInterceptor implements HttpInterceptor {
                 });
         } else {
             this.ds.log(`tokenInterceptor: handle401Error: this.isRefreshingToken, waiting for new token`);
-            return this.tokenSubject
-                .filter(accessToken => accessToken != null)
-                .take(1)
-                .switchMap(accessToken => {
+            return this.tokenSubject.pipe(
+                filter(accessToken => accessToken != null),
+                take(1),
+                switchMap(accessToken => {
                     this.ds.log(`tokenInterceptor: handle401Error: this.isRefreshingToken, new token arrived, firing call`);
                     return next.handle(this.addToken(req, accessToken));
-                });
+                })
+            );
         }
     }
 

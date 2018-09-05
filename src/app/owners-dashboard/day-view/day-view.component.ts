@@ -5,10 +5,8 @@ import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import 'rxjs/add/operator/switchMap';
-import {zip} from 'rxjs/observable/zip';
-import {combineLatest} from 'rxjs/observable/combineLatest';
-import {Subject} from 'rxjs/Subject';
+
+import {zip, combineLatest, Subject} from 'rxjs';
 import {Order} from '../../../tabit/model/Order.model';
 import {OrderType} from '../../../tabit/model/OrderType.model';
 import {OwnersDashboardService} from '../owners-dashboard.service';
@@ -449,6 +447,7 @@ export class DayViewComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.hasData = false;
         window.scrollTo(0, 0);
         this.render();
         this.renderChart();

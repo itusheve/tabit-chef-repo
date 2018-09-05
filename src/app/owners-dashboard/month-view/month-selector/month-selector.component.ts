@@ -1,7 +1,7 @@
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 
 import * as moment from 'moment';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {currencySymbol} from '../../../../tabit/data/data.service';
 import {CardData} from '../../../ui/card/card.component';

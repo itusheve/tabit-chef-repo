@@ -16,7 +16,7 @@
                     <td class="ar" i18n="@@tip">Gratuity</td>
                     <td class="ar" i18n="@@totalPayments">Total Payments</td>
                 </tr>
-                <tr class="totalRow">
+                <tr class="totalRow" *ngIf="data">
                     <td i18n="@@total">Total</td>
                     <td class="ar">{{data.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
                     <td class="ar">{{data.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
@@ -24,23 +24,27 @@
                     <td class="ar">{{data.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
                     <td class="ar">{{data.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
                 </tr>
-                <ng-container *ngFor="let accountGroupObj of data.byAccountGroup">
-                    <tr class="accountTypeRow">
-                        <td>{{accountGroupObj.accountGroup}}</td>
-                        <td class="ar">{{accountGroupObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{accountGroupObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{accountGroupObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{accountGroupObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{accountGroupObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
-                    </tr>
-                    <tr *ngFor="let clearerNameObj of accountGroupObj.byClearerName" class="accountRow">
-                        <td>{{clearerNameObj.clearerName}}</td>
-                        <td class="ar">{{clearerNameObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{clearerNameObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{clearerNameObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{clearerNameObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
-                        <td class="ar">{{clearerNameObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
-                    </tr>
+                <ng-container *ngIf="data">
+                    <ng-container *ngFor="let accountGroupObj of data.byAccountGroup">
+                        <ng-container *ngIf="accountGroupObj">
+                            <tr class="accountTypeRow">
+                                <td>{{accountGroupObj.accountGroup}}</td>
+                                <td class="ar">{{accountGroupObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
+                                <td class="ar">{{accountGroupObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
+                                <td class="ar">{{accountGroupObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
+                                <td class="ar">{{accountGroupObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
+                                <td class="ar">{{accountGroupObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
+                            </tr>
+                            <tr *ngFor="let clearerNameObj of accountGroupObj.byClearerName" class="accountRow">
+                                <td>{{clearerNameObj.clearerName}}</td>
+                                <td class="ar">{{clearerNameObj.paymentsKpis.calcSalesAmnt | curr:'0':'':'nullify'}}</td>
+                                <td class="ar">{{clearerNameObj.paymentsKpis.refundAmnt | curr:'0':'':'nullify'}}</td>
+                                <td class="ar">{{clearerNameObj.paymentsKpis.paymentsAmount | curr:'0':'':'nullify'}}</td>
+                                <td class="ar">{{clearerNameObj.paymentsKpis.tipsAmnt | curr:'0':'':'nullify'}}</td>
+                                <td class="ar">{{clearerNameObj.paymentsKpis.totalPaymentsAmnt | curr:'0':'':'nullify'}}</td>
+                            </tr>
+                        </ng-container>
+                    </ng-container>
                 </ng-container>
             </table>
         </mat-expansion-panel>

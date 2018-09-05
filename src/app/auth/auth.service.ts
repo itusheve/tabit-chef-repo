@@ -1,11 +1,9 @@
+import {throwError as observableThrowError, Observable, Subject, zip} from 'rxjs';
 import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {User} from '../../tabit/model/User.model';
-import {Subject} from 'rxjs/Subject';
-import {zip} from 'rxjs/observable/zip';
 import {environment} from '../../environments/environment';
 import {DebugService} from '../debug.service';
 import {LogzioService} from '../logzio.service';
@@ -290,7 +288,7 @@ export class AuthService {
         if (!token) {
             this.ds.err('authSvc: getAuthToken: couldnt get token out of localStorage');
         }
-        if (!token) throw Observable.throw({});
+        if (!token) throw observableThrowError({});
         subject.next(token.access_token);
         return subject;
     }

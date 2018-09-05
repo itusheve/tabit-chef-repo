@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {DataService, tmpTranslations, appVersions} from '../../tabit/data/data.service';
 import {AuthService} from '../auth/auth.service';
 import {Router, ActivatedRoute, ParamMap} from '@angular/router';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import {MatSnackBar, MatDialog} from '@angular/material';
 import {AreYouSureDialogComponent} from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
 import {environment} from '../../environments/environment';

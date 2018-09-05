@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ROSEp } from '../ep/ros.ep';
 
 import * as _ from 'lodash';

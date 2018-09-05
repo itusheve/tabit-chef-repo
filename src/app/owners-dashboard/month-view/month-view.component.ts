@@ -4,9 +4,8 @@ import {DatePipe} from '@angular/common';
 import * as _ from 'lodash';
 
 import * as moment from 'moment';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject, combineLatest} from 'rxjs';
 import {CardData} from '../../ui/card/card.component';
-import {combineLatest} from 'rxjs/observable/combineLatest';
 import {TrendModel} from '../../../tabit/model/Trend.model';
 import {environment} from '../../../environments/environment';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';

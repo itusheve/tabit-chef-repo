@@ -2,12 +2,11 @@
 import {Injectable} from '@angular/core';
 
 //rxjs
-import {Observable} from 'rxjs/Observable';
-import {combineLatest} from 'rxjs/observable/combineLatest';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import 'rxjs/add/operator/concatMap';
-import 'rxjs/add/operator/publishReplay';
-import 'rxjs/add/operator/share';
+import {Observable, combineLatest, BehaviorSubject} from 'rxjs';
+import {publishReplay, refCount} from 'rxjs/operators';
+
+
+
 
 //tools
 import * as _ from 'lodash';
@@ -399,7 +398,10 @@ export class DataService {
                 const pbd: moment.Moment = moment(cbd).subtract(1, 'day');
                 obs.next(pbd);
             });
-    }).publishReplay(1).refCount();
+    }).pipe(
+        publishReplay(1),
+        refCount()
+    );
 
     public LatestBusinessDayDashboardData$: Observable<any> = Observable.create(obs => {
         this.refresh$
@@ -416,7 +418,10 @@ export class DataService {
                         obs.next(data);
                     });
             });
-    }).publishReplay(1).refCount();
+    }).pipe(
+        publishReplay(1),
+        refCount()
+    );
 
     /**
      *  Do not delete
@@ -1308,7 +1313,10 @@ export class DataService {
 
             obs.next(result);
         });
-    }).publishReplay(1).refCount();
+    }).pipe(
+        publishReplay(1),
+        refCount()
+    );
 
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService, private logz: LogzioService) {
 

@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
+import {take} from 'rxjs/operators';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
-import {ReplaySubject} from 'rxjs/ReplaySubject';
+import {ReplaySubject} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {OlapMappings} from './olap.mappings';
 import {HttpHeaders, HttpClient} from '@angular/common/http';
@@ -723,7 +724,7 @@ export class OlapEp {
             `;
 
 
-            this.url.take(1)
+            this.url.pipe(take(1))
                 .subscribe(url => {
                     const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
 
@@ -792,7 +793,7 @@ export class OlapEp {
                 FROM ${this.cube}
             `;
 
-            this.url.take(1)
+            this.url.pipe(take(1))
                 .subscribe(url => {
                     const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
 
@@ -865,7 +866,7 @@ export class OlapEp {
                 ${whereClause}
             `;
 
-            this.url.take(1)
+            this.url.pipe(take(1))
                 .subscribe(url => {
                     const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
 
@@ -978,7 +979,7 @@ export class OlapEp {
                 )
             `;
 
-            this.url.take(1)
+            this.url.pipe(take(1))
                 .subscribe(url => {
                     const xmla4j_w = new Xmla4JWrapper({url: url, catalog: this.catalog});
 

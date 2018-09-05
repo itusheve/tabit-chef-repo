@@ -2,7 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {DatePipe} from '@angular/common';
 import * as moment from 'moment';
-import {combineLatest} from 'rxjs/observable/combineLatest';
+import {combineLatest} from 'rxjs/internal/observable/combineLatest';
+import {take} from 'rxjs/operators';
 import {DataService, tmpTranslations} from '../../../tabit/data/data.service';
 import {CardData} from '../../ui/card/card.component';
 import {OwnersDashboardService} from '../owners-dashboard.service';
@@ -82,7 +83,7 @@ export class HomeComponent implements OnInit {
 
     initRefreshSubscriber(): void {
         this.dataService.refresh$.subscribe((refresh) => {
-            if(refresh === 'force') {
+            if (refresh === 'force') {
                 this.loadingOlapData = true;
                 this.currentBdCardData.loading = true;
             }
@@ -296,7 +297,7 @@ export class HomeComponent implements OnInit {
 
     onDayRequest(date: string) {
         if (date === 'currentBD') {
-            this.dataService.currentRestTime$.take(1).subscribe(cbd => {
+            this.dataService.currentRestTime$.pipe(take(1)).subscribe(cbd => {
                 date = cbd.format('YYYY-MM-DD');
                 this.router.navigate(['/owners-dashboard/day', date]);
             });
@@ -304,7 +305,7 @@ export class HomeComponent implements OnInit {
             if (this.previousBdNotFinal) {
                 return;
             }
-            this.dataService.previousBd$.take(1).subscribe(pbd => {
+            this.dataService.previousBd$.pipe(take(1)).subscribe(pbd => {
                 date = pbd.format('YYYY-MM-DD');
                 this.router.navigate(['/owners-dashboard/day', date]);
             });

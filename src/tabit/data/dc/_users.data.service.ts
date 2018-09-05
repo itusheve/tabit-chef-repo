@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  from as fromPromise ,  zip } from 'rxjs';
 import { ROSEp } from '../ep/ros.ep';
-
-import { fromPromise } from 'rxjs/observable/fromPromise';
-import { zip } from 'rxjs/observable/zip';
 import { DebugService } from '../../../app/debug.service';
+import {publishReplay, refCount} from 'rxjs/operators';
 
 @Injectable()
 export class UsersDataService {
@@ -32,7 +30,10 @@ export class UsersDataService {
             });
         });
 
-    }).publishReplay(1).refCount();
+    }).pipe(
+        publishReplay(1),
+        refCount()
+    );
 
     constructor(
         private rosEp: ROSEp,
