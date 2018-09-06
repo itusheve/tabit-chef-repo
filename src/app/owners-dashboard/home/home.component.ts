@@ -91,11 +91,12 @@ export class HomeComponent implements OnInit {
     }
 
     getTodayData(): void {
-        combineLatest(this.dataService.LatestBusinessDayDashboardData$, this.dataService.olapToday$, this.dataService.vat$)
+        combineLatest(this.dataService.LatestBusinessDayDashboardData$, this.dataService.olapToday$, this.dataService.vat$, this.dataService.currentRestTime$)
             .subscribe(data => {
                 let realtimeData = data[0];
                 let day = data[1];
                 let incTax = data[2];
+                let restTime = data[3];
 
                 let totalSales = 0;
                 let totalSalesWithoutTax = 0;
@@ -108,7 +109,7 @@ export class HomeComponent implements OnInit {
                     totalSalesWithoutTax = realtimeData.today.totalSalesBeforeTax;
                 }
 
-                if (realtimeData.today.totalSales === 0) {
+                if (restTime !== realtimeDataDate) {
                     this.currentBdCardData.salesComment = 'eod';
                 }
 
