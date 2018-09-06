@@ -59,16 +59,10 @@ import {
     MatSlideToggleModule,
     MatExpansionModule,
     MatTabsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatProgressSpinnerModule
 } from '@angular/material';//material modules
 
-// import { locale, loadMessages } from 'devextreme/localization'; //https://github.com/DevExpress/devextreme-examples/tree/17_2/intl-angular
-import {DxButtonModule} from 'devextreme-angular';
-import {DxCalendarModule} from 'devextreme-angular';
-import {DxDataGridModule} from 'devextreme-angular';
-import {DxLoadIndicatorModule} from 'devextreme-angular';
-
-import 'devextreme-intl';
 import {OrderCashRefundComponent} from './order-view/slips/_cashRefund/cashRefund.component';
 import {OrderChequeRefundComponent} from './order-view/slips/_chequeRefund/chequeRefund.component';
 import {OrderCreditRefundComponent} from './order-view/slips/_creditRefund/creditRefund.component';
@@ -87,7 +81,6 @@ import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sa
         CommonModule,
         OwnersDashboardRoutingModule,
         MomentModule,
-
         MatCheckboxModule,
         MatButtonModule,
         MatIconModule,
@@ -97,11 +90,7 @@ import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sa
         MatSlideToggleModule,
         MatExpansionModule,
         MatTabsModule,
-
-        DxButtonModule,
-        DxCalendarModule,
-        DxDataGridModule,
-        DxLoadIndicatorModule
+        MatProgressSpinnerModule,
     ],
     declarations: [
         OwnersDashboardComponent,

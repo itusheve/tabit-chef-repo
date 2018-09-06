@@ -23,6 +23,7 @@ import {
     MatButtonToggleModule,
     MatGridListModule,
     MatDialogModule,
+    MatProgressSpinnerModule
 } from '@angular/material';//material modules
 
 import {MomentModule} from 'angular2-moment';
@@ -111,6 +112,7 @@ if (environment.tbtLocale === 'he-IL') {
         MatSnackBarModule,
         MatButtonToggleModule,
         MatGridListModule,
+        MatProgressSpinnerModule
     ],
     providers: [
         {

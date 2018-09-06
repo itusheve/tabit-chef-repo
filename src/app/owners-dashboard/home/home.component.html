@@ -13,9 +13,7 @@
                     </div>
                     <div *ngIf="!OlapFailed">
                         <div>
-                            <div class="text-center">
-                                <dx-load-indicator class="text-center"></dx-load-indicator>
-                            </div>
+                            <mat-spinner style="margin:0 auto;"></mat-spinner>
                             <p class="text-center saving"><span i18n="@@fetchingLatestAnalyticsData">Fetching latest analytics data</span><span>.</span><span>.</span><span>.</span></p>
                         </div>
                     </div>

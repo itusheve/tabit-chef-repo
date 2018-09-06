@@ -53,8 +53,8 @@ export class DayHourlySalesComponent implements OnChanges {
         if (width === 0) {
             width = 100;
         }
-        else if (width < 20) {
-            width = 20;
+        else if (width < 25) {
+            width = 25;
         }
         else if (width > 100) {
             width = 100;

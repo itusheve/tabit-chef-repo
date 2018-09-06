@@ -1,12 +1,12 @@
 // https://material.angular.io/guide/theming
 
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
 
 
 
 @import '~@angular/material/theming';
 @include mat-core();
-$tabit-app-primary: mat-palette($mat-orange);
+$tabit-app-primary: mat-palette($mat-grey);
 $tabit-app-accent:  mat-palette($mat-cyan, A200, A100, A400);
 $tabit-app-warn:    mat-palette($mat-red);
 $tabit-app-theme: mat-light-theme($tabit-app-primary, $tabit-app-accent, $tabit-app-warn);

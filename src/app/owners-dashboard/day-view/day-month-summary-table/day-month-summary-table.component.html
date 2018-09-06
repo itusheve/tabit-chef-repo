@@ -4,7 +4,7 @@
         <mat-expansion-panel expanded="false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{month | date:'LLLL'}}
+                    {{month | date:'LLLL'}} - {{mtdBusinessData.totals.netSales | curr:'0'}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <table class="chf-tbl chf-tbl-xxx-smaller chf-tbl-row-oriented">

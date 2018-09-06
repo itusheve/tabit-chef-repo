@@ -109,7 +109,7 @@ export class HomeComponent implements OnInit {
                     totalSalesWithoutTax = realtimeData.today.totalSalesBeforeTax;
                 }
 
-                if (restTime !== realtimeDataDate) {
+                if (!restTime.isSame(realtimeDataDate, 'day')) {
                     this.currentBdCardData.salesComment = 'eod';
                 }
 

@@ -123,8 +123,8 @@
         <target>מכירות</target>
       </trans-unit>
       <trans-unit id="salesByHour" datatype="html">
-        <source>Sales vs 4week Avg</source>
-        <target>מכירות לפי שעה \ ממוצע 4 שב'</target>
+        <source>Hourly sales vs daily avg</source>
+        <target>מכירות לפי שעה ביחס לממוצע היומי</target>
       </trans-unit>
       <trans-unit id="monthly" datatype="html">
         <source>Monthly</source>
@@ -313,6 +313,10 @@
         <source>Sales</source>
         <target>מכירות</target>
       </trans-unit>
+      <trans-unit id="sales3" datatype="html">
+              <source>Sales</source>
+              <target>מכירות (הזמנות סגורות)</target>
+            </trans-unit>
       <trans-unit id="dinersOrders" datatype="html">
         <source>Diners / Orders</source>
         <target>סועדים / הזמנות</target>

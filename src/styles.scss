@@ -24,7 +24,7 @@ $cyan:    #00ACC1;
 $grey-600:#757575;
 $grey-800:#424242;
 $darkGreen: rgb(76, 142, 0);
-$titleColor: rgb(76, 142, 0);
+$titleColor: $teal;
 
 @import "~bootstrap/scss/bootstrap";
 
@@ -243,14 +243,14 @@ table {
       font-size: $xxx-smaller-font-size;
       tr {
         td, th {
-          padding: 8px 0px;
+          padding: 8px 1px;
 
           &:first-child {
-            padding-left: 0px;
+            padding-left: 2px;
           }
 
           &:last-child {
-            padding-right: 0px;
+            padding-right: 2px;
           }
         }
       }
@@ -312,10 +312,10 @@ body[dir="rtl"] {
     &.chf-tbl-xxx-smaller {
       td, th {
         &:first-child {
-          padding-right: 0px;
+          padding-right: 2px;
         }
         &:last-child {
-          padding-left: 0px;
+          padding-left: 2px;
         }
       }
     }
@@ -475,4 +475,51 @@ snack-bar-container {
 
 .shadow-card {
   box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.4) !important;
+}
+
+.app-loading {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.app-loading .spinner {
+  height: 200px;
+  width: 200px;
+  animation: rotate 2s linear infinite;
+  transform-origin: center center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.app-loading .spinner .path {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  animation: dash 1.5s ease-in-out infinite;
+  stroke-linecap: round;
+  stroke: #ddd;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
 }

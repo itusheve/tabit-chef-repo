@@ -9,7 +9,6 @@
     </div>
     <div class="card-body py-2">
         <div *ngIf="!cardData || cardData.loading" class="text-center">
-            <dx-load-indicator [(visible)]="!cardData || cardData.loading"></dx-load-indicator>
         </div>
         <div *ngIf="cardData && !cardData.loading" class="row">
             <div class="col-7 px-2"
@@ -38,7 +37,7 @@
                                         play_arrow
                                     </mat-icon>
                                 </td>
-                                <td class="text-dark">{{(cardData.averages.yearly.percentage) | pct: 2}}</td>
+                                <td class="text-dark">{{(cardData.averages.yearly.percentage) | pct: 1}}</td>
                                 <td class="text-body" i18n="@@lastYear">Last year</td>
                             </tr>
                             <tr *ngIf="cardData.averages?.weekly">
@@ -48,7 +47,7 @@
                                         play_arrow
                                     </mat-icon>
                                 </td>
-                                <td class="text-dark">{{(cardData.averages.weekly.percentage || 0) | pct: 2}}</td>
+                                <td class="text-dark">{{(cardData.averages.weekly.percentage || 0) | pct: 1}}</td>
                                 <td class="text-body" i18n="@@fourWeekAvg">4 Week</td>
                             </tr>
                         </table>

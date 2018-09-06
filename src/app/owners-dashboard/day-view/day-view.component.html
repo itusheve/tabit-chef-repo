@@ -16,9 +16,7 @@
                 </div>
                 <div *ngIf="!hasNoDataForToday">
                     <div>
-                        <div class="text-center">
-                            <dx-load-indicator class="text-center"></dx-load-indicator>
-                        </div>
+                        <mat-spinner style="margin:0 auto;"></mat-spinner>
                         <p class="text-center saving"><span
                                 i18n="@@fetching">Fetching</span><span>.</span><span>.</span><span>.</span></p>
                     </div>
@@ -43,12 +41,12 @@
 
         <div class="widget">
             <div class="flex d-col">
-                <div class="title" i18n="@@sales2">Sales</div>
+                <div class="title" i18n="@@sales3">Sales (closed orders)</div>
                 <div class="flex d-col body">
                     <mat-expansion-panel expanded="true">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                <ng-container i18n="@@salesByHour">Sales vs 4week Avg</ng-container>
+                                <ng-container i18n="@@salesByHour">Hourly sales vs daily avg</ng-container>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <app-day-hourly-sales
