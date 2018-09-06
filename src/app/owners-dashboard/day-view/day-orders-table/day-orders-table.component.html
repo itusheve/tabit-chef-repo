@@ -3,7 +3,7 @@
         <ng-container i18n="@@orders">Orders</ng-container>
     </div>
     <div class="body flex d-col">
-        <mat-spinner *ngIf="loading" style="margin:0 auto;"></mat-spinner>
+        <mat-spinner *ngIf="loading" style="margin:0 auto;" diameter="50"></mat-spinner>
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData && byOrderTypes" class="flex d-col a-stretch">
