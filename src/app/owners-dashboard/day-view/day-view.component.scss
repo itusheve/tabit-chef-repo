@@ -7,7 +7,7 @@
 //     display: block;
 //     height: 100%;
 // }
-$matAccordionHeaderColor: #fff;
+$matAccordionHeaderColor: #C5CCD4;
 
 ::ng-deep.mat-expansion-panel {
   ::ng-deep.mat-expansion-panel-header {
@@ -15,7 +15,7 @@ $matAccordionHeaderColor: #fff;
     font-size: 16px!important;
     font-weight: bold!important;
     padding: 0 12px!important;
-    background-color: #fff;
+    background-color: $matAccordionHeaderColor;
     &:first-child {
       border-bottom: 1px solid $matAccordionHeaderColor;
     }
