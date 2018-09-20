@@ -16,7 +16,7 @@
                 </div>
                 <div *ngIf="!hasNoDataForToday">
                     <div>
-                        <mat-spinner style="margin:0 auto;" diameter="50"></mat-spinner>
+                        <mat-progress-bar style="margin:10px auto;" color="primary" mode="indeterminate"></mat-progress-bar>
                         <p class="text-center saving"><span
                                 i18n="@@fetching">Fetching</span><span>.</span><span>.</span><span>.</span></p>
                     </div>
@@ -135,23 +135,23 @@
         ></app-payments-table>
 
         <app-operational-errors-table *ngIf="operationalErrorsData"
-                class="widget"
-                [operationalErrorsData]="operationalErrorsData"
-                [lastViewed]="drilledOrderNumber"
-                (onOrderClicked)="onOrderClicked_orderNumber($event)"
+                                      class="widget"
+                                      [operationalErrorsData]="operationalErrorsData"
+                                      [lastViewed]="drilledOrderNumber"
+                                      (onOrderClicked)="onOrderClicked_orderNumber($event)"
         ></app-operational-errors-table>
 
         <app-retention-table *ngIf="retentionData"
-                class="widget"
-                [retentionData]="retentionData"
-                [lastViewed]="drilledOrderNumber"
-                (onOrderClicked)="onOrderClicked_orderNumber($event)"
+                             class="widget"
+                             [retentionData]="retentionData"
+                             [lastViewed]="drilledOrderNumber"
+                             (onOrderClicked)="onOrderClicked_orderNumber($event)"
         ></app-retention-table>
 
         <app-month-summary-table *ngIf="mtdBusinessData"
-                class="widget"
-                [month]="day"
-                [mtdBusinessData]="mtdBusinessData"
+                                 class="widget"
+                                 [month]="day"
+                                 [mtdBusinessData]="mtdBusinessData"
         ></app-month-summary-table>
     </div>
 </div>

@@ -60,7 +60,8 @@ import {
     MatExpansionModule,
     MatTabsModule,
     MatCheckboxModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatProgressBarModule
 } from '@angular/material';//material modules
 
 import {OrderCashRefundComponent} from './order-view/slips/_cashRefund/cashRefund.component';
@@ -91,6 +92,7 @@ import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sa
         MatExpansionModule,
         MatTabsModule,
         MatProgressSpinnerModule,
+        MatProgressBarModule
     ],
     declarations: [
         OwnersDashboardComponent,
