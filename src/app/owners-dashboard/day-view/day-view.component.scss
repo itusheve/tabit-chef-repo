@@ -12,7 +12,7 @@ $matAccordionHeaderColor: #C5CCD4;
 ::ng-deep.mat-expansion-panel {
   ::ng-deep.mat-expansion-panel-header {
     font-family: inherit!important;
-    font-size: 16px!important;
+    font-size: 18px!important;
     font-weight: bold!important;
     padding: 0 12px!important;
     background-color: $matAccordionHeaderColor;
@@ -29,8 +29,8 @@ $matAccordionHeaderColor: #C5CCD4;
     }
   }
 
-  .mat-expansion-panel-spacing {
-    margin: 0px 0px;
+  ::ng-deep.mat-expansion-panel-spacing {
+    margin: 12px 0 !important;
   }
 
   .mat-expansion-panel-header-description {
