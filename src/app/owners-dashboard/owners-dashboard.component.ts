@@ -11,6 +11,9 @@ import {OwnersDashboardService} from './owners-dashboard.service';
 import {AreYouSureDialogComponent} from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
 import {DebugService} from '../debug.service';
 
+import * as moment from 'moment';
+import 'moment-timezone';
+
 @Component({
     templateUrl: './owners-dashboard.component.html',
     styleUrls: ['./owners-dashboard.component.scss']

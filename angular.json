@@ -33,8 +33,7 @@
               "src/js/lib/OrderView_v1/Translate.js",
               "src/js/lib/OrderView_v1/Utils.js",
               "src/js/vendor/rpbouman-xmla4j/xmla-min.js",
-              "src/js/xmla4j-wrapper.class.js",
-              "node_modules/moment-timezone/builds/moment-timezone-with-data-2012-2022.min.js"
+              "src/js/xmla4j-wrapper.class.js"
             ]
           },
           "configurations": {
@@ -142,8 +141,7 @@
               "src/js/lib/OrderView_v1/Translate.js",
               "src/js/lib/OrderView_v1/Utils.js",
               "src/js/vendor/rpbouman-xmla4j/xmla-min.js",
-              "src/js/xmla4j-wrapper.class.js",
-              "node_modules/moment-timezone/builds/moment-timezone-with-data-2012-2022.min.js"
+              "src/js/xmla4j-wrapper.class.js"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap-reboot.min.css",

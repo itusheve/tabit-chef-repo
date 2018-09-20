@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { DebugService } from '../debug.service';
 import { environment } from '../../environments/environment';
 
+import * as moment from 'moment';
+import 'moment-timezone';
+
 @Injectable()
 export class OwnersDashboardService {
     public toolbarConfig = {
