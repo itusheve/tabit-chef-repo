@@ -1,11 +1,7 @@
-<div class="btn-group bg-white" role="group" dir="ltr" style="width: 100%">
-    <button type="button" class="btn btn-lg btn-outline-secondary rounded-0" (click)="region == 'il' ? nextMonth() : prevMonth()"
-            [ngClass]="region == 'il' ? {'disable':disableNext} : {'disable':disablePrevious}" style="width: 15%"><i class="material-icons" style="position: relative;top:4px">keyboard_arrow_left</i>
-    </button>
-    <button id="month" type="button" class="btn btn-lg border-secondary" [ngClass]="cardData?.statusClass" style="width: 70%">
+<div class="btn-group bg-white month-selector" role="group" dir="ltr" style="width: 100%">
+    <button mat-stroked-button (click)="region == 'il' ? nextMonth() : prevMonth()" style="width: 10%"><i class="material-icons">keyboard_arrow_left</i></button>
+    <button mat-stroked-button  id="month" [ngClass]="cardData?.statusClass" style="font-size: 17px; border-color: #fff; width: 80%">
         <ng-container>{{month | date:'MMMM yyyy'}}</ng-container>&nbsp;<ng-container class="dx-button-text text-lowercase mx-2" i18n="@@monthSelectorFinalIndication">{final, select, final {Final} notFinal {Not final}}</ng-container>
     </button>
-    <button type="button" class="btn btn-outline-secondary btn-lg rounded-0" (click)="region == 'il' ? prevMonth() : nextMonth()"
-            [ngClass]="region == 'il' ? {'disable':disablePrevious} : {'disable':disableNext}" style="width: 16%"><i class="material-icons" style="position: relative;top:4px">keyboard_arrow_right</i>
-    </button>
+    <button mat-stroked-button (click)="region == 'il' ? prevMonth() : nextMonth()" style="width: 10%"><i class="material-icons">keyboard_arrow_right</i></button>
 </div>

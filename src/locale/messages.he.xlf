@@ -315,11 +315,15 @@
       </trans-unit>
       <trans-unit id="sales3" datatype="html">
               <source>Sales</source>
-              <target>מכירות (הזמנות סגורות)</target>
+              <target>מכירות</target>
             </trans-unit>
+        <trans-unit id="closedOrders" datatype="html">
+          <source>(closed orders)</source>
+          <target>(הזמנות סגורות)</target>
+        </trans-unit>
       <trans-unit id="dinersOrders" datatype="html">
-        <source>Diners / Orders</source>
-        <target>סועדים / הזמנות</target>
+        <source>Diners/ Orders</source>
+        <target>סועדים\ הזמנות</target>
       </trans-unit>
       <trans-unit id="average" datatype="html">
         <target>ממוצע</target>

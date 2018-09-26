@@ -14,6 +14,7 @@ export class DayOperationalErrorsTableComponent implements OnChanges {
   @Input() operationalErrorsData: {
     orderType: OrderType;
     waiter: string;
+    approvedBy: string;
     orderNumber: number;
     tableId: string;
     item: string;

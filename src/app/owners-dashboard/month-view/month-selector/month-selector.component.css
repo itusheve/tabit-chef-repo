@@ -1,3 +1,7 @@
 .dx-calendar-navigator a.disable i {
     color: rgba(128, 128, 128, 0.5);
 }
+
+.month-selector button {
+    height: 50px;
+}

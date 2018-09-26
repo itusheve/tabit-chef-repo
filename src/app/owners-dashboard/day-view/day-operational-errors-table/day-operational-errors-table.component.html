@@ -60,9 +60,9 @@
                 <tr
                         *ngFor="let tuple of operationalErrorsData"
                         (click)="orderClicked(tuple.orderNumber)"
-                        [ngClass]="{'lastViewed': lastViewed===tuple.orderNumber}"
+                        [ngClass]="{'lastViewed': lastViewed == tuple.orderNumber}"
                 >
-                    <td>{{tuple.waiter}}</td>
+                    <td dir="rtl">{{tuple.waiter}} ({{tuple.approvedBy}})</td>
                     <td>
                         <span *ngIf="tuple.tableId!==''">
                              {{tuple.tableId}}
@@ -81,7 +81,7 @@
                             }
                         </span>
                         <br>
-                        <span>
+                        <span dir="rtl">
                             ({{tuple.orderNumber}})
                         </span>
                     </td>

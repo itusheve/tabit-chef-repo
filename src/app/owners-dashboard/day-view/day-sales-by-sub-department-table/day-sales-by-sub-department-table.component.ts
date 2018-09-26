@@ -63,7 +63,7 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
     loading = true;
 
     public sortBy: string;//category, daily, thisWeek, thisMonth, thisYear
-    public sortDir = 'desc';//asc | desc
+    public sortDir = '';
 
     constructor() {
     }
@@ -142,7 +142,7 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
 
                         this.data.bySubDepartment.push(o);
                     }
-                    o[k + 'sales'] = +(subDepartmentObj.sales);
+                    o[k + 'sales'] = +subDepartmentObj.sales || 0;
                     o.data[k] = {
                         sales: subDepartmentObj.sales,
                         pct: subDepartmentObj.pct
@@ -181,7 +181,7 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
             });
 
             if (!this.sortBy) {
-                this.sort('thisYear');
+                this.sort('thisBd');
             }
 
             this.loading = false;

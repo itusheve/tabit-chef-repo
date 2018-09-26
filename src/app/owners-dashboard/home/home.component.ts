@@ -104,7 +104,8 @@ export class HomeComponent implements OnInit {
                 let realtimeDataDate = moment(realtimeData.today.businessDate);
                 let today = moment();
 
-                if (realtimeData.today && realtimeDataDate.day() === today.day()) {
+                let test = moment.tz('America/Chicago');
+                if (realtimeData.today && realtimeDataDate.date() === today.date()) {
                     totalSales = realtimeData.today.totalSales;
                     totalSalesWithoutTax = realtimeData.today.totalSalesBeforeTax;
                 }

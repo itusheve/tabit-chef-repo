@@ -24,7 +24,7 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
         }[]
     };
 
-    maxItemsPerDepartment = 5;
+    maxItemsPerDepartment = 20;
 
     data: {
         department?: string,

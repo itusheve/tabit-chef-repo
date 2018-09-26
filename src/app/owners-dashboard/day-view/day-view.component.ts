@@ -137,6 +137,7 @@ export class DayViewComponent implements OnInit {
     public operationalErrorsData: {
         orderType: OrderType;
         waiter: string;
+        approvedBy: string;
         orderNumber: number;
         tableId: string;
         item: string;
@@ -148,6 +149,7 @@ export class DayViewComponent implements OnInit {
     public retentionData: {
         orderType: OrderType;
         waiter: string;
+        approvedBy: string;
         orderNumber: number;
         tableId: string;
         item: string;
@@ -158,7 +160,7 @@ export class DayViewComponent implements OnInit {
 
     public mtdBusinessData: any;
     public salesByHour: any;
-
+    public today: moment.Moment;
     public bdIsCurrentBd: boolean;
     public closedOpenSalesDiff: number;
     public openOrders: { totalAmount: number };
@@ -176,6 +178,7 @@ export class DayViewComponent implements OnInit {
         ownersDashboardService.toolbarConfig.menuBtn.show = false;
         this.region = environment.region;
         this.hasData = false;
+        this.today = moment();
     }
 
     extractOrders(dailyReport): Order[] {
@@ -402,7 +405,8 @@ export class DayViewComponent implements OnInit {
             _.forEach(dailyReport.operationalReduction, record => {
                 this.operationalErrorsData.push({
                     orderType: {id: record.orderType, rank: 1},
-                    waiter: record.WaiterPRapprovedBy,
+                    waiter: record.WaiterFiredBy,
+                    approvedBy: record.WaiterPRapprovedBy,
                     orderNumber: record.OrderNumber.match(/\d/g).join(''),
                     tableId: record.Tablenumber,
                     item: record.ItemName,
@@ -416,7 +420,8 @@ export class DayViewComponent implements OnInit {
             _.forEach(dailyReport.marketingRetentionReasons, retention => {
                 this.retentionData.push({
                     orderType: {id: retention.orderType, rank: 1},
-                    waiter: retention.WaiterPRapprovedBy,
+                    waiter: retention.WaiterFiredBy,
+                    approvedBy: retention.WaiterPRapprovedBy,
                     orderNumber: retention.OrderNumber.match(/\d/g).join(''),
                     tableId: retention.Tablenumber,
                     item: retention.ItemName,
@@ -447,6 +452,7 @@ export class DayViewComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.today = moment();
         this.hasData = false;
         window.scrollTo(0, 0);
         this.render();

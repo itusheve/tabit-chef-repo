@@ -32,20 +32,20 @@ export class MonthSelectorComponent implements OnInit {
         this.region = environment.region;
     }
 
-    disablePrevious = false;
-    disableNext = false;
+    disablePrevious = '';
+    disableNext = '';
 
-    private setDisable() {
+    private disableButton() {
         if (this.month.isSame(this.options.minDate, 'month')) {
-            this.disablePrevious = true;
+            this.disablePrevious = 'disabled';
         } else {
-            this.disablePrevious = false;
+            this.disablePrevious = '';
         }
 
         if (this.month.isSame(this.options.maxDate, 'month')) {
-            this.disableNext = true;
+            this.disableNext = 'disabled';
         } else {
-            this.disableNext = false;
+            this.disableNext = '';
         }
     }
 
@@ -53,7 +53,6 @@ export class MonthSelectorComponent implements OnInit {
         this.month$.subscribe(month => {
             this.month = month;
             this.final = moment().format('YYYYM') > this.month.format('YYYYM') ? 'final' : 'notFinal';
-            this.setDisable();
         });
 
     }
@@ -67,5 +66,4 @@ export class MonthSelectorComponent implements OnInit {
         if (this.month.isSame(this.options.maxDate, 'month')) return;
         this.onDateChanged.emit(moment(this.month).add(1, 'months'));
     }
-
 }

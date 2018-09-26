@@ -16,7 +16,7 @@
                 formControlName="email"
                 required
                 autofocus
-                style="font-size: 25px"
+                style="font-size: 25px; color: #fff;"
                 >
               <button mat-button *ngIf="loginForm.value.email" matSuffix mat-icon-button aria-label="Clear" (click)="loginForm.patchValue({email: ''})">
                 <mat-icon>close</mat-icon>
@@ -33,7 +33,7 @@
                 [type]="hidePass ? 'password' : 'text'"
                 formControlName="password"
                 required
-                style="font-size: 25px"
+                style="font-size: 25px; color: #fff;"
                 >
               <mat-icon matSuffix (click)="hidePass = !hidePass">{{hidePass ? 'visibility' : 'visibility_off'}}</mat-icon>
               <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">

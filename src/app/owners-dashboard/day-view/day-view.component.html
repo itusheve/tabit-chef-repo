@@ -41,7 +41,7 @@
 
         <div class="widget">
             <div class="flex d-col">
-                <div class="title" i18n="@@sales3">Sales (closed orders)</div>
+                <div class="title"><ng-container i18n="@@sales3">Sales</ng-container>&nbsp;<ng-container *ngIf="day.isSame(today, 'day')" i18n="@@closedOrders">(closed orders)</ng-container></div>
                 <div class="flex d-col body">
                     <mat-expansion-panel expanded="true">
                         <mat-expansion-panel-header>
@@ -56,7 +56,8 @@
                     <mat-expansion-panel expanded="true" *ngIf="dailySummaryTblData">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                <ng-container i18n="@@closedSummary">Closed orders summary</ng-container>
+                                <ng-container *ngIf="day.isSame(today, 'day')" i18n="@@closedSummary">Closed orders summary</ng-container>
+                                <ng-container *ngIf="!day.isSame(today, 'day')" i18n="@@summary">Summary</ng-container>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <app-day-sales-table
@@ -79,6 +80,12 @@
                 </div>
             </div>
         </div>
+
+        <app-payments-table
+            class="widget"
+            [bd]="day"
+            [paymentsData]="paymentsData"
+        ></app-payments-table>
 
         <app-day-sales-by-sub-department-table
                 class="widget"
@@ -126,13 +133,6 @@
                 class="widget"
                 [itemsData]="mostReturnedItems"
         ></app-most-returned-items-table>
-
-        <!-- TODO US missing measures -->
-        <app-payments-table
-                class="widget"
-                [bd]="day"
-                [paymentsData]="paymentsData"
-        ></app-payments-table>
 
         <app-operational-errors-table *ngIf="operationalErrorsData"
                                       class="widget"

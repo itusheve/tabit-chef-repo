@@ -21,6 +21,7 @@ export class MonthGridComponent implements OnInit {
     categoryTitle: string;
     tmpTranslations: any;
     hasYearlyAvg: boolean;
+    selected: any;
 
     private tabitHelper;
 
@@ -28,6 +29,17 @@ export class MonthGridComponent implements OnInit {
         this.currentDate = moment().format('YYYY-MM-DD');
         this.tmpTranslations = tmpTranslations;
         this.tabitHelper = new TabitHelper();
+    }
+
+    select(day) {
+        this.selected = day;
+        setTimeout(() => {
+            this.rowClickHandler(day);
+        }, 10);
+    }
+
+    isActive(item) {
+        return this.selected === item;
     }
 
     ngOnInit() {
