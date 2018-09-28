@@ -392,11 +392,9 @@ export class DayViewComponent implements OnInit {
                     date: dayDate,
                     clearerName: payment.Clearing,
                     paymentsKPIs: {
-                        calcSalesAmnt: payment.SalesAmount,
-                        refundAmnt: payment.RefundAmount,
-                        paymentsAmount: payment.PaymentsAmount,
-                        tipsAmnt: payment.TipsAmount,
-                        totalPaymentsAmnt: payment.TtlpaymentsAmount
+                        daily: payment.daily,
+                        monthly: payment.monthly,
+                        yearly: payment.yearly
                     }
                 });
             });

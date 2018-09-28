@@ -31,11 +31,9 @@ export interface Orders_KPIs {
 
 // All sorts of KPIs for payments
 export interface PaymentsKPIs {
-    calcSalesAmnt: number;
-    refundAmnt: number;
-    paymentsAmount: number;//=calcSalesAmnt - refundAmnt
-    tipsAmnt: number;
-    totalPaymentsAmnt: number;//=paymentsAmount + tipsAmnt
+    daily: number;
+    monthly: number;
+    yearly: number;//=calcSalesAmnt - refundAmnt
 }
 
 // OLD INTERFACES:

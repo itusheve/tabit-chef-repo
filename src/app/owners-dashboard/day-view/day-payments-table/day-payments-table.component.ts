@@ -85,32 +85,26 @@ export class DayPaymentsTableComponent implements OnChanges {
             });
 
             // calculate aggregated kpis:
-            if (!data.paymentsKpis.calcSalesAmnt) data.paymentsKpis.calcSalesAmnt = 0;
-            if (!data.paymentsKpis.refundAmnt) data.paymentsKpis.refundAmnt = 0;
-            if (!data.paymentsKpis.paymentsAmount) data.paymentsKpis.paymentsAmount = 0;
-            if (!data.paymentsKpis.tipsAmnt) data.paymentsKpis.tipsAmnt = 0;
-            if (!data.paymentsKpis.totalPaymentsAmnt) data.paymentsKpis.totalPaymentsAmnt = 0;
+            if (!data.paymentsKpis.daily) data.paymentsKpis.daily = 0;
+            if (!data.paymentsKpis.monthly) data.paymentsKpis.monthly = 0;
+            if (!data.paymentsKpis.yearly) data.paymentsKpis.yearly = 0;
+
             data.byAccountGroup.forEach(byAccountGroupObj => {
-                if (!byAccountGroupObj.paymentsKpis.calcSalesAmnt) byAccountGroupObj.paymentsKpis.calcSalesAmnt = 0;
-                if (!byAccountGroupObj.paymentsKpis.refundAmnt) byAccountGroupObj.paymentsKpis.refundAmnt = 0;
-                if (!byAccountGroupObj.paymentsKpis.paymentsAmount) byAccountGroupObj.paymentsKpis.paymentsAmount = 0;
-                if (!byAccountGroupObj.paymentsKpis.tipsAmnt) byAccountGroupObj.paymentsKpis.tipsAmnt = 0;
-                if (!byAccountGroupObj.paymentsKpis.totalPaymentsAmnt) byAccountGroupObj.paymentsKpis.totalPaymentsAmnt = 0;
+                if (!byAccountGroupObj.paymentsKpis.daily) byAccountGroupObj.paymentsKpis.daily = 0;
+                if (!byAccountGroupObj.paymentsKpis.monthly) byAccountGroupObj.paymentsKpis.monthly = 0;
+                if (!byAccountGroupObj.paymentsKpis.yearly) byAccountGroupObj.paymentsKpis.yearly = 0;
+
                 byAccountGroupObj.byClearerName.forEach(byClearerNameObj => {
-                    byAccountGroupObj.paymentsKpis.calcSalesAmnt += byClearerNameObj.paymentsKpis.calcSalesAmnt;
-                    byAccountGroupObj.paymentsKpis.refundAmnt += byClearerNameObj.paymentsKpis.refundAmnt;
-                    byAccountGroupObj.paymentsKpis.paymentsAmount += byClearerNameObj.paymentsKpis.paymentsAmount;
-                    byAccountGroupObj.paymentsKpis.tipsAmnt += byClearerNameObj.paymentsKpis.tipsAmnt;
-                    byAccountGroupObj.paymentsKpis.totalPaymentsAmnt += byClearerNameObj.paymentsKpis.totalPaymentsAmnt;
+                    byAccountGroupObj.paymentsKpis.daily += byClearerNameObj.paymentsKpis.daily;
+                    byAccountGroupObj.paymentsKpis.monthly += byClearerNameObj.paymentsKpis.monthly;
+                    byAccountGroupObj.paymentsKpis.yearly += byClearerNameObj.paymentsKpis.yearly;
                 });
-                data.paymentsKpis.calcSalesAmnt += byAccountGroupObj.paymentsKpis.calcSalesAmnt;
-                data.paymentsKpis.refundAmnt += byAccountGroupObj.paymentsKpis.refundAmnt;
-                data.paymentsKpis.paymentsAmount += byAccountGroupObj.paymentsKpis.paymentsAmount;
-                data.paymentsKpis.tipsAmnt += byAccountGroupObj.paymentsKpis.tipsAmnt;
-                data.paymentsKpis.totalPaymentsAmnt += byAccountGroupObj.paymentsKpis.totalPaymentsAmnt;
+                data.paymentsKpis.daily += byAccountGroupObj.paymentsKpis.daily;
+                data.paymentsKpis.monthly += byAccountGroupObj.paymentsKpis.monthly;
+                data.paymentsKpis.yearly += byAccountGroupObj.paymentsKpis.yearly;
             });
 
-            if (data.paymentsKpis.calcSalesAmnt === 0 && data.paymentsKpis.refundAmnt === 0) {
+            if (data.paymentsKpis.daily === 0 && data.paymentsKpis.daily === 0) {
                 this.noData = true;
             } else {
                 this.data = data;

@@ -3,6 +3,8 @@
 import 'intl';
 import 'intl/locale-data/jsonp/en';
 import 'intl/locale-data/jsonp/he-IL';
+import * as moment from 'moment';
+import 'moment-timezone';
 //TODO see maybe in angular 6 its solved.
 
 import { enableProdMode, TRANSLATIONS, TRANSLATIONS_FORMAT } from '@angular/core';
@@ -35,6 +37,7 @@ if (environment.tbtLocale ==='he-IL') {
 }
 
 const bootstrap = () => {
+  moment.tz.setDefault(environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem');
   platformBrowserDynamic().bootstrapModule(AppModule, {
     providers: providers
   })

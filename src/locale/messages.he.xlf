@@ -50,6 +50,10 @@
         <source>Daily</source>
         <target>יומי</target>
       </trans-unit>
+      <trans-unit id="yearly" datatype="html">
+        <source>Yearly</source>
+        <target>שנתי</target>
+      </trans-unit>
       <trans-unit id="thisWeek" datatype="html">
         <source>This Week</source>
         <target>השבוע</target>
