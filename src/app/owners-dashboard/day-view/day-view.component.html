@@ -148,7 +148,7 @@
                              (onOrderClicked)="onOrderClicked_orderNumber($event)"
         ></app-retention-table>
 
-        <app-month-summary-table *ngIf="mtdBusinessData"
+        <app-month-summary-table *ngIf="mtdBusinessData && mtdBusinessData.totals"
                                  class="widget"
                                  [month]="day"
                                  [mtdBusinessData]="mtdBusinessData"

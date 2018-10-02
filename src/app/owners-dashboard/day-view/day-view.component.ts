@@ -248,7 +248,7 @@ export class DayViewComponent implements OnInit {
             let dayDate = data[1];
 
             let dailyReport = await this.dataService.getDailyReport(dayDate);
-            if (!dailyReport) {
+            if (!dailyReport || !dailyReport.services) {
                 this.hasData = false;
                 this.hasNoDataForToday = true;
                 return;

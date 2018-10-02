@@ -263,8 +263,14 @@ export class HomeComponent implements OnInit {
                 let incTax = data[1];
 
                 let month = database.getCurrentMonth();
-                this.forecastCardData.averages = {yearly: {}, weekly: {}};
 
+                if(!month.latestDay || moment(month.latestDay).isBefore(moment())) {
+                    this.showForecast = false;
+                    this.forecastCardData.loading = false;
+                    return;
+                }
+
+                this.forecastCardData.averages = {yearly: {}, weekly: {}};
 
                 let lastYearMonth = database.getMonth(moment().subtract(1, 'years'));
                 let previousMonth = database.getMonth(moment().subtract(1, 'months'));
