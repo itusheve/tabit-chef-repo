@@ -4,4 +4,5 @@
 
 .month-selector button {
     height: 50px;
+    min-width: 60px;
 }
