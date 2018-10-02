@@ -95,9 +95,9 @@ export class DayPaymentsTableComponent implements OnChanges {
                 if (!byAccountGroupObj.paymentsKpis.yearly) byAccountGroupObj.paymentsKpis.yearly = 0;
 
                 byAccountGroupObj.byClearerName.forEach(byClearerNameObj => {
-                    byAccountGroupObj.paymentsKpis.daily += byClearerNameObj.paymentsKpis.daily;
-                    byAccountGroupObj.paymentsKpis.monthly += byClearerNameObj.paymentsKpis.monthly;
-                    byAccountGroupObj.paymentsKpis.yearly += byClearerNameObj.paymentsKpis.yearly;
+                    byAccountGroupObj.paymentsKpis.daily += byClearerNameObj.paymentsKpis.daily ? parseFloat(byClearerNameObj.paymentsKpis.daily) : 0;
+                    byAccountGroupObj.paymentsKpis.monthly += byClearerNameObj.paymentsKpis.monthly ? parseFloat(byClearerNameObj.paymentsKpis.monthly) : 0;
+                    byAccountGroupObj.paymentsKpis.yearly += byClearerNameObj.paymentsKpis.yearly ? parseFloat(byClearerNameObj.paymentsKpis.yearly) : 0;
                 });
                 data.paymentsKpis.daily += byAccountGroupObj.paymentsKpis.daily;
                 data.paymentsKpis.monthly += byAccountGroupObj.paymentsKpis.monthly;
