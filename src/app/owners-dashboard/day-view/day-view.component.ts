@@ -235,7 +235,7 @@ export class DayViewComponent implements OnInit {
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
-        this.dataService.database$.subscribe(database => {
+        this.dataService.databaseV2$.subscribe(database => {
             this.daySelectorOptions = {
                 minDate: moment(database.getLowestDate()),
                 maxDate: moment(moment())

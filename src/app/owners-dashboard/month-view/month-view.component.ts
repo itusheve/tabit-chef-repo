@@ -65,7 +65,7 @@ export class MonthViewComponent implements OnInit {
         }
         this.onDateChanged(date);
 
-        combineLatest(this.month$, this.dataService.currentRestTime$, this.dataService.database$, this.dataService.vat$)
+        combineLatest(this.month$, this.dataService.currentRestTime$, this.dataService.databaseV2$, this.dataService.vat$)
             .subscribe(data => {
                 this.update(data[0], data[1], data[2], data[3]);
             });
@@ -89,9 +89,9 @@ export class MonthViewComponent implements OnInit {
         this.monthGrid.hasYearlyAvg = false;
         this.monthGrid.days = [];
         _.each(days, day => {
-            if(day.date !== currentDate.format('YYYY-MM-DD')) {
+            if(day.businessDate !== currentDate.format('YYYY-MM-DD')) {
                 this.monthGrid.days.push(day);
-                if(day.aggregations.sales.yearAvg) {
+                if(day.AvgYearSalesAndRefoundAmountIncludeVat) {
                     this.monthGrid.hasYearlyAvg = true;
                 }
             }
@@ -111,42 +111,42 @@ export class MonthViewComponent implements OnInit {
         let previousMonth = database.getMonth(moment(month.latestDay).subtract(1,'months'));
 
         this.showSummary = true;
-        this.summaryCardData.diners = month.diners;
-        this.summaryCardData.ppa = incTax ? month.ppa : month.ppaWithoutVat;
-        this.summaryCardData.sales = incTax ? month.amount : month.amountWithoutVat;
+        this.summaryCardData.diners = month.diners || month.orders;
+        this.summaryCardData.ppa = incTax ? month.ppaIncludeVat : month.ppaIncludeVat / month.vat;
+        this.summaryCardData.sales = incTax ? month.ttlsalesIncludeVat : month.ttlsalesExcludeVat;
 
         this.summaryCardData.averages = {
-            yearly: {
+            /*yearly: {
                 percentage: month.aggregations.sales.lastYearWeekAvg ? ((month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1) : 0,
                 change: month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg
-            },
+            },*/
             weekly: {
-                percentage: previousMonth && previousMonth.aggregations.sales.weekAvg ? ((month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg) - 1) : 0,
-                change: previousMonth ? (month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg) : 0
+                percentage: previousMonth && previousMonth.weekAvg ? ((month.weekAvg / previousMonth.weekAvg) - 1) : 0,
+                change: previousMonth ? (month.weekAvg / previousMonth.weekAvg) : 0
             }
         };
 
         this.summaryCardData.reductions = {
             cancellations: {
-                percentage: month.aggregations.reductions.cancellations.percentage,
-                change: month.aggregations.reductions.cancellations.percentage / month.aggregations.reductions.cancellations.threeMonthAvgPercentage
+                percentage: month.prcVoidsAmount / 100,
+                change: month.prcVoidsAmount / previousMonth.prcVoidsAmount * 100
             },
             employee: {
-                percentage: month.aggregations.reductions.employee.percentage,
-                change: month.aggregations.reductions.employee.percentage / month.aggregations.reductions.employee.threeMonthAvgPercentage
+                percentage: month.prcEmployeesAmount / 100,
+                change: month.prcEmployeesAmount / previousMonth.prcEmployeesAmount * 100
             },
             operational: {
-                percentage: month.aggregations.reductions.operational.percentage,
-                change: month.aggregations.reductions.operational.percentage / month.aggregations.reductions.operational.threeMonthAvgPercentage
+                percentage: month.prcOperationalAmount / 100,
+                change: month.prcOperationalAmount / previousMonth.prcOperationalAmount * 100
             },
             retention: {
-                percentage: month.aggregations.reductions.retention.percentage,
-                change: month.aggregations.reductions.retention.percentage / month.aggregations.reductions.retention.threeMonthAvgPercentage
+                percentage: month.prcMrAmount / 100,
+                change: month.prcMrAmount / previousMonth.prcMrAmount * 100
             }
         };
 
         if (this.summaryCardData.averages.weekly.percentage) {
-            let value = (month.aggregations.sales.weekAvg / previousMonth.aggregations.sales.weekAvg) * 100;
+            let value = (month.weekAvg / previousMonth.weekAvg) * 100;
             this.summaryCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
         }
         else {

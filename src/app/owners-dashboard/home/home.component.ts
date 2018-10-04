@@ -163,7 +163,7 @@ export class HomeComponent implements OnInit {
     }
 
     getTodayOlapData(): void {
-        this.dataService.database$
+        this.dataService.databaseV2$
             .subscribe(database => {
                 let restaurantTime = this.dataService.getCurrentRestTime();
 
@@ -174,8 +174,9 @@ export class HomeComponent implements OnInit {
             });
     }
 
+
     getYesterdayData(): void {
-        combineLatest(this.dataService.database$, this.dataService.currentRestTime$, this.dataService.vat$)
+        combineLatest(this.dataService.databaseV2$, this.dataService.currentRestTime$, this.dataService.vat$)
             .subscribe(data => {
                 this.previousBdCardData.loading = true;
                 this.loadingOlapData = true;
@@ -188,8 +189,6 @@ export class HomeComponent implements OnInit {
                     this.olapError = database && database.error;
                     return;
                 }
-
-                this.loadingOlapData = false;
 
                 let previousDay = moment(restaurantTime).subtract(1, 'days');
                 let day = database.getDay(previousDay);
@@ -204,67 +203,61 @@ export class HomeComponent implements OnInit {
                 else {
                     this.showPreviousDay = true;
                     this.previousBdCardData.holiday = day.holiday;
-                    this.previousBdCardData.diners = day.diners;
-                    this.previousBdCardData.ppa = incVat ? day.ppa : day.ppaWithoutVat;
-                    this.previousBdCardData.sales = incVat ? day.amount : day.amountWithoutVat;
+                    this.previousBdCardData.diners = day.diners || day.orders;
+                    this.previousBdCardData.ppa = incVat ? day.ppaIncludeVat : day.ppaIncludeVat / day.vat;
+                    this.previousBdCardData.sales = incVat ? day.salesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountExcludeVat;
                     this.previousBdCardData.averages = {
-                        yearly: {
+                        /*yearly: {
                             percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
                             change: day.aggregations.sales.amount / day.aggregations.sales.yearAvg
-                        },
+                        },*/
                         weekly: {
-                            percentage: (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) - 1,
-                            change: day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg
+                            percentage: day.prcAvgNweeksSalesAndRefoundAmountIncludeVat / 100,
+                            change: day.prcAvgNweeksSalesAndRefoundAmountIncludeVat
                         }
                     };
 
                     this.previousBdCardData.reductions = {
                         cancellations: {
-                            percentage: day.aggregations.reductions.cancellations.percentage,
-                            change: (day.aggregations.reductions.cancellations.percentage / (day.aggregations.reductions.cancellations.generalAvg / (day.aggregations.sales.generalAvgNet + day.aggregations.reductions.cancellations.generalAvg)))
+                            percentage: day.voidsPrc / 100,
+                            change: day.VoidsDiff
                         },
                         employee: {
-                            percentage: day.aggregations.reductions.employee.percentage,
-                            change: (day.aggregations.reductions.employee.percentage / (day.aggregations.reductions.employee.fourWeekAvg / (day.aggregations.sales.fourWeekAvgNet + day.aggregations.reductions.employee.fourWeekAvg)))
+                            percentage: day.employeesPrc / 100,
+                            change: day.Employeesdiff
                         },
                         operational: {
-                            percentage: day.aggregations.reductions.operational.percentage,
-                            change: (day.aggregations.reductions.operational.percentage / (day.aggregations.reductions.operational.generalAvg / (day.aggregations.sales.generalAvgNet + day.aggregations.reductions.operational.generalAvg)))
+                            percentage: day.operationalPrc / 100,
+                            change: day.OperationalDiff
                         },
                         retention: {
-                            percentage: day.aggregations.reductions.retention.percentage,
-                            change: (day.aggregations.reductions.retention.percentage / (day.aggregations.reductions.retention.fourWeekAvg / (day.aggregations.sales.fourWeekAvgNet + day.aggregations.reductions.retention.fourWeekAvg)))
+                            percentage: day.mrPrc / 100,
+                            change: day.mrDiff
                         }
 
                     };
 
                     if (this.previousBdCardData.averages.weekly.percentage) {
-                        let value = (day.aggregations.sales.amount / day.aggregations.sales.fourWeekAvg) * 100;
-                        this.previousBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
+                        this.previousBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(day.prcAvgNweeksSalesAndRefoundAmountIncludeVat, true);
                     }
                 }
 
                 this.previousBdCardData.title = title;
-
-                /*if (day.hasOwnProperty('final') && !data[0].final) {
-                    this.previousBdCardData.salesComment = 'NotFinal';
-                    this.previousBdNotFinal = true;
-                }*/
-
                 this.previousBdCardData.loading = false;
             });
     }
 
+
     getForecastData(): void {
-        combineLatest(this.dataService.database$, this.dataService.vat$)
+        combineLatest(this.dataService.databaseV2$, this.dataService.vat$)
             .subscribe(data => {
                 this.forecastCardData.loading = true;
                 let database = data[0];
                 let incTax = data[1];
 
                 let month = database.getCurrentMonth();
-
-                if(!month.latestDay || moment(month.latestDay).isBefore(moment())) {
+                this.loadingOlapData = false;
+                if(!month.latestDay || moment(month.latestDay).isBefore(moment(), 'days')) {
                     this.showForecast = false;
                     this.forecastCardData.loading = false;
                     return;
@@ -281,10 +274,13 @@ export class HomeComponent implements OnInit {
                     };
                 }
 
-                this.forecastCardData.title = `${this.datePipe.transform(moment().startOf('month'), 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
-                this.forecastCardData.diners = month.forecast.diners.count;
-                this.forecastCardData.ppa = incTax ? month.forecast.ppa.amount : month.forecast.ppa.amountWithoutVat;
+                this.forecastCardData.title = `${this.datePipe.transform(moment(month.latestDay).startOf('month'), 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
+                this.forecastCardData.diners = month.forecast.diners.count || month.forecast.orders.count;
                 this.forecastCardData.sales = incTax ? month.forecast.sales.amount : month.forecast.sales.amountWithoutVat;
+
+                let ppa = this.forecastCardData.sales / this.forecastCardData.diners;
+                this.forecastCardData.ppa = incTax ?ppa : ppa / month.vat;
+
                 this.forecastCardData.loading = false;
                 this.forecastCardData.noSeparator = true;
 

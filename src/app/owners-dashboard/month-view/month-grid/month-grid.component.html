@@ -34,7 +34,7 @@
                 [ngClass]="{active: isActive(day)}" (click)="select(day)">
                 <div class="row flex a-center" style="cursor: pointer">
                     <div class="col-3 px-1" style="max-width: 17% !important;">
-                        <div>{{day.date | date: 'dd'}} {{day.date | date: 'EEEEE'}}</div>
+                        <div>{{day.businessDate | date: 'dd'}} {{day.businessDate | date: 'EEEEE'}}</div>
                     </div>
                     <div class="col-8 px-1" style="max-width: 60% !important;">
                         <div class="progress rounded-0" style="width: 85%; height: 6px;">

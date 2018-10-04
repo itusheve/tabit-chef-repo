@@ -6,8 +6,6 @@ import {Observable, combineLatest, BehaviorSubject} from 'rxjs';
 import {publishReplay, refCount} from 'rxjs/operators';
 
 
-
-
 //tools
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -15,6 +13,7 @@ import 'moment-timezone';
 
 //models
 import {Database} from '../model/Database.model';
+import {DatabaseV2} from '../model/DatabaseV2.model';
 
 //end points
 import {OlapEp} from './ep/olap.ep';
@@ -384,7 +383,7 @@ export class DataService {
     });
 
     public currentBd$: Observable<moment.Moment> = Observable.create(obs => {
-        this.database$.subscribe(database => {
+        this.databaseV2$.subscribe(database => {
             obs.next(database.getCurrentBusinessDay());
         });
     });
@@ -497,6 +496,22 @@ export class DataService {
         }*/
     });
 
+    public olapYearlyDataV2$: Observable<any> = Observable.create(async obs => {
+        this.refresh$.subscribe(async event => {
+            let perfStartTime = performance.now();
+
+            let olapYearlyData = await this.olapEp.getDatabaseV2();
+            obs.next(olapYearlyData);
+
+            this.logz.log('chef', 'getDatabaseV2', {'timing': performance.now() - perfStartTime});
+
+        });
+        /*let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
+        if (data) {
+            //obs.next(new Database(data));
+        }*/
+    });
+
     public olapToday$: Observable<any> = Observable.create(async obs => {
         this.refresh$
             .subscribe(async refresh => {
@@ -545,6 +560,158 @@ export class DataService {
 
             });
     });
+
+    public databaseV2$: Observable<any> = Observable.create(async obs => {
+        combineLatest(this.olapYearlyDataV2$, this.calendar$).subscribe(async streamData => {
+            let org = JSON.parse(window.localStorage.getItem('org'));
+            let olapYearlyData = _.cloneDeep(streamData[0]);
+            let rosCalendars = _.cloneDeep(streamData[1]);
+            let currentDate = moment();
+
+            if (!olapYearlyData || olapYearlyData.error) {
+                obs.next(olapYearlyData);
+                return;
+            }
+
+            let excludedDates = this.getExcludedDates(rosCalendars, org.id);
+            let database = _.keyBy(olapYearlyData, month => month.yearMonth);
+
+            let latestMonth = 0;
+            _.forEach(database, month => {
+                month.vat = (Math.round(month.ttlsalesIncludeVat / month.ttlsalesExcludeVat * 100) / 100).toFixed(2);
+                let orderedDays = _.orderBy(month.daily, function (day) {
+                    return moment(day.businessDate).date();
+                }, 'desc');
+
+                _.remove(orderedDays, day => {
+                    return moment(day.businessDate).isAfter(currentDate);
+                });
+
+                month.days = orderedDays;
+                delete month.daily;
+
+                month.weekAvg = month.ttlsalesIncludeVat / month.days.length * 7;
+                month.dayAvg = month.ttlsalesIncludeVat / month.days.length;
+
+                //calculate latest month
+                if (month.yearMonth > latestMonth) {
+                    latestMonth = month.yearMonth;
+                    database.latestMonth = month.yearMonth;
+                }
+
+                month.forecast = {
+                    sales: {amount: 0, amountWithoutVat: 0},
+                    diners: {count: 0},
+                    orders: {count: 0},
+                    ppa: {amount: 0, amountWithoutVat: 0},
+                    reductions: {
+                        cancellations: {
+                            amount: 0,
+                        },
+                        operational: {
+                            amount: 0,
+                        },
+                        retention: {
+                            amount: 0,
+                        },
+                        employee: {
+                            amount: 0,
+                        },
+                    }
+                };
+                month.aggregations = {days: []};
+
+                //itrrate days in month and prepare data
+                let latestDayNumber = 0;
+                _.forEach(month.days, day => {
+                    day.vat = (Math.round(day.salesAndRefoundAmountIncludeVat / day.salesAndRefoundAmountExcludeVat * 100) / 100).toFixed(2);
+                    let excludedDetail = excludedDates[moment(day.businessDate).format('YYYY-MM-DD')];
+                    if (excludedDetail) {
+                        day.isExcluded = true;
+                        day.holiday = excludedDetail;
+                    }
+
+                    let dayNumber = parseInt(moment(day.businessDate).format('D'), 10);
+
+                    //get latest day of month
+                    if (dayNumber > latestDayNumber) {
+                        latestDayNumber = dayNumber;
+                        month.latestDay = day.businessDate;
+                    }
+
+                    //get lowest data of all days in database
+                    if (moment(day.businessDate).isBefore(moment(database.lowestDate), 'days')) {
+                        database.lowestDate = day.businessDate;
+                    }
+
+                    if (!moment(day.businessDate).isSame(currentDate, 'day')) {
+
+                        if (currentDate.isSame(moment(day.businessDate), 'month')) {
+                            month.forecast.sales.amount += day.salesAndRefoundAmountIncludeVat;
+                            month.forecast.sales.amountWithoutVat += day.salesAndRefoundAmountExcludeVat;
+                        }
+                        else {
+                            month.forecast.sales.amount += day.AvgNweeksSalesAndRefoundAmountIncludeVat;
+                            month.forecast.sales.amountWithoutVat += day.AvgNweeksSalesAndRefoundAmountIncludeVat;
+                        }
+
+                        month.forecast.diners.count += day.diners;
+                        month.forecast.orders.count += day.orders;
+                    }
+
+                    let weekday = moment(day.businessDate).weekday();
+                    if(!month.aggregations.days[weekday]) {
+                        month.aggregations.days[weekday] = {
+                            count: 0,
+                            sales: {amount: 0, amountWithoutVat: 0},
+                            diners: {count: 0},
+                            orders: {count: 0}
+                        };
+                    }
+                    month.aggregations.days[weekday].count += 1;
+                    month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountIncludeVat;
+                    month.aggregations.days[weekday].sales.amountWithoutVat += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat / day.vat : day.salesAndRefoundAmountIncludeVat / day.vat;
+                    month.aggregations.days[weekday].diners.count += day.diners || 0;
+                    month.aggregations.days[weekday].orders.count += day.orders || 0;
+                });
+
+                if (month.days && month.days.length) {
+                    let endOfMonth = moment(month.days[0].businessDate).endOf('month');
+                    if (currentDate.isSame(endOfMonth, 'month')) {
+                        let datePointer = moment();
+                        while (datePointer.isSameOrBefore(endOfMonth, 'day')) {
+                            let weekday = datePointer.weekday();
+
+                            if (!month.aggregations.days[weekday] || month.aggregations.days[weekday].count === 0) {
+                                let previousMonth = database[moment(datePointer).subtract(1, 'months').format('YYYYMM')];
+                                if (previousMonth && previousMonth.aggregations.days[weekday]) {
+                                    month.forecast.sales.amount += (previousMonth.aggregations.days[weekday].sales.amount / previousMonth.aggregations.days[weekday].count) || 0;
+                                    month.forecast.sales.amountWithoutVat += (previousMonth.aggregations.days[weekday].sales.amountWithoutVat / previousMonth.aggregations.days[weekday].count) || 0;
+                                    month.forecast.diners.count += (previousMonth.aggregations.days[weekday].diners.count / previousMonth.aggregations.days[weekday].count) || 0;
+                                    month.forecast.orders.count += (previousMonth.aggregations.days[weekday].orders.count / previousMonth.aggregations.days[weekday].count) || 0;
+                                }
+                            }
+                            else {
+                                month.forecast.sales.amount += (month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count) || 0;
+                                month.forecast.sales.amountWithoutVat += (month.aggregations.days[weekday].sales.amountWithoutVat / month.aggregations.days[weekday].count) || 0;
+                                month.forecast.diners.count += (month.aggregations.days[weekday].diners.count / month.aggregations.days[weekday].count) || 0;
+                                month.forecast.orders.count += (month.aggregations.days[weekday].orders.count / month.aggregations.days[weekday].count) || 0;
+                            }
+
+                            datePointer.add(1, 'days');
+                        }
+                    }
+                }
+            });
+
+            database = new DatabaseV2(database);
+            obs.next(database);
+        });
+    }).pipe(
+        publishReplay(1),
+        refCount()
+    );
+
 
     public database$: Observable<any> = Observable.create(async obs => {
         combineLatest(this.olapYearlyData$, this.calendar$).subscribe(async streamData => {
@@ -1155,7 +1322,7 @@ export class DataService {
                     _.forEach(month.aggregations.days, (day, weekDay) => {
                         let previousMonthWeekDay = moment(month.latestDay).subtract(1, 'months').endOf('month').day(weekDay);
                         let notFound = 0;
-                        while(day.count < 4 && notFound < 6) {
+                        while (day.count < 4 && notFound < 6) {
                             let previousMonth = database[previousMonthWeekDay.format('YYYYMM')];
                             if (previousMonth && previousMonth.days) {
                                 let previousDayData = _.find(previousMonth.days, {'date': previousMonthWeekDay.format('YYYY-MM-DD')});
@@ -1302,7 +1469,7 @@ export class DataService {
             let today = moment();
             let currentMonth = result.getMonth(today);
             let currentDay = result.getDay(today);
-            if(currentDay) {
+            if (currentDay) {
                 currentMonth.salesNetAmount = currentMonth.salesNetAmount - currentDay.salesNetAmount;
                 currentMonth.salesNetAmountWithOutVat = currentMonth.salesNetAmountWithOutVat - currentDay.salesNetAmountWithOutVat;
                 currentMonth.salesTipAmount = currentMonth.salesTipAmount - currentDay.salesTipAmount;
@@ -1395,7 +1562,7 @@ export class DataService {
             let result = [];
             _.forEach(dailySalesByHour, dailySales => {
                 let hour = parseInt(dailySales.hour, 10);
-                if(hour < 6) {
+                if (hour < 6) {
                     hour = hour + 30;
                 }
                 if (dailySales.salesNetAmount) {
@@ -1413,7 +1580,7 @@ export class DataService {
                             result[hour].salesNetAmountAvg = 0;
                             result[hour].days = 0;
                         }
-                        if(result[hour].days < 4) {
+                        if (result[hour].days < 4) {
                             result[hour].salesNetAmountAvg += dailySales.salesNetAmount;
                             result[hour].days++;
                         }

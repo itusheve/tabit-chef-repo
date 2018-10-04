@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import 'moment-timezone';
 
-export class Database {
+export class DatabaseV2 {
 
     private _data: any;
     private _dates: any;
@@ -10,6 +10,7 @@ export class Database {
     constructor(data:any) {
         this._data = data;
         let latestMonth = data[data.latestMonth];
+        let firstMonth = data[data.firstMonth];
         this._dates = {
             today: moment(),
             latest: moment(latestMonth.latestDay),
@@ -39,7 +40,7 @@ export class Database {
             return null;
         }
 
-        let day = _.find(monthData.days, { 'date': date.format('YYYY-MM-DD') });
+        let day = _.find(monthData.days, { 'businessDate': date.format('YYYY-MM-DD') });
         return day;
     }
 
