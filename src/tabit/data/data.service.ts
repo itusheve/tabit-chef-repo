@@ -1542,6 +1542,15 @@ export class DataService {
         }
     }
 
+    async getOpenOrders() {
+        let params:any = {
+            select: '_id,number,orderType,serviceType,created,lastUpdated,closed,isStaffTable,diners,paymentSummary,source,balance,totals',
+            orderBy: 'created',
+        };
+
+        return this.rosEp.get('orders', params);
+    }
+
     async getDailySalesByHours(day: moment.Moment) {
         let org = JSON.parse(window.localStorage.getItem('org'));
         let reportsCache = JSON.parse(window.localStorage.getItem(org.id + '-daily-sales-by-hour'));

@@ -163,7 +163,7 @@ export class DayViewComponent implements OnInit {
     public today: moment.Moment;
     public bdIsCurrentBd: boolean;
     public closedOpenSalesDiff: number;
-    public openOrders: { totalAmount: number };
+    public openOrders: any;
     private day$ = new Subject<moment.Moment>();
 
     constructor(private ownersDashboardService: OwnersDashboardService,
@@ -262,14 +262,15 @@ export class DayViewComponent implements OnInit {
             };
 
 
-            this.openOrders = {totalAmount: undefined};
             if (!moment().isSame(dayDate, 'day')) {
                 this.bdIsCurrentBd = false;
+                this.openOrders = null;
             }
             else {
-                let olapTotals = _.filter(this.dailySummaryTblData.data, data => data.dataType === '');
-                this.openOrders.totalAmount = _.get(dashboardData, 'today.totalSales') - _.get(olapTotals[0], 'salesNetAmount');
+                //let olapTotals = _.filter(this.dailySummaryTblData.data, data => data.dataType === '');
+                //this.openOrders.totalAmount = _.get(dashboardData, 'today.totalSales') - _.get(olapTotals[0], 'salesNetAmount');
                 this.bdIsCurrentBd = true;
+                this.openOrders = await this.dataService.getOpenOrders();
             }
 
             this.byShiftSummaryTblsData = [
@@ -495,6 +496,24 @@ export class DayViewComponent implements OnInit {
         this.drilledOrder = order;
         this.drilledOrderNumber = order.number;
         this.drillTlogTime = order.openingTime;
+
+        setTimeout(() => {
+            this.drill = true;
+        }, 300);
+
+        this.ownersDashboardService.toolbarConfig.left.back.pre = () => {
+            this.closeDrill();
+            this.ownersDashboardService.toolbarConfig.left.back.pre = undefined;
+            //prevent navigating back
+            return false;
+        };
+    }
+
+    onOpenOrderClicked(openOrder: any) {
+
+        this.drilledOrder = openOrder;
+        this.drilledOrderNumber = openOrder.number;
+        this.drillTlogTime = openOrder.openingTime;
 
         setTimeout(() => {
             this.drill = true;

@@ -34,8 +34,9 @@
                 [lastViewed]="drilledOrder"
                 [orders]="orders"
                 [bdIsCurrentBd]="bdIsCurrentBd"
-                [openOrders]="openOrders"
+                [todayOpenOrders]="openOrders"
                 (onOrderClicked)="onOrderClicked($event)"
+                (onOpenOrderClicked)="onOpenOrderClicked($event)"
         ></app-day-orders-table>
 
 
