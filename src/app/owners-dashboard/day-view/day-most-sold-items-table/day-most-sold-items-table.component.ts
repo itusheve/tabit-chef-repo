@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
 import * as _ from 'lodash';
-import {tmpTranslations} from '../../../../tabit/data/data.service';
+import {DataService, tmpTranslations} from '../../../../tabit/data/data.service';
 
 @Component({
     selector: 'app-most-sold-items-table',
@@ -24,7 +24,7 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
         }[]
     };
 
-    maxItemsPerDepartment = 20;
+    maxItemsPerDepartment: number;
 
     data: {
         department?: string,
@@ -35,7 +35,10 @@ export class DayMostSoldItemsTableComponent implements OnChanges {
         }[]
     }[];
 
-    constructor() {
+    constructor(private dataService: DataService) {
+        dataService.settings$.subscribe((settings: any) => {
+            this.maxItemsPerDepartment = _.get(settings, 'maxItemsPerDepartment') || 5;
+        });
     }
 
     ngOnChanges(o: SimpleChanges) {

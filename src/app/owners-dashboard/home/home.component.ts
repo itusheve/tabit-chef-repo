@@ -64,6 +64,7 @@ export class HomeComponent implements OnInit {
         this.tabitHelper = new TabitHelper();
         ownersDashboardService.toolbarConfig.left.back.showBtn = false;
         ownersDashboardService.toolbarConfig.menuBtn.show = true;
+        ownersDashboardService.toolbarConfig.settings.show = true;
     }
 
     ngOnInit() {

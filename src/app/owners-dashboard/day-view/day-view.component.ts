@@ -176,6 +176,7 @@ export class DayViewComponent implements OnInit {
         ownersDashboardService.toolbarConfig.left.back.target = '/owners-dashboard/home';
         ownersDashboardService.toolbarConfig.left.back.showBtn = true;
         ownersDashboardService.toolbarConfig.menuBtn.show = false;
+        ownersDashboardService.toolbarConfig.settings.show = false;
         this.region = environment.region;
         this.hasData = false;
         this.today = moment();

@@ -435,7 +435,9 @@ export class DataService {
         other: new OrderType('other', 6)
     };
 
-    public vat$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+    public vat$: BehaviorSubject<boolean> = new BehaviorSubject<any>(_.get(JSON.parse(window.localStorage.getItem('settings')), 'vat'));
+
+    public settings$: BehaviorSubject<boolean> = new BehaviorSubject<any>(JSON.parse(window.localStorage.getItem('settings')) || {});
 
     public refresh$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 

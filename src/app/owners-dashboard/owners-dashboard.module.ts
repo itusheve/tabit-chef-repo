@@ -11,6 +11,7 @@ import {
 } from './owners-dashboard.pipes';
 
 import {HomeComponent} from './home/home.component';
+import {OwnerSettingsComponent} from './settings/owner-settings.component';
 
 import {MomentModule} from 'angular2-moment';
 
@@ -48,8 +49,7 @@ import {CardComponent} from '../ui/card/card.component';
 import {SignatureComponent} from '../../tabit/ui/signature/signature.component';
 
 import {OwnersDashboardRoutingModule} from './owners-dashboard-routing.module';
-
-
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
     MatSidenavModule,
     MatButtonModule,
@@ -61,7 +61,10 @@ import {
     MatTabsModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule
 } from '@angular/material';//material modules
 
 import {OrderCashRefundComponent} from './order-view/slips/_cashRefund/cashRefund.component';
@@ -92,7 +95,12 @@ import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sa
         MatExpansionModule,
         MatTabsModule,
         MatProgressSpinnerModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatOptionModule,
+        FormsModule,
+        ReactiveFormsModule
     ],
     declarations: [
         OwnersDashboardComponent,
@@ -102,6 +110,7 @@ import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sa
         OwnersDashboardCountPipe,
 
         HomeComponent,
+        OwnerSettingsComponent,
         CardComponent,
 
         SignatureComponent,

@@ -28,7 +28,8 @@ export class OwnersDashboardService {
         },
         right: {
 
-        }
+        },
+        settings: {show: true}
     };
 
     public sideNavConfig = {

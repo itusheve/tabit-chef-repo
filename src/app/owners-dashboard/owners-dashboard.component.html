@@ -7,24 +7,6 @@
       <div>{{this.sideNavConfig.header.org?.alias || this.sideNavConfig.header.org?.name}}</div>
     </div>
     <div class="g-1 flex d-col content">
-      <mat-checkbox
-        color="primary"
-        *ngIf="this.sideNavConfig.content.showVatCb"
-        [checked]="vat"
-        (change)="vatChange($event)"
-        [indeterminate]="false"
-        [disabled]="false"
-        i18n="owners-dashboard|maam@@vat">
-        VAT
-      </mat-checkbox>
-      <mat-checkbox
-        color="primary"
-        *ngIf="this.sideNavConfig.content.showDebugCb"
-        [checked]="debug"
-        (change)="debug=!debug"
-        >
-        Debug
-      </mat-checkbox>
       <button class="s-0" *ngIf="this.sideNavConfig.content.showMySitesBtn" mat-raised-button [routerLink]="['/restaurants', { m: 's'}]">
         <span i18n="owners-dashboard@@mySites">My Sites</span>
       </button>
@@ -69,7 +51,14 @@
         </div>
         <div *ngIf="!vat" style="color:white;font-size:12px;">(<span i18n="owners-dashboard@@excludingVAT">Data excluding VAT</span>)</div>
       </div>
-      <div class="flex j-end pe15" style="width:15%"></div>
+      <div class="flex j-end pe15" style="width:15%">
+          <button
+                  *ngIf="toolbarConfig.settings.show"
+                  mat-icon-button
+                  (click)="settings()">
+              <mat-icon>settings</mat-icon>
+          </button>
+      </div>
     </div>
     <div class="contentFixed">
       <div class="content" (swipeleft)="env.region === 'il' ? sidenav.open() : sidenav.close()">

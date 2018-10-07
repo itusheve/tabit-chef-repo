@@ -57,6 +57,7 @@ export class OwnersDashboardComponent implements OnInit {
 
         ownersDashboardService.toolbarConfig.left.back.showBtn = false;
         ownersDashboardService.toolbarConfig.menuBtn.show = true;
+        ownersDashboardService.toolbarConfig.settings.show = true;
 
         //bind for the view:
         this.toolbarConfig = ownersDashboardService.toolbarConfig;
@@ -67,18 +68,16 @@ export class OwnersDashboardComponent implements OnInit {
         });
     }
 
-    vatChange(event) {
-        setTimeout(() => {
-            this.dataService.vat$.next(event.checked);
-        }, 300);
-    }
-
     refresh() {
         this.dataService.refresh$.next('force');
     }
 
     changeRest() {
         //TODO hide the switch rest button if only one rest exists
+    }
+
+    settings() {
+        this.router.navigate(['owners-dashboard/settings']);
     }
 
     logout() {

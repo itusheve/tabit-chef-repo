@@ -413,6 +413,14 @@
         <source>Server</source>
         <target>מלצר</target>
       </trans-unit>
+       <trans-unit id="settings" datatype="html">
+          <source>Settings</source>
+          <target>הגדרות</target>
+        </trans-unit>
+        <trans-unit id="displayedItemsPerDept" datatype="html">
+          <source>Items per department:</source>
+          <target>מספר פריטים להצגה בקטגוריה</target>
+        </trans-unit>
       <trans-unit id="sales" datatype="html">
         <source>סכום</source>
         <target>סכום</target>

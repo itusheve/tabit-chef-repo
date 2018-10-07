@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { OwnersDashboardComponent } from './owners-dashboard.component';
 import { HomeComponent } from './home/home.component';
+import { OwnerSettingsComponent } from './settings/owner-settings.component';
 import { DayViewComponent } from './day-view/day-view.component';
 import { OrderViewComponent } from './order-view/order-view.component';
 
@@ -26,6 +27,10 @@ const ownersDashboardRoutes: Routes = [
             {
                 path: 'bd/:businessDate/tlogid/:tlogid',
                 component: OrderViewComponent
+            },
+            {
+                path: 'settings',
+                component: OwnerSettingsComponent
             }
         ]
     }
