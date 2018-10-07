@@ -51,7 +51,7 @@ export class CardComponent implements OnInit {
     }
 
     getPercentageCssClass(change, isUpPositive) {
-        let cssClass = this.tabitHelper.getTextClassByPercentage(change, isUpPositive);
+        let cssClass = this.tabitHelper.getTextClassByPercentage(change * 100, isUpPositive);
         if(isUpPositive && change > 1) {
             cssClass += ' up';
         }

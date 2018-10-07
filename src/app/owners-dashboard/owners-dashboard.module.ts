@@ -43,6 +43,7 @@ import {OrderSingleInvoiceDataComponent} from './order-view/slips/common/singleI
 import {OrderGiftCardDetailsComponent} from './order-view/slips/common/giftCardDetails/giftCardDetails.component';
 import {OrderCashPaymentFooterComponent} from './order-view/slips/common/cashPaymentFooter/cashPaymentFooter.component';
 import {OrderDetailsComponent} from './order-view/details/details.component';
+import { DxLoadIndicatorModule } from 'devextreme-angular';
 
 import {CardComponent} from '../ui/card/card.component';
 
@@ -100,7 +101,8 @@ import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sa
         MatSelectModule,
         MatOptionModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        DxLoadIndicatorModule
     ],
     declarations: [
         OwnersDashboardComponent,

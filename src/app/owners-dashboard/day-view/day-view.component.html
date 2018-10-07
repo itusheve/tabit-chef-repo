@@ -15,10 +15,9 @@
                     </div>
                 </div>
                 <div *ngIf="!hasNoDataForToday">
-                    <div>
-                        <mat-progress-bar style="margin:10px auto;" color="primary" mode="indeterminate"></mat-progress-bar>
-                        <p class="text-center saving"><span
-                                i18n="@@fetching">Fetching</span><span>.</span><span>.</span><span>.</span></p>
+                    <div class="text-center">
+                        <dx-load-indicator></dx-load-indicator>
+                        <p class="text-center saving"><span i18n="@@fetching">Fetching</span><span>.</span><span>.</span><span>.</span></p>
                     </div>
                 </div>
 

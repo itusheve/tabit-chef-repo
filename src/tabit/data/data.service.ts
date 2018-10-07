@@ -402,17 +402,15 @@ export class DataService {
         refCount()
     );
 
-    public LatestBusinessDayDashboardData$: Observable<any> = Observable.create(obs => {
+    public dailyTotals$: Observable<any> = Observable.create(obs => {
         this.refresh$
             .subscribe(refresh => {
                 let currentRestTime = this.getCurrentRestTime();
                 currentRestTime = moment(currentRestTime);
                 const params = {
-                    //daysOfHistory: 1,//0 returns everything...
-                    today: 1,//Johnny said to use this
-                    to: currentRestTime.format('YYYY-MM-DD')
+                    businessDate: currentRestTime.format('YYYY-MM-DD')
                 };
-                this.rosEp.get('reports/owner-dashboard', params)
+                this.rosEp.get('reports/daily-totals', params)
                     .then(data => {
                         obs.next(data);
                     });
@@ -536,26 +534,7 @@ export class DataService {
                             amount: today.grossSales,
                             fourWeekAvgNet: fourWeekAvg.salesNetAmount,
                             fourWeekAvg: fourWeekAvg.grossSales,
-                        },
-                        reductions: {
-                            cancellations: {
-                                percentage: today.Voids / (today.salesNetAmount + today.Voids),
-                                fourWeekAvgPercentage: fourWeekAvg.Voids / (fourWeekAvg.salesNetAmount + fourWeekAvg.Voids)
-                            },
-                            employee: {
-                                percentage: today.Employees / (today.salesNetAmount + today.Employees),
-                                fourWeekAvgPercentage: fourWeekAvg.Employees / (fourWeekAvg.salesNetAmount + fourWeekAvg.Employees)
-                            },
-                            operational: {
-                                percentage: today.Operational / (today.salesNetAmount + today.Operational),
-                                fourWeekAvgPercentage: fourWeekAvg.Operational / (fourWeekAvg.salesNetAmount + fourWeekAvg.Operational)
-                            },
-                            retention: {
-                                percentage: today.RetentionDiscount / (today.salesNetAmount + today.RetentionDiscount),
-                                fourWeekAvgPercentage: fourWeekAvg.RetentionDiscount / (fourWeekAvg.salesNetAmount + fourWeekAvg.RetentionDiscount)
-                            }
-                        },
-                        indicators: {}
+                        }
                     }
                 };
                 obs.next(day);
@@ -662,7 +641,7 @@ export class DataService {
                     }
 
                     let weekday = moment(day.businessDate).weekday();
-                    if(!month.aggregations.days[weekday]) {
+                    if (!month.aggregations.days[weekday]) {
                         month.aggregations.days[weekday] = {
                             count: 0,
                             sales: {amount: 0, amountWithoutVat: 0},
@@ -1545,7 +1524,7 @@ export class DataService {
     }
 
     async getOpenOrders() {
-        let params:any = {
+        let params: any = {
             select: '_id,number,orderType,serviceType,created,lastUpdated,closed,isStaffTable,diners,paymentSummary,source,balance,totals',
             orderBy: 'created',
         };

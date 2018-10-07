@@ -8,7 +8,7 @@
       <ng-template matTabContent>
         <div class="tab slips">
           <div *ngIf="!show" class="flex aj-center" style="width:100%;height:100%;">
-              <mat-progress-bar style="margin:10px auto;" color="primary" mode="indeterminate"></mat-progress-bar>
+              <dx-load-indicator></dx-load-indicator>
           </div>
           <app-order-slips
             *ngIf="show"
@@ -29,7 +29,7 @@
       <ng-template matTabContent>
         <div class="tab details">
           <div *ngIf="!show" class="flex aj-center" style="width:100%;height:100%;">
-              <mat-progress-bar style="margin:10px auto;" color="primary" mode="indeterminate"></mat-progress-bar>
+              <dx-load-indicator></dx-load-indicator>
           </div>
           <app-order-details
             *ngIf="show"

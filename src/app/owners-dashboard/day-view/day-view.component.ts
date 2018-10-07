@@ -243,10 +243,8 @@ export class DayViewComponent implements OnInit {
             };
         });
 
-        combineLatest(this.dataService.LatestBusinessDayDashboardData$, this.day$, this.dataService.refresh$).subscribe(async data => {
-
-            let dashboardData = data[0];
-            let dayDate = data[1];
+        combineLatest(this.day$, this.dataService.refresh$).subscribe(async data => {
+            let dayDate = data[0];
 
             let dailyReport = await this.dataService.getDailyReport(dayDate);
             if (!dailyReport || !dailyReport.services) {
@@ -268,8 +266,6 @@ export class DayViewComponent implements OnInit {
                 this.openOrders = null;
             }
             else {
-                //let olapTotals = _.filter(this.dailySummaryTblData.data, data => data.dataType === '');
-                //this.openOrders.totalAmount = _.get(dashboardData, 'today.totalSales') - _.get(olapTotals[0], 'salesNetAmount');
                 this.bdIsCurrentBd = true;
                 this.openOrders = await this.dataService.getOpenOrders();
             }

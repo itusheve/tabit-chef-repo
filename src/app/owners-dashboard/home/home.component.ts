@@ -92,32 +92,22 @@ export class HomeComponent implements OnInit {
     }
 
     getTodayData(): void {
-        combineLatest(this.dataService.LatestBusinessDayDashboardData$, this.dataService.olapToday$, this.dataService.vat$, this.dataService.currentRestTime$)
+        combineLatest(this.dataService.dailyTotals$, this.dataService.olapToday$, this.dataService.vat$, this.dataService.currentRestTime$)
             .subscribe(data => {
-                let realtimeData = data[0];
+                let dailyTotals = data[0];
                 let day = data[1];
                 let incTax = data[2];
                 let restTime = data[3];
+                let realtimeDataDate = moment(dailyTotals.businessDate);
 
-                let totalSales = 0;
-                let totalSalesWithoutTax = 0;
-
-                let realtimeDataDate = moment(realtimeData.today.businessDate);
-                let today = moment();
-
-                if (realtimeData.today && realtimeDataDate.date() === today.date()) {
-                    totalSales = realtimeData.today.totalSales;
-                    totalSalesWithoutTax = realtimeData.today.totalSalesBeforeTax;
-                }
+                let totalSales = dailyTotals.totals.totalPayments / 100;
+                let totalSalesWithoutTax = (dailyTotals.totals.totalPayments - dailyTotals.totals.includedTax) / 100;
 
                 if (!restTime.isSame(realtimeDataDate, 'day')) {
                     this.currentBdCardData.salesComment = 'eod';
                 }
 
                 this.currentBdCardData.sales = incTax ? totalSales : totalSalesWithoutTax;
-                this.currentBdCardData.diners = realtimeData.today.totalDiners;
-                this.currentBdCardData.ppa = incTax ? realtimeData.today.ppa : realtimeData.today.ppaBeforeTax;
-
                 this.currentBdCardData.title = this.datePipe.transform(moment(day.date).valueOf(), 'fullDate');
 
                 this.currentBdCardData.averages = {
@@ -131,27 +121,6 @@ export class HomeComponent implements OnInit {
                     }
                 };
 
-                if (day.aggregations.reductions) {
-                    this.currentBdCardData.reductions = {
-                        cancellations: {
-                            percentage: day.aggregations.reductions.cancellations.percentage,
-                            change: (day.aggregations.reductions.cancellations.percentage / day.aggregations.reductions.cancellations.fourWeekAvgPercentage)
-                        },
-                        employee: {
-                            percentage: day.aggregations.reductions.employee.percentage,
-                            change: (day.aggregations.reductions.employee.percentage / day.aggregations.reductions.employee.fourWeekAvgPercentage)
-                        },
-                        operational: {
-                            percentage: day.aggregations.reductions.operational.percentage,
-                            change: (day.aggregations.reductions.operational.percentage / day.aggregations.reductions.operational.fourWeekAvgPercentage)
-                        },
-                        retention: {
-                            percentage: day.aggregations.reductions.retention.percentage,
-                            change: day.aggregations.reductions.retention.percentage / day.aggregations.reductions.retention.fourWeekAvgPercentage
-                        }
-                    };
-                }
-
                 if (this.currentBdCardData.averages.weekly.change) {
                     let value = (this.currentBdCardData.averages.weekly.change) * 100;
                     this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
@@ -164,15 +133,39 @@ export class HomeComponent implements OnInit {
     }
 
     getTodayOlapData(): void {
-        this.dataService.databaseV2$
-            .subscribe(database => {
-                let restaurantTime = this.dataService.getCurrentRestTime();
+        combineLatest(this.dataService.databaseV2$, this.dataService.vat$).subscribe(data => {
+            let database = data[0];
+            let incTax = data[1];
+            let restaurantTime = this.dataService.getCurrentRestTime();
 
-                let day = database.getDay(restaurantTime);
-                if (day) {
-                    this.currentBdCardData.holiday = day.holiday;
-                }
-            });
+            let day = database.getDay(restaurantTime);
+            if (day) {
+                this.currentBdCardData.holiday = day.holiday;
+
+                this.currentBdCardData.diners = day.diners || day.orders;
+                this.currentBdCardData.ppa = incTax ? day.ppaIncludeVat : day.ppaIncludeVat / day.vat;
+
+                this.currentBdCardData.reductions = {
+                    cancellations: {
+                        percentage: day.voidsPrc / 100,
+                        change: day.VoidsDiff
+                    },
+                    employee: {
+                        percentage: day.employeesPrc / 100,
+                        change: day.Employeesdiff
+                    },
+                    operational: {
+                        percentage: day.operationalPrc / 100,
+                        change: day.OperationalDiff
+                    },
+                    retention: {
+                        percentage: day.mrPrc / 100,
+                        change: day.mrDiff
+                    }
+
+                };
+            }
+        });
     }
 
 
@@ -203,6 +196,7 @@ export class HomeComponent implements OnInit {
                 }
                 else {
                     this.showPreviousDay = true;
+
                     this.previousBdCardData.holiday = day.holiday;
                     this.previousBdCardData.diners = day.diners || day.orders;
                     this.previousBdCardData.ppa = incVat ? day.ppaIncludeVat : day.ppaIncludeVat / day.vat;
@@ -213,8 +207,8 @@ export class HomeComponent implements OnInit {
                             change: day.aggregations.sales.amount / day.aggregations.sales.yearAvg
                         },*/
                         weekly: {
-                            percentage: day.prcAvgNweeksSalesAndRefoundAmountIncludeVat / 100,
-                            change: day.prcAvgNweeksSalesAndRefoundAmountIncludeVat
+                            percentage: ((day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) - 1),
+                            change: (day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat)
                         }
                     };
 
@@ -235,11 +229,11 @@ export class HomeComponent implements OnInit {
                             percentage: day.mrPrc / 100,
                             change: day.mrDiff
                         }
-
                     };
 
                     if (this.previousBdCardData.averages.weekly.percentage) {
-                        this.previousBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(day.prcAvgNweeksSalesAndRefoundAmountIncludeVat, true);
+                        let value = (this.previousBdCardData.averages.weekly.change) * 100;
+                        this.previousBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                     }
                 }
 
@@ -258,7 +252,7 @@ export class HomeComponent implements OnInit {
 
                 let month = database.getCurrentMonth();
                 this.loadingOlapData = false;
-                if(!month.latestDay || moment(month.latestDay).isBefore(moment(), 'days')) {
+                if (!month.latestDay || moment(month.latestDay).isBefore(moment(), 'days')) {
                     this.showForecast = false;
                     this.forecastCardData.loading = false;
                     return;
@@ -280,7 +274,7 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.sales = incTax ? month.forecast.sales.amount : month.forecast.sales.amountWithoutVat;
 
                 let ppa = this.forecastCardData.sales / this.forecastCardData.diners;
-                this.forecastCardData.ppa = incTax ?ppa : ppa / month.vat;
+                this.forecastCardData.ppa = incTax ? ppa : ppa / month.vat;
 
                 this.forecastCardData.loading = false;
                 this.forecastCardData.noSeparator = true;

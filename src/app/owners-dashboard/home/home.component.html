@@ -12,8 +12,8 @@
                         </div>
                     </div>
                     <div *ngIf="!OlapFailed">
-                        <div>
-                            <mat-progress-bar style="margin:10px auto;" color="primary" mode="indeterminate"></mat-progress-bar>
+                        <div class="text-center">
+                            <dx-load-indicator></dx-load-indicator>
                             <p class="text-center saving"><span i18n="@@fetchingLatestAnalyticsData">Fetching latest analytics data</span><span>.</span><span>.</span><span>.</span></p>
                         </div>
                     </div>
