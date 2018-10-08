@@ -1,70 +1,78 @@
 <mat-sidenav-container (swiperight)="env.region === 'il' ? sidenav.close() : sidenav.open()">
 
-  <mat-sidenav class="flex d-col" #sidenav mode="over" (swiperight)="env.region === 'il' ? sidenav.close() : sidenav.open()">
-    <div class="s-0 flex d-col header">
-      <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{this.sideNavConfig.header.userInitials}}</button>
-      <div class="mt10 mb10">{{this.sideNavConfig.header.user?.firstName}} {{this.sideNavConfig.header.user?.lastName}}</div>
-      <div>{{this.sideNavConfig.header.org?.alias || this.sideNavConfig.header.org?.name}}</div>
-    </div>
-    <div class="g-1 flex d-col content">
-      <button class="s-0" *ngIf="this.sideNavConfig.content.showMySitesBtn" mat-raised-button [routerLink]="['/restaurants', { m: 's'}]">
-        <span i18n="owners-dashboard@@mySites">My Sites</span>
-      </button>
-      <button class="s-0" mat-raised-button [routerLink]="['/managers-dashboard']">
-        <span i18n="owners-dashboard@@managerDashboard">Manager Dashboard</span>
-      </button>
-      <button class="s-0" *ngIf="this.sideNavConfig.content.showLogoutBtn" mat-raised-button (click)="logout()">
-        <span i18n="owners-dashboard@@logout">Logout</span>
-      </button>
-      <div *ngIf="debug" class="g-1 flex d-col" style="word-break: break-all;text-align: left;padding: 5px;background-color: white;overflow: auto;">
-        <div class="mb5" *ngFor="let logEntry of logArr" [ngStyle]="{'color': logEntry.type==='error' ? 'red' : 'black'}">{{logEntry.message}}</div>
-      </div>
-      <div class="versions s-0 flex d-col a-center" style=" margin-top: auto;">
-        <div>chef v{{appVersions?.chef}}</div>
-        <div>chef-w v{{appVersions?.wrapper}}</div>
-      </div>
-    </div>
-  </mat-sidenav>
-
-  <mat-sidenav-content>
-    <div class="flex j-sb a-center toolbar" (swipeleft)="env.region === 'il' ? sidenav.open() : sidenav.close()">
-      <div class="flex j-start ps15" style="width:15%">
-        <button
-          *ngIf="toolbarConfig.menuBtn.show"
-          mat-icon-button
-          (click)="sidenav.toggle()">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <button style="height: 70px; width: 70px;"
-          *ngIf="toolbarConfig.left.back.showBtn"
-          mat-icon-button
-          (click)="toolbarConfig.left.back.onGoBackClicked()">
-          <mat-icon>{{env.tbtLocale==='he-IL' ? 'keyboard_arrow_right' : 'keyboard_arrow_left'}}</mat-icon>
-        </button>
-      </div>
-      <div class="flex d-col aj-center" style="width:70%;">
-        <div class="flex a-center" style="color:white" (click)="refresh()">
-          <div>{{toolbarConfig.center.caption}}</div>
-          <button *ngIf="toolbarConfig.center.showRefresh" style="color: #c2c9d4;" mat-icon-button>
-            <mat-icon>refresh</mat-icon>
-          </button>
+    <mat-sidenav class="flex d-col" #sidenav mode="over"
+                 (swiperight)="env.region === 'il' ? sidenav.close() : sidenav.open()">
+        <div class="s-0 flex d-col header">
+            <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">
+                {{this.sideNavConfig.header.userInitials}}
+            </button>
+            <div class="mt10 mb10">{{this.sideNavConfig.header.user?.firstName}}
+                {{this.sideNavConfig.header.user?.lastName}}
+            </div>
+            <div>{{this.sideNavConfig.header.org?.alias || this.sideNavConfig.header.org?.name}}</div>
         </div>
-        <div *ngIf="!vat" style="color:white;font-size:12px;">(<span i18n="owners-dashboard@@excludingVAT">Data excluding VAT</span>)</div>
-      </div>
-      <div class="flex j-end pe15" style="width:15%">
-          <button
-                  *ngIf="toolbarConfig.settings.show"
-                  mat-icon-button
-                  (click)="settings()">
-              <mat-icon>settings</mat-icon>
-          </button>
-      </div>
-    </div>
-    <div class="contentFixed">
-      <div class="content" (swipeleft)="env.region === 'il' ? sidenav.open() : sidenav.close()">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-  </mat-sidenav-content>
+        <div class="g-1 flex d-col content">
+            <button class="s-0" *ngIf="this.sideNavConfig.content.showMySitesBtn" mat-raised-button
+                    [routerLink]="['/restaurants', { m: 's'}]">
+                <span i18n="owners-dashboard@@mySites">My Sites</span>
+            </button>
+            <button class="s-0" mat-raised-button [routerLink]="['/managers-dashboard']">
+                <span i18n="owners-dashboard@@managerDashboard">Manager Dashboard</span>
+            </button>
+            <button class="s-0" mat-raised-button (click)="settings(); sidenav.toggle();">
+                <span i18n="owners-dashboard@@personalSettings">Personal Settings</span>
+            </button>
+            <button class="s-0" *ngIf="this.sideNavConfig.content.showLogoutBtn" mat-raised-button (click)="logout()">
+                <span i18n="owners-dashboard@@logout">Logout</span>
+            </button>
+            <div *ngIf="debug" class="g-1 flex d-col"
+                 style="word-break: break-all;text-align: left;padding: 5px;background-color: white;overflow: auto;">
+                <div class="mb5" *ngFor="let logEntry of logArr"
+                     [ngStyle]="{'color': logEntry.type==='error' ? 'red' : 'black'}">{{logEntry.message}}
+                </div>
+            </div>
+            <div class="versions s-0 flex d-col a-center" style=" margin-top: auto;">
+                <div>chef v{{appVersions?.chef}}</div>
+                <div>chef-w v{{appVersions?.wrapper}}</div>
+            </div>
+        </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <div class="flex j-sb a-center toolbar" (swipeleft)="env.region === 'il' ? sidenav.open() : sidenav.close()">
+            <div class="flex j-start ps15" style="width:15%">
+                <button
+                        *ngIf="toolbarConfig.menuBtn.show"
+                        mat-icon-button
+                        (click)="sidenav.toggle()">
+                    <mat-icon>menu</mat-icon>
+                </button>
+                <button style="height: 70px; width: 70px;"
+                        *ngIf="toolbarConfig.left.back.showBtn"
+                        mat-icon-button
+                        (click)="toolbarConfig.left.back.onGoBackClicked()">
+                    <mat-icon>{{env.tbtLocale==='he-IL' ? 'keyboard_arrow_right' : 'keyboard_arrow_left'}}</mat-icon>
+                </button>
+            </div>
+            <div class="flex d-col aj-center" style="width:70%;">
+                <div class="flex a-center" style="color:white" (click)="refresh()">
+                    <div>{{toolbarConfig.center.caption}}</div>
+                    <button *ngIf="toolbarConfig.center.showRefresh" style="color: #c2c9d4;" mat-icon-button>
+                        <mat-icon>refresh</mat-icon>
+                    </button>
+                </div>
+                <div *ngIf="!vat" style="color:white;font-size:12px;">(<span i18n="owners-dashboard@@excludingVAT">Data excluding VAT</span>)
+                </div>
+                <div *ngIf="vat" style="color:white;font-size:12px;">(<span i18n="owners-dashboard@@includingVAT">Data including VAT</span>)
+                </div>
+            </div>
+            <div class="flex j-end pe15" style="width:15%"></div>
+        </div>
+        <div class="contentFixed">
+            <div class="content" (swipeleft)="env.region === 'il' ? sidenav.open() : sidenav.close()">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </mat-sidenav-content>
 
 </mat-sidenav-container>

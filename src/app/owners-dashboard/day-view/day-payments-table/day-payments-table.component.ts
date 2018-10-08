@@ -110,10 +110,12 @@ export class DayPaymentsTableComponent implements OnChanges {
                 this.data = data;
             }
 
-            let byAccountGroup = this.data.byAccountGroup;
-            byAccountGroup = _.orderBy(byAccountGroup, 'accountGroup', 'desc');
-            this.data.byAccountGroup = byAccountGroup;
-            this.loading = false;
+            if(this.data) {
+                let byAccountGroup = _.get(this.data, 'byAccountGroup');
+                byAccountGroup = _.orderBy(byAccountGroup, 'accountGroup', 'desc');
+                this.data.byAccountGroup = byAccountGroup;
+                this.loading = false;
+            }
         }
     }
 }
