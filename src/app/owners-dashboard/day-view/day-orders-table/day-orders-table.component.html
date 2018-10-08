@@ -1,4 +1,4 @@
-<div class="flex d-col a-stretch">
+<div class="flex d-col a-stretch" *ngIf="openOrders && openOrders.count > 0">
     <div class="title">
         <ng-container i18n="@@openOrders">Open orders</ng-container>
     </div>
@@ -6,7 +6,7 @@
         <div *ngIf="!loading">
             <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
             <div *ngIf="!noData && byOrderTypes" class="flex d-col a-stretch">
-                <mat-expansion-panel expanded="false" *ngIf="openOrders && openOrders.count > 0">
+                <mat-expansion-panel expanded="false">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <ng-container i18n="@@openOrders">Open Orders</ng-container>
