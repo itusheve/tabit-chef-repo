@@ -68,18 +68,6 @@ $matAccordionHeaderColor: #C5CCD4;
     &.daySelectorFixed {
       position: fixed;
       top: $toolbarHeight;
-      @media #{$iphone-X-portrait-mq} {
-        top: $iphone-X-notch-px + $toolbarHeight;
-      }
-      @media #{$iphone-6-7-8-portrait-mq} {
-        top: $iphone-6-7-8-status-bar-px + $toolbarHeight;
-      }
-      @media #{$iphone-6-7-8-plus-portrait-mq} {
-        top: $iphone-6-7-8-plus-status-bar-px + $toolbarHeight;
-      }
-      @media #{$ipad-portrait-mq} {
-        top: $ipad-status-bar-px + $toolbarHeight;
-      }
       left: 0;
       right: 0;
       height: $secondaryToolbarHeight;
@@ -97,18 +85,6 @@ $matAccordionHeaderColor: #C5CCD4;
   width: 100vw;
   height: 100vh;
   padding-top: $toolbarHeight;
-  @media #{$iphone-X-portrait-mq} {
-    padding-top: $iphone-X-notch-px + $toolbarHeight;
-  }
-  @media #{$iphone-6-7-8-portrait-mq} {
-    padding-top: $iphone-6-7-8-status-bar-px + $toolbarHeight;
-  }
-  @media #{$iphone-6-7-8-plus-portrait-mq} {
-    padding-top: $iphone-6-7-8-plus-status-bar-px + $toolbarHeight;
-  }
-  @media #{$ipad-portrait-mq} {
-    padding-top: $ipad-status-bar-px + $toolbarHeight;
-  }
   background-color: #edf1f2;
   overflow: hidden;
   // -webkit-overflow-scrolling: touch;This caused bad behaviour with the fixed order-view - on ios user was able to scroll to see the view beneath. removing this solved the problem, and momentum scrolling is still working on ios.

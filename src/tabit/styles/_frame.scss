@@ -24,18 +24,6 @@ mat-sidenav-container {
         $header-padding-px: 15px;
         .header {
             padding: $header-padding-px;
-            @media #{$iphone-X-portrait-mq} {
-                padding-top: $iphone-X-notch-px + $header-padding-px;
-            }
-            @media #{$iphone-6-7-8-portrait-mq} {
-                padding-top: $iphone-6-7-8-status-bar-px + $header-padding-px;
-            }
-            @media #{$iphone-6-7-8-plus-portrait-mq} {
-                padding-top: $iphone-6-7-8-plus-status-bar-px + $header-padding-px;
-            }
-            @media #{$ipad-portrait-mq} {
-                padding-top: $ipad-status-bar-px + $header-padding-px;
-            }
             background-color: $headerBgColor;
             color: white;
         }
@@ -79,21 +67,6 @@ mat-sidenav-container {
             font-size: 20px;
             font-weight: 500;
             box-sizing: content-box;
-            // padding-top: env(safe-area-inset-top);//TLA, NOTCH
-            // padding-top: constant(safe-area-inset-top);//TLA, NOTCH
-            // padding-top: $tmpToolbarPaddingTopForNotch;
-            @media #{$iphone-X-portrait-mq} {
-                padding-top: $iphone-X-notch-px;
-            }
-            @media #{$iphone-6-7-8-portrait-mq} {
-                padding-top: $iphone-6-7-8-status-bar-px;
-            }
-            @media #{$iphone-6-7-8-plus-portrait-mq} {
-                padding-top: $iphone-6-7-8-plus-status-bar-px;
-            }
-            @media #{$ipad-portrait-mq} {
-                padding-top: $ipad-status-bar-px;
-            }
         }
         .contentFixed {
             position: absolute;
@@ -105,18 +78,6 @@ mat-sidenav-container {
             z-index: 0;
             .content {
                 padding: ($toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
-                @media #{$iphone-X-portrait-mq} {
-                    padding: ($iphone-X-notch-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
-                }
-                @media #{$iphone-6-7-8-portrait-mq} {
-                    padding: ($iphone-6-7-8-status-bar-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
-                }
-                @media #{$iphone-6-7-8-plus-portrait-mq} {
-                    padding: ($iphone-6-7-8-plus-status-bar-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
-                }
-                @media #{$ipad-portrait-mq} {
-                    padding: ($ipad-status-bar-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
-                }
                 background-color: $contentBgColor;
                 width: 100vw;
                 height: 100vh;

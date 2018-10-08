@@ -40,6 +40,8 @@ html, body {
   background-color: black;
   overflow: hidden;
   text-align: start;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  padding: constant(safe-area-inset-top) constant(safe-area-inset-right) constant(safe-area-inset-bottom) constant(safe-area-inset-left);
 }
 
 :focus {
@@ -450,18 +452,6 @@ i.icon {
 snack-bar-container {
   $snackTopPadding: 14px;
   padding-top: $snackTopPadding !important;
-  @media #{$iphone-X-portrait-mq} {
-    padding-top: $snackTopPadding + $iphone-X-notch-px !important;
-  }
-  @media #{$iphone-6-7-8-portrait-mq} {
-    padding-top: $snackTopPadding + $iphone-6-7-8-status-bar-px !important;
-  }
-  @media #{$iphone-6-7-8-plus-portrait-mq} {
-    padding-top: $snackTopPadding + $iphone-6-7-8-plus-status-bar-px !important;
-  }
-  @media #{$ipad-portrait-mq} {
-    padding-top: $snackTopPadding + $ipad-status-bar-px !important;
-  }
 
   simple-snack-bar {
     font-size: $base-font-size !important;
