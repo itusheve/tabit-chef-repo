@@ -252,7 +252,7 @@ export class HomeComponent implements OnInit {
 
                 let month = database.getCurrentMonth();
                 this.loadingOlapData = false;
-                if (!month.latestDay || moment(month.latestDay).isBefore(moment(), 'days')) {
+                if (!month.latestDay || moment(month.latestDay).isBefore(moment(), 'month')) {
                     this.showForecast = false;
                     this.forecastCardData.loading = false;
                     return;
