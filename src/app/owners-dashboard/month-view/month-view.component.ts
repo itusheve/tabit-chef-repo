@@ -122,7 +122,7 @@ export class MonthViewComponent implements OnInit {
             },*/
             weekly: {
                 percentage: previousMonth && previousMonth.weekAvg ? ((month.weekAvg / previousMonth.weekAvg) - 1) : 0,
-                change: previousMonth ? (month.weekAvg / previousMonth.weekAvg) : 0
+                change: previousMonth ? (month.weekAvg / previousMonth.weekAvg) * 100: 0
             }
         };
 

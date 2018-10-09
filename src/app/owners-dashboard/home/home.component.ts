@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {DatePipe} from '@angular/common';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import {combineLatest} from 'rxjs/internal/observable/combineLatest';
 import {take} from 'rxjs/operators';
 import {DataService, tmpTranslations} from '../../../tabit/data/data.service';
@@ -100,8 +101,16 @@ export class HomeComponent implements OnInit {
                 let restTime = data[3];
                 let realtimeDataDate = moment(dailyTotals.businessDate);
 
-                let totalSales = dailyTotals.totals.totalPayments / 100;
-                let totalSalesWithoutTax = (dailyTotals.totals.totalPayments - dailyTotals.totals.includedTax) / 100;
+                let totals = dailyTotals.totals;
+                let totalClosedOrders = _.get(totals, 'totalPayments', 0);
+                let totalClosedOrdersWithoutVat = totalClosedOrders - _.get(totals, 'includedTax', 0);
+
+                let totalOpenOrders = _.get(totals, 'openOrders.totalAmount', 0);
+                let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
+
+
+                let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
+                let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
 
                 if (!restTime.isSame(realtimeDataDate, 'day')) {
                     this.currentBdCardData.salesComment = 'eod';
@@ -117,12 +126,12 @@ export class HomeComponent implements OnInit {
                     },*/
                     weekly: {
                         percentage: totalSales ? ((totalSales / day.aggregations.sales.fourWeekAvg) - 1) : 0,
-                        change: (totalSales / day.aggregations.sales.fourWeekAvg)
+                        change: (totalSales / day.aggregations.sales.fourWeekAvg) * 100
                     }
                 };
 
                 if (this.currentBdCardData.averages.weekly.change) {
-                    let value = (this.currentBdCardData.averages.weekly.change) * 100;
+                    let value = (this.currentBdCardData.averages.weekly.change);
                     this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }
 
@@ -162,7 +171,6 @@ export class HomeComponent implements OnInit {
                         percentage: day.mrPrc / 100,
                         change: day.mrDiff
                     }
-
                 };
             }
         });
@@ -208,7 +216,7 @@ export class HomeComponent implements OnInit {
                         },*/
                         weekly: {
                             percentage: ((day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) - 1),
-                            change: (day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat)
+                            change: (day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) * 100
                         }
                     };
 
@@ -232,7 +240,7 @@ export class HomeComponent implements OnInit {
                     };
 
                     if (this.previousBdCardData.averages.weekly.percentage) {
-                        let value = (this.previousBdCardData.averages.weekly.change) * 100;
+                        let value = (this.previousBdCardData.averages.weekly.change);
                         this.previousBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                     }
                 }
@@ -265,7 +273,7 @@ export class HomeComponent implements OnInit {
                 if (lastYearMonth) {
                     this.forecastCardData.averages.yearly = {
                         percentage: lastYearMonth.aggregations.sales.amount ? ((month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount) - 1) : 0,
-                        change: month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount
+                        change: month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount * 100
                     };
                 }
 
@@ -281,7 +289,7 @@ export class HomeComponent implements OnInit {
 
                 this.forecastCardData.averages.weekly = {
                     percentage: previousMonth ? ((month.forecast.sales.amount / previousMonth.forecast.sales.amount) - 1) : 0,
-                    change: previousMonth ? (month.forecast.sales.amount / previousMonth.forecast.sales.amount) : 0
+                    change: previousMonth ? (month.forecast.sales.amount / previousMonth.forecast.sales.amount) * 100 : 0
                 };
 
                 this.showForecast = moment().diff(moment(database.getLowestDate()), 'days') > 8; //do not show forecast for new businesses with less than 8 days of data

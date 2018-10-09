@@ -6,3 +6,9 @@
     height: 50px;
     min-width: 60px;
 }
+
+.month-picker {
+    font-size: 17px;
+    border-color: #fff;
+    width: 80%
+}

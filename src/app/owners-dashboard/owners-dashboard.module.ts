@@ -43,12 +43,9 @@ import {OrderSingleInvoiceDataComponent} from './order-view/slips/common/singleI
 import {OrderGiftCardDetailsComponent} from './order-view/slips/common/giftCardDetails/giftCardDetails.component';
 import {OrderCashPaymentFooterComponent} from './order-view/slips/common/cashPaymentFooter/cashPaymentFooter.component';
 import {OrderDetailsComponent} from './order-view/details/details.component';
-import { DxLoadIndicatorModule } from 'devextreme-angular';
-
+import {DxLoadIndicatorModule} from 'devextreme-angular';
 import {CardComponent} from '../ui/card/card.component';
-
 import {SignatureComponent} from '../../tabit/ui/signature/signature.component';
-
 import {OwnersDashboardRoutingModule} from './owners-dashboard-routing.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -65,7 +62,9 @@ import {
     MatProgressBarModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    MatBottomSheetModule,
+    MatListModule
 } from '@angular/material';//material modules
 
 import {OrderCashRefundComponent} from './order-view/slips/_cashRefund/cashRefund.component';
@@ -80,6 +79,7 @@ import {DayOperationalErrorsTableComponent} from './day-view/day-operational-err
 import {DayRetentionTableComponent} from './day-view/day-retention-table/day-retention-table.component';
 import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/day-month-summary-table.component';
 import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sales.component';
+import {MonthPickerDialogComponent} from './month-view/month-selector/month-picker-dialog.component';
 
 @NgModule({
     imports: [
@@ -100,6 +100,8 @@ import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sa
         MatFormFieldModule,
         MatSelectModule,
         MatOptionModule,
+        MatBottomSheetModule,
+        MatListModule,
         FormsModule,
         ReactiveFormsModule,
         DxLoadIndicatorModule
@@ -119,6 +121,7 @@ import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sa
 
         MonthViewComponent,
         MonthSelectorComponent,
+        MonthPickerDialogComponent,
         MonthGridComponent,
         DayViewComponent,
         DaySelectorComponent,
@@ -156,11 +159,15 @@ import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sa
         OrderMediaExchangeDetailsComponent,
         OrderGiftCardDetailsComponent,
         OrderCashPaymentFooterComponent,
-        OrderDetailsComponent,
+        OrderDetailsComponent
     ],
     providers: [
         OwnersDashboardService
-    ]
+    ],
+    entryComponents: [
+        MonthSelectorComponent,
+        MonthPickerDialogComponent
+    ],
 })
 export class OwnersDashboardModule {
 }

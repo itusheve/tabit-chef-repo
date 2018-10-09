@@ -2,7 +2,7 @@ import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import * as moment from 'moment';
 import {tmpTranslations} from '../../../../tabit/data/data.service';
 import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
-
+import {environment} from '../../../../environments/environment';
 @Component({
     selector: 'app-month-grid',
     templateUrl: './month-grid.component.html',
@@ -22,10 +22,11 @@ export class MonthGridComponent implements OnInit {
     tmpTranslations: any;
     hasYearlyAvg: boolean;
     selected: any;
-
+    public environment;
     private tabitHelper;
 
     constructor() {
+        this.environment = environment;
         this.currentDate = moment().format('YYYY-MM-DD');
         this.tmpTranslations = tmpTranslations;
         this.tabitHelper = new TabitHelper();
