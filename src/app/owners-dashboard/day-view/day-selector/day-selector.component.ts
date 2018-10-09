@@ -1,4 +1,5 @@
 import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
+import {MatDatepickerInputEvent} from '@angular/material';
 import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
 
@@ -17,6 +18,7 @@ export class DaySelectorComponent implements OnChanges {
         maxDate: moment.Moment
     };
 
+    public picker;
     disablePrevious = true;
     disableNext = true;
 
@@ -63,6 +65,10 @@ export class DaySelectorComponent implements OnChanges {
         e.stopPropagation();
         if (this.currentValue.isSame(this.options.maxDate, 'day')) return;
         this.onDateChanged.emit(moment(this.currentValue).add(1, 'day'));
+    }
+
+    changeDate(event: MatDatepickerInputEvent<Date>) {
+        this.onDateChanged.emit(moment(event.value));
     }
 
 }
