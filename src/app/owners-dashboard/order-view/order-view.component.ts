@@ -9,6 +9,8 @@ import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.
 import ORDERS_VIEW from '../../../tabit/data/dc/closedOrders.data.service';
 import {OwnersDashboardService} from '../owners-dashboard.service';
 
+declare var TlogDocsService: any;
+
 export interface SlipVM {
     id: number;
     class: string;//bill/club
@@ -33,7 +35,7 @@ export class OrderViewComponent implements OnInit {
     printDataOld: any;
     ORDERS_VIEW: any;
     orderDocs: any;
-
+    tlogDocsService: any;
 
     //<!-- https://github.com/angular/material2/issues/5269 -->
     // selectedTabIndex;
@@ -45,6 +47,9 @@ export class OrderViewComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        //TODO: implement below
+        //this.tlogDocsService = new TlogDocsService();
 
         this.route.paramMap
             .subscribe((params: ParamMap) => {
