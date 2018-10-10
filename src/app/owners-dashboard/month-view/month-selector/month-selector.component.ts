@@ -3,7 +3,6 @@ import {MatBottomSheet} from '@angular/material';
 import * as moment from 'moment';
 import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
-import {currencySymbol} from '../../../../tabit/data/data.service';
 import {CardData} from '../../../ui/card/card.component';
 import {MonthPickerDialogComponent} from './month-picker-dialog.component';
 
@@ -74,10 +73,15 @@ export class MonthSelectorComponent implements OnInit {
     }
 
     openMonthPicker() {
-        let dialog = this.monthPickerDialog.open(MonthPickerDialogComponent, {data: {selected: this.month, onDateChanged: this.onDateChanged}});
+        let dialog = this.monthPickerDialog.open(MonthPickerDialogComponent, {
+            data: {selected: this.month, onDateChanged: this.onDateChanged},
+            hasBackdrop: true
+        });
         dialog.afterDismissed().subscribe(() => {
-            this.month = dialog.instance.selection;
-            this.final = this.getFinalState(this.month);
+            if(dialog.instance.selection) {
+                this.month = dialog.instance.selection;
+                this.final = this.getFinalState(this.month);
+            }
         });
     }
 }
