@@ -65,7 +65,8 @@ import {
     MatOptionModule,
     MatBottomSheetModule,
     MatListModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatDialogModule
 } from '@angular/material';//material modules
 
 import {OrderCashRefundComponent} from './order-view/slips/_cashRefund/cashRefund.component';
@@ -106,6 +107,7 @@ import {MonthPickerDialogComponent} from './month-view/month-selector/month-pick
         MatDatepickerModule,
         FormsModule,
         ReactiveFormsModule,
+        MatDialogModule,
         DxLoadIndicatorModule
     ],
     declarations: [

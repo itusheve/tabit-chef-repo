@@ -52,23 +52,33 @@ export class MonthSelectorComponent implements OnInit {
     ngOnInit() {
         this.month$.subscribe(month => {
             this.month = month;
-            this.final = moment().format('YYYYM') > this.month.format('YYYYM') ? 'final' : 'notFinal';
+            this.final = this.getFinalState(this.month);
         });
 
+    }
+
+    getFinalState(month: moment.Moment) {
+        return moment().isSame(month, 'month') ? 'notFinal' : 'final';
     }
 
     prevMonth = () => {
         if (this.month.isSame(this.options.minDate, 'month')) return;
         this.onDateChanged.emit(moment(this.month).subtract(1, 'months'));
+        this.final = this.getFinalState(this.month);
     }
 
     nextMonth = () => {
         if (this.month.isSame(this.options.maxDate, 'month')) return;
         this.onDateChanged.emit(moment(this.month).add(1, 'months'));
+        this.final = this.getFinalState(this.month);
     }
 
     openMonthPicker() {
-        this.monthPickerDialog.open(MonthPickerDialogComponent, {data: {selected: this.month, onDateChanged: this.onDateChanged}});
+        let dialog = this.monthPickerDialog.open(MonthPickerDialogComponent, {data: {selected: this.month, onDateChanged: this.onDateChanged}});
+        dialog.afterDismissed().subscribe(() => {
+            this.month = dialog.instance.selection;
+            this.final = this.getFinalState(this.month);
+        });
     }
 }
 
