@@ -77,7 +77,7 @@ export class DaySalesTableComponent implements OnChanges {
                     this.pivotedData.gratuity.push(row.ttlTipAmountExcludeVat);
                     this.pivotedData.serviceCharge.push(row.ttlTipAmountExcludeVat);
                     this.pivotedData.diners.push(row.dinersOrders);
-                    this.pivotedData.ppa.push(row.dataType ? row.ppa : null);
+                    this.pivotedData.ppa.push(row.ppaAmountIncludeVat);
                 }
             });
 

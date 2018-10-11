@@ -263,9 +263,10 @@ export class DayViewComponent implements OnInit {
 
             this.orders = this.extractOrders(dailyReport);
 
+            dailyReport.summary = _.orderBy(dailyReport.summary, 'orderTypeKey', 'asc');
             this.dailySummaryTblData = {
                 title: '',
-                data: _.filter(dailyReport.summary, summary => summary.orderType === undefined && summary.service === undefined)
+                data: _.filter(dailyReport.summary, summary => summary.serviceKey == '-1')
             };
 
 
@@ -281,7 +282,7 @@ export class DayViewComponent implements OnInit {
             this.byShiftSummaryTblsData = [];
             _.forEach(dailyReport.summary, summary => {
                 let serviceKey = _.get(summary, 'serviceKey');
-                if (serviceKey) {
+                if (serviceKey && serviceKey != '-1') {
                     if(!this.byShiftSummaryTblsData[+serviceKey]) {
                         this.byShiftSummaryTblsData[+serviceKey] = {title: summary.serviceName, data: []};
                     }
@@ -289,6 +290,8 @@ export class DayViewComponent implements OnInit {
                     this.byShiftSummaryTblsData[+serviceKey].data.push(summary);
                 }
             });
+
+            this.salesByHour = dailyReport.salesByHour;
 
             this.salesBySubDepartment = {
                 thisBd: {
@@ -448,18 +451,11 @@ export class DayViewComponent implements OnInit {
         });
     }
 
-    private renderChart() {
-        combineLatest(this.day$, this.dataService.refresh$).subscribe(async day => {
-            this.salesByHour = await this.dataService.getDailySalesByHours(day[0]);
-        });
-    }
-
     ngOnInit() {
         this.today = moment();
         this.hasData = false;
         window.scrollTo(0, 0);
         this.render();
-        this.renderChart();
 
         this.dataService.refresh$.subscribe(refresh => {
             this.hasData = false;

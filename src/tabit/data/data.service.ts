@@ -1519,7 +1519,40 @@ export class DataService {
                     //log something here
                 }
             }*/
-            return report;
+
+        let result = [];
+        _.forEach(report.salesByHour, dailySales => {
+            let hour = parseInt(dailySales.firedOnHHMM, 10);
+            if (hour < 6) {
+                hour = hour + 30;
+            }
+
+            if (dailySales.ttlSaleAmountIncludeVat) {
+                if (!result[hour]) {
+                    result[hour] = {};
+                }
+
+                result[hour].hour = dailySales.firedOnHHMM;
+
+                if (moment(dailySales.firedOn).isSame(day, 'days')) {
+                    result[hour].salesNetAmount = dailySales.ttlSaleAmountIncludeVat;
+                }
+                else {
+                    if (!result[hour].salesNetAmountAvg) {
+                        result[hour].salesNetAmountAvg = 0;
+                        result[hour].days = 0;
+                    }
+                    if (result[hour].days < 4) {
+                        result[hour].salesNetAmountAvg += dailySales.ttlSaleAmountIncludeVat;
+                        result[hour].days++;
+                    }
+                }
+            }
+        });
+
+        let newResult = _.orderBy(_.values(_.compact(result)), 'firedOn', 'asc');
+        report.salesByHour = newResult;
+        return report;
         /*}*/
     }
 
