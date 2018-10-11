@@ -1,0 +1,12 @@
+.selected {
+    background-color: #BDBDBD;
+}
+
+::ng-deep.card {
+  margin-bottom: 5px;
+}
+
+::ng-deep.mat-bottom-sheet-container {
+    height: 100vh;
+    max-height: 100vh !important;
+}

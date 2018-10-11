@@ -1,7 +1,14 @@
-<div class="btn-group bg-white month-selector" dir="ltr" style="width: 100%">
-    <button mat-stroked-button (click)="region == 'il' ? nextMonth() : prevMonth()" style="width: 10%"><i class="material-icons">keyboard_arrow_left</i></button>
+<!--<div class="btn-group bg-white month-selector" dir="ltr" style="width: 100%">
     <button (click)="openMonthPicker()" mat-stroked-button  id="month" [ngClass]="cardData?.statusClass" style="font-size: 17px; border-color: #fff; width: 80%">
         <ng-container>{{month | date:'MMMM yyyy'}}</ng-container>&nbsp;<ng-container class="dx-button-text text-lowercase mx-2" i18n="@@monthSelectorFinalIndication">{final, select, final {Final} notFinal {Not final}}</ng-container>
     </button>
-    <button mat-stroked-button (click)="region == 'il' ? prevMonth() : nextMonth()" style="width: 10%"><i class="material-icons">keyboard_arrow_right</i></button>
+</div>-->
+<div class="card bg-light dashboard-home-card shadow-card rounded-0">
+    <div class="card-header text-center py-1" style="font-size: 18px; cursor: pointer; margin-bottom: -1px;"
+         [ngClass]="cardData.statusClass || 'bg-light'">
+        <span (click)="openMonthPicker()" class="font-weight-bold">
+            <ng-container>{{month | date:'MMMM yyyy'}}</ng-container>&nbsp;<ng-container class="dx-button-text text-lowercase mx-2" i18n="@@monthSelectorFinalIndication">{final, select, final {Final} notFinal {Not final}}</ng-container>
+            <mat-icon style="top:3px; position: relative; float: left;">keyboard_arrow_down</mat-icon>
+        </span>
+    </div>
 </div>
