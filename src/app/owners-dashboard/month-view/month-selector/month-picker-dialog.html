@@ -1,7 +1,9 @@
 <mat-dialog-content>
+    <div class="month-picker-dialog">
+        <app-card *ngFor="let month of months" (click)="select($event, month)" [cardData]="month.summary"></app-card>
+    </div>
    <!-- <a mat-list-item *ngFor="let month of months" (click)="select($event, month)" [ngClass]="month.selected ? 'selected' : ''">
         <span mat-line>{{month.date | date:'MMMM yyyy'}}</span>
         <span mat-line>{{month.sales | curr:0:0}}</span>
     </a>-->
-    <app-card *ngFor="let month of months" (click)="select($event, month)" [cardData]="month.summary"></app-card>
 </mat-dialog-content>

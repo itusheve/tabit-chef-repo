@@ -2,8 +2,13 @@
     background-color: #BDBDBD;
 }
 
+.month-picker-dialog {
+  font-family: 'Assistant', sans-serif;
+}
+
 ::ng-deep.card {
   margin-bottom: 5px;
+  font-family: 'Assistant', sans-serif;
 }
 
 ::ng-deep.mat-bottom-sheet-container {
