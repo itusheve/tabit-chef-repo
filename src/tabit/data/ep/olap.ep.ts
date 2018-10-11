@@ -160,7 +160,7 @@ export class OlapEp {
 
             this.httpClient.post(`${this.sqlServerProxy}?customdata=S${org.id}&token=${token.access_token}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
-                    action: 'tabitChefSiteDaily',
+                    action: 'tabitChefSiteDailyV2',
                     businessDate: date.format('YYYYMMDD')
                 },
                 {

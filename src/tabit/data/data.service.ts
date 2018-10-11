@@ -1472,55 +1472,55 @@ export class DataService {
 
     async getDailyReport(day: moment.Moment) {
         let org = JSON.parse(window.localStorage.getItem('org'));
-        let reportsCache = JSON.parse(window.localStorage.getItem(org.id + '-daily-reports'));
+        /*let reportsCache = JSON.parse(window.localStorage.getItem(org.id + '-daily-reports'));
         if (!reportsCache) {
             reportsCache = [];
-        }
+        }*/
 
         let now = moment();
 
-        let dailyReport = _.find(reportsCache, {date: day.format('YYYYMMDD')});
+        /*let dailyReport = _.find(reportsCache, {date: day.format('YYYYMMDD')});
         if (!day.isSame(now, 'days') && dailyReport && moment(dailyReport.createTime, 'YYYY-MM-DD HH:mm').isSameOrAfter(now.subtract(10, 'minutes'))) {
             return dailyReport.data;
         }
-        else {
+        else {*/
             let perfStartTime = performance.now();
             let report = await this.olapEp.getDailyReport(day);
             this.logz.log('chef', 'getDailyReport', {'timing': performance.now() - perfStartTime});
 
-            if (dailyReport) {
+            /*if (dailyReport) {
                 reportsCache = _.filter(reportsCache, function (report) {
                     return report.date !== dailyReport.date;
                 });
-            }
+            }*/
 
-            if (reportsCache.length >= 10) {
+            /*if (reportsCache.length >= 10) {
                 reportsCache.splice(0, 1);
-            }
+            }*/
 
-            reportsCache.push({
+            /*reportsCache.push({
                 date: day.format('YYYYMMDD'),
                 createTime: moment().format('YYYY-MM-DD HH:mm'),
                 data: report
-            });
+            });*/
 
-            let localStorage = window.localStorage;
+            /*let localStorage = window.localStorage;
             let keys = Object.keys(localStorage);
             _.forEach(keys, key => {
                 if (key.indexOf('daily-reports') !== -1) {
                     localStorage.removeItem(key);
                 }
-            });
-            try {
+            });*/
+            /*try {
                 window.localStorage.setItem(org.id + '-daily-reports', JSON.stringify(reportsCache));
             } catch (domException) {
                 if (domException.name === 'QuotaExceededError' ||
                     domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
                     //log something here
                 }
-            }
+            }*/
             return report;
-        }
+        /*}*/
     }
 
     async getOpenOrders() {

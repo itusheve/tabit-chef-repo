@@ -64,28 +64,20 @@ export class DaySalesTableComponent implements OnChanges {
 
             this.data.forEach(row => {
 
-                if(row.Tip) {
+                if(row.ttlTipAmountExcludeVat) {
                     this.pivotedData.hasTips = true;
                 }
 
-                let diners = null;
-                if(row.dataType) {
-                    diners = row.dataType === 'seated' ? row.Diners : row.Orders;
-                }
-
-                if(row['salesNetAmount']) {
+                if(row.salesRefundTipAmountIncludeVat) {
                     this.pivotedData.titles.push(row.orderType);
-                    this.pivotedData.salesTotalAmount.push(row['Gross Sales $']);
-                    this.pivotedData.totalSales.push(row['salesNetAmount']);
-                    this.pivotedData.netSales.push(row['salesNetAmount']);
-                    this.pivotedData.netSalesWithoutVat.push(row['salesNetAmountWithOutVat']);
-                    this.pivotedData.tax.push(row.Tax);
-                    this.pivotedData.grossSales.push(row['Gross Sales $']);
-                    this.pivotedData.gratuity.push(row.Tip);
-                    this.pivotedData.serviceCharge.push(row.Tip);
-                    //this.pivotedData.orders.push(row.Orders);
-                    this.pivotedData.diners.push(diners);
-                    this.pivotedData.ppa.push(row.dataType ? row['PPA $'] : null);
+                    this.pivotedData.netSales.push(row.ttlSaleAmountIncludeVat);
+                    this.pivotedData.netSalesWithoutVat.push(row.ttlSaleAmountExcludeVat);
+                    this.pivotedData.tax.push(row.ttlVat);
+                    this.pivotedData.grossSales.push(row.salesRefundTipAmountIncludeVat);
+                    this.pivotedData.gratuity.push(row.ttlTipAmountExcludeVat);
+                    this.pivotedData.serviceCharge.push(row.ttlTipAmountExcludeVat);
+                    this.pivotedData.diners.push(row.dinersOrders);
+                    this.pivotedData.ppa.push(row.dataType ? row.ppa : null);
                 }
             });
 

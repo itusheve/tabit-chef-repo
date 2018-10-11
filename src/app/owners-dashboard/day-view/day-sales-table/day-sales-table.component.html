@@ -21,7 +21,7 @@
 
     <tr *ngIf="environment.region === 'il'">
         <td>מחזור</td>
-        <td class="ar" *ngFor="let val of pivotedData.salesTotalAmount">{{val | curr:'0'}}</td>
+        <td class="ar" *ngFor="let val of pivotedData.grossSales">{{val | curr:'0'}}</td>
     </tr>
 
     <tr *ngIf="environment.region === 'us'">

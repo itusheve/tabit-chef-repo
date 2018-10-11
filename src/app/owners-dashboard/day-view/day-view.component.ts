@@ -52,7 +52,7 @@ export class DayViewComponent implements OnInit {
     public orders: Order[];
 
     public dailySummaryTblData: { title: string; data: SalesTableRow[] };
-    public byShiftSummaryTblsData: { title: string; data: SalesTableRow[] }[];
+    public byShiftSummaryTblsData: {  title: string; data: SalesTableRow[] }[];
 
     public salesBySubDepartment: {
         thisBd: {
@@ -144,6 +144,7 @@ export class DayViewComponent implements OnInit {
         subType: string;
         reasonId: string;
         operational: number;
+        tlogId: string;
     }[];
 
     public retentionData: {
@@ -156,6 +157,7 @@ export class DayViewComponent implements OnInit {
         subType: string;
         reasonId: string;
         retention: number;
+        tlogId: string;
     }[];
 
     public mtdBusinessData: any;
@@ -197,10 +199,10 @@ export class DayViewComponent implements OnInit {
             order.number = tlog.orderNumber;
             order.orderType = new OrderType(tlog.orderType, 1);
 
-            order.sales = tlog.totalPaymentAmount;
+            order.sales = tlog.totalAmount;
             order.tlogId = tlog.tlogId;
-            order.waiter = tlog.firstName + ' ' + tlog.lastName;
-            order.openingTime = moment(tlog.opened);
+            order.waiter = tlog.userName;
+            order.openingTime = tlog.HHMM;
 
             order.priceReductions = {
                 cancellation: 0,
@@ -208,22 +210,28 @@ export class DayViewComponent implements OnInit {
                 employees: 0,
                 promotions: 0
             };
-            let reductions = tlog.icons ? tlog.icons.split(',') : [];
-            if (reductions.length) {
-                _.forEach(reductions, reduction => {
-                    if (reduction === 'promotions') {
-                        order.priceReductions.promotions = 1;
-                    }
-                    else if (reduction === 'retention') {
-                        order.priceReductions.discountsAndOTH = 1;
-                    }
-                    else if (reduction === 'waste') {
-                        order.priceReductions.cancellation = 1;
-                    }
-                    else if (reduction === 'employees') {
-                        order.priceReductions.employees = 1;
-                    }
-                });
+            let tlogFlag = _.find(dailyReport.flags, {tlogId: tlog.tlogId});
+
+            if(tlogFlag) {
+                let reductions = tlogFlag.NameValues ? tlogFlag.NameValues.split(',') : [];
+                if (reductions.length) {
+                    _.forEach(reductions, reduction => {
+                        reduction = reduction.trim();
+
+                        if (reduction === 'promotions') {
+                            order.priceReductions.promotions = 1;
+                        }
+                        else if (reduction === 'discounts' || reduction === 'oth') {
+                            order.priceReductions.discountsAndOTH = 1;
+                        }
+                        else if (reduction === 'cancellation') {
+                            order.priceReductions.cancellation = 1;
+                        }
+                        else if (reduction === 'employees') {
+                            order.priceReductions.employees = 1;
+                        }
+                    });
+                }
             }
 
             orders.push(order);
@@ -247,7 +255,7 @@ export class DayViewComponent implements OnInit {
             let dayDate = data[0];
 
             let dailyReport = await this.dataService.getDailyReport(dayDate);
-            if (!dailyReport || !dailyReport.services) {
+            if (!dailyReport || !dailyReport.summary) {
                 this.hasData = false;
                 this.hasNoDataForToday = true;
                 return;
@@ -257,7 +265,7 @@ export class DayViewComponent implements OnInit {
 
             this.dailySummaryTblData = {
                 title: '',
-                data: _.filter(dailyReport.services, service => service.service === 'סיכום יומי')
+                data: _.filter(dailyReport.summary, summary => summary.orderType === undefined && summary.service === undefined)
             };
 
 
@@ -270,20 +278,17 @@ export class DayViewComponent implements OnInit {
                 this.openOrders = await this.dataService.getOpenOrders();
             }
 
-            this.byShiftSummaryTblsData = [
-                {
-                    title: 'צהריים',
-                    data: _.filter(dailyReport.services, service => service.service === 'צהריים')
-                },
-                {
-                    title: 'ערב',
-                    data: _.filter(dailyReport.services, service => service.service === 'ערב')
-                },
-                {
-                    title: 'לילה',
-                    data: _.filter(dailyReport.services, service => service.service === 'לילה')
+            this.byShiftSummaryTblsData = [];
+            _.forEach(dailyReport.summary, summary => {
+                let serviceKey = _.get(summary, 'serviceKey');
+                if (serviceKey) {
+                    if(!this.byShiftSummaryTblsData[+serviceKey]) {
+                        this.byShiftSummaryTblsData[+serviceKey] = {title: summary.serviceName, data: []};
+                    }
+
+                    this.byShiftSummaryTblsData[+serviceKey].data.push(summary);
                 }
-            ];
+            });
 
             this.salesBySubDepartment = {
                 thisBd: {
@@ -332,13 +337,13 @@ export class DayViewComponent implements OnInit {
             });
 
             this.mostSoldItems = {byItem: []};
-            _.forEach(dailyReport.mostPopularItems, item => {
+            _.forEach(dailyReport.topItemSales, item => {
                 this.mostSoldItems.byItem.push(
                     {
-                        department: item.DepartmentId,
-                        item: item.ItemName,
-                        sales: item.salesNetAmount,
-                        sold: item.salesSold,
+                        department: item.departmentName,
+                        item: item.itemName,
+                        sales: item.salesRefundIncludeVat,
+                        sold: item.sold,
                         prepared: 0,
                         returned: 0,
                         operational: 0
@@ -347,17 +352,17 @@ export class DayViewComponent implements OnInit {
             });
 
             this.mostSoldItemsByShift = [];
-            let shifts = _.groupBy(dailyReport.mostPopularItemsByShift, 'serviceKey');
+            let shifts = _.groupBy(dailyReport.topItemSalesByService, 'serviceKey');
             _.forEach(shifts, (items, shiftName) => {
                 this.mostSoldItemsByShift.push({
                     title: shiftName,
                     mostSoldItems: {
                         byItem: _.map(items, item => {
                             return {
-                                department: item.DepartmentId,
-                                item: item.ItemName,
-                                sales: item.salesNetAmount,
-                                sold: item.salesSold,
+                                department: item.departmentName,
+                                item: item.itemName,
+                                sales: item.salesRefundIncludeVat,
+                                sold: item.sold,
                                 prepared: 0,
                                 returned: 0,
                                 operational: 0
@@ -371,13 +376,13 @@ export class DayViewComponent implements OnInit {
             _.forEach(dailyReport.mostReturnItems, item => {
                 this.mostReturnedItems.byItem.push(
                     {
-                        department: item.DepartmentId,
-                        item: item.ItemName,
+                        department: item.departmentName,
+                        item: item.itemName,
                         sales: 0,
                         sold: 0,
-                        prepared: item.salesPrepared,
-                        returned: item.salesReturn,
-                        operational: item.salesReductionsOperationalDiscountAmount
+                        prepared: item.prepared,
+                        returned: item.return,
+                        operational: item.returnAmount
                     }
                 );
             });
@@ -385,45 +390,47 @@ export class DayViewComponent implements OnInit {
             this.paymentsData = {payments: []};
             _.forEach(dailyReport.payments, payment => {
                 this.paymentsData.payments.push({
-                    accountGroup: payment.Type,
-                    accountType: payment.Payments,
+                    accountGroup: payment.type,
+                    accountType: payment.name,
                     date: dayDate,
-                    clearerName: payment.Clearing,
+                    clearerName: payment.clearingName || payment.name,
                     paymentsKPIs: {
-                        daily: payment.daily,
-                        monthly: payment.monthly,
-                        yearly: payment.yearly
+                        daily: payment.DailyPaymentAmount,
+                        monthly: payment.MonthlyPaymentAmount,
+                        yearly: payment.YearlyPaymentAmount
                     }
                 });
             });
 
             this.operationalErrorsData = [];
-            _.forEach(dailyReport.operationalReduction, record => {
+            _.forEach(dailyReport.operational, record => {
                 this.operationalErrorsData.push({
                     orderType: {id: record.orderType, rank: 1},
-                    waiter: record.WaiterFiredBy,
-                    approvedBy: record.WaiterPRapprovedBy,
-                    orderNumber: record.OrderNumber.match(/\d/g).join(''),
-                    tableId: record.Tablenumber,
-                    item: record.ItemName,
-                    subType: record.ReasonType,
-                    reasonId: record.ReasonName,
-                    operational: record.ReductionsOperationalDiscountAmount
+                    waiter: record.reducedByName,
+                    approvedBy: record.approvedByName,
+                    orderNumber: record.orderNumber,
+                    tableId: record.tableNumber,
+                    item: record.itemName,
+                    subType: record.reasonName,
+                    reasonId: record.reasonSubTypeHebrew,
+                    operational: record.operationalDiscountAmount,
+                    tlogId: record.tlogId
                 });
             });
 
             this.retentionData = [];
-            _.forEach(dailyReport.marketingRetentionReasons, retention => {
+            _.forEach(dailyReport.reduction, reduction => {
                 this.retentionData.push({
-                    orderType: {id: retention.orderType, rank: 1},
-                    waiter: retention.WaiterFiredBy,
-                    approvedBy: retention.WaiterPRapprovedBy,
-                    orderNumber: retention.OrderNumber.match(/\d/g).join(''),
-                    tableId: retention.Tablenumber,
-                    item: retention.ItemName,
-                    subType: retention.ReasonType,
-                    reasonId: retention.ReasonName,
-                    retention: retention.Amount
+                    orderType: {id: reduction.orderType, rank: 1},
+                    waiter: reduction.reducedByName,
+                    approvedBy: reduction.approvedByName,
+                    orderNumber: reduction.orderNumber,
+                    tableId: reduction.tableNumber,
+                    item: reduction.itemName,
+                    subType: reduction.reasonName,
+                    reasonId: reduction.reasonSubTypeHebrew,
+                    retention: reduction.retentionDiscountAmount,
+                    tlogId: reduction.tlogId
                 });
             });
 

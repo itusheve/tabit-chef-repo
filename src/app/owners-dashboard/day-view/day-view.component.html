@@ -65,7 +65,7 @@
                         </app-day-sales-table>
                     </mat-expansion-panel>
                     <ng-container *ngFor="let tblData of byShiftSummaryTblsData">
-                        <mat-expansion-panel expanded="true" *ngIf="tblData.data.length">
+                        <mat-expansion-panel expanded="true" *ngIf="tblData && tblData.data.length">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <ng-container>{{tblData?.title}}</ng-container>
