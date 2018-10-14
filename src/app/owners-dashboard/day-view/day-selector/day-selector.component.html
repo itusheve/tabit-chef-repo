@@ -6,7 +6,7 @@
         {{currentValue | date:'fullDate':currentValue.format('ZZ')}}
     </button>
     <input matInput [matDatepicker]="picker" [max]="datePickerMaxDate" (dateChange)="changeDate($event)" type="hidden">
-    <mat-datepicker touchUi  #picker [startAt]="currentValue"></mat-datepicker>
+    <mat-datepicker touchUi  #picker [startAt]="currentValue.format()"></mat-datepicker>
     <button type="button" class="btn btn-outline-secondary btn-lg rounded-0" (click)="region === 'il' ? prevDay($event): nextDay($event)"
             [ngClass]="region == 'il' ? {'disable':disablePrevious} : {'disable':disableNext}" style="width: 16%"><i class="material-icons" style="position: relative;top:4px">keyboard_arrow_right</i>
     </button>

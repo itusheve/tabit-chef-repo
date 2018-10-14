@@ -60,17 +60,18 @@ export class DaySelectorComponent implements OnChanges {
     prevDay = (e) => {
         e.stopPropagation();
         if (this.currentValue.isSame(this.options.minDate, 'day')) return;
-        this.onDateChanged.emit(moment(this.currentValue).subtract(1, 'day'));
+        this.onDateChanged.emit(this.currentValue.subtract(1, 'day'));
     }
 
     nextDay = (e) => {
         e.stopPropagation();
         if (this.currentValue.isSame(this.options.maxDate, 'day')) return;
-        this.onDateChanged.emit(moment(this.currentValue).add(1, 'day'));
+        this.onDateChanged.emit(this.currentValue.add(1, 'day'));
     }
 
     changeDate(event: MatDatepickerInputEvent<Date>) {
-        this.onDateChanged.emit(moment(event.value));
+        this.currentValue = moment(event.value);
+        this.onDateChanged.emit(this.currentValue);
     }
 
 }
