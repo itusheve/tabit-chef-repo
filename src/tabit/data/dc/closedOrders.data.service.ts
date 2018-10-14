@@ -386,7 +386,7 @@ export class ClosedOrdersDataService {
                         if (order.enrichmentLevels.orderDetails) {
                             resolve({ order: order });
                         } else {
-                            return this.enrichOrder(order, businessDateStr)
+                            return this.enrichOrder(order)
                                 .then(data => {
                                     resolve(data);
                                 });
@@ -404,7 +404,7 @@ export class ClosedOrdersDataService {
             b.
             ...
      */
-    public enrichOrder(order_: Order, businessDateStr: string): Promise<{
+    public enrichOrder(order_: Order): Promise<{
         order: Order,
         orderOld: any,
         printDataOld: any
@@ -484,12 +484,7 @@ export class ClosedOrdersDataService {
         }
 
         /* since tlogId dim is removed, we need to add procedure here to find it using the order number + BD: */
-        return addTlogId(order_, businessDateStr)
-            .then(() => {
-
-                that.ds.log('closedOrdersDS: enrichOrder: Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])');
-                return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)]);
-            })
+        return Promise.all([getTlog(order_), getLookupData(), getBillData(order_)])
             .then(data => {
 
                 that.ds.log('closedOrdersDS: getLookupData: get tlog, lookupdata, billdata: done');

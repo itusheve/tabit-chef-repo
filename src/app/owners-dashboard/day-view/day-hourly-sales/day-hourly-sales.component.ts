@@ -81,7 +81,7 @@ export class DayHourlySalesComponent implements OnChanges {
     }
 
     getAvgPeriodValueByCategory(day) {
-        return day.salesNetAmountAvg / day.days;
+        return day.salesNetAmountAvg;
     }
 
     getAvgValue(day) {

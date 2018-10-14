@@ -53,10 +53,9 @@ export class OrderViewComponent implements OnInit {
 
         this.route.paramMap
             .subscribe((params: ParamMap) => {
-                const dateStr = params.get('businessDate');
 
                 this.order = this.order.tlogId ? this.order : _.find(this.orders, {orderNumber: this.orderNumber});
-                this.closedOrdersDataService.enrichOrder(this.order, dateStr)
+                this.closedOrdersDataService.enrichOrder(this.order)
                     .then((o: {
                         order: Order,
                         orderOld: any,

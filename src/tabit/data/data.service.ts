@@ -1533,20 +1533,8 @@ export class DataService {
                 }
 
                 result[hour].hour = dailySales.firedOnHHMM;
-
-                if (moment(dailySales.firedOn).isSame(day, 'days')) {
-                    result[hour].salesNetAmount = dailySales.ttlSaleAmountIncludeVat;
-                }
-                else {
-                    if (!result[hour].salesNetAmountAvg) {
-                        result[hour].salesNetAmountAvg = 0;
-                        result[hour].days = 0;
-                    }
-                    if (result[hour].days < 4) {
-                        result[hour].salesNetAmountAvg += dailySales.ttlSaleAmountIncludeVat;
-                        result[hour].days++;
-                    }
-                }
+                result[hour].salesNetAmount = dailySales.ttlSaleAmountIncludeVat;
+                result[hour].salesNetAmountAvg = dailySales.AvgNweekByHour;
             }
         });
 

@@ -202,7 +202,8 @@ export class DayViewComponent implements OnInit {
             order.sales = tlog.totalAmount;
             order.tlogId = tlog.tlogId;
             order.waiter = tlog.userName;
-            order.openingTime = tlog.HHMM;
+            order.openingTime = tlog.HHMM; //weird hack, talk to BI to get it formatted
+            order.businessDate = moment(tlog.businessDate, 'YYYYMMDD'); //weird hack, talk to BI to get it formatted
 
             order.priceReductions = {
                 cancellation: 0,
@@ -355,7 +356,7 @@ export class DayViewComponent implements OnInit {
             });
 
             this.mostSoldItemsByShift = [];
-            let shifts = _.groupBy(dailyReport.topItemSalesByService, 'serviceKey');
+            let shifts = _.groupBy(dailyReport.topItemSalesByService, 'serviceName');
             _.forEach(shifts, (items, shiftName) => {
                 this.mostSoldItemsByShift.push({
                     title: shiftName,
@@ -495,7 +496,7 @@ export class DayViewComponent implements OnInit {
 
         this.drilledOrder = order;
         this.drilledOrderNumber = order.number;
-        this.drillTlogTime = order.openingTime;
+        this.drillTlogTime = order.businessDate;
 
         setTimeout(() => {
             this.drill = true;
@@ -513,7 +514,7 @@ export class DayViewComponent implements OnInit {
 
         this.drilledOrder = openOrder;
         this.drilledOrderNumber = openOrder.number;
-        this.drillTlogTime = openOrder.openingTime;
+        this.drillTlogTime = openOrder.businessDate;
 
         setTimeout(() => {
             this.drill = true;

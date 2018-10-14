@@ -23,7 +23,7 @@ interface DailyTrends {
 @Component({
     selector: 'app-month-view',
     templateUrl: './month-view.component.html',
-    styleUrls: ['./month-view.component.css']
+    styleUrls: ['./month-view.component.scss']
 })
 export class MonthViewComponent implements OnInit {
     @ViewChild('monthGrid') monthGrid;

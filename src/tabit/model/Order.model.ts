@@ -5,7 +5,8 @@ import { OrderType } from './OrderType.model';
 export class Order {
     id: number;
     tlogId: string;
-    openingTime: moment.Moment;
+    openingTime: string;
+    businessDate: moment.Moment;
     number: number;
     waiter: string;
     users: {
