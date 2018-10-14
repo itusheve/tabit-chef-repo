@@ -67,7 +67,7 @@ export class MonthGridComponent implements OnInit {
 
     getProgressBarBackground(day) {
         let value = this.getPercentage(day);
-        return this.tabitHelper.getColorClassByPercentage(value, this.category === 'sales');
+        return this.tabitHelper.getColorClassByPercentage(value, (this.category === 'sales' || this.category === 'employee'));
     }
 
     setActive(categoryClicked) {

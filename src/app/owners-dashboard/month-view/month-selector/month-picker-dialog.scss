@@ -1,5 +1,8 @@
+@import '../../../../tabit/styles/config/frame';
+@import '../../../../tabit/styles/config/colors';
+
 .selected {
-    background-color: #BDBDBD;
+  background-color: #BDBDBD;
 }
 
 .month-picker-dialog {
@@ -12,6 +15,31 @@
 }
 
 ::ng-deep.mat-bottom-sheet-container {
-    height: 100vh;
-    max-height: 100vh !important;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-drag: none;
+  max-height: 100vh;
+}
+
+::ng-deep.cdk-overlay-pane {
+  top: $toolbarHeight;
+  @media #{$iphone-X-portrait-mq} {
+    top: $iphone-X-notch-px + $toolbarHeight;
+  }
+  @media #{$iphone-6-7-8-portrait-mq} {
+    top: $iphone-6-7-8-status-bar-px + $toolbarHeight;
+  }
+  @media #{$iphone-6-7-8-plus-portrait-mq} {
+    top: $iphone-6-7-8-plus-status-bar-px + $toolbarHeight;
+  }
+  @media #{$ipad-portrait-mq} {
+    top: $ipad-status-bar-px + $toolbarHeight;
+  }
+  height: 100vh;
+  max-height: 100vh;
+  position: relative !important;
+}
+
+.month-picker-backdrop {
+  opacity: 0;
 }

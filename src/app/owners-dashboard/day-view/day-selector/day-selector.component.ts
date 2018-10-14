@@ -19,12 +19,14 @@ export class DaySelectorComponent implements OnChanges {
     };
 
     public picker;
+    public datePickerMaxDate;
     disablePrevious = true;
     disableNext = true;
 
     public region: any;
 
     constructor() {
+        this.datePickerMaxDate = new Date();
         this.region = environment.region;
     }
 

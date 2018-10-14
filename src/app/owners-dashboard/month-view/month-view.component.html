@@ -1,9 +1,9 @@
 <div class="flex d-col">
     <app-month-selector *ngIf="monthSelectorOptions" #monthSelector [month$]="month$"
                         [options]="monthSelectorOptions" [cardData]="summaryCardData"
-                        (onDateChanged)="onDateChanged($event)">
+                        (onDateChanged)="onDateChanged($event)" (click)="openMonthPicker()">
     </app-month-selector>
-    <app-card *ngIf="showSummary" [cardData]="summaryCardData" class="month-view-card"></app-card>
+    <app-card *ngIf="showSummary" [cardData]="summaryCardData" class="month-view-card" (click)="openMonthPicker()"></app-card>
     <app-month-grid [hidden]="!renderGrid" #monthGrid (onDateClicked)="onDateClicked2($event)"></app-month-grid>
 </div>
 

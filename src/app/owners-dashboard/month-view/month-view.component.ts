@@ -9,7 +9,9 @@ import {CardData} from '../../ui/card/card.component';
 import {TrendModel} from '../../../tabit/model/Trend.model';
 import {environment} from '../../../environments/environment';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
-
+import {MatBottomSheet} from '@angular/material';
+import {MonthPickerDialogComponent} from './month-selector/month-picker-dialog.component';
+import {OwnersDashboardService} from '../owners-dashboard.service';
 
 interface DailyTrends {
     date: moment.Moment;
@@ -52,7 +54,12 @@ export class MonthViewComponent implements OnInit {
     public showSummary;
     public tabitHelper;
 
-    constructor(private dataService: DataService, private datePipe: DatePipe) {
+    constructor(
+        private dataService: DataService,
+        private datePipe: DatePipe,
+        private monthPickerDialog: MatBottomSheet,
+        private ownersDashboardService: OwnersDashboardService,
+        ) {
         this.showSummary = false;
         this.tabitHelper = new TabitHelper();
     }
@@ -71,6 +78,28 @@ export class MonthViewComponent implements OnInit {
             });
     }
 
+    openMonthPicker() {
+        let dialog = this.monthPickerDialog.open(MonthPickerDialogComponent, {
+            data: {selected: this.month, onDateChanged: this.onDateChanged},
+            hasBackdrop: true,
+            closeOnNavigation: true,
+            backdropClass: 'month-picker-backdrop'
+        });
+
+        this.ownersDashboardService.toolbarConfig.left.back.showBtn = true;
+        this.ownersDashboardService.toolbarConfig.menuBtn.show = false;
+        this.ownersDashboardService.toolbarConfig.center.showRefresh = false;
+
+        dialog.afterDismissed().subscribe(() => {
+            this.ownersDashboardService.toolbarConfig.left.back.showBtn = false;
+            this.ownersDashboardService.toolbarConfig.menuBtn.show = true;
+            this.ownersDashboardService.toolbarConfig.center.showRefresh = true;
+            if(dialog.instance.selection) {
+                this.month = dialog.instance.selection;
+                this.onDateChanged(this.month);
+            }
+        });
+    }
 
     updateGrid(month, database, incTax) {
         let monthlyData = database.getMonth(month);

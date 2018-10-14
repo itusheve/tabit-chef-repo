@@ -349,10 +349,10 @@
         <target>ממוצע</target>
       </trans-unit>
       <trans-unit id="orderTypeSelect" datatype="html">
-        <target>{ val, select, seated {בישיבה} counter {דלפק} ta {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
+        <target>{ val, select, seated {בישיבה} OTC {דלפק} takeaway {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
       </trans-unit>
       <trans-unit id="orderTypeSelect2" datatype="html">
-        <target>{ tuple.orderType.id, select, seated {בישיבה} counter {דלפק} ta {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
+        <target>{ tuple.orderType.id, select, seated {בישיבה} OTC {דלפק} takeaway {לקחת} delivery {משלוח} other {סוג הזמנה לא מוגדר} returns {החזר} mediaExchange {החלפת אמצעי תשלום} }</target>
       </trans-unit>
       <trans-unit id="orderSubTypeSelect" datatype="html">
         <target>{ tuple.subType, select, Discounts {הנחה} OTH {OTH} Promotions {מבצע} Returns {החזרה} Voids {ביטול} Unknown {לא ידוע} }</target>

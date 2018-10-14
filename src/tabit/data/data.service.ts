@@ -38,8 +38,8 @@ const tmpTranslations_ = {
         },
         orderTypes: {
             seated: 'בישיבה',
-            counter: 'דלפק',
-            ta: 'לקחת',
+            otc: 'דלפק',
+            takeaway: 'לקחת',
             delivery: 'משלוח',
             other: 'סוג הזמנה לא מוגדר',
             returns: 'החזר',
@@ -198,8 +198,8 @@ const tmpTranslations_ = {
         },
         orderTypes: {
             seated: 'Seated',
-            counter: 'Counter',
-            ta: 'TA',
+            otc: 'OTC',
+            takeaway: 'Takeaway',
             delivery: 'Delivery',
             other: 'Other',
             returns: 'Returns',
@@ -425,8 +425,8 @@ export class DataService {
      * */
     public orderTypes: { [index: string]: OrderType } = {
         seated: new OrderType('seated', 0),
-        counter: new OrderType('counter', 1),
-        ta: new OrderType('ta', 2),
+        otc: new OrderType('otc', 1),
+        takeaway: new OrderType('takeaway', 2),
         delivery: new OrderType('delivery', 3),
         refund: new OrderType('refund', 4),
         mediaExchange: new OrderType('mediaExchange', 5),

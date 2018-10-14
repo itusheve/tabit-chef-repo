@@ -27,7 +27,7 @@ export class MonthSelectorComponent implements OnInit {
 
     public region: any;
 
-    constructor(private monthPickerDialog: MatBottomSheet) {
+    constructor() {
         this.region = environment.region;
     }
 
@@ -70,19 +70,6 @@ export class MonthSelectorComponent implements OnInit {
         if (this.month.isSame(this.options.maxDate, 'month')) return;
         this.onDateChanged.emit(moment(this.month).add(1, 'months'));
         this.final = this.getFinalState(this.month);
-    }
-
-    openMonthPicker() {
-        let dialog = this.monthPickerDialog.open(MonthPickerDialogComponent, {
-            data: {selected: this.month, onDateChanged: this.onDateChanged},
-            hasBackdrop: true
-        });
-        dialog.afterDismissed().subscribe(() => {
-            if(dialog.instance.selection) {
-                this.month = dialog.instance.selection;
-                this.final = this.getFinalState(this.month);
-            }
-        });
     }
 }
 

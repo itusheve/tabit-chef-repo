@@ -28,7 +28,7 @@ export class DayViewComponent implements OnInit {
 
     day: moment.Moment;
 
-    daySelectorOptions: {
+    public daySelectorOptions: {
         minDate: moment.Moment,
         maxDate: moment.Moment
     };
