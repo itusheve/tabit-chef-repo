@@ -9,6 +9,7 @@
     </div>
     <div class="card-body py-2">
         <div *ngIf="!cardData || cardData.loading" class="text-center">
+            <dx-load-indicator></dx-load-indicator>
         </div>
         <div *ngIf="cardData && !cardData.loading" class="row">
             <div class="col-7 px-2"

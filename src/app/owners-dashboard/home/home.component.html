@@ -1,9 +1,15 @@
 <div class="flex d-col">
-    <div class="card-columns">
-        <app-card *ngIf="!currentBdCardData.loading" class="mb10" [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
-        <app-card *ngIf="!loadingOlapData && showPreviousDay" class="mb10" [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')" style="cursor: pointer"></app-card>
-        <app-card *ngIf="!loadingOlapData && showForecast" class="mb10" [cardData]="forecastCardData"></app-card>
-        <div *ngIf="loadingOlapData">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <app-card [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
+        </div>
+        <div *ngIf="!loadingOlapData && showPreviousDay" class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <app-card [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')" style="cursor: pointer"></app-card>
+        </div>
+        <div *ngIf="!loadingOlapData && showForecast" class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <app-card [cardData]="forecastCardData"></app-card>
+        </div>
+        <div class="col-12" *ngIf="loadingOlapData">
             <div class="card">
                 <div class="card-body bg-white">
                     <div *ngIf="OlapFailed">
