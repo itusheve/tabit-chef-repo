@@ -304,8 +304,8 @@
        <target>{VAR_SELECT, select, final {סופי} notFinal {עד כה}}</target>
       </trans-unit>
       <trans-unit id="orsLastDay" datatype="html">
-        <source>{VAR_SELECT, select, currentBd {Today} previousBd {Yesterday} }</source>
-        <target>{VAR_SELECT, select, currentBd {היום} previousBd {אתמול} }</target>
+        <source>{VAR_SELECT, select, currentBd {Today,} previousBd {Yesterday,} }</source>
+        <target>{VAR_SELECT, select, currentBd {היום, יום} previousBd {אתמול, יום} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/card/card.component.ts</context>
           <context context-type="linenumber">4</context>

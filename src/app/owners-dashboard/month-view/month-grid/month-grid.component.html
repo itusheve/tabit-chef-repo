@@ -55,13 +55,13 @@
                         </div>
                     </div>
                     <div class="col-3 px-1" style="max-width: 23% !important;">
-                        <span *ngIf="category === 'sales'"
+                        <span *ngIf="category === 'sales' || category === 'employee'"
                               [innerHtml]="getDayValue(day) | currency:'0':'':'':false"></span>
-                        <span *ngIf="category !== 'sales'">{{getDayValue(day) | pct : 1 }}</span>
+                        <span *ngIf="category !== 'sales' && category !== 'employee'">{{getDayValue(day) | pct : 1 }}</span>
                         <div style="font-size: 14px">
-                            (<span *ngIf="category === 'sales'"
+                            (<span *ngIf="category === 'sales' || category === 'employee'"
                                    [innerHtml]="getAvgValue(day) | currency:'0':'':'':false"></span><span
-                                *ngIf="category !== 'sales'">{{getAvgValue(day) | pct : 1 }}</span>)
+                                *ngIf="category !== 'sales' && category !== 'employee'">{{getAvgValue(day) | pct : 1 }}</span>)
                         </div>
                     </div>
                 </div>

@@ -1,11 +1,11 @@
 <div class="card bg-light dashboard-home-card shadow-card rounded-0">
     <div *ngIf="cardData.title" class="card-header text-center py-1" style="font-size: 18px;"
          [ngClass]="cardData.statusClass || 'bg-light'">
-        <span class="header-day-indicator"
-              [ngClass]="region == 'il' ? 'float-right il-day-indicator' : 'float-left us-day-indicator'"
-              *ngIf="cardData"
-              i18n="@@orsLastDay">{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</span>
-        <span class="font-weight-bold">{{cardData?.title || '&nbsp;'}}</span>
+
+        <span class="font-weight-bold">
+            <ng-container *ngIf="cardData" i18n="@@orsLastDay">{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</ng-container>
+            {{cardData?.title || '&nbsp;'}}
+        </span>
     </div>
     <div class="card-body py-2">
         <div *ngIf="!cardData || cardData.loading" class="text-center">

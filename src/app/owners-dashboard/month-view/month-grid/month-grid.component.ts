@@ -107,7 +107,7 @@ export class MonthGridComponent implements OnInit {
                 value = day.avgNweeksOperationalPrc / 100;
             }
             else if (this.category === 'employee') {
-                value = day.avgNweeksEmployeesPrc / 100;
+                value = day.avgEmployeesAmount;
             }
         }
         else if (this.avgPeriodComparator === 'year') {
@@ -124,7 +124,7 @@ export class MonthGridComponent implements OnInit {
                 value = day.avgYearOperationalPrc / 100;
             }
             else if (this.category === 'employee') {
-                value = day.avgYearEmployeesPrc / 100;
+                value = day.avgEmployeesAmount;
             }
         }
 
@@ -145,7 +145,7 @@ export class MonthGridComponent implements OnInit {
             return day.operationalPrc / 100;
         }
         else if (this.category === 'employee') {
-            return day.employeesPrc / 100;
+            return day.EmployeesAmount;
         }
     }
 
@@ -163,7 +163,7 @@ export class MonthGridComponent implements OnInit {
             return day.operationalPrc / 100;
         }
         else if (this.category === 'employee') {
-            return day.employeesPrc / 100;
+            return day.EmployeesAmount;
         }
     }
 
@@ -227,7 +227,7 @@ export class MonthGridComponent implements OnInit {
                 value = day.avgNweeksOperationalPrc / 100;
             }
             else if (this.category === 'employee') {
-                value = day.avgNweeksEmployeesPrc / 100;
+                value = day.avgEmployeesAmount;
             }
         }
         else if (this.avgPeriodComparator === 'year') {
@@ -244,7 +244,7 @@ export class MonthGridComponent implements OnInit {
                 value = day.avgYearOperationalPrc / 100;
             }
             else if (this.category === 'employee') {
-                value = day.avgYearEmployeesPrc / 100;
+                value = day.avgEmployeesAmount;
             }
         }
 

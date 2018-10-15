@@ -118,7 +118,7 @@ export class HomeComponent implements OnInit {
                 }
 
                 this.currentBdCardData.sales = incTax ? totalSales : totalSalesWithoutTax;
-                this.currentBdCardData.title = this.datePipe.transform(moment(day.date).valueOf(), 'fullDate');
+                this.currentBdCardData.title = this.datePipe.transform(moment(day.date).valueOf(), 'EEEEE, MMMM d');
 
                 this.currentBdCardData.averages = {
                     /*yearly: {
@@ -196,7 +196,7 @@ export class HomeComponent implements OnInit {
                 let previousDay = moment(restaurantTime).subtract(1, 'days');
                 let day = database.getDay(previousDay);
 
-                const title = this.datePipe.transform(previousDay.valueOf(), 'fullDate');
+                const title = this.datePipe.transform(previousDay.valueOf(), 'EEEEE, MMMM d');
                 if (!day) {
                     this.showPreviousDay = false;
                     this.previousBdCardData.salesComment = 'noData';

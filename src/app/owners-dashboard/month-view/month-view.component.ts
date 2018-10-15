@@ -87,14 +87,13 @@ export class MonthViewComponent implements OnInit {
         });
 
         dialog.afterDismissed().subscribe(() => {
-
-            let item = document.getElementById('monthSelector');// what we want to scroll to
-            let wrapper = document.getElementById('main-content');// the wrapper we will scroll inside
-            let header = document.getElementById('main-toolbar');// the wrapper we will scroll inside
-            let count = item.offsetTop - wrapper.scrollTop - header.scrollHeight - 10; // xx = any extra distance from top ex. 60
-            wrapper.scrollBy({top: count, left: 0, behavior: 'smooth'});
-
             if (dialog.instance.selection) {
+                let item = document.getElementById('monthSelector');// what we want to scroll to
+                let wrapper = document.getElementById('main-content');// the wrapper we will scroll inside
+                let header = document.getElementById('main-toolbar');// the wrapper we will scroll inside
+                let count = item.offsetTop - wrapper.scrollTop - header.scrollHeight - 10; // xx = any extra distance from top ex. 60
+                wrapper.scrollBy({top: count, left: 0, behavior: 'smooth'});
+
                 this.month = dialog.instance.selection;
                 this.onDateChanged(this.month);
             }
