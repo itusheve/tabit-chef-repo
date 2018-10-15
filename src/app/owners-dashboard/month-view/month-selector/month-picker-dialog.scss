@@ -78,10 +78,8 @@
 
     background-color: $contentBgColor;
     width: 100vw;
-    height: 100vh;
-    overflow: auto;
-
-    overflow-y: scroll; /* has to be scroll, not auto */
+    height: 700px;
+    overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
 }
