@@ -59,14 +59,14 @@ export class MonthViewComponent implements OnInit {
         private datePipe: DatePipe,
         private monthPickerDialog: MatBottomSheet,
         private ownersDashboardService: OwnersDashboardService,
-        ) {
+    ) {
         this.showSummary = false;
         this.tabitHelper = new TabitHelper();
     }
 
     ngOnInit() {
         let date = moment();
-        if(moment().date() === 1) {
+        if (moment().date() === 1) {
             date.subtract(10, 'days');
             this.month$.next(date.startOf('month'));
         }
@@ -86,15 +86,15 @@ export class MonthViewComponent implements OnInit {
             backdropClass: 'month-picker-backdrop'
         });
 
-        this.ownersDashboardService.toolbarConfig.left.back.showBtn = true;
-        this.ownersDashboardService.toolbarConfig.menuBtn.show = false;
-        this.ownersDashboardService.toolbarConfig.center.showRefresh = false;
-
         dialog.afterDismissed().subscribe(() => {
-            this.ownersDashboardService.toolbarConfig.left.back.showBtn = false;
-            this.ownersDashboardService.toolbarConfig.menuBtn.show = true;
-            this.ownersDashboardService.toolbarConfig.center.showRefresh = true;
-            if(dialog.instance.selection) {
+
+            let item = document.getElementById('monthSelector');// what we want to scroll to
+            let wrapper = document.getElementById('main-content');// the wrapper we will scroll inside
+            let header = document.getElementById('main-toolbar');// the wrapper we will scroll inside
+            let count = item.offsetTop - wrapper.scrollTop - header.scrollHeight - 10; // xx = any extra distance from top ex. 60
+            wrapper.scrollBy({top: count, left: 0, behavior: 'smooth'});
+
+            if (dialog.instance.selection) {
                 this.month = dialog.instance.selection;
                 this.onDateChanged(this.month);
             }
@@ -118,9 +118,9 @@ export class MonthViewComponent implements OnInit {
         this.monthGrid.hasYearlyAvg = false;
         this.monthGrid.days = [];
         _.each(days, day => {
-            if(day.businessDate !== currentDate.format('YYYY-MM-DD')) {
+            if (day.businessDate !== currentDate.format('YYYY-MM-DD')) {
                 this.monthGrid.days.push(day);
-                if(day.AvgYearSalesAndRefoundAmountIncludeVat) {
+                if (day.AvgYearSalesAndRefoundAmountIncludeVat) {
                     this.monthGrid.hasYearlyAvg = true;
                 }
             }
@@ -133,11 +133,11 @@ export class MonthViewComponent implements OnInit {
 
     updateSummary(date, currentBd: moment.Moment, database, incTax) {
         let month = database.getMonth(date);
-        if(!month) {
+        if (!month) {
             this.showSummary = false;
             return;
         }
-        let previousMonth = database.getMonth(moment(month.latestDay).subtract(1,'months'));
+        let previousMonth = database.getMonth(moment(month.latestDay).subtract(1, 'months'));
 
         this.showSummary = true;
         this.summaryCardData.diners = month.diners || month.orders;
@@ -151,7 +151,7 @@ export class MonthViewComponent implements OnInit {
             },*/
             weekly: {
                 percentage: previousMonth && previousMonth.weekAvg ? ((month.weekAvg / previousMonth.weekAvg) - 1) : 0,
-                change: previousMonth ? (month.weekAvg / previousMonth.weekAvg) * 100: 0
+                change: previousMonth ? (month.weekAvg / previousMonth.weekAvg) * 100 : 0
             }
         };
 

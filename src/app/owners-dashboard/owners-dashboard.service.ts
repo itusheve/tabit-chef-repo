@@ -23,6 +23,7 @@ export class OwnersDashboardService {
             }
         },
         center: {
+            showVatComment: false,
             showRefresh: true,
             caption: ''
         },
