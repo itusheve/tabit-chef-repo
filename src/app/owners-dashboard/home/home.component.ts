@@ -158,19 +158,19 @@ export class HomeComponent implements OnInit {
                 this.currentBdCardData.reductions = {
                     cancellations: {
                         percentage: day.voidsPrc / 100,
-                        change: day.VoidsDiff
+                        change: day.voidsPrc - day.avgNweeksVoidsPrc
                     },
                     employee: {
                         percentage: day.employeesPrc / 100,
-                        change: day.Employeesdiff
+                        change: day.employeesPrc - day.avgNweeksEmployeesPrc
                     },
                     operational: {
                         percentage: day.operationalPrc / 100,
-                        change: day.OperationalDiff
+                        change: day.operationalPrc - day.avgNweeksOperationalPrc
                     },
                     retention: {
                         percentage: day.mrPrc / 100,
-                        change: day.mrDiff
+                        change: day.mrPrc - day.avgNweeksMrPrc
                     }
                 };
             }
@@ -224,19 +224,19 @@ export class HomeComponent implements OnInit {
                     this.previousBdCardData.reductions = {
                         cancellations: {
                             percentage: day.voidsPrc / 100,
-                            change: day.VoidsDiff
+                            change: day.voidsPrc - day.avgNweeksVoidsPrc
                         },
                         employee: {
                             percentage: day.employeesPrc / 100,
-                            change: day.Employeesdiff
+                            change: day.employeesPrc - day.avgNweeksEmployeesPrc
                         },
                         operational: {
                             percentage: day.operationalPrc / 100,
-                            change: day.OperationalDiff
+                            change: day.operationalPrc - day.avgNweeksOperationalPrc
                         },
                         retention: {
                             percentage: day.mrPrc / 100,
-                            change: day.mrDiff
+                            change: day.mrPrc - day.avgNweeksMrPrc
                         }
                     };
 

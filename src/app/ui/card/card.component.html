@@ -34,7 +34,7 @@
                             <tr *ngIf="cardData.averages?.yearly?.percentage">
                                 <td>
                                     <mat-icon *ngIf="cardData.averages.yearly.percentage"
-                                              [ngClass]="getPercentageCssClass(cardData.averages.yearly.change, true)">
+                                              [ngClass]="getPercentageCssClass(cardData.averages.yearly.percentage, true, cardData.averages.yearly.change)">
                                         play_arrow
                                     </mat-icon>
                                 </td>
@@ -44,7 +44,7 @@
                             <tr *ngIf="cardData.averages?.weekly">
                                 <td>
                                     <mat-icon *ngIf="cardData.averages.weekly.percentage"
-                                              [ngClass]="getPercentageCssClass(cardData.averages.weekly.change, true)">
+                                              [ngClass]="getPercentageCssClass(cardData.averages.weekly.percentage, true, cardData.averages.weekly.change)">
                                         play_arrow
                                     </mat-icon>
                                 </td>
@@ -63,7 +63,7 @@
                             <tr *ngIf="cardData.reductions?.cancellations">
                                 <td>
                                     <mat-icon
-                                            [ngClass]="getPercentageCssClass(cardData.reductions.cancellations.change, false)">
+                                            [ngClass]="getReductionPercentageCssClass(cardData.reductions.cancellations.change, false, cardData.reductions.cancellations.percentage)">
                                         play_arrow
                                     </mat-icon>
                                 </td>
@@ -74,7 +74,7 @@
                             <tr *ngIf="cardData.reductions?.operational">
                                 <td>
                                     <mat-icon
-                                            [ngClass]="getPercentageCssClass(cardData.reductions.operational.change, false)">
+                                            [ngClass]="getReductionPercentageCssClass(cardData.reductions.operational.change, false, cardData.reductions.operational.percentage)">
                                         play_arrow
                                     </mat-icon>
                                 </td>
@@ -84,7 +84,7 @@
                             <tr *ngIf="cardData.reductions?.retention">
                                 <td>
                                     <mat-icon
-                                            [ngClass]="getPercentageCssClass(cardData.reductions.retention.change, false)">
+                                            [ngClass]="getReductionPercentageCssClass(cardData.reductions.retention.change, false, cardData.reductions.retention.percentage)">
                                         play_arrow
                                     </mat-icon>
                                 </td>
@@ -94,7 +94,7 @@
                             <tr *ngIf="cardData.reductions?.employee">
                                 <td>
                                     <mat-icon
-                                            [ngClass]="getPercentageCssClass(cardData.reductions.employee.change, false)">
+                                            [ngClass]="getReductionPercentageCssClass(cardData.reductions.employee.change, false, cardData.reductions.employee.percentage)">
                                         play_arrow
                                     </mat-icon>
                                 </td>

@@ -79,19 +79,19 @@ export class MonthPickerDialogComponent {
                     summaryCardData.reductions = {
                         cancellations: {
                             percentage: month.prcVoidsAmount / 100,
-                            change: previousMonth ? (month.prcVoidsAmount / previousMonth.prcVoidsAmount * 100) : 0
+                            change: previousMonth ? (month.prcVoidsAmount - previousMonth.prcVoidsAmount) : 0
                         },
                         employee: {
                             percentage: month.prcEmployeesAmount / 100,
-                            change: previousMonth ? (month.prcEmployeesAmount / previousMonth.prcEmployeesAmount * 100) : 0
+                            change: previousMonth ? (month.prcEmployeesAmount - previousMonth.prcEmployeesAmount) : 0
                         },
                         operational: {
                             percentage: month.prcOperationalAmount / 100,
-                            change: previousMonth ? (month.prcOperationalAmount / previousMonth.prcOperationalAmount * 100) : 0
+                            change: previousMonth ? (month.prcOperationalAmount - previousMonth.prcOperationalAmount) : 0
                         },
                         retention: {
                             percentage: month.prcMrAmount / 100,
-                            change: previousMonth ? (month.prcMrAmount / previousMonth.prcMrAmount * 100) : 0
+                            change: previousMonth ? (month.prcMrAmount - previousMonth.prcMrAmount) : 0
                         }
                     };
 
