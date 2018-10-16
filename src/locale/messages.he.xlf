@@ -654,8 +654,8 @@
         <target>שנה קודמת</target>
       </trans-unit>
       <trans-unit id="fourWeekAvg" datatype="html">
-        <source>4 Week</source>
-        <target>ממוצע 4 שב'</target>
+        <source>4W Avg.</source>
+        <target>ממוצע 4ש'</target>
       </trans-unit>
       <trans-unit id="cancellations" datatype="html">
         <source>Cancellations</source>
