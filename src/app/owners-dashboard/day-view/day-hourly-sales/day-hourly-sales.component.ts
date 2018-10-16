@@ -3,6 +3,7 @@ import {environment} from '../../../../environments/environment';
 import {tmpTranslations} from '../../../../tabit/data/data.service';
 import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-day-hourly-sales',
@@ -14,6 +15,8 @@ export class DayHourlySalesComponent implements OnChanges {
     loading = true;
     noData = false;
     @Input() data;
+    maxValue;
+    minValue;
 
     private tabitHelper;
 
@@ -25,6 +28,12 @@ export class DayHourlySalesComponent implements OnChanges {
     ngOnChanges(o: SimpleChanges) {
         this.loading = true;
         this.noData = false;
+
+        let highestRecord = _.max([_.maxBy(this.data, function(o) { return o.salesNetAmount; }), _.maxBy(this.data, function(o) { return o.salesNetAmountAvg; })]);
+
+        if(highestRecord) {
+            this.maxValue = Math.max(highestRecord.salesNetAmount, highestRecord.salesNetAmountAvg);
+        }
     }
 
     getProgressBarBackground(day) {
@@ -86,5 +95,25 @@ export class DayHourlySalesComponent implements OnChanges {
 
     getAvgValue(day) {
         return this.getAvgPeriodValueByCategory(day);
+    }
+
+    //new procedures
+    outerWidth(record) {
+        return record.salesNetAmountAvg / this.maxValue * 100;
+    }
+
+    innerAndOuterWidth(record) {
+        let outer = this.outerWidth(record);
+        let inner = this.progressBarWidth(record);
+
+        if(record.salesNetAmountAvg > record.salesNetAmount) {
+            return outer;
+        }
+
+        return inner;
+    }
+
+    progressBarWidth(record) {
+        return record.salesNetAmount / this.maxValue * 100;
     }
 }
