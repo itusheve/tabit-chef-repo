@@ -104,16 +104,19 @@ export class DayHourlySalesComponent implements OnChanges {
 
     innerAndOuterWidth(record) {
         let outer = this.outerWidth(record);
-        let inner = this.progressBarWidth(record);
+        let inner = record.salesNetAmount / this.maxValue * 100;
 
-        if(record.salesNetAmountAvg > record.salesNetAmount) {
-            return outer;
+        if(record.salesNetAmount > record.salesNetAmountAvg) {
+            return inner;
         }
 
-        return inner;
+        return outer;
     }
 
     progressBarWidth(record) {
+        if(record.salesNetAmount > record.salesNetAmountAvg) {
+            return 100;
+        }
         return record.salesNetAmount / this.maxValue * 100;
     }
 }
