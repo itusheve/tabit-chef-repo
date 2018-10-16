@@ -326,9 +326,17 @@
         <target>מכירות</target>
       </trans-unit>
       <trans-unit id="sales3" datatype="html">
-              <source>Sales</source>
-              <target>מכירות</target>
-            </trans-unit>
+          <source>Sales</source>
+          <target>מכירות</target>
+        </trans-unit>
+        <trans-unit id="hourAvg" datatype="html">
+          <source>Hour Avg.</source>
+          <target>ממוצע לשעה</target>
+        </trans-unit>
+        <trans-unit id="hour" datatype="html">
+          <source>Hour</source>
+          <target>שעה</target>
+        </trans-unit>
         <trans-unit id="closedOrders" datatype="html">
           <source>(closed orders)</source>
           <target>(הזמנות סגורות)</target>

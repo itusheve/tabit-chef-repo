@@ -1,44 +1,44 @@
 <ul class="list-group p-0" *ngIf="data">
+    <li class="list-group-item py-1" style="height: 50px;">
+        <div class="row flex a-center" style="cursor: pointer">
+            <div class="col-3 text-center">
+                <ng-container i18n="@@hour">Hour</ng-container>
+            </div>
+            <div class="col-5 border-right border-left" style="height: 42px;">
+            </div>
+            <div class="col-4 text-center">
+                <ng-container i18n="@@sales3">Sales</ng-container> <br />
+                <ng-container i18n="@@hourAvg">Hour Avg.</ng-container>
+            </div>
+        </div>
+    </li>
     <ng-container *ngFor="let day of data">
-        <li class="list-group-item" *ngIf="day.salesNetAmount" style="height: 70px;">
+        <li class="list-group-item py-0" *ngIf="day.salesNetAmount" style="height: 44px;">
             <div class="row flex a-center" style="cursor: pointer">
-                <div class="col-2 px-1">
+                <div class="col-2">
                     <div>{{day.hour}}</div>
                 </div>
 
-
-                <div class="col-7 px-1">
-
-                    <div class="progress rounded-0" style="height: 6px;" [style.width]="outerWidth(day) + '%'">
-                        <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
-                             style="width: 100%; background-color: #e9ecef"></div>
-                    </div>
-
-                    <div class="progress rounded-0" [style.width]="innerAndOuterWidth(day) + '%'">
+                <div class="col-7" style="height: 24px;">
+                    <div class="progress rounded-0" [style.width]="innerAndOuterWidth(day) + '%'"
+                         style="background-color: #ced1d4">
                         <div class="progress-bar progress-bar-animated rounded-0"
                              [ngClass]="getProgressBarBackground(day)" role="progressbar"
                              [style.width]="progressBarWidth(day) + '%'" style="font-size: 16px;">
                         </div>
                     </div>
-
-                    <div class="progress rounded-0" style="height: 6px;" [style.width]="outerWidth(day) + '%'">
+                    <div class="progress rounded-0" style="height: 4px;" [style.width]="outerWidth(day) + '%'">
                         <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
-                             style="width: 100%; background-color: #e9ecef"></div>
+                             style="width: 100%; background-color: #ced1d4"></div>
                     </div>
-
-                    <div class="row p-0 m-0">
-                        <div class="col-12 text-center p-0 m-0">
-                            {{getPercentage(day).toFixed(1)}}%
-                        </div>
+                    <div class="text-center" style="position: relative; top: -24px;">
+                        <span>{{getPercentage(day).toFixed(0)}}%</span>
                     </div>
                 </div>
 
-
-                <div class="col-3 px-1">
-                    <span [innerHtml]="day.salesNetAmount | currency:'0':'':'':false"></span>
-                    <div style="font-size: 14px">
-                        (<span [innerHtml]="getAvgValue(day) | currency:'0':'':'':false"></span>)
-                    </div>
+                <div class="col-3 px-0">
+                    <div>&nbsp;<span [innerHtml]="day.salesNetAmount | currency:'0':'':'':false"></span></div>
+                    <div>(<span [innerHtml]="getAvgValue(day) | currency:'0':'':'':false"></span>)</div>
                 </div>
             </div>
         </li>
