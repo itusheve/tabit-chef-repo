@@ -26,6 +26,7 @@ export interface CardData {
     reductions?: any;
     holiday?: string;
     statusClass?: string;
+    showDrillArrow?: boolean;
 }
 
 @Component({

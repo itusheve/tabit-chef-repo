@@ -139,6 +139,8 @@ export class HomeComponent implements OnInit {
                 if (typeof this.currentBdCardData.sales === 'number') {
                     this.currentBdCardData.loading = false;
                 }
+
+                this.currentBdCardData.showDrillArrow = true;
             });
     }
 
@@ -247,6 +249,7 @@ export class HomeComponent implements OnInit {
                 }
 
                 this.previousBdCardData.title = title;
+                this.previousBdCardData.showDrillArrow = true;
                 this.previousBdCardData.loading = false;
             });
     }

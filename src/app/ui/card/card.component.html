@@ -1,4 +1,4 @@
-<div class="card bg-light dashboard-home-card shadow-card rounded-0" onmousedown="event.target.closest('.card').classList.remove('shadow-card');" onmouseup = "event.target.closest('.card').classList.add('shadow-card')">
+<div class="card bg-light dashboard-home-card shadow-card rounded-0" ontouchstart="event.target.closest('.card').classList.remove('shadow-card');" ontouchend = "event.target.closest('.card').classList.add('shadow-card')">
     <div *ngIf="cardData.title" class="card-header text-center py-1" style="font-size: 18px;"
          [ngClass]="cardData.statusClass || 'bg-light'">
 
@@ -6,6 +6,7 @@
             <ng-container *ngIf="cardData" i18n="@@orsLastDay">{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</ng-container>
             {{cardData?.title || '&nbsp;'}}
         </span>
+        <mat-icon *ngIf="cardData.showDrillArrow" style="top:3px; position: relative; float: left;">keyboard_arrow_down</mat-icon>
     </div>
     <div class="card-body py-2">
         <div *ngIf="!cardData || cardData.loading" class="text-center">
