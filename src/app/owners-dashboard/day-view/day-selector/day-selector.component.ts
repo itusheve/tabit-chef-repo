@@ -9,10 +9,10 @@ import {environment} from '../../../../environments/environment';
     styleUrls: ['./day-selector.component.css']
 })
 export class DaySelectorComponent implements OnChanges {
-    @Input() currentValue: moment.Moment;
-
     @Output() onDateChanged = new EventEmitter();
 
+    @Input() currentValue: moment.Moment;
+    @Input() dayFromDatabase: any;
     @Input() options: {
         minDate: moment.Moment,
         maxDate: moment.Moment

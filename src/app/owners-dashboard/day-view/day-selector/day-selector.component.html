@@ -4,6 +4,7 @@
     </button>
     <button id="month" type="button" class="btn btn-lg btn-outline-secondary" style="width: 70%" (click)="picker.open()">
         {{currentValue | date:'fullDate':currentValue.format('ZZ')}}
+        <span *ngIf="dayFromDatabase?.holiday" class="font-weight-light text-primary" style="font-size: 14px; position: relative; top:2px; display: block; margin: -8px">{{dayFromDatabase?.holiday}}</span>
     </button>
     <input matInput [matDatepicker]="picker" [max]="datePickerMaxDate" (dateChange)="changeDate($event)" type="hidden">
     <mat-datepicker touchUi  #picker [startAt]="currentValue.format()"></mat-datepicker>

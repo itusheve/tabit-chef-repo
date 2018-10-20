@@ -40,6 +40,7 @@ export class DayViewComponent implements OnInit {
     drilledOrder: Order;
     drilledOrderNumber: number;
 
+    public dayFromDatabase: any;
     public hasData: boolean;
     public hasNoDataForToday: boolean;
 
@@ -246,11 +247,16 @@ export class DayViewComponent implements OnInit {
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
-        this.dataService.databaseV2$.subscribe(database => {
+        combineLatest(this.day$, this.dataService.databaseV2$)
+        .subscribe(data => {
+            let date = data[0];
+            let database = data[1];
             this.daySelectorOptions = {
                 minDate: moment(database.getLowestDate()),
                 maxDate: moment(moment())
             };
+
+            this.dayFromDatabase = database.getDay(date);
         });
 
         combineLatest(this.day$, this.dataService.refresh$).subscribe(async data => {

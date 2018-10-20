@@ -51,7 +51,7 @@ export class CurrencyPipe implements PipeTransform {
 export class OwnersDashboardCurrencyPipe implements PipeTransform {
     private decPipe: DecimalPipe = new DecimalPipe(environment.tbtLocale);
 
-    transform(value: any, decimal?: string, cents?: string, nullify?: string, disableSymbol?: boolean): any {
+    transform(value: any, decimal?: string, cents?: string, nullify?: string, hideSymbol?: boolean): any {
         decimal = decimal || '2';
 
         if (value===undefined || value===null) {
@@ -66,7 +66,7 @@ export class OwnersDashboardCurrencyPipe implements PipeTransform {
         }
         let result = this.decPipe.transform(Math.abs(value), `1.${decimal}-${decimal}`);
         if (result) {
-            if(!disableSymbol) {
+            if(!hideSymbol) {
                 if(value < 0){
                     result = `${currencySymbol}${result}-`;
                 } else {

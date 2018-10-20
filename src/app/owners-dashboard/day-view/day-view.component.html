@@ -2,6 +2,7 @@
     <app-day-selector
             class="widget noPadding daySelectorFixed"
             [currentValue]="day"
+            [dayFromDatabase]="dayFromDatabase"
             [options]="daySelectorOptions"
             (onDateChanged)="onDateChanged($event)">
     </app-day-selector>

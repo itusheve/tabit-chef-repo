@@ -1,6 +1,6 @@
 {
   "production": {
-    "version": "1.1.47",
+    "version": "1.1.48",
     "bundles": [
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Assistant",
