@@ -88,7 +88,7 @@ export class DaySalesTableComponent implements OnChanges {
                     this.pivotedData.netSalesWithoutVat.push(row.ttlSaleAmountExcludeVat);
                     this.pivotedData.tax.push(row.ttlVat);
                     this.pivotedData.grossSales.push(row.salesRefundTipAmountIncludeVat);
-                    this.pivotedData.gratuity.push(row.ttlTipAmountExcludeVat);
+                    this.pivotedData.gratuity.push(row.ttlTipAmountIncludeVat);
                     this.pivotedData.serviceCharge.push(row.ttlTipAmountExcludeVat);
                     this.pivotedData.diners.push(row.dinersOrders);
                     this.pivotedData.ppa.push(row.ppaAmountIncludeVat);
@@ -97,7 +97,7 @@ export class DaySalesTableComponent implements OnChanges {
                     this.totals.netSalesWithoutVat += row.ttlSaleAmountExcludeVat || 0;
                     this.totals.tax += row.ttlVat || 0;
                     this.totals.grossSales += row.salesRefundTipAmountIncludeVat || 0;
-                    this.totals.gratuity += row.ttlTipAmountExcludeVat || 0;
+                    this.totals.gratuity += row.ttlTipAmountIncludeVat || 0;
                     this.totals.serviceCharge += row.ttlTipAmountExcludeVat || 0;
                     this.totals.diners += row.dinersOrders || 0;
                 }
