@@ -63,7 +63,8 @@
 <!--closed orders-->
 <div class="flex d-col a-stretch">
     <div class="title">
-        <ng-container i18n="@@closedOrders2">Closed orders</ng-container>
+        <span i18n="@@closedOrders2">Closed orders</span>
+        <span *ngIf="bdIsCurrentBd" i18n="@@delayed" style="font-size: 14px; display: block;">Data delayed by ~15min</span>
     </div>
     <div class="body flex d-col">
         <div *ngIf="!loading">
@@ -169,7 +170,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)"
+                        <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)" class="dayReportDataRow"
                             [ngClass]="{'lastViewed': lastViewed===order, 'clicked': order.__dayOrdersTable__clicked}">
                             <td>{{order.openingTime}}</td>
                             <td>{{order.number | number:'1.0-0'}}</td>

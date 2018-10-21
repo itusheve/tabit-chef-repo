@@ -1,4 +1,7 @@
-<div class="card p-0 month-grid rounded-0 shadow-card" xmlns="http://www.w3.org/1999/html">
+<div class="card p-0 month-grid bg-info dashboard-home-card shadow-card">
+    <div class="card-header text-center" style="font-size: 18px; font-weight: 700">
+        <ng-container i18n="@@dailyBreakdown">Daily Breakdown</ng-container>
+    </div>
     <div class="col-12 p-0">
         <ul class="list-group p-0" *ngIf="days">
             <li class="list-group-item p-0 m-0 rounded-0">
@@ -31,9 +34,9 @@
                     </div>
                 </div>
             </li>
-            <li *ngFor="let day of days" class="list-group-item" style="height: 70px;"
+            <li *ngFor="let day of days" class="list-group-item py-0" style="height: 46px;"
                 [ngClass]="{active: isActive(day)}" (click)="select(day)">
-                <div class="row flex a-center" style="cursor: pointer">
+                <div class="row flex a-center py-0" style="cursor: pointer">
                     <div class="col-3 px-1" style="max-width: 17% !important;">
                         <div>{{day.businessDate | date: 'dd'}} {{day.businessDate | date: 'EEEEE'}}</div>
                     </div>
@@ -58,7 +61,7 @@
                         <span *ngIf="category === 'sales' || category === 'employee'"
                               [innerHtml]="getDayValue(day) | currency:'0':'':'':false"></span>
                         <span *ngIf="category !== 'sales' && category !== 'employee'">{{getDayValue(day) | pct : 1 }}</span>
-                        <div style="font-size: 14px">
+                        <div style="font-size: 14px; line-height: 10px;">
                             (<span *ngIf="category === 'sales' || category === 'employee'"
                                    [innerHtml]="getAvgValue(day) | currency:'0':'':'':false"></span><span
                                 *ngIf="category !== 'sales' && category !== 'employee'">{{getAvgValue(day) | pct : 1 }}</span>)
@@ -67,7 +70,7 @@
                 </div>
                 <div *ngIf="day.isExcluded" class="row">
                     <div iv class="col-12 px-1">
-                        <span class="font-weight-light text-info" style="font-size: 14px; position:relative;top:-10px;">{{day.holiday}}</span>
+                        <span class="font-weight-light text-info" style="font-size: 14px; position:relative;top:-12px; line-height: 10px;">{{day.holiday}}</span>
                     </div>
                 </div>
             </li>

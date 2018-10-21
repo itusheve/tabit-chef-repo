@@ -1,0 +1,15 @@
+<div class="btn-group bg-white rounded-0" role="group" dir="ltr" style="width: 100%; z-index: 100000" id="monthSelector">
+<button id="month" class="btn btn-lg btn-outline-secondary rounded-0 font-bold" style="width: 100%">
+    {{month | date:'MMMM yyyy'}}
+    <mat-icon style="top:3px; position: relative; float: left;">keyboard_arrow_down</mat-icon>
+</button>
+</div>
+<!--<div class="card bg-light dashboard-home-card shadow-card rounded-0 mb-0">
+    <div class="card-header text-center py-1" style="font-size: 18px; cursor: pointer;"
+         [ngClass]="'bg-light'">
+        <span class="font-weight-bold">
+            <ng-container>{{month | date:'MMMM yyyy'}}</ng-container>&nbsp;<ng-container class="dx-button-text text-lowercase mx-2" i18n="@@monthSelectorFinalIndication">{final, select, final {Final} notFinal {Not final}}</ng-container>
+
+        </span>
+    </div>
+</div>-->

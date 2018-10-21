@@ -8,7 +8,7 @@
             <td class="ar" i18n="@@sold">Sold</td>
         </tr>
         <ng-container *ngFor="let departmentData of data">
-            <tr *ngFor="let dataObj of departmentData.topItems">
+            <tr *ngFor="let dataObj of departmentData.topItems" class="dayReportDataRow">
                 <td>{{departmentData.department}}</td>
                 <td class="break">{{dataObj.itemName}}</td>
                 <td class="ar">{{dataObj.itemSales | curr:'0'}}</td>

@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {OrderType} from '../../../../tabit/model/OrderType.model';
 import {Orders_KPIs} from '../../../../tabit/data/ep/olap.ep';
 import {environment} from '../../../../environments/environment';
+import {tmpTranslations} from '../../../../tabit/data/data.service';
 
 @Component({
     selector: 'app-day-sales-table',
@@ -14,9 +15,7 @@ export class DaySalesTableComponent implements OnChanges {
     noData = false;
     @Input() title: string;
     @Input() data;
-
-    totals;
-
+    private totalsTitle: string;
 
     pivotedData: {
         salesTotalAmount: number[],
@@ -34,7 +33,7 @@ export class DaySalesTableComponent implements OnChanges {
         hasTips: boolean
     };
 
-    pivotedDataTotals: any;
+    totals: any;
 
     constructor() {
         this.environment = environment;
@@ -44,13 +43,14 @@ export class DaySalesTableComponent implements OnChanges {
         this.loading = true;
         this.noData = false;
 
+        this.totalsTitle = tmpTranslations.get('total');
         if (this.data) {
 
             this.pivotedData = {
                 salesTotalAmount: [],
                 netSalesWithoutVat: [],
                 titles: [],
-                totalSales: [],//==paymentsAmnt
+                totalSales: [],
                 netSales: [],
                 tax: [],
                 grossSales: [],
@@ -60,6 +60,20 @@ export class DaySalesTableComponent implements OnChanges {
                 orders: [],
                 ppa: [],
                 hasTips: false
+            };
+
+            this.totals = {
+                salesTotalAmount: 0,
+                netSalesWithoutVat: 0,
+                totalSales: 0,
+                netSales: 0,
+                tax: 0,
+                grossSales: 0,
+                gratuity: 0,
+                serviceCharge: 0,
+                diners: 0,
+                orders: 0,
+                ppa: 0,
             };
 
             this.data.forEach(row => {
@@ -78,12 +92,29 @@ export class DaySalesTableComponent implements OnChanges {
                     this.pivotedData.serviceCharge.push(row.ttlTipAmountExcludeVat);
                     this.pivotedData.diners.push(row.dinersOrders);
                     this.pivotedData.ppa.push(row.ppaAmountIncludeVat);
+
+                    this.totals.netSales += row.ttlSaleAmountIncludeVat || 0;
+                    this.totals.netSalesWithoutVat += row.ttlSaleAmountExcludeVat || 0;
+                    this.totals.tax += row.ttlVat || 0;
+                    this.totals.grossSales += row.salesRefundTipAmountIncludeVat || 0;
+                    this.totals.gratuity += row.ttlTipAmountExcludeVat || 0;
+                    this.totals.serviceCharge += row.ttlTipAmountExcludeVat || 0;
+                    this.totals.diners += row.dinersOrders || 0;
                 }
             });
 
             if (!this.pivotedData) {
                 this.noData = true;
             }
+
+            this.pivotedData.titles.push(this.totalsTitle);
+            this.pivotedData.netSales.push(this.totals.netSales);
+            this.pivotedData.netSalesWithoutVat.push(this.totals.netSalesWithoutVat);
+            this.pivotedData.tax.push(this.totals.tax);
+            this.pivotedData.grossSales.push(this.totals.grossSales);
+            this.pivotedData.gratuity.push(this.totals.gratuity);
+            this.pivotedData.serviceCharge.push(this.totals.serviceCharge);
+            this.pivotedData.diners.push(this.totals.diners);
 
             this.loading = false;
         }

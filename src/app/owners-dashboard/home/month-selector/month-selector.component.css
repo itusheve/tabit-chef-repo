@@ -4,11 +4,11 @@
 
 .month-selector button {
     height: 50px;
-    min-width: 60px;
+    min-width: 100%;
 }
 
 .month-picker {
     font-size: 17px;
     border-color: #fff;
-    width: 80%
+    width: 100%;
 }

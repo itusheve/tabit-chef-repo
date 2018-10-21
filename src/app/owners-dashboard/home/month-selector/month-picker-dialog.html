@@ -18,7 +18,9 @@
 <div class="dialog-content-fixed">
     <div class="dialog-content">
         <div class="month-picker-dialog">
-            <app-card *ngFor="let month of months" (click)="select($event, month)" [cardData]="month.summary" class="picker-card-container" style="cursor: pointer"></app-card>
+            <div class="col mb-3 p-0" *ngFor="let month of months">
+                <app-card (click)="select($event, month)" [cardData]="month.summary" class="picker-card-container" style="cursor: pointer"></app-card>
+            </div>
         </div>
     </div>
 </div>

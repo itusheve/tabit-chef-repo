@@ -1,32 +1,38 @@
-<div class="flex d-col">
-    <div class="row">
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-            <app-card [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
-        </div>
-        <div *ngIf="!loadingOlapData && showPreviousDay" class="col-sm-12 col-md-6 col-lg-4 mb-3">
-            <app-card [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')" style="cursor: pointer"></app-card>
-        </div>
-        <div *ngIf="!loadingOlapData && showForecast" class="col-sm-12 col-md-6 col-lg-4 mb-3">
-            <app-card [cardData]="forecastCardData"></app-card>
-        </div>
-        <div class="col-12" *ngIf="loadingOlapData">
-            <div class="card">
-                <div class="card-body bg-white">
-                    <div *ngIf="OlapFailed">
-                        <div>
-                            <div class="text-center" i18n="@@processingData">We are processing your data, please check back in a few minutes.</div>
-                        </div>
-                    </div>
-                    <div *ngIf="!OlapFailed">
-                        <div class="text-center">
-                            <dx-load-indicator></dx-load-indicator>
-                            <p class="text-center saving"><span i18n="@@fetchingLatestAnalyticsData">Fetching latest analytics data</span><span>.</span><span>.</span><span>.</span></p>
-                        </div>
-                    </div>
+<div class="row mb-3">
+    <app-month-selector style="width: 100%; margin-top: -14px;" (onDateChanged)="onDateChanged($event)" (click)="openMonthPicker()"></app-month-selector>
+</div>
 
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-4 mb-3" *ngIf="isCurrentMonth()">
+        <app-card [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
+    </div>
+    <div *ngIf="!loadingOlapData && showPreviousDay && isCurrentMonth()" class="col-sm-12 col-md-6 col-lg-4 mb-3">
+        <app-card [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')"
+                  style="cursor: pointer"></app-card>
+    </div>
+    <div *ngIf="!loadingOlapData && showForecast && isCurrentMonth()" class="col-sm-12 col-md-6 col-lg-4 mb-3">
+        <app-card [cardData]="forecastCardData"></app-card>
+    </div>
+    <div class="col-12" *ngIf="loadingOlapData">
+        <div class="card">
+            <div class="card-body bg-white">
+                <div *ngIf="OlapFailed">
+                    <div>
+                        <div class="text-center" i18n="@@processingData">We are processing your data, please check back
+                            in a few minutes.
+                        </div>
+                    </div>
                 </div>
+                <div *ngIf="!OlapFailed">
+                    <div class="text-center">
+                        <dx-load-indicator></dx-load-indicator>
+                        <p class="text-center saving"><span i18n="@@fetchingLatestAnalyticsData">Fetching latest analytics data</span><span>.</span><span>.</span><span>.</span>
+                        </p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
-    <app-month-view *ngIf="!loadingOlapData" (onDayRequest)="onDayRequest($event)"></app-month-view>
 </div>
+<app-month-view *ngIf="!loadingOlapData" (onDayRequest)="onDayRequest($event)"></app-month-view>

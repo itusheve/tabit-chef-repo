@@ -109,5 +109,11 @@ export class OwnersDashboardComponent implements OnInit {
         document.addEventListener('refreshData', function (event) {
             context.refresh();
         });
+
+        let date = moment();
+        if (moment().date() === 1) {
+            date.subtract(10, 'days');
+            this.dataService.selectedMonth$.next(date.startOf('month'));
+        }
     }
 }

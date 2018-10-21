@@ -3,8 +3,8 @@ import {MatBottomSheet} from '@angular/material';
 import * as moment from 'moment';
 import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
-import {CardData} from '../../../ui/card/card.component';
 import {MonthPickerDialogComponent} from './month-picker-dialog.component';
+import {DataService} from '../../../../tabit/data/data.service';
 
 @Component({
     selector: 'app-month-selector',
@@ -12,10 +12,7 @@ import {MonthPickerDialogComponent} from './month-picker-dialog.component';
     styleUrls: ['./month-selector.component.css']
 })
 export class MonthSelectorComponent implements OnInit {
-    @Input() month$: Observable<moment.Moment>;
-    @Input() cardData: CardData;
-
-    @Input() options: {
+    options: {
         minDate: moment.Moment,
         maxDate: moment.Moment
     };
@@ -27,7 +24,7 @@ export class MonthSelectorComponent implements OnInit {
 
     public region: any;
 
-    constructor() {
+    constructor(private dataService: DataService) {
         this.region = environment.region;
     }
 
@@ -49,11 +46,16 @@ export class MonthSelectorComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.month$.subscribe(month => {
-            this.month = month;
-            this.final = this.getFinalState(this.month);
+        this.dataService.databaseV2$.subscribe(database => {
+            this.options = {
+                minDate: moment(database.getLowestDate()),
+                maxDate: moment()
+            };
         });
 
+        this.dataService.selectedMonth$.subscribe(month => {
+            this.month = month;
+        });
     }
 
     getFinalState(month: moment.Moment) {

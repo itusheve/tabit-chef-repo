@@ -16,7 +16,7 @@ import {OwnerSettingsComponent} from './settings/owner-settings.component';
 import {MomentModule} from 'angular2-moment';
 
 import {MonthViewComponent} from './month-view/month-view.component';
-import {MonthSelectorComponent} from './month-view/month-selector/month-selector.component';
+import {MonthSelectorComponent} from './home/month-selector/month-selector.component';
 import {MonthGridComponent} from './month-view/month-grid/month-grid.component';
 
 import {DayViewComponent} from './day-view/day-view.component';
@@ -81,7 +81,7 @@ import {DayOperationalErrorsTableComponent} from './day-view/day-operational-err
 import {DayRetentionTableComponent} from './day-view/day-retention-table/day-retention-table.component';
 import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/day-month-summary-table.component';
 import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sales.component';
-import {MonthPickerDialogComponent} from './month-view/month-selector/month-picker-dialog.component';
+import {MonthPickerDialogComponent} from './home/month-selector/month-picker-dialog.component';
 
 @NgModule({
     imports: [

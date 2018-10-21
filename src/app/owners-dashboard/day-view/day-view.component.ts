@@ -13,6 +13,7 @@ import {OwnersDashboardService} from '../owners-dashboard.service';
 import {Orders_KPIs, PaymentsKPIs} from '../../../tabit/data/ep/olap.ep';
 import {DebugService} from '../../debug.service';
 import {environment} from '../../../environments/environment';
+import {CardData} from '../../ui/card/card.component';
 
 export interface SalesTableRow {
     orderType: OrderType;
@@ -161,12 +162,23 @@ export class DayViewComponent implements OnInit {
         tlogId: string;
     }[];
 
+    public cardData: CardData = {
+        loading: false,
+        tag: '',
+        title: '',
+        sales: 0,
+        diners: 0,
+        ppa: 0,
+        aggregations: {},
+    };
+
     public mtdBusinessData: any;
     public salesByHour: any;
     public today: moment.Moment;
     public bdIsCurrentBd: boolean;
     public closedOpenSalesDiff: number;
     public openOrders: any;
+
     private day$ = new Subject<moment.Moment>();
 
     constructor(private ownersDashboardService: OwnersDashboardService,
@@ -247,16 +259,62 @@ export class DayViewComponent implements OnInit {
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
-        combineLatest(this.day$, this.dataService.databaseV2$)
+        //get card data for the day
+        combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.olapToday$)
         .subscribe(data => {
             let date = data[0];
             let database = data[1];
+            let dailyTotals = data[2];
+            let OlapToday = data[3];
+
             this.daySelectorOptions = {
                 minDate: moment(database.getLowestDate()),
                 maxDate: moment(moment())
             };
 
             this.dayFromDatabase = database.getDay(date);
+
+            if (this.dayFromDatabase) {
+                this.cardData.holiday = this.dayFromDatabase.holiday;
+
+                this.cardData.sales = this.dayFromDatabase.salesAndRefoundAmountIncludeVat;
+
+                this.cardData.diners = this.dayFromDatabase.diners || this.dayFromDatabase.orders;
+                this.cardData.ppa = this.dayFromDatabase.ppaIncludeVat;
+
+                this.cardData.reductions = {
+                    cancellations: {
+                        percentage: this.dayFromDatabase.voidsPrc / 100,
+                        change: this.dayFromDatabase.voidsPrc - this.dayFromDatabase.avgNweeksVoidsPrc
+                    },
+                    employee: {
+                        percentage: this.dayFromDatabase.employeesPrc / 100,
+                        change: this.dayFromDatabase.employeesPrc - this.dayFromDatabase.avgNweeksEmployeesPrc
+                    },
+                    operational: {
+                        percentage: this.dayFromDatabase.operationalPrc / 100,
+                        change: this.dayFromDatabase.operationalPrc - this.dayFromDatabase.avgNweeksOperationalPrc
+                    },
+                    retention: {
+                        percentage: this.dayFromDatabase.mrPrc / 100,
+                        change: this.dayFromDatabase.mrPrc - this.dayFromDatabase.avgNweeksMrPrc
+                    }
+                };
+            }
+
+            if (moment().isSame(date, 'day')) {
+                let totals = dailyTotals.totals;
+                let totalClosedOrders = _.get(totals, 'totalPayments', 0);
+                let totalClosedOrdersWithoutVat = totalClosedOrders - _.get(totals, 'includedTax', 0);
+
+                let totalOpenOrders = _.get(totals, 'openOrders.totalAmount', 0);
+                let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
+
+                let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
+                let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
+
+                this.cardData.sales = totalSales;
+            }
         });
 
         combineLatest(this.day$, this.dataService.refresh$).subscribe(async data => {

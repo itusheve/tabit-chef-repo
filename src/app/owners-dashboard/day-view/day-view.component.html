@@ -28,6 +28,9 @@
 
     <div [hidden]="!hasData">
 
+        <div class="col-12 px-0 mb-2" *ngIf="cardData">
+            <app-card [cardData]="cardData"></app-card>
+        </div>
         <app-day-orders-table
                 class="widget"
                 style="padding-bottom: 0px;"

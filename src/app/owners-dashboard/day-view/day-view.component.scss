@@ -9,6 +9,10 @@
 // }
 $matAccordionHeaderColor: #C5CCD4;
 
+::ng-deep.dayReportDataRow {
+  line-height: 14px;
+}
+
 .mat-expanded:not(.mat-expansion-panel-spacing):not(.mat-expansion-panel-content):not(mat-expansion-panel-header) {
   margin: 12px 0;
 }

@@ -1,12 +1,12 @@
 <div class="card bg-light dashboard-home-card shadow-card rounded-0" ontouchstart="event.target.closest('.card').classList.remove('shadow-card');" ontouchend = "event.target.closest('.card').classList.add('shadow-card')">
-    <div *ngIf="cardData.title" class="card-header text-center py-1" style="font-size: 18px;"
+    <div *ngIf="cardData.title" class="card-header text-center" style="font-size: 18px;"
          [ngClass]="cardData.statusClass || 'bg-light'">
 
         <span class="font-weight-bold">
             <ng-container *ngIf="cardData" i18n="@@orsLastDay">{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</ng-container>
             {{cardData?.title || '&nbsp;'}}
         </span>
-        <mat-icon *ngIf="cardData.showDrillArrow" style="top:3px; position: relative; float: left;">keyboard_arrow_down</mat-icon>
+        <mat-icon *ngIf="cardData.showDrillArrow" style="top:3px; position: relative; float: left;">note_add</mat-icon>
     </div>
     <div class="card-body py-2">
         <div *ngIf="!cardData || cardData.loading" class="text-center">

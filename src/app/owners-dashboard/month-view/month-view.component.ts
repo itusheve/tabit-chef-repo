@@ -9,8 +9,7 @@ import {CardData} from '../../ui/card/card.component';
 import {TrendModel} from '../../../tabit/model/Trend.model';
 import {environment} from '../../../environments/environment';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
-import {MatBottomSheet} from '@angular/material';
-import {MonthPickerDialogComponent} from './month-selector/month-picker-dialog.component';
+
 import {OwnersDashboardService} from '../owners-dashboard.service';
 
 interface DailyTrends {
@@ -32,13 +31,7 @@ export class MonthViewComponent implements OnInit {
 
     @Output() onDayRequest = new EventEmitter();
 
-    month$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment().startOf('month'));
     month: moment.Moment;
-    monthSelectorOptions: {
-        minDate: moment.Moment,
-        maxDate: moment.Moment,
-    };
-
     renderGrid = true;
 
     summaryCardData: CardData = {
@@ -57,7 +50,6 @@ export class MonthViewComponent implements OnInit {
     constructor(
         private dataService: DataService,
         private datePipe: DatePipe,
-        private monthPickerDialog: MatBottomSheet,
         private ownersDashboardService: OwnersDashboardService,
     ) {
         this.showSummary = false;
@@ -65,39 +57,10 @@ export class MonthViewComponent implements OnInit {
     }
 
     ngOnInit() {
-        let date = moment();
-        if (moment().date() === 1) {
-            date.subtract(10, 'days');
-            this.month$.next(date.startOf('month'));
-        }
-        this.onDateChanged(date);
-
-        combineLatest(this.month$, this.dataService.currentRestTime$, this.dataService.databaseV2$, this.dataService.vat$)
+        combineLatest(this.dataService.selectedMonth$, this.dataService.currentRestTime$, this.dataService.databaseV2$, this.dataService.vat$)
             .subscribe(data => {
                 this.update(data[0], data[1], data[2], data[3]);
             });
-    }
-
-    openMonthPicker() {
-        let dialog = this.monthPickerDialog.open(MonthPickerDialogComponent, {
-            data: {selected: this.month, onDateChanged: this.onDateChanged},
-            hasBackdrop: true,
-            closeOnNavigation: true,
-            backdropClass: 'month-picker-backdrop'
-        });
-
-        dialog.afterDismissed().subscribe(() => {
-            if (dialog.instance.selection) {
-                let item = document.getElementById('monthSelector');// what we want to scroll to
-                let wrapper = document.getElementById('main-content');// the wrapper we will scroll inside
-                let header = document.getElementById('main-toolbar');// the wrapper we will scroll inside
-                let count = item.offsetTop - wrapper.scrollTop - header.scrollHeight - 10; // xx = any extra distance from top ex. 60
-                wrapper.scrollBy({top: count, left: 0, behavior: 'smooth'});
-
-                this.month = dialog.instance.selection;
-                this.onDateChanged(this.month);
-            }
-        });
     }
 
     updateGrid(month, database, incTax) {
@@ -154,6 +117,10 @@ export class MonthViewComponent implements OnInit {
             }
         };
 
+        let monthName = this.datePipe.transform(date, 'MMMM');
+        let monthState = moment().isSame(date, 'month') ? tmpTranslations.get('home.month.notFinalTitle') : tmpTranslations.get('home.month.finalTitle');
+        this.summaryCardData.title = monthName + ' ' +  monthState;
+
         this.summaryCardData.reductions = {
             cancellations: {
                 percentage: month.prcVoidsAmount / 100,
@@ -187,11 +154,6 @@ export class MonthViewComponent implements OnInit {
     update(month, currentBd: moment.Moment, database, incTax) {
         this.month = month;
 
-        this.monthSelectorOptions = {
-            minDate: moment(database.getLowestDate()),
-            maxDate: moment(),
-        };
-
         const isCurrentMonth = month.isSame(currentBd, 'month');
         if (isCurrentMonth && currentBd.date() === 1) this.renderGrid = false;
         else this.renderGrid = true;
@@ -204,19 +166,7 @@ export class MonthViewComponent implements OnInit {
 
     }
 
-    /* if chart / grid date is clicked */
-    onDateClicked(dayInMonth: string) {
-        const day: string = moment(this.month).day(dayInMonth).format('YYYY-MM-DD');
-        this.onDayRequest.emit(day);
-    }
-
     onDateClicked2(date: string) {//TODO ugly..
         this.onDayRequest.emit(date);
     }
-
-    onDateChanged(mom: moment.Moment) {
-        const month = moment(mom).startOf('month');
-        this.month$.next(month);
-    }
-
 }

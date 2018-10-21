@@ -58,11 +58,12 @@
                     </td>
                 </tr>
                 <tr
+                        class="dayReportDataRow"
                         *ngFor="let tuple of operationalErrorsData"
                         (click)="orderClicked(tuple.orderNumber)"
                         [ngClass]="{'lastViewed': lastViewed == tuple.orderNumber}"
                 >
-                    <td dir="rtl">{{tuple.waiter}} ({{tuple.approvedBy}})</td>
+                    <td dir="rtl">{{tuple.waiter}}<span style="font-size: 12px; display: block">{{tuple.approvedBy}}</span></td>
                     <td>
                         <span *ngIf="tuple.tableId!==''">
                              {{tuple.tableId}}

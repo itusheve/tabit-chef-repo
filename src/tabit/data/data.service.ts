@@ -31,6 +31,7 @@ const tmpTranslations_ = {
         areYouSureYouWish: 'האם אתה בטוח שברצונך',
         toLogout: 'להתנתק',
         loading: 'טוען נתונים...',
+        total: 'סיכום',
         login: {
             userPassIncorrect: 'שם משתמש ו/או סיסמא אינם נכונים',
             passwordRestore: 'איפוס סיסמא',
@@ -58,7 +59,9 @@ const tmpTranslations_ = {
             mtd: 'עד כה',
             month: {
                 expected: 'צפוי',
-                final: 'סופי'
+                final: 'סופי',
+                finalTitle: 'סופי',
+                notFinalTitle: 'עד כה'
             }
         },
         order: {
@@ -191,6 +194,7 @@ const tmpTranslations_ = {
         areYouSureYouWish: 'Are you sure you wish',
         toLogout: 'to logout',
         loading: 'Loading...',
+        total: 'Total',
         login: {
             userPassIncorrect: 'Incorrect User / Password',
             passwordRestore: 'Reset Password',
@@ -218,7 +222,9 @@ const tmpTranslations_ = {
             mtd: 'MTD',
             month: {
                 expected: 'Forecasted',
-                final: 'Final'
+                final: 'Final',
+                finalTitle: 'Final',
+                notFinalTitle: 'MTD'
             }
         },
         order: {
@@ -387,6 +393,8 @@ export class DataService {
             obs.next(database.getCurrentBusinessDay());
         });
     });
+
+    selectedMonth$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment().startOf('month'));
 
     /*
         emits the Previous Business Date ("pbd") which is the day before the Current Business Day ("cbd")

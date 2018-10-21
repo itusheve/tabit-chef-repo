@@ -40,7 +40,7 @@
 
                 <div class="col-2 px-0">
                     <div>&nbsp;<span [innerHtml]="day.salesNetAmount | currency:'0':'':'':false"></span></div>
-                    <div style="line-height: 10px;">(<span [innerHtml]="getAvgValue(day) | currency:'0':'':'':false"></span>)</div>
+                    <div style="line-height: 10px;">(<span style="font-size: 12px;" [innerHtml]="getAvgValue(day) | currency:'0':'':'':true"></span>)</div>
                 </div>
             </div>
         </li>

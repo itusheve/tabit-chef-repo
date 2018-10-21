@@ -685,6 +685,14 @@
         <source>We are processing your data, please check back in a few minutes.</source>
         <target>השרת מבצע עדכון נתונים, מידע עדכני יהיה זמין בעוד מספר דקות.</target>
       </trans-unit>
+      <trans-unit id="dailyBreakdown" datatype="html">
+        <source>Daily Breakdown</source>
+        <target>ניתוח יומי</target>
+    </trans-unit>
+    <trans-unit id="delayed" datatype="html">
+        <source>Data delayed by ~15min</source>
+        <target>מידע מעוכב - 15דק'</target>
+    </trans-unit>
     </body>
   </file>
 </xliff>

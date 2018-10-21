@@ -9,6 +9,8 @@ import {DataService, tmpTranslations} from '../../../tabit/data/data.service';
 import {CardData} from '../../ui/card/card.component';
 import {OwnersDashboardService} from '../owners-dashboard.service';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
+import {MatBottomSheet} from '@angular/material';
+import {MonthPickerDialogComponent} from './month-selector/month-picker-dialog.component';
 
 @Component({
     selector: 'app-home',
@@ -60,6 +62,7 @@ export class HomeComponent implements OnInit {
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private dataService: DataService,
                 private router: Router,
+                private monthPickerDialog: MatBottomSheet,
                 private datePipe: DatePipe) {
 
         this.tabitHelper = new TabitHelper();
@@ -89,6 +92,27 @@ export class HomeComponent implements OnInit {
             if (refresh === 'force') {
                 this.loadingOlapData = true;
                 this.currentBdCardData.loading = true;
+            }
+        });
+    }
+
+    openMonthPicker() {
+        let dialog = this.monthPickerDialog.open(MonthPickerDialogComponent, {
+            data: {selected: this.dataService.selectedMonth$.value, onDateChanged: this.onDateChanged},
+            hasBackdrop: true,
+            closeOnNavigation: true,
+            backdropClass: 'month-picker-backdrop'
+        });
+
+        dialog.afterDismissed().subscribe(() => {
+            if (dialog.instance.selection) {
+                let item = document.getElementById('monthSelector');// what we want to scroll to
+                let wrapper = document.getElementById('main-content');// the wrapper we will scroll inside
+                let header = document.getElementById('main-toolbar');// the wrapper we will scroll inside
+                let count = item.offsetTop - wrapper.scrollTop - header.scrollHeight - 10; // xx = any extra distance from top ex. 60
+                wrapper.scrollBy({top: count, left: 0, behavior: 'smooth'});
+
+                this.onDateChanged(dialog.instance.selection);
             }
         });
     }
@@ -322,5 +346,14 @@ export class HomeComponent implements OnInit {
         } else {
             this.router.navigate(['/owners-dashboard/day', date]);
         }
+    }
+
+    onDateChanged(mom: moment.Moment) {
+        const month = moment(mom).startOf('month');
+        this.dataService.selectedMonth$.next(month);
+    }
+
+    isCurrentMonth() {
+        return this.dataService.selectedMonth$.value.isSameOrAfter(moment(), 'month');
     }
 }
