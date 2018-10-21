@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import {tmpTranslations} from '../../../../tabit/data/data.service';
 import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 import {environment} from '../../../../environments/environment';
+import * as _ from 'lodash';
 @Component({
     selector: 'app-month-grid',
     templateUrl: './month-grid.component.html',
@@ -24,6 +25,7 @@ export class MonthGridComponent implements OnInit {
     selected: any;
     public environment;
     private tabitHelper;
+    maxSalesValue: any;
 
     constructor() {
         this.environment = environment;
@@ -44,6 +46,12 @@ export class MonthGridComponent implements OnInit {
     }
 
     ngOnInit() {
+        let highestRecord = _.max([_.maxBy(this.days, function(o) { return o.salesAndRefoundAmountIncludeVat; }), _.maxBy(this.days, function(o) { return o.AvgNweeksSalesAndRefoundAmountIncludeVat; })]);
+
+        if(highestRecord) {
+            this.maxSalesValue = Math.max(highestRecord.salesAndRefoundAmountIncludeVat, highestRecord.AvgNweeksSalesAndRefoundAmountIncludeVat);
+        }
+
         this.changeAvgPeriodComparator('month');
         this.changeCategory('sales');
     }
@@ -180,6 +188,10 @@ export class MonthGridComponent implements OnInit {
      * @param day
      */
     getProgressBarWidth(day): number {
+        if(this.category === 'sales') {
+            return this.salesProgressBarWidth(day);
+        }
+
         let width = this.getPercentage(day);
         if (width === 0) {
             width = 100;
@@ -199,6 +211,10 @@ export class MonthGridComponent implements OnInit {
      * @param day
      */
     getProgressBarContainerWidth(day) { //in px
+
+        if(this.category === 'sales') {
+            return this.innerAndOuterWidth(day);
+        }
 
         let width = 85 + ((this.getPercentage(day) - 100) * 1.17);
         if (width > 100) {
@@ -253,5 +269,34 @@ export class MonthGridComponent implements OnInit {
 
     getAvgValue(day) {
         return this.getAvgPeriodValueByCategory(day);
+    }
+
+    //new procedures
+    outerWidth(record) {
+        if(this.category === 'sales') {
+            return record.AvgNweeksSalesAndRefoundAmountIncludeVat / this.maxSalesValue * 100;
+        }
+        else {
+            return 85;
+        }
+
+    }
+
+    innerAndOuterWidth(record) {
+        let outer = this.outerWidth(record);
+        let inner = record.salesAndRefoundAmountIncludeVat / this.maxSalesValue * 100;
+
+        if(record.salesAndRefoundAmountIncludeVat > record.AvgNweeksSalesAndRefoundAmountIncludeVat) {
+            return inner;
+        }
+
+        return outer;
+    }
+
+    salesProgressBarWidth(record) {
+        if(record.salesAndRefoundAmountIncludeVat > record.AvgNweeksSalesAndRefoundAmountIncludeVat) {
+            return 100;
+        }
+        return ((record.salesAndRefoundAmountIncludeVat / this.maxSalesValue) / (record.AvgNweeksSalesAndRefoundAmountIncludeVat / this.maxSalesValue)) * 100;
     }
 }
