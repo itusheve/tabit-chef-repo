@@ -56,7 +56,8 @@ export class MonthPickerDialogComponent {
                         aggregations: {},
                         averages: {weekly: {percentage: 0, change: 0}},
                         reductions: {},
-                        statusClass: ''
+                        statusClass: '',
+                        showDrillArrow: true
                     };
 
                     let previousMonth = database.getMonth(moment(month.latestDay).subtract(1, 'months'));
