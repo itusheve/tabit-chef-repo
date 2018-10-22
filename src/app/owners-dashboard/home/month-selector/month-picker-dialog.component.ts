@@ -131,6 +131,7 @@ export class MonthPickerDialogComponent {
     select(event: MouseEvent, month): void {
         this.selection = month.date;
         this.currentMonth = month.date;
+        this.onDateChanged(this.selection);
         this.bottomSheetRef.dismiss();
         event.preventDefault();
     }
