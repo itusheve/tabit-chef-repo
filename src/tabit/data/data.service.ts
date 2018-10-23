@@ -1479,13 +1479,13 @@ export class DataService {
     }
 
     async getDailyReport(day: moment.Moment) {
-        let org = JSON.parse(window.localStorage.getItem('org'));
+        /*let org = JSON.parse(window.localStorage.getItem('org'));*/
         /*let reportsCache = JSON.parse(window.localStorage.getItem(org.id + '-daily-reports'));
         if (!reportsCache) {
             reportsCache = [];
         }*/
 
-        let now = moment();
+        /*let now = moment();*/
 
         /*let dailyReport = _.find(reportsCache, {date: day.format('YYYYMMDD')});
         if (!day.isSame(now, 'days') && dailyReport && moment(dailyReport.createTime, 'YYYY-MM-DD HH:mm').isSameOrAfter(now.subtract(10, 'minutes'))) {

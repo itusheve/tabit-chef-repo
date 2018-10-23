@@ -105,12 +105,16 @@ export class HomeComponent implements OnInit {
             autoFocus: false
         });
 
-        /* Example on how to use after dismissed
         dialog.afterDismissed().subscribe(() => {
-            if (dialog.instance.selection) {
+            /*if (dialog.instance.selection) {
                 this.onDateChanged(dialog.instance.selection);
-            }
-        });*/
+            }*/
+            let item = document.getElementById('monthSelector');// what we want to scroll to
+            let wrapper = document.getElementById('main-content');// the wrapper we will scroll inside
+            let header = document.getElementById('main-toolbar');// the wrapper we will scroll inside
+            let count = item.offsetTop - wrapper.scrollTop - header.scrollHeight - 10; // xx = any extra distance from top ex. 60
+            wrapper.scrollBy({top: count, left: 0, behavior: 'smooth'});
+        });
     }
 
     getTodayData(): void {

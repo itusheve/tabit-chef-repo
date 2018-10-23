@@ -78,7 +78,7 @@
                         </mat-panel-title>
                         <mat-panel-description>
                             <div class="flex a-center">
-                                <div class="ar" style="width:70px">{{orderType.sales | curr:'0'}}</div>
+                                <div class="ar" style="width:70px">{{orderType.salesBeforeTip | curr:'0'}}</div>
                                 <div class="ms20">
                                     {{orderType.ordersCount | count}}
                                     &nbsp;<ng-container i18n="@@orders">Orders</ng-container>

@@ -58,7 +58,7 @@ export class DayOrdersTableComponent implements OnChanges {
                 };
 
                 if (openOrder.totals.totalAmount > 0) {
-                    let sales = openOrder.totals.totalAmount / 100;
+                    let sales = openOrder.totals.netSales / 100;
                     this.openOrders.totalAmount += sales;
                     formattedOpenOrder.sales = sales;
                 }
@@ -92,6 +92,7 @@ export class DayOrdersTableComponent implements OnChanges {
             orderTypesArr.forEach(ot => {
                 ot.orders = ordersCloned.filter(o => o.orderType.id === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);
                 ot.sales = ot.orders.reduce((acc, curr) => acc + (curr.sales || 0), 0);
+                ot.salesBeforeTip = ot.orders.reduce((acc, curr) => acc + (curr.salesBeforeTip || 0), 0);
                 ot.ordersCount = ot.orders.reduce((acc, curr) => (acc + 1), 0);
                 totalOrdersCount += ot.ordersCount;
             });

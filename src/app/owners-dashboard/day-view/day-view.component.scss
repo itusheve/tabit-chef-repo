@@ -18,6 +18,8 @@ $matAccordionHeaderColor: #C5CCD4;
 }
 
 ::ng-deep.mat-expansion-panel {
+  border-radius: 0px !important;
+
   ::ng-deep.mat-expansion-panel-header {
     font-family: inherit!important;
     font-size: 18px!important;

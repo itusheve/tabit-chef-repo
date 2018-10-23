@@ -6,7 +6,8 @@ import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
-import {zip, combineLatest, Subject} from 'rxjs';
+import {zip, combineLatest, Subject, Observable} from 'rxjs';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {Order} from '../../../tabit/model/Order.model';
 import {OrderType} from '../../../tabit/model/OrderType.model';
 import {OwnersDashboardService} from '../owners-dashboard.service';
@@ -180,6 +181,9 @@ export class DayViewComponent implements OnInit {
     public openOrders: any;
 
     private day$ = new Subject<moment.Moment>();
+    private dayDebounced: Observable<moment.Moment>;
+    private metaData: any;
+    private user: any;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private dataService: DataService,
@@ -197,6 +201,8 @@ export class DayViewComponent implements OnInit {
         this.region = environment.region;
         this.hasData = false;
         this.today = moment();
+
+        this.user = JSON.parse(window.localStorage.getItem('user'));
     }
 
     extractOrders(dailyReport): Order[] {
@@ -215,6 +221,7 @@ export class DayViewComponent implements OnInit {
             order.orderType = new OrderType(tlog.orderType, 1);
 
             order.sales = tlog.totalAmount;
+            order.salesBeforeTip = tlog.totalBeforeTip;
             order.tlogId = tlog.tlogId;
             order.waiter = tlog.userName;
             order.openingTime = tlog.HHMM; //weird hack, talk to BI to get it formatted
@@ -260,8 +267,12 @@ export class DayViewComponent implements OnInit {
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
+        this.dayDebounced = this.day$.pipe(
+            debounceTime(1000)
+        );
+
         //get card data for the day
-        combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.olapToday$)
+        combineLatest(this.dayDebounced, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.olapToday$)
         .subscribe(data => {
             let date = data[0];
             let database = data[1];
@@ -301,6 +312,17 @@ export class DayViewComponent implements OnInit {
                         change: this.dayFromDatabase.mrPrc - this.dayFromDatabase.avgNweeksMrPrc
                     }
                 };
+
+                this.cardData.averages = {
+                    /*yearly: {
+                        percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
+                        change: day.aggregations.sales.amount / day.aggregations.sales.yearAvg
+                    },*/
+                    weekly: {
+                        percentage: ((this.dayFromDatabase.salesAndRefoundAmountIncludeVat / this.dayFromDatabase.AvgNweeksSalesAndRefoundAmountIncludeVat) - 1),
+                        change: (this.dayFromDatabase.salesAndRefoundAmountIncludeVat / this.dayFromDatabase.AvgNweeksSalesAndRefoundAmountIncludeVat) * 100
+                    }
+                };
             }
 
             if (moment().isSame(date, 'day')) {
@@ -315,19 +337,46 @@ export class DayViewComponent implements OnInit {
                 let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
 
                 this.cardData.sales = totalSales;
+
+                this.cardData.averages = {
+                    /*yearly: {
+                        percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
+                        change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
+                    },*/
+                    weekly: {
+                        percentage: totalSales ? ((totalSales / OlapToday.aggregations.sales.fourWeekAvg) - 1) : 0,
+                        change: (totalSales / OlapToday.aggregations.sales.fourWeekAvg) * 100
+                    }
+                };
             }
         });
 
-        combineLatest(this.day$, this.dataService.refresh$).subscribe(async data => {
+        combineLatest(this.dayDebounced, this.dataService.refresh$).subscribe(async data => {
             let dayDate = data[0];
-
-            let dailyReport = await this.dataService.getDailyReport(dayDate);
-            if (!dailyReport || !dailyReport.summary) {
+            let dailyReport;
+            try {
+                dailyReport = await this.dataService.getDailyReport(dayDate);
+            }
+            catch(e) {
                 this.hasData = false;
                 this.hasNoDataForToday = true;
                 return;
             }
 
+            if (!dailyReport || !dailyReport.summary) {
+                this.hasData = false;
+                this.hasNoDataForToday = true;
+                return;
+            }
+            else {
+                this.hasData = true;
+                this.hasNoDataForToday = false;
+            }
+
+            this.metaData = {
+                isEod: dailyReport.isEOD,
+                isBalanced: dailyReport.isBalance,
+            };
             this.orders = this.extractOrders(dailyReport);
 
             dailyReport.summary = _.orderBy(dailyReport.summary, 'orderTypeKey', 'asc');
@@ -542,9 +591,9 @@ export class DayViewComponent implements OnInit {
             });
     }
 
-
     onDateChanged(dateM: moment.Moment) {
         this.hasData = false;
+        this.hasNoDataForToday = false;
         this.day = dateM;
         this.day$.next(this.day);
     }

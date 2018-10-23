@@ -4,7 +4,7 @@ export const environment = {
     region: 'il',
     tbtLocale: 'he-IL',//
     rosConfig: {//IL 'BETA' 'REPORTS'
-        baseUrl: 'https://ros-office-beta.herokuapp.com/'
+        baseUrl: 'https://ros-rp-beta.tabit.cloud/'
     },
     olapConfig: {//IL PROD CUBE
         baseUrl: 'https://analytics-dev.tabit.cloud/proxyV2/il-prod/proxy.ashx',

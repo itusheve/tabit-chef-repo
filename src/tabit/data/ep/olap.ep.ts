@@ -158,6 +158,7 @@ export class OlapEp {
             let token = JSON.parse(window.localStorage.getItem('token'));
             let headers = new HttpHeaders({'Content-Type': 'application/json'});
 
+
             this.httpClient.post(`${this.sqlServerProxy}?customdata=S${org.id}&token=${token.access_token}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
                     action: 'tabitChefSiteDailyV2',
@@ -174,6 +175,7 @@ export class OlapEp {
                     },
                     (err) => {
                         console.log(`Handler Proxy Error: ${JSON.stringify(err)}`);
+                        throw err;
                     }
                 );
         });
