@@ -13,7 +13,7 @@ import {
 import {HomeComponent} from './home/home.component';
 import {OwnerSettingsComponent} from './settings/owner-settings.component';
 
-import {MomentModule} from 'angular2-moment';
+import {MomentModule} from 'ngx-moment';
 
 import {MonthViewComponent} from './month-view/month-view.component';
 import {MonthSelectorComponent} from './home/month-selector/month-selector.component';

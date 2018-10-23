@@ -27,7 +27,7 @@ import {
     MatProgressBarModule,
 } from '@angular/material';//material modules
 
-import {MomentModule} from 'angular2-moment';
+import {MomentModule} from 'ngx-moment';
 
 import {ROSEp} from '../tabit/data/ep/ros.ep';
 import {OlapEp} from '../tabit/data/ep/olap.ep';
