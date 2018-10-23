@@ -20,7 +20,7 @@
                 <tr>
                     <td i18n="@@total">Total</td>
                     <td class="ar">{{mtdBusinessData.totals.netSales | curr:'0'}}</td>
-                    <td class="ar">{{mtdBusinessData.totals.dinesrs}}<br>({{mtdBusinessData.totals.ppaAmount | curr:'1'}})</td>
+                    <td class="ar">{{mtdBusinessData.totals.dinesrs}}<br>({{mtdBusinessData.totals.ppaAmount | curr:'2'}})</td>
                     <td class="ar">{{mtdBusinessData.totals.CancellationAmount | curr:'0'}}<br>({{mtdBusinessData.totals.CancellationAmount / mtdBusinessData.totals.netSales | pct:'1'}})</td>
                     <td class="ar">{{mtdBusinessData.totals.OperationalDiscountAmount | curr:'0'}}<br>({{mtdBusinessData.totals.OperationalDiscountAmount / mtdBusinessData.totals.netSales | pct:'1'}})</td>
                     <td class="ar">{{mtdBusinessData.totals.RetentionDiscountAmount | curr:'0'}}<br>({{mtdBusinessData.totals.RetentionDiscountAmount / mtdBusinessData.totals.netSales | pct:'1'}})</td>
@@ -29,7 +29,7 @@
                 <tr *ngFor="let tuple of mtdBusinessData.businessDays">
                     <td>{{tuple.businessDate}}</td>
                     <td class="ar">{{tuple.netSales | curr:'0'}}</td>
-                    <td class="ar">{{tuple.dinesrs}}<br>({{tuple.ppaAmount | curr:'1'}})</td>
+                    <td class="ar">{{tuple.dinesrs}}<br>({{tuple.ppaAmount | curr:'2'}})</td>
                     <td class="ar">{{tuple.CancellationAmount | curr:'0'}}<br>({{tuple.CancellationAmount / tuple.netSales | pct:'1'}})</td>
                     <td class="ar">{{tuple.OperationalDiscountAmount | curr:'0'}}<br>({{tuple.OperationalDiscountAmount / tuple.netSales | pct:'1'}})</td>
                     <td class="ar">{{tuple.RetentionDiscountAmount | curr:'0'}}<br>({{tuple.RetentionDiscountAmount / tuple.netSales | pct:'1'}})</td>

@@ -67,6 +67,15 @@ export class OwnersDashboardComponent implements OnInit {
         dataService.vat$.subscribe((vat: boolean) => {
             this.vat = vat;
         });
+
+        dataService.selectedMonth$.subscribe(month => {
+            if(!month.isSame(moment(), 'month')) {
+                ownersDashboardService.toolbarConfig.home.show = true;
+            }
+            else {
+                ownersDashboardService.toolbarConfig.home.show = false;
+            }
+        });
     }
 
     refresh() {

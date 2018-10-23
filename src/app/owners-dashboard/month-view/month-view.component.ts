@@ -30,6 +30,7 @@ export class MonthViewComponent implements OnInit {
     @ViewChild('monthGrid') monthGrid;
 
     @Output() onDayRequest = new EventEmitter();
+    @Output() onMonthCardClick = new EventEmitter();
 
     month: moment.Moment;
     renderGrid = true;
@@ -105,6 +106,7 @@ export class MonthViewComponent implements OnInit {
         this.summaryCardData.diners = month.diners || month.orders;
         this.summaryCardData.ppa = incTax ? month.ppaIncludeVat : month.ppaIncludeVat / month.vat;
         this.summaryCardData.sales = incTax ? month.ttlsalesIncludeVat : month.ttlsalesExcludeVat;
+        this.summaryCardData.showDrillArrow = true;
 
         this.summaryCardData.averages = {
             /*yearly: {
@@ -168,5 +170,9 @@ export class MonthViewComponent implements OnInit {
 
     onDateClicked2(date: string) {//TODO ugly..
         this.onDayRequest.emit(date);
+    }
+
+    onMonthClicked(event) {
+        this.onMonthCardClick.emit(event);
     }
 }

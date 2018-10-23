@@ -13,6 +13,10 @@ export class OwnersDashboardService {
         menuBtn: {
             show: true,
         },
+        home: {
+            show: false,
+            goHome: undefined
+        },
         left: {
             back: {
                 showBtn: false,//show the btn?
@@ -110,6 +114,11 @@ export class OwnersDashboardService {
             } else {
                 console.error('OwnersDashboardService: onGoBackClicked: no target');
             }
+        };
+
+        this.toolbarConfig.home.goHome = function() {
+            dataService.selectedMonth$.next(moment());
+            router.navigate(['/owners-dashboard/home']);
         };
     }
 }

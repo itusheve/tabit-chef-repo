@@ -16,24 +16,24 @@
                 </tr>
                 <tr class="totalRow" *ngIf="data">
                     <td i18n="@@total">Total</td>
-                    <td class="ar">{{data.paymentsKpis.daily | curr:'0':'':'nullify'}}</td>
-                    <td class="ar">{{data.paymentsKpis.monthly | curr:'0':'':'nullify'}}</td>
-                    <td class="ar">{{data.paymentsKpis.yearly | curr:'0':'':'nullify'}}</td>
+                    <td class="ar">{{data.paymentsKpis.daily | curr:'0':'':'nullify':true}}</td>
+                    <td class="ar">{{data.paymentsKpis.monthly | curr:'0':'':'nullify':true}}</td>
+                    <td class="ar">{{data.paymentsKpis.yearly | curr:'0':'':'nullify':true}}</td>
                 </tr>
                 <ng-container *ngIf="data">
                     <ng-container *ngFor="let accountGroupObj of data.byAccountGroup">
                         <ng-container *ngIf="accountGroupObj">
                             <tr class="accountTypeRow">
                                 <td>{{accountGroupObj.accountGroup}}</td>
-                                <td class="ar">{{accountGroupObj.paymentsKpis.daily | curr:'0':'':'nullify'}}</td>
-                                <td class="ar">{{accountGroupObj.paymentsKpis.monthly | curr:'0':'':'nullify'}}</td>
-                                <td class="ar">{{accountGroupObj.paymentsKpis.yearly | curr:'0':'':'nullify'}}</td>
+                                <td class="ar">{{accountGroupObj.paymentsKpis.daily | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar">{{accountGroupObj.paymentsKpis.monthly | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar">{{accountGroupObj.paymentsKpis.yearly | curr:'0':'':'nullify':true}}</td>
                             </tr>
                             <tr *ngFor="let clearerNameObj of accountGroupObj.byClearerName" class="accountRow">
                                 <td>{{clearerNameObj.clearerName}}</td>
-                                <td class="ar">{{clearerNameObj.paymentsKpis.daily | curr:'0':'':'nullify'}}</td>
-                                <td class="ar">{{clearerNameObj.paymentsKpis.monthly | curr:'0':'':'nullify'}}</td>
-                                <td class="ar">{{clearerNameObj.paymentsKpis.yearly | curr:'0':'':'nullify'}}</td>
+                                <td class="ar">{{clearerNameObj.paymentsKpis.daily | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar">{{clearerNameObj.paymentsKpis.monthly | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar">{{clearerNameObj.paymentsKpis.yearly | curr:'0':'':'nullify':true}}</td>
                             </tr>
                         </ng-container>
                     </ng-container>

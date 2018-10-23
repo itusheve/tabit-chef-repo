@@ -53,8 +53,8 @@ export class DayViewComponent implements OnInit {
     /* the day's Orders */
     public orders: Order[];
 
-    public dailySummaryTblData: { title: string; data: SalesTableRow[] };
-    public byShiftSummaryTblsData: {  title: string; data: SalesTableRow[] }[];
+    public dailySummaryTblData: { title: string; data: SalesTableRow[], globalSalesIncludingVat: any };
+    public byShiftSummaryTblsData: {  title: string; data: SalesTableRow[], globalSalesIncludingVat: any }[];
 
     public salesBySubDepartment: {
         thisBd: {
@@ -193,6 +193,7 @@ export class DayViewComponent implements OnInit {
         ownersDashboardService.toolbarConfig.menuBtn.show = false;
         ownersDashboardService.toolbarConfig.settings.show = false;
         ownersDashboardService.toolbarConfig.center.showVatComment = false;
+        ownersDashboardService.toolbarConfig.home.show = true;
         this.region = environment.region;
         this.hasData = false;
         this.today = moment();
@@ -330,9 +331,13 @@ export class DayViewComponent implements OnInit {
             this.orders = this.extractOrders(dailyReport);
 
             dailyReport.summary = _.orderBy(dailyReport.summary, 'orderTypeKey', 'asc');
+            let summary = _.filter(dailyReport.summary, summary => summary.serviceKey == '-1');
+            let globalSalesIncludingVat = _.sumBy(summary, function(row) { return row.ttlSaleAmountIncludeVat; });
+
             this.dailySummaryTblData = {
                 title: '',
-                data: _.filter(dailyReport.summary, summary => summary.serviceKey == '-1')
+                data: summary,
+                globalSalesIncludingVat: globalSalesIncludingVat
             };
 
 
@@ -350,7 +355,7 @@ export class DayViewComponent implements OnInit {
                 let serviceKey = _.get(summary, 'serviceKey');
                 if (serviceKey && serviceKey != '-1') {
                     if(!this.byShiftSummaryTblsData[+serviceKey]) {
-                        this.byShiftSummaryTblsData[+serviceKey] = {title: summary.serviceName, data: []};
+                        this.byShiftSummaryTblsData[+serviceKey] = {title: summary.serviceName, data: [], globalSalesIncludingVat: globalSalesIncludingVat};
                     }
 
                     this.byShiftSummaryTblsData[+serviceKey].data.push(summary);

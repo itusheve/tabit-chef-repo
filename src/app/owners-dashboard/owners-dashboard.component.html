@@ -66,7 +66,14 @@
                 <div *ngIf="toolbarConfig.center.showVatComment && vat" style="color:white;font-size:12px;">(<span i18n="owners-dashboard@@includingVAT">Data including VAT</span>)
                 </div>
             </div>
-            <div class="flex j-end pe15" style="width:15%"></div>
+            <div class="flex j-end pe15" style="width:15%">
+                <button style="height: 70px; width: 70px;"
+                        *ngIf="toolbarConfig.home.show"
+                        mat-icon-button
+                        (click)="toolbarConfig.home.goHome()">
+                    <mat-icon>{{env.tbtLocale==='he-IL' ? 'home' : 'home'}}</mat-icon>
+                </button>
+            </div>
         </div>
         <div class="contentFixed">
             <div class="content" id="main-content" (swipeleft)="env.region === 'il' ? sidenav.open() : sidenav.close()">

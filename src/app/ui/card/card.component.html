@@ -6,7 +6,7 @@
             <ng-container *ngIf="cardData" i18n="@@orsLastDay">{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</ng-container>
             {{cardData?.title || '&nbsp;'}}
         </span>
-        <mat-icon *ngIf="cardData.showDrillArrow" style="top:3px; position: relative; float: left;">note_add</mat-icon>
+        <mat-icon *ngIf="cardData.showDrillArrow" style="top:3px; position: relative; float: left;">keyboard_arrow_left</mat-icon>
     </div>
     <div class="card-body py-2">
         <div *ngIf="!cardData || cardData.loading" class="text-center">

@@ -101,7 +101,7 @@ export class HomeComponent implements OnInit {
             data: {selected: this.dataService.selectedMonth$.value, onDateChanged: this.onDateChanged},
             hasBackdrop: true,
             closeOnNavigation: true,
-            backdropClass: 'month-picker-backdrop'
+            backdropClass: 'month-picker-backdrop',
         });
 
         /* Example on how to use after dismissed

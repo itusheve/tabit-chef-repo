@@ -2,6 +2,7 @@ import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '
 import {MatDatepickerInputEvent} from '@angular/material';
 import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
+import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 
 @Component({
     selector: 'app-day-selector',
@@ -24,10 +25,11 @@ export class DaySelectorComponent implements OnChanges {
     disableNext = true;
 
     public region: any;
-
+    private tabitHelper;
     constructor() {
         this.datePickerMaxDate = new Date();
         this.region = environment.region;
+        this.tabitHelper = new TabitHelper();
     }
 
     private setDisable() {
@@ -72,6 +74,16 @@ export class DaySelectorComponent implements OnChanges {
     changeDate(event: MatDatepickerInputEvent<Date>) {
         this.currentValue = moment(event.value);
         this.onDateChanged.emit(this.currentValue);
+    }
+
+    getPickerBackground(day) {
+        if(day) {
+            return this.tabitHelper.getColorClassByPercentage((day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) * 100, true);
+        }
+        else {
+            return '';
+        }
+
     }
 
 }

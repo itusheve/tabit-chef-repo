@@ -35,4 +35,4 @@
         </div>
     </div>
 </div>
-<app-month-view *ngIf="!loadingOlapData" (onDayRequest)="onDayRequest($event)"></app-month-view>
+<app-month-view *ngIf="!loadingOlapData" (onDayRequest)="onDayRequest($event)" (onMonthCardClick)="openMonthPicker()"></app-month-view>

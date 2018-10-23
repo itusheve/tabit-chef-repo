@@ -51,7 +51,7 @@
                             <td>{{openOrder.openingTime | date:'H:mm'}}</td>
                             <td>{{openOrder.number | number:'1.0-0'}}</td>
                             <!--<td>{{openOrder.waiter}}</td>-->
-                            <td class="ar">{{openOrder.sales | curr:'1'}}</td>
+                            <td class="ar">{{openOrder.sales | curr:'0'}}</td>
                         </tr>
                     </table>
                 </mat-expansion-panel>
@@ -175,7 +175,7 @@
                             <td>{{order.openingTime}}</td>
                             <td>{{order.number | number:'1.0-0'}}</td>
                             <td>{{order.waiter}}</td>
-                            <td class="ar">{{order.sales | curr:'1'}}</td>
+                            <td class="ar">{{order.sales | curr:'0'}}</td>
                             <td>
                                 <div class="flex a-center" style="height:100%;">
                                     <i class="mh3 icon iconOperationalAndCancellations"
