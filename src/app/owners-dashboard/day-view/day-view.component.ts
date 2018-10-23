@@ -183,7 +183,7 @@ export class DayViewComponent implements OnInit {
     private day$ = new Subject<moment.Moment>();
     private dayDebounced: Observable<moment.Moment>;
     private metaData: any;
-    private user: any;
+    public user: any;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private dataService: DataService,
