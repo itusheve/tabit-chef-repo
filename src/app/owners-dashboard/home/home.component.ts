@@ -102,6 +102,7 @@ export class HomeComponent implements OnInit {
             hasBackdrop: true,
             closeOnNavigation: true,
             backdropClass: 'month-picker-backdrop',
+            autoFocus: false
         });
 
         /* Example on how to use after dismissed
