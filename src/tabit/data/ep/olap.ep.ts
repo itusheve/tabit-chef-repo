@@ -157,7 +157,7 @@ export class OlapEp {
             let org = JSON.parse(window.localStorage.getItem('org'));
             let token = JSON.parse(window.localStorage.getItem('token'));
             let headers = new HttpHeaders({'Content-Type': 'application/json'});
-            this.dailyReportPendingRequestsCount++;
+            //this.dailyReportPendingRequestsCount++;
 
             this.httpClient.post(`${this.sqlServerProxy}?customdata=S${org.id}&token=${token.access_token}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
@@ -171,11 +171,12 @@ export class OlapEp {
                 })
                 .subscribe(
                     (results: any) => {
-                        this.dailyReportPendingRequestsCount--;
+                        resolve(results);
+                        /*this.dailyReportPendingRequestsCount--;
                         if(this.dailyReportPendingRequestsCount <= 0) {
                             this.dailyReportPendingRequestsCount = 0;
-                            resolve(results);
-                        }
+
+                        }*/
                     },
                     (err) => {
                         this.dailyReportPendingRequestsCount--;

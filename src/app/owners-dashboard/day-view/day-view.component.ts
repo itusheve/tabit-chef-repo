@@ -260,10 +260,10 @@ export class DayViewComponent implements OnInit {
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
-        this.dayDebounceStream$ = this.day$.pipe(debounceTime(350));
+        //this.dayDebounceStream$ = this.day$.pipe(debounceTime(350));
 
         //get card data for the day
-        combineLatest(this.dayDebounceStream$, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.olapToday$)
+        combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.olapToday$)
         .subscribe(data => {
             let date = data[0];
             let database = data[1];
@@ -342,7 +342,7 @@ export class DayViewComponent implements OnInit {
             }
         });
 
-        combineLatest(this.dayDebounceStream$, this.dataService.refresh$).subscribe(async data => {
+        combineLatest(this.day$, this.dataService.refresh$).subscribe(async data => {
             let dayDate = data[0];
             let dailyReport;
             try {
