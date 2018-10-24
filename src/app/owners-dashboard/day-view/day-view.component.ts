@@ -260,7 +260,7 @@ export class DayViewComponent implements OnInit {
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
-        this.dayDebounceStream$ = this.day$.pipe(debounceTime(1));
+        this.dayDebounceStream$ = this.day$.pipe(debounceTime(350));
 
         //get card data for the day
         combineLatest(this.dayDebounceStream$, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.olapToday$)

@@ -172,7 +172,8 @@ export class OlapEp {
                 .subscribe(
                     (results: any) => {
                         this.dailyReportPendingRequestsCount--;
-                        if(this.dailyReportPendingRequestsCount === 0) {
+                        if(this.dailyReportPendingRequestsCount <= 0) {
+                            this.dailyReportPendingRequestsCount = 0;
                             resolve(results);
                         }
                     },
