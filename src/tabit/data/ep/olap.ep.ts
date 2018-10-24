@@ -61,7 +61,7 @@ export class OlapEp {
     private baseUrl = environment.olapConfig.baseUrl;
     private sqlServerProxy = environment.olapConfig.sqlServerProxy;
     private url$: ReplaySubject<any>;
-    private dailyReportPendingRequestsCount: Number = 0;
+    private dailyReportPendingRequestsCount:number = 0;
 
     constructor(private olapMappings: OlapMappings, private httpClient: HttpClient) {}
 
