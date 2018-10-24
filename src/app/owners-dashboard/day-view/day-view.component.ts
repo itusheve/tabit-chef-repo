@@ -268,7 +268,7 @@ export class DayViewComponent implements OnInit {
         this.byShiftSummaryTblsData = undefined;
 
         this.dayDebounced = this.day$.pipe(
-            debounceTime(1000)
+            debounceTime(500)
         );
 
         //get card data for the day
