@@ -66,12 +66,13 @@ export class DayPaymentsTableComponent implements OnChanges {
                     byAccountGroupObj = {
                         accountGroup: payment.accountGroup,
                         paymentsKpis: {},
-                        byClearerName: []
+                        byClearerName: [],
+                        order: this.getAccountGroupOrderByName(payment.accountGroup)
                     };
                     data.byAccountGroup.push(byAccountGroupObj);
                 }
 
-                if(payment.clearerName) {
+                if (payment.clearerName) {
                     let byClearerNameObj = byAccountGroupObj.byClearerName.find(o => o.clearerName === payment.clearerName);
 
                     if (!byClearerNameObj) {
@@ -106,12 +107,23 @@ export class DayPaymentsTableComponent implements OnChanges {
                 this.data = data;
             }
 
-            if(this.data) {
+            if (this.data) {
                 let byAccountGroup = _.get(this.data, 'byAccountGroup');
-                byAccountGroup = _.orderBy(byAccountGroup, 'accountGroup', 'desc');
+                byAccountGroup = _.orderBy(byAccountGroup, 'order');
                 this.data.byAccountGroup = byAccountGroup;
                 this.loading = false;
             }
         }
+    }
+
+    getAccountGroupOrderByName(name) {
+        if(name === 'מזומן' || name === 'cash' ) {
+            return 1;
+        }
+        else if(name === 'אשראי' || name === 'credit') {
+            return 2;
+        }
+
+        return 3;
     }
 }

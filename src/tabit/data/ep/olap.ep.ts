@@ -61,9 +61,9 @@ export class OlapEp {
     private baseUrl = environment.olapConfig.baseUrl;
     private sqlServerProxy = environment.olapConfig.sqlServerProxy;
     private url$: ReplaySubject<any>;
+    private dailyReportPendingRequestsCount: Number = 0;
 
-    constructor(private olapMappings: OlapMappings, private httpClient: HttpClient) {
-    }
+    constructor(private olapMappings: OlapMappings, private httpClient: HttpClient) {}
 
     public getToday(currentTime): Promise<any> {
         return new Promise((resolve, reject) => {
@@ -157,7 +157,7 @@ export class OlapEp {
             let org = JSON.parse(window.localStorage.getItem('org'));
             let token = JSON.parse(window.localStorage.getItem('token'));
             let headers = new HttpHeaders({'Content-Type': 'application/json'});
-
+            this.dailyReportPendingRequestsCount++;
 
             this.httpClient.post(`${this.sqlServerProxy}?customdata=S${org.id}&token=${token.access_token}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
@@ -171,9 +171,13 @@ export class OlapEp {
                 })
                 .subscribe(
                     (results: any) => {
-                        resolve(results);
+                        this.dailyReportPendingRequestsCount--;
+                        if(this.dailyReportPendingRequestsCount === 0) {
+                            resolve(results);
+                        }
                     },
                     (err) => {
+                        this.dailyReportPendingRequestsCount--;
                         console.log(`Handler Proxy Error: ${JSON.stringify(err)}`);
                         throw err;
                     }

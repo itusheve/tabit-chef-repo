@@ -32,13 +32,6 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
                 subDepartment: string;
                 sales: number
             }[]
-        },
-        thisYear: {
-            totalSales: number;
-            bySubDepartment: {
-                subDepartment: string;
-                sales: number
-            }[]
         }
     };
 
@@ -49,9 +42,7 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
             thisWeekSales?: number,
             thisWeekPct?: number,
             thisMonthSales?: number,
-            thisMonthPct?: number,
-            thisYearSales?: number,
-            thisYearPct?: number
+            thisMonthPct?: number
         };
         bySubDepartment: any[]
     } = {
@@ -94,14 +85,6 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
                         sales: number,
                         pct?: number
                     }[]
-                },
-                thisYear: {
-                    totalSales: number;
-                    bySubDepartment: {
-                        subDepartment: string;
-                        sales: number,
-                        pct?: number
-                    }[]
                 }
             } = _.cloneDeep(this.salesBySubDepartment);
 
@@ -114,19 +97,14 @@ export class DaySalesBySubDepartmentTableComponent implements OnChanges {
             clone.thisMonth.bySubDepartment.forEach(element => {
                 element.pct = element.sales / clone.thisMonth.totalSales;
             });
-            clone.thisYear.bySubDepartment.forEach(element => {
-                element.pct = element.sales / clone.thisYear.totalSales;
-            });
 
             //this.data = clone;
             this.data.totalSales.thisBdSales = clone.thisBd.totalSales;
             this.data.totalSales.thisWeekSales = clone.thisWeek.totalSales;
             this.data.totalSales.thisMonthSales = clone.thisMonth.totalSales;
-            this.data.totalSales.thisYearSales = clone.thisYear.totalSales;
             this.data.totalSales.thisBdPct = 1;
             this.data.totalSales.thisWeekPct = 1;
             this.data.totalSales.thisMonthPct = 1;
-            this.data.totalSales.thisYearPct = 1;
 
             Object.keys(clone).forEach(k => {
                 const bySubDepartmentObject: {

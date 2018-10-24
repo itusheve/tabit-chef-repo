@@ -8,7 +8,7 @@ export class TabitHelper {
 
     public getColorClassByPercentage(percentage: number, reverse: boolean) {
         if (percentage === 0) {
-            return 'bg-secondary';
+            return 'bg-light';
         }
         if (percentage <= 80) {
             return reverse ? 'bg-danger-dark text-white' : 'bg-success-dark text-white';

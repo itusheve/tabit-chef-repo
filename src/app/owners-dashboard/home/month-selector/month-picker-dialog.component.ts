@@ -135,5 +135,10 @@ export class MonthPickerDialogComponent {
         this.bottomSheetRef.dismiss();
         event.preventDefault();
     }
+
+    goHome() {
+        this.ownersDashboardService.toolbarConfig.home.goHome();
+        this.bottomSheetRef.dismiss();
+    }
 }
 

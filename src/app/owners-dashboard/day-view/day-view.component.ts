@@ -78,13 +78,6 @@ export class DayViewComponent implements OnInit {
                 subDepartment: string;
                 sales: number
             }[]
-        },
-        thisYear: {
-            totalSales: number;
-            bySubDepartment: {
-                subDepartment: string;
-                sales: number
-            }[]
         }
     };
 
@@ -181,7 +174,7 @@ export class DayViewComponent implements OnInit {
     public openOrders: any;
 
     private day$ = new Subject<moment.Moment>();
-    private dayDebounced: Observable<moment.Moment>;
+    private dayDebounceStream$: Observable<moment.Moment>;
     private metaData: any;
     public user: any;
 
@@ -267,12 +260,10 @@ export class DayViewComponent implements OnInit {
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
 
-        this.dayDebounced = this.day$.pipe(
-            debounceTime(500)
-        );
+        this.dayDebounceStream$ = this.day$.pipe(debounceTime(1));
 
         //get card data for the day
-        combineLatest(this.dayDebounced, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.olapToday$)
+        combineLatest(this.dayDebounceStream$, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.olapToday$)
         .subscribe(data => {
             let date = data[0];
             let database = data[1];
@@ -351,7 +342,7 @@ export class DayViewComponent implements OnInit {
             }
         });
 
-        combineLatest(this.dayDebounced, this.dataService.refresh$).subscribe(async data => {
+        combineLatest(this.dayDebounceStream$, this.dataService.refresh$).subscribe(async data => {
             let dayDate = data[0];
             let dailyReport;
             try {
@@ -425,36 +416,27 @@ export class DayViewComponent implements OnInit {
                 thisMonth: {
                     totalSales: 0,
                     bySubDepartment: []
-                },
-                thisYear: {
-                    totalSales: 0,
-                    bySubDepartment: []
-                },
+                }
             };
 
             _.forEach(dailyReport.categories, category => {
-                if (!category.subDepartment) {
-                    this.salesBySubDepartment.thisBd.totalSales = category.businessDate;
-                    this.salesBySubDepartment.thisWeek.totalSales = category.week;
-                    this.salesBySubDepartment.thisMonth.totalSales = category.month;
-                    this.salesBySubDepartment.thisYear.totalSales = category.year;
-                }
-                else {
+
+                this.salesBySubDepartment.thisBd.totalSales += category.businessDateIncludeVat || 0;
+                this.salesBySubDepartment.thisWeek.totalSales += category.weekIncludeVat || 0;
+                this.salesBySubDepartment.thisMonth.totalSales += category.monthIncludeVat || 0;
+
+                if(category.subDepartmentName) {
                     this.salesBySubDepartment.thisBd.bySubDepartment.push({
-                        subDepartment: category.subDepartment,
-                        sales: category.businessDate
+                        subDepartment: category.subDepartmentName,
+                        sales: category.businessDateIncludeVat || 0
                     });
                     this.salesBySubDepartment.thisWeek.bySubDepartment.push({
-                        subDepartment: category.subDepartment,
-                        sales: category.week
+                        subDepartment: category.subDepartmentName,
+                        sales: category.weekIncludeVat || 0
                     });
                     this.salesBySubDepartment.thisMonth.bySubDepartment.push({
-                        subDepartment: category.subDepartment,
-                        sales: category.month
-                    });
-                    this.salesBySubDepartment.thisYear.bySubDepartment.push({
-                        subDepartment: category.subDepartment,
-                        sales: category.year
+                        subDepartment: category.subDepartmentName,
+                        sales: category.monthIncludeVat || 0
                     });
                 }
             });
