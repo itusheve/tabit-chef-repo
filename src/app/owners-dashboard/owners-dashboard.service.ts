@@ -119,6 +119,7 @@ export class OwnersDashboardService {
         this.toolbarConfig.home.goHome = function() {
             dataService.selectedMonth$.next(moment());
             router.navigate(['/owners-dashboard/home']);
+            window.scrollTo(0,0);
         };
     }
 }

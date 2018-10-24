@@ -87,21 +87,17 @@ export class DayPaymentsTableComponent implements OnChanges {
             // calculate aggregated kpis:
             if (!data.paymentsKpis.daily) data.paymentsKpis.daily = 0;
             if (!data.paymentsKpis.monthly) data.paymentsKpis.monthly = 0;
-            if (!data.paymentsKpis.yearly) data.paymentsKpis.yearly = 0;
 
             data.byAccountGroup.forEach(byAccountGroupObj => {
                 if (!byAccountGroupObj.paymentsKpis.daily) byAccountGroupObj.paymentsKpis.daily = 0;
                 if (!byAccountGroupObj.paymentsKpis.monthly) byAccountGroupObj.paymentsKpis.monthly = 0;
-                if (!byAccountGroupObj.paymentsKpis.yearly) byAccountGroupObj.paymentsKpis.yearly = 0;
 
                 byAccountGroupObj.byClearerName.forEach(byClearerNameObj => {
                     byAccountGroupObj.paymentsKpis.daily += byClearerNameObj.paymentsKpis.daily ? parseFloat(byClearerNameObj.paymentsKpis.daily) : 0;
                     byAccountGroupObj.paymentsKpis.monthly += byClearerNameObj.paymentsKpis.monthly ? parseFloat(byClearerNameObj.paymentsKpis.monthly) : 0;
-                    byAccountGroupObj.paymentsKpis.yearly += byClearerNameObj.paymentsKpis.yearly ? parseFloat(byClearerNameObj.paymentsKpis.yearly) : 0;
                 });
                 data.paymentsKpis.daily += byAccountGroupObj.paymentsKpis.daily;
                 data.paymentsKpis.monthly += byAccountGroupObj.paymentsKpis.monthly;
-                data.paymentsKpis.yearly += byAccountGroupObj.paymentsKpis.yearly;
             });
 
             if (data.paymentsKpis.daily === 0 && data.paymentsKpis.daily === 0) {
