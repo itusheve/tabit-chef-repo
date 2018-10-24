@@ -1,14 +1,9 @@
-<div class="btn-group bg-white" role="group" dir="ltr" style="width: 100%; z-index: 100000" id="daySelector">
-    <button type="button" class="btn btn-lg btn-outline-secondary rounded-0" (click)="region === 'il' ? nextDay($event) : prevDay($event)"
-            [ngClass]="region == 'il' ? {'disable':disableNext} : {'disable':disablePrevious}" style="width: 15%"><i class="material-icons" style="position: relative;top:4px">keyboard_arrow_left</i>
-    </button>
-    <button id="month" type="button" class="btn btn-lg btn-outline-secondary" style="width: 70%" (click)="picker.open()" [ngClass]="getPickerBackground(dayFromDatabase)">
+<div dir="ltr" style="width: 100%; z-index: 100000" id="daySelector">
+    <button id="month" type="button" class="btn btn-lg btn-outline-secondary rounded-0" style="width: 100%" (click)="picker.open()" [ngClass]="getPickerBackground(dayFromDatabase)">
+        <mat-icon class="float-left" style="position: relative; top:4px;">calendar_today</mat-icon>
         {{currentValue | date:'fullDate':currentValue.format('ZZ')}}
         <span *ngIf="dayFromDatabase?.holiday" class="font-weight-light" style="font-size: 14px; position: relative; top:2px; display: block; margin: -8px">{{dayFromDatabase?.holiday}}</span>
     </button>
     <input matInput [matDatepicker]="picker" [max]="datePickerMaxDate" (dateChange)="changeDate($event)" type="hidden">
     <mat-datepicker touchUi  #picker [startAt]="currentValue.format()"></mat-datepicker>
-    <button type="button" class="btn btn-outline-secondary btn-lg rounded-0" (click)="region === 'il' ? prevDay($event): nextDay($event)"
-            [ngClass]="region == 'il' ? {'disable':disablePrevious} : {'disable':disableNext}" style="width: 16%"><i class="material-icons" style="position: relative;top:4px">keyboard_arrow_right</i>
-    </button>
 </div>
