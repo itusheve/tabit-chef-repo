@@ -28,8 +28,8 @@
                             </tr>
                             <tr *ngFor="let clearerNameObj of accountGroupObj.byClearerName" class="accountRow">
                                 <td>&nbsp;&nbsp;{{clearerNameObj.clearerName}}</td>
-                                <td class="ar" dir="ltr">{{clearerNameObj.paymentsKpis.daily | curr:'0':'':'nullify':true}}<span style="display: block">({{clearerNameObj.paymentsKpis.dailyPrc | pct:'1'}})</span></td>
-                                <td class="ar" dir="ltr">{{clearerNameObj.paymentsKpis.monthly | curr:'0':'':'nullify':true}}<span style="display: block">({{clearerNameObj.paymentsKpis.dailyPrc | pct:'1'}})</span></td>
+                                <td class="ar" dir="ltr">{{clearerNameObj.paymentsKpis.daily | curr:'0':'':'nullify':true}}<span *ngIf="clearerNameObj.paymentsKpis.daily" style="display: block">({{clearerNameObj.paymentsKpis.dailyPrc | pct:'1'}})</span></td>
+                                <td class="ar" dir="ltr">{{clearerNameObj.paymentsKpis.monthly | curr:'0':'':'nullify':true}}<span *ngIf="clearerNameObj.paymentsKpis.monthly" style="display: block">({{clearerNameObj.paymentsKpis.monthlyPrc | pct:'1'}})</span></td>
                             </tr>
                         </ng-container>
                     </ng-container>

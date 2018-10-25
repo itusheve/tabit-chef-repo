@@ -112,7 +112,7 @@ export class DayPaymentsTableComponent implements OnChanges {
                 accountGroup.paymentsKpis.monthlyPrc = accountGroup.paymentsKpis.monthly / data.paymentsKpis.monthly;
                 accountGroup.byClearerName.forEach(clearer => {
                     clearer.paymentsKpis.dailyPrc = clearer.paymentsKpis.daily / accountGroup.paymentsKpis.daily;
-                    clearer.paymentsKpis.dailyPrc = clearer.paymentsKpis.monthly / accountGroup.paymentsKpis.monthly;
+                    clearer.paymentsKpis.monthlyPrc = clearer.paymentsKpis.monthly / accountGroup.paymentsKpis.monthly;
                 });
 
                 accountGroup.byClearerName = _.filter(accountGroup.byClearerName, clearer => {
