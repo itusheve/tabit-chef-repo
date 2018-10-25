@@ -6,7 +6,7 @@ import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
-import {zip, combineLatest, Subject, Observable} from 'rxjs';
+import {zip, combineLatest, Subject, Observable, BehaviorSubject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {Order} from '../../../tabit/model/Order.model';
 import {OrderType} from '../../../tabit/model/OrderType.model';
@@ -173,7 +173,8 @@ export class DayViewComponent implements OnInit {
     public closedOpenSalesDiff: number;
     public openOrders: any;
 
-    private day$ = new Subject<moment.Moment>();
+    private day$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment());
+
     private dayDebounceStream$: Observable<moment.Moment>;
     private metaData: any;
     public user: any;
@@ -354,6 +355,10 @@ export class DayViewComponent implements OnInit {
                 return;
             }
 
+            if(!this.day$.value.isSame(dailyReport.date)) {
+                return;
+            }
+
             if (!dailyReport || !dailyReport.summary) {
                 this.hasData = false;
                 this.hasNoDataForToday = true;
@@ -502,7 +507,10 @@ export class DayViewComponent implements OnInit {
                     paymentsKPIs: {
                         daily: payment.DailyPaymentAmount,
                         monthly: payment.MonthlyPaymentAmount,
-                        yearly: payment.YearlyPaymentAmount
+                        yearly: payment.YearlyPaymentAmount,
+                        dailyPrc: 0,
+                        monthlyPrc: 0,
+                        yearlyPrc: 0
                     }
                 });
             });

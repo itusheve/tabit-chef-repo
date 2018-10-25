@@ -33,7 +33,10 @@ export interface Orders_KPIs {
 export interface PaymentsKPIs {
     daily: number;
     monthly: number;
-    yearly: number;//=calcSalesAmnt - refundAmnt
+    yearly: number;
+    dailyPrc: number;
+    monthlyPrc: number;
+    yearlyPrc: number;
 }
 
 // OLD INTERFACES:

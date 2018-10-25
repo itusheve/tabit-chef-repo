@@ -1548,6 +1548,7 @@ export class DataService {
 
         let newResult = _.orderBy(_.values(_.compact(result)), 'firedOn', 'asc');
         report.salesByHour = newResult;
+        report.date = day;
         return report;
         /*}*/
     }

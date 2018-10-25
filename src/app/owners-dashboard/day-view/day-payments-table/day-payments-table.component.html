@@ -23,13 +23,13 @@
                         <ng-container *ngIf="accountGroupObj">
                             <tr class="accountTypeRow">
                                 <td>{{accountGroupObj.accountGroup}}</td>
-                                <td class="ar">{{accountGroupObj.paymentsKpis.daily | curr:'0':'':'nullify':true}}</td>
-                                <td class="ar">{{accountGroupObj.paymentsKpis.monthly | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar" dir="ltr">{{accountGroupObj.paymentsKpis.daily | curr:'0':'':'nullify':true}}<span style="display: block">({{accountGroupObj.paymentsKpis.dailyPrc | pct:'1'}})</span></td>
+                                <td class="ar" dir="ltr">{{accountGroupObj.paymentsKpis.monthly | curr:'0':'':'nullify':true}}<span style="display: block">({{accountGroupObj.paymentsKpis.monthlyPrc | pct:'1'}})</span></td>
                             </tr>
                             <tr *ngFor="let clearerNameObj of accountGroupObj.byClearerName" class="accountRow">
-                                <td>{{clearerNameObj.clearerName}}</td>
-                                <td class="ar">{{clearerNameObj.paymentsKpis.daily | curr:'0':'':'nullify':true}}</td>
-                                <td class="ar">{{clearerNameObj.paymentsKpis.monthly | curr:'0':'':'nullify':true}}</td>
+                                <td>&nbsp;&nbsp;{{clearerNameObj.clearerName}}</td>
+                                <td class="ar" dir="ltr">{{clearerNameObj.paymentsKpis.daily | curr:'0':'':'nullify':true}}<span style="display: block">({{clearerNameObj.paymentsKpis.dailyPrc | pct:'1'}})</span></td>
+                                <td class="ar" dir="ltr">{{clearerNameObj.paymentsKpis.monthly | curr:'0':'':'nullify':true}}<span style="display: block">({{clearerNameObj.paymentsKpis.dailyPrc | pct:'1'}})</span></td>
                             </tr>
                         </ng-container>
                     </ng-container>
