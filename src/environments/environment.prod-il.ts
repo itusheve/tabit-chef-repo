@@ -3,6 +3,7 @@ export const environment = {
     managerDashboardMode: false,
     region: 'il',
     tbtLocale: 'he-IL',//
+    lang: 'he',
     rosConfig: {//IL 'BETA' 'REPORTS'
         baseUrl: 'https://ros-rp-beta.tabit.cloud/'
     },

@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
 import {DataService} from '../../../tabit/data/data.service';
 import {OwnersDashboardService} from '../owners-dashboard.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     templateUrl: './owner-settings.component.html',
@@ -18,7 +19,7 @@ export class OwnerSettingsComponent implements OnInit {
 
     toolbarConfig: any;
     sideNavConfig: any;
-
+    lang: string;
     appVersions: {
         chef: string,
         wrapper: string
@@ -35,8 +36,8 @@ export class OwnerSettingsComponent implements OnInit {
         private dataService: DataService,
         public router: Router,
         public route: ActivatedRoute,
+        private translate: TranslateService
     ) {
-
         dataService.vat$.subscribe((vat: boolean) => {
             this.vat = vat;
         });
@@ -54,6 +55,7 @@ export class OwnerSettingsComponent implements OnInit {
 
         dataService.settings$.subscribe((settings: any) => {
             this.maxItemsPerDepartment = settings.maxItemsPerDepartment || 5;
+            this.lang = settings.lang || 'en';
         });
     }
 
@@ -62,6 +64,15 @@ export class OwnerSettingsComponent implements OnInit {
         settings.vat = event.checked;
         window.localStorage.setItem('settings', JSON.stringify(settings));
         this.dataService.vat$.next(event.checked);
+    }
+
+    updateLanguage() {
+        let settings = JSON.parse(window.localStorage.getItem('settings'));
+        settings.lang = this.lang;
+        window.localStorage.setItem('settings', JSON.stringify(settings));
+        this.dataService.settings$.next(settings);
+
+        this.translate.use(this.lang);
     }
 
     updateMaxItemsPerDepartment() {

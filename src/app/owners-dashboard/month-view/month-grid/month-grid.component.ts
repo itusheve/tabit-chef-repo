@@ -287,7 +287,7 @@ export class MonthGridComponent implements OnInit {
         }
 
 
-        if(this.getDayAmount(record) > this.getAvgPeriodValueByCategory(record)) {
+        if(this.getDayAmount(record) > this.getAvgPeriodValueByCategory(record) && inner > outer) {
             return inner;
         }
 
@@ -297,17 +297,15 @@ export class MonthGridComponent implements OnInit {
     getProgressBarWidth(record): number {
         let result = 0;
         if(this.getDayAmount(record) > this.getAvgPeriodValueByCategory(record)) {
-            result = 100;
+            return 100;
         }
 
         if(this.category === 'sales' || this.category === 'employee') {
-            result = ((this.getDayAmount(record) / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) / this.maxValuesByCategory[this.category])) * 100;
+            return ((this.getDayAmount(record) / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) / this.maxValuesByCategory[this.category])) * 100;
 
         }
         else {
-            result = ((this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category])) * 100;
+            return ((this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category])) * 100;
         }
-
-        return result;
     }
 }

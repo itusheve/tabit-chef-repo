@@ -8,7 +8,7 @@
             <div *ngIf="!noData && byOrderTypes" class="flex d-col a-stretch">
                 <mat-expansion-panel expanded="false">
                     <mat-expansion-panel-header>
-                        <mat-panel-title>
+                        <mat-panel-title style="width: 90px;">
                             <ng-container i18n="@@openOrders">Open Orders</ng-container>
                         </mat-panel-title>
                         <mat-panel-description>
@@ -73,7 +73,7 @@
                 <mat-expansion-panel expanded="false" hideToggle="false" (closed)="panelClosed()"
                                      *ngFor="let orderType of byOrderTypes | hasSales">
                     <mat-expansion-panel-header>
-                        <mat-panel-title>
+                        <mat-panel-title style="width:90px">
                             {{orderType.caption}}
                         </mat-panel-title>
                         <mat-panel-description>
@@ -100,7 +100,7 @@
                                     </mat-icon>
                                 </div>
                             </td>
-                            <td (click)="sort(orderType, 'number')" style="width:50px;">
+                            <td (click)="sort(orderType, 'number')" style="width:55px;">
                                 <div class="flex a-center">
                                     <div i18n="day-orders-table'@@orderNumber">Order #</div>
                                     <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='desc'">
@@ -111,7 +111,7 @@
                                     </mat-icon>
                                 </div>
                             </td>
-                            <td (click)="sort(orderType, 'waiter')" style="width:55px;">
+                            <td (click)="sort(orderType, 'waiter')" style="width:65px;">
                                 <div class="flex a-center">
                                     <div i18n="@@server">Server</div>
                                     <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">
@@ -122,7 +122,7 @@
                                     </mat-icon>
                                 </div>
                             </td>
-                            <td (click)="sort(orderType, 'sales')" style="width:50px;">
+                            <td (click)="sort(orderType, 'sales')" style="width:55px;">
                                 <div class="flex a-center j-end">
                                     <div i18n="day-orders-table@@sales">Sales</div>
                                     <mat-icon class="sortMatIcon" *ngIf="sortBy==='sales' && sortDir==='desc'">
@@ -134,7 +134,7 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="flex d-col">
+                                <div class="flex d-col px-1" style="width:50px;">
                                     <div class="flex">
                                         <div class="iconFilter cancellation flex ml5 mb5"
                                              [ngClass]="{'on': iconFilterOn('cancellation')}"

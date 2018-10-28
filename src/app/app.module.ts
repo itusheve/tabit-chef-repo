@@ -1,7 +1,7 @@
 import {APP_INITIALIZER, NgModule, LOCALE_ID} from '@angular/core';//https://stackoverflow.com/questions/35191617/how-to-run-a-service-when-the-app-starts-in-angular-2/35191647
 import {BrowserModule} from '@angular/platform-browser';
 import {ReactiveFormsModule} from '@angular/forms';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';//required by some material components
 
 import {registerLocaleData} from '@angular/common';
@@ -69,6 +69,12 @@ import 'hammerjs';//https://material.angular.io/guide/getting-started
 import 'hammer-timejs';
 import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
 
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import localeHebrew from '@angular/common/locales/he';
+
+registerLocaleData(localeHebrew, 'he');
+
 export class MyHammerConfig extends HammerGestureConfig {
     public buildHammer(element: HTMLElement): any {
         return new (window as any).Hammer(element, {touchAction: 'pan-y'});
@@ -114,7 +120,14 @@ if (environment.tbtLocale === 'he-IL') {
         MatButtonToggleModule,
         MatGridListModule,
         MatProgressSpinnerModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: (createTranslateLoader),
+                deps: [HttpClient]
+            }
+        })
     ],
     providers: [
         {
@@ -172,4 +185,12 @@ if (environment.tbtLocale === 'he-IL') {
     bootstrap: [AppComponent]
 })
 export class AppModule {
+}
+
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http);
+}
+
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }

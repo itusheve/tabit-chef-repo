@@ -1,20 +1,24 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import dxConfig from 'devextreme/core/config';
+import {DataService} from '../tabit/data/data.service';
 
 @Injectable()
 export class LocalizationService {
 
-    constructor() {
-        const bodyEl = document.getElementsByTagName("BODY")[0];
-        bodyEl.setAttribute('dir', environment.tbtLocale === 'he-IL' ? 'rtl' : 'ltr');
-        bodyEl.setAttribute('lang', environment.tbtLocale === 'he-IL' ? 'he' : 'en');
-        if (environment.tbtLocale === 'he-IL') bodyEl.classList.add("rtl");
-        // [style.direction] = "env.tbtLocale==='he-IL' ? 'rtl' : 'ltr'"//also needed? currently doesnt look so.
+    constructor(dataService: DataService) {
 
-        dxConfig({
-            defaultCurrency: environment.region === 'il' ? 'ILS' : 'USD',
-            rtlEnabled: environment.tbtLocale === 'he-IL' ? true : false
+        dataService.settings$.subscribe(settings => {
+            const bodyEl = document.getElementsByTagName("BODY")[0];
+            bodyEl.setAttribute('dir', settings.lang === 'he' ? 'rtl' : 'ltr');
+            bodyEl.setAttribute('lang', settings.lang === 'he' ? 'he' : 'en');
+            if (settings.lang === 'he') bodyEl.classList.add("rtl");
+            // [style.direction] = "env.tbtLocale==='he-IL' ? 'rtl' : 'ltr'"//also needed? currently doesnt look so.
+
+            dxConfig({
+                defaultCurrency: settings.region === 'il' ? 'ILS' : 'USD',
+                rtlEnabled: settings.lang === 'he' ? true : false
+            });
         });
     }
 

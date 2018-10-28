@@ -54,7 +54,7 @@ export class AuthService {
                         resolve();
                     });
 
-                this.logz.log('chef', 'changeOrganization', {'user': user.email, 'org': org.id});
+                this.logz.log('chef', 'login', {'user': user.email, 'org': org.id});
 
             } else {
                 reject();

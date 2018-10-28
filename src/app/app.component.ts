@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {DebugService} from './debug.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-root',
@@ -20,8 +21,15 @@ export class AppComponent implements OnInit {
 
     logArr: { type: string, message: string }[];
 
-    constructor(private ds: DebugService) {
+    constructor(private ds: DebugService, private translate: TranslateService) {
         this.logArr = ds.logArr;
+        let currentLanguage = translate.getBrowserLang();
+        if(currentLanguage !== 'en' && currentLanguage !== 'he') {
+            currentLanguage = 'en';
+        }
+
+        translate.setDefaultLang(currentLanguage);
+        translate.use(currentLanguage);
     }
 
     ngOnInit() {

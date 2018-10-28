@@ -35,6 +35,8 @@
     "@angular/platform-browser-dynamic": "7.0.0",
     "@angular/router": "7.0.0",
     "@angular/service-worker": "7.0.0",
+    "@ngx-translate/core": "^10.0.2",
+    "@ngx-translate/http-loader": "^3.0.1",
     "@types/moment-timezone": "0.5.4",
     "bootstrap": "4.1.1",
     "bootstrap-v4-rtl": "4.1.1-0",

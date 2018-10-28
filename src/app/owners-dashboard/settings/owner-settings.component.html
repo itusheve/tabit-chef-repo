@@ -1,27 +1,60 @@
 <div class="card">
     <h5 class="card-header" i18n="@@settings">Settings</h5>
     <div class="card-body bg-white">
-        <mat-checkbox
-                color="primary"
-                [checked]="vat"
-                (change)="updateVat($event)"
-                [indeterminate]="false"
-                [disabled]="false"
-                i18n="owners-dashboard|maam@@vat">
-            VAT
-        </mat-checkbox>
-        <div class="border-top my-3"></div>
-        <form>
-            <ng-container i18n="@@displayedItemsPerDept">Items per department:</ng-container>
-            <mat-form-field>
-                <mat-select [(value)]="maxItemsPerDepartment"
-                            (selectionChange)="updateMaxItemsPerDepartment()">
-                    <mat-option [value]="5">5</mat-option>
-                    <mat-option [value]="10">10</mat-option>
-                    <mat-option [value]="15">15</mat-option>
-                    <mat-option [value]="20">20</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </form>
+
+        <div class="card">
+            <div class="card-header" [translate]="'settingsPage.homePage'"></div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item border-0">
+                    <mat-checkbox
+                            color="primary"
+                            [checked]="vat"
+                            (change)="updateVat($event)"
+                            [indeterminate]="false"
+                            [disabled]="false"
+                            i18n="owners-dashboard|maam@@vat">
+                        VAT
+                    </mat-checkbox>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="card-header" [translate]="'settingsPage.dayPage'"></div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item border-0">
+                    <form>
+                        <div i18n="@@displayedItemsPerDept">Items per department</div>
+                        <mat-form-field>
+                            <mat-select [(value)]="maxItemsPerDepartment"
+                                        (selectionChange)="updateMaxItemsPerDepartment()">
+                                <mat-option [value]="5">5</mat-option>
+                                <mat-option [value]="10">10</mat-option>
+                                <mat-option [value]="15">15</mat-option>
+                                <mat-option [value]="20">20</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </form>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="card-header" [translate]="'settingsPage.general'"></div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item border-0">
+                    <form>
+                        <div [translate]="'settingsPage.language'"></div>
+                        <mat-form-field>
+                            <mat-select [(value)]="lang"
+                                        (selectionChange)="updateLanguage()">
+                                <mat-option [value]="'en'">English US</mat-option>
+                                <mat-option [value]="'he'">Hebrew</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </form>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

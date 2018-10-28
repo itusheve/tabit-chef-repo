@@ -25,7 +25,7 @@ import {DebugService} from '../../app/debug.service';
 import {LogzioService} from '../../app/logzio.service';
 
 const tmpTranslations_ = {
-    'he-IL': {
+    'he': {
         exampleOrgName: 'מסעדה לדוגמא',
         opFailed: 'הפעולה נכשלה. אנא פנה לתמיכה.',
         areYouSureYouWish: 'האם אתה בטוח שברצונך',
@@ -188,7 +188,7 @@ const tmpTranslations_ = {
             'online': 'Online'
         }
     },
-    'en-US': {
+    'en': {
         exampleOrgName: 'Demo Restaurant',
         opFailed: 'Operation has failed. please contact support.',
         areYouSureYouWish: 'Are you sure you wish',
@@ -239,9 +239,9 @@ const tmpTranslations_ = {
         },
         monthViewFilters: {
             sales: 'Sales',
-            cancellations: 'Cancellations',
-            operational: 'Operational Discounts',
-            retention: 'Retention Discounts',
+            cancellations: 'Voids',
+            operational: 'OP Discount',
+            retention: 'RET Discount',
             employee: 'Employee Meals',
         },
         managerDash: {
@@ -355,7 +355,7 @@ const tmpTranslations_ = {
 export const tmpTranslations = {
     get(path: string): string {
         const tokens = path.split('.');
-        let translation: any = tmpTranslations_[environment.tbtLocale];
+        let translation: any = tmpTranslations_[environment.lang];
         for (let i = 0; i < tokens.length; i++) {
             translation = translation[tokens[i]];
         }

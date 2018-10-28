@@ -51,37 +51,26 @@ export class CardComponent implements OnInit {
     ngOnInit() {
     }
 
-    getPercentageCssClass(percentage, isUpPositive, change) {
-        let cssClass = this.tabitHelper.getTextClassByPercentage(change || percentage, isUpPositive);
-
+    getArrow(percentage) {
         if(!percentage) {
-            return cssClass += ' neutral';
+            return 'trending_flat';
         }
 
         if(percentage > 0) {
-            cssClass += ' up';
+            return 'trending_up';
         }
         else if(percentage < 0) {
-            cssClass += ' down';
+            return 'trending_down';
         }
+    }
 
+    getPercentageCssClass(percentage, isUpPositive, change) {
+        let cssClass = this.tabitHelper.getTextClassByPercentage(change || percentage, isUpPositive);
         return cssClass;
     }
 
     getReductionPercentageCssClass(percentage, isUpPositive, change) {
         let cssClass = this.tabitHelper.getTextClassByPercentage(((change / (percentage - change)) * 100) + 100, isUpPositive);
-
-        if(!percentage) {
-            return cssClass += ' neutral';
-        }
-
-        if(percentage > 0) {
-            cssClass += ' up';
-        }
-        else if(percentage < 0) {
-            cssClass += ' down';
-        }
-
         return cssClass;
     }
 }

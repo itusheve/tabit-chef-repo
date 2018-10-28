@@ -82,6 +82,7 @@ import {DayRetentionTableComponent} from './day-view/day-retention-table/day-ret
 import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/day-month-summary-table.component';
 import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sales.component';
 import {MonthPickerDialogComponent} from './home/month-selector/month-picker-dialog.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -108,7 +109,8 @@ import {MonthPickerDialogComponent} from './home/month-selector/month-picker-dia
         FormsModule,
         ReactiveFormsModule,
         MatDialogModule,
-        DxLoadIndicatorModule
+        DxLoadIndicatorModule,
+        TranslateModule
     ],
     declarations: [
         OwnersDashboardComponent,

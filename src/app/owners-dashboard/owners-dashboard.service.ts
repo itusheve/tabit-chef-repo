@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 
 import * as moment from 'moment';
 import 'moment-timezone';
+import {BehaviorSubject} from '../../../node_modules/rxjs';
 
 @Injectable()
 export class OwnersDashboardService {
@@ -44,12 +45,15 @@ export class OwnersDashboardService {
             org: undefined
         },
         content: {
-            showVatCb: environment.region==='il' ? true : false,
+            showVatCb: environment.region === 'il',
             showDebugCb: false,
             showMySitesBtn: true,
             showLogoutBtn: true
         }
     };
+
+    region$: BehaviorSubject<any> = new BehaviorSubject<any>('us');
+    language$: BehaviorSubject<any> = new BehaviorSubject<any>('en');
 
     constructor(
         private dataService: DataService,
@@ -81,6 +85,11 @@ export class OwnersDashboardService {
                 this.sideNavConfig.header.userInitials = (user.firstName ? user.firstName.substring(0, 1) : '?').toUpperCase() + (user.lastName ? user.lastName.substring(0, 1) : '').toUpperCase();
             });
 
+        dataService.settings$
+            .subscribe(settings => {
+                environment.lang = settings.lang;
+            });
+
 
         let exampleOrgName;
         try {
@@ -89,6 +98,12 @@ export class OwnersDashboardService {
 
         dataService.organization$
             .subscribe(org => {
+                if(org.region === 'IL') {
+                    environment.tbtLocale = 'he-IL';
+                }
+                else {
+                    environment.tbtLocale = 'en-US';
+                }
 
                 if (exampleOrgName) {
                     org.alias = exampleOrgName;
