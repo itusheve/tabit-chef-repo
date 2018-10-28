@@ -298,7 +298,7 @@ export class HomeComponent implements OnInit {
 
                 let lastYearMonth = database.getMonth(moment().subtract(1, 'years'));
                 let previousMonth = database.getMonth(moment().subtract(1, 'months'));
-                if (lastYearMonth) {
+                if (lastYearMonth && lastYearMonth.aggregations && lastYearMonth.aggregations.sales) {
                     this.forecastCardData.averages.yearly = {
                         percentage: lastYearMonth.aggregations.sales.amount ? ((month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount) - 1) : 0,
                         change: month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount * 100
