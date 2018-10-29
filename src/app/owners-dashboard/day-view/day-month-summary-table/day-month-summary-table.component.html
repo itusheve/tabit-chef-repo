@@ -1,5 +1,5 @@
 <div class="flex d-col">
-    <div class="title" i18n="@@monthlyReport">Monthly Report</div>
+    <div class="title" [translate]="'day.monthlyReport'">Monthly Report</div>
     <mat-accordion>
         <mat-expansion-panel expanded="false">
             <mat-expansion-panel-header>
@@ -9,16 +9,16 @@
             </mat-expansion-panel-header>
             <table class="chf-tbl chf-tbl-xxx-smaller chf-tbl-row-oriented">
                 <tr class="header">
-                    <td i18n="@@businessDay">Business Day</td>
-                    <td class="ar" i18n="@@netSales">Net Sales</td>
-                    <td class="ar" ><ng-container i18n="@@diners">Diners</ng-container><br>(<ng-container i18n="@@ppa">PPA</ng-container>)</td>
-                    <td class="ar" i18n="@@cancellationsValue">Voids</td>
-                    <td class="ar" i18n="@@operationalErrorsValue">Operational Errors</td>
-                    <td class="ar" i18n="@@retentionValue">Retention</td>
-                    <td class="ar" i18n="@@organizationalValue">Employees &amp; Owners</td>
+                    <td [translate]="'day.businessDay'">Business Day</td>
+                    <td class="ar" [translate]="'day.netSales'">Net Sales</td>
+                    <td class="ar" ><span [translate]="'day.diners'">Diners</span><br>(<span [translate]="'day.ppa'">PPA</span>)</td>
+                    <td class="ar" [translate]="'day.cancellationsValue'">Voids</td>
+                    <td class="ar" [translate]="'day.operationalErrorsValue'">Operational Errors</td>
+                    <td class="ar" [translate]="'day.retentionValue'">Retention</td>
+                    <td class="ar" [translate]="'day.organizationalValue'">Employees &amp; Owners</td>
                 </tr>
                 <tr>
-                    <td i18n="@@total">Total</td>
+                    <td [translate]="'day.total'">Total</td>
                     <td class="ar">{{mtdBusinessData.totals.netSales | curr:'0'}}</td>
                     <td class="ar">{{mtdBusinessData.totals.dinesrs}}<br>({{mtdBusinessData.totals.ppaAmount | curr:'2'}})</td>
                     <td class="ar">{{mtdBusinessData.totals.CancellationAmount | curr:'0'}}<br>({{mtdBusinessData.totals.CancellationAmount / mtdBusinessData.totals.netSales | pct:'1'}})</td>

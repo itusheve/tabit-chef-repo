@@ -1,22 +1,22 @@
 <div class="flex d-col a-stretch mb-2" *ngIf="openOrders && openOrders.count > 0">
     <div class="title">
-        <ng-container i18n="@@openOrders">Open orders</ng-container>
+        <span [translate]="'day.openOrders'">Open orders</span>
     </div>
     <div class="body flex d-col">
         <div *ngIf="!loading">
-            <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
+            <div *ngIf="noData" class="noData" [translate]="'day.noData'">No Data</div>
             <div *ngIf="!noData && byOrderTypes" class="flex d-col a-stretch">
                 <mat-expansion-panel expanded="false">
                     <mat-expansion-panel-header>
                         <mat-panel-title style="width: 90px;">
-                            <ng-container i18n="@@openOrders">Open Orders</ng-container>
+                            <span [translate]="'day.openOrders'">Open Orders</span>
                         </mat-panel-title>
                         <mat-panel-description>
                             <div class="flex a-center">
                                 <div class="ar" style="width:70px">{{openOrders.totalAmount | curr:'0'}}</div>
                                 <div class="ms20">
                                     {{openOrders.count | count}}
-                                    &nbsp;<ng-container i18n="@@orders">Orders</ng-container>
+                                    &nbsp;<span [translate]="'day.orders'">Orders</span>
                                 </div>
                             </div>
                         </mat-panel-description>
@@ -26,22 +26,22 @@
                         <tr style="background-color: #f2f2f2;font-weight: bold;">
                             <td>
                                 <div class="flex a-center">
-                                    <div i18n="day-orders-table@@opened">Opened</div>
+                                    <div [translate]="'dayTable.opened'">Opened</div>
                                 </div>
                             </td>
                             <td>
                                 <div class="flex a-center">
-                                    <div i18n="day-orders-table'@@orderNumber">Order #</div>
+                                    <div [translate]="'dayTable.orderNumber'">Order #</div>
                                 </div>
                             </td>
                             <!--<td>
                                 <div class="flex a-center">
-                                    <div i18n="@@server">Server</div>
+                                    <div [translate]="'day.server'">Server</div>
                                 </div>
                             </td>-->
                             <td>
                                 <div class="flex a-center j-end">
-                                    <div i18n="day-orders-table@@sales">Sales</div>
+                                    <div [translate]="'dayTable.sales'">Sales</div>
                                 </div>
                             </td>
                         </tr>
@@ -63,12 +63,12 @@
 <!--closed orders-->
 <div class="flex d-col a-stretch">
     <div class="title">
-        <span i18n="@@closedOrders2">Closed orders</span>
-        <span *ngIf="bdIsCurrentBd" i18n="@@delayed" style="font-size: 14px; display: block;">Data delayed by ~15min</span>
+        <span [translate]="'day.closedOrders2'">Closed orders</span>
+        <span *ngIf="bdIsCurrentBd" [translate]="'day.delayed'" style="font-size: 14px; display: block;">Data delayed by ~15min</span>
     </div>
     <div class="body flex d-col">
         <div *ngIf="!loading">
-            <div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
+            <div *ngIf="noData" class="noData" [translate]="'day.noData'">No Data</div>
             <div *ngIf="!noData && byOrderTypes" class="flex d-col a-stretch">
                 <mat-expansion-panel expanded="false" hideToggle="false" (closed)="panelClosed()"
                                      *ngFor="let orderType of byOrderTypes | hasSales">
@@ -81,7 +81,7 @@
                                 <div class="ar" style="width:70px">{{orderType.salesBeforeTip | curr:'0'}}</div>
                                 <div class="ms20">
                                     {{orderType.ordersCount | count}}
-                                    &nbsp;<ng-container i18n="@@orders">Orders</ng-container>
+                                    &nbsp;<span [translate]="'day.orders'">Orders</span>
                                 </div>
                             </div>
                         </mat-panel-description>
@@ -91,7 +91,7 @@
                         <tr style="background-color: #f2f2f2;font-weight: bold;">
                             <td (click)="sort(orderType, 'time')" style="width:50px;">
                                 <div class="flex a-center">
-                                    <div i18n="day-orders-table@@opened">Opened</div>
+                                    <div [translate]="'dayTable.opened'">Opened</div>
                                     <mat-icon class="sortMatIcon" *ngIf="sortBy==='time' && sortDir==='desc'">
                                         arrow_drop_down
                                     </mat-icon>
@@ -102,7 +102,7 @@
                             </td>
                             <td (click)="sort(orderType, 'number')" style="width:55px;">
                                 <div class="flex a-center">
-                                    <div i18n="day-orders-table'@@orderNumber">Order #</div>
+                                    <div [translate]="'dayTable.orderNumber'">Order #</div>
                                     <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='desc'">
                                         arrow_drop_down
                                     </mat-icon>
@@ -113,7 +113,7 @@
                             </td>
                             <td (click)="sort(orderType, 'waiter')" style="width:65px;">
                                 <div class="flex a-center">
-                                    <div i18n="@@server">Server</div>
+                                    <div [translate]="'day.server'">Server</div>
                                     <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">
                                         arrow_drop_down
                                     </mat-icon>
@@ -124,7 +124,7 @@
                             </td>
                             <td (click)="sort(orderType, 'sales')" style="width:55px;">
                                 <div class="flex a-center j-end">
-                                    <div i18n="day-orders-table@@sales">Sales</div>
+                                    <div [translate]="'dayTable.sales'">Sales</div>
                                     <mat-icon class="sortMatIcon" *ngIf="sortBy==='sales' && sortDir==='desc'">
                                         arrow_drop_down
                                     </mat-icon>

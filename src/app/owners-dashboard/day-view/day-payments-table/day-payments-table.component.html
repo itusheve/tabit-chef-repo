@@ -1,20 +1,20 @@
 <div class="flex d-col">
-    <div class="title" i18n="@@payments">Payments</div>
+    <div class="title" [translate]="'day.payments'">Payments</div>
     <mat-accordion>
         <mat-expansion-panel expanded="false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <ng-container i18n="@@paymentsReport">Payments report</ng-container>
+                    <span [translate]="'day.paymentsReport'">Payments report</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <table class="chf-tbl chf-tbl-x-smaller">
                 <tr class="header">
-                    <td i18n="@@method">Method</td>
-                    <td class="ar" i18n="@@daily">Daily</td>
-                    <td class="ar" i18n="@@monthly">Monthly</td>
+                    <td [translate]="'day.method'">Method</td>
+                    <td class="ar" [translate]="'day.daily'">Daily</td>
+                    <td class="ar" [translate]="'day.monthly'">Monthly</td>
                 </tr>
                 <tr class="totalRow" *ngIf="data">
-                    <td i18n="@@total">Total</td>
+                    <td [translate]="'day.total'">Total</td>
                     <td class="ar">{{data.paymentsKpis.daily | curr:'0':'':'nullify':true}}</td>
                     <td class="ar">{{data.paymentsKpis.monthly | curr:'0':'':'nullify':true}}</td>
                 </tr>

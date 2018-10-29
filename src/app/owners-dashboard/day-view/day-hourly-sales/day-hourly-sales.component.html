@@ -2,12 +2,12 @@
     <li class="list-group-item py-1">
         <div class="row flex a-center" style="cursor: pointer">
             <div class="col-2 justify-content-center">
-                <ng-container i18n="@@hour">Hour</ng-container>
+                <span [translate]="'day.hour'">Hour</span>
             </div>
             <div class="col-6"></div>
             <div class="col-4 text-center px-0">
-                <ng-container i18n="@@sales3">Sales</ng-container> <br />
-                (<ng-container i18n="@@fourWeekAvg">4W Avg.</ng-container>)
+                <span [translate]="'day.sales3'">Sales</span> <br />
+                (<span [translate]="'day.fourWeekAvg'">4W Avg.</span>)
             </div>
         </div>
     </li>

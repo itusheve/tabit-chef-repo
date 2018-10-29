@@ -1,19 +1,19 @@
 <div class="flex d-col">
-    <div class="title" i18n="@@mostReturnedItems">Most Returned Items</div>
+    <div class="title" [translate]="'day.mostReturnedItems'">Most Returned Items</div>
     <mat-accordion>
         <mat-expansion-panel expanded="false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <ng-container i18n="@@mostReturnedItems">Most Returned Items</ng-container>
+                    <span [translate]="'day.mostReturnedItems'">Most Returned Items</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <table class="chf-tbl chf-tbl-smaller chf-tbl-row-oriented">
                 <tr class="header">
-                    <td i18n="@@department">Department</td>
-                    <td i18n="@@item">Item</td>
-                    <td class="ar" i18n="@@prepared">Prepared</td>
-                    <td class="ar" i18n="@@returned">Returned</td>
-                    <td class="ar" i18n="@@operationalReductionsValue">Operational Reductions Value</td>
+                    <td [translate]="'day.department'">Department</td>
+                    <td [translate]="'day.item'">Item</td>
+                    <td class="ar" [translate]="'day.prepared'">Prepared</td>
+                    <td class="ar" [translate]="'day.returned'">Returned</td>
+                    <td class="ar" [translate]="'day.operationalReductionsValue'">Operational Reductions Value</td>
                 </tr>
                 <ng-container *ngFor="let departmentData of data">
                     <tr *ngFor="let dataObj of departmentData.topItems" class="dayReportDataRow">

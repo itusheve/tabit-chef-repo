@@ -1,11 +1,11 @@
-<div *ngIf="noData" class="noData" i18n="@@noData">No Data</div>
+<div *ngIf="noData" class="noData" [translate]="'day.noData'">No Data</div>
 <div *ngIf="!noData">
     <table class="chf-tbl chf-tbl-smaller chf-tbl-row-oriented">
         <tr class="header">
-            <td i18n="@@department">Department</td>
-            <td i18n="@@item">Item</td>
-            <td class="ar" i18n="@@sales2">Sales</td>
-            <td class="ar" i18n="@@sold">Sold</td>
+            <td [translate]="'day.department'">Department</td>
+            <td [translate]="'day.item'">Item</td>
+            <td class="ar" [translate]="'day.sales2'">Sales</td>
+            <td class="ar" [translate]="'day.sold'">Sold</td>
         </tr>
         <ng-container *ngFor="let departmentData of data">
             <tr *ngFor="let dataObj of departmentData.topItems" class="dayReportDataRow">

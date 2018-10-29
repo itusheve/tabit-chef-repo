@@ -1,19 +1,19 @@
 <div class="flex d-col">
     <div class="title">
-        <ng-container i18n="@@retention">Retention</ng-container>&nbsp;-&nbsp;<ng-container i18n="@@retentionByServer">Manual Operations by Server</ng-container>
+        <span [translate]="'day.retention'">Retention</span>&nbsp;-&nbsp;<span [translate]="'day.retentionByServer'">Manual Operations by Server</span>
     </div>
     <mat-accordion>
         <mat-expansion-panel expanded="false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{retentionData.length}}&nbsp;<ng-container i18n="@@actionsWorth">Actions worth</ng-container>&nbsp;{{totalValue | curr:'0'}}
+                    {{retentionData.length}}&nbsp;<span [translate]="'day.actionsWorth'">Actions worth</span>&nbsp;{{totalValue | curr:'0'}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <table class="chf-tbl chf-tbl-smaller chf-tbl-row-oriented">
                 <tr class="header">
                     <td (click)="sort('waiter')">
                         <div class="flex a-center">
-                            <div i18n="@@server">Server</div>
+                            <div [translate]="'day.server'">Server</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
@@ -21,8 +21,8 @@
                     <td (click)="sort('tableId')">
                         <div class="flex a-center">
                             <div>
-                                <ng-container i18n="@@table">Table</ng-container><br>
-                                (<ng-container i18n="@@order">Order</ng-container>)
+                                <span [translate]="'day.table'">Table</span><br>
+                                (<span [translate]="'day.order'">Order</span>)
                             </div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='asc'">arrow_drop_up</mat-icon>
@@ -30,28 +30,28 @@
                     </td>
                     <td (click)="sort('item')">
                         <div class="flex a-center">
-                            <div i18n="@@item">Item</div>
+                            <div [translate]="'day.item'">Item</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='item' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='item' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
                     </td>
                     <td (click)="sort('retention')">
                         <div class="flex a-center j-end">
-                            <div i18n="@@amount">Amount</div>
+                            <div [translate]="'day.amount'">Amount</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='retention' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='retention' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
                     </td>
                     <td (click)="sort('subType')">
                         <div class="flex a-center">
-                            <div i18n="@@type">Type</div>
+                            <div [translate]="'day.type'">Type</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='subType' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='subType' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
                     </td>
                     <td (click)="sort('reasonId')">
                         <div class="flex a-center">
-                            <div i18n="@@reason">Reason</div>
+                            <div [translate]="'day.reason'">Reason</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='reasonId' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='reasonId' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
@@ -68,19 +68,7 @@
                         <span *ngIf="tuple.tableId!==''">
                             {{tuple.tableId}}
                         </span>
-                        <span *ngIf="tuple.tableId===''" i18n="@@orderTypeSelect2">
-                            {
-                                tuple.orderType.id,
-                                select,
-                                seated {Seated}
-                                counter {Counter}
-                                ta {TA}
-                                delivery {Delivery}
-                                other {Other}
-                                returns {Returns}
-                                mediaExchange {Media Exchange}
-                            }
-                        </span>
+                        <span *ngIf="tuple.tableId===''" [translate]="tuple.orderType.id"></span>
                         <br>
                         <span>
                             ({{tuple.orderNumber}})
@@ -88,7 +76,7 @@
                     </td>
                     <td class="break">{{tuple.item}}</td>
                     <td class="ar">{{tuple.retention | curr:'0'}}</td>
-                    <td i18n="@@orderSubTypeSelect">{
+                    <td [translate]="tuple.subType">{
                         tuple.subType,
                         select,
                         Discounts {Discounts}

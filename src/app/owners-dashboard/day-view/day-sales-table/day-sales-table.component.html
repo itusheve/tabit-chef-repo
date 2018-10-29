@@ -5,17 +5,17 @@
     </tr>
 
     <tr>
-        <td style="font-weight: bold" i18n="@@netSales">Net Sales</td>
+        <td style="font-weight: bold" [translate]="'day.netSales'">Net Sales</td>
         <td class="ar" *ngFor="let val of pivotedData.netSalesWithoutVat">{{val | curr:'0':'':'':true}}</td>
     </tr>
 
     <tr>
-        <td style="font-weight: bold; width:70px;white-space: normal;" i18n="@@salesWithTax">Sales + Tax</td>
+        <td style="font-weight: bold; width:70px;white-space: normal;" [translate]="'day.salesWithTax'">Sales + Tax</td>
         <td class="ar" *ngFor="let val of pivotedData.netSales">{{val.amount | curr:'0':'':'':true}}<span style="display: block;font-size: 12px;">({{val.pct | pct: 1}})</span></td>
     </tr>
 
     <tr *ngIf="pivotedData.hasTips && environment.region === 'il'">
-        <td i18n="@@tips">Tips</td>
+        <td [translate]="'day.tips'">Tips</td>
         <td class="ar" *ngFor="let val of pivotedData.gratuity">{{val | curr:'0':'':'':true}}</td>
     </tr>
 
@@ -25,27 +25,27 @@
     </tr>
 
     <tr *ngIf="environment.region === 'us'">
-        <td i18n="@@grossSales">Gross Sales</td>
+        <td [translate]="'day.grossSales'">Gross Sales</td>
         <td class="ar" *ngFor="let val of pivotedData.grossSales">{{val | curr:'0':'':'':true}}</td>
     </tr>
 
     <tr *ngIf="environment.region === 'us'">
-        <td i18n="@@tips">Tips</td>
+        <td [translate]="'day.tips'">Tips</td>
         <td class="ar" *ngFor="let val of pivotedData.gratuity">{{val | curr:'0':'':'':true}}</td>
     </tr>
 
     <tr *ngIf="environment.region === 'us'">
-        <td i18n="@@serviceCharge">Service Charge</td>
+        <td [translate]="'day.serviceCharge'">Service Charge</td>
         <td class="ar" *ngFor="let val of pivotedData.serviceCharge">{{val | curr:'0':'':'':true}}</td>
     </tr>
 
     <tr>
-        <td i18n="@@dinersOrders">Diners / Orders</td>
+        <td [translate]="'day.dinersOrders'">Diners / Orders</td>
         <td class="ar" *ngFor="let val of pivotedData.diners">{{val}}</td>
     </tr>
 
     <tr>
-        <td i18n="@@ppa">PPA</td>
+        <td [translate]="'day.ppa'">PPA</td>
         <td class="ar" *ngFor="let val of pivotedData.ppa">{{val | curr:'2':'':'':true}}</td>
     </tr>
 </table>

@@ -44,12 +44,12 @@
 
         <div class="widget">
             <div class="flex d-col">
-                <div class="title"><ng-container i18n="@@sales3'">Sales</ng-container>&nbsp;<ng-container *ngIf="day.isSame(today, 'day')" i18n="@@closedOrders'">(closed orders)</ng-container></div>
+                <div class="title"><span [translate]="'day.sales3'">Sales</span>&nbsp;<span *ngIf="day.isSame(today, 'day')" [translate]="'day.closedOrders'">(closed orders)</span></div>
                 <div class="flex d-col body">
                     <mat-expansion-panel expanded="true">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                <ng-container i18n="@@salesByHour'">Sales by hour</ng-container>
+                                <span [translate]="'day.salesByHour'">Sales by hour</span>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <app-day-hourly-sales
@@ -59,8 +59,8 @@
                     <mat-expansion-panel expanded="true" *ngIf="dailySummaryTblData">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                <ng-container *ngIf="day.isSame(today, 'day')" i18n="@@closedSummary'">Closed orders summary</ng-container>
-                                <ng-container *ngIf="!day.isSame(today, 'day')" i18n="@@daily'">Daily</ng-container>
+                                <span *ngIf="day.isSame(today, 'day')" [translate]="'day.closedSummary'">Closed orders summary</span>
+                                <span *ngIf="!day.isSame(today, 'day')" [translate]="'day.daily'">Daily</span>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <app-day-sales-table
@@ -102,13 +102,13 @@
 
         <div class="widget">
             <div class="flex d-col">
-                <div class="title" i18n="@@mostSoldItems'">Top Selling Items by Category</div>
+                <div class="title" [translate]="'day.mostSoldItems'">Top Selling Items by Category</div>
                 <div class="flex d-col body">
                     <mat-accordion>
                         <mat-expansion-panel expanded="false">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
-                                    <ng-container i18n="@@allDay'">All day</ng-container>
+                                    <span [translate]="'day.allDay'">All day</span>
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
                             <app-most-sold-items-table

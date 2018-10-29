@@ -1,17 +1,17 @@
 <div class="flex d-col">
-    <div class="title" i18n="@@categories">Categories</div>
+    <div class="title" [translate]="'day.categories'">Categories</div>
     <mat-accordion>
         <mat-expansion-panel expanded="false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <ng-container i18n="@@salesByCategory">Sales by category</ng-container>
+                    <span [translate]="'day.salesByCategory'">Sales by category</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <table class="chf-tbl chf-tbl-row-oriented chf-tbl-x-smaller" *ngIf="data">
                 <tr class="header">
                     <td (click)="sort('category')">
                         <div class="flex a-center">
-                            <div i18n="@@category">Category</div>
+                            <div [translate]="'day.category'">Category</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='category' && sortDir==='desc'">
                                 arrow_drop_down
                             </mat-icon>
@@ -22,7 +22,7 @@
                     </td>
                     <td (click)="sort('thisBd')">
                         <div class="flex a-center">
-                            <div i18n="@@daily">Daily</div>
+                            <div [translate]="'day.daily'">Daily</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisBd' && sortDir==='desc'">
                                 arrow_drop_down
                             </mat-icon>
@@ -32,7 +32,7 @@
                     </td>
                     <td (click)="sort('thisWeek')">
                         <div class="flex a-center">
-                            <div i18n="@@thisWeek">This Week</div>
+                            <div [translate]="'day.thisWeek'">This Week</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisWeek' && sortDir==='desc'">
                                 arrow_drop_down
                             </mat-icon>
@@ -43,7 +43,7 @@
                     </td>
                     <td (click)="sort('thisMonth')">
                         <div class="flex a-center">
-                            <div i18n="@@thisMonth">This Month</div>
+                            <div [translate]="'day.thisMonth'">This Month</div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='thisMonth' && sortDir==='desc'">
                                 arrow_drop_down
                             </mat-icon>
@@ -77,7 +77,7 @@
                 </tr>
 
                 <tr>
-                    <td i18n="@@total">Total</td>
+                    <td [translate]="'day.total'">Total</td>
                     <td class="ar">{{data.totalSales.thisBdSales | curr:'0'}}
                         <br>({{1 | pct:'1'}})
                     </td>
