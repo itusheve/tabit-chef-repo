@@ -5,7 +5,6 @@
          [ngClass]="cardData.statusClass || 'bg-light'">
 
         <span class="font-weight-bold">
-            <ng-container *ngIf="cardData" i18n="@@orsLastDay">{cardData.tag, select, currentBd {Today} previousBd {Yesterday}}</ng-container>
             {{cardData?.title || '&nbsp;'}}
         </span>
         <mat-icon *ngIf="cardData.showDrillArrow" style="top:3px; position: relative; float: left;">
@@ -18,7 +17,7 @@
         </div>
         <div *ngIf="cardData && !cardData.loading" class="row">
             <div class="col-7 px-2"
-                 [ngClass]="cardData.noSeparator ? '' : (region == 'il' ? 'border-left' : 'border-right')">
+                 [ngClass]="cardData.noSeparator ? '' : (env.lang == 'he' ? 'border-left' : 'border-right')">
                 <div class="row">
                     <div class="col-12">
                         <div class="row px-3">
@@ -29,12 +28,12 @@
                             </div>
                         </div>
                         <div class="row px-4">
-                            <span *ngIf="cardData.salesComment" class="text-danger text-md"
-                                 i18n="@@salesComment">
-                                {cardData.salesComment, select, eod {Awaiting EOD} notFinal {Not Final}}
+                            <span *ngIf="cardData.salesComment" class="text-danger text-md">
+                                {{cardData.salesComment}}
                             </span>
                         </div>
-                        <div class="row px-4" *ngIf="cardData.holiday" class="font-weight-light" style="font-size: 12px;">
+                        <div class="row px-4" *ngIf="cardData.holiday" class="font-weight-light"
+                             style="font-size: 12px;">
                             <span>{{cardData.holiday}}</span>
                         </div>
                     </div>
@@ -42,26 +41,28 @@
                 <div class="row" style="margin-top: 5px;">
                     <div class="col-12">
                         <table class="table table-borderless table-sm sales-table mb-0"
-                               [ngClass]="region == 'il' ? 'table-padding-rtl' : 'table-padding-ltr'">
+                               [ngClass]="env.lang == 'he' ? 'table-padding-rtl' : 'table-padding-ltr'">
                             <tr *ngIf="cardData.averages?.yearly?.percentage">
                                 <td>
                                     <mat-icon *ngIf="cardData.averages.yearly.percentage"
-                                              [ngClass]="getPercentageCssClass(cardData.averages.yearly.percentage, true, cardData.averages.yearly.change)">
+                                              [ngClass]="[getPercentageCssClass(cardData.averages.yearly.percentage, true, cardData.averages.yearly.change),getIconClass()]"
+                                    >
                                         {{getArrow(cardData.averages.yearly.percentage)}}
                                     </mat-icon>
                                 </td>
                                 <td class="text-dark">{{(cardData.averages.yearly.percentage) | pct: 1}}</td>
-                                <td class="text-body" i18n="@@lastYear">Last year</td>
+                                <td class="text-body" [translate]="'lastYear'"></td>
                             </tr>
                             <tr *ngIf="cardData.averages?.weekly">
                                 <td>
                                     <mat-icon *ngIf="cardData.averages.weekly.percentage"
-                                              [ngClass]="getPercentageCssClass(cardData.averages.weekly.percentage, true, cardData.averages.weekly.change)">
+                                              [ngClass]="[getPercentageCssClass(cardData.averages.weekly.percentage, true, cardData.averages.weekly.change),getIconClass()]"
+                                    >
                                         {{getArrow(cardData.averages.weekly.percentage)}}
                                     </mat-icon>
                                 </td>
                                 <td class="text-dark">{{(cardData.averages.weekly.percentage || 0) | pct: 1}}</td>
-                                <td class="text-body" i18n="@@fourWeekAvg">4W Avg.</td>
+                                <td class="text-body" [translate]="'fourWeekAvg'"></td>
                             </tr>
                         </table>
                     </div>
@@ -71,49 +72,58 @@
                 <div class="row">
                     <div class="col-12 pt-1 px-2">
                         <table class="table table-borderless table-sm mb-0"
-                               [ngClass]="region == 'il' ? 'table-padding-rtl' : 'table-padding-ltr'">
+                               [ngClass]="env.lang == 'he' ? 'table-padding-rtl' : 'table-padding-ltr'">
                             <tr *ngIf="cardData.reductions?.cancellations">
                                 <td>
                                     <mat-icon
-                                            [ngClass]="getReductionPercentageCssClass(cardData.reductions.cancellations.change, false, cardData.reductions.cancellations.percentage)">
+                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.cancellations.change, false, cardData.reductions.cancellations.percentage),getIconClass()]"
+                                    >
                                         {{getArrow(cardData.reductions.cancellations.change)}}
 
                                     </mat-icon>
                                 </td>
-                                <td class="text-dark">&nbsp;{{cardData.reductions.cancellations.percentage || 0 | pct: 1}}
+                                <td class="text-dark">&nbsp;{{cardData.reductions.cancellations.percentage || 0 | pct:
+                                    1}}
                                 </td>
-                                <td class="text-body" i18n="@@cancellations">Cancellations</td>
+                                <td class="text-body" [translate]="'cancellations'">Cancellations</td>
                             </tr>
                             <tr *ngIf="cardData.reductions?.operational">
                                 <td>
                                     <mat-icon
-                                            [ngClass]="getReductionPercentageCssClass(cardData.reductions.operational.change, false, cardData.reductions.operational.percentage)">
+                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.operational.change, false, cardData.reductions.operational.percentage),getIconClass()]"
+                                    >
                                         {{getArrow(cardData.reductions.operational.change)}}
                                     </mat-icon>
                                 </td>
-                                <td class="text-dark">&nbsp;{{cardData.reductions.operational.percentage || 0 | pct: 1}}</td>
-                                <td class="text-body" i18n="@@operational">Operational</td>
+                                <td class="text-dark">&nbsp;{{cardData.reductions.operational.percentage || 0 | pct:
+                                    1}}
+                                </td>
+                                <td class="text-body" [translate]="'operational'">Operational</td>
                             </tr>
                             <tr *ngIf="cardData.reductions?.retention">
                                 <td>
                                     <mat-icon
-                                            [ngClass]="getReductionPercentageCssClass(cardData.reductions.retention.change, false, cardData.reductions.retention.percentage)">
+                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.retention.change, false, cardData.reductions.retention.percentage),getIconClass()]"
+                                    >
                                         {{getArrow(cardData.reductions.retention.change)}}
 
                                     </mat-icon>
                                 </td>
-                                <td class="text-dark">&nbsp;{{cardData.reductions.retention.percentage || 0 | pct: 1}}</td>
-                                <td class="text-body" i18n="@@retention">Retention</td>
+                                <td class="text-dark">&nbsp;{{cardData.reductions.retention.percentage || 0 | pct: 1}}
+                                </td>
+                                <td class="text-body" [translate]="'retention'">Retention</td>
                             </tr>
                             <tr *ngIf="cardData.reductions?.employee">
                                 <td>
                                     <mat-icon
-                                            [ngClass]="getReductionPercentageCssClass(cardData.reductions.employee.change, false, cardData.reductions.employee.percentage)">
+                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.employee.change, false, cardData.reductions.employee.percentage), getIconClass()]"
+                                    >
                                         {{getArrow(cardData.reductions.employee.change)}}
                                     </mat-icon>
                                 </td>
-                                <td class="text-dark">&nbsp;{{cardData.reductions.employee.percentage || 0 | pct: 1}}</td>
-                                <td class="text-body" i18n="@@organizational">Organizational</td>
+                                <td class="text-dark">&nbsp;{{cardData.reductions.employee.percentage || 0 | pct: 1}}
+                                </td>
+                                <td class="text-body" [translate]="'organizational'">Organizational</td>
                             </tr>
                         </table>
                     </div>
@@ -124,7 +134,7 @@
     <div class="card-footer bg-light py-1 px-0" *ngIf="cardData && !cardData.loading && cardData.diners > 0">
         <div class="d-flex justify-content-between">
             <div><span class="text-dark" [innerHtml]="cardData?.ppa | currency"></span>&nbsp;<span class="text-body"
-                                                                                                   i18n="@@ppaText">PPA</span>
+                                                                                                   [translate]="'ppa'">PPA</span>
             </div>
             <div>
                 <i class="icon user diners-footer-icon" style="display: inline-block"></i> <span class="text-dark">{{cardData?.diners | number:'1.0-0'}}</span>

@@ -48,7 +48,7 @@ export class MonthPickerDialogComponent {
 
                     let summaryCardData = {
                         loading: false,
-                        title: this.datePipe.transform(month.latestDay, 'MMMM yyyy'),
+                        title: this.datePipe.transform(month.latestDay, 'MMMM yyyy', '', this.env.tbtLocale),
                         tag: '',
                         sales: 0,
                         diners: 0,

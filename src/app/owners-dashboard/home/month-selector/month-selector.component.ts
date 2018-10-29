@@ -23,9 +23,11 @@ export class MonthSelectorComponent implements OnInit {
     @Output() onDateChanged = new EventEmitter();
 
     public region: any;
+    public env: any;
 
     constructor(private dataService: DataService) {
         this.region = environment.region;
+        this.env = environment;
     }
 
     disablePrevious = '';

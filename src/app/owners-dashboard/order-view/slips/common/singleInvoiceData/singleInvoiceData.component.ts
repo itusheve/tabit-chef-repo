@@ -25,7 +25,7 @@ export class OrderSingleInvoiceDataComponent implements OnInit {
     private isUS;
 
     constructor() {
-        this.isUS = environment.region === 'us' ? true : false //controls behaviour
+        this.isUS = environment.region === 'us' ? true : false; //controls behaviour
         this.orderViewService = new OrderViewService({
             local: environment.tbtLocale,//controls translations, accepts 'he-IL' / 'en-US'
             isUS: this.isUS,//controls behaviour

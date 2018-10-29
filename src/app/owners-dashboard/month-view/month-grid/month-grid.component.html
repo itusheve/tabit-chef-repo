@@ -1,6 +1,6 @@
 <div class="card p-0 month-grid bg-info dashboard-home-card shadow-card">
     <div class="card-header text-center text-white" style="font-size: 18px; font-weight: 700">
-        <ng-container i18n="@@dailyBreakdown">Daily Breakdown</ng-container>
+        <span [translate]="'dailyBreakdown'"></span>
     </div>
     <div class="col-12 p-0">
         <ul class="list-group p-0" *ngIf="days">
@@ -22,14 +22,14 @@
                     </div>
                     <div class="row m-2" style="direction: ltr">
                         <div class="btn-group average-picker">
-                            <span class="btn btn-lg btn-outline-secondary disabled" i18n="@@budget">budget</span>
+                            <span class="btn btn-lg btn-outline-secondary disabled" [translate]="'budget'">budget</span>
                             <span class="btn btn-lg btn-outline-secondary"
                                   [ngClass]="{'active': avgPeriodComparator === 'year', 'disabled': !hasYearlyAvg}"
-                                  (click)="changeAvgPeriodComparator('year')" i18n="@@previousYear">Prev. Year</span>
+                                  (click)="changeAvgPeriodComparator('year')" [translate]="'previousYear'">Prev. Year</span>
                             <span class="btn btn-lg btn-outline-secondary"
-                                  [style.direction]="environment.region === 'il' ? 'rtl' : 'ltr'"
+                                  [style.direction]="environment.lang === 'he' ? 'rtl' : 'ltr'"
                                   [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''"
-                                  (click)="changeAvgPeriodComparator('month')" i18n="@@fourWeek">4 Week</span>
+                                  (click)="changeAvgPeriodComparator('month')" [translate]="'fourWeek'">4 Week</span>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                 [ngClass]="{active: isActive(day)}" (click)="select(day)">
                 <div class="row flex a-center py-0" style="cursor: pointer; height: 42px;">
                     <div class="col-3 px-1" style="max-width: 17% !important; font-weight: 700">
-                        <div>{{day.businessDate | date: 'dd'}} {{day.businessDate | date: 'EEEEE'}}</div>
+                        <div>{{day.businessDate | date: 'dd'}} {{day.businessDate | date: 'EEEEE': '': environment.tbtLocale}}</div>
                     </div>
                     <div class="col-8 px-1" style="max-width: 60% !important;">
 

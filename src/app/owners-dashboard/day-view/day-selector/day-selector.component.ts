@@ -7,7 +7,7 @@ import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 @Component({
     selector: 'app-day-selector',
     templateUrl: './day-selector.component.html',
-    styleUrls: ['./day-selector.component.css']
+    styleUrls: ['./day-selector.component.css'],
 })
 export class DaySelectorComponent implements OnChanges {
     @Output() onDateChanged = new EventEmitter();
@@ -21,6 +21,7 @@ export class DaySelectorComponent implements OnChanges {
 
     public picker;
     public datePickerMaxDate;
+    public env;
     disablePrevious = true;
     disableNext = true;
 
@@ -30,6 +31,7 @@ export class DaySelectorComponent implements OnChanges {
         this.datePickerMaxDate = new Date();
         this.region = environment.region;
         this.tabitHelper = new TabitHelper();
+        this.env = environment;
     }
 
     private setDisable() {

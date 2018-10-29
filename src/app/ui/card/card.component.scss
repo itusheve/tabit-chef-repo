@@ -81,4 +81,14 @@
     font-size: 20px;
     position: relative;
   }
+
+  .iconFlipped {
+    transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -ms-transform: scaleX(-1);
+    right: 5px;
+    position: relative;
+    margin: 0 3px;
+  }
 }

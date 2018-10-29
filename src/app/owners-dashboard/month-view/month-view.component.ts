@@ -47,6 +47,7 @@ export class MonthViewComponent implements OnInit {
 
     public showSummary;
     public tabitHelper;
+    public env;
 
     constructor(
         private dataService: DataService,
@@ -55,6 +56,7 @@ export class MonthViewComponent implements OnInit {
     ) {
         this.showSummary = false;
         this.tabitHelper = new TabitHelper();
+        this.env = environment;
     }
 
     ngOnInit() {
@@ -119,7 +121,7 @@ export class MonthViewComponent implements OnInit {
             }
         };
 
-        let monthName = this.datePipe.transform(date, 'MMMM');
+        let monthName = this.datePipe.transform(date, 'MMMM', '', this.env.lang);
         let monthState = moment().isSame(date, 'month') ? tmpTranslations.get('home.month.notFinalTitle') : tmpTranslations.get('home.month.finalTitle');
         this.summaryCardData.title = monthName + ' ' +  monthState;
 

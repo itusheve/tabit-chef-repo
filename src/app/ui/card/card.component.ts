@@ -1,10 +1,4 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {DecimalPipe, PercentPipe, DatePipe} from '@angular/common';
-import {BehaviorSubject} from 'rxjs';
-// export interface Trend {
-//   show: boolean;
-//   val: number;
-// }
 import {environment} from '../../../environments/environment';
 import {currencySymbol} from '../../../tabit/data/data.service';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
@@ -41,11 +35,13 @@ export class CardComponent implements OnInit {
     public region: any;
     public currency: any;
     public tabitHelper: TabitHelper;
+    public env;
 
     constructor() {
         this.region = environment.region;
         this.currency = currencySymbol;
         this.tabitHelper = new TabitHelper();
+        this.env = environment;
     }
 
     ngOnInit() {
@@ -72,5 +68,9 @@ export class CardComponent implements OnInit {
     getReductionPercentageCssClass(percentage, isUpPositive, change) {
         let cssClass = this.tabitHelper.getTextClassByPercentage(((change / (percentage - change)) * 100) + 100, isUpPositive);
         return cssClass;
+    }
+
+    getIconClass() {
+        return this.env.lang === 'he' ? 'iconFlipped' : '';
     }
 }

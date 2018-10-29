@@ -6,6 +6,7 @@ import {Subject} from 'rxjs';
 import {MatSnackBar, MatDialog} from '@angular/material';
 import {AreYouSureDialogComponent} from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
 import {environment} from '../../environments/environment';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-orgs',
@@ -51,7 +52,17 @@ export class OrgsComponent implements OnInit {
                 public dialog: MatDialog,
                 public snackBar: MatSnackBar,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private router: Router,
+                private translate: TranslateService
+    ) {
+
+        let settings = JSON.parse(window.localStorage.getItem('settings'));
+        let currentLanguage = settings.lang || translate.getBrowserLang();
+        if(currentLanguage !== 'en' && currentLanguage !== 'he') {
+            currentLanguage = 'en';
+        }
+        translate.setDefaultLang(currentLanguage);
+        translate.use(currentLanguage);
 
         this.env = environment;
         this.appVersions = appVersions;

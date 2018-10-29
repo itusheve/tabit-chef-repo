@@ -17,7 +17,8 @@
     "build-il": "ng build --configuration=prod-il --prod --build-optimizer",
     "build-us": "ng build --configuration=prod-us --prod --build-optimizer",
     "cordova-il": "ng build --prod --configuration=prod-il --output-hashing=none",
-    "cordova-us": "ng build --prod --configuration=prod-us --output-hashing=none"
+    "cordova-us": "ng build --prod --configuration=prod-us --output-hashing=none",
+    "extract": "ngx-translate-extract --input ./src -o ./src/assets/i18n/en.json --clean --sort --format json"
   },
   "private": true,
   "dependencies": {
@@ -62,6 +63,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.7.5",
     "@angular/language-service": "7.0.0",
+    "@biesbjerg/ngx-translate-extract": "^2.3.4",
     "@types/jasmine": "2.5.53",
     "@types/jasminewd2": "2.0.2",
     "@types/node": "6.0.101",

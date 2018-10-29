@@ -11,6 +11,8 @@ import {OwnersDashboardService} from '../owners-dashboard.service';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
 import {MatBottomSheet} from '@angular/material';
 import {MonthPickerDialogComponent} from './month-selector/month-picker-dialog.component';
+import {environment} from '../../../environments/environment';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-home',
@@ -58,13 +60,16 @@ export class HomeComponent implements OnInit {
     public loadingOlapData: boolean;
     public OlapFailed: boolean;
     public olapError: any;
+    private env: any;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private dataService: DataService,
                 private router: Router,
                 private monthPickerDialog: MatBottomSheet,
-                private datePipe: DatePipe) {
+                private datePipe: DatePipe,
+                private translate: TranslateService) {
 
+        this.env = environment;
         this.tabitHelper = new TabitHelper();
         ownersDashboardService.toolbarConfig.left.back.showBtn = false;
         ownersDashboardService.toolbarConfig.menuBtn.show = true;
@@ -124,7 +129,7 @@ export class HomeComponent implements OnInit {
                 let day = data[1];
                 let incTax = data[2];
                 let restTime = data[3];
-                let realtimeDataDate = moment(dailyTotals.businessDate);
+                let realtimeDataDate = moment.utc(dailyTotals.businessDate);
 
                 let totals = dailyTotals.totals;
                 let totalClosedOrders = _.get(totals, 'totalPayments', 0);
@@ -137,12 +142,20 @@ export class HomeComponent implements OnInit {
                 let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
                 let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
 
-                if (!restTime.isSame(realtimeDataDate, 'day')) {
-                    this.currentBdCardData.salesComment = 'eod';
+                let endOfDayComment;
+                this.translate.get('eod').subscribe((res: string) => {
+                    endOfDayComment = res;
+                });
+
+                if (restTime.format('YYYYMMDD') !== realtimeDataDate.format('YYYYMMDD')) {
+                    this.currentBdCardData.salesComment = endOfDayComment;
                 }
 
                 this.currentBdCardData.sales = incTax ? totalSales : totalSalesWithoutTax;
-                this.currentBdCardData.title = this.datePipe.transform(moment(day.date).valueOf(), 'EEEEE, MMMM d');
+
+                this.translate.get('card.today').subscribe((res: string) => {
+                    this.currentBdCardData.title = res + ' ' + this.datePipe.transform(moment(day.date).valueOf(), 'EEEEE, MMMM d', '', this.env.lang);
+                });
 
                 this.currentBdCardData.averages = {
                     /*yearly: {
@@ -222,10 +235,9 @@ export class HomeComponent implements OnInit {
                 let previousDay = moment(restaurantTime).subtract(1, 'days');
                 let day = database.getDay(previousDay);
 
-                const title = this.datePipe.transform(previousDay.valueOf(), 'EEEEE, MMMM d');
+                const title = this.datePipe.transform(previousDay.valueOf(), 'EEEEE, MMMM d','', this.env.lang);
                 if (!day) {
                     this.showPreviousDay = false;
-                    this.previousBdCardData.salesComment = 'noData';
                     this.previousBdNotFinal = true;
                     this.previousBdCardData.loading = false;
                 }
@@ -272,7 +284,10 @@ export class HomeComponent implements OnInit {
                     }
                 }
 
-                this.previousBdCardData.title = title;
+                this.translate.get('card.yesterday').subscribe((res: string) => {
+                    this.previousBdCardData.title = res + ' ' + title;
+                });
+
                 this.previousBdCardData.showDrillArrow = true;
                 this.previousBdCardData.loading = false;
             });
@@ -305,7 +320,7 @@ export class HomeComponent implements OnInit {
                     };
                 }
 
-                this.forecastCardData.title = `${this.datePipe.transform(moment(month.latestDay).startOf('month'), 'MMMM')} ${tmpTranslations.get('home.month.expected')}`;
+                this.forecastCardData.title = `${this.datePipe.transform(moment(month.latestDay).startOf('month'), 'MMMM', '', this.env.lang)} ${tmpTranslations.get('home.month.expected')}`;
                 this.forecastCardData.diners = month.forecast.diners.count || month.forecast.orders.count;
                 this.forecastCardData.sales = incTax ? month.forecast.sales.amount : month.forecast.sales.amountWithoutVat;
 

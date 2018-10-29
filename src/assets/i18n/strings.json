@@ -1,0 +1,29 @@
+{
+	"CHECK_NUMBER": "",
+	"ORDERS_VIEW": {
+		"all_order_oth": "",
+		"exempted_tax": ""
+	},
+	"budget": "",
+	"cancellations": "",
+	"card": {
+		"today": "",
+		"yesterday": ""
+	},
+	"dailyBreakdown": "",
+	"eod": "",
+	"fourWeek": "",
+	"fourWeekAvg": "",
+	"lastYear": "",
+	"operational": "",
+	"organizational": "",
+	"ppa": "",
+	"previousYear": "",
+	"retention": "",
+	"settingsPage": {
+		"dayPage": "",
+		"general": "",
+		"homePage": "",
+		"language": ""
+	}
+}

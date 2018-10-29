@@ -178,6 +178,7 @@ export class DayViewComponent implements OnInit {
     private dayDebounceStream$: Observable<moment.Moment>;
     private metaData: any;
     public user: any;
+    public env: any;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private dataService: DataService,
@@ -193,6 +194,7 @@ export class DayViewComponent implements OnInit {
         ownersDashboardService.toolbarConfig.center.showVatComment = false;
         ownersDashboardService.toolbarConfig.home.show = true;
         this.region = environment.region;
+        this.env = environment;
         this.hasData = false;
         this.today = moment();
 

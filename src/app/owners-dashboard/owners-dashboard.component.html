@@ -1,7 +1,7 @@
-<mat-sidenav-container (swiperight)="env.region === 'il' ? sidenav.close() : sidenav.open()">
+<mat-sidenav-container (swiperight)="env.lang === 'he' ? sidenav.close() : sidenav.open()">
 
     <mat-sidenav class="flex d-col" #sidenav mode="over"
-                 (swiperight)="env.region === 'il' ? sidenav.close() : sidenav.open()">
+                 (swiperight)="env.lang === 'he' ? sidenav.close() : sidenav.open()">
         <div class="s-0 flex d-col header">
             <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">
                 {{this.sideNavConfig.header.userInitials}}
@@ -14,16 +14,16 @@
         <div class="g-1 flex d-col content">
             <button class="s-0" *ngIf="this.sideNavConfig.content.showMySitesBtn" mat-raised-button
                     [routerLink]="['/restaurants', { m: 's'}]">
-                <span i18n="owners-dashboard@@mySites">My Sites</span>
+                <span [translate]="'menu.mySites'">My Sites</span>
             </button>
             <button class="s-0" mat-raised-button [routerLink]="['/managers-dashboard']">
-                <span i18n="owners-dashboard@@managerDashboard">Manager Dashboard</span>
+                <span [translate]="'menu.managerDashboard'">Manager Dashboard</span>
             </button>
             <button class="s-0" mat-raised-button (click)="settings(); sidenav.toggle();">
-                <span i18n="owners-dashboard@@personalSettings">Personal Settings</span>
+                <span [translate]="'menu.personalSettings'">Personal Settings</span>
             </button>
             <button class="s-0" *ngIf="this.sideNavConfig.content.showLogoutBtn" mat-raised-button (click)="logout()">
-                <span i18n="owners-dashboard@@logout">Logout</span>
+                <span [translate]="'menu.logout'">Logout</span>
             </button>
             <div *ngIf="debug" class="g-1 flex d-col"
                  style="word-break: break-all;text-align: left;padding: 5px;background-color: white;overflow: auto;">
@@ -39,7 +39,7 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-        <div class="flex j-sb a-center toolbar" id="main-toolbar" (swipeleft)="env.region === 'il' ? sidenav.open() : sidenav.close()">
+        <div class="flex j-sb a-center toolbar" id="main-toolbar" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
             <div class="flex j-start ps15" style="width:15%">
                 <button
                         *ngIf="toolbarConfig.menuBtn.show"
@@ -61,9 +61,9 @@
                         <mat-icon>refresh</mat-icon>
                     </button>
                 </div>
-                <div *ngIf="toolbarConfig.center.showVatComment && !vat" style="color:white;font-size:12px;">(<span i18n="owners-dashboard@@excludingVAT">Data excluding VAT</span>)
+                <div *ngIf="toolbarConfig.center.showVatComment && !vat" style="color:white;font-size:12px;">(<span [translate]="'menu.excludingVAT'">Data excluding VAT</span>)
                 </div>
-                <div *ngIf="toolbarConfig.center.showVatComment && vat" style="color:white;font-size:12px;">(<span i18n="owners-dashboard@@includingVAT">Data including VAT</span>)
+                <div *ngIf="toolbarConfig.center.showVatComment && vat" style="color:white;font-size:12px;">(<span [translate]="'menu.includingVAT'">Data including VAT</span>)
                 </div>
             </div>
             <div class="flex j-end pe15" style="width:15%">
@@ -76,7 +76,7 @@
             </div>
         </div>
         <div class="contentFixed">
-            <div class="content" id="main-content" (swipeleft)="env.region === 'il' ? sidenav.open() : sidenav.close()">
+            <div class="content" id="main-content" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
                 <router-outlet></router-outlet>
             </div>
         </div>

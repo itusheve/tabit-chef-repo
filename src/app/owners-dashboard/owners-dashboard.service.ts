@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import * as moment from 'moment';
 import 'moment-timezone';
 import {BehaviorSubject} from '../../../node_modules/rxjs';
+import {DateAdapter} from '@angular/material';
 
 @Injectable()
 export class OwnersDashboardService {
@@ -58,7 +59,8 @@ export class OwnersDashboardService {
     constructor(
         private dataService: DataService,
         private router: Router,
-        private ds: DebugService
+        private ds: DebugService,
+        private dateAdapter: DateAdapter<any>
     ) {
         document.addEventListener('backbutton', function(e) {
             ds.log('event: back button pressed');
@@ -88,6 +90,10 @@ export class OwnersDashboardService {
         dataService.settings$
             .subscribe(settings => {
                 environment.lang = settings.lang;
+                let locale = settings.lang === 'he' ? 'he-IL' : 'en-US';
+                environment.tbtLocale = locale;
+
+                dateAdapter.setLocale(locale);
             });
 
 
@@ -99,10 +105,10 @@ export class OwnersDashboardService {
         dataService.organization$
             .subscribe(org => {
                 if(org.region === 'IL') {
-                    environment.tbtLocale = 'he-IL';
+                    environment.region = 'il';
                 }
                 else {
-                    environment.tbtLocale = 'en-US';
+                    environment.region = 'us';
                 }
 
                 if (exampleOrgName) {

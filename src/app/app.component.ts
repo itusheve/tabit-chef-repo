@@ -23,11 +23,12 @@ export class AppComponent implements OnInit {
 
     constructor(private ds: DebugService, private translate: TranslateService) {
         this.logArr = ds.logArr;
-        let currentLanguage = translate.getBrowserLang();
+
+        let settings = JSON.parse(window.localStorage.getItem('settings'));
+        let currentLanguage = settings.lang || translate.getBrowserLang();
         if(currentLanguage !== 'en' && currentLanguage !== 'he') {
             currentLanguage = 'en';
         }
-
         translate.setDefaultLang(currentLanguage);
         translate.use(currentLanguage);
     }

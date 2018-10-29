@@ -23,6 +23,7 @@ import {Order} from '../model/Order.model';
 import {environment} from '../../environments/environment';
 import {DebugService} from '../../app/debug.service';
 import {LogzioService} from '../../app/logzio.service';
+import {TranslateService} from '@ngx-translate/core';
 
 const tmpTranslations_ = {
     'he': {
@@ -1474,7 +1475,16 @@ export class DataService {
         refCount()
     );
 
-    constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService, private logz: LogzioService) {
+    constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService, private logz: LogzioService, private translate: TranslateService) {
+        let settings = JSON.parse(window.localStorage.getItem('settings'));
+        this.settings$.next(settings);
+
+        let currentLanguage = settings.lang || translate.getBrowserLang();
+        if(currentLanguage !== 'en' && currentLanguage !== 'he') {
+            currentLanguage = 'en';
+        }
+        translate.setDefaultLang(currentLanguage);
+        translate.use(currentLanguage);
 
     }
 

@@ -9,7 +9,7 @@ import {DomSanitizer} from '@angular/platform-browser';
     pure: false
 })
 export class CurrencyPipe implements PipeTransform {
-    private decPipe: DecimalPipe = new DecimalPipe(environment.tbtLocale);
+    private decPipe: DecimalPipe = new DecimalPipe(environment.region === 'il' ? 'he-IL' : 'en-US');
 
     constructor(private sanitized: DomSanitizer){}
 
@@ -49,7 +49,7 @@ export class CurrencyPipe implements PipeTransform {
     pure: false
 })
 export class OwnersDashboardCurrencyPipe implements PipeTransform {
-    private decPipe: DecimalPipe = new DecimalPipe(environment.tbtLocale);
+    private decPipe: DecimalPipe = new DecimalPipe(environment.region === 'il' ? 'he-IL' : 'en-US');
 
     transform(value: any, decimal?: string, cents?: string, nullify?: string, hideSymbol?: boolean): any {
         decimal = decimal || '2';
@@ -87,7 +87,7 @@ export class OwnersDashboardCurrencyPipe implements PipeTransform {
     pure: false
 })
 export class OwnersDashboardPercentPipe implements PipeTransform {
-    private pctPipe: PercentPipe = new PercentPipe(environment.tbtLocale);
+    private pctPipe: PercentPipe = new PercentPipe(environment.region === 'il' ? 'he-IL' : 'en-US');
 
     transform(value: any, decimal?: string, nullify?: string): any {
         decimal = decimal || '2';
