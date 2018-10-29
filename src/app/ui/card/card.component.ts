@@ -1,7 +1,7 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {environment} from '../../../environments/environment';
-import {currencySymbol} from '../../../tabit/data/data.service';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
+import {DataService} from '../../../tabit/data/data.service';
 
 export interface CardData {
     loading: boolean;
@@ -37,14 +37,16 @@ export class CardComponent implements OnInit {
     public tabitHelper: TabitHelper;
     public env;
 
-    constructor() {
+    constructor(private dataService: DataService) {
         this.region = environment.region;
-        this.currency = currencySymbol;
         this.tabitHelper = new TabitHelper();
         this.env = environment;
     }
 
     ngOnInit() {
+        this.dataService.currencySymbol$.subscribe(symbol => {
+            this.currency = symbol;
+        });
     }
 
     getArrow(percentage) {

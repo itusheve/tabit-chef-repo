@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DecimalPipe, PercentPipe } from '@angular/common';
 import { environment } from '../../environments/environment';
-import { currencySymbol } from '../../tabit/data/data.service';
 import {DomSanitizer} from '@angular/platform-browser';
+import {DataService} from '../../tabit/data/data.service';
 
 @Pipe({
     name: 'currency',
@@ -11,7 +11,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 export class CurrencyPipe implements PipeTransform {
     private decPipe: DecimalPipe = new DecimalPipe(environment.region === 'il' ? 'he-IL' : 'en-US');
 
-    constructor(private sanitized: DomSanitizer){}
+    constructor(private sanitized: DomSanitizer, private dataService: DataService){}
 
     transform(value: any, decimal?: string, cents?: string, nullify?: string, disableSymbol?: boolean): any {
         decimal = decimal || '2';
@@ -30,9 +30,9 @@ export class CurrencyPipe implements PipeTransform {
         if (result) {
             if(!disableSymbol) {
                 if(value < 0){
-                    result = `<span style="font-size: calc(100% - 4px)">${currencySymbol}</span>${result}-`;
+                    result = `<span style="font-size: calc(100% - 4px)">${this.dataService.currencySymbol$.value}</span>${result}-`;
                 } else {
-                    result = `<span style="font-size: calc(100% - 4px)">${currencySymbol}</span>${result}`;
+                    result = `<span style="font-size: calc(100% - 4px)">${this.dataService.currencySymbol$.value}</span>${result}`;
                 }
 
             } else if(value < 0) {
@@ -51,6 +51,8 @@ export class CurrencyPipe implements PipeTransform {
 export class OwnersDashboardCurrencyPipe implements PipeTransform {
     private decPipe: DecimalPipe = new DecimalPipe(environment.region === 'il' ? 'he-IL' : 'en-US');
 
+    constructor(private dataService: DataService){}
+
     transform(value: any, decimal?: string, cents?: string, nullify?: string, hideSymbol?: boolean): any {
         decimal = decimal || '2';
 
@@ -68,9 +70,9 @@ export class OwnersDashboardCurrencyPipe implements PipeTransform {
         if (result) {
             if(!hideSymbol) {
                 if(value < 0){
-                    result = `${currencySymbol}${result}-`;
+                    result = `${this.dataService.currencySymbol$.value}${result}-`;
                 } else {
-                    result = `${currencySymbol}${result}`;
+                    result = `${this.dataService.currencySymbol$.value}${result}`;
                 }
 
             } else if(value < 0) {

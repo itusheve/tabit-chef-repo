@@ -111,6 +111,7 @@ export class OwnersDashboardService {
                     environment.region = 'us';
                 }
 
+                dataService.currencySymbol$.next(environment.region === 'il' ? '₪' : '$');
                 if (exampleOrgName) {
                     org.alias = exampleOrgName;
                 } else {

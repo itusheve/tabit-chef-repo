@@ -444,6 +444,8 @@ export class DataService {
 
     public vat$: BehaviorSubject<boolean> = new BehaviorSubject<any>(_.get(JSON.parse(window.localStorage.getItem('settings')), 'vat'));
 
+    public currencySymbol$: BehaviorSubject<any> = new BehaviorSubject<any>(environment.region === 'il' ? '$' : '₪');
+
     public settings$: BehaviorSubject<any> = new BehaviorSubject<any>(JSON.parse(window.localStorage.getItem('settings')) || {});
 
     public refresh$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
