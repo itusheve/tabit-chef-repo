@@ -24,7 +24,6 @@ const TlogDocsService = (function () {
             ChargeAccountPayment: 'ChargeAccountPayment',
             CashPayment: 'CashPayment',
             ChequePayment: 'ChequePayment',
-            CreditCardPayment: 'CreditCardPayment',
             ChargeAccountRefund: 'ChargeAccountRefund',
             CashRefund: 'CashRefund',
             ChequeRefund: 'ChequeRefund',
