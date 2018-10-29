@@ -56,13 +56,14 @@ export class OrgsComponent implements OnInit {
                 private translate: TranslateService
     ) {
 
-        let settings = JSON.parse(window.localStorage.getItem('settings'));
-        let currentLanguage = settings.lang || translate.getBrowserLang();
-        if(currentLanguage !== 'en' && currentLanguage !== 'he') {
-            currentLanguage = 'en';
-        }
-        translate.setDefaultLang(currentLanguage);
-        translate.use(currentLanguage);
+        dataService.settings$.subscribe(settings => {
+            let currentLanguage = settings.lang || translate.getBrowserLang();
+            if(currentLanguage !== 'en' && currentLanguage !== 'he') {
+                currentLanguage = 'en';
+            }
+            translate.setDefaultLang(currentLanguage);
+            translate.use(currentLanguage);
+        });
 
         this.env = environment;
         this.appVersions = appVersions;

@@ -61,6 +61,11 @@ export class OwnerSettingsComponent implements OnInit {
 
     updateVat(event) {
         let settings = JSON.parse(window.localStorage.getItem('settings')) || {vat: true};
+        if(!settings) {
+            settings = {
+                vat: event.checked
+            };
+        }
         settings.vat = event.checked;
         window.localStorage.setItem('settings', JSON.stringify(settings));
         this.dataService.vat$.next(event.checked);
@@ -68,6 +73,12 @@ export class OwnerSettingsComponent implements OnInit {
 
     updateLanguage() {
         let settings = JSON.parse(window.localStorage.getItem('settings'));
+
+        if(!settings) {
+            settings = {
+                lang: this.lang
+            };
+        }
         settings.lang = this.lang;
         window.localStorage.setItem('settings', JSON.stringify(settings));
         this.dataService.settings$.next(settings);
@@ -77,6 +88,13 @@ export class OwnerSettingsComponent implements OnInit {
 
     updateMaxItemsPerDepartment() {
         let settings = JSON.parse(window.localStorage.getItem('settings')) || {};
+
+        if(!settings) {
+            settings = {
+                maxItemsPerDepartment: 5
+            };
+        }
+
         settings.maxItemsPerDepartment = this.maxItemsPerDepartment;
         this.dataService.settings$.next(settings);
         window.localStorage.setItem('settings', JSON.stringify(settings));

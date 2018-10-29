@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DebugService} from './debug.service';
 import {TranslateService} from '@ngx-translate/core';
+import {environment} from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -25,6 +26,12 @@ export class AppComponent implements OnInit {
         this.logArr = ds.logArr;
 
         let settings = JSON.parse(window.localStorage.getItem('settings'));
+        if(!settings) {
+            settings = {
+                lang: environment.region === 'il' ? 'he' : 'en'
+            };
+        }
+
         let currentLanguage = settings.lang || translate.getBrowserLang();
         if(currentLanguage !== 'en' && currentLanguage !== 'he') {
             currentLanguage = 'en';

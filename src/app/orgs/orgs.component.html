@@ -38,7 +38,7 @@
         <div class="flex d-col orgs" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
           <div *ngIf="orgs && orgs.length>9" class="s-0 flex orgsFilter">
             <mat-form-field floatLabel="never">
-              <input matInput placeholder="{{'menu.searchRestaurant' | translate}}" [translate]="'menu.searchRestaurant'" (keyup)='keyUp.next($event.target.value)'>
+              <input matInput [translate]="'menu.searchRestaurant'" (keyup)='keyUp.next($event.target.value)'>
             </mat-form-field>
           </div>
           <div class="g-1 flex f-wrap j-space-between mt15 orgsCards" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">

@@ -13,15 +13,6 @@ import {
     MatButtonModule
 } from '@angular/material';
 
-import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import localeHebrew from '@angular/common/locales/he';
-import {HttpClient} from '../../../node_modules/@angular/common/http';
-import {createTranslateLoader} from '../app.module';
-
-registerLocaleData(localeHebrew, 'he');
-
-
 @NgModule({
     imports: [
         CommonModule,
@@ -32,14 +23,7 @@ registerLocaleData(localeHebrew, 'he');
         MatSidenavModule,
         MatCardModule,
         MatFormFieldModule,
-        MatInputModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: (createTranslateLoader),
-                deps: [HttpClient]
-            }
-        })
+        MatInputModule
     ],
     declarations: [
         OrgsComponent

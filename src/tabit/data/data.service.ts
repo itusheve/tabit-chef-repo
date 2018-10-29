@@ -1479,6 +1479,12 @@ export class DataService {
 
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService, private logz: LogzioService, private translate: TranslateService) {
         let settings = JSON.parse(window.localStorage.getItem('settings'));
+        if(!settings) {
+            settings = {
+                lang: environment.region === 'il' ? 'he' : 'en',
+                vat: true
+            };
+        }
         this.settings$.next(settings);
 
         let currentLanguage = settings.lang || translate.getBrowserLang();

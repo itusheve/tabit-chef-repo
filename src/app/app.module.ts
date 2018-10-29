@@ -72,8 +72,10 @@ import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-brow
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import localeHebrew from '@angular/common/locales/he';
+import localeEnglish from '@angular/common/locales/en';
 
 registerLocaleData(localeHebrew, 'he');
+registerLocaleData(localeEnglish, 'en');
 
 export class MyHammerConfig extends HammerGestureConfig {
     public buildHammer(element: HTMLElement): any {
