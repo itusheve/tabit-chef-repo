@@ -121,6 +121,7 @@ export class DayViewComponent implements OnInit {
     };
 
     public paymentsData: {
+        env: any;
         payments: {
             accountGroup: string;
             accountType: string;
@@ -198,7 +199,13 @@ export class DayViewComponent implements OnInit {
         this.hasData = false;
         this.today = moment();
 
-        this.user = JSON.parse(window.localStorage.getItem('user'));
+        this.user = {
+            isStaff: false
+        };
+
+        this.dataService.user$.subscribe(user => {
+            this.user = user;
+        });
     }
 
     extractOrders(dailyReport): Order[] {
@@ -501,11 +508,12 @@ export class DayViewComponent implements OnInit {
 
             this.paymentsData = {payments: []};
             _.forEach(dailyReport.payments, payment => {
+                this.paymentsData.env = dailyReport.env;
                 this.paymentsData.payments.push({
                     accountGroup: payment.type,
-                    accountType: payment.name,
+                    accountType: payment.name || payment.clearing,
                     date: dayDate,
-                    clearerName: payment.clearingName || payment.name,
+                    clearerName: payment.clearingName || payment.name || payment.clearing,
                     paymentsKPIs: {
                         daily: payment.DailyPaymentAmount,
                         monthly: payment.MonthlyPaymentAmount,
@@ -513,7 +521,8 @@ export class DayViewComponent implements OnInit {
                         dailyPrc: 0,
                         monthlyPrc: 0,
                         yearlyPrc: 0
-                    }
+                    },
+                    rawData: payment //quick dirty fix for us
                 });
             });
 

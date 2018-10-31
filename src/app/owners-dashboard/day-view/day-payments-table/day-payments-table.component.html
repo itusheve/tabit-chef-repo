@@ -7,7 +7,7 @@
                     <span [translate]="'day.paymentsReport'">Payments report</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table class="chf-tbl chf-tbl-x-smaller">
+            <table *ngIf="paymentsData && paymentsData.env !== 'usa'" class="chf-tbl chf-tbl-x-smaller">
                 <tr class="header">
                     <td [translate]="'day.method'">Method</td>
                     <td class="ar" [translate]="'day.daily'">Daily</td>
@@ -30,6 +30,47 @@
                                 <td>&nbsp;&nbsp;{{clearerNameObj.clearerName}}</td>
                                 <td class="ar" dir="ltr">{{clearerNameObj.paymentsKpis.daily | curr:'0':'':'nullify':true}}<span *ngIf="clearerNameObj.paymentsKpis.daily" style="display: block">({{clearerNameObj.paymentsKpis.dailyPrc | pct:'1'}})</span></td>
                                 <td class="ar" dir="ltr">{{clearerNameObj.paymentsKpis.monthly | curr:'0':'':'nullify':true}}<span *ngIf="clearerNameObj.paymentsKpis.monthly" style="display: block">({{clearerNameObj.paymentsKpis.monthlyPrc | pct:'1'}})</span></td>
+                            </tr>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </table>
+
+            <table *ngIf="paymentsData && paymentsData.env === 'usa'" class="chf-tbl chf-tbl-x-smaller">
+                <tr class="header">
+                    <td [translate]="'day.method'">Method</td>
+                    <td class="ar" [translate]="'day.sales'">Sales</td>
+                    <td class="ar" [translate]="'day.refund'">Refund</td>
+                    <td class="ar" [translate]="'day.payments'">Payments</td>
+                    <td class="ar" [translate]="'day.gratuity'">Gratuity</td>
+                    <td class="ar" [translate]="'day.totalPayments'">Total Payments</td>
+                </tr>
+                <tr class="totalRow" *ngIf="data">
+                    <td [translate]="'day.total'">Total</td>
+                    <td class="ar">{{data.paymentsKpis.sales | curr:'0':'':'nullify':true}}</td>
+                    <td class="ar">{{data.paymentsKpis.refund | curr:'0':'':'nullify':true}}</td>
+                    <td class="ar">{{data.paymentsKpis.payments | curr:'0':'':'nullify':true}}</td>
+                    <td class="ar">{{data.paymentsKpis.gratuity | curr:'0':'':'nullify':true}}</td>
+                    <td class="ar">{{data.paymentsKpis.totalPayments | curr:'0':'':'nullify':true}}</td>
+                </tr>
+                <ng-container *ngIf="data">
+                    <ng-container *ngFor="let accountGroupObj of data.byAccountGroup">
+                        <ng-container *ngIf="accountGroupObj">
+                            <tr class="accountTypeRow">
+                                <td>{{accountGroupObj.accountGroup}}</td>
+                                <td class="ar" dir="ltr">{{accountGroupObj.paymentsKpis.sales | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar" dir="ltr">{{accountGroupObj.paymentsKpis.refund | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar" dir="ltr">{{accountGroupObj.paymentsKpis.payments | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar" dir="ltr">{{accountGroupObj.paymentsKpis.gratuity | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar" dir="ltr">{{accountGroupObj.paymentsKpis.totalPayments | curr:'0':'':'nullify':true}}</td>
+                            </tr>
+                            <tr *ngFor="let clearerNameObj of accountGroupObj.byClearerName" class="accountRow">
+                                <td>&nbsp;&nbsp;{{clearerNameObj.clearerName}}</td>
+                                <td class="ar" dir="ltr">{{clearerNameObj.rawData.sales | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar" dir="ltr">{{clearerNameObj.rawData.refund | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar" dir="ltr">{{clearerNameObj.rawData.payments | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar" dir="ltr">{{clearerNameObj.rawData.gratuity | curr:'0':'':'nullify':true}}</td>
+                                <td class="ar" dir="ltr">{{clearerNameObj.rawData.totalPayments | curr:'0':'':'nullify':true}}</td>
                             </tr>
                         </ng-container>
                     </ng-container>

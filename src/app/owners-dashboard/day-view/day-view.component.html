@@ -165,7 +165,7 @@
                     [orders]="orders"></app-order-view>
 </div>
 
-<div class="card text-center" *ngIf="this.user.isStaff && hasData">
+<div class="card text-center" *ngIf="user.isStaff && hasData">
     EOD: {{metaData?.isEod == '1' ? 'Yes' : 'No'}} |
     Balanced: {{metaData?.isBalanced == '1' ? 'Yes' : 'No'}}
 </div>

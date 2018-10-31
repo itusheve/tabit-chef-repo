@@ -349,23 +349,46 @@ export class AuthService {
     }
 
     getToken():string {
+        let region = this.region;
+        if(!region) {
+            let organization = JSON.parse(window.localStorage.getItem('org'));
+            if(organization) {
+                region = organization.region.toLowerCase();
+            }
+        }
+        this.region = region;
+        let tokens = JSON.parse(window.localStorage.getItem('tokens'));
+        if(!this.authTokens) {
+            this.authTokens = tokens;
+        }
+
         if(this.authTokens) {
-            let regionToken = this.authTokens[this.region || environment.region];
+            let regionToken = this.authTokens[region];
             return regionToken ? regionToken.access_token : '';
         }
     }
 
     getRosUrl(region = null): string {
-        if(region) {
-            this.region = region;
+        if(!region) {
+            region = this.region || environment.region;
+            let organization = JSON.parse(window.localStorage.getItem('org'));
+            if(organization) {
+                region = organization.region.toLowerCase();
+            }
         }
-        return this.remoteServers[region || this.region || environment.region];
+        this.region = region;
+        return this.remoteServers[region];
     }
 
     getDatabaseUrl(region = null): string {
-        if(region) {
-            this.region = region;
+        if(!region) {
+            region = this.region || environment.region;
+            let organization = JSON.parse(window.localStorage.getItem('org'));
+            if(organization) {
+                region = organization.region.toLowerCase();
+            }
         }
-        return environment.remoteDatabases[region || this.region || environment.region];
+        this.region = region;
+        return environment.remoteDatabases[region];
     }
 }
