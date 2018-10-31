@@ -193,7 +193,7 @@ export class DayViewComponent implements OnInit {
         ownersDashboardService.toolbarConfig.left.back.showBtn = true;
         ownersDashboardService.toolbarConfig.menuBtn.show = false;
         ownersDashboardService.toolbarConfig.settings.show = false;
-        ownersDashboardService.toolbarConfig.center.showVatComment = false;
+        ownersDashboardService.toolbarConfig.center.showVatComment = environment.region === 'il';
         ownersDashboardService.toolbarConfig.home.show = true;
         this.region = environment.region;
         this.env = environment;

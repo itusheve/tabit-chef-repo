@@ -6,7 +6,6 @@ import {Subject} from 'rxjs';
 import {MatSnackBar, MatDialog} from '@angular/material';
 import {AreYouSureDialogComponent} from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
 import {environment} from '../../environments/environment';
-import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-orgs',
@@ -37,6 +36,7 @@ export class OrgsComponent implements OnInit {
     mode: string;// normal (selecting org and continuing to app), switch (changing an org, restart should occur)
 
     orgs: any;
+    title: string;
     keyUp = new Subject<string>();
     orgsFiltered: any;
 
@@ -52,19 +52,8 @@ export class OrgsComponent implements OnInit {
                 public dialog: MatDialog,
                 public snackBar: MatSnackBar,
                 private route: ActivatedRoute,
-                private router: Router,
-                private translate: TranslateService
+                private router: Router
     ) {
-
-        dataService.settings$.subscribe(settings => {
-            let currentLanguage = settings.lang || translate.getBrowserLang();
-            if(currentLanguage !== 'en' && currentLanguage !== 'he') {
-                currentLanguage = 'en';
-            }
-            translate.setDefaultLang(currentLanguage);
-            translate.use(currentLanguage);
-        });
-
         this.env = environment;
         this.appVersions = appVersions;
 
@@ -161,7 +150,7 @@ export class OrgsComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        this.title = tmpTranslations.get('mySites');
         this.route.paramMap
         //  .filter(params => params.m)
             .subscribe((params: ParamMap) => {

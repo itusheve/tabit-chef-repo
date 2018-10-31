@@ -27,6 +27,7 @@ import {TranslateService} from '@ngx-translate/core';
 
 const tmpTranslations_ = {
     'he': {
+        mySites: 'המסעדות שלי',
         exampleOrgName: 'מסעדה לדוגמא',
         opFailed: 'הפעולה נכשלה. אנא פנה לתמיכה.',
         areYouSureYouWish: 'האם אתה בטוח שברצונך',
@@ -190,6 +191,7 @@ const tmpTranslations_ = {
         }
     },
     'en': {
+        mySites: 'My Restaurants',
         exampleOrgName: 'Demo Restaurant',
         opFailed: 'Operation has failed. please contact support.',
         areYouSureYouWish: 'Are you sure you wish',
@@ -241,8 +243,8 @@ const tmpTranslations_ = {
         monthViewFilters: {
             sales: 'Sales',
             cancellations: 'Voids',
-            operational: 'OP Discount',
-            retention: 'RET Discount',
+            operational: 'OP Errors',
+            retention: 'Comps',
             employee: 'Employee Meals',
         },
         managerDash: {
@@ -384,7 +386,13 @@ export class DataService {
     private organizations: any[];
 
     public organization$: Observable<any> = Observable.create(obs => {
-        obs.next(JSON.parse(window.localStorage.getItem('org')));
+        let org = JSON.parse(window.localStorage.getItem('org'));
+
+        if(org.region.toLowerCase() === 'us') {
+            this.vat$.next(true);
+        }
+
+        obs.next(org);
     });
 
     public user$: Observable<any> = Observable.create(obs => {

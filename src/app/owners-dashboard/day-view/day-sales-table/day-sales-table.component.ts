@@ -27,7 +27,7 @@ export class DaySalesTableComponent implements OnChanges {
         netSales: any[],
         tax: number[],
         grossSales: number[],
-        gratuity: number[],
+        tip: number[],
         serviceCharge: number[],
         diners: number[],
         orders: number[],
@@ -57,7 +57,7 @@ export class DaySalesTableComponent implements OnChanges {
                 netSales: [],
                 tax: [],
                 grossSales: [],
-                gratuity: [],
+                tip: [],
                 serviceCharge: [],
                 diners: [],
                 orders: [],
@@ -73,7 +73,7 @@ export class DaySalesTableComponent implements OnChanges {
                 netSales: {amount: 0, pct: 0},
                 tax: 0,
                 grossSales: 0,
-                gratuity: 0,
+                tip: 0,
                 serviceCharge: 0,
                 diners: 0,
                 orders: 0,
@@ -92,7 +92,7 @@ export class DaySalesTableComponent implements OnChanges {
                     this.pivotedData.netSalesWithoutVat.push(row.ttlSaleAmountExcludeVat);
                     this.pivotedData.tax.push(row.ttlVat);
                     this.pivotedData.grossSales.push(row.salesRefundTipAmountIncludeVat);
-                    this.pivotedData.gratuity.push(row.ttlTipAmountIncludeVat);
+                    this.pivotedData.tip.push(row.ttlTipAmountIncludeVat);
                     this.pivotedData.serviceCharge.push(row.ttlTipAmountExcludeVat);
                     this.pivotedData.diners.push(row.dinersOrders);
                     this.pivotedData.ppa.push(row.ppaAmountIncludeVat);
@@ -101,7 +101,7 @@ export class DaySalesTableComponent implements OnChanges {
                     this.totals.netSalesWithoutVat += row.ttlSaleAmountExcludeVat || 0;
                     this.totals.tax += row.ttlVat || 0;
                     this.totals.grossSales += row.salesRefundTipAmountIncludeVat || 0;
-                    this.totals.gratuity += row.ttlTipAmountIncludeVat || 0;
+                    this.totals.tip += row.ttlTipAmountIncludeVat || 0;
                     this.totals.serviceCharge += row.ttlTipAmountExcludeVat || 0;
                     this.totals.diners += row.dinersOrders || 0;
                 }
@@ -116,7 +116,7 @@ export class DaySalesTableComponent implements OnChanges {
             this.pivotedData.netSalesWithoutVat.splice(0,0,this.totals.netSalesWithoutVat);
             this.pivotedData.tax.splice(0,0,this.totals.tax);
             this.pivotedData.grossSales.splice(0,0,this.totals.grossSales);
-            this.pivotedData.gratuity.splice(0,0,this.totals.gratuity);
+            this.pivotedData.tip.splice(0,0,this.totals.gratuity);
             this.pivotedData.serviceCharge.splice(0,0,this.totals.serviceCharge);
             this.pivotedData.diners.splice(0,0,this.totals.diners);
 

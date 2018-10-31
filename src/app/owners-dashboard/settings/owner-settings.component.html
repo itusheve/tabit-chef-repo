@@ -2,7 +2,7 @@
     <h5 class="card-header" [translate]="'settingsPage.settings'">Settings</h5>
     <div class="card-body bg-white">
 
-        <div class="card">
+        <div *ngIf="env.region === 'il'" class="card">
             <div class="card-header" [translate]="'settingsPage.homePage'"></div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item border-0">
@@ -12,7 +12,7 @@
                             (change)="updateVat($event)"
                             [indeterminate]="false"
                             [disabled]="false"
-                            i18n="owners-dashboard|maam@@vat">
+                            [translate]="'settingsPage.vat'">
                         {{'settingsPage.vat' | translate}}
                     </mat-checkbox>
                 </li>

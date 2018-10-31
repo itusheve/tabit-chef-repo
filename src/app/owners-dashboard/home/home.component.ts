@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit {
         ownersDashboardService.toolbarConfig.left.back.showBtn = false;
         ownersDashboardService.toolbarConfig.menuBtn.show = true;
         ownersDashboardService.toolbarConfig.settings.show = true;
-        ownersDashboardService.toolbarConfig.center.showVatComment = true;
+        ownersDashboardService.toolbarConfig.center.showVatComment = environment.region === 'il';
     }
 
     ngOnInit() {

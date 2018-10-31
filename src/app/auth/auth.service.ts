@@ -8,7 +8,7 @@ import {environment} from '../../environments/environment';
 import {DebugService} from '../debug.service';
 import {LogzioService} from '../logzio.service';
 import * as _ from 'lodash';
-
+import {DataService} from '../../tabit/data/data.service';
 const loginUrl = 'oauth2/token';
 const meUrl = 'account/me';
 

@@ -58,7 +58,7 @@ export class OwnersDashboardComponent implements OnInit {
         ownersDashboardService.toolbarConfig.left.back.showBtn = false;
         ownersDashboardService.toolbarConfig.menuBtn.show = true;
         ownersDashboardService.toolbarConfig.settings.show = true;
-        ownersDashboardService.toolbarConfig.center.showVatComment = false;
+        ownersDashboardService.toolbarConfig.center.showVatComment = environment.region === 'il';
 
         //bind for the view:
         this.toolbarConfig = ownersDashboardService.toolbarConfig;

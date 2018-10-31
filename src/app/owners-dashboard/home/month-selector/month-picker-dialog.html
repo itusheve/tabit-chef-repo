@@ -8,9 +8,9 @@
         <div class="flex a-center" style="color:white">
             <div>{{ownersDashboardService.toolbarConfig.center.caption}}</div>
         </div>
-        <div *ngIf="!incTax" style="color:white;font-size:12px;">(<span [translate]="'menu.excludingVAT'">Data excluding VAT</span>)
+        <div *ngIf="!incTax && env.region === 'il'" style="color:white;font-size:12px;">(<span [translate]="'menu.excludingVAT'">Data excluding VAT</span>)
         </div>
-        <div *ngIf="incTax" style="color:white;font-size:12px;">(<span [translate]="'menu.includingVAT'">Data including VAT</span>)
+        <div *ngIf="incTax && env.region === 'il'" style="color:white;font-size:12px;">(<span [translate]="'menu.includingVAT'">Data including VAT</span>)
         </div>
     </div>
     <div class="flex j-end pe15" style="width:15%">

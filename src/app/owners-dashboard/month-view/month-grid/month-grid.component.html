@@ -5,7 +5,7 @@
     <div class="col-12 p-0">
         <ul class="list-group p-0" *ngIf="days">
             <li class="list-group-item p-0 m-0 rounded-0">
-                <div class="col-12 mx-0 p-0">
+                <div *ngIf="environment.lang === 'he'" class="col-12 mx-0 p-0">
                     <div class="row m-2" style="direction: ltr">
                         <div class="btn-group category-picker">
                             <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('employee')"
@@ -30,6 +30,34 @@
                                   [style.direction]="environment.lang === 'he' ? 'rtl' : 'ltr'"
                                   [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''"
                                   (click)="changeAvgPeriodComparator('month')" [translate]="'fourWeek'">4 Week</span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="environment.lang === 'en'" class="col-12 mx-0 p-0">
+                    <div class="row m-2" style="direction: ltr">
+                        <div class="btn-group category-picker">
+                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('sales')"
+                                  (click)="changeCategory('sales')">{{tmpTranslations.get('monthViewFilters.sales')}}</span>
+                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('cancellations')"
+                                  (click)="changeCategory('cancellations')">{{tmpTranslations.get('monthViewFilters.cancellations')}}</span>
+                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('operational')"
+                                  (click)="changeCategory('operational')">{{tmpTranslations.get('monthViewFilters.operational')}}</span>
+                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('retention')"
+                                  (click)="changeCategory('retention')">{{tmpTranslations.get('monthViewFilters.retention')}}</span>
+                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('employee')"
+                                  (click)="changeCategory('employee')">{{tmpTranslations.get('monthViewFilters.employee')}}</span>
+                        </div>
+                    </div>
+                    <div class="row m-2" style="direction: ltr">
+                        <div class="btn-group average-picker">
+                            <span class="btn btn-lg btn-outline-secondary"
+                                  [style.direction]="environment.lang === 'he' ? 'rtl' : 'ltr'"
+                                  [ngClass]="avgPeriodComparator === 'month' ? 'active' : ''"
+                                  (click)="changeAvgPeriodComparator('month')" [translate]="'fourWeek'">4 Week</span>
+                            <span class="btn btn-lg btn-outline-secondary"
+                                  [ngClass]="{'active': avgPeriodComparator === 'year', 'disabled': !hasYearlyAvg}"
+                                  (click)="changeAvgPeriodComparator('year')" [translate]="'previousYear'">Prev. Year</span>
+                            <span class="btn btn-lg btn-outline-secondary disabled" [translate]="'budget'">budget</span>
                         </div>
                     </div>
                 </div>
