@@ -17,5 +17,6 @@ export const environment = {
         sqlServerProxy: 'https://analytics-us.tabit.cloud/olapproxy/handler.ashx',
         catalog: 'isrProd',
         cube: 'tlogs',
-    }
+    },
+    translationBaseUrl: './assets/i18n/'
 };
