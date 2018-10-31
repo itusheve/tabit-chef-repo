@@ -127,7 +127,8 @@ export class DayViewComponent implements OnInit {
             accountType: string;
             clearerName: string;
             date: moment.Moment;
-            paymentsKPIs: PaymentsKPIs;
+            paymentsKPIs: any;
+            rawData: any;
         }[]
     };
 
@@ -506,7 +507,7 @@ export class DayViewComponent implements OnInit {
                 );
             });
 
-            this.paymentsData = {payments: []};
+            this.paymentsData = {env: '', payments: []};
             _.forEach(dailyReport.payments, payment => {
                 this.paymentsData.env = dailyReport.env;
                 this.paymentsData.payments.push({
