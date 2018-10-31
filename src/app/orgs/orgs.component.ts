@@ -123,7 +123,9 @@ export class OrgsComponent implements OnInit {
         if (this.mode === 'normal') {
             this.authService.selectOrg(org)
                 .then(() => {
-                    let user = JSON.parse(window.localStorage.getItem('user'));
+                    let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
+                    let region = org.region.toLowerCase();
+                    let user = userSettings[region];
                     let membership = user.memberships.find(m => {
                         return m.organization === org.id && m.active;
                     });

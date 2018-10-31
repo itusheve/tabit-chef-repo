@@ -106,9 +106,11 @@ export class OwnersDashboardService {
             .subscribe(org => {
                 if(org.region === 'IL') {
                     environment.region = 'il';
+                    moment.tz.setDefault('Asia/Jerusalem');
                 }
                 else {
                     environment.region = 'us';
+                    moment.tz.setDefault('America/Chicago');
                 }
 
                 dataService.currencySymbol$.next(environment.region === 'il' ? '₪' : '$');

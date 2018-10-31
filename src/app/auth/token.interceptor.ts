@@ -56,8 +56,8 @@ export class TokenInterceptor implements HttpInterceptor {
         // });
         // return next.handle(clonedReq)
 
-        this.ds.log(`tokenInterceptor: request intercepted: adding token: ${that.authService.authToken}`);
-        return next.handle(that.addToken(request, that.authService.authToken))
+        this.ds.log(`tokenInterceptor: request intercepted: adding token: ${that.authService.getToken()}`);
+        return next.handle(that.addToken(request, that.authService.getToken()))
             .pipe(
                 catchError(error => {
                     this.ds.log(`tokenInterceptor: intercept: catched error`);
@@ -81,6 +81,7 @@ export class TokenInterceptor implements HttpInterceptor {
     }
 
     handle401Error(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
+        let that = this;
         this.ds.log(`tokenInterceptor: handle401Error`);
         if (!this.isRefreshingToken) {
             this.ds.log(`tokenInterceptor: handle401Error: !this.isRefreshingToken`);
@@ -93,11 +94,11 @@ export class TokenInterceptor implements HttpInterceptor {
 
             return Observable.create(sub => {
                 return this.authService.refreshToken()
-                    .then((newAccessToken: string) => {
-                        if (newAccessToken) {
+                    .then((token: string) => {
+                        if (token) {
                             this.ds.log(`tokenInterceptor: handle401Error: got new token`);
-                            this.tokenSubject.next(newAccessToken);
-                            sub.next(newAccessToken);
+                            this.tokenSubject.next(that.authService.getToken());
+                            sub.next(that.authService.getToken());
                         } else {
                             this.ds.err(`tokenInterceptor: handle401Error: failed getting new token (1)`);
                             // If we don't get a new token, we are in trouble so logout.

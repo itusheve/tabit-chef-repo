@@ -4,8 +4,13 @@ export const environment = {
     region: 'us',
     tbtLocale: 'en-US',
     lang: 'en',
-    rosConfig: {//US 'PROD' 'REPORTS'
-        baseUrl: 'https://us-ros-rp.tabit.cloud/'
+    rosConfig: {
+        il: 'https://ros-rp-beta.tabit.cloud/',
+        us: 'https://us-ros-rp.tabit.cloud/'
+    },
+    remoteDatabases: {
+        il: 'https://analytics-dev.tabit.cloud/olapproxy/handler.ashx',
+        us: 'https://analytics-us.tabit.cloud/olapproxy/handler.ashx'
     },
     olapConfig: {//US PROD CUBE
         baseUrl: 'https://analytics-us.tabit.cloud/olapproxy/proxy.ashx',

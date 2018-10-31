@@ -37,7 +37,6 @@ if (environment.tbtLocale ==='he-IL') {
 }
 
 const bootstrap = () => {
-  moment.tz.setDefault(environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem');
   platformBrowserDynamic().bootstrapModule(AppModule, {
     providers: providers
   })

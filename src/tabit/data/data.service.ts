@@ -356,7 +356,15 @@ const tmpTranslations_ = {
 export const tmpTranslations = {
     get(path: string): string {
         const tokens = path.split('.');
-        let translation: any = tmpTranslations_[environment.lang];
+
+        let language = environment.lang.toLowerCase();
+        if (language === 'us' || language === 'en') {
+            language = 'en';
+        } else {
+            language = 'he';
+        }
+
+        let translation: any = tmpTranslations_[language];
         for (let i = 0; i < tokens.length; i++) {
             translation = translation[tokens[i]];
         }
@@ -380,7 +388,9 @@ export class DataService {
     });
 
     public user$: Observable<any> = Observable.create(obs => {
-        obs.next(JSON.parse(window.localStorage.getItem('user')));
+        let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
+
+        obs.next(userSettings[environment.region]);
     });
 
     public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';//'America/Chicago' / 'Asia/Jerusalem'
@@ -1479,7 +1489,7 @@ export class DataService {
 
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService, private logz: LogzioService, private translate: TranslateService) {
         let settings = JSON.parse(window.localStorage.getItem('settings'));
-        if(!settings) {
+        if (!settings) {
             settings = {
                 lang: environment.region === 'il' ? 'he' : 'en',
                 vat: true
@@ -1488,7 +1498,7 @@ export class DataService {
         this.settings$.next(settings);
 
         let currentLanguage = settings.lang || translate.getBrowserLang();
-        if(currentLanguage !== 'en' && currentLanguage !== 'he') {
+        if (currentLanguage !== 'en' && currentLanguage !== 'he') {
             currentLanguage = 'en';
         }
         translate.setDefaultLang(currentLanguage);
@@ -1510,41 +1520,41 @@ export class DataService {
             return dailyReport.data;
         }
         else {*/
-            let perfStartTime = performance.now();
-            let report = await this.olapEp.getDailyReport(day);
-            this.logz.log('chef', 'getDailyReport', {'timing': performance.now() - perfStartTime});
+        let perfStartTime = performance.now();
+        let report = await this.olapEp.getDailyReport(day);
+        this.logz.log('chef', 'getDailyReport', {'timing': performance.now() - perfStartTime});
 
-            /*if (dailyReport) {
-                reportsCache = _.filter(reportsCache, function (report) {
-                    return report.date !== dailyReport.date;
-                });
-            }*/
+        /*if (dailyReport) {
+            reportsCache = _.filter(reportsCache, function (report) {
+                return report.date !== dailyReport.date;
+            });
+        }*/
 
-            /*if (reportsCache.length >= 10) {
-                reportsCache.splice(0, 1);
-            }*/
+        /*if (reportsCache.length >= 10) {
+            reportsCache.splice(0, 1);
+        }*/
 
-            /*reportsCache.push({
-                date: day.format('YYYYMMDD'),
-                createTime: moment().format('YYYY-MM-DD HH:mm'),
-                data: report
-            });*/
+        /*reportsCache.push({
+            date: day.format('YYYYMMDD'),
+            createTime: moment().format('YYYY-MM-DD HH:mm'),
+            data: report
+        });*/
 
-            /*let localStorage = window.localStorage;
-            let keys = Object.keys(localStorage);
-            _.forEach(keys, key => {
-                if (key.indexOf('daily-reports') !== -1) {
-                    localStorage.removeItem(key);
-                }
-            });*/
-            /*try {
-                window.localStorage.setItem(org.id + '-daily-reports', JSON.stringify(reportsCache));
-            } catch (domException) {
-                if (domException.name === 'QuotaExceededError' ||
-                    domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-                    //log something here
-                }
-            }*/
+        /*let localStorage = window.localStorage;
+        let keys = Object.keys(localStorage);
+        _.forEach(keys, key => {
+            if (key.indexOf('daily-reports') !== -1) {
+                localStorage.removeItem(key);
+            }
+        });*/
+        /*try {
+            window.localStorage.setItem(org.id + '-daily-reports', JSON.stringify(reportsCache));
+        } catch (domException) {
+            if (domException.name === 'QuotaExceededError' ||
+                domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                //log something here
+            }
+        }*/
 
         let result = [];
         _.forEach(report.salesByHour, dailySales => {
@@ -1671,14 +1681,16 @@ export class DataService {
         if (this.organizations && cacheStrategy === 'cache') return Promise.resolve(this.organizations);
 
         return Promise.all([
-            this.rosEp.get('organizations'),
+            this.rosEp.get('organizations', {}, 'il'),
+            this.rosEp.get('organizations', {}, 'us'),
             this.rosEp.get('account/me')//user responsibilities might got changed so we re-get them for the permissions test
         ])
             .then(data => {
-                const orgs = data[0];
-                const user = data[1];
-                this.organizations = orgs
-                    .filter(o => o.active && o.live && o.name.indexOf('HQ') === -1 && o.name.toUpperCase() !== 'TABIT')
+                const orgsIl = data[0];
+                const orgsUs = data[1];
+                let orgs = _.merge(orgsIl, orgsUs);
+                const user = data[2];
+                this.organizations = orgs.filter(o => o.active && o.live && o.name.indexOf('HQ') === -1 && o.name.toUpperCase() !== 'TABIT')
                     .filter(o => {
                         if (user.isStaff) return true;
 

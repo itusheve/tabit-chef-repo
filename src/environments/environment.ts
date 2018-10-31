@@ -5,7 +5,12 @@ export const environment = {
     tbtLocale: 'he-IL',//controls localization (directions, translations, formattings, plurals etc.) supported: 'he-IL'/'en-US'
     lang: 'he',
     rosConfig: {
-        baseUrl: 'https://ros-office-beta.herokuapp.com/',
+        il: 'https://ros-rp-beta.tabit.cloud/',
+        us: 'https://us-ros-rp.tabit.cloud/'
+    },
+    remoteDatabases: {
+        il: 'https://analytics-dev.tabit.cloud/olapproxy/handler.ashx',
+        us: 'https://analytics-us.tabit.cloud/olapproxy/handler.ashx'
     },
     olapConfig: {
         baseUrl: 'https://analytics-dev.tabit.cloud/proxyV2/il-prod/proxy.ashx',

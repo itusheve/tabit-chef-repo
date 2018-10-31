@@ -8,7 +8,6 @@ import { DebugService } from '../../../app/debug.service';
 
 @Injectable()
 export class ROSEp {
-    private rosBaseUrl = environment.rosConfig.baseUrl;
 
     constructor(
         private httpClient: HttpClient,
@@ -16,9 +15,9 @@ export class ROSEp {
         private ds: DebugService
     ) {}
 
-    get(url, params?): Promise<any> {
+    get(url, params?, region?): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.httpClient.get(this.rosBaseUrl + url, {
+            this.httpClient.get(this.authService.getRosUrl(region) + url, {
                 params: params || {}
             })
                 .subscribe(
@@ -33,9 +32,9 @@ export class ROSEp {
         });
     }
 
-    post(url, payload?): Promise<any> {
+    post(url, payload?, region?): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.httpClient.post(this.rosBaseUrl + url, payload || {})
+            this.httpClient.post(this.authService.getRosUrl(region) + url, payload || {})
                 .subscribe(
                     (results: any)=>{
                         resolve(results);
@@ -47,9 +46,9 @@ export class ROSEp {
         });
     }
 
-    put(url, payload?): Promise<any> {
+    put(url, payload?, region?): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.httpClient.put(this.rosBaseUrl + url, payload || {})
+            this.httpClient.put(this.authService.getRosUrl(region) + url, payload || {})
                 .subscribe(
                 (results: any) => {
                     resolve(results);

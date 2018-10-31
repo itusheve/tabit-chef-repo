@@ -7,22 +7,37 @@ import {User} from '../../tabit/model/User.model';
 import {environment} from '../../environments/environment';
 import {DebugService} from '../debug.service';
 import {LogzioService} from '../logzio.service';
+import * as _ from 'lodash';
 
 const loginUrl = 'oauth2/token';
 const meUrl = 'account/me';
 
 @Injectable()
 export class AuthService {
-    private rosBaseUrl = environment.rosConfig.baseUrl;
+    private remoteServers = environment.rosConfig;
+    private authState = 0;//0: anon, 1: user mode, 2: org mode
+    private region: string;
+    public authToken: string;
+    public authTokens: {
+        il: any,
+        us: any
+    };
 
     constructor(private httpClient: HttpClient,
                 private ds: DebugService,
                 private logz: LogzioService) {
+
+        this.authTokens = {
+            il: {},
+            us: {}
+        };
+
+        this.region = environment.region; //try to guess the region first
     }
 
-    private authState = 0;//0: anon, 1: user mode, 2: org mode
-
-    public authToken: string;
+    public getRegion() {
+        return this.region || environment.region;
+    }
 
     private clearLocalStorage() {
         window.localStorage.removeItem('token');
@@ -35,10 +50,13 @@ export class AuthService {
     }
 
     selectOrg(org: any): Promise<any> {
+        let region = org.region.toLowerCase();
+        this.region = region;
         return new Promise((resolve, reject) => {
             if (this.authState >= 1) {
-                const user = JSON.parse(window.localStorage.getItem('user'));
+                const userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
 
+                let user = userSettings[region];
                 let membership = user.memberships.find(m => {
                     return m.organization === org.id && m.active;
                 });
@@ -47,7 +65,7 @@ export class AuthService {
                     reject('');
                 }
 
-                this.httpClient.post(`${this.rosBaseUrl}Organizations/${org.id}/change`, {})
+                this.httpClient.post(`${this.remoteServers[region]}Organizations/${org.id}/change`, {})
                     .subscribe(org_ => {
                         window.localStorage.setItem('org', JSON.stringify(org_));
                         this.authState = 2;
@@ -77,69 +95,87 @@ export class AuthService {
             if (credentials) {
                 this.ds.log('authSvc: authenticate: authenticating using credentials');
 
-                /* login attempt. get token & user, store locally and set authState to 1 (user mode) */
-                this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
-                    client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
-                    grant_type: 'password',
-                    username: credentials.email,
-                    password: credentials.password
-                })
-                    .subscribe(
-                        (token: {
-                            access_token: string,
-                            refresh_token: string
-                        }) => {
-                            this.authToken = token.access_token;
-                            window.localStorage.setItem('token', JSON.stringify(token));
+                _.forEach(this.remoteServers, (url, region) => {
+                    this.httpClient.post(`${url}${loginUrl}`, {
+                        client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
+                        grant_type: 'password',
+                        username: credentials.email,
+                        password: credentials.password
+                    })
+                        .subscribe(
+                            (token: {
+                                access_token: string,
+                                refresh_token: string
+                            }) => {
+                                let tokens = JSON.parse(window.localStorage.getItem('tokens'));
+                                if (!tokens) {
+                                    tokens = {};
+                                }
+                                tokens[region] = token;
+                                window.localStorage.setItem('tokens', JSON.stringify(tokens));
 
-                            this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
-                                .subscribe(
-                                    user => {
-                                        window.localStorage.setItem('user', JSON.stringify(user));
-                                        this.authState = 1;
-                                        resolve();
-                                        this.logz.log('chef', 'login', {'user': user['email']});
-                                    },
-                                    e => {
-                                        //reverse process upon error
-                                        this.ds.err(`authSvc: authenticate: get me failed - unauthenticate (anon auth): ${e}`);
-                                        this.unauthenticate();
-                                    }
-                                );
+                                this.authTokens = tokens;
 
-                        },
-                        err => {
-                            reject(err);
-                        }
-                    );
+                                this.region = region;
+                                this.httpClient.get(`${url}${meUrl}`)
+                                    .subscribe(
+                                        user => {
+                                            let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
+                                            if (!userSettings) {
+                                                userSettings = {};
+                                            }
+
+                                            userSettings[region] = user;
+                                            window.localStorage.setItem('userSettings', JSON.stringify(userSettings));
+                                            this.authState = 1;
+                                            resolve();
+                                            this.logz.log('chef', 'login', {'user': user['email']});
+                                        },
+                                        e => {
+                                            //reverse process upon error
+                                            this.ds.err(`authSvc: authenticate: get me failed - unauthenticate (anon auth): ${e}`);
+                                            this.unauthenticate();
+                                        }
+                                    );
+
+                            },
+                            err => {
+                                reject(err);
+                            }
+                        );
+                });
             } else {
                 this.ds.log('authSvc: authenticate: authenticating from localStorage');
 
                 //look for token, user and possibly an org
-                let token = JSON.parse(window.localStorage.getItem('token'));
+                let tokens = JSON.parse(window.localStorage.getItem('tokens'));
                 let tokeFromSession = window.sessionStorage.getItem('userToken');
+                let regionFromSession = window.sessionStorage.getItem('userRegion'); // il or us currently
 
-                if (!token && tokeFromSession) { //try getting from session storage (PAD logic)
-                    token = {
+                if (!tokens && tokeFromSession) { //try getting from session storage (PAD logic)
+                    tokens[regionFromSession || 'il'] = {
                         access_token: tokeFromSession
                     };
 
-                    window.localStorage.setItem('token', JSON.stringify(token));
+                    window.localStorage.setItem('tokens', JSON.stringify(tokens));
                     this.authState = 1;
-                    this.authToken = token.access_token;
+                    this.authTokens = tokens;
                 }
 
-                let user = JSON.parse(window.localStorage.getItem('user'));
+                let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
                 let org = JSON.parse(window.localStorage.getItem('org'));
 
-                if(!user && token) {
-                    user = await this.httpClient.get(`${this.rosBaseUrl}${meUrl}`).toPromise();
-                    window.localStorage.setItem('user', JSON.stringify(user));
+                if (!userSettings && tokens) {
+                    _.forEach(tokens, async (token, region) => {
+                        let user = await this.httpClient.get(`${this.remoteServers[region]}${meUrl}`).toPromise();
+                        userSettings[region] = user;
+                    });
+                    window.localStorage.setItem('userSettings', JSON.stringify(userSettings));
                 }
 
-                if (token && user) {
-                    this.authToken = token.access_token;
-                    this.ds.log('authSvc: authenticate: found access token: ' + this.authToken);
+                if (tokens && userSettings) {
+                    this.authTokens = tokens;
+                    this.ds.log('authSvc: authenticate: found access tokens: ' + this.authTokens);
                     if (org) {
                         this.ds.log('authSvc: authenticate: found org: ' + org.name + '; setting authState = 2');
                         this.authState = 2;
@@ -149,56 +185,65 @@ export class AuthService {
                     }
                 }
 
-                if (token) {
-                    if (token.refresh_token) {
-                        this.ds.log('authSvc: authenticate: refreshing token (to try and solve the problem)');
-                        this.refreshToken()
-                            .then(() => {
-                                this.ds.log('authSvc: authenticate: refreshing token: success');
-                                resolve();
+                if (tokens) {
+                    _.forEach(tokens, (token, region) => {
+                        if (token.refresh_token) {
+                            this.ds.log('authSvc: authenticate: refreshing token (to try and solve the problem)');
+                            this.refreshToken(region)
+                                .then(() => {
+                                    this.ds.log('authSvc: authenticate: refreshing token: success');
+                                    resolve();
 
-                                // async check if the user responsibilities hasnt changed and they still allow him the org.
-                                // if not, user will be logged out and will be forced to re authenticate.
-                                if (org) {
-                                    this.ds.log('  authSvc: async checking user responsibilities');
-                                    this.httpClient.get(`${this.rosBaseUrl}${meUrl}`)
-                                        .subscribe(
-                                            (user: any) => {
+                                    // async check if the user responsibilities hasnt changed and they still allow him the org.
+                                    // if not, user will be logged out and will be forced to re authenticate.
+                                    if (org) {
+                                        this.ds.log('  authSvc: async checking user responsibilities');
+                                        let region = org.region.toLowerCase();
+                                        this.region = region;
+                                        this.httpClient.get(`${this.remoteServers[region]}${meUrl}`)
+                                            .subscribe(
+                                                (user: any) => {
 
-                                                window.localStorage.setItem('user', JSON.stringify(user));
+                                                    let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
+                                                    if(!userSettings) {
+                                                        userSettings = {};
+                                                    }
+                                                    userSettings[region] = user;
+                                                    window.localStorage.setItem('userSettings', JSON.stringify(userSettings));
 
-                                                if (user.isStaff) {
-                                                    this.ds.log('  authSvc: async checking user responsibilities: user isStaff: skipping');
-                                                    return;
+                                                    if (user.isStaff) {
+                                                        this.ds.log('  authSvc: async checking user responsibilities: user isStaff: skipping');
+                                                        return;
+                                                    }
+
+                                                    //TODO DRY with getOrganizations, refactor to a common func
+                                                    let membership = user.memberships.find(m => {
+                                                        return m.organization === org.id && m.active;
+                                                    });
+
+                                                    if (!membership || !membership.responsibilities || (membership.responsibilities.indexOf('CHEF') === -1 && membership.role !== 'manager')) {
+                                                        //log out:
+                                                        this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: unauthenticate (anon auth)`);
+                                                        this.unauthenticate()
+                                                            .then(() => {
+                                                                this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: unauthenticate (anon auth): done`);
+                                                                this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: reloading`);
+                                                                window.location.reload();
+                                                            });
+                                                    }
                                                 }
-
-                                                //TODO DRY with getOrganizations, refactor to a common func
-                                                let membership = user.memberships.find(m => {
-                                                    return m.organization === org.id && m.active;
-                                                });
-
-                                                if (!membership || !membership.responsibilities || (membership.responsibilities.indexOf('CHEF') === -1 && membership.role !== 'manager')) {
-                                                    //log out:
-                                                    this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: unauthenticate (anon auth)`);
-                                                    this.unauthenticate()
-                                                        .then(() => {
-                                                            this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: unauthenticate (anon auth): done`);
-                                                            this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: reloading`);
-                                                            window.location.reload();
-                                                        });
-                                                }
-                                            }
-                                        );
-                                }
-                            })
-                            .catch(e => {
-                                this.ds.log('authSvc: authenticate: refreshing token: fail ' + e);
-                                reject(e);
-                            });
-                    }
-                    else {
-                        resolve(this.authToken);
-                    }
+                                            );
+                                    }
+                                })
+                                .catch(e => {
+                                    this.ds.log('authSvc: authenticate: refreshing token: fail ' + e);
+                                    reject(e);
+                                });
+                        }
+                        else {
+                            resolve(this.authToken);
+                        }
+                    });
                 } else {
                     this.ds.log('authSvc: authenticate: no token found');
                     this.ds.log('authSvc: authenticate: no token found: unauthenticating (anon auth)');
@@ -222,18 +267,21 @@ export class AuthService {
         try to authenticate with the refresh token.
         on success resolve with new access token
      */
-    public refreshToken(): Promise<string> {
+    public refreshToken(region = null): Promise<string> {
+        if(!region) {
+            region = this.getRegion();
+        }
         return new Promise((resolve, reject) => {
-            const token = JSON.parse(window.localStorage.getItem('token'));
-            this.ds.log(`   authSvc: refreshToken: started. token is ${JSON.stringify(token)}`);
-            this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
+            const tokens = JSON.parse(window.localStorage.getItem('tokens'));
+            this.ds.log(`   authSvc: refreshToken: started. token is ${JSON.stringify(tokens)}`);
+            this.httpClient.post(`${this.remoteServers[region]}${loginUrl}`, {
                 client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
                 grant_type: 'refresh_token',
-                refresh_token: token.refresh_token
+                refresh_token: tokens[region].refresh_token
             }).subscribe((token: any) => {
-                this.authToken = token.access_token;
-                window.localStorage.setItem('token', JSON.stringify(token));
-                resolve(this.authToken);
+                this.authTokens[region] = token;
+                window.localStorage.setItem('tokens', JSON.stringify(this.authTokens));
+                resolve(token.access_token);
                 this.ds.log('   authSvc: refreshToken: success');
             }, err => {
                 this.ds.err('   authSvc: refreshToken: fail: ' + JSON.stringify(err));
@@ -250,23 +298,25 @@ export class AuthService {
 
             //get anonymous token for this session only - not storing in localStorage. required at times to send to ROS on anon scenarios, e.g. when requesting to reset password.
             this.ds.log(`   unauthenticate: get anon token`);
-            this.httpClient.post(`${this.rosBaseUrl}${loginUrl}`, {
-                client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
-                grant_type: 'client_credentials'
-            })
-                .subscribe(
-                    (token: {
-                        access_token: string
-                    }) => {
-                        this.ds.log(`   unauthenticate: get anon token: success: ${token.access_token}`);
-                        this.authToken = token.access_token;
-                        resolve();
-                    },
-                    e => {
-                        this.ds.log(`   unauthenticate: get anon token: failed: ${e}`);
-                        reject(e);
-                    }
-                );
+            _.forEach(this.remoteServers, (url, region) => {
+                this.httpClient.post(`${url}${loginUrl}`, {
+                    client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
+                    grant_type: 'client_credentials'
+                })
+                    .subscribe(
+                        (token: {
+                            access_token: string
+                        }) => {
+                            this.ds.log(`   unauthenticate: get anon token: success: ${token.access_token}`);
+                            this.authTokens[region] = token;
+                            resolve();
+                        },
+                        e => {
+                            this.ds.log(`   unauthenticate: get anon token: failed: ${e}`);
+                            reject(e);
+                        }
+                    );
+            });
         });
     }
 
@@ -282,28 +332,40 @@ export class AuthService {
         });
     }
 
-    getAuthToken(ep: string): Subject<any> {
-        const subject = new Subject<any>();
-        const token = JSON.parse(window.localStorage.getItem('token'));
-        if (!token) {
-            this.ds.err('authSvc: getAuthToken: couldnt get token out of localStorage');
-        }
-        if (!token) throw observableThrowError({});
-        subject.next(token.access_token);
-        return subject;
-    }
-
     forgotPassword(options: { email: string }): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.httpClient.post(`${this.rosBaseUrl}account/password/request`, {
-                email: options.email,
-                locale: environment.tbtLocale
-            })
-                .subscribe((a: any) => {
-                    resolve();
-                }, err => {
-                    reject(err);
-                });
+            _.forEach(this.remoteServers, (url, region) => {
+                this.httpClient.post(`${url}account/password/request`, {
+                    email: options.email,
+                    locale: environment.tbtLocale
+                })
+                    .subscribe((a: any) => {
+                        resolve();
+                    }, err => {
+                        reject(err);
+                    });
+            });
         });
+    }
+
+    getToken():string {
+        if(this.authTokens) {
+            let regionToken = this.authTokens[this.region || environment.region];
+            return regionToken ? regionToken.access_token : '';
+        }
+    }
+
+    getRosUrl(region = null): string {
+        if(region) {
+            this.region = region;
+        }
+        return this.remoteServers[region || this.region || environment.region];
+    }
+
+    getDatabaseUrl(region = null): string {
+        if(region) {
+            this.region = region;
+        }
+        return environment.remoteDatabases[region || this.region || environment.region];
     }
 }
