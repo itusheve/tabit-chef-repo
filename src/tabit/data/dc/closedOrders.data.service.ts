@@ -346,57 +346,7 @@ export class ClosedOrdersDataService {
             isUS: environment.region === 'us' ? true : false,//controls behaviour
             moment: moment //the lib requires moment
         });
-
-
-
     }
-
-    /*
-     @:promise
-     resolves with a collection of 'Order's for the provided businesDate.
- */
-    public getOrders(
-        businessDate: moment.Moment
-        // { withPriceReductions = false }: { withPriceReductions?: boolean } = {}
-    ): Promise<Order[]> {
-        return this.dataService.getOrders(businessDate);
-    }
-
-    /*
-        @caching(indirect)
-        @:promise
-        resolves with the Order with the provided order number (and orderOld as copied from Office).
-        you supply the business date ('YYYY-MM-DD').
-        if 'enriched', enriches the order.
-    */
-    public getOrder(
-        businessDateStr: string,
-        orderNumber: number,
-        { enriched = false }: { enriched?: boolean } = {}
-    ): Promise<{
-        order: Order,
-        orderOld?: any,
-        printDataOld?: any
-    }> {
-        return new Promise((resolve, reject) => {
-            this.dataService.getOrders(moment(businessDateStr))
-                .then(orders => {
-                    const order = orders.find(o => o.number === orderNumber);
-                    if (order && enriched) {
-                        if (order.enrichmentLevels.orderDetails) {
-                            resolve({ order: order });
-                        } else {
-                            return this.enrichOrder(order)
-                                .then(data => {
-                                    resolve(data);
-                                });
-                        }
-                    }
-                });
-        });
-    }
-
-    //TODO the app was developed against ROS 3.7.0 (belongs to Product 4.X), but the enrich order code was copied from develop-il (Office 3.X, Product 3.X). TODO, bring newer code from latest Office 4.X (compare the relevant office files to detect what was changed).
 
     /*
         enriches the provided Order with the following info:
@@ -607,7 +557,4 @@ export class ClosedOrdersDataService {
                 });
         });
     }
-
-
-
 }
