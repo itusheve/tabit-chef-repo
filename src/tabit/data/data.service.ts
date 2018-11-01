@@ -1700,17 +1700,17 @@ export class DataService {
             this.rosEp.get('account/me')//user responsibilities might got changed so we re-get them for the permissions test
         ])
             .then(data => {
-                let orgsIl = _.map(data[0], function(org) {
+                let orgsIl = data[0].map(function(org) {
                     org.region = 'il';
                     return org;
                 });
 
-                let orgsUs = _.map(data[1], function(org) {
+                let orgsUs = data[1].map(function(org) {
                     org.region = 'us';
                     return org;
                 });
 
-                let orgs = _.merge(orgsIl, orgsUs);
+                let orgs = orgsIl.concat(orgsUs);
                 let user = data[2];
                 this.organizations = orgs.filter(o => o.active && o.live && o.name.indexOf('HQ') === -1 && o.name.toUpperCase() !== 'TABIT')
                     .filter(o => {

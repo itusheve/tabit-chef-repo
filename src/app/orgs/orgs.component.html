@@ -47,16 +47,16 @@
                       <span></span><span>{{exampleOrg.name}}</span>
                   </li>
                   <ng-container *ngFor="let org of orgsFiltered">
-                      <ng-container *ngIf="org.region === 'us'">
-                          <li class="list-group-item mb-2 p-0" (click)="selectOrg(org)" [ngClass]="{'active': org===selectedOrg}" >
-                              <span><img style="max-width: 60px; height: 60px;" src="{{org.smallLogo.url}}" /></span><span class="mx-2">{{org.name}}</span>
+                      <ng-container *ngIf="org.region === 'il'">
+                          <li class="list-group-item mb-2 p-0" style="height: 62px;" (click)="selectOrg(org)" [ngClass]="{'active': org===selectedOrg}" >
+                              <span><img style="width: 60px; height: 60px; object-fit:contain;" src="{{org.smallLogo.url}}" /></span><span class="mx-2" style="font-size: 20px;">{{org.name}}</span>
                           </li>
                       </ng-container>
                   </ng-container>
                   <ng-container *ngFor="let org of orgsFiltered">
-                      <ng-container *ngIf="org.region === 'il'">
-                          <li class="list-group-item mb-2 p-0" (click)="selectOrg(org)" [ngClass]="{'active': org===selectedOrg}" >
-                              <span><img style="max-width: 60px; height: 60px;" src="{{org.smallLogo.url}}" /></span><span class="mx-2">{{org.name}}</span>
+                      <ng-container *ngIf="org.region === 'us'">
+                          <li class="list-group-item mb-2 p-0" style="height: 62px;" (click)="selectOrg(org)" [ngClass]="{'active': org===selectedOrg}" >
+                              <span><img style="width: 60px; height: 60px; object-fit:contain;" src="{{org.smallLogo.url}}" /></span><span class="mx-2" style="font-size: 20px;">{{org.name}}</span>
                           </li>
                       </ng-container>
                   </ng-container>
