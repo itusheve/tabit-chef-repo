@@ -77,6 +77,22 @@
       top: -2px;
     }
   }
+
+  .month-grid-line {
+    height: 50px;
+
+    .month-grid-line {
+      height: 44px;
+      cursor: pointer;
+    }
+
+    .month-grid-holiday {
+      font-size: 13px;
+      position:relative;
+      top:-8px;
+      line-height: 10px;
+    }
+  }
 }
 
 .trend {

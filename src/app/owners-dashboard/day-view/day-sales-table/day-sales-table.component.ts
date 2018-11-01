@@ -82,7 +82,7 @@ export class DaySalesTableComponent implements OnChanges {
 
             this.data.forEach(row => {
 
-                if(row.ttlTipAmountExcludeVat) {
+                if(row.ttlSaleAmountIncludeVat) {
                     this.pivotedData.hasTips = true;
                 }
 
@@ -92,17 +92,17 @@ export class DaySalesTableComponent implements OnChanges {
                     this.pivotedData.netSalesWithoutVat.push(row.ttlSaleAmountExcludeVat);
                     this.pivotedData.tax.push(row.ttlVat);
                     this.pivotedData.grossSales.push(row.salesRefundTipAmountIncludeVat);
-                    this.pivotedData.tip.push(row.ttlTipAmountIncludeVat);
-                    this.pivotedData.serviceCharge.push(row.ttlTipAmountExcludeVat);
+                    this.pivotedData.tip.push(row.ttlTipAmountIncludeVat || row.gratuity);
+                    this.pivotedData.serviceCharge.push(row.serviceCharge);
                     this.pivotedData.diners.push(row.dinersOrders);
-                    this.pivotedData.ppa.push(row.ppaAmountIncludeVat);
+                    this.pivotedData.ppa.push(row.ttlSaleAmountIncludeVat / row.dinersOrders);
 
                     this.totals.netSales.amount += row.ttlSaleAmountIncludeVat || 0;
                     this.totals.netSalesWithoutVat += row.ttlSaleAmountExcludeVat || 0;
                     this.totals.tax += row.ttlVat || 0;
                     this.totals.grossSales += row.salesRefundTipAmountIncludeVat || 0;
-                    this.totals.tip += row.ttlTipAmountIncludeVat || 0;
-                    this.totals.serviceCharge += row.ttlTipAmountExcludeVat || 0;
+                    this.totals.tip += row.ttlTipAmountIncludeVat || row.gratuity || 0;
+                    this.totals.serviceCharge += row.serviceCharge || 0;
                     this.totals.diners += row.dinersOrders || 0;
                 }
             });
@@ -116,9 +116,12 @@ export class DaySalesTableComponent implements OnChanges {
             this.pivotedData.netSalesWithoutVat.splice(0,0,this.totals.netSalesWithoutVat);
             this.pivotedData.tax.splice(0,0,this.totals.tax);
             this.pivotedData.grossSales.splice(0,0,this.totals.grossSales);
-            this.pivotedData.tip.splice(0,0,this.totals.gratuity);
+            this.pivotedData.tip.splice(0,0,this.totals.tip);
             this.pivotedData.serviceCharge.splice(0,0,this.totals.serviceCharge);
             this.pivotedData.diners.splice(0,0,this.totals.diners);
+
+            this.totals.ppa = this.totals.netSales.amount / this.totals.diners;
+            this.pivotedData.ppa.splice(0,0,this.totals.ppa);
 
             _.forEach(this.pivotedData.netSales, netSales => {
                 if(!netSales.pct) {

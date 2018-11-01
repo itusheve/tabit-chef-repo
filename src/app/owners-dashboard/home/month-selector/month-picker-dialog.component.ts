@@ -3,7 +3,7 @@ import {MatBottomSheetRef} from '@angular/material';
 import {MAT_BOTTOM_SHEET_DATA} from '@angular/material';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import {DataService} from '../../../../tabit/data/data.service';
+import {DataService, tmpTranslations} from '../../../../tabit/data/data.service';
 import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 import {DatePipe} from '@angular/common';
 import {environment} from '../../../../environments/environment';
@@ -46,9 +46,10 @@ export class MonthPickerDialogComponent {
                 this.months = [];
                 _.each(database._data, month => {
 
+                    let monthState = moment().isSame(month.latestDay, 'month') ? tmpTranslations.get('home.month.notFinalTitle') : '';
                     let summaryCardData = {
                         loading: false,
-                        title: this.datePipe.transform(month.latestDay, 'MMMM yyyy', '', this.env.tbtLocale),
+                        title: this.datePipe.transform(month.latestDay, 'MMMM yyyy', '', this.env.tbtLocale) + ' ' + monthState,
                         tag: '',
                         sales: 0,
                         diners: 0,

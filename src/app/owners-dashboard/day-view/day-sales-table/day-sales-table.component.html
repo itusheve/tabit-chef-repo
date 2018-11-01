@@ -16,7 +16,7 @@
 
     <tr *ngIf="pivotedData.hasTips && environment.region === 'il'">
         <td [translate]="'day.tips'">Tips</td>
-        <td class="ar" *ngFor="let val of pivotedData.gratuity">{{val | curr:'0':'':'':true}}</td>
+        <td class="ar" *ngFor="let val of pivotedData.tip">{{val | curr:'0':'':'':true}}</td>
     </tr>
 
     <tr *ngIf="environment.region === 'il'">
@@ -29,7 +29,7 @@
         <td class="ar" *ngFor="let val of pivotedData.grossSales">{{val | curr:'0':'':'':true}}</td>
     </tr>
 
-    <tr *ngIf="environment.region === 'us'">
+    <tr *ngIf="pivotedData.hasTips && environment.region === 'us'">
         <td [translate]="'day.tips'">Tips</td>
         <td class="ar" *ngFor="let val of pivotedData.tip">{{val | curr:'0':'':'':true}}</td>
     </tr>

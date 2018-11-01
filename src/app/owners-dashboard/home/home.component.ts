@@ -154,7 +154,7 @@ export class HomeComponent implements OnInit {
                 this.currentBdCardData.sales = incTax ? totalSales : totalSalesWithoutTax;
 
                 this.translate.get('card.today').subscribe((res: string) => {
-                    this.currentBdCardData.title = res + ' ' + this.datePipe.transform(moment(day.date).valueOf(), 'EEEEE, MMMM d', '', this.env.lang);
+                    this.currentBdCardData.title = res + ' ' + this.datePipe.transform(moment(day.date).valueOf(), 'EEEE, MMMM d', '', this.env.lang);
                 });
 
                 this.currentBdCardData.averages = {
@@ -235,7 +235,6 @@ export class HomeComponent implements OnInit {
                 let previousDay = moment.utc(restaurantTime.format('YYYY-MM-DD')).subtract(1, 'days');
                 let day = database.getDay(previousDay);
 
-                const title = this.datePipe.transform(previousDay.valueOf(), 'EEEEE, MMMM d','', this.env.lang);
                 if (!day) {
                     this.showPreviousDay = false;
                     this.previousBdNotFinal = true;
@@ -284,6 +283,7 @@ export class HomeComponent implements OnInit {
                     }
                 }
 
+                let title = this.datePipe.transform(previousDay.valueOf(), 'EEEE, MMMM d','', this.env.lang);
                 this.translate.get('card.yesterday').subscribe((res: string) => {
                     this.previousBdCardData.title = res + ' ' + title;
                 });

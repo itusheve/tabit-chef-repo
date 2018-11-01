@@ -70,6 +70,7 @@ export class AuthService {
                         _.set(org_, 'region', org.region);
 
                         window.localStorage.setItem('org', JSON.stringify(org_));
+                        environment.region = org.region;
                         this.authState = 2;
                         resolve();
                     });

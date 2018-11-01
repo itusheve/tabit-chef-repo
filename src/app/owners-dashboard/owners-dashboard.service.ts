@@ -104,7 +104,7 @@ export class OwnersDashboardService {
 
         dataService.organization$
             .subscribe(org => {
-                if(org.region === 'IL') {
+                if(org.region.toLowerCase() === 'il') {
                     environment.region = 'il';
                     moment.tz.setDefault('Asia/Jerusalem');
                 }

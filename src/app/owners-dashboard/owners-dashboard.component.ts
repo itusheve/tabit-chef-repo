@@ -124,5 +124,11 @@ export class OwnersDashboardComponent implements OnInit {
             date.subtract(10, 'days');
             this.dataService.selectedMonth$.next(date.startOf('month'));
         }*/
+
+        //set region if we have a restaurant
+        let org = JSON.parse(window.localStorage.getItem('org'));
+        if(org && org.region) {
+            environment.region = org.region.toLowerCase();
+        }
     }
 }
