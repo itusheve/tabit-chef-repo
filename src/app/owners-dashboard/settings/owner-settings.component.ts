@@ -26,7 +26,7 @@ export class OwnerSettingsComponent implements OnInit {
     };
 
     env;
-
+    public loading: boolean;
     debug: boolean;
 
     logArr: { type: string, message: string }[];
@@ -38,6 +38,7 @@ export class OwnerSettingsComponent implements OnInit {
         public route: ActivatedRoute,
         private translate: TranslateService
     ) {
+        this.loading = false;
         dataService.vat$.subscribe((vat: boolean) => {
             this.vat = vat;
         });
@@ -72,6 +73,7 @@ export class OwnerSettingsComponent implements OnInit {
     }
 
     updateLanguage() {
+        this.loading = true;
         let settings = JSON.parse(window.localStorage.getItem('settings'));
 
         if(!settings) {
@@ -84,6 +86,9 @@ export class OwnerSettingsComponent implements OnInit {
         this.dataService.settings$.next(settings);
 
         this.translate.use(this.lang);
+
+        let context = this;
+        setTimeout(() => {context.loading = false;}, 400);
     }
 
     updateMaxItemsPerDepartment() {
