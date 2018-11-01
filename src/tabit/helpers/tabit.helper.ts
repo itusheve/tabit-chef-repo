@@ -17,10 +17,10 @@ export class TabitHelper {
             return reverse ? 'bg-danger text-white' : 'bg-success-dark text-white';
         }
         else if (percentage <= 100) {
-            return reverse ? 'bg-warning text-dark' : 'bg-success text-white';
+            return reverse ? 'bg-warning text-white' : 'bg-success text-white';
         }
         else if (percentage < 110) {
-            return reverse ? 'bg-success text-white' : 'bg-warning text-dark';
+            return reverse ? 'bg-success text-white' : 'bg-warning text-white';
         }
         else if (percentage >= 110) {
             return reverse ? 'bg-success-dark text-white' : 'bg-danger text-white';
