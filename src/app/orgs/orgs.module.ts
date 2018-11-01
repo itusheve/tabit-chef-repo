@@ -3,6 +3,7 @@ import {CommonModule, registerLocaleData} from '@angular/common';
 
 import {OrgsComponent} from './orgs.component';
 import {OrgsRoutingModule} from './orgs-routing.module';
+import {TranslateModule} from '@ngx-translate/core';
 
 import {
     MatCardModule,
@@ -23,7 +24,8 @@ import {
         MatSidenavModule,
         MatCardModule,
         MatFormFieldModule,
-        MatInputModule
+        MatInputModule,
+        TranslateModule
     ],
     declarations: [
         OrgsComponent

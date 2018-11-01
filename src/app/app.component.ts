@@ -24,20 +24,6 @@ export class AppComponent implements OnInit {
 
     constructor(private ds: DebugService, private translate: TranslateService) {
         this.logArr = ds.logArr;
-
-        let settings = JSON.parse(window.localStorage.getItem('settings'));
-        if(!settings) {
-            settings = {
-                lang: environment.region === 'il' ? 'he' : 'en'
-            };
-        }
-
-        let currentLanguage = settings.lang || translate.getBrowserLang();
-        if(currentLanguage !== 'en' && currentLanguage !== 'he') {
-            currentLanguage = 'en';
-        }
-        translate.setDefaultLang(currentLanguage);
-        translate.use(currentLanguage);
     }
 
     ngOnInit() {
@@ -53,6 +39,31 @@ export class AppComponent implements OnInit {
         setInterval(function () {
             that.token = window.localStorage.getItem('token');
         }, 1000);
+
+        let currentLanguage = this.translate.getBrowserLang();
+        let settings = JSON.parse(window.localStorage.getItem('settings'));
+        if(settings && settings.lang) {
+            currentLanguage = settings.lang;
+        }
+
+        if(currentLanguage !== 'en' && currentLanguage !== 'he') {
+            currentLanguage = 'en';
+        }
+
+        if(!settings) {
+            settings = {
+                lang: currentLanguage
+            };
+        }
+        else {
+            settings.lang = currentLanguage;
+        }
+
+        window.localStorage.setItem('settings', JSON.stringify(settings));
+
+        environment.lang = currentLanguage;
+        this.translate.setDefaultLang(currentLanguage);
+        this.translate.use(currentLanguage);
     }
 }
 

@@ -74,7 +74,7 @@ export class DaySelectorComponent implements OnChanges {
     }
 
     changeDate(event: MatDatepickerInputEvent<Date>) {
-        this.currentValue = moment(event.value);
+        this.currentValue = moment.utc(event.value.toDateString());
         this.onDateChanged.emit(this.currentValue);
     }
 

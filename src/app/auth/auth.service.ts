@@ -67,6 +67,8 @@ export class AuthService {
 
                 this.httpClient.post(`${this.remoteServers[region]}Organizations/${org.id}/change`, {})
                     .subscribe(org_ => {
+                        _.set(org_, 'region', org.region);
+
                         window.localStorage.setItem('org', JSON.stringify(org_));
                         this.authState = 2;
                         resolve();

@@ -385,11 +385,16 @@ export class DataService {
 
     private organizations: any[];
 
+    public timezone;
     public organization$: Observable<any> = Observable.create(obs => {
         let org = JSON.parse(window.localStorage.getItem('org'));
 
-        if(org.region.toLowerCase() === 'us') {
+        if(org && org.region.toLowerCase() === 'us') {
             this.vat$.next(true);
+            if(org.timezone) {
+                this.timezone = org.timezone;
+            }
+
         }
 
         obs.next(org);
@@ -401,7 +406,8 @@ export class DataService {
         obs.next(userSettings[environment.region]);
     });
 
-    public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';//'America/Chicago' / 'Asia/Jerusalem'
+    public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';
+    public timezone = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';
 
     public currentRestTime$: Observable<moment.Moment> = Observable.create(obs => {
         obs.next(this.getCurrentRestTime());
@@ -433,7 +439,7 @@ export class DataService {
         this.refresh$
             .subscribe(refresh => {
                 let currentRestTime = this.getCurrentRestTime();
-                currentRestTime = moment(currentRestTime);
+                currentRestTime = moment.utc(currentRestTime.format('YYYY-MM-DD'));
                 const params = {
                     businessDate: currentRestTime.format('YYYY-MM-DD')
                 };
@@ -1499,19 +1505,20 @@ export class DataService {
         let settings = JSON.parse(window.localStorage.getItem('settings'));
         if (!settings) {
             settings = {
-                lang: environment.region === 'il' ? 'he' : 'en',
+                lang: this.translate.getBrowserLang(),
                 vat: true
             };
         }
+
+        if(settings.lang !== 'he' && settings.lang !== 'en') {
+            settings.lang = 'en';
+        }
         this.settings$.next(settings);
 
-        let currentLanguage = settings.lang || translate.getBrowserLang();
-        if (currentLanguage !== 'en' && currentLanguage !== 'he') {
-            currentLanguage = 'en';
-        }
+        let currentLanguage = settings.lang;
+
         translate.setDefaultLang(currentLanguage);
         translate.use(currentLanguage);
-
     }
 
     async getDailyReport(day: moment.Moment) {
@@ -1695,11 +1702,13 @@ export class DataService {
         ])
             .then(data => {
                 let orgsIl = _.map(data[0], function(org) {
-                    return _.extend({}, org, {region: 'il'});
+                    org.region = 'il';
+                    return org;
                 });
 
                 let orgsUs = _.map(data[1], function(org) {
-                    return _.extend({}, org, {region: 'us'});
+                    org.region = 'us';
+                    return org;
                 });
 
                 let orgs = _.merge(orgsIl, orgsUs);
@@ -1744,9 +1753,9 @@ export class DataService {
     public getCurrentRestTime() {
         let time;
         try {
-            time = moment.tz(this.region);
+            time = moment.tz(this.timezone);
         } catch (e) {
-            console.error(e, 'tmp = moment.tz(this.region);', this.region);
+            console.error(e, 'tmp = moment.tz(this.timezone);', this.timezone);
             time = moment();
         }
 

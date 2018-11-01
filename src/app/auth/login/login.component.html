@@ -1,50 +1,51 @@
 <div class="flex d-col login">
     <div class="flex f-ltr d-col a-center logoBars" style="margin-top:23px;">
-      <div class="logo"></div>
+        <div class="logo"></div>
     </div>
     <div class="flex d-col" style="padding: 0 57px;">
 
         <!-- reactive form + material design: -->
         <form class="flex d-col" [formGroup]="loginForm" novalidate>
-          <div class="flex d-col">
-            <mat-form-field style="width:100%" floatLabel="never">
-              <input
-                matInput
-                type="email"
-                placeholder="Email"
-                i18n-placeholder="login@@email"
-                formControlName="email"
-                required
-                autofocus
-                style="font-size: 25px; color: #fff;"
-                >
-              <button mat-button *ngIf="loginForm.value.email" matSuffix mat-icon-button aria-label="Clear" (click)="loginForm.patchValue({email: ''})">
-                <mat-icon>close</mat-icon>
-              </button>
-              <mat-error *ngIf="email.invalid && email.value && (email.dirty || email.touched)">
-                <div *ngIf="email.errors.email" i18n="login@@illegalEmail">Illegal email</div>
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field floatLabel="never">
-              <input
-                matInput
-                placeholder="Password"
-                i18n-placeholder="login@@password"
-                [type]="hidePass ? 'password' : 'text'"
-                formControlName="password"
-                required
-                style="font-size: 25px; color: #fff;"
-                >
-              <mat-icon matSuffix (click)="hidePass = !hidePass">{{hidePass ? 'visibility' : 'visibility_off'}}</mat-icon>
-              <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
-                <!-- <div *ngIf="password.errors.required"> -->
-
-                <!-- </div> -->
-              </mat-error>
-            </mat-form-field>
-            <div i18n="@@forgotPassword" (click)="forgotPassword()" class="forgotPassword">Forgot Password</div>
-          </div>
-          <button class="as-center" mat-raised-button color="primary" (click)="login()" i18n="login@@login">Login</button>
+            <div class="flex d-col">
+                <mat-form-field style="width:100%" floatLabel="never">
+                    <mat-label [translate]="'login.email'" style="color: #FFF">Email</mat-label>
+                    <input
+                            matInput
+                            type="email"
+                            formControlName="email"
+                            required
+                            autofocus
+                            style="font-size: 25px; color: #fff;"
+                    >
+                    <button mat-button *ngIf="loginForm.value.email" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="loginForm.patchValue({email: ''})">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-error *ngIf="email.invalid && email.value && (email.dirty || email.touched)">
+                        <div *ngIf="email.errors.email" [translate]="'login.illegalEmail'">Illegal email</div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field floatLabel="never">
+                    <mat-label [translate]="'login.password'" style="color: #FFF">Password</mat-label>
+                    <input
+                            matInput
+                            [type]="hidePass ? 'password' : 'text'"
+                            formControlName="password"
+                            required
+                            style="font-size: 25px; color: #fff;"
+                    >
+                    <mat-icon matSuffix (click)="hidePass = !hidePass">{{hidePass ? 'visibility' : 'visibility_off'}}
+                    </mat-icon>
+                    <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
+                    </mat-error>
+                </mat-form-field>
+                <div [translate]="'login.forgotPassword'" (click)="forgotPassword()" class="forgotPassword">Forgot
+                    Password
+                </div>
+            </div>
+            <button class="as-center" mat-raised-button color="primary" (click)="login()">
+                <span [translate]="'login.login'"></span>
+            </button>
         </form>
 
     </div>

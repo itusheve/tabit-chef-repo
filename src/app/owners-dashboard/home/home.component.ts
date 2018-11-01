@@ -232,7 +232,7 @@ export class HomeComponent implements OnInit {
                     return;
                 }
 
-                let previousDay = moment(restaurantTime).subtract(1, 'days');
+                let previousDay = moment.utc(restaurantTime.format('YYYY-MM-DD')).subtract(1, 'days');
                 let day = database.getDay(previousDay);
 
                 const title = this.datePipe.transform(previousDay.valueOf(), 'EEEEE, MMMM d','', this.env.lang);

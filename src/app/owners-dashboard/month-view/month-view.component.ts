@@ -158,9 +158,13 @@ export class MonthViewComponent implements OnInit {
     update(month, currentBd: moment.Moment, database, incTax) {
         this.month = month;
 
-        const isCurrentMonth = month.isSame(currentBd, 'month');
-        if (isCurrentMonth && currentBd.date() === 1) this.renderGrid = false;
-        else this.renderGrid = true;
+        let isCurrentMonth = month.isSame(currentBd, 'month');
+        if (isCurrentMonth && currentBd.date() === 1){
+            this.renderGrid = false;
+        }
+        else {
+            this.renderGrid = true;
+        }
 
         if (this.renderGrid) {
             this.updateGrid(month, database, incTax);

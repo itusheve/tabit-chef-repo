@@ -1,112 +1,113 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
-import { MatSnackBar, MatDialog } from '@angular/material';
+import {MatSnackBar, MatDialog} from '@angular/material';
 
-import { AuthService } from '../auth.service';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { tmpTranslations } from '../../../tabit/data/data.service';
-import { ForgotPasswordDialogComponent } from '../../../tabit/ui/dialogs/forgot-password.component/forgot-password.component';
+import {AuthService} from '../auth.service';
+import {Router, ActivatedRoute, ParamMap} from '@angular/router';
+import {tmpTranslations} from '../../../tabit/data/data.service';
+import {ForgotPasswordDialogComponent} from '../../../tabit/ui/dialogs/forgot-password.component/forgot-password.component';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
 
-  constructor(
-    private authService: AuthService,
-    private route: ActivatedRoute,
-    private router:Router,
-    public snackBar: MatSnackBar,
-    public dialog: MatDialog
-  ) { }
+    public lang;
 
-  mode: string;// normal (selecting org and continuing to app), switch (changing an org, restart should occur)
+    constructor(
+        private authService: AuthService,
+        private route: ActivatedRoute,
+        private router: Router,
+        public snackBar: MatSnackBar,
+        public dialog: MatDialog,
+        private translate: TranslateService
+    ) {
 
-  hidePass = true;
-
-  loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(1)])
-  });
-
-  showChangeRegion = false;
-
-  get email(): any { return this.loginForm.get('email'); }
-  get password(): any { return this.loginForm.get('password'); }
-
-  ngOnInit() {
-    // after hitting logout, we get the switch mode so after login, the org selection comp will know to reload
-    this.route.paramMap
-      //  .filter(params => params.m)
-      .subscribe((params: ParamMap) => {
-        const mode = params.get('m');
-        this.mode = (mode && mode === 's') ? 'switch' : 'normal';
-      });
-
-    /* if the wrapper exposes for us the regionService, we let the user change region using it */
-    if (window.hasOwnProperty('regionService')) {
-      this.showChangeRegion = true;
     }
-  }
 
-  login() {
-    if (this.email.invalid || this.password.invalid) return;
+    mode: string;// normal (selecting org and continuing to app), switch (changing an org, restart should occur)
 
-    this.authService.login({
-      email: this.email.value,
-      password: this.password.value
-    })
-      .then(()=>{
-        const paramObj:any = {};
-        if (this.mode==='switch') {
-          paramObj.m = 's';
-        }
-        this.router.navigate(['/restaurants', paramObj]);
-      })
-      .catch(err=>{
-        if (err.status===403) {
-          this.snackBar.open(tmpTranslations.get('login.userPassIncorrect'), null, {
-            duration: 5000,
-            verticalPosition: 'top'
-          });
-        }
-      });
-  }
+    hidePass = true;
 
-  forgotPassword() {
-    let dialogRef = this.dialog.open(ForgotPasswordDialogComponent, {
-      width: '450px',
-      data: {
-        title: tmpTranslations.get('login.passwordRestore'),
-        email: this.loginForm.value.email.slice(0)
-      }
+    loginForm = new FormGroup({
+        email: new FormControl('', [Validators.required, Validators.email]),
+        password: new FormControl('', [Validators.required, Validators.minLength(1)])
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result!==false) {
-        this.authService.forgotPassword({email: result.email})
-          .then(() => {
-            this.snackBar.open(`${tmpTranslations.get('login.resetPasswordSent')} ${result.email}`, null, {
-              duration: 5000,
-              verticalPosition: 'top'
-            });
-          })
-          .catch(()=> {
-            this.snackBar.open(`${tmpTranslations.get('opFailed')} (err 826)`, null, {
-              duration: 5000,
-              verticalPosition: 'top'
-            });
-          });
-      }
-    });
-  }
 
-  changeRegion() {
-    if (!window.hasOwnProperty('regionService')) return;
-    window['regionService'].resetRegionAndRefresh();
-  }
+    get email(): any {
+        return this.loginForm.get('email');
+    }
 
+    get password(): any {
+        return this.loginForm.get('password');
+    }
+
+    ngOnInit() {
+        // after hitting logout, we get the switch mode so after login, the org selection comp will know to reload
+        this.route.paramMap
+        //  .filter(params => params.m)
+            .subscribe((params: ParamMap) => {
+                const mode = params.get('m');
+                this.mode = (mode && mode === 's') ? 'switch' : 'normal';
+            });
+
+        this.lang = this.translate.getDefaultLang();
+    }
+
+    login() {
+        if (this.email.invalid || this.password.invalid) return;
+
+        this.authService.login({
+            email: this.email.value,
+            password: this.password.value
+        })
+            .then(() => {
+                const paramObj: any = {};
+                if (this.mode === 'switch') {
+                    paramObj.m = 's';
+                }
+                this.router.navigate(['/restaurants', paramObj]);
+            })
+            .catch(err => {
+                if (err.status === 403) {
+                    this.snackBar.open(tmpTranslations.get('login.userPassIncorrect'), null, {
+                        duration: 5000,
+                        verticalPosition: 'top'
+                    });
+                }
+            });
+    }
+
+    forgotPassword() {
+        let dialogRef = this.dialog.open(ForgotPasswordDialogComponent, {
+            width: '450px',
+            data: {
+                title: tmpTranslations.get('login.passwordRestore'),
+                email: this.loginForm.value.email.slice(0)
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result !== false) {
+                this.authService.forgotPassword({email: result.email})
+                    .then(() => {
+                        this.snackBar.open(`${tmpTranslations.get('login.resetPasswordSent')} ${result.email}`, null, {
+                            duration: 5000,
+                            verticalPosition: 'top'
+                        });
+                    })
+                    .catch(() => {
+                        this.snackBar.open(`${tmpTranslations.get('opFailed')} (err 826)`, null, {
+                            duration: 5000,
+                            verticalPosition: 'top'
+                        });
+                    });
+            }
+        });
+    }
 }
