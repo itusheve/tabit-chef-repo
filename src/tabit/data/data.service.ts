@@ -244,8 +244,8 @@ const tmpTranslations_ = {
             sales: 'Sales',
             cancellations: 'Voids',
             operational: 'OP Errors',
-            retention: 'Comps',
-            employee: 'Employee Meals',
+            retention: 'Comps.',
+            employee: 'Emp. Meals',
         },
         managerDash: {
             'ALLORDERS': 'All Orders',

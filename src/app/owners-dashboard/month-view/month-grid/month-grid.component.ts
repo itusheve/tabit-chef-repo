@@ -1,9 +1,11 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, OnChanges} from '@angular/core';
 import * as moment from 'moment';
-import {tmpTranslations} from '../../../../tabit/data/data.service';
+import {DataService, tmpTranslations} from '../../../../tabit/data/data.service';
 import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 import {environment} from '../../../../environments/environment';
 import * as _ from 'lodash';
+import {DatabaseV2} from '../../../../tabit/model/DatabaseV2.model';
+import {combineLatest} from '../../../../../node_modules/rxjs';
 @Component({
     selector: 'app-month-grid',
     templateUrl: './month-grid.component.html',
@@ -27,7 +29,7 @@ export class MonthGridComponent implements OnInit {
     private tabitHelper;
     maxValuesByCategory: any;
 
-    constructor() {
+    constructor(dataService: DataService) {
         this.environment = environment;
         this.currentDate = moment().format('YYYY-MM-DD');
         this.tmpTranslations = tmpTranslations;
@@ -39,6 +41,60 @@ export class MonthGridComponent implements OnInit {
             operational: 0,
             employee: 0
         };
+
+        combineLatest(dataService.selectedMonth$, dataService.databaseV2$).subscribe(data => {
+            let selectedMonth = data[0];
+            let database = data[1];
+
+            let monthlyData = database.getMonth(selectedMonth);
+
+            if (!monthlyData || monthlyData.amount === 0) {
+                return;
+            }
+
+            let days = _.values(monthlyData.days);
+
+            let currentDate = moment();
+
+            this.hasYearlyAvg = false;
+            this.days = [];
+            _.each(days, day => {
+                if (day.businessDate !== currentDate.format('YYYY-MM-DD')) {
+                    this.days.push(day);
+                    if (day.AvgYearSalesAndRefoundAmountIncludeVat) {
+                        this.hasYearlyAvg = true;
+                    }
+                }
+            });
+
+            this.month = monthlyData;
+
+
+            let highestSales = _.max([_.maxBy(this.days, function(o) { return o.salesAndRefoundAmountIncludeVat; }), _.maxBy(this.days, function(o) { return o.AvgNweeksSalesAndRefoundAmountIncludeVat; })]);
+            if(highestSales) {
+                this.maxValuesByCategory['sales'] = Math.max(highestSales.salesAndRefoundAmountIncludeVat, highestSales.AvgNweeksSalesAndRefoundAmountIncludeVat);
+            }
+
+            let highestCancellations = _.max([_.maxBy(this.days, function(o) { return o.voidsPrc; }), _.maxBy(this.days, function(o) { return o.avgNweeksVoidsPrc; })]);
+            if(highestCancellations) {
+                this.maxValuesByCategory['cancellations'] = Math.max(highestCancellations.voidsPrc, highestCancellations.avgNweeksVoidsPrc);
+            }
+
+            let highestRetention = _.max([_.maxBy(this.days, function(o) { return o.mrPrc; }), _.maxBy(this.days, function(o) { return o.avgNweeksMrPrc; })]);
+            if(highestRetention) {
+                this.maxValuesByCategory['retention'] = Math.max(highestRetention.mrPrc, highestRetention.avgNweeksMrPrc);
+            }
+
+            let highestOperational = _.max([_.maxBy(this.days, function(o) { return o.operationalPrc; }), _.maxBy(this.days, function(o) { return o.avgNweeksOperationalPrc; })]);
+            if(highestOperational) {
+                this.maxValuesByCategory['operational'] = Math.max(highestOperational.operationalPrc, highestOperational.avgNweeksOperationalPrc);
+            }
+
+            let highestEmployee = _.max([_.maxBy(this.days, function(o) { return o.EmployeesAmount; }), _.maxBy(this.days, function(o) { return o.avgEmployeesAmount; })]);
+            if(highestEmployee) {
+                this.maxValuesByCategory['employee'] = Math.max(highestEmployee.EmployeesAmount, highestEmployee.avgEmployeesAmount);
+            }
+        });
     }
 
     select(day) {
@@ -53,34 +109,8 @@ export class MonthGridComponent implements OnInit {
     }
 
     ngOnInit() {
-
         this.changeAvgPeriodComparator('month');
         this.changeCategory('sales');
-
-        let highestSales = _.max([_.maxBy(this.days, function(o) { return o.salesAndRefoundAmountIncludeVat; }), _.maxBy(this.days, function(o) { return o.AvgNweeksSalesAndRefoundAmountIncludeVat; })]);
-        if(highestSales) {
-            this.maxValuesByCategory['sales'] = Math.max(highestSales.salesAndRefoundAmountIncludeVat, highestSales.AvgNweeksSalesAndRefoundAmountIncludeVat);
-        }
-
-        let highestCancellations = _.max([_.maxBy(this.days, function(o) { return o.voidsPrc; }), _.maxBy(this.days, function(o) { return o.avgNweeksVoidsPrc; })]);
-        if(highestCancellations) {
-            this.maxValuesByCategory['cancellations'] = Math.max(highestCancellations.voidsPrc, highestCancellations.avgNweeksVoidsPrc);
-        }
-
-        let highestRetention = _.max([_.maxBy(this.days, function(o) { return o.mrPrc; }), _.maxBy(this.days, function(o) { return o.avgNweeksMrPrc; })]);
-        if(highestRetention) {
-            this.maxValuesByCategory['retention'] = Math.max(highestRetention.mrPrc, highestRetention.avgNweeksMrPrc);
-        }
-
-        let highestOperational = _.max([_.maxBy(this.days, function(o) { return o.operationalPrc; }), _.maxBy(this.days, function(o) { return o.avgNweeksOperationalPrc; })]);
-        if(highestOperational) {
-            this.maxValuesByCategory['operational'] = Math.max(highestOperational.operationalPrc, highestOperational.avgNweeksOperationalPrc);
-        }
-
-        let highestEmployee = _.max([_.maxBy(this.days, function(o) { return o.EmployeesAmount; }), _.maxBy(this.days, function(o) { return o.avgEmployeesAmount; })]);
-        if(highestEmployee) {
-            this.maxValuesByCategory['employee'] = Math.max(highestEmployee.EmployeesAmount, highestEmployee.avgEmployeesAmount);
-        }
     }
 
     rowClickHandler(day) {

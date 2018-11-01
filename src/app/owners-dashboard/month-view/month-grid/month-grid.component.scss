@@ -1,3 +1,5 @@
+@import "../../../../../src/tabit/styles/config/colors";
+
 /deep/.month-grid {
     .dx-datagrid .dx-row.dx-header-row > td, .dx-datagrid .dx-row.dx-data-row > td {
         font-size: 14px;
@@ -17,6 +19,10 @@
 }
 
 .month-grid {
+
+  .card-header {
+    background-color: $headerBgColor;
+  }
 
   .btn:active:not(.active), .btn:hover:not(.active), .btn:visited:not(.active) {
     background-color: white;
@@ -81,7 +87,7 @@
   .month-grid-line {
     height: 50px;
 
-    .month-grid-line {
+    .month-grid-line-content {
       height: 44px;
       cursor: pointer;
     }
@@ -89,7 +95,7 @@
     .month-grid-holiday {
       font-size: 13px;
       position:relative;
-      top:-8px;
+      top:-13px;
       line-height: 10px;
     }
   }

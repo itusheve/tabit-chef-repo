@@ -6,6 +6,7 @@ import {Subject} from 'rxjs';
 import {MatSnackBar, MatDialog} from '@angular/material';
 import {AreYouSureDialogComponent} from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
 import {environment} from '../../environments/environment';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-orgs',
@@ -115,6 +116,7 @@ export class OrgsComponent implements OnInit {
                     let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
                     let region = org.region.toLowerCase();
                     let user = userSettings[region];
+                    this.dataService.selectedMonth$.next(moment());
                     let membership = user.memberships.find(m => {
                         return m.organization === org.id && m.active;
                     });
@@ -134,6 +136,7 @@ export class OrgsComponent implements OnInit {
         } else {
             this.authService.selectOrg(org)
                 .then(() => {
+                    this.dataService.selectedMonth$.next(moment());
                     this.router.navigate([''])
                         .then(() => {
                             const bodyEl = document.getElementsByTagName('body')[0];

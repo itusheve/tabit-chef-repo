@@ -75,25 +75,8 @@ export class MonthViewComponent implements OnInit {
             return;
         }
 
-        let days = _.values(monthlyData.days);
-
-        let currentDate = moment();
-
         this.monthGrid.incTax = incTax;
-        this.monthGrid.hasYearlyAvg = false;
-        this.monthGrid.days = [];
-        _.each(days, day => {
-            if (day.businessDate !== currentDate.format('YYYY-MM-DD')) {
-                this.monthGrid.days.push(day);
-                if (day.AvgYearSalesAndRefoundAmountIncludeVat) {
-                    this.monthGrid.hasYearlyAvg = true;
-                }
-            }
-        });
-
         this.monthGrid.month = monthlyData;
-
-
     }
 
     updateSummary(date, currentBd: moment.Moment, database, incTax) {

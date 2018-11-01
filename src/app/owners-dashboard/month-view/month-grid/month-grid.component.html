@@ -1,4 +1,4 @@
-<div class="card p-0 month-grid bg-info dashboard-home-card shadow-card">
+<div class="card p-0 month-grid dashboard-home-card shadow-card">
     <div class="card-header text-center text-white" style="font-size: 18px; font-weight: 700">
         <span [translate]="'dailyBreakdown'"></span>
     </div>
@@ -36,15 +36,15 @@
                 <div *ngIf="environment.lang === 'en'" class="col-12 mx-0 p-0">
                     <div class="row m-2" style="direction: ltr">
                         <div class="btn-group category-picker">
-                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('sales')"
+                            <span class="btn btn-lg btn-outline-secondary" [ngClass]="setActive('sales')"
                                   (click)="changeCategory('sales')">{{tmpTranslations.get('monthViewFilters.sales')}}</span>
-                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('cancellations')"
+                            <span class="btn btn-lg btn-outline-secondary" [ngClass]="setActive('cancellations')"
                                   (click)="changeCategory('cancellations')">{{tmpTranslations.get('monthViewFilters.cancellations')}}</span>
-                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('operational')"
+                            <span class="btn btn-lg btn-outline-secondary" [ngClass]="setActive('operational')"
                                   (click)="changeCategory('operational')">{{tmpTranslations.get('monthViewFilters.operational')}}</span>
-                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('retention')"
+                            <span class="btn btn-lg btn-outline-secondary" [ngClass]="setActive('retention')"
                                   (click)="changeCategory('retention')">{{tmpTranslations.get('monthViewFilters.retention')}}</span>
-                            <span class="btn btn-lg btn-outline-info" [ngClass]="setActive('employee')"
+                            <span class="btn btn-lg btn-outline-secondary" [ngClass]="setActive('employee')"
                                   (click)="changeCategory('employee')">{{tmpTranslations.get('monthViewFilters.employee')}}</span>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                 </div>
                 <div *ngIf="day.isExcluded" class="row">
                     <div iv class="col-12 px-1">
-                        <span class="font-weight-light text-info month-grid-holiday">{{day.holiday}}</span>
+                        <span class="font-weight-light month-grid-holiday">{{day.holiday}}</span>
                     </div>
                 </div>
             </li>

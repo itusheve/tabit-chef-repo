@@ -7,8 +7,11 @@
         <span class="font-weight-bold">
             {{cardData?.title || '&nbsp;'}}
         </span>
-        <mat-icon *ngIf="cardData.showDrillArrow" style="top:3px; position: relative; float: left;">
+        <mat-icon *ngIf="cardData.showDrillArrow && env.lang === 'he'" style="top:3px; position: relative; float: left;">
             keyboard_arrow_left
+        </mat-icon>
+        <mat-icon *ngIf="cardData.showDrillArrow && env.lang === 'en'" style="top:3px; position: relative; float: right;">
+            keyboard_arrow_right
         </mat-icon>
     </div>
     <div class="card-body py-2">
@@ -79,11 +82,9 @@
                                             [ngClass]="[getReductionPercentageCssClass(cardData.reductions.cancellations.change, false, cardData.reductions.cancellations.percentage),getIconClass()]"
                                     >
                                         {{getArrow(cardData.reductions.cancellations.change)}}
-
                                     </mat-icon>
                                 </td>
-                                <td class="text-dark">&nbsp;{{cardData.reductions.cancellations.percentage || 0 | pct:
-                                    1}}
+                                <td class="text-dark">&nbsp;{{cardData.reductions.cancellations.percentage || 0 | pct:1}}
                                 </td>
                                 <td class="text-body" [translate]="'cancellations'">Cancellations</td>
                             </tr>
