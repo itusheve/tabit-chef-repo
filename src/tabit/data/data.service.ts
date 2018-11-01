@@ -385,7 +385,9 @@ export class DataService {
 
     private organizations: any[];
 
-    public timezone;
+    public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';
+    public timezone = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';
+
     public organization$: Observable<any> = Observable.create(obs => {
         let org = JSON.parse(window.localStorage.getItem('org'));
 
@@ -405,9 +407,6 @@ export class DataService {
 
         obs.next(userSettings[environment.region]);
     });
-
-    public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';
-    public timezone = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';
 
     public currentRestTime$: Observable<moment.Moment> = Observable.create(obs => {
         obs.next(this.getCurrentRestTime());
