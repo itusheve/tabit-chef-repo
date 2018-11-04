@@ -1,14 +1,7 @@
-<div class="flex j-sb a-center dialog-toolbar">
-    <div *ngIf="env.lang === 'he'" class="flex j-start ps15" style="width:15%">
+<div class="flex j-sb a-center dialog-toolbar" [style.direction]="env.lang === 'he' ? 'rtl' : 'ltr'">
+    <div class="flex j-start ps15" style="width:15%">
         <button mat-icon-button style="height: 70px; width: 70px;" (click)="bottomSheetRef.dismiss();">
             <mat-icon>{{env.lang === 'he' ? 'keyboard_arrow_right' : 'keyboard_arrow_left'}}</mat-icon>
-        </button>
-    </div>
-    <div *ngIf="env.lang === 'en'" class="flex j-end pe15" style="width:15%">
-        <button style="height: 70px; width: 70px;"
-                mat-icon-button
-                (click)="goHome()">
-            <mat-icon>{{env.tbtLocale==='he-IL' ? 'home' : 'home'}}</mat-icon>
         </button>
     </div>
     <div class="flex d-col aj-center" style="width:70%;">
@@ -20,16 +13,11 @@
         <div *ngIf="incTax && env.region === 'il'" style="color:white;font-size:12px;">(<span [translate]="'menu.includingVAT'">Data including VAT</span>)
         </div>
     </div>
-    <div *ngIf="env.lang === 'he'" class="flex j-end pe15" style="width:15%">
+    <div class="flex j-end pe15" style="width:15%">
         <button style="height: 70px; width: 70px;"
                 mat-icon-button
                 (click)="goHome()">
-            <mat-icon>{{env.tbtLocale==='he-IL' ? 'home' : 'home'}}</mat-icon>
-        </button>
-    </div>
-    <div *ngIf="env.lang === 'en'" class="flex j-start ps15" style="width:15%">
-        <button mat-icon-button style="height: 70px; width: 70px;" (click)="bottomSheetRef.dismiss();">
-            <mat-icon>{{env.lang === 'he' ? 'keyboard_arrow_right' : 'keyboard_arrow_left'}}</mat-icon>
+            <mat-icon>{{'home'}}</mat-icon>
         </button>
     </div>
 </div>
