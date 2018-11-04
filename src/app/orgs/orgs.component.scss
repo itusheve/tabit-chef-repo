@@ -7,12 +7,25 @@
   }
 
   position: fixed;
-  top: 66px;
+  top: 65px;
   background: #f7f7f7;
   z-index: 100;
   width: 100%;
   height: 40px;
   left: 0px;
+
+  @media #{$iphone-X-portrait-mq} {
+    top: $iphone-X-notch-px + 65px;
+  }
+  @media #{$iphone-6-7-8-portrait-mq} {
+    top: $iphone-6-7-8-status-bar-px  + 65px;
+  }
+  @media #{$iphone-6-7-8-plus-portrait-mq} {
+    top: $iphone-6-7-8-plus-status-bar-px  + 65px;
+  }
+  @media #{$ipad-portrait-mq} {
+    top: $ipad-status-bar-px  + 65px;
+  }
 }
 
 .orgsCards {

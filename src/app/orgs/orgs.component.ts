@@ -106,6 +106,9 @@ export class OrgsComponent implements OnInit {
 
                         this.orgsFiltered.splice(0,0, ilOrg);
                         this.orgsFiltered.splice(0,0, usOrg);
+
+                        let order = this.env.lang === 'he' ? 'asc' : 'desc';
+                        this.orgsFiltered = _.orderBy(this.orgsFiltered, ['region', 'name'], [order, 'asc']);
                     }
 
                 }
