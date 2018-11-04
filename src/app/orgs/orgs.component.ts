@@ -7,6 +7,7 @@ import {MatSnackBar, MatDialog} from '@angular/material';
 import {AreYouSureDialogComponent} from '../../tabit/ui/dialogs/are-you-sure.component/are-you-sure.component';
 import {environment} from '../../environments/environment';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-orgs',
