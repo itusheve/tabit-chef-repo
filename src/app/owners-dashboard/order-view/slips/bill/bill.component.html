@@ -47,7 +47,7 @@
         <div *ngIf="orderOld.tips.length">
             <hr/>
             <div class="row">
-                <div class="col-8" i18n="slips@@tip">Gratuity</div>
+                <div class="col-8" [translate]="'slips.tip'">Gratuity</div>
                 <div class="col-3">
                     <span class="negative">{{(orderOld.tips[0].amount/100) | number:'1.2-2'}}</span>
                 </div>
@@ -96,7 +96,7 @@
 
         <div class="row text-center">
             <h4 *ngIf="order.isReturnOrder">
-                <span class="inline m-far-xs returnOrder" i18n="slips@@returnTransaction">Return Transaction</span>
+                <span class="inline m-far-xs returnOrder" [translate]="'slips.returnTransaction'">Return Transaction</span>
             </h4>
         </div>
 

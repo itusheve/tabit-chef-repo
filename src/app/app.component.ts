@@ -62,6 +62,8 @@ export class AppComponent implements OnInit {
         window.localStorage.setItem('settings', JSON.stringify(settings));
 
         environment.lang = currentLanguage;
+        let locale = currentLanguage === 'he' ? 'he-IL' : 'en-US';
+        environment.tbtLocale = locale;
         this.translate.setDefaultLang(currentLanguage);
         this.translate.use(currentLanguage);
     }

@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import {Order} from '../../../tabit/model/Order.model';
 
 import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
-import ORDERS_VIEW from '../../../tabit/data/dc/closedOrders.data.service';
+import {ORDERS_VIEW} from '../../../tabit/data/dc/closedOrders.data.service';
 import {OwnersDashboardService} from '../owners-dashboard.service';
 
 declare var TlogDocsService: any;
@@ -42,7 +42,7 @@ export class OrderViewComponent implements OnInit {
 
     constructor(private closedOrdersDataService: ClosedOrdersDataService,
                 private route: ActivatedRoute) {
-        this.ORDERS_VIEW = ORDERS_VIEW;
+        this.ORDERS_VIEW = ORDERS_VIEW.get();
         this.orderDocs = {};
     }
 

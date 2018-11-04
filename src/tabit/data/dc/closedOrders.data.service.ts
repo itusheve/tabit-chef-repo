@@ -300,9 +300,15 @@ let ORDERS_VIEW_en = {
     "type": "Type"
 };
 
-const ORDERS_VIEW = environment.tbtLocale === 'he-IL' ? ORDERS_VIEW_he : ORDERS_VIEW_en;
+/*let ORDERS_VIEW = environment.lang === 'he' ? ORDERS_VIEW_he : ORDERS_VIEW_en;
+export default ORDERS_VIEW;*/
 
-export default ORDERS_VIEW;
+export const ORDERS_VIEW = {
+    get() {
+        return environment.lang === 'he' ? ORDERS_VIEW_he : ORDERS_VIEW_en;
+    }
+};
+
 
 const PRINT_DATA = 'printdata';
 const DOCUMENTS_URL = 'documents/v2';

@@ -23,7 +23,7 @@
     <!-- BEFORE VAT -->
     <div class="row">
         <div class="col-8">
-            <span i18n="slips@@beforeVAT">Before VAT</span>
+            <span [translate]="'slips.beforeVAT'">Before VAT</span>
         </div>
         <div class="col-3">
             <span>{{documentItems.ITEM_AMOUNT_EX_VAT | number:'1.2-2'}}</span>
@@ -33,7 +33,7 @@
     <!-- VAT -->
     <div class="row">
         <div class="col-8">
-            <span i18n="slips@@vat">VAT</span>
+            <span [translate]="'slips.vat'">VAT</span>
             <span *ngIf="documentItems.ITEM_VAT_PERCENT">{{documentItems.ITEM_VAT_PERCENT}}%</span>
         </div>
         <div class="col-3">
@@ -44,7 +44,7 @@
     <!-- INCLUDE VAT -->
     <div class="row">
         <div class="col-8">
-            <span i18n="slips@@includeVAT">Include VAT</span>
+            <span [translate]="'slips.includeVAT'">Include VAT</span>
         </div>
         <div class="col-3">
             <span class="negative">{{ documentItems.ITEM_AMOUNT | number:'1.2-2'}}</span>

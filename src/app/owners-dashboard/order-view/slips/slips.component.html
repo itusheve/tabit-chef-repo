@@ -28,7 +28,7 @@
             <div *ngIf="printDataOld.variables.ORGANIZATION_BN_NUMBER">
               <span>{{printDataOld.variables.ORGANIZATION_LEGAL_NAME}}</span>
               <span> - </span>
-              <span i18n="slips@@bn_number"></span>
+              <span [translate]="'slips.bn_number'"></span>
               <span>{{printDataOld.variables.ORGANIZATION_BN_NUMBER}}</span>
             </div>
             <div *ngIf="!printDataOld.variables.ORGANIZATION_BN_NUMBER">
@@ -48,7 +48,7 @@
 
           <!-- ORGANIZATION_TEL -->
           <div class="flex j-center fs-15">
-            <div i18n="slips@@tel"></div>
+            <div [translate]="'slips.tel'"></div>
             &nbsp;
             <div>{{printDataOld.variables.ORGANIZATION_TEL}}</div>
           </div>
@@ -69,7 +69,7 @@
 
           <!-- ORGANIZATION_TEL -->
           <div class="flex j-center fs-15">
-            <div i18n="slips@@tel"></div>
+            <div [translate]="'slips.tel'"></div>
             &nbsp;
             <div>972-9-9585682</div>
           </div>
@@ -89,7 +89,7 @@
 
         <!-- ORDER TYPE -->
         <div class="flex j-center">
-          <div i18n="slips@@orderType">Order Type</div>
+          <div [translate]="'slips.orderType'">Order Type</div>
           &nbsp;
           <div>{{ orderOld.orderTypeDisplayText }}</div>
           &nbsp;
@@ -98,7 +98,7 @@
 
         <!-- TABLE # -->
         <div *ngIf="orderOld.orderType==='Seated'" class="flex j-center">
-          <div i18n="slips@@table">Table</div>
+          <div [translate]="'slips.table'">Table</div>
           &nbsp;
           <div>{{orderOld.table}}</div>
         </div>
@@ -107,7 +107,7 @@
         <div class="flex d-row j-center fs-15">
 
           <div class="flex j-center pad3">
-            <div i18n="slips@@server">Server</div>
+            <div [translate]="'slips.server'">Server</div>
             &nbsp;
             <div>{{order.users.owner.fullName}}</div>
           </div>
@@ -115,7 +115,7 @@
           <div class="flex j-center pad3" *ngIf="!isCheck">
             <div>{{orderOld.dinersNum}}</div>
             &nbsp;
-            <div i18n="slips@@diners">Guests</div>
+            <div [translate]="'slips.diners'">Guests</div>
           </div>
 
         </div>
@@ -129,7 +129,7 @@
 
         <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
           <!-- TODO why is this commented? -->
-          <!-- <span class="inline m-far-xs returnOrder" i18n="slips@@returnTransaction">Return Transaction</span> -->
+          <!-- <span class="inline m-far-xs returnOrder" [translate]="'slips.returnTransaction'">Return Transaction</span> -->
         </div>
 
         <div class="flex" *ngIf="order.isReturnOrder && showOrderDetails">
