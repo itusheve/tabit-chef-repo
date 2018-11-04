@@ -1,35 +1,43 @@
 @import '../../tabit/styles/config/frame';
 
 .orgsFilter {
-    // padding: 15px 15px 0 15px;
-    mat-form-field {
-        width:100%;
-    }
+  // padding: 15px 15px 0 15px;
+  mat-form-field {
+    width: 100%;
+  }
+
+  position: fixed;
+  top: 66px;
+  background: #f7f7f7;
+  z-index: 100;
+  width: 100%;
+  height: 40px;
+  left: 0px;
 }
 
 .orgsCards {
-    overflow: auto;
-    // -webkit-overflow-scrolling: touch;This caused bad behaviour with the fixed order-view - on ios user was able to scroll to see the view beneath. removing this solved the problem, and momentum scrolling is still working on ios.
+  overflow: auto;
+  // -webkit-overflow-scrolling: touch;This caused bad behaviour with the fixed order-view - on ios user was able to scroll to see the view beneath. removing this solved the problem, and momentum scrolling is still working on ios.
 
-    $cardSize: 29vmin;
-    $cardsPerRow: 3;
-    // $cardMargin: (100 - (2 * $contentPadding) - ($cardSize * $cardsPerRow)) / ($cardsPerRow * 2);
-    mat-card {
-        cursor: pointer;
-        padding: 2vmin;
-        width: $cardSize;
-        height: $cardSize;
-        // margin: 0 $cardMargin ($cardMargin * 2) $cardMargin;
-        margin-bottom: 10px;
-        overflow: hidden;
-        mat-card-content {
-            font-size: 5vmin;
-            word-wrap: break-word;
-        }
-
-        &.selected {
-            background-color: #3A5675;
-            color: white;
-        }
+  $cardSize: 29vmin;
+  $cardsPerRow: 3;
+  // $cardMargin: (100 - (2 * $contentPadding) - ($cardSize * $cardsPerRow)) / ($cardsPerRow * 2);
+  mat-card {
+    cursor: pointer;
+    padding: 2vmin;
+    width: $cardSize;
+    height: $cardSize;
+    // margin: 0 $cardMargin ($cardMargin * 2) $cardMargin;
+    margin-bottom: 10px;
+    overflow: hidden;
+    mat-card-content {
+      font-size: 5vmin;
+      word-wrap: break-word;
     }
+
+    &.selected {
+      background-color: #3A5675;
+      color: white;
+    }
+  }
 }

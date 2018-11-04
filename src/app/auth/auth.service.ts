@@ -69,6 +69,10 @@ export class AuthService {
                     .subscribe(org_ => {
                         _.set(org_, 'region', org.region);
 
+                        if(org.isDemo === true) {
+                            org_.name = org.name;
+                            org_.smallLogo = org.smallLogo;
+                        }
                         window.localStorage.setItem('org', JSON.stringify(org_));
                         environment.region = org.region;
                         this.authState = 2;

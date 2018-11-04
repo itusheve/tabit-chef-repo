@@ -1,71 +1,86 @@
 <mat-sidenav-container>
-  <mat-sidenav #sidenav mode="over" (swiperight)="env.lang === 'he' ? sidenav.close() : sidenav.open()">
-    <div class="flex d-col header">
-      <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{userInitials}}</button>
-      <div class="mt10 mb10">{{user?.firstName}} {{user?.lastName}}</div>
-      <div>{{org?.name}}</div>
-    </div>
-    <div class="flex d-col content" (swiperight)="env.lang === 'he' ? sidenav.close() : sidenav.open()">
-      <button mat-raised-button (click)="logout()">
-        <span [translate]="'menu.logout'">Logout</span>
-      </button>
-    </div>
-    <div class="versions" style="align-self: center; margin-top: auto; justify-self: end; display: flex; flex-direction: column;">
-      <div>chef v{{appVersions?.chef}}</div>
-      <div>chef-w v{{appVersions?.wrapper}}</div>
-    </div>
-  </mat-sidenav>
+    <mat-sidenav #sidenav mode="over" (swiperight)="env.lang === 'he' ? sidenav.close() : sidenav.open()">
+        <div class="flex d-col header">
+            <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{userInitials}}
+            </button>
+            <div class="mt10 mb10">{{user?.firstName}} {{user?.lastName}}</div>
+            <div>{{org?.name}}</div>
+        </div>
+        <div class="flex d-col content" (swiperight)="env.lang === 'he' ? sidenav.close() : sidenav.open()">
+            <button mat-raised-button (click)="logout()">
+                <span [translate]="'menu.logout'">Logout</span>
+            </button>
+        </div>
+        <div class="versions"
+             style="align-self: center; margin-top: auto; justify-self: end; display: flex; flex-direction: column;">
+            <div>chef v{{appVersions?.chef}}</div>
+            <div>chef-w v{{appVersions?.wrapper}}</div>
+        </div>
+    </mat-sidenav>
 
-  <mat-sidenav-content>
-    <div class="flex j-sb a-center toolbar" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
-      <div class="flex j-start ps15" style="width:15%">
-        <button mat-icon-button (click)="sidenav.toggle()">
-          <mat-icon>menu</mat-icon>
-        </button>
-      </div>
-      <div class="flex d-col aj-center" style="width:70%;">
-        <div class="flex a-center" style="color:white">
-          <span>{{title}}</span>
-          <button style="color: #c2c9d4;" mat-icon-button (click)="refresh()">
-            <mat-icon>refresh</mat-icon>
-          </button>
+    <mat-sidenav-content>
+        <div class="flex j-sb a-center toolbar" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
+            <div class="flex j-start ps15" style="width:15%">
+                <button mat-icon-button (click)="sidenav.toggle()">
+                    <mat-icon>menu</mat-icon>
+                </button>
+            </div>
+            <div class="flex d-col aj-center" style="width:70%;">
+                <div class="flex a-center" style="color:white">
+                    <span>{{title}}</span>
+                    <button style="color: #c2c9d4;" mat-icon-button (click)="refresh()">
+                        <mat-icon>refresh</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="pe15" style="width:15%"> <!-- for design purpose only --> </div>
         </div>
-      </div>
-      <div class="pe15" style="width:15%"> <!-- for design purpose only --> </div>
-    </div>
-    <div class="contentFixed">
-      <div class="content">
-        <div class="flex d-col orgs" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
-          <div *ngIf="orgs && orgs.length>9" class="s-0 flex orgsFilter">
-            <mat-form-field floatLabel="never">
-              <input matInput [translate]="'menu.searchRestaurant'" placeholder="{{'menu.searchRestaurant' | translate }}" (keyup)='keyUp.next($event.target.value)'>
-            </mat-form-field>
-          </div>
-          <div class="" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
-              <ul class="list-group list-group-flush" style="padding: 0;">
-                  <li class="list-group-item mb-2" *ngIf="exampleOrg.enabled" (click)="exampleOrg.select()" [ngClass]="{'active': exampleOrg.selected}">
-                      <span></span><span>{{exampleOrg.name}}</span>
-                  </li>
-                  <ng-container *ngFor="let org of orgsFiltered">
-                      <ng-container *ngIf="org.region === 'il'">
-                          <li class="list-group-item mb-2 p-0" style="height: 62px;" (click)="selectOrg(org)" [ngClass]="{'active': org===selectedOrg}" >
-                              <span><img style="width: 60px; height: 60px; object-fit:contain;" src="{{org.smallLogo.url}}" /></span><span class="mx-2" style="font-size: 20px;">{{org.name}}</span>
-                          </li>
-                      </ng-container>
-                  </ng-container>
-                  <ng-container *ngFor="let org of orgsFiltered">
-                      <ng-container *ngIf="org.region === 'us'">
-                          <li class="list-group-item mb-2 p-0" style="height: 62px;" (click)="selectOrg(org)" [ngClass]="{'active': org===selectedOrg}" >
-                              <span><img style="width: 60px; height: 60px; object-fit:contain;" src="{{org.smallLogo.url}}" /></span><span class="mx-2" style="font-size: 20px;">{{org.name}}</span>
-                          </li>
-                      </ng-container>
-                  </ng-container>
-                  <li class="list-group-item" *ngIf="orgs?.length===0" class="ph20" [translate]="'menu.noOrgs'">Your user is not authorized to view Restaurants. Please contact support.</li>
-              </ul>
-          </div>
+        <div class="contentFixed">
+            <div class="content">
+                <div class="flex d-col orgs" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
+                    <div *ngIf="orgs && orgs.length>9" class="s-0 flex orgsFilter">
+                        <mat-form-field floatLabel="never">
+                            <input matInput [translate]="'menu.searchRestaurant'"
+                                   placeholder="{{'menu.searchRestaurant' | translate }}"
+                                   (keyup)='keyUp.next($event.target.value)'>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="orgs && orgs.length>9" style="height: 34px;"></div>
+                    <div class="" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
+                        <ul class="list-group list-group-flush" style="padding: 0;">
+                            <li class="list-group-item mb-2" *ngIf="exampleOrg.enabled" (click)="exampleOrg.select()"
+                                [ngClass]="{'active': exampleOrg.selected}">
+                                <span></span><span>{{exampleOrg.name}}</span>
+                            </li>
+                            <ng-container *ngFor="let org of orgsFiltered">
+                                <ng-container *ngIf="org.region === 'il'">
+                                    <li class="list-group-item mb-2 p-0" style="height: 62px;" (click)="selectOrg(org)"
+                                        [ngClass]="{'active': org===selectedOrg}">
+                                        <span><img style="width: 60px; height: 60px; object-fit:contain;"
+                                                   src="{{org.smallLogo.url}}"/></span><span class="mx-2"
+                                                                                             style="font-size: 20px;">{{org.name}}</span>
+                                    </li>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngFor="let org of orgsFiltered">
+                                <ng-container *ngIf="org.region === 'us'">
+                                    <li class="list-group-item mb-2 p-0" style="height: 62px;" (click)="selectOrg(org)"
+                                        [ngClass]="{'active': org===selectedOrg}">
+                                        <span><img style="width: 60px; height: 60px; object-fit:contain;"
+                                                   src="{{org.smallLogo.url}}"/></span><span class="mx-2"
+                                                                                             style="font-size: 20px;">{{org.name}}</span>
+                                    </li>
+                                </ng-container>
+                            </ng-container>
+                            <li class="list-group-item" *ngIf="orgs?.length===0" class="ph20"
+                                [translate]="'menu.noOrgs'">Your user is not authorized to view Restaurants. Please
+                                contact support.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </mat-sidenav-content>
+    </mat-sidenav-content>
 
 </mat-sidenav-container>
