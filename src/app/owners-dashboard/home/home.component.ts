@@ -283,7 +283,7 @@ export class HomeComponent implements OnInit {
                     }
                 }
 
-                let title = this.datePipe.transform(previousDay.valueOf(), 'EEEE, MMMM d','', this.env.lang);
+                let title = this.datePipe.transform(previousDay.format('YYYY-MM-DD'), 'EEEE, MMMM d','', this.env.lang);
                 this.translate.get('card.yesterday').subscribe((res: string) => {
                     this.previousBdCardData.title = res + ' ' + title;
                 });
@@ -320,7 +320,7 @@ export class HomeComponent implements OnInit {
                     };
                 }
 
-                this.forecastCardData.title = `${this.datePipe.transform(moment(month.latestDay).startOf('month'), 'MMMM', '', this.env.lang)} ${tmpTranslations.get('home.month.expected')}`;
+                this.forecastCardData.title = `${this.datePipe.transform(moment(month.latestDay).startOf('month').format('YYYY-MM-DD'), 'MMMM', '', this.env.lang)} ${tmpTranslations.get('home.month.expected')}`;
                 this.forecastCardData.diners = month.forecast.diners.count || month.forecast.orders.count;
                 this.forecastCardData.sales = incTax ? month.forecast.sales.amount : month.forecast.sales.amountWithoutVat;
 
