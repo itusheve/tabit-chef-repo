@@ -74,7 +74,10 @@ export class OrgsComponent implements OnInit {
         this.selectedOrg = undefined;
 
         this.keyUp.subscribe((filter: string) => {
-            if (filter === '') this.orgsFiltered = this.orgs;
+            let order = this.env.lang === 'he' ? 'asc' : 'desc';
+            if (filter === '') {
+                this.orgsFiltered = _.orderBy(this.orgs, ['order', 'region', 'name'], ['asc', order, 'asc']);
+            }
             else {
                 filter = filter.toUpperCase();
                 this.orgsFiltered = this.orgs.filter(o => o.name.toUpperCase().indexOf(filter) > -1);
@@ -100,15 +103,20 @@ export class OrgsComponent implements OnInit {
                         usOrg.name = 'Demo Restaurant';
                         usOrg.smallLogo = {url: 'https://office.tabit.cloud/images/restaurant-ico.png'};
                         usOrg.isDemo = true;
+                        usOrg.order = 0;
+
                         ilOrg.name = 'מסעדה לדוגמא';
                         ilOrg.smallLogo = {url: 'https://office.tabit.cloud/images/restaurant-ico.png'};
                         ilOrg.isDemo = true;
+                        ilOrg.order = 0;
 
-                        this.orgsFiltered.splice(0,0, ilOrg);
                         this.orgsFiltered.splice(0,0, usOrg);
+                        this.orgsFiltered.splice(0,0, ilOrg);
 
                         let order = this.env.lang === 'he' ? 'asc' : 'desc';
-                        this.orgsFiltered = _.orderBy(this.orgsFiltered, ['region', 'name'], [order, 'asc']);
+                        this.orgsFiltered = _.orderBy(this.orgsFiltered, ['order', 'region', 'name'], ['asc' ,order, 'asc']);
+
+
                     }
 
                 }
