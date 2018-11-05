@@ -1,6 +1,6 @@
 <mat-sidenav-container>
     <mat-sidenav-content>
-        <div class="flex j-sb a-center toolbar" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
+        <div class="flex j-sb a-center toolbar">
             <div class="flex j-start ps15" style="width:15%">
                 <button style="height: 70px; width: 70px;"
                         *ngIf="showBackButton"
@@ -21,7 +21,7 @@
         </div>
         <div class="contentFixed">
             <div class="content">
-                <div class="flex d-col orgs" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
+                <div class="flex d-col orgs">
                     <div *ngIf="orgs && orgs.length>9" class="s-0 flex orgsFilter">
                         <mat-form-field floatLabel="never" class="text-center" style="font-size: 16px;">
                             <input matInput [translate]="'menu.searchRestaurant'"
@@ -30,7 +30,7 @@
                         </mat-form-field>
                     </div>
                     <div *ngIf="orgs && orgs.length>9" style="height: 34px;"></div>
-                    <div class="" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
+                    <div class="">
                         <ul class="list-group list-group-flush" style="padding: 0;">
                             <li class="list-group-item mb-2" *ngIf="exampleOrg.enabled" (click)="exampleOrg.select()"
                                 [ngClass]="{'active': exampleOrg.selected}">
