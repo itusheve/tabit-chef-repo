@@ -67,8 +67,13 @@ export class CardComponent implements OnInit {
         return cssClass;
     }
 
-    getReductionPercentageCssClass(percentage, isUpPositive, change) {
-        let cssClass = this.tabitHelper.getTextClassByPercentage(((change / (percentage - change)) * 100) + 100, isUpPositive);
+    getReductionPercentageCssClass(change, isUpPositive, percentage) {
+        let normalizedPercentage = percentage * 100;
+        let normalizedAvg = normalizedPercentage - change;
+
+        let calculatedPercentage = (normalizedPercentage / normalizedAvg * 100);
+
+        let cssClass = this.tabitHelper.getTextClassByPercentage(calculatedPercentage, isUpPositive);
         return cssClass;
     }
 
