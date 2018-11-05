@@ -1,28 +1,12 @@
 <mat-sidenav-container>
-    <mat-sidenav #sidenav mode="over" (swiperight)="env.lang === 'he' ? sidenav.close() : sidenav.open()">
-        <div class="flex d-col header">
-            <button mat-fab disabled style="background-color:white;color: black;font-weight:bold;">{{userInitials}}
-            </button>
-            <div class="mt10 mb10">{{user?.firstName}} {{user?.lastName}}</div>
-            <div>{{org?.name}}</div>
-        </div>
-        <div class="flex d-col content" (swiperight)="env.lang === 'he' ? sidenav.close() : sidenav.open()">
-            <button mat-raised-button (click)="logout()">
-                <span [translate]="'menu.logout'">Logout</span>
-            </button>
-        </div>
-        <div class="versions"
-             style="align-self: center; margin-top: auto; justify-self: end; display: flex; flex-direction: column;">
-            <div>chef v{{appVersions?.chef}}</div>
-            <div>chef-w v{{appVersions?.wrapper}}</div>
-        </div>
-    </mat-sidenav>
-
     <mat-sidenav-content>
         <div class="flex j-sb a-center toolbar" (swipeleft)="env.lang === 'he' ? sidenav.open() : sidenav.close()">
             <div class="flex j-start ps15" style="width:15%">
-                <button mat-icon-button (click)="sidenav.toggle()">
-                    <mat-icon>menu</mat-icon>
+                <button style="height: 70px; width: 70px;"
+                        *ngIf="showBackButton"
+                        mat-icon-button
+                        (click)="onGoBackClicked()">
+                    <mat-icon>{{env.tbtLocale==='he-IL' ? 'keyboard_arrow_right' : 'keyboard_arrow_left'}}</mat-icon>
                 </button>
             </div>
             <div class="flex d-col aj-center" style="width:70%;">
@@ -33,7 +17,7 @@
                     </button>
                 </div>
             </div>
-            <div class="pe15" style="width:15%"> <!-- for design purpose only --> </div>
+            <div class="pe15" style="width:15%"></div>
         </div>
         <div class="contentFixed">
             <div class="content">

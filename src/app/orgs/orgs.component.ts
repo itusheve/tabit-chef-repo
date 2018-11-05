@@ -17,6 +17,7 @@ import * as _ from 'lodash';
 export class OrgsComponent implements OnInit {
 
     org: any;
+    showBackButton: boolean;
     public env: any;
     exampleOrg: any = {//this renders a card that is actually an alias to another org, just for presentation purposes.
         enabled: false,//whether to render the card.
@@ -83,6 +84,14 @@ export class OrgsComponent implements OnInit {
                 this.orgsFiltered = this.orgs.filter(o => o.name.toUpperCase().indexOf(filter) > -1);
             }
         });
+    }
+
+    public onGoBackClicked() {
+      window.history.back();
+    }
+
+    settings() {
+        this.router.navigate(['owners-dashboard/settings']);
     }
 
     private render() {
@@ -185,6 +194,10 @@ export class OrgsComponent implements OnInit {
                 this.mode = (mode && mode === 's') ? 'switch' : 'normal';
             });
 
+        let org = JSON.parse(window.localStorage.getItem('org'));
+        if(org) {
+            this.showBackButton = true;
+        }
         this.render();
     }
 
