@@ -224,8 +224,8 @@ export class DayViewComponent implements OnInit {
             order.number = tlog.orderNumber;
             order.orderType = new OrderType(tlog.orderType, 1);
 
-            order.sales = tlog.totalAmount;
-            order.salesBeforeTip = tlog.totalBeforeTip;
+            order.sales = environment.region === 'us' ? tlog.netSalesAmount : tlog.totalAmount;
+            order.salesBeforeTip = environment.region === 'us' ? tlog.netSalesAmount : tlog.totalBeforeTip;
             order.tlogId = tlog.tlogId;
             order.waiter = tlog.userName;
             order.openingTime = tlog.HHMM; //weird hack, talk to BI to get it formatted
@@ -329,10 +329,11 @@ export class DayViewComponent implements OnInit {
 
             if (moment().isSame(date, 'day')) {
                 let totals = dailyTotals.totals;
-                let totalClosedOrders = _.get(totals, 'totalPayments', 0);
+
+                let totalClosedOrders = environment.region === 'us' ? _.get(totals, 'netSales', 0) : _.get(totals, 'totalPayments', 0);
                 let totalClosedOrdersWithoutVat = totalClosedOrders - _.get(totals, 'includedTax', 0);
 
-                let totalOpenOrders = _.get(totals, 'openOrders.totalAmount', 0);
+                let totalOpenOrders = environment.region === 'us' ? _.get(totals, 'openOrders.netSales', 0) : _.get(totals, 'openOrders.totalAmount', 0);
                 let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
 
                 let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
@@ -387,7 +388,7 @@ export class DayViewComponent implements OnInit {
 
             dailyReport.summary = _.orderBy(dailyReport.summary, 'orderTypeKey', 'asc');
             let summary = _.filter(dailyReport.summary, summary => summary.serviceKey == '-1');
-            let globalSalesIncludingVat = _.sumBy(summary, function(row) { return row.ttlSaleAmountIncludeVat; });
+            let globalSalesIncludingVat = _.sumBy(summary, function(row) { return environment.region === 'us' ? row.salesNetAmount : row.ttlSaleAmountIncludeVat; });
 
             this.dailySummaryTblData = {
                 title: '',

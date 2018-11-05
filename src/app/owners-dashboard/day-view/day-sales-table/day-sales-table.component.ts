@@ -82,28 +82,38 @@ export class DaySalesTableComponent implements OnChanges {
 
             this.data.forEach(row => {
 
-                if(row.ttlSaleAmountIncludeVat) {
+                if (row.tip || row.ttlTipAmountIncludeVat || row.gratuity) {
                     this.pivotedData.hasTips = true;
                 }
 
-                if(row.salesRefundTipAmountIncludeVat) {
-                    this.pivotedData.titles.push(row.orderType);
-                    this.pivotedData.netSales.push({amount: row.ttlSaleAmountIncludeVat});
-                    this.pivotedData.netSalesWithoutVat.push(row.ttlSaleAmountExcludeVat);
-                    this.pivotedData.tax.push(row.ttlVat);
-                    this.pivotedData.grossSales.push(row.salesRefundTipAmountIncludeVat);
-                    this.pivotedData.tip.push(row.ttlTipAmountIncludeVat || row.gratuity);
-                    this.pivotedData.serviceCharge.push(row.serviceCharge);
-                    this.pivotedData.diners.push(row.dinersOrders);
-                    this.pivotedData.ppa.push(row.ttlSaleAmountIncludeVat / row.dinersOrders);
+                if (row.salesRefundTipAmountIncludeVat) {
 
-                    this.totals.netSales.amount += row.ttlSaleAmountIncludeVat || 0;
-                    this.totals.netSalesWithoutVat += row.ttlSaleAmountExcludeVat || 0;
+                    let netSales = environment.region === 'us' ? row.salesNetAmount : row.ttlSaleAmountIncludeVat;
+                    let netSalesWithoutVat = environment.region === 'us' ? row.salesNetAmount : row.ttlSaleAmountExcludeVat;
+                    let tip = row.ttlTipAmountIncludeVat || row.tip || row.gratuity || 0;
+                    let grossSales = row.salesRefundTipAmountIncludeVat || 0;
+                    let serviceCharge = row.serviceCharge || 0;
+                    let totalSales = grossSales + tip + serviceCharge;
+
+                    this.pivotedData.titles.push(row.orderType);
+                    this.pivotedData.netSales.push({amount: netSales});
+                    this.pivotedData.netSalesWithoutVat.push(netSalesWithoutVat);
+                    this.pivotedData.tax.push(row.ttlVat);
+                    this.pivotedData.grossSales.push(grossSales);
+                    this.pivotedData.tip.push(tip);
+                    this.pivotedData.serviceCharge.push(serviceCharge);
+                    this.pivotedData.diners.push(row.dinersOrders);
+                    this.pivotedData.ppa.push(netSales / row.dinersOrders);
+                    this.pivotedData.totalSales.push(totalSales);
+
+                    this.totals.netSales.amount += netSales || 0;
+                    this.totals.netSalesWithoutVat += netSalesWithoutVat || 0;
                     this.totals.tax += row.ttlVat || 0;
-                    this.totals.grossSales += row.salesRefundTipAmountIncludeVat || 0;
-                    this.totals.tip += row.ttlTipAmountIncludeVat || row.gratuity || 0;
-                    this.totals.serviceCharge += row.serviceCharge || 0;
+                    this.totals.grossSales += grossSales;
+                    this.totals.tip += tip;
+                    this.totals.serviceCharge += serviceCharge;
                     this.totals.diners += row.dinersOrders || 0;
+                    this.totals.totalSales += totalSales || 0;
                 }
             });
 
@@ -111,20 +121,24 @@ export class DaySalesTableComponent implements OnChanges {
                 this.noData = true;
             }
 
-            this.pivotedData.titles.splice(0,0,this.totalsTitle);
-            this.pivotedData.netSales.splice(0,0,{amount: this.totals.netSales.amount, pct: this.totals.netSales.amount / this.globalSalesIncludingVat});
-            this.pivotedData.netSalesWithoutVat.splice(0,0,this.totals.netSalesWithoutVat);
-            this.pivotedData.tax.splice(0,0,this.totals.tax);
-            this.pivotedData.grossSales.splice(0,0,this.totals.grossSales);
-            this.pivotedData.tip.splice(0,0,this.totals.tip);
-            this.pivotedData.serviceCharge.splice(0,0,this.totals.serviceCharge);
-            this.pivotedData.diners.splice(0,0,this.totals.diners);
+            this.pivotedData.titles.splice(0, 0, this.totalsTitle);
+            this.pivotedData.netSales.splice(0, 0, {
+                amount: this.totals.netSales.amount,
+                pct: this.totals.netSales.amount / this.globalSalesIncludingVat
+            });
+            this.pivotedData.netSalesWithoutVat.splice(0, 0, this.totals.netSalesWithoutVat);
+            this.pivotedData.tax.splice(0, 0, this.totals.tax);
+            this.pivotedData.grossSales.splice(0, 0, this.totals.grossSales);
+            this.pivotedData.tip.splice(0, 0, this.totals.tip);
+            this.pivotedData.serviceCharge.splice(0, 0, this.totals.serviceCharge);
+            this.pivotedData.diners.splice(0, 0, this.totals.diners);
+            this.pivotedData.totalSales.splice(0, 0, this.totals.totalSales);
 
             this.totals.ppa = this.totals.netSales.amount / this.totals.diners;
-            this.pivotedData.ppa.splice(0,0,this.totals.ppa);
+            this.pivotedData.ppa.splice(0, 0, this.totals.ppa);
 
             _.forEach(this.pivotedData.netSales, netSales => {
-                if(!netSales.pct) {
+                if (!netSales.pct) {
                     netSales.pct = netSales.amount / this.totals.netSales.amount;
                 }
             });

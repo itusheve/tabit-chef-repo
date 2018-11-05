@@ -15,6 +15,7 @@ export class Order {
     };
     orderType: OrderType;
     sales: number;
+    netSales: number;
     salesBeforeTip: number;
     diners: number;
     ppa: number;

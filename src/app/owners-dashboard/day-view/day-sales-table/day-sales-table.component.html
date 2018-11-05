@@ -9,9 +9,14 @@
         <td class="ar" *ngFor="let val of pivotedData.netSalesWithoutVat">{{val | curr:'0':'':'':true}}</td>
     </tr>
 
-    <tr>
+    <tr *ngIf="environment.region === 'il'">
         <td style="font-weight: bold; width:70px;white-space: normal;" [translate]="'day.salesWithTax'">Sales + Tax</td>
         <td class="ar" *ngFor="let val of pivotedData.netSales">{{val.amount | curr:'0':'':'':true}}<span style="display: block;font-size: 12px;">({{val.pct | pct: 1}})</span></td>
+    </tr>
+
+    <tr *ngIf="environment.region === 'us'">
+        <td style="font-weight: bold; width:70px;white-space: normal;" [translate]="'day.tax'">Tax</td>
+        <td class="ar" *ngFor="let val of pivotedData.tax">{{val | curr:'0':'':'':true}}</td>
     </tr>
 
     <tr *ngIf="pivotedData.hasTips && environment.region === 'il'">
@@ -37,6 +42,11 @@
     <tr *ngIf="environment.region === 'us'">
         <td [translate]="'day.serviceCharge'">Service Charge</td>
         <td class="ar" *ngFor="let val of pivotedData.serviceCharge">{{val | curr:'0':'':'':true}}</td>
+    </tr>
+
+    <tr *ngIf="environment.region === 'us'">
+        <td [translate]="'day.payments'">Payments</td>
+        <td class="ar" *ngFor="let val of pivotedData.totalSales">{{val | curr:'0':'':'':true}}</td>
     </tr>
 
     <tr>
