@@ -234,10 +234,11 @@ export class MonthGridComponent implements OnInit {
 
     getPercentage(day) {
         let avg = this.getAvgPeriodValueByCategory(day);
-        if(avg === 0) {
+        if(!avg) {
             return 0;
         }
-        return this.getDayAmount(day) / avg * 100 || 0;
+
+        return (this.getDayAmount(day) / avg * 100) || 0;
     }
 
     /**

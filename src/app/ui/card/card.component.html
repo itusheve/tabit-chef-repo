@@ -74,7 +74,7 @@
             <div class="col-5 px-2 py-0" *ngIf="cardData.type !== 'forecast'">
                 <div class="row">
                     <div class="col-12 pt-1 px-2">
-                        <table class="table table-borderless table-sm mb-0"
+                        <table class="table table-borderless table-sm mb-0 card-reduction-table"
                                [ngClass]="env.lang == 'he' ? 'table-padding-rtl' : 'table-padding-ltr'">
                             <tr *ngIf="cardData.reductions?.cancellations">
                                 <td>

@@ -88,7 +88,14 @@
     -webkit-transform: scaleX(-1);
     -ms-transform: scaleX(-1);
     right: 5px;
+    top: -2px;
     position: relative;
     margin: 0 3px;
+  }
+
+  .card-reduction-table {
+    tr {
+      white-space: nowrap;
+    }
   }
 }

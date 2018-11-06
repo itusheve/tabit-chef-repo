@@ -55,10 +55,10 @@ export class CardComponent implements OnInit {
         }
 
         if(percentage > 0) {
-            return 'trending_up';
+            return 'arrow_drop_up';
         }
         else if(percentage < 0) {
-            return 'trending_down';
+            return 'arrow_drop_down';
         }
     }
 
