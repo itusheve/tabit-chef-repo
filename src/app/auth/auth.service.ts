@@ -135,19 +135,22 @@ export class AuthService {
                                             userSettings[region] = user;
                                             window.localStorage.setItem('userSettings', JSON.stringify(userSettings));
                                             this.authState = 1;
-                                            resolve();
                                             this.logz.log('chef', 'login', {'user': user['email']});
+                                            resolve();
                                         },
                                         e => {
                                             //reverse process upon error
                                             this.ds.err(`authSvc: authenticate: get me failed - unauthenticate (anon auth): ${e}`);
-                                            this.unauthenticate();
                                         }
                                     );
-
                             },
                             err => {
-                                reject(err);
+                                this.ds.err(`authSvc: authenticate: region login failed`);
+                                let tokens = JSON.parse(window.localStorage.getItem('tokens'));
+
+                                delete tokens[region];
+                                window.localStorage.setItem('tokens', JSON.stringify(tokens));
+                                this.authTokens = tokens;
                             }
                         );
                 });

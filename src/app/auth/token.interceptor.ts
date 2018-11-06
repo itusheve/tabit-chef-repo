@@ -60,9 +60,8 @@ export class TokenInterceptor implements HttpInterceptor {
         return next.handle(that.addToken(request, that.authService.getToken()))
             .pipe(
                 catchError(error => {
-                    this.ds.log(`tokenInterceptor: intercept: catched error`);
                     if (error instanceof HttpErrorResponse) {
-                        this.ds.log(`tokenInterceptor: intercept: catched error (1)`);
+                        this.ds.log(`tokenInterceptor: intercept: catched Http error`);
                         switch ((<HttpErrorResponse>error).status) {
                             case 400:
                                 //TODO (general bad request the server couldnt understand)
@@ -73,7 +72,7 @@ export class TokenInterceptor implements HttpInterceptor {
                                 return that.handle401Error(request, next);
                         }
                     } else {
-                        this.ds.err(`tokenInterceptor: intercept: catched error (2)`);
+                        this.ds.err(`tokenInterceptor: intercept: catched non http error`);
                         return observableThrowError(error);
                     }
                 })

@@ -579,6 +579,9 @@ export class DataService {
     public databaseV2$: Observable<any> = Observable.create(async obs => {
         combineLatest(this.olapYearlyDataV2$, this.calendar$).subscribe(async streamData => {
             let org = JSON.parse(window.localStorage.getItem('org'));
+            if(!org) {
+                return;
+            }
             let olapYearlyData = _.cloneDeep(streamData[0]);
             let rosCalendars = _.cloneDeep(streamData[1]);
             let currentDate = moment();
@@ -1689,44 +1692,31 @@ export class DataService {
         }
     }
 
-    getOrganizations(o?): Promise<any> {
+    getTokens() {
+        let tokens = JSON.parse(window.localStorage.getItem('tokens'));
+        return tokens;
+    }
+
+    async getOrganizations(o?): Promise<any> {
         const cacheStrategy = o && o.cacheStrategy ? o.cacheStrategy : 'cache';
 
         if (this.organizations && cacheStrategy === 'cache') return Promise.resolve(this.organizations);
 
-        return Promise.all([
-            this.rosEp.get('organizations', {}, 'il'),
-            this.rosEp.get('organizations', {}, 'us'),
-            this.rosEp.get('account/me')//user responsibilities might got changed so we re-get them for the permissions test
-        ])
-            .then(data => {
-                let orgsIl = data[0].map(function(org) {
-                    org.region = 'il';
-                    return org;
-                });
+        let tokens = this.getTokens();
+        let orgs = [];
 
-                let orgsUs = data[1].map(function(org) {
-                    org.region = 'us';
-                    return org;
-                });
-
-                let orgs = orgsIl.concat(orgsUs);
-                let user = data[2];
-                this.organizations = orgs.filter(o => o.active && o.live && o.name.indexOf('HQ') === -1 && o.name.toUpperCase() !== 'TABIT')
-                    .filter(o => {
-                        if (user.isStaff) return true;
-
-                        let membership = user.memberships.find(m => {
-                            return m.organization === o.id && m.active;
-                        });
-
-                        if (!membership || !membership.responsibilities || (membership.responsibilities.indexOf('CHEF') === -1 && membership.role !== 'manager')) {
-                            return false;
-                        }
-                        return true;
-                    });
-                return this.organizations;
+        this.organizations = [];
+        for(let region of _.keys(tokens)) {
+            let response = await this.rosEp.get('organizations', {}, region);
+            _.forEach(response, org => {
+                if(org.active && org.live && org.name.indexOf('HQ') === -1 && org.name.toUpperCase() !== 'TABIT') {
+                    org.region = region;
+                    this.organizations.push(org);
+                }
             });
+        }
+
+        return this.organizations;
     }
 
     private getExcludedDates(calendars, organizationId) {

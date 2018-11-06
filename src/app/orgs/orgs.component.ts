@@ -104,28 +104,27 @@ export class OrgsComponent implements OnInit {
                     this.orgsFiltered = orgs;
 
                     if (this.user.email.indexOf('@tabit.cloud') > 0) {
-                        //this.exampleOrg.name = tmpTranslations.get('exampleOrgName');
-                        //this.exampleOrg.enabled = true;
                         let usOrg = _.clone(_.find(this.orgsFiltered, {id: "59c3f78cd1ea272200200880"}));
                         let ilOrg = _.clone(_.find(this.orgsFiltered, {id: "53eb1ee2e6c77111203d8503"}));
 
-                        usOrg.name = 'Demo Restaurant';
-                        usOrg.smallLogo = {url: 'https://office.tabit.cloud/images/restaurant-ico.png'};
-                        usOrg.isDemo = true;
-                        usOrg.order = 0;
+                        if(usOrg) {
+                            usOrg.name = 'Demo Restaurant';
+                            usOrg.smallLogo = {url: 'https://office.tabit.cloud/images/restaurant-ico.png'};
+                            usOrg.isDemo = true;
+                            usOrg.order = 0;
+                            this.orgsFiltered.splice(0,0, usOrg);
+                        }
 
-                        ilOrg.name = 'מסעדה לדוגמא';
-                        ilOrg.smallLogo = {url: 'https://office.tabit.cloud/images/restaurant-ico.png'};
-                        ilOrg.isDemo = true;
-                        ilOrg.order = 0;
-
-                        this.orgsFiltered.splice(0,0, usOrg);
-                        this.orgsFiltered.splice(0,0, ilOrg);
+                        if(ilOrg) {
+                            ilOrg.name = 'מסעדה לדוגמא';
+                            ilOrg.smallLogo = {url: 'https://office.tabit.cloud/images/restaurant-ico.png'};
+                            ilOrg.isDemo = true;
+                            ilOrg.order = 0;
+                            this.orgsFiltered.splice(0,0, ilOrg);
+                        }
 
                         let order = this.env.lang === 'he' ? 'asc' : 'desc';
                         this.orgsFiltered = _.orderBy(this.orgsFiltered, ['order', 'region', 'name'], ['asc' ,order, 'asc']);
-
-
                     }
 
                 }
