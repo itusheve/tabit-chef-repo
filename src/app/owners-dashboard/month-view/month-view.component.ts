@@ -105,7 +105,7 @@ export class MonthViewComponent implements OnInit {
         };
 
         let monthName = this.datePipe.transform(date, 'MMMM', '', this.env.lang);
-        let monthState = moment().isSame(date, 'month') ? tmpTranslations.get('home.month.notFinalTitle') : tmpTranslations.get('home.month.finalTitle');
+        let monthState = moment().month() === date.month() ? tmpTranslations.get('home.month.notFinalTitle') : tmpTranslations.get('home.month.finalTitle');
         this.summaryCardData.title = monthName + ' ' +  monthState;
 
         this.summaryCardData.reductions = {

@@ -61,7 +61,7 @@ export class MonthSelectorComponent implements OnInit {
     }
 
     getFinalState(month: moment.Moment) {
-        return moment().isSame(month, 'month') ? 'notFinal' : 'final';
+        return moment().month() === month.month() ? 'notFinal' : 'final';
     }
 
     prevMonth = () => {

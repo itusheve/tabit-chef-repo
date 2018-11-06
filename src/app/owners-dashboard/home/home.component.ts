@@ -369,6 +369,7 @@ export class HomeComponent implements OnInit {
     }
 
     isCurrentMonth() {
-        return this.dataService.selectedMonth$.value.isSameOrAfter(moment(), 'month');
+        let selectedMonth = this.dataService.selectedMonth$.value;
+        return selectedMonth.month() === moment().month();
     }
 }

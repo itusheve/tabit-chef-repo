@@ -69,7 +69,7 @@ export class OwnersDashboardComponent implements OnInit {
         });
 
         dataService.selectedMonth$.subscribe(month => {
-            if(!month.isSame(moment(), 'month')) {
+            if(month.month() !== moment().month()) {
                 ownersDashboardService.toolbarConfig.home.show = true;
             }
             else {
