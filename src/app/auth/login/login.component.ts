@@ -74,12 +74,10 @@ export class LoginComponent implements OnInit {
                 this.router.navigate(['/restaurants', paramObj]);
             })
             .catch(err => {
-                if (err.status === 403) {
-                    this.snackBar.open(tmpTranslations.get('login.userPassIncorrect'), null, {
-                        duration: 5000,
-                        verticalPosition: 'top'
-                    });
-                }
+                this.snackBar.open(tmpTranslations.get('login.userPassIncorrect'), null, {
+                    duration: 5000,
+                    verticalPosition: 'top'
+                });
             });
     }
 

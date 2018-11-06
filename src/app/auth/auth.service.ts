@@ -9,6 +9,7 @@ import {DebugService} from '../debug.service';
 import {LogzioService} from '../logzio.service';
 import * as _ from 'lodash';
 import {DataService} from '../../tabit/data/data.service';
+
 const loginUrl = 'oauth2/token';
 const meUrl = 'account/me';
 
@@ -40,8 +41,10 @@ export class AuthService {
     }
 
     private clearLocalStorage() {
+        window.localStorage.removeItem('tokens');
         window.localStorage.removeItem('token');
         window.localStorage.removeItem('user');
+        window.localStorage.removeItem('userSettings');
         window.localStorage.removeItem('org');
     }
 
@@ -69,7 +72,7 @@ export class AuthService {
                     .subscribe(org_ => {
                         _.set(org_, 'region', org.region);
 
-                        if(org.isDemo === true) {
+                        if (org.isDemo === true) {
                             _.set(org_, 'name', org.name);
                             _.set(org_, 'smallLogo', org.smallLogo);
                         }
@@ -102,6 +105,13 @@ export class AuthService {
             if (credentials) {
                 this.ds.log('authSvc: authenticate: authenticating using credentials');
 
+                let authenticationStatus = {
+                    success: 0,
+                    error: 0,
+                    totalAttempts: 0,
+                    availableServersCount: Object.keys(this.remoteServers).length
+                };
+
                 _.forEach(this.remoteServers, (url, region) => {
                     this.httpClient.post(`${url}${loginUrl}`, {
                         client_id: 'VbXPFm2RMiq8I2eV7MP4ZQ',
@@ -114,6 +124,8 @@ export class AuthService {
                                 access_token: string,
                                 refresh_token: string
                             }) => {
+                                authenticationStatus.success++;
+                                authenticationStatus.totalAttempts++;
                                 let tokens = JSON.parse(window.localStorage.getItem('tokens'));
                                 if (!tokens) {
                                     tokens = {};
@@ -136,24 +148,61 @@ export class AuthService {
                                             window.localStorage.setItem('userSettings', JSON.stringify(userSettings));
                                             this.authState = 1;
                                             this.logz.log('chef', 'login', {'user': user['email']});
-                                            resolve();
+
+                                            //if we tried logging in to all environments
+                                            if(authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {
+                                                if(authenticationStatus.success > 0) {
+                                                    resolve();
+                                                }
+                                                else {
+                                                    reject();
+                                                }
+                                            }
                                         },
                                         e => {
                                             //reverse process upon error
                                             this.ds.err(`authSvc: authenticate: get me failed - unauthenticate (anon auth): ${e}`);
+                                            //if we tried logging in to all environments
+                                            if(authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {
+                                                if(authenticationStatus.success > 0) {
+                                                    resolve();
+                                                }
+                                                else {
+                                                    reject();
+                                                }
+                                            }
                                         }
                                     );
                             },
                             err => {
+                                authenticationStatus.error++;
+                                authenticationStatus.totalAttempts++;
                                 this.ds.err(`authSvc: authenticate: region login failed`);
                                 let tokens = JSON.parse(window.localStorage.getItem('tokens'));
 
-                                delete tokens[region];
+                                if(_.isEmpty(tokens)) {
+                                    tokens = {};
+                                }
+                                else {
+                                    delete tokens[region];
+                                }
+
                                 window.localStorage.setItem('tokens', JSON.stringify(tokens));
                                 this.authTokens = tokens;
+
+                                //if we tried logging in to all environments
+                                if(authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {
+                                    if(authenticationStatus.success > 0) {
+                                        resolve();
+                                    }
+                                    else {
+                                        reject();
+                                    }
+                                }
                             }
                         );
                 });
+
             } else {
                 this.ds.log('authSvc: authenticate: authenticating from localStorage');
 
@@ -162,7 +211,7 @@ export class AuthService {
                 let tokeFromSession = window.sessionStorage.getItem('userToken');
                 let regionFromSession = window.sessionStorage.getItem('userRegion'); // il or us currently
 
-                if (!tokens && tokeFromSession) { //try getting from session storage (PAD logic)
+                if (_.isEmpty(tokens) && tokeFromSession) { //try getting from session storage (PAD logic)
                     tokens[regionFromSession || 'il'] = {
                         access_token: tokeFromSession
                     };
@@ -175,7 +224,7 @@ export class AuthService {
                 let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
                 let org = JSON.parse(window.localStorage.getItem('org'));
 
-                if (!userSettings && tokens) {
+                if (!userSettings && !_.isEmpty(tokens)) {
                     _.forEach(tokens, async (token, region) => {
                         let user = await this.httpClient.get(`${this.remoteServers[region]}${meUrl}`).toPromise();
                         userSettings[region] = user;
@@ -183,7 +232,7 @@ export class AuthService {
                     window.localStorage.setItem('userSettings', JSON.stringify(userSettings));
                 }
 
-                if (tokens && userSettings) {
+                if (!_.isEmpty(tokens) && userSettings) {
                     this.authTokens = tokens;
                     this.ds.log('authSvc: authenticate: found access tokens: ' + this.authTokens);
                     if (org) {
@@ -195,7 +244,7 @@ export class AuthService {
                     }
                 }
 
-                if (tokens) {
+                if (!_.isEmpty(tokens)) {
                     _.forEach(tokens, (token, region) => {
                         if (token.refresh_token) {
                             this.ds.log('authSvc: authenticate: refreshing token (to try and solve the problem)');
@@ -215,7 +264,7 @@ export class AuthService {
                                                 (user: any) => {
 
                                                     let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
-                                                    if(!userSettings) {
+                                                    if (!userSettings) {
                                                         userSettings = {};
                                                     }
                                                     userSettings[region] = user;
@@ -278,7 +327,7 @@ export class AuthService {
         on success resolve with new access token
      */
     public refreshToken(region = null): Promise<string> {
-        if(!region) {
+        if (!region) {
             region = this.getRegion();
         }
         return new Promise((resolve, reject) => {
@@ -358,31 +407,31 @@ export class AuthService {
         });
     }
 
-    getToken():string {
+    getToken(): string {
         let region = this.region;
-        if(!region) {
+        if (!region) {
             let organization = JSON.parse(window.localStorage.getItem('org'));
-            if(organization) {
+            if (organization) {
                 region = organization.region.toLowerCase();
             }
         }
         this.region = region;
         let tokens = JSON.parse(window.localStorage.getItem('tokens'));
-        if(!this.authTokens) {
+        if (!this.authTokens) {
             this.authTokens = tokens;
         }
 
-        if(this.authTokens) {
+        if (this.authTokens) {
             let regionToken = this.authTokens[region];
             return regionToken ? regionToken.access_token : '';
         }
     }
 
     getRosUrl(region = null): string {
-        if(!region) {
+        if (!region) {
             region = this.region || environment.region;
             let organization = JSON.parse(window.localStorage.getItem('org'));
-            if(organization) {
+            if (organization) {
                 region = organization.region.toLowerCase();
             }
         }
@@ -391,10 +440,10 @@ export class AuthService {
     }
 
     getDatabaseUrl(region = null): string {
-        if(!region) {
+        if (!region) {
             region = this.region || environment.region;
             let organization = JSON.parse(window.localStorage.getItem('org'));
-            if(organization) {
+            if (organization) {
                 region = organization.region.toLowerCase();
             }
         }
