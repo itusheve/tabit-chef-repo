@@ -27,10 +27,9 @@
     font-size: 17px;
   }
 
-  td {
-    padding: 0px;
-    border: none;
+  tr {
     font-size: 14px;
+    white-space: nowrap;
   }
   .icon {
     top: 1px;
@@ -47,17 +46,12 @@
   }
 
   .table-padding-rtl {
-    margin-right: -8px;
+
   }
 
   .card-footer {
     margin-left: 18px !important;
     margin-right: 18px !important;
-  }
-
-  mat-icon {
-    width: 22px;
-    height: 26px;
   }
 
   .up {
@@ -82,15 +76,15 @@
     position: relative;
   }
 
-  .iconFlipped {
-    transform: scaleX(-1);
-    -moz-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    -ms-transform: scaleX(-1);
-    right: 5px;
-    top: -2px;
+  .arrowIcon {
+    top: 11px;
     position: relative;
-    margin: 0 3px;
+    font-size: 30px;
+    line-height: 10px;
+  }
+
+  .noChangeIcon {
+    top: 0px;
   }
 
   .card-reduction-table {

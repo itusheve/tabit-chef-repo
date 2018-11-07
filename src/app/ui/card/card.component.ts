@@ -51,7 +51,7 @@ export class CardComponent implements OnInit {
 
     getArrow(percentage) {
         if(!percentage) {
-            return 'trending_flat';
+            return 'minimize';
         }
 
         if(percentage > 0) {
@@ -73,11 +73,18 @@ export class CardComponent implements OnInit {
 
         let calculatedPercentage = (normalizedPercentage / normalizedAvg * 100);
 
+        if(calculatedPercentage === 0) {
+            calculatedPercentage = change * 100;
+        }
         let cssClass = this.tabitHelper.getTextClassByPercentage(calculatedPercentage, isUpPositive);
         return cssClass;
     }
 
-    getIconClass() {
-        return this.env.lang === 'he' ? 'iconFlipped' : '';
+    getIconClass(change) {
+        let classList = 'arrowIcon';
+        if(!change) {
+            classList += ' noChangeIcon';
+        }
+        return classList;
     }
 }
