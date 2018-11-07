@@ -3,14 +3,14 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-12 col-md-6 col-lg-4 mb-3" *ngIf="isCurrentMonth()">
+    <div class="col-sm-12 mb-3" *ngIf="isCurrentMonth()">
         <app-card [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
     </div>
-    <div *ngIf="!loadingOlapData && showPreviousDay && isCurrentMonth()" class="col-sm-12 col-md-6 col-lg-4 mb-3">
+    <div *ngIf="!loadingOlapData && showPreviousDay && isCurrentMonth()" class="col-sm-12 mb-3">
         <app-card [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')"
                   style="cursor: pointer"></app-card>
     </div>
-    <div *ngIf="!loadingOlapData && showForecast && isCurrentMonth()" class="col-sm-12 col-md-6 col-lg-4 mb-3">
+    <div *ngIf="!loadingOlapData && showForecast && isCurrentMonth()" class="col-sm-12 mb-3">
         <app-card [cardData]="forecastCardData"></app-card>
     </div>
     <div class="col-12" *ngIf="loadingOlapData">
@@ -34,5 +34,7 @@
             </div>
         </div>
     </div>
+    <div class="col-12">
+        <app-month-view *ngIf="!loadingOlapData" (onDayRequest)="onDayRequest($event)" (onMonthCardClick)="openMonthPicker()"></app-month-view>
+    </div>
 </div>
-<app-month-view *ngIf="!loadingOlapData" (onDayRequest)="onDayRequest($event)" (onMonthCardClick)="openMonthPicker()"></app-month-view>

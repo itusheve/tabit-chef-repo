@@ -1,5 +1,7 @@
-<div class="flex d-col" id="monthSelector">
-    <app-card id="monthSummary" *ngIf="showSummary" [cardData]="summaryCardData" class="month-view-card mb-3" (click)="onMonthClicked($event)"></app-card>
+<div id="monthSelector">
+    <div class="mb-3">
+        <app-card id="monthSummary" *ngIf="showSummary" [cardData]="summaryCardData" (click)="onMonthClicked($event)"></app-card>
+    </div>
     <app-month-grid [hidden]="!renderGrid" #monthGrid (onDateClicked)="onDateClicked2($event)"></app-month-grid>
 </div>
 
