@@ -1,5 +1,5 @@
 
-<mat-sidenav-container class="rtl">
+<mat-sidenav-container [ngClass]="env.lang === 'he' ? 'rtl' : ''">
 
   <mat-sidenav class="flex d-col" #sidenav mode="over">
     <div class="s-0 header d-flex align-items-center">

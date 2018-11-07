@@ -87,9 +87,9 @@ export class ManagersDashboardComponent implements OnInit {
     showPPA: true,
     serviceTypes: [
       { value: "seated", text: 'orderTypes.seated', showPPA:true },
-      { value: "takeaway", text: 'orderTypes.ta', showPPA: false },
+      { value: "takeaway", text: 'orderTypes.takeaway', showPPA: false },
       { value: "delivery", text: 'orderTypes.delivery', showPPA: false },
-      { value: "counter", text: 'orderTypes.counter', showPPA: false }
+      { value: "counter", text: 'orderTypes.otc', showPPA: false }
     ]
   }
 
