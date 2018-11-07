@@ -18,5 +18,5 @@ export const environment = {
         catalog: 'usaProd',
         cube: 'tlogs',
     },
-    translationBaseUrl: 'https://chef.tabit-dev.com/assets/i18n/'
+    translationBaseUrl: 'http://chef.tabit-dev.com/assets/i18n/'
 };

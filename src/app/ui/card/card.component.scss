@@ -77,14 +77,14 @@
   }
 
   .arrowIcon {
-    top: 11px;
-    position: relative;
-    font-size: 30px;
-    line-height: 10px;
+    width: 24px;
+    height: 4px;
+    transform: scale(1.8);
   }
 
   .noChangeIcon {
-    top: 0px;
+    top: -15px;
+    position: relative;
   }
 
   .card-reduction-table {

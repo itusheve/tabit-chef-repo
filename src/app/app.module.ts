@@ -70,7 +70,7 @@ import 'hammer-timejs';
 import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
 
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {TranslationLoader} from './translation.loader';
 import localeHebrew from '@angular/common/locales/he';
 import localeEnglish from '@angular/common/locales/en';
 
@@ -190,5 +190,5 @@ export class AppModule {
 }
 
 export function createTranslateLoader(http: HttpClient) {
-    return new TranslateHttpLoader(http, environment.translationBaseUrl, '.json');
+    return new TranslationLoader();
 }

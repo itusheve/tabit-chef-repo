@@ -50,7 +50,7 @@
                                     <mat-icon *ngIf="cardData.averages.yearly.percentage"
                                               [ngClass]="[getPercentageCssClass(cardData.averages.yearly.percentage, true, cardData.averages.yearly.change),getIconClass(cardData.averages.yearly.change)]"
                                     >
-                                        {{getArrow(cardData.averages.yearly.change)}}
+                                        {{getArrow(cardData.averages.yearly.percentage)}}
                                     </mat-icon>
                                 </span>
                                 <span class="text-dark px-1">{{(cardData.averages.yearly.percentage) | pct: 1}}</span>
@@ -61,7 +61,7 @@
                                     <mat-icon *ngIf="cardData.averages.weekly.percentage"
                                               [ngClass]="[getPercentageCssClass(cardData.averages.weekly.percentage, true, cardData.averages.weekly.change),getIconClass(cardData.averages.weekly.change)]"
                                     >
-                                        {{getArrow(cardData.averages.weekly.change)}}
+                                        {{getArrow(cardData.averages.weekly.percentage)}}
                                     </mat-icon>
                                 </span>
                                 <span class="text-dark px-1">{{(cardData.averages.weekly.percentage || 0) | pct: 1}}</span>
