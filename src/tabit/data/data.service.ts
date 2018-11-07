@@ -405,7 +405,9 @@ export class DataService {
     public user$: Observable<any> = Observable.create(obs => {
         let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
 
-        obs.next(userSettings[environment.region]);
+        if(!_.isEmpty(userSettings[environment.region])) {
+            obs.next(userSettings[environment.region]);
+        }
     });
 
     public currentRestTime$: Observable<moment.Moment> = Observable.create(obs => {
