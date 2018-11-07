@@ -1,8 +1,5 @@
-import { Injectable,Injector } from '@angular/core';
 import {TranslateLoader} from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-@Injectable()
-
 
 const he = {
     "CHECK_NUMBER": "",
