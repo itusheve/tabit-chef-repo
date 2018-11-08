@@ -123,13 +123,12 @@ export class HomeComponent implements OnInit {
     }
 
     getTodayData(): void {
-        combineLatest(this.dataService.dailyTotals$, this.dataService.olapToday$, this.dataService.vat$, this.dataService.currentRestTime$)
+        combineLatest(this.dataService.dailyTotals$, this.dataService.olapToday$, this.dataService.vat$)
             .subscribe(data => {
                 let dailyTotals = data[0];
                 let day = data[1];
                 let incTax = data[2];
-                let restTime = data[3];
-                let realtimeDataDate = moment.utc(dailyTotals.businessDate);
+                let restaurantTime = moment.utc(dailyTotals.businessDate);
 
                 let totals = dailyTotals.totals;
                 let totalClosedOrders = environment.region === 'us' ? _.get(totals, 'netSales', 0) : _.get(totals, 'totalPayments', 0);
@@ -147,14 +146,14 @@ export class HomeComponent implements OnInit {
                     endOfDayComment = res;
                 });
 
-                if (restTime.format('YYYYMMDD') !== realtimeDataDate.format('YYYYMMDD')) {
+                if (restaurantTime.format('YYYYMMDD') !== moment().format('YYYYMMDD')) {
                     this.currentBdCardData.salesComment = endOfDayComment;
                 }
 
                 this.currentBdCardData.sales = incTax ? totalSales : totalSalesWithoutTax;
 
                 this.translate.get('card.today').subscribe((res: string) => {
-                    this.currentBdCardData.title = res + ', ' + this.datePipe.transform(moment(day.date).valueOf(), 'EEEE MMMM d', '', this.env.lang);
+                    this.currentBdCardData.title = res + ', ' + this.datePipe.transform(restaurantTime.valueOf(), 'EEEE MMMM d', '', this.env.lang);
                 });
 
                 this.currentBdCardData.averages = {

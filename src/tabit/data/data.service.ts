@@ -440,7 +440,6 @@ export class DataService {
         this.refresh$
             .subscribe(refresh => {
                 let currentRestTime = this.getCurrentRestTime();
-                currentRestTime = moment.utc(currentRestTime.format('YYYY-MM-DD'));
                 const params = {
                     businessDate: currentRestTime.format('YYYY-MM-DD')
                 };

@@ -13,7 +13,7 @@
                 <tr class="header">
                     <td (click)="sort('waiter')">
                         <div class="flex a-center">
-                            <div [translate]="'day.server'">Server</div>
+                            <div><span [translate]="'day.server'"></span><span><br />({{'manager' | translate}})</span></div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>

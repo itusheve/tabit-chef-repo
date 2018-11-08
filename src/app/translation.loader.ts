@@ -2,6 +2,7 @@ import {TranslateLoader} from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 const he = {
+    "manager": "מנהל",
     "CHECK_NUMBER": "",
     "Discounts": "הנחה",
     "ORDERS_VIEW.all_order_oth": "הזמנה על חשבון הבית",
@@ -152,6 +153,7 @@ const he = {
     "takeaway": "לקחת"
 };
 const en = {
+    "manager": "Manager",
     "CHECK_NUMBER": "",
     "Discounts": "Discounts",
     "ORDERS_VIEW.all_order_oth": "Order OTH",

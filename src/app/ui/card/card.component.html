@@ -53,8 +53,8 @@
                                         {{getArrow(cardData.averages.yearly.percentage)}}
                                     </mat-icon>
                                 </span>
-                                <span class="text-dark px-1">{{(cardData.averages.yearly.percentage) | pct: 1}}</span>
-                                <span class="text-body" [translate]="'lastYear'"></span>
+                                <span class="text-dark">{{(cardData.averages.yearly.percentage) | pct: 1}}</span>
+                                <span class="text-body px-1" [translate]="'lastYear'"></span>
                             </tr>
                             <tr *ngIf="cardData.averages?.weekly">
                                 <span>
@@ -64,8 +64,8 @@
                                         {{getArrow(cardData.averages.weekly.percentage)}}
                                     </mat-icon>
                                 </span>
-                                <span class="text-dark px-1">{{(cardData.averages.weekly.percentage || 0) | pct: 1}}</span>
-                                <span class="text-body" [translate]="'fourWeekAvg'"></span>
+                                <span class="text-dark">{{(cardData.averages.weekly.percentage || 0) | pct: 1}}</span>
+                                <span class="text-body px-1" [translate]="'fourWeekAvg'"></span>
                             </tr>
                         </table>
                     </div>
