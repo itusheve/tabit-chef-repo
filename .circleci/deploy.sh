@@ -40,6 +40,17 @@ elif [[ "$CIRCLE_BRANCH" == "us-production-rp"  ]]; then
   echo "On4"
   S3_BUCKET="chef-web-us.tabit.cloud" _s3/s3-push-us-prod.sh
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
+elif [[ "$CIRCLE_BRANCH" == "chef-prod"  ]]; then
+  echo "On1"
+  npm install --ignore-scripts
+  npm rebuild node-sass
+  echo "On2"
+  ng build --configuration=prod-il --prod --build-optimizer
+  echo "On3"
+  chmod +x _s3/s3-push-us-prod.sh
+  echo "On4"
+  S3_BUCKET="chef-prod.tabit.cloud" _s3/s3-push-us-prod.sh
+  echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "us-production-rp-cordova"  ]]; then
   echo "On1"
   npm install --ignore-scripts
