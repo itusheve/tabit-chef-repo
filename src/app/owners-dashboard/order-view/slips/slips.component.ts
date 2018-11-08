@@ -45,7 +45,7 @@ export class OrderSlipsComponent implements OnInit {
     isOTH = false;
 
     constructor() {
-        this.ordersView = ORDERS_VIEW.get();
+        this.ordersView = ORDERS_VIEW.getTranslations();
     }
 
     ngOnInit() {
