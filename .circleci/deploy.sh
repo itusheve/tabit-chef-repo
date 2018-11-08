@@ -40,7 +40,7 @@ elif [[ "$CIRCLE_BRANCH" == "us-production-rp"  ]]; then
   echo "On4"
   S3_BUCKET="chef-web-us.tabit.cloud" _s3/s3-push-us-prod.sh
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
-elif [[ "$CIRCLE_BRANCH" == "chef-prod"  ]]; then
+elif [[ "$CIRCLE_BRANCH" == "ecs-chef-prod"  ]]; then
   echo "On1"
   npm install --ignore-scripts
   npm rebuild node-sass
