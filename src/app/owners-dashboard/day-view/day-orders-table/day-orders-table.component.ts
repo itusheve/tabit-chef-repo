@@ -45,7 +45,7 @@ export class DayOrdersTableComponent implements OnChanges {
 
         this.openOrders = {totalAmount: 0, count: 0, orders: []};
         if (this.todayOpenOrders && this.bdIsCurrentBd) {
-            console.log(this.openOrders);
+            this.noData = false;
             this.openOrders.totalAmount = 0;
             this.openOrders.count = 0;
             this.openOrders.orders = [];
