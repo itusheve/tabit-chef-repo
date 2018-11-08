@@ -304,7 +304,7 @@ let ORDERS_VIEW_en = {
 export default ORDERS_VIEW;*/
 
 export const ORDERS_VIEW = {
-    get() {
+    getTranslations() {
         return environment.lang === 'he' ? ORDERS_VIEW_he : ORDERS_VIEW_en;
     }
 };

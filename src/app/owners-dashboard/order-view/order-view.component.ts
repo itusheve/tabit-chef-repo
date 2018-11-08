@@ -42,7 +42,7 @@ export class OrderViewComponent implements OnInit {
 
     constructor(private closedOrdersDataService: ClosedOrdersDataService,
                 private route: ActivatedRoute) {
-        this.ORDERS_VIEW = ORDERS_VIEW.get();
+        this.ORDERS_VIEW = ORDERS_VIEW.getTranslations();
         this.orderDocs = {};
     }
 
