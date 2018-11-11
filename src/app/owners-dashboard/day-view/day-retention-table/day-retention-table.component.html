@@ -10,6 +10,12 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <table class="chf-tbl chf-tbl-smaller chf-tbl-row-oriented">
+                <tr class="table-information-row" [ngClass]="getCssColorClass()">
+                    <td colspan="6">
+                        <div><span [translate]="'day.percentageFromSales'">Percentage</span>: <span>{{dayFromDatabase?.mrPrc / 100 | pct : 1}}</span></div>
+                        <div><span [translate]="'day.fourWeekAvg'">4W' Avg</span>: <span>{{dayFromDatabase?.avgNweeksMrPrc / 100 | pct : 1}}</span></div>
+                    </td>
+                </tr>
                 <tr class="header">
                     <td (click)="sort('waiter')">
                         <div class="flex a-center">

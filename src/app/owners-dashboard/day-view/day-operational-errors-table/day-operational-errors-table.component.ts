@@ -1,73 +1,85 @@
-import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { OrderType } from '../../../../tabit/model/OrderType.model';
+import {OrderType} from '../../../../tabit/model/OrderType.model';
+import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 
 @Component({
-  selector: 'app-operational-errors-table',
-  templateUrl: './day-operational-errors-table.component.html',
-  styleUrls: ['./day-operational-errors-table.component.scss']
+    selector: 'app-operational-errors-table',
+    templateUrl: './day-operational-errors-table.component.html',
+    styleUrls: ['./day-operational-errors-table.component.scss']
 })
 export class DayOperationalErrorsTableComponent implements OnChanges {
-  
-  @Input() operationalErrorsData: {
-    orderType: OrderType;
-    waiter: string;
-    approvedBy: string;
-    orderNumber: number;
-    tableId: string;
-    item: string;
-    subType: string;
-    reasonId: string;
-    operational: number;
-  }[];
-  @Input() lastViewed: number;//last viewed order number
-  @Input() category: string;
 
-  @Output() onOrderClicked = new EventEmitter();
+    @Input() operationalErrorsData: {
+        orderType: OrderType;
+        waiter: string;
+        approvedBy: string;
+        orderNumber: number;
+        tableId: string;
+        item: string;
+        subType: string;
+        reasonId: string;
+        operational: number;
+    }[];
+    @Input() lastViewed: number;//last viewed order number
+    @Input() category: string;
+    @Input() dayFromDatabase: any;
 
-  totalValue: number;
+    @Output() onOrderClicked = new EventEmitter();
 
-  show = true;
-  loading = true;
+    totalValue: number;
 
-  public sortBy: string;//waiter, orderNumber, tableId, item, subType, reasonId, operational
-  public sortDir = 'desc';//asc | desc  
+    show = true;
+    loading = true;
 
-  constructor() {}
+    public sortBy: string;//waiter, orderNumber, tableId, item, subType, reasonId, operational
+    public sortDir = 'desc';//asc | desc
+    public tabitHelper: any;
 
-  ngOnChanges(o: SimpleChanges) {
-    if (o.operationalErrorsData && o.operationalErrorsData.currentValue) {            
-      this.totalValue = this.operationalErrorsData.reduce((acc, curr)=>(acc+curr.operational), 0);
-      
-      // we wish sorting to occur automatically only on component init, not on further changes:
-      if (!this.sortBy) {
-        this.sort('operational');
-      }
-
-      this.loading = false;
+    constructor() {
+        this.tabitHelper = new TabitHelper();
     }
-  }
 
-  orderClicked(orderNumber: number) {
-    this.onOrderClicked.emit(orderNumber);
-  }
+    ngOnChanges(o: SimpleChanges) {
+        if (o.operationalErrorsData && o.operationalErrorsData.currentValue) {
+            this.totalValue = this.operationalErrorsData.reduce((acc, curr) => (acc + curr.operational), 0);
 
-  sort(by: string) {
-    if (this.sortBy && this.sortBy === by) {
-      this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
-    } else {
-      if (by === 'operational') {
-        this.sortDir = 'desc';
-      } else {
-        this.sortDir = 'asc';
-      }
-      this.sortBy = by;
+            // we wish sorting to occur automatically only on component init, not on further changes:
+            if (!this.sortBy) {
+                this.sort('operational');
+            }
+
+            this.loading = false;
+        }
     }
-    let dir = this.sortDir === 'asc' ? -1 : 1;
-    this.operationalErrorsData
-      .sort((a, b) => (a[this.sortBy] < b[this.sortBy] ? dir : dir * -1));
-  }
 
+    orderClicked(orderNumber: number) {
+        this.onOrderClicked.emit(orderNumber);
+    }
+
+    sort(by: string) {
+        if (this.sortBy && this.sortBy === by) {
+            this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
+        } else {
+            if (by === 'operational') {
+                this.sortDir = 'desc';
+            } else {
+                this.sortDir = 'asc';
+            }
+            this.sortBy = by;
+        }
+        let dir = this.sortDir === 'asc' ? -1 : 1;
+        this.operationalErrorsData
+            .sort((a, b) => (a[this.sortBy] < b[this.sortBy] ? dir : dir * -1));
+    }
+
+    getCssColorClass() {
+        if(this.dayFromDatabase) {
+            return this.tabitHelper.getColorClassByPercentage(this.dayFromDatabase.operationalPrc / this.dayFromDatabase.avgNweeksOperationalPrc * 100, false);
+        }
+
+        return 'bg-secondary';
+    }
 }

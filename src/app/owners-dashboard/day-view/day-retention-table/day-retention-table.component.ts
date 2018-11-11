@@ -3,6 +3,7 @@ import {Component, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import {OrderType} from '../../../../tabit/model/OrderType.model';
+import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 
 @Component({
     selector: 'app-retention-table',
@@ -25,6 +26,7 @@ export class DayRetentionTableComponent implements OnChanges {
     }[];
     @Input() lastViewed: number;
     @Input() category: string;
+    @Input() dayFromDatabase: any;
 
     @Output() onOrderClicked = new EventEmitter();
 
@@ -35,8 +37,10 @@ export class DayRetentionTableComponent implements OnChanges {
 
     public sortBy: string;//waiter, orderNumber, tableId, item, subType, reasonId, retention
     public sortDir = 'desc';//asc | desc
+    public tabitHelper: any;
 
     constructor() {
+        this.tabitHelper = new TabitHelper();
     }
 
     ngOnChanges(o: SimpleChanges) {
@@ -71,6 +75,14 @@ export class DayRetentionTableComponent implements OnChanges {
         let dir = this.sortDir === 'asc' ? -1 : 1;
         this.retentionData
             .sort((a, b) => (a[that.sortBy] < b[that.sortBy] ? dir : dir * -1));
+    }
+
+    getCssColorClass() {
+        if(this.dayFromDatabase) {
+            return this.tabitHelper.getColorClassByPercentage(this.dayFromDatabase.mrPrc / this.dayFromDatabase.avgNweeksMrPrc * 100, false);
+        }
+
+        return 'bg-secondary';
     }
 
 }

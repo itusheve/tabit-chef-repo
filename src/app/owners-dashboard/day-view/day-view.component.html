@@ -146,6 +146,7 @@
                                       [lastViewed]="drilledOrderNumber"
                                       (onOrderClicked)="onOrderClicked_orderNumber($event)"
                                       [category]="category"
+                                      [dayFromDatabase]="dayFromDatabase"
         ></app-operational-errors-table>
 
         <div id="retention" style="position: relative;" class="anchor"></div>
@@ -155,6 +156,7 @@
                              [lastViewed]="drilledOrderNumber"
                              (onOrderClicked)="onOrderClicked_orderNumber($event)"
                              [category]="category"
+                             [dayFromDatabase]="dayFromDatabase"
         ></app-retention-table>
 
         <app-month-summary-table *ngIf="mtdBusinessData && mtdBusinessData.totals"
