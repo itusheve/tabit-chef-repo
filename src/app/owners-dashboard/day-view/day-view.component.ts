@@ -357,10 +357,12 @@ export class DayViewComponent implements OnInit {
             if(!_.isEmpty(this.category)) {
                 let section = document.getElementById(this.category);
                 if(section) {
-                    section.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                    setTimeout(() => {
+                        section.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 100);
                 }
             }
         });
