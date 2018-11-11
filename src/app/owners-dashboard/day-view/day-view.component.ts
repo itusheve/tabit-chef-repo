@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {DataService} from '../../../tabit/data/data.service';
 import {Router, ActivatedRoute, ParamMap} from '@angular/router';
 import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
@@ -26,7 +26,7 @@ export interface SalesTableRow {
     templateUrl: './day-view.component.html',
     styleUrls: ['./day-view.component.scss']
 })
-export class DayViewComponent implements OnInit {
+export class DayViewComponent implements OnInit, AfterViewInit {
 
     day: moment.Moment;
     category: string;
@@ -56,7 +56,7 @@ export class DayViewComponent implements OnInit {
     public orders: Order[];
 
     public dailySummaryTblData: { title: string; data: SalesTableRow[], globalSalesIncludingVat: any };
-    public byShiftSummaryTblsData: {  title: string; data: SalesTableRow[], globalSalesIncludingVat: any }[];
+    public byShiftSummaryTblsData: { title: string; data: SalesTableRow[], globalSalesIncludingVat: any }[];
 
     public salesBySubDepartment: {
         thisBd: {
@@ -240,7 +240,7 @@ export class DayViewComponent implements OnInit {
             };
             let tlogFlag = _.find(dailyReport.flags, {tlogId: tlog.tlogId});
 
-            if(tlogFlag) {
+            if (tlogFlag) {
                 let reductions = tlogFlag.NameValues ? tlogFlag.NameValues.split(',') : [];
                 if (reductions.length) {
                     _.forEach(reductions, reduction => {
@@ -276,96 +276,84 @@ export class DayViewComponent implements OnInit {
 
         //get card data for the day
         combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.olapToday$)
-        .subscribe(data => {
-            let date = data[0];
-            let database = data[1];
-            let dailyTotals = data[2];
-            let OlapToday = data[3];
+            .subscribe(data => {
+                let date = data[0];
+                let database = data[1];
+                let dailyTotals = data[2];
+                let OlapToday = data[3];
 
-            this.daySelectorOptions = {
-                minDate: moment(database.getLowestDate()),
-                maxDate: moment(moment())
-            };
-
-            this.dayFromDatabase = database.getDay(date);
-
-            if (this.dayFromDatabase) {
-                this.cardData.holiday = this.dayFromDatabase.holiday;
-
-                this.cardData.sales = this.dayFromDatabase.salesAndRefoundAmountIncludeVat;
-
-                this.cardData.diners = this.dayFromDatabase.diners || this.dayFromDatabase.orders;
-                this.cardData.ppa = this.dayFromDatabase.ppaIncludeVat;
-
-                this.cardData.reductions = {
-                    cancellations: {
-                        percentage: this.dayFromDatabase.voidsPrc / 100,
-                        change: this.dayFromDatabase.voidsPrc - this.dayFromDatabase.avgNweeksVoidsPrc
-                    },
-                    employee: {
-                        percentage: this.dayFromDatabase.employeesPrc / 100,
-                        change: this.dayFromDatabase.employeesPrc - this.dayFromDatabase.avgNweeksEmployeesPrc
-                    },
-                    operational: {
-                        percentage: this.dayFromDatabase.operationalPrc / 100,
-                        change: this.dayFromDatabase.operationalPrc - this.dayFromDatabase.avgNweeksOperationalPrc
-                    },
-                    retention: {
-                        percentage: this.dayFromDatabase.mrPrc / 100,
-                        change: this.dayFromDatabase.mrPrc - this.dayFromDatabase.avgNweeksMrPrc
-                    }
+                this.daySelectorOptions = {
+                    minDate: moment(database.getLowestDate()),
+                    maxDate: moment(moment())
                 };
 
-                this.cardData.averages = {
-                    /*yearly: {
-                        percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
-                        change: day.aggregations.sales.amount / day.aggregations.sales.yearAvg
-                    },*/
-                    weekly: {
-                        percentage: ((this.dayFromDatabase.salesAndRefoundAmountIncludeVat / this.dayFromDatabase.AvgNweeksSalesAndRefoundAmountIncludeVat) - 1),
-                        change: (this.dayFromDatabase.salesAndRefoundAmountIncludeVat / this.dayFromDatabase.AvgNweeksSalesAndRefoundAmountIncludeVat) * 100
-                    }
-                };
-            }
+                this.dayFromDatabase = database.getDay(date);
 
-            if (moment().isSame(date, 'day')) {
-                let totals = dailyTotals.totals;
+                if (this.dayFromDatabase) {
+                    this.cardData.holiday = this.dayFromDatabase.holiday;
 
-                let totalClosedOrders = environment.region === 'us' ? _.get(totals, 'netSales', 0) : _.get(totals, 'totalPayments', 0);
-                let totalClosedOrdersWithoutVat = totalClosedOrders - _.get(totals, 'includedTax', 0);
+                    this.cardData.sales = this.dayFromDatabase.salesAndRefoundAmountIncludeVat;
 
-                let totalOpenOrders = environment.region === 'us' ? _.get(totals, 'openOrders.totalNetSalesAndRefunds', 0) : _.get(totals, 'openOrders.totalAmount', 0);
-                let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
+                    this.cardData.diners = this.dayFromDatabase.diners || this.dayFromDatabase.orders;
+                    this.cardData.ppa = this.dayFromDatabase.ppaIncludeVat;
 
-                let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
-                let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
+                    this.cardData.reductions = {
+                        cancellations: {
+                            percentage: this.dayFromDatabase.voidsPrc / 100,
+                            change: this.dayFromDatabase.voidsPrc - this.dayFromDatabase.avgNweeksVoidsPrc
+                        },
+                        employee: {
+                            percentage: this.dayFromDatabase.employeesPrc / 100,
+                            change: this.dayFromDatabase.employeesPrc - this.dayFromDatabase.avgNweeksEmployeesPrc
+                        },
+                        operational: {
+                            percentage: this.dayFromDatabase.operationalPrc / 100,
+                            change: this.dayFromDatabase.operationalPrc - this.dayFromDatabase.avgNweeksOperationalPrc
+                        },
+                        retention: {
+                            percentage: this.dayFromDatabase.mrPrc / 100,
+                            change: this.dayFromDatabase.mrPrc - this.dayFromDatabase.avgNweeksMrPrc
+                        }
+                    };
 
-                this.cardData.sales = totalSales;
-
-                this.cardData.averages = {
-                    /*yearly: {
-                        percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
-                        change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
-                    },*/
-                    weekly: {
-                        percentage: totalSales ? ((totalSales / OlapToday.aggregations.sales.fourWeekAvg) - 1) : 0,
-                        change: (totalSales / OlapToday.aggregations.sales.fourWeekAvg) * 100
-                    }
-                };
-            }
-
-            if(!_.isEmpty(this.category)) {
-                let section = document.getElementById(this.category);
-                if(section) {
-                    setTimeout(() => {
-                        section.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }, 100);
+                    this.cardData.averages = {
+                        /*yearly: {
+                            percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
+                            change: day.aggregations.sales.amount / day.aggregations.sales.yearAvg
+                        },*/
+                        weekly: {
+                            percentage: ((this.dayFromDatabase.salesAndRefoundAmountIncludeVat / this.dayFromDatabase.AvgNweeksSalesAndRefoundAmountIncludeVat) - 1),
+                            change: (this.dayFromDatabase.salesAndRefoundAmountIncludeVat / this.dayFromDatabase.AvgNweeksSalesAndRefoundAmountIncludeVat) * 100
+                        }
+                    };
                 }
-            }
-        });
+
+                if (moment().isSame(date, 'day')) {
+                    let totals = dailyTotals.totals;
+
+                    let totalClosedOrders = environment.region === 'us' ? _.get(totals, 'netSales', 0) : _.get(totals, 'totalPayments', 0);
+                    let totalClosedOrdersWithoutVat = totalClosedOrders - _.get(totals, 'includedTax', 0);
+
+                    let totalOpenOrders = environment.region === 'us' ? _.get(totals, 'openOrders.totalNetSalesAndRefunds', 0) : _.get(totals, 'openOrders.totalAmount', 0);
+                    let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
+
+                    let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
+                    let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
+
+                    this.cardData.sales = totalSales;
+
+                    this.cardData.averages = {
+                        /*yearly: {
+                            percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
+                            change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
+                        },*/
+                        weekly: {
+                            percentage: totalSales ? ((totalSales / OlapToday.aggregations.sales.fourWeekAvg) - 1) : 0,
+                            change: (totalSales / OlapToday.aggregations.sales.fourWeekAvg) * 100
+                        }
+                    };
+                }
+            });
 
         combineLatest(this.day$, this.dataService.refresh$).subscribe(async data => {
             let dayDate = data[0];
@@ -373,13 +361,13 @@ export class DayViewComponent implements OnInit {
             try {
                 dailyReport = await this.dataService.getDailyReport(dayDate);
             }
-            catch(e) {
+            catch (e) {
                 this.hasData = false;
                 this.hasNoDataForToday = true;
                 return;
             }
 
-            if(!this.day$.value.isSame(dailyReport.date)) {
+            if (!this.day$.value.isSame(dailyReport.date)) {
                 return;
             }
 
@@ -401,7 +389,9 @@ export class DayViewComponent implements OnInit {
 
             dailyReport.summary = _.orderBy(dailyReport.summary, 'orderTypeKey', 'asc');
             let summary = _.filter(dailyReport.summary, summary => summary.serviceKey == '-1');
-            let globalSalesIncludingVat = _.sumBy(summary, function(row) { return environment.region === 'us' ? row.salesNetAmount : row.ttlSaleAmountIncludeVat; });
+            let globalSalesIncludingVat = _.sumBy(summary, function (row) {
+                return environment.region === 'us' ? row.salesNetAmount : row.ttlSaleAmountIncludeVat;
+            });
 
             this.dailySummaryTblData = {
                 title: '',
@@ -423,8 +413,12 @@ export class DayViewComponent implements OnInit {
             _.forEach(dailyReport.summary, summary => {
                 let serviceKey = _.get(summary, 'serviceKey');
                 if (serviceKey && serviceKey != '-1') {
-                    if(!this.byShiftSummaryTblsData[+serviceKey]) {
-                        this.byShiftSummaryTblsData[+serviceKey] = {title: summary.serviceName, data: [], globalSalesIncludingVat: globalSalesIncludingVat};
+                    if (!this.byShiftSummaryTblsData[+serviceKey]) {
+                        this.byShiftSummaryTblsData[+serviceKey] = {
+                            title: summary.serviceName,
+                            data: [],
+                            globalSalesIncludingVat: globalSalesIncludingVat
+                        };
                     }
 
                     this.byShiftSummaryTblsData[+serviceKey].data.push(summary);
@@ -454,7 +448,7 @@ export class DayViewComponent implements OnInit {
                 this.salesBySubDepartment.thisWeek.totalSales += category.weekIncludeVat || 0;
                 this.salesBySubDepartment.thisMonth.totalSales += category.monthIncludeVat || 0;
 
-                if(category.subDepartmentName) {
+                if (category.subDepartmentName) {
                     this.salesBySubDepartment.thisBd.bySubDepartment.push({
                         subDepartment: category.subDepartmentName,
                         sales: category.businessDateIncludeVat || 0
@@ -579,10 +573,19 @@ export class DayViewComponent implements OnInit {
                 businessDays: _.filter(dailyReport.monthly, record => !!record.businessDate)
             };
 
+            this.hasData = true;
+            this.hasNoDataForToday = false;
             let that = this;
             setTimeout(() => {
-                that.hasData = true;
-                that.hasNoDataForToday = false;
+                if (!_.isEmpty(that.category)) {
+                    let section = document.getElementById(this.category);
+                    if (section) {
+                        section.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
             }, 300);
         });
     }
@@ -612,8 +615,8 @@ export class DayViewComponent implements OnInit {
         this.hasData = false;
         this.hasNoDataForToday = false;
         this.day = dateM;
-        this.category = '';
         this.day$.next(this.day);
+        this.category = '';
     }
 
     onGoToOrders(filter, type) {
