@@ -29,6 +29,7 @@ export interface SalesTableRow {
 export class DayViewComponent implements OnInit {
 
     day: moment.Moment;
+    category: string;
 
     public daySelectorOptions: {
         minDate: moment.Moment,
@@ -352,6 +353,16 @@ export class DayViewComponent implements OnInit {
                     }
                 };
             }
+
+            if(!_.isEmpty(this.category)) {
+                let section = document.getElementById(this.category);
+                if(section) {
+                    section.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
         });
 
         combineLatest(this.day$, this.dataService.refresh$).subscribe(async data => {
@@ -590,6 +601,7 @@ export class DayViewComponent implements OnInit {
             .subscribe((params: ParamMap) => {
                 const dateStr = params.get('businessDate');
                 this.day = moment(dateStr);
+                this.category = params.get('category');
                 this.day$.next(this.day);
             });
     }
@@ -598,6 +610,7 @@ export class DayViewComponent implements OnInit {
         this.hasData = false;
         this.hasNoDataForToday = false;
         this.day = dateM;
+        this.category = '';
         this.day$.next(this.day);
     }
 

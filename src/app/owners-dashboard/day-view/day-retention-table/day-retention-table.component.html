@@ -3,7 +3,7 @@
         <span [translate]="'day.retention'">Retention</span>&nbsp;-&nbsp;<span [translate]="'day.retentionByServer'">Manual Operations by Server</span>
     </div>
     <mat-accordion>
-        <mat-expansion-panel expanded="false">
+        <mat-expansion-panel [expanded]="category === 'retention'">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     {{retentionData.length}}&nbsp;<span [translate]="'day.actionsWorth'">Actions worth</span>&nbsp;{{totalValue | curr:'0'}}

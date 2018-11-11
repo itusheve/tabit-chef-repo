@@ -100,7 +100,7 @@ export class MonthGridComponent implements OnInit {
     select(day) {
         this.selected = day;
         setTimeout(() => {
-            this.rowClickHandler(day);
+            this.rowClickHandler(day, this.category);
         }, 10);
     }
 
@@ -113,8 +113,8 @@ export class MonthGridComponent implements OnInit {
         this.changeCategory('sales');
     }
 
-    rowClickHandler(day) {
-        this.onDateClicked.emit(day.businessDate);
+    rowClickHandler(day, category = '') {
+        this.onDateClicked.emit({date: day.businessDate, category: category});
     }
 
     changeAvgPeriodComparator(value) {

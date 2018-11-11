@@ -3,7 +3,7 @@
         <span [translate]="'day.operationalErrors'">Operational Errors</span>&nbsp;-&nbsp;<span [translate]="'day.operationalErrorsByServer'">Item Returns, OTH and Discounts by Server</span>
     </div>
     <mat-accordion>
-        <mat-expansion-panel expanded="false">
+        <mat-expansion-panel [expanded]="category === 'operational'">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     {{operationalErrorsData.length}}&nbsp;<span [translate]="'day.actionsWorth'">Actions worth</span>&nbsp;{{totalValue | curr:'0'}}

@@ -95,6 +95,22 @@ $matAccordionHeaderColor: #C5CCD4;
   }
 }
 
+.anchor {
+  top: -120px;
+  @media #{$iphone-X-portrait-mq} {
+    top: -1 * ($iphone-X-notch-px + 120px);
+  }
+  @media #{$iphone-6-7-8-portrait-mq} {
+    top: -1 * ($iphone-6-7-8-status-bar-px + 120px);
+  }
+  @media #{$iphone-6-7-8-plus-portrait-mq} {
+    top: -1 * ($iphone-6-7-8-plus-status-bar-px + 120px);
+  }
+  @media #{$ipad-portrait-mq} {
+    top: -1 * ($ipad-status-bar-px + 120px);
+  }
+}
+
 .drill {
   z-index: 10000;
   position: absolute;

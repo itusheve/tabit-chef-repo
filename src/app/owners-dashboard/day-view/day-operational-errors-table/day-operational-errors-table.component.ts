@@ -23,6 +23,7 @@ export class DayOperationalErrorsTableComponent implements OnChanges {
     operational: number;
   }[];
   @Input() lastViewed: number;//last viewed order number
+  @Input() category: string;
 
   @Output() onOrderClicked = new EventEmitter();
 

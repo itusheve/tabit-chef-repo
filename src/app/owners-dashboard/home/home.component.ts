@@ -343,7 +343,9 @@ export class HomeComponent implements OnInit {
             });
     }
 
-    onDayRequest(date: string) {
+    onDayRequest(data) {
+        let date = data.date;
+        let category = data.category;
         if (date === 'currentBD') {
             this.dataService.currentRestTime$.pipe(take(1)).subscribe(cbd => {
                 date = cbd.format('YYYY-MM-DD');
@@ -358,7 +360,7 @@ export class HomeComponent implements OnInit {
                 this.router.navigate(['/owners-dashboard/day', date]);
             });
         } else {
-            this.router.navigate(['/owners-dashboard/day', date]);
+            this.router.navigate(['/owners-dashboard/day', date, {category: data.category}]);
         }
     }
 

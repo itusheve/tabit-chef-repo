@@ -23,7 +23,8 @@ export class DayRetentionTableComponent implements OnChanges {
         reasons: string;
         retention: number;
     }[];
-    @Input() lastViewed: number;//last viewed order number
+    @Input() lastViewed: number;
+    @Input() category: string;
 
     @Output() onOrderClicked = new EventEmitter();
 

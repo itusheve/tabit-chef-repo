@@ -157,8 +157,8 @@ export class MonthViewComponent implements OnInit {
 
     }
 
-    onDateClicked2(date: string) {//TODO ugly..
-        this.onDayRequest.emit(date);
+    onDateClicked(data) {
+        this.onDayRequest.emit(data);
     }
 
     onMonthClicked(event) {
