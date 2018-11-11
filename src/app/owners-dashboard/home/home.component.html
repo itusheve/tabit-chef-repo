@@ -4,10 +4,10 @@
 
 <div class="row">
     <div class="col-sm-12 mb-3" *ngIf="isCurrentMonth()">
-        <app-card [cardData]="currentBdCardData" (click)="onDayRequest('currentBD')" style="cursor: pointer"></app-card>
+        <app-card [cardData]="currentBdCardData" (click)="onDayRequest({date: 'currentBD'})" style="cursor: pointer"></app-card>
     </div>
     <div *ngIf="!loadingOlapData && showPreviousDay && isCurrentMonth()" class="col-sm-12 mb-3">
-        <app-card [cardData]="previousBdCardData" (click)="onDayRequest('previousBD')"
+        <app-card [cardData]="previousBdCardData" (click)="onDayRequest({date: 'previousBD'})"
                   style="cursor: pointer"></app-card>
     </div>
     <div *ngIf="!loadingOlapData && showForecast && isCurrentMonth()" class="col-sm-12 mb-3">
