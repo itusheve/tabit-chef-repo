@@ -153,7 +153,7 @@ export class HomeComponent implements OnInit {
                 this.currentBdCardData.sales = incTax ? totalSales : totalSalesWithoutTax;
 
                 this.translate.get('card.today').subscribe((res: string) => {
-                    this.currentBdCardData.title = res + ', ' + this.datePipe.transform(restaurantTime.valueOf(), 'EEEE MMMM d', '', this.env.lang);
+                    this.currentBdCardData.title = res + ', ' + this.datePipe.transform(restaurantTime.valueOf(), 'EEEE MMMM d', 'GMT', this.env.lang);
                 });
 
                 this.currentBdCardData.averages = {
@@ -282,7 +282,7 @@ export class HomeComponent implements OnInit {
                     }
                 }
 
-                let title = this.datePipe.transform(previousDay.format('YYYY-MM-DD'), 'EEEE MMMM d','', this.env.lang);
+                let title = this.datePipe.transform(previousDay.format('YYYY-MM-DD'), 'EEEE MMMM d','GMT', this.env.lang);
                 this.translate.get('card.yesterday').subscribe((res: string) => {
                     this.previousBdCardData.title = res + ', ' + title;
                 });
