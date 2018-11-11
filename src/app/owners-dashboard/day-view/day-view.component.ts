@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DataService} from '../../../tabit/data/data.service';
 import {Router, ActivatedRoute, ParamMap} from '@angular/router';
 import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
@@ -26,7 +26,7 @@ export interface SalesTableRow {
     templateUrl: './day-view.component.html',
     styleUrls: ['./day-view.component.scss']
 })
-export class DayViewComponent implements OnInit, AfterViewInit {
+export class DayViewComponent implements OnInit {
 
     day: moment.Moment;
     category: string;

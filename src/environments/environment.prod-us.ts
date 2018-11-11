@@ -9,8 +9,8 @@ export const environment = {
         us: 'https://us-ros-rp.tabit.cloud/'
     },
     remoteDatabases: {
-        il: 'https://analytics-dev.tabit.cloud/olapproxy/handler.ashx',
-        us: 'https://analytics-us.tabit.cloud/olapproxy/handler.ashx'
+        il: 'https://analytics-dev.tabit.cloud/chef/handler.ashx',
+        us: 'https://analytics-us.tabit.cloud/chef/handler.ashx'
     },
     olapConfig: {//US PROD CUBE
         baseUrl: 'https://analytics-us.tabit.cloud/olapproxy/proxy.ashx',
