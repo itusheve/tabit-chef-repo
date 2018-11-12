@@ -240,7 +240,9 @@ export class MonthGridComponent implements OnInit {
 
         let amount = this.getDayAmount(day) * 100;
         let normalizedAvg = avg * 100;
-        let percentage = amount.toFixed(1) / normalizedAvg.toFixed(1);
+        amount = +(amount.toFixed(1));
+        normalizedAvg = +(normalizedAvg.toFixed(1));
+        let percentage =  amount / normalizedAvg;
 
         return percentage * 100 || 0;
     }

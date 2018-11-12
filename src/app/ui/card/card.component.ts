@@ -71,7 +71,10 @@ export class CardComponent implements OnInit {
         let normalizedPercentage = percentage * 100;
         let normalizedAvg = (normalizedPercentage - change);
 
-        let calculatedPercentage = normalizedPercentage.toFixed(1) / normalizedAvg.toFixed(1);
+        normalizedPercentage = +(normalizedPercentage.toFixed(1));
+        normalizedAvg = +(normalizedAvg.toFixed(1));
+
+        let calculatedPercentage = normalizedPercentage / normalizedAvg;
 
         if(calculatedPercentage === 0) {
             calculatedPercentage = change;
