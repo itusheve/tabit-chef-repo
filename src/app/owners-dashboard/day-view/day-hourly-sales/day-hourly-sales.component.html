@@ -14,14 +14,14 @@
     <ng-container *ngFor="let day of data">
         <li class="list-group-item py-0" *ngIf="day.salesNetAmount" style="height: 38px;">
             <div class="row flex a-center" style="cursor: pointer">
-                <div class="col-2">
-                    <div style="font-weight: bold">{{day.hour}}</div>
+                <div class="col-3">
+                    <div style="font-weight: bold">{{getHour(day.hour)}}</div>
                     <div style="line-height: 10px;">
                         <span>{{getPercentage(day).toFixed(0)}}%</span>
                     </div>
                 </div>
 
-                <div class="col-8 px-1" style="height: 28px;">
+                <div class="col-7 px-1" style="height: 28px;">
                     <div class="progress rounded-0" style="height: 6px;" [style.width]="outerWidth(day) + '%'">
                         <div class="progress-bar progress-bar-animated rounded-0" role="progressbar"
                              style="width: 100%; background-color: #d6d9dc"></div>

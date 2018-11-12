@@ -77,7 +77,7 @@ export class DayOperationalErrorsTableComponent implements OnChanges {
 
     getCssColorClass() {
         if(this.dayFromDatabase) {
-            return this.tabitHelper.getColorClassByPercentage(this.dayFromDatabase.operationalPrc / this.dayFromDatabase.avgNweeksOperationalPrc * 100, false);
+            return this.tabitHelper.getColorClassByPercentage(this.dayFromDatabase.operationalPrc.toFixed(1) / this.dayFromDatabase.avgNweeksOperationalPrc.toFixed(1) * 100, false);
         }
 
         return 'bg-secondary';

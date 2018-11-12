@@ -544,8 +544,8 @@ export class DayViewComponent implements OnInit {
                     orderNumber: record.orderNumber,
                     tableId: record.tableNumber,
                     item: record.itemName,
-                    subType: record.reasonName,
-                    reasonId: record.reasonSubTypeHebrew,
+                    subType: record.reasonSubTypeHebrew,
+                    reasonId: record.reasonName,
                     operational: record.operationalDiscountAmount,
                     tlogId: record.tlogId
                 });
@@ -560,8 +560,8 @@ export class DayViewComponent implements OnInit {
                     orderNumber: reduction.orderNumber,
                     tableId: reduction.tableNumber,
                     item: reduction.itemName,
-                    subType: reduction.reasonName,
-                    reasonId: reduction.reasonSubTypeHebrew,
+                    subType: reduction.reasonSubTypeHebrew,
+                    reasonId: reduction.reasonName,
                     retention: reduction.retentionDiscountAmount,
                     tlogId: reduction.tlogId
                 });

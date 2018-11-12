@@ -65,7 +65,7 @@ button {
 }
 
 .bg-success-dark {
-  background-color: $darkGreen;
+  background-color: $darkGreen !important;
 }
 
 .text-success-dark {
@@ -73,7 +73,7 @@ button {
 }
 
 .bg-danger-dark {
-  background-color: $darkRed;
+  background-color: $darkRed !important;
 }
 
 .text-danger-dark {

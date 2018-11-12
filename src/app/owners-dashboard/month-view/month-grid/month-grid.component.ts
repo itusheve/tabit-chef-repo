@@ -238,7 +238,11 @@ export class MonthGridComponent implements OnInit {
             return 0;
         }
 
-        return (this.getDayAmount(day) / avg * 100) || 0;
+        let amount = this.getDayAmount(day) * 100;
+        let normalizedAvg = avg * 100;
+        let percentage = amount.toFixed(1) / normalizedAvg.toFixed(1);
+
+        return percentage * 100 || 0;
     }
 
     /**
@@ -286,7 +290,7 @@ export class MonthGridComponent implements OnInit {
             }
         }
 
-        return value;
+        return value || 0;
     }
 
     getAvgValue(day) {
@@ -295,16 +299,22 @@ export class MonthGridComponent implements OnInit {
 
     //new procedures
     outerWidth(record) {
+        let result = 0;
         if(this.category === 'sales') {
-            return record.AvgNweeksSalesAndRefoundAmountIncludeVat / this.maxValuesByCategory['sales'] * 100;
+            result = record.AvgNweeksSalesAndRefoundAmountIncludeVat / this.maxValuesByCategory['sales'] * 100;
         }
         else if(this.category === 'employee') {
-            return record.avgEmployeesAmount / this.maxValuesByCategory['employee'] * 100;
+            result = record.avgEmployeesAmount / this.maxValuesByCategory['employee'] * 100;
         }
         else {
-            let result = this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category] * 100;
-            return result;
+            result = this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category] * 100;
         }
+
+        if(result > 100) {
+            return 100;
+        }
+
+        return result || 0;
     }
 
     innerAndOuterWidth(record) {
@@ -319,6 +329,9 @@ export class MonthGridComponent implements OnInit {
 
 
         if(this.getDayAmount(record) > this.getAvgPeriodValueByCategory(record) && inner > outer) {
+            if(inner > 100) {
+                return 100;
+            }
             return inner;
         }
 

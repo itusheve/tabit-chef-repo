@@ -92,6 +92,26 @@
             [paymentsData]="paymentsData"
         ></app-payments-table>
 
+        <div id="operational" style="position: relative;" class="anchor"></div>
+        <app-operational-errors-table *ngIf="operationalErrorsData"
+                                      class="widget"
+                                      [operationalErrorsData]="operationalErrorsData"
+                                      [lastViewed]="drilledOrderNumber"
+                                      (onOrderClicked)="onOrderClicked_orderNumber($event)"
+                                      [category]="category"
+                                      [dayFromDatabase]="dayFromDatabase"
+        ></app-operational-errors-table>
+
+        <div id="retention" style="position: relative;" class="anchor"></div>
+        <app-retention-table *ngIf="retentionData"
+                             class="widget"
+                             [retentionData]="retentionData"
+                             [lastViewed]="drilledOrderNumber"
+                             (onOrderClicked)="onOrderClicked_orderNumber($event)"
+                             [category]="category"
+                             [dayFromDatabase]="dayFromDatabase"
+        ></app-retention-table>
+
         <app-day-sales-by-sub-department-table
                 class="widget"
                 [bd]="day"
@@ -138,26 +158,6 @@
                 class="widget"
                 [itemsData]="mostReturnedItems"
         ></app-most-returned-items-table>
-
-        <div id="operational" style="position: relative;" class="anchor"></div>
-        <app-operational-errors-table *ngIf="operationalErrorsData"
-                                      class="widget"
-                                      [operationalErrorsData]="operationalErrorsData"
-                                      [lastViewed]="drilledOrderNumber"
-                                      (onOrderClicked)="onOrderClicked_orderNumber($event)"
-                                      [category]="category"
-                                      [dayFromDatabase]="dayFromDatabase"
-        ></app-operational-errors-table>
-
-        <div id="retention" style="position: relative;" class="anchor"></div>
-        <app-retention-table *ngIf="retentionData"
-                             class="widget"
-                             [retentionData]="retentionData"
-                             [lastViewed]="drilledOrderNumber"
-                             (onOrderClicked)="onOrderClicked_orderNumber($event)"
-                             [category]="category"
-                             [dayFromDatabase]="dayFromDatabase"
-        ></app-retention-table>
 
         <app-month-summary-table *ngIf="mtdBusinessData && mtdBusinessData.totals"
                                  class="widget"

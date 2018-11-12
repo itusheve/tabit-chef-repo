@@ -4,7 +4,7 @@
     </div>
     <mat-accordion>
         <mat-expansion-panel [expanded]="category === 'retention'">
-            <mat-expansion-panel-header>
+            <mat-expansion-panel-header [ngClass]="getCssColorClass()">
                 <mat-panel-title>
                     {{retentionData.length}}&nbsp;<span [translate]="'day.actionsWorth'">Actions worth</span>&nbsp;{{totalValue | curr:'0'}}
                 </mat-panel-title>
@@ -24,11 +24,11 @@
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
                         </div>
                     </td>
-                    <td (click)="sort('tableId')">
+                    <td (click)="sort('orderNumber')">
                         <div class="flex a-center">
                             <div>
-                                <span [translate]="'day.table'">Table</span><br>
-                                (<span [translate]="'day.order'">Order</span>)
+                                <span [translate]="'day.order'">Order</span><br />
+                                (<span [translate]="'day.table'">Table</span>)
                             </div>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='asc'">arrow_drop_up</mat-icon>
@@ -71,28 +71,17 @@
                 >
                     <td dir="rtl">{{tuple.waiter}}<span style="font-size: 12px; display: block">{{tuple.approvedBy}}</span></td>
                     <td>
-                        <span *ngIf="tuple.tableId!==''">
-                            {{tuple.tableId}}
-                        </span>
-                        <span *ngIf="tuple.tableId===''" [translate]="tuple.orderType.id"></span>
-                        <br>
                         <span>
-                            ({{tuple.orderNumber}})
+                            {{tuple.orderNumber}}
+                        </span>
+                        <br>
+                        <span *ngIf="tuple.tableId">
+                            ({{tuple.tableId}})
                         </span>
                     </td>
                     <td class="break">{{tuple.item}}</td>
                     <td class="ar">{{tuple.retention | curr:'0'}}</td>
-                    <td [translate]="tuple.subType">{
-                        tuple.subType,
-                        select,
-                        Discounts {Discounts}
-                        OTH {OTH}
-                        Promotions {Promotions}
-                        Returns {Returns}
-                        Voids {Voids}
-                        Unknown {Unknown}
-                        }
-                    </td>
+                    <td [translate]="tuple.subType"></td>
                     <td>{{tuple.reasonId}}</td>
                 </tr>
             </table>

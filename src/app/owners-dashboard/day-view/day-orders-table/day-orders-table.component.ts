@@ -6,6 +6,7 @@ import {DataService, tmpTranslations} from '../../../../tabit/data/data.service'
 
 import * as _ from 'lodash';
 import {environment} from '../../../../environments/environment';
+import * as moment from 'moment';
 
 export interface OrderTypeVM {
     id: string;
@@ -184,4 +185,13 @@ export class DayOrdersTableComponent implements OnChanges {
         this.markOrdersAsFiltered();
     }
 
+    getHour(time) {
+        time = moment(time, 'HH:mm');
+        if(environment.tbtLocale === 'he-IL') {
+            return time.format('HH:mm');
+        }
+        else {
+            return time.format('h:mm A');
+        }
+    }
 }

@@ -48,7 +48,7 @@
                         <!--(click)="openOrderClicked(openOrder)"-->
                         <tr *ngFor="let openOrder of openOrders.orders"
                             [ngClass]="{'lastViewed': lastViewed===openOrder, 'clicked': openOrder.__dayOrdersTable__clicked}">
-                            <td>{{openOrder.openingTime | date:'H:mm'}}</td>
+                            <td>{{getHour(openOrder.openingTime)}}</td>
                             <td>{{openOrder.number | number:'1.0-0'}}</td>
                             <!--<td>{{openOrder.waiter}}</td>-->
                             <td class="ar">{{openOrder.sales | curr:'0'}}</td>
@@ -89,7 +89,7 @@
 
                     <table class="chf-tbl">
                         <tr style="background-color: #f2f2f2;font-weight: bold;">
-                            <td (click)="sort(orderType, 'time')" style="width:50px;">
+                            <td (click)="sort(orderType, 'time')" style="width:55px;">
                                 <div class="flex a-center">
                                     <div [translate]="'dayTable.opened'">Opened</div>
                                     <mat-icon class="sortMatIcon" *ngIf="sortBy==='time' && sortDir==='desc'">
@@ -100,7 +100,7 @@
                                     </mat-icon>
                                 </div>
                             </td>
-                            <td (click)="sort(orderType, 'number')" style="width:55px;">
+                            <td (click)="sort(orderType, 'number')" style="width:65px;">
                                 <div class="flex a-center">
                                     <div [translate]="'dayTable.orderNumber'">Order #</div>
                                     <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='desc'">
@@ -172,7 +172,8 @@
                         </tr>
                         <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)" class="dayReportDataRow"
                             [ngClass]="{'lastViewed': lastViewed===order, 'clicked': order.__dayOrdersTable__clicked}">
-                            <td>{{order.openingTime}}</td>
+                            <td>{{getHour(order.openingTime)}}</td>
+
                             <td>{{order.number | number:'1.0-0'}}</td>
                             <td>{{order.waiter}}</td>
                             <td class="ar">{{order.sales | curr:'0'}}</td>

@@ -50,7 +50,7 @@ export class DayHourlySalesComponent implements OnChanges {
         if(avg === 0) {
             return 0;
         }
-        return this.getDayAmount(day) / avg * 100 || 0;
+        return (this.getDayAmount(day) / avg * 100) || 0;
     }
 
     /**
@@ -90,7 +90,7 @@ export class DayHourlySalesComponent implements OnChanges {
     }
 
     getAvgPeriodValueByCategory(day) {
-        return day.salesNetAmountAvg;
+        return day.salesNetAmountAvg || 0;
     }
 
     getAvgValue(day) {
@@ -99,14 +99,18 @@ export class DayHourlySalesComponent implements OnChanges {
 
     //new procedures
     outerWidth(record) {
-        return record.salesNetAmountAvg / this.maxValue * 100;
+        let width = record.salesNetAmountAvg / this.maxValue * 100;
+        if(width > 100) {
+            return 100;
+        }
+        return width || 0;
     }
 
     innerAndOuterWidth(record) {
         let outer = this.outerWidth(record);
         let inner = record.salesNetAmount / this.maxValue * 100;
 
-        if(record.salesNetAmount > record.salesNetAmountAvg) {
+        if(!record.salesNetAmountAvg || record.salesNetAmount > record.salesNetAmountAvg) {
             return inner;
         }
 
@@ -114,9 +118,18 @@ export class DayHourlySalesComponent implements OnChanges {
     }
 
     progressBarWidth(record) {
-        if(record.salesNetAmount > record.salesNetAmountAvg) {
+        if(!record.salesNetAmountAvg || record.salesNetAmount > record.salesNetAmountAvg) {
             return 100;
         }
         return ((record.salesNetAmount / this.maxValue) / (record.salesNetAmountAvg / this.maxValue)) * 100;
+    }
+
+    getHour(hour) {
+        if(environment.tbtLocale === 'he-IL') {
+            return hour;
+        }
+        else {
+            return moment(hour, 'HH:mm').format('h A');
+        }
     }
 }

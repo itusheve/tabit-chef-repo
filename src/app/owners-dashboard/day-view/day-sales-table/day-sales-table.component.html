@@ -56,6 +56,6 @@
 
     <tr>
         <td [translate]="'day.ppa'">PPA</td>
-        <td class="ar" *ngFor="let val of pivotedData.ppa">{{val | curr:'2':'':'':true}}</td>
+        <td class="ar" *ngFor="let val of pivotedData.ppa">{{val | curr:'2':'':'nullify':true}}</td>
     </tr>
 </table>

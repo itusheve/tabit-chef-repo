@@ -112,7 +112,7 @@ export class DaySalesTableComponent implements OnChanges {
                     this.totals.grossSales += grossSales;
                     this.totals.tip += tip;
                     this.totals.serviceCharge += serviceCharge;
-                    this.totals.diners += row.dinersOrders || 0;
+                    this.totals.diners = '';
                     this.totals.totalSales += totalSales || 0;
                 }
             });
@@ -134,7 +134,7 @@ export class DaySalesTableComponent implements OnChanges {
             this.pivotedData.diners.splice(0, 0, this.totals.diners);
             this.pivotedData.totalSales.splice(0, 0, this.totals.totalSales);
 
-            this.totals.ppa = this.totals.netSales.amount / this.totals.diners;
+            this.totals.ppa = 0;
             this.pivotedData.ppa.splice(0, 0, this.totals.ppa);
 
             _.forEach(this.pivotedData.netSales, netSales => {

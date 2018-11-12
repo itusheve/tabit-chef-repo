@@ -79,7 +79,7 @@ export class DayRetentionTableComponent implements OnChanges {
 
     getCssColorClass() {
         if(this.dayFromDatabase) {
-            return this.tabitHelper.getColorClassByPercentage(this.dayFromDatabase.mrPrc / this.dayFromDatabase.avgNweeksMrPrc * 100, false);
+            return this.tabitHelper.getColorClassByPercentage(this.dayFromDatabase.mrPrc.toFixed(1) / this.dayFromDatabase.avgNweeksMrPrc.toFixed(1) * 100, false);
         }
 
         return 'bg-secondary';
