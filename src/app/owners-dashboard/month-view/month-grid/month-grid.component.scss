@@ -1,9 +1,9 @@
 @import "../../../../../src/tabit/styles/config/colors";
 
-/deep/.month-grid {
-    .dx-datagrid .dx-row.dx-header-row > td, .dx-datagrid .dx-row.dx-data-row > td {
-        font-size: 14px;
-    }
+/deep/ .month-grid {
+  .dx-datagrid .dx-row.dx-header-row > td, .dx-datagrid .dx-row.dx-data-row > td {
+    font-size: 14px;
+  }
 }
 
 .progress {
@@ -94,54 +94,58 @@
 
     .month-grid-holiday {
       font-size: 13px;
-      position:relative;
-      top:-14px;
+      position: relative;
+      top: -14px;
       line-height: 10px;
     }
   }
 }
 
 .trend {
-    transform: scale(0.7);//scaling compared to the card trend components
+  transform: scale(0.7); //scaling compared to the card trend components
 
-    .figure {
-        font-size: 16px;
-        line-height: 0.8;
+  .figure {
+    font-size: 16px;
+    line-height: 0.8;
+  }
+
+  .label {
+    line-height: 1;
+    mat-icon {
+      font-size: 30px;
     }
+    .letter {
+      font-size: 15px;
+    }
+  }
 
+  &.up {
     .label {
-        line-height: 1;
-        mat-icon {
-            font-size: 30px;
-        }
-        .letter {
-            font-size: 15px;
-        }
+      color: #30e430;
+      text-shadow: #eeffee 0px 0px 2px;
+      .letter {
+        transform: translateX(-3px) translateY(4px);
+      }
+      mat-icon {
+        transform: rotateZ(-90deg) translateY(-3px) translateX(-6px);
+      }
     }
+  }
+  &.down {
+    .label {
+      color: #ff2121;
+      text-shadow: #f48f8f 0px 0px 2px;
+      order: 2;
+      .letter {
+        transform: translateX(-1px) translateY(2px);
+      }
+      mat-icon {
+        transform: rotateZ(90deg) translateY(-4px) translateX(-6px);
+      }
+    }
+  }
+}
 
-    &.up {
-        .label {
-            color: #30e430;
-            text-shadow: #eeffee 0px 0px 2px;
-            .letter {
-                transform: translateX(-3px) translateY(4px);
-            }
-            mat-icon {
-                transform: rotateZ(-90deg) translateY(-3px) translateX(-6px);
-            }
-        }
-    }
-    &.down {
-        .label {
-            color: #ff2121;
-            text-shadow: #f48f8f 0px 0px 2px;
-            order: 2;
-            .letter {
-                transform: translateX(-1px) translateY(2px);
-            }
-            mat-icon {
-                transform: rotateZ(90deg) translateY(-4px) translateX(-6px);
-            }
-        }
-    }
+.one-word-per-line {
+  word-spacing: 30px;
 }

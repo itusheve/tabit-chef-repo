@@ -186,7 +186,7 @@ export class DayOrdersTableComponent implements OnChanges {
     }
 
     getHour(time) {
-        time = moment(time, 'HH:mm');
+        time = moment.utc(time);
         if(environment.tbtLocale === 'he-IL') {
             return time.format('HH:mm');
         }

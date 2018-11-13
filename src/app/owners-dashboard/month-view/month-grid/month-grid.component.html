@@ -66,8 +66,8 @@
                 [ngClass]="{active: isActive(day)}" (click)="select(day)">
                 <div class="row flex a-center py-0 month-grid-line-content">
                     <div class="col-3 px-1" style="max-width: 17% !important; font-weight: 700">
-                        <div *ngIf="environment.lang === 'he'">{{day.businessDate | date: 'dd'}} {{day.businessDate | date: 'EEEEEE': '': environment.tbtLocale}}</div>
-                        <div *ngIf="environment.lang !== 'he'">{{day.businessDate | date: 'dd'}} {{day.businessDate | date: 'EEE': '': environment.tbtLocale}}</div>
+                        <span *ngIf="environment.lang === 'he'">{{day.businessDate | date: 'dd'}} {{day.businessDate | date: 'EEEEEE': '': environment.tbtLocale}}</span>
+                        <span *ngIf="environment.lang !== 'he'" class="one-word-per-line">{{day.businessDate | date: 'dd'}} {{day.businessDate | date: 'EEE': '': environment.tbtLocale}}</span>
                     </div>
                     <div class="col-8 px-1" style="max-width: 60% !important;">
 
