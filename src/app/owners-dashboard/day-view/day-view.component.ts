@@ -539,9 +539,10 @@ export class DayViewComponent implements OnInit {
 
             this.operationalErrorsData = [];
             _.forEach(dailyReport.operational, record => {
+                let order = _.find(this.orders, {tlogId: record.tlogId});
                 this.operationalErrorsData.push({
                     orderType: {id: record.orderType, rank: 1},
-                    waiter: record.reducedByName,
+                    waiter: order.waiter,
                     approvedBy: record.approvedByName,
                     orderNumber: record.orderNumber,
                     tableId: record.tableNumber,
@@ -555,9 +556,10 @@ export class DayViewComponent implements OnInit {
 
             this.retentionData = [];
             _.forEach(dailyReport.reduction, reduction => {
+                let order = _.find(this.orders, {tlogId: reduction.tlogId});
                 this.retentionData.push({
                     orderType: {id: reduction.orderType, rank: 1},
-                    waiter: reduction.reducedByName,
+                    waiter: order.waiter,
                     approvedBy: reduction.approvedByName,
                     orderNumber: reduction.orderNumber,
                     tableId: reduction.tableNumber,

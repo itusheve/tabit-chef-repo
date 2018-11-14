@@ -40,7 +40,7 @@
                                 <li class="list-group-item mb-2 p-0" style="height: 62px;" (click)="selectOrg(org)"
                                     [ngClass]="{'active': org===selectedOrg}">
                                         <span><img style="width: 60px; height: 60px; object-fit:contain;"
-                                                   src="{{org.smallLogo.url}}"/></span><span class="mx-2"
+                                                   src="{{org.smallLogo?.url}}"/></span><span class="mx-2"
                                                                                              style="font-size: 20px;">{{org.name}}</span>
                                 </li>
                             </ng-container>
