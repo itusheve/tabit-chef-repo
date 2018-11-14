@@ -57,12 +57,24 @@ export class HomeComponent implements OnInit {
         type: 'forecast'
     };
 
+    summaryCardData: CardData = {
+        loading: true,
+        title: '',
+        tag: '',
+        sales: 0,
+        diners: 0,
+        ppa: 0,
+        ppaOrders: 0,
+        aggregations: {}
+    };
+
     private previousBdNotFinal = false;
     public showPreviousDay = false;
     public tabitHelper;
     public loadingOlapData: boolean;
     public OlapFailed: boolean;
     public olapError: any;
+    public showSummary: boolean;
     private env: any;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
@@ -84,7 +96,7 @@ export class HomeComponent implements OnInit {
     ngOnInit() {
         this.loadingOlapData = true;
         this.currentBdCardData.loading = true;
-
+        this.showSummary = false;
         this.ownersDashboardService.toolbarConfig.home.show = false;
 
         this.OlapFailed = false;
@@ -96,6 +108,7 @@ export class HomeComponent implements OnInit {
         this.getTodayOlapData();
         this.getYesterdayData();
         this.getForecastData();
+        this.getSummary();
     }
 
     initRefreshSubscriber(): void {
@@ -356,6 +369,77 @@ export class HomeComponent implements OnInit {
                     let value = (month.forecast.sales.amount / previousMonth.forecast.sales.amount) * 100;
                     this.forecastCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }
+            });
+    }
+
+    getSummary() {
+        combineLatest(this.dataService.selectedMonth$, this.dataService.currentRestTime$, this.dataService.databaseV2$, this.dataService.vat$)
+            .subscribe(data => {
+                let date = data[0];
+                let currentBd = data[1];
+                let database = data[2];
+                let incTax = data[3];
+
+                let month = database.getMonth(date);
+                if (!month) {
+                    this.showSummary = false;
+                    return;
+                }
+                let previousMonth = database.getMonth(moment(month.latestDay).subtract(1, 'months'));
+
+                this.showSummary = true;
+                this.summaryCardData.diners = month.diners || month.orders;
+                this.summaryCardData.sales = incTax ? month.ttlsalesIncludeVat : month.ttlsalesExcludeVat;
+
+                this.summaryCardData.ppa = incTax ? month.ppaIncludeVat : month.ppaIncludeVat / month.vat;
+                this.summaryCardData.ppaOrders = this.summaryCardData.sales / month.orders;
+
+                this.summaryCardData.showDrillArrow = true;
+
+
+                this.summaryCardData.averages = {
+                    /*yearly: {
+                        percentage: month.aggregations.sales.lastYearWeekAvg ? ((month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1) : 0,
+                        change: month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg
+                    },*/
+                    weekly: {
+                        percentage: previousMonth && previousMonth.weekAvg ? ((month.weekAvg / previousMonth.weekAvg) - 1) : 0,
+                        change: previousMonth ? (month.weekAvg / previousMonth.weekAvg) * 100 : 0
+                    }
+                };
+
+                let monthName = this.datePipe.transform(date, 'MMMM', '', this.env.lang);
+                let monthState = moment().month() === date.month() ? tmpTranslations.get('home.month.notFinalTitle') : tmpTranslations.get('home.month.finalTitle');
+                this.summaryCardData.title = monthName + ' ' +  monthState;
+
+                this.summaryCardData.reductions = {
+                    cancellations: {
+                        percentage: month.prcVoidsAmount / 100,
+                        change: previousMonth ? (month.prcVoidsAmount - previousMonth.prcVoidsAmount) : 0
+                    },
+                    employee: {
+                        percentage: month.prcEmployeesAmount / 100,
+                        change: previousMonth ? (month.prcEmployeesAmount - previousMonth.prcEmployeesAmount) : 0
+                    },
+                    operational: {
+                        percentage: month.prcOperationalAmount / 100,
+                        change: previousMonth ? (month.prcOperationalAmount - previousMonth.prcOperationalAmount) : 0
+                    },
+                    retention: {
+                        percentage: month.prcMrAmount / 100,
+                        change: previousMonth ? (month.prcMrAmount - previousMonth.prcMrAmount) : 0
+                    }
+                };
+
+                if (this.summaryCardData.averages.weekly.percentage) {
+                    let value = previousMonth ? (month.weekAvg / previousMonth.weekAvg) * 100 : 0;
+                    this.summaryCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
+                }
+                else {
+                    this.summaryCardData.statusClass = '';
+                }
+
+                this.summaryCardData.loading = false;
             });
     }
 

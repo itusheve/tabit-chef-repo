@@ -8,9 +8,11 @@
         <div class="flex a-center" style="color:white">
             <div>{{ownersDashboardService.toolbarConfig.center.caption}}</div>
         </div>
-        <div *ngIf="!incTax && env.region === 'il'" style="color:white;font-size:12px;">(<span [translate]="'menu.excludingVAT'">Data excluding VAT</span>)
+        <div *ngIf="!incTax && env.region === 'il'" style="color:white;font-size:12px;">(<span
+                [translate]="'menu.excludingVAT'">Data excluding VAT</span>)
         </div>
-        <div *ngIf="incTax && env.region === 'il'" style="color:white;font-size:12px;">(<span [translate]="'menu.includingVAT'">Data including VAT</span>)
+        <div *ngIf="incTax && env.region === 'il'" style="color:white;font-size:12px;">(<span
+                [translate]="'menu.includingVAT'">Data including VAT</span>)
         </div>
     </div>
     <div class="flex j-end pe15" style="width:15%">
@@ -24,8 +26,13 @@
 <div class="dialog-content-fixed">
     <div class="dialog-content">
         <div class="month-picker-dialog">
-            <div class="col mb-3 p-0" *ngFor="let month of months">
-                <app-card (click)="select($event, month)" [cardData]="month.summary" class="picker-card-container" style="cursor: pointer"></app-card>
+            <div class="container p-0 m-0">
+                <div class="row">
+                    <div *ngFor="let month of months" class="col-sm-12 col-md-6 mb-3">
+                        <app-card (click)="select($event, month)" [cardData]="month.summary" class="picker-card-container"
+                                  style="cursor: pointer"></app-card>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
