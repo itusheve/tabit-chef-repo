@@ -185,7 +185,17 @@ export class DayOrdersTableComponent implements OnChanges {
         this.markOrdersAsFiltered();
     }
 
-    getHour(time) {
+    getClosedOrderHour(time) {
+        time = moment.utc(time, 'HH:mm');
+        if(environment.tbtLocale === 'he-IL') {
+            return time.format('HH:mm');
+        }
+        else {
+            return time.format('h:mm A');
+        }
+    }
+
+    getOpenOrderHour(time) {
         time = moment.utc(time);
         if(environment.tbtLocale === 'he-IL') {
             return time.format('HH:mm');

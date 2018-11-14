@@ -42,6 +42,7 @@ export class MonthViewComponent implements OnInit {
         sales: 0,
         diners: 0,
         ppa: 0,
+        ppaOrders: 0,
         aggregations: {}
     };
 
@@ -89,9 +90,13 @@ export class MonthViewComponent implements OnInit {
 
         this.showSummary = true;
         this.summaryCardData.diners = month.diners || month.orders;
-        this.summaryCardData.ppa = incTax ? month.ppaIncludeVat : month.ppaIncludeVat / month.vat;
         this.summaryCardData.sales = incTax ? month.ttlsalesIncludeVat : month.ttlsalesExcludeVat;
+
+        this.summaryCardData.ppa = incTax ? month.ppaIncludeVat : month.ppaIncludeVat / month.vat;
+        this.summaryCardData.ppaOrders = this.summaryCardData.sales / month.orders;
+
         this.summaryCardData.showDrillArrow = true;
+
 
         this.summaryCardData.averages = {
             /*yearly: {

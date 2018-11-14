@@ -166,6 +166,7 @@ export class DayViewComponent implements OnInit {
         sales: 0,
         diners: 0,
         ppa: 0,
+        ppaOrders: 0,
         aggregations: {},
     };
 
@@ -194,7 +195,7 @@ export class DayViewComponent implements OnInit {
         ownersDashboardService.toolbarConfig.left.back.showBtn = true;
         ownersDashboardService.toolbarConfig.menuBtn.show = false;
         ownersDashboardService.toolbarConfig.settings.show = false;
-        ownersDashboardService.toolbarConfig.center.showVatComment = environment.region === 'il';
+        ownersDashboardService.toolbarConfig.center.showVatComment = false;
         ownersDashboardService.toolbarConfig.home.show = true;
         this.region = environment.region;
         this.env = environment;
@@ -296,6 +297,7 @@ export class DayViewComponent implements OnInit {
 
                     this.cardData.diners = this.dayFromDatabase.diners || this.dayFromDatabase.orders;
                     this.cardData.ppa = this.dayFromDatabase.ppaIncludeVat;
+                    this.cardData.ppaOrders = this.cardData.sales / this.dayFromDatabase.orders;
 
                     this.cardData.reductions = {
                         cancellations: {

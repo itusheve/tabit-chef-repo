@@ -10,6 +10,7 @@ export interface CardData {
     sales: number;
     diners: number;
     ppa: number;
+    ppaOrders: number;
     trends?: any;
     salesComment?: string;
     aggregations?: any;

@@ -48,7 +48,7 @@
                         <!--(click)="openOrderClicked(openOrder)"-->
                         <tr *ngFor="let openOrder of openOrders.orders"
                             [ngClass]="{'lastViewed': lastViewed===openOrder, 'clicked': openOrder.__dayOrdersTable__clicked}">
-                            <td>{{getHour(openOrder.openingTime)}}</td>
+                            <td>{{getOpenOrderHour(openOrder.openingTime)}}</td>
                             <td>{{openOrder.number | number:'1.0-0'}}</td>
                             <!--<td>{{openOrder.waiter}}</td>-->
                             <td class="ar">{{openOrder.sales | curr:'0'}}</td>
@@ -172,7 +172,7 @@
                         </tr>
                         <tr *ngFor="let order of orderType.orders | filterr" (click)="orderClicked(order)" class="dayReportDataRow"
                             [ngClass]="{'lastViewed': lastViewed===order, 'clicked': order.__dayOrdersTable__clicked}">
-                            <td>{{getHour(order.openingTime)}}</td>
+                            <td>{{getClosedOrderHour(order.openingTime)}}</td>
 
                             <td>{{order.number | number:'1.0-0'}}</td>
                             <td>{{order.waiter}}</td>

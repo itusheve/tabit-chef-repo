@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
         sales: 0,
         diners: 0,
         ppa: 0,
+        ppaOrders: 0,
         aggregations: {},
     };
 
@@ -39,6 +40,7 @@ export class HomeComponent implements OnInit {
         sales: 0,
         diners: 0,
         ppa: 0,
+        ppaOrders: 0,
         aggregations: {},
     };
 
@@ -50,6 +52,7 @@ export class HomeComponent implements OnInit {
         sales: 0,
         diners: 0,
         ppa: 0,
+        ppaOrders: 0,
         aggregations: {},
         type: 'forecast'
     };
@@ -75,11 +78,14 @@ export class HomeComponent implements OnInit {
         ownersDashboardService.toolbarConfig.menuBtn.show = true;
         ownersDashboardService.toolbarConfig.settings.show = true;
         ownersDashboardService.toolbarConfig.center.showVatComment = environment.region === 'il';
+        ownersDashboardService.toolbarConfig.home.show = false;
     }
 
     ngOnInit() {
         this.loadingOlapData = true;
         this.currentBdCardData.loading = true;
+
+        this.ownersDashboardService.toolbarConfig.home.show = false;
 
         this.OlapFailed = false;
         this.showForecast = false;
@@ -192,6 +198,7 @@ export class HomeComponent implements OnInit {
 
                 this.currentBdCardData.diners = day.diners || day.orders;
                 this.currentBdCardData.ppa = incTax ? day.ppaIncludeVat : day.ppaIncludeVat / day.vat;
+                this.currentBdCardData.ppaOrders = this.currentBdCardData.sales / day.orders;
 
                 this.currentBdCardData.reductions = {
                     cancellations: {
@@ -246,6 +253,9 @@ export class HomeComponent implements OnInit {
                     this.previousBdCardData.diners = day.diners || day.orders;
                     this.previousBdCardData.ppa = incVat ? day.ppaIncludeVat : day.ppaIncludeVat / day.vat;
                     this.previousBdCardData.sales = incVat ? day.salesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountExcludeVat;
+
+                    this.previousBdCardData.ppaOrders = this.previousBdCardData.sales / day.orders;
+
                     this.previousBdCardData.averages = {
                         /*yearly: {
                             percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
@@ -323,8 +333,14 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.diners = month.forecast.diners.count || month.forecast.orders.count;
                 this.forecastCardData.sales = incTax ? month.forecast.sales.amount : month.forecast.sales.amountWithoutVat;
 
-                let ppa = this.forecastCardData.sales / this.forecastCardData.diners;
-                this.forecastCardData.ppa = incTax ? ppa : ppa / month.vat;
+                if(month.forecast.diners.count) {
+                    let ppa = this.forecastCardData.sales / month.forecast.diners.count;
+                    this.forecastCardData.ppa = incTax ? ppa : ppa / month.vat;
+                }
+                else {
+                    let ppaOrders = this.forecastCardData.sales / month.forecast.orders.count;
+                    this.forecastCardData.ppaOrders = incTax ? ppaOrders : ppaOrders / month.vat;
+                }
 
                 this.forecastCardData.loading = false;
                 this.forecastCardData.noSeparator = true;
