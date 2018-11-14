@@ -671,7 +671,7 @@ export class DataService {
                         }
                         else {
                             month.forecast.sales.amount += day.AvgNweeksSalesAndRefoundAmountIncludeVat;
-                            month.forecast.sales.amountWithoutVat += day.AvgNweeksSalesAndRefoundAmountIncludeVat;
+                            month.forecast.sales.amountWithoutVat += day.AvgNweeksSalesAndRefoundAmountExcludeVat;
                         }
 
                         month.forecast.diners.count += day.diners;
@@ -698,6 +698,8 @@ export class DataService {
                     let endOfMonth = moment(month.days[0].businessDate).endOf('month');
                     if (currentDate.isSame(endOfMonth, 'month')) {
                         let datePointer = moment();
+                        datePointer.add(1, 'days');
+
                         while (datePointer.isSameOrBefore(endOfMonth, 'day')) {
                             let weekday = datePointer.weekday();
 
