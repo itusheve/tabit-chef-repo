@@ -391,9 +391,9 @@ export class DataService {
     public organization$: Observable<any> = Observable.create(obs => {
         let org = JSON.parse(window.localStorage.getItem('org'));
 
-        if(org && org.region.toLowerCase() === 'us') {
+        if (org && org.region.toLowerCase() === 'us') {
             this.vat$.next(true);
-            if(org.timezone) {
+            if (org.timezone) {
                 this.timezone = org.timezone;
             }
 
@@ -405,7 +405,7 @@ export class DataService {
     public user$: Observable<any> = Observable.create(obs => {
         let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
 
-        if(!_.isEmpty(userSettings[environment.region])) {
+        if (!_.isEmpty(userSettings[environment.region])) {
             obs.next(userSettings[environment.region]);
         }
     });
@@ -580,7 +580,7 @@ export class DataService {
     public databaseV2$: Observable<any> = Observable.create(async obs => {
         combineLatest(this.olapYearlyDataV2$, this.calendar$).subscribe(async streamData => {
             let org = JSON.parse(window.localStorage.getItem('org'));
-            if(!org) {
+            if (!org) {
                 return;
             }
             let olapYearlyData = _.cloneDeep(streamData[0]);
@@ -687,18 +687,53 @@ export class DataService {
                             orders: {count: 0}
                         };
                     }
-                    month.aggregations.days[weekday].count += 1;
-                    month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountIncludeVat;
-                    month.aggregations.days[weekday].sales.amountWithoutVat += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat / day.vat : day.salesAndRefoundAmountIncludeVat / day.vat;
-                    month.aggregations.days[weekday].diners.count += day.diners || 0;
-                    month.aggregations.days[weekday].orders.count += day.orders || 0;
+
+                    if(day.isExcluded) {
+                        console.log(day.businessDate);
+                    }
+                    if(month.aggregations.days[weekday].count < 4 && !moment(day.businessDate).isSame(currentDate, 'day') && !day.isExcluded) {
+                        month.aggregations.days[weekday].count += 1;
+                        month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountIncludeVat;
+                        month.aggregations.days[weekday].sales.amountWithoutVat += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat / day.vat : day.salesAndRefoundAmountIncludeVat / day.vat;
+                        month.aggregations.days[weekday].diners.count += day.diners || 0;
+                        month.aggregations.days[weekday].orders.count += day.orders || 0;
+                    }
                 });
+
+                _.forEach(month.aggregations.days, (data, weekday) => {
+                    let monthDate = month.latestDay;
+                    let dayCounter = _.clone(data.count);
+                    while(dayCounter < 4) {
+                        let previousMonth = database[moment(monthDate).subtract(1, 'months').format('YYYYMM')];
+                        let days = _.get(previousMonth, 'days');
+                        if(!_.isEmpty(days)) {
+                            _.forEach(days, day => {
+                                let previousWeekday = moment(day.businessDate).weekday();
+                                if(day.isExcluded) {
+                                    console.log(day.businessDate);
+                                }
+                                if(previousWeekday === weekday && dayCounter < 4 && !day.isExcluded) {
+                                    dayCounter++;
+                                    month.aggregations.days[weekday].count += 1;
+                                    month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountIncludeVat;
+                                    month.aggregations.days[weekday].sales.amountWithoutVat += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat / day.vat : day.salesAndRefoundAmountIncludeVat / day.vat;
+                                    month.aggregations.days[weekday].diners.count += day.diners || 0;
+                                    month.aggregations.days[weekday].orders.count += day.orders || 0;
+                                }
+                            });
+                            monthDate = previousMonth.latestDay;
+                        }
+                        else {
+                            dayCounter = 5;
+                        }
+                    }
+                });
+
 
                 if (month.days && month.days.length) {
                     let endOfMonth = moment(month.days[0].businessDate).endOf('month');
                     if (currentDate.isSame(endOfMonth, 'month')) {
                         let datePointer = moment();
-                        datePointer.add(1, 'days');
 
                         while (datePointer.isSameOrBefore(endOfMonth, 'day')) {
                             let weekday = datePointer.weekday();
@@ -733,8 +768,7 @@ export class DataService {
         refCount()
     );
 
-
-    public database$: Observable<any> = Observable.create(async obs => {
+    /*public database$: Observable<any> = Observable.create(async obs => {
         combineLatest(this.olapYearlyData$, this.calendar$).subscribe(async streamData => {
             let org = JSON.parse(window.localStorage.getItem('org'));
             let olapYearlyData = _.cloneDeep(streamData[0]);
@@ -1375,6 +1409,7 @@ export class DataService {
 
                 if (month.days && month.days.length) {
                     let endOfMonth = moment(month.days[0].date).endOf('month');
+                    currentDate.add(1, 'days');
                     if (currentDate.isSame(endOfMonth, 'month')) {
                         while (currentDate.isSameOrBefore(endOfMonth, 'day')) {
                             let weekday = currentDate.weekday();
@@ -1402,7 +1437,6 @@ export class DataService {
                                     }
                                 }
                             }
-
                             currentDate.add(1, 'days');
                         }
                     }
@@ -1504,7 +1538,7 @@ export class DataService {
     }).pipe(
         publishReplay(1),
         refCount()
-    );
+    );*/
 
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService, private logz: LogzioService, private translate: TranslateService) {
         let settings = JSON.parse(window.localStorage.getItem('settings'));
@@ -1515,7 +1549,7 @@ export class DataService {
             };
         }
 
-        if(settings.lang !== 'he' && settings.lang !== 'en') {
+        if (settings.lang !== 'he' && settings.lang !== 'en') {
             settings.lang = 'en';
         }
         this.settings$.next(settings);
@@ -1709,10 +1743,10 @@ export class DataService {
         let orgs = [];
 
         this.organizations = [];
-        for(let region of _.keys(tokens)) {
+        for (let region of _.keys(tokens)) {
             let response = await this.rosEp.get('organizations', {}, region);
             _.forEach(response, org => {
-                if(org.active && org.live && org.name.indexOf('HQ') === -1 && org.name.toUpperCase() !== 'TABIT') {
+                if (org.active && org.live && org.name.indexOf('HQ') === -1 && org.name.toUpperCase() !== 'TABIT') {
                     org.region = region;
                     this.organizations.push(org);
                 }

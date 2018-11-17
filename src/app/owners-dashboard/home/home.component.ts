@@ -165,7 +165,7 @@ export class HomeComponent implements OnInit {
                     endOfDayComment = res;
                 });
 
-                if (restaurantTime.format('YYYYMMDD') !== moment().format('YYYYMMDD')) {
+                if (restaurantTime.format('YYYYMMDD') !== moment().utc().format('YYYYMMDD')) {
                     this.currentBdCardData.salesComment = endOfDayComment;
                 }
 
@@ -200,10 +200,11 @@ export class HomeComponent implements OnInit {
     }
 
     getTodayOlapData(): void {
-        combineLatest(this.dataService.databaseV2$, this.dataService.vat$).subscribe(data => {
+        combineLatest(this.dataService.databaseV2$, this.dataService.vat$, this.dataService.dailyTotals$).subscribe(data => {
             let database = data[0];
             let incTax = data[1];
-            let restaurantTime = this.dataService.getCurrentRestTime();
+            let dailyTotals = data[2];
+            let restaurantTime = moment.utc(dailyTotals.businessDate);
 
             let day = database.getDay(restaurantTime);
             if (day) {
