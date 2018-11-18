@@ -438,15 +438,10 @@ export class DataService {
 
     public dailyTotals$: Observable<any> = Observable.create(obs => {
         this.refresh$
-            .subscribe(refresh => {
+            .subscribe(async refresh => {
                 let currentRestTime = this.getCurrentRestTime();
-                const params = {
-                    businessDate: currentRestTime.format('YYYY-MM-DD')
-                };
-                this.rosEp.get('reports/daily-totals', params)
-                    .then(data => {
-                        obs.next(data);
-                    });
+                let dailyTotals = await this.getDailyTotals(currentRestTime);
+                obs.next(dailyTotals);
             });
     }).pipe(
         publishReplay(1),
@@ -682,15 +677,12 @@ export class DataService {
                     if (!month.aggregations.days[weekday]) {
                         month.aggregations.days[weekday] = {
                             count: 0,
-                            sales: {amount: 0, amountWithoutVat: 0},
+                            sales: {amount: 0, amountWithoutVat: 0, avg: 0, avgWithoutVat: 0},
                             diners: {count: 0},
                             orders: {count: 0}
                         };
                     }
 
-                    if(day.isExcluded) {
-                        console.log(day.businessDate);
-                    }
                     if(month.aggregations.days[weekday].count < 4 && !moment(day.businessDate).isSame(currentDate, 'day') && !day.isExcluded) {
                         month.aggregations.days[weekday].count += 1;
                         month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountIncludeVat;
@@ -701,31 +693,33 @@ export class DataService {
                 });
 
                 _.forEach(month.aggregations.days, (data, weekday) => {
-                    let monthDate = month.latestDay;
-                    let dayCounter = _.clone(data.count);
-                    while(dayCounter < 4) {
-                        let previousMonth = database[moment(monthDate).subtract(1, 'months').format('YYYYMM')];
-                        let days = _.get(previousMonth, 'days');
-                        if(!_.isEmpty(days)) {
-                            _.forEach(days, day => {
-                                let previousWeekday = moment(day.businessDate).weekday();
-                                if(day.isExcluded) {
-                                    console.log(day.businessDate);
-                                }
-                                if(previousWeekday === weekday && dayCounter < 4 && !day.isExcluded) {
-                                    dayCounter++;
-                                    month.aggregations.days[weekday].count += 1;
-                                    month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountIncludeVat;
-                                    month.aggregations.days[weekday].sales.amountWithoutVat += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat / day.vat : day.salesAndRefoundAmountIncludeVat / day.vat;
-                                    month.aggregations.days[weekday].diners.count += day.diners || 0;
-                                    month.aggregations.days[weekday].orders.count += day.orders || 0;
-                                }
-                            });
-                            monthDate = previousMonth.latestDay;
+                    if(data) {
+                        let monthDate = month.latestDay;
+                        let dayCounter = _.clone(data.count);
+                        while(dayCounter < 4) {
+                            let previousMonth = database[moment(monthDate).subtract(1, 'months').format('YYYYMM')];
+                            let days = _.get(previousMonth, 'days');
+                            if(!_.isEmpty(days)) {
+                                _.forEach(days, day => {
+                                    let previousWeekday = moment(day.businessDate).weekday();
+                                    if(previousWeekday === weekday && dayCounter < 4 && !day.isExcluded) {
+                                        dayCounter++;
+                                        month.aggregations.days[weekday].count += 1;
+                                        month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountIncludeVat;
+                                        month.aggregations.days[weekday].sales.amountWithoutVat += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat / day.vat : day.salesAndRefoundAmountIncludeVat / day.vat;
+                                        month.aggregations.days[weekday].diners.count += day.diners || 0;
+                                        month.aggregations.days[weekday].orders.count += day.orders || 0;
+                                    }
+                                });
+                                monthDate = previousMonth.latestDay;
+                            }
+                            else {
+                                dayCounter = 5;
+                            }
                         }
-                        else {
-                            dayCounter = 5;
-                        }
+
+                        data.sales.avg = month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count;
+                        data.sales.avgWithoutVat = month.aggregations.days[weekday].sales.amountWithoutVat / month.aggregations.days[weekday].count;
                     }
                 });
 
@@ -1642,6 +1636,16 @@ export class DataService {
         };
 
         return this.rosEp.get('orders', params);
+    }
+
+    getDailyTotals(date) {
+        const params = {
+            businessDate: date.format('YYYY-MM-DD')
+        };
+        return this.rosEp.get('reports/daily-totals', params)
+            .then(data => {
+                return data;
+            });
     }
 
     async getDailySalesByHours(day: moment.Moment) {

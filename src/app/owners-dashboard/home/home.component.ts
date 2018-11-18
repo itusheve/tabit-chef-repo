@@ -143,7 +143,7 @@ export class HomeComponent implements OnInit {
 
     getTodayData(): void {
         combineLatest(this.dataService.dailyTotals$, this.dataService.olapToday$, this.dataService.vat$)
-            .subscribe(data => {
+            .subscribe(async data => {
                 let dailyTotals = data[0];
                 let day = data[1];
                 let incTax = data[2];
@@ -165,7 +165,9 @@ export class HomeComponent implements OnInit {
                     endOfDayComment = res;
                 });
 
-                if (restaurantTime.format('YYYYMMDD') !== moment().utc().format('YYYYMMDD')) {
+                let yesterdayDate = moment.utc(dailyTotals.businessDate).subtract(1, 'day');
+                let yesterdayDailyTotals = await this.dataService.getDailyTotals(yesterdayDate);
+                if (!yesterdayDailyTotals.isEndOfDay) {
                     this.currentBdCardData.salesComment = endOfDayComment;
                 }
 
