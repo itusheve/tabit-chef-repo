@@ -405,7 +405,7 @@ export class DataService {
     public user$: Observable<any> = Observable.create(obs => {
         let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
 
-        if (!_.isEmpty(userSettings[environment.region])) {
+        if (userSettings && !_.isEmpty(userSettings[environment.region])) {
             obs.next(userSettings[environment.region]);
         }
     });

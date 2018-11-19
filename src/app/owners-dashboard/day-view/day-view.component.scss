@@ -13,54 +13,24 @@ $matAccordionHeaderColor: #C5CCD4;
   line-height: 14px;
 }
 
-.mat-expanded:not(.mat-expansion-panel-spacing):not(.mat-expansion-panel-content):not(mat-expansion-panel-header) {
-  margin: 12px 0;
-}
-
 ::ng-deep.mat-expansion-panel {
   border-radius: 0px !important;
 
-  ::ng-deep.mat-expansion-panel-header {
+  .mat-expansion-panel-header {
     font-family: inherit!important;
     font-size: 18px!important;
     font-weight: bold!important;
     padding: 0 12px!important;
-    background-color: $matAccordionHeaderColor;
-    &:first-child {
-      border-bottom: 1px solid $matAccordionHeaderColor;
-    }
-    ::ng-deep.mat-panel-title {
-      color: $fontColor!important;
-      flex-grow: 0!important;
-    }
-    ::ng-deep.mat-panel-description {
-      font-weight: normal!important;
-      color: $fontColor!important;
-    }
-  }
-
-  ::ng-deep.mat-expansion-panel-spacing {
-    margin: 12px 0 !important;
   }
 
   .mat-expansion-panel-header-description {
     color: $fontColor!important;
   }
+}
 
-  ::ng-deep.mat-expansion-panel-header.mat-expanded,
-  .mat-expansion-panel-header.mat-expanded:hover,
-  .mat-expansion-panel-header:hover,
-  .mat-expansion-panel:hover {
-    background: $matAccordionHeaderColor !important;
-  }
-
-  ::ng-deep .mat-expansion-panel {
-    background: $matAccordionHeaderColor !important;
-  }
-
-  ::ng-deep .mat-expansion-panel-body {
-    padding: 0px !important;
-  }
+::ng-deep.mat-expansion-panel-body {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 

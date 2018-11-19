@@ -150,10 +150,10 @@ export class HomeComponent implements OnInit {
                 let restaurantTime = moment.utc(dailyTotals.businessDate);
 
                 let totals = dailyTotals.totals;
-                let totalClosedOrders = environment.region === 'us' ? _.get(totals, 'netSales', 0) : _.get(totals, 'totalPayments', 0);
+                let totalClosedOrders = _.get(totals, 'netSales', 0);
                 let totalClosedOrdersWithoutVat = totalClosedOrders - _.get(totals, 'includedTax', 0);
 
-                let totalOpenOrders = environment.region === 'us' ? _.get(totals, 'openOrders.netSales', 0) : _.get(totals, 'openOrders.totalAmount', 0);
+                let totalOpenOrders = _.get(totals, 'openOrders.totalNetSalesAndRefunds', 0);
                 let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
 
 

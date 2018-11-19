@@ -1,177 +1,187 @@
-<div class="flex d-col dayView">
-    <app-day-selector
-            class="widget noPadding daySelectorFixed"
-            [currentValue]="day"
-            [dayFromDatabase]="dayFromDatabase"
-            [options]="daySelectorOptions"
-            (onDateChanged)="onDateChanged($event)">
-    </app-day-selector>
+<div class="container px-0">
+    <div class="flex d-col dayView">
+        <app-day-selector
+                class="widget noPadding daySelectorFixed"
+                [currentValue]="day"
+                [dayFromDatabase]="dayFromDatabase"
+                [options]="daySelectorOptions"
+                (onDateChanged)="onDateChanged($event)">
+        </app-day-selector>
 
-    <div [hidden]="hasData">
-        <div class="card">
-            <div class="card-body bg-white">
-                <div *ngIf="hasNoDataForToday">
-                    <div>
-                        <div class="text-center" [translate]="'day.noDataAvailableForToday'">No data available for today</div>
+        <div [hidden]="hasData">
+            <div class="card">
+                <div class="card-body bg-white">
+                    <div *ngIf="hasNoDataForToday">
+                        <div>
+                            <div class="text-center" [translate]="'day.noDataAvailableForToday'">No data available for
+                                today
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div *ngIf="!hasNoDataForToday">
-                    <div class="text-center">
-                        <dx-load-indicator></dx-load-indicator>
-                        <p class="text-center saving"><span [translate]="'fetching'">Fetching</span><span>.</span><span>.</span><span>.</span></p>
+                    <div *ngIf="!hasNoDataForToday">
+                        <div class="text-center">
+                            <dx-load-indicator></dx-load-indicator>
+                            <p class="text-center saving"><span
+                                    [translate]="'fetching'">Fetching</span><span>.</span><span>.</span><span>.</span>
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-            </div>
-        </div>
-    </div>
-
-    <div [hidden]="!hasData">
-
-        <div class="col-12 px-0 mb-2" *ngIf="cardData">
-            <app-card [cardData]="cardData"></app-card>
-        </div>
-        <app-day-orders-table
-                class="widget"
-                style="padding-bottom: 0px;"
-                [lastViewed]="drilledOrder"
-                [orders]="orders"
-                [bdIsCurrentBd]="bdIsCurrentBd"
-                [todayOpenOrders]="openOrders"
-                (onOrderClicked)="onOrderClicked($event)"
-                (onOpenOrderClicked)="onOpenOrderClicked($event)"
-        ></app-day-orders-table>
-
-        <div class="widget">
-            <div class="flex d-col">
-                <div class="title"><span [translate]="'day.sales3'">Sales</span>&nbsp;<span *ngIf="day.isSame(today, 'day')" [translate]="'day.closedOrders'">(closed orders)</span></div>
-                <div class="flex d-col body">
-                    <mat-expansion-panel expanded="true">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                <span [translate]="'day.salesByHour'">Sales by hour</span>
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <app-day-hourly-sales
-                                [data]="salesByHour">
-                        </app-day-hourly-sales>
-                    </mat-expansion-panel>
-                    <mat-expansion-panel expanded="true" *ngIf="dailySummaryTblData">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                <span *ngIf="day.isSame(today, 'day')" [translate]="'day.closedSummary'">Closed orders summary</span>
-                                <span *ngIf="!day.isSame(today, 'day')" [translate]="'day.daily'">Daily</span>
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <app-day-sales-table
-                                [data]="dailySummaryTblData?.data"
-                                [globalSalesIncludingVat]="dailySummaryTblData?.globalSalesIncludingVat">
-                        </app-day-sales-table>
-                    </mat-expansion-panel>
-                    <ng-container *ngFor="let tblData of byShiftSummaryTblsData">
-                        <mat-expansion-panel expanded="true" *ngIf="tblData && tblData.data.length">
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    <ng-container>{{tblData?.title}}</ng-container>
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <app-day-sales-table
-                                    [title]="tblData?.title"
-                                    [data]="tblData?.data"
-                                    [globalSalesIncludingVat]="tblData?.globalSalesIncludingVat">
-                            </app-day-sales-table>
-                        </mat-expansion-panel>
-                    </ng-container>
                 </div>
             </div>
         </div>
 
-        <app-payments-table
-            class="widget"
-            [bd]="day"
-            [paymentsData]="paymentsData"
-        ></app-payments-table>
+        <div [hidden]="!hasData">
 
-        <div id="operational" style="position: relative;" class="anchor"></div>
-        <app-operational-errors-table *ngIf="operationalErrorsData"
-                                      class="widget"
-                                      [operationalErrorsData]="operationalErrorsData"
-                                      [lastViewed]="drilledOrderNumber"
-                                      (onOrderClicked)="onOrderClicked_orderNumber($event)"
-                                      [category]="category"
-                                      [dayFromDatabase]="dayFromDatabase"
-        ></app-operational-errors-table>
+            <div class="col-12 px-0 mb-2" *ngIf="cardData">
+                <app-card [cardData]="cardData"></app-card>
+            </div>
+            <app-day-orders-table
+                    class="widget"
+                    style="padding-bottom: 0px;"
+                    [lastViewed]="drilledOrder"
+                    [orders]="orders"
+                    [bdIsCurrentBd]="bdIsCurrentBd"
+                    [todayOpenOrders]="openOrders"
+                    (onOrderClicked)="onOrderClicked($event)"
+                    (onOpenOrderClicked)="onOpenOrderClicked($event)"
+            ></app-day-orders-table>
 
-        <div id="retention" style="position: relative;" class="anchor"></div>
-        <app-retention-table *ngIf="retentionData"
-                             class="widget"
-                             [retentionData]="retentionData"
-                             [lastViewed]="drilledOrderNumber"
-                             (onOrderClicked)="onOrderClicked_orderNumber($event)"
-                             [category]="category"
-                             [dayFromDatabase]="dayFromDatabase"
-        ></app-retention-table>
-
-        <app-day-sales-by-sub-department-table
-                class="widget"
-                [bd]="day"
-                [salesBySubDepartment]="salesBySubDepartment"
-        ></app-day-sales-by-sub-department-table>
-
-        <!--Most sold items -->
-
-        <div class="widget">
-            <div class="flex d-col">
-                <div class="title" [translate]="'day.mostSoldItems'">Top Selling Items by Category</div>
-                <div class="flex d-col body">
-                    <mat-accordion>
-                        <mat-expansion-panel expanded="false">
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    <span [translate]="'day.allDay'">All day</span>
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <app-most-sold-items-table
-                                    class="widget"
-                                    [itemsData]="mostSoldItems"
-                            ></app-most-sold-items-table>
-                        </mat-expansion-panel>
-                        <ng-container *ngFor="let tblData of mostSoldItemsByShift">
-                            <mat-expansion-panel>
+            <div class="widget">
+                <div class="flex d-col">
+                    <div class="title"><span [translate]="'day.sales3'">Sales</span>&nbsp;<span
+                            *ngIf="day.isSame(today, 'day')" [translate]="'day.closedOrders'">(closed orders)</span>
+                    </div>
+                    <div class="flex d-col body">
+                        <mat-accordion [multi]="true">
+                            <mat-expansion-panel expanded="true">
                                 <mat-expansion-panel-header>
                                     <mat-panel-title>
-                                        <ng-container>{{tblData.title}}</ng-container>
+                                        <span [translate]="'day.salesByHour'">Sales by hour</span>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <app-day-hourly-sales
+                                        [data]="salesByHour">
+                                </app-day-hourly-sales>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel expanded="true" *ngIf="dailySummaryTblData">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <span *ngIf="day.isSame(today, 'day')" [translate]="'day.closedSummary'">Closed orders summary</span>
+                                        <span *ngIf="!day.isSame(today, 'day')" [translate]="'day.daily'">Daily</span>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <app-day-sales-table
+                                        [data]="dailySummaryTblData?.data"
+                                        [globalSalesIncludingVat]="dailySummaryTblData?.globalSalesIncludingVat">
+                                </app-day-sales-table>
+                            </mat-expansion-panel>
+                            <ng-container *ngFor="let tblData of byShiftSummaryTblsData">
+                                <mat-expansion-panel expanded="true" *ngIf="tblData && tblData.data.length">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            <ng-container>{{tblData?.title}}</ng-container>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <app-day-sales-table
+                                            [title]="tblData?.title"
+                                            [data]="tblData?.data"
+                                            [globalSalesIncludingVat]="tblData?.globalSalesIncludingVat">
+                                    </app-day-sales-table>
+                                </mat-expansion-panel>
+                            </ng-container>
+                        </mat-accordion>
+                    </div>
+                </div>
+            </div>
+
+            <app-payments-table
+                    class="widget"
+                    [bd]="day"
+                    [paymentsData]="paymentsData"
+            ></app-payments-table>
+
+            <div id="operational" style="position: relative;" class="anchor"></div>
+            <app-operational-errors-table *ngIf="operationalErrorsData"
+                                          class="widget"
+                                          [operationalErrorsData]="operationalErrorsData"
+                                          [lastViewed]="drilledOrderNumber"
+                                          (onOrderClicked)="onOrderClicked_orderNumber($event)"
+                                          [category]="category"
+                                          [dayFromDatabase]="dayFromDatabase"
+            ></app-operational-errors-table>
+
+            <div id="retention" style="position: relative;" class="anchor"></div>
+            <app-retention-table *ngIf="retentionData"
+                                 class="widget"
+                                 [retentionData]="retentionData"
+                                 [lastViewed]="drilledOrderNumber"
+                                 (onOrderClicked)="onOrderClicked_orderNumber($event)"
+                                 [category]="category"
+                                 [dayFromDatabase]="dayFromDatabase"
+            ></app-retention-table>
+
+            <app-day-sales-by-sub-department-table
+                    class="widget"
+                    [bd]="day"
+                    [salesBySubDepartment]="salesBySubDepartment"
+            ></app-day-sales-by-sub-department-table>
+
+            <!--Most sold items -->
+
+            <div class="widget">
+                <div class="flex d-col">
+                    <div class="title" [translate]="'day.mostSoldItems'">Top Selling Items by Category</div>
+                    <div class="flex d-col body">
+                        <mat-accordion>
+                            <mat-expansion-panel expanded="false">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <span [translate]="'day.allDay'">All day</span>
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <app-most-sold-items-table
                                         class="widget"
-                                        [itemsData]="tblData.mostSoldItems"
+                                        [itemsData]="mostSoldItems"
                                 ></app-most-sold-items-table>
                             </mat-expansion-panel>
-                        </ng-container>
-                    </mat-accordion>
+                            <ng-container *ngFor="let tblData of mostSoldItemsByShift">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            <ng-container>{{tblData.title}}</ng-container>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <app-most-sold-items-table
+                                            class="widget"
+                                            [itemsData]="tblData.mostSoldItems"
+                                    ></app-most-sold-items-table>
+                                </mat-expansion-panel>
+                            </ng-container>
+                        </mat-accordion>
+                    </div>
                 </div>
             </div>
+
+            <app-most-returned-items-table
+                    class="widget"
+                    [itemsData]="mostReturnedItems"
+            ></app-most-returned-items-table>
+
+            <app-month-summary-table *ngIf="mtdBusinessData && mtdBusinessData.totals"
+                                     class="widget"
+                                     [month]="day"
+                                     [mtdBusinessData]="mtdBusinessData"
+            ></app-month-summary-table>
         </div>
-
-        <app-most-returned-items-table
-                class="widget"
-                [itemsData]="mostReturnedItems"
-        ></app-most-returned-items-table>
-
-        <app-month-summary-table *ngIf="mtdBusinessData && mtdBusinessData.totals"
-                                 class="widget"
-                                 [month]="day"
-                                 [mtdBusinessData]="mtdBusinessData"
-        ></app-month-summary-table>
     </div>
-</div>
-<div class="flex d-col drill" *ngIf="drill">
-    <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber" [order]="drilledOrder"
-                    [orders]="orders"></app-order-view>
-</div>
+    <div class="flex d-col drill" *ngIf="drill">
+        <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber" [order]="drilledOrder"
+                        [orders]="orders"></app-order-view>
+    </div>
 
-<div class="card text-center" *ngIf="user.isStaff && hasData">
-    EOD: {{metaData?.isEod == '1' ? 'Yes' : 'No'}} |
-    Balanced: {{metaData?.isBalanced == '1' ? 'Yes' : 'No'}}
+    <div class="card text-center" *ngIf="user.isStaff && hasData">
+        EOD: {{metaData?.isEod == '1' ? 'Yes' : 'No'}} |
+        Balanced: {{metaData?.isBalanced == '1' ? 'Yes' : 'No'}}
+    </div>
 </div>

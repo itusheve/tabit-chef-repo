@@ -1,15 +1,9 @@
-import {throwError as observableThrowError, Observable, Subject, zip} from 'rxjs';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-
-import {User} from '../../tabit/model/User.model';
 import {environment} from '../../environments/environment';
 import {DebugService} from '../debug.service';
 import {LogzioService} from '../logzio.service';
 import * as _ from 'lodash';
-import {DataService} from '../../tabit/data/data.service';
-
 const loginUrl = 'oauth2/token';
 const meUrl = 'account/me';
 
@@ -191,14 +185,16 @@ export class AuthService {
                                 this.authTokens = tokens;
 
                                 //if we tried logging in to all environments
-                                if(authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {
-                                    if(authenticationStatus.success > 0) {
-                                        resolve();
+                                setTimeout(() => {
+                                    if(authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {
+                                        if(authenticationStatus.success > 0) {
+                                            resolve();
+                                        }
+                                        else {
+                                            reject();
+                                        }
                                     }
-                                    else {
-                                        reject();
-                                    }
-                                }
+                                }, 250);
                             }
                         );
                 });
