@@ -130,6 +130,7 @@ export class AuthService {
                                 this.authTokens = tokens;
 
                                 this.region = region;
+                                environment.region = region;
                                 this.httpClient.get(`${url}${meUrl}`)
                                     .subscribe(
                                         user => {
@@ -194,7 +195,7 @@ export class AuthService {
                                             reject();
                                         }
                                     }
-                                }, 250);
+                                }, 2000);
                             }
                         );
                 });

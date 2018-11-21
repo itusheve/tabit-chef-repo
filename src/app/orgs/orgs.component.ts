@@ -63,7 +63,7 @@ export class OrgsComponent implements OnInit {
         this.dataService.user$
             .subscribe(user => {
                 this.user = user;
-                if(user) {
+                if (user) {
                     this.userInitials = (user.firstName ? user.firstName.substring(0, 1) : '?').toUpperCase() + (user.lastName ? user.lastName.substring(0, 1) : '').toUpperCase();
                 }
 
@@ -90,7 +90,7 @@ export class OrgsComponent implements OnInit {
     }
 
     public onGoBackClicked() {
-      window.history.back();
+        window.history.back();
     }
 
     settings() {
@@ -106,28 +106,30 @@ export class OrgsComponent implements OnInit {
                 } else {
                     this.orgsFiltered = orgs;
 
-                    if (this.user.email.indexOf('@tabit.cloud') > 0) {
-                        let usOrg = _.clone(_.find(this.orgsFiltered, {id: "59c3f78cd1ea272200200880"}));
-                        let ilOrg = _.clone(_.find(this.orgsFiltered, {id: "53eb1ee2e6c77111203d8503"}));
+                    let user = this.dataService.getUser();
 
-                        if(usOrg) {
+                    if (user.email.indexOf('@tabit.cloud') > 0) {
+                        let usOrg = _.clone(_.find(this.orgsFiltered, {id: '59c3f78cd1ea272200200880'}));
+                        let ilOrg = _.clone(_.find(this.orgsFiltered, {id: '53eb1ee2e6c77111203d8503'}));
+
+                        if (usOrg) {
                             usOrg.name = 'Demo Restaurant';
                             usOrg.smallLogo = {url: 'https://office.tabit.cloud/images/restaurant-ico.png'};
                             usOrg.isDemo = true;
                             usOrg.order = 0;
-                            this.orgsFiltered.splice(0,0, usOrg);
+                            this.orgsFiltered.splice(0, 0, usOrg);
                         }
 
-                        if(ilOrg) {
+                        if (ilOrg) {
                             ilOrg.name = 'מסעדה לדוגמא';
                             ilOrg.smallLogo = {url: 'https://office.tabit.cloud/images/restaurant-ico.png'};
                             ilOrg.isDemo = true;
                             ilOrg.order = 0;
-                            this.orgsFiltered.splice(0,0, ilOrg);
+                            this.orgsFiltered.splice(0, 0, ilOrg);
                         }
 
                         let order = this.env.lang === 'he' ? 'asc' : 'desc';
-                        this.orgsFiltered = _.orderBy(this.orgsFiltered, ['order', 'region', 'name'], ['asc' ,order, 'asc']);
+                        this.orgsFiltered = _.orderBy(this.orgsFiltered, ['order', 'region', 'name'], ['asc', order, 'asc']);
                     }
 
                 }
@@ -197,7 +199,7 @@ export class OrgsComponent implements OnInit {
             });
 
         let org = JSON.parse(window.localStorage.getItem('org'));
-        if(org) {
+        if (org) {
             this.showBackButton = true;
         }
         this.render();
