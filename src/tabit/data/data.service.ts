@@ -389,14 +389,14 @@ export class DataService {
     public timezone = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';
 
     public organization$: Observable<any> = Observable.create(obs => {
-        let org = JSON.parse(window.localStorage.getItem('org'));
+
+        let org = this.getOrganization();
 
         if (org && org.region.toLowerCase() === 'us') {
             this.vat$.next(true);
             if (org.timezone) {
                 this.timezone = org.timezone;
             }
-
         }
 
         obs.next(org);
@@ -1920,7 +1920,8 @@ export class DataService {
     public getCurrentRestTime() {
         let time;
         try {
-            time = moment.tz(this.timezone);
+            let org = this.getOrganization();
+            time = moment.tz(org.timezone);
         } catch (e) {
             console.error(e, 'tmp = moment.tz(this.timezone);', this.timezone);
             time = moment();
@@ -1937,5 +1938,10 @@ export class DataService {
         }
 
         return userSettings[environment.region];
+    }
+
+    public getOrganization() {
+        let org = JSON.parse(window.localStorage.getItem('org'));
+        return org;
     }
 }

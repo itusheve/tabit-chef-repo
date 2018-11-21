@@ -242,6 +242,11 @@ export class MonthGridComponent implements OnInit {
         let normalizedAvg = avg * 100;
         amount = +(amount.toFixed(1));
         normalizedAvg = +(normalizedAvg.toFixed(1));
+
+        if(!normalizedAvg) {
+            return 0;
+        }
+
         let percentage =  amount / normalizedAvg;
 
         return percentage * 100 || 0;

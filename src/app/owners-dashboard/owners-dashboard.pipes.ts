@@ -3,6 +3,7 @@ import { DecimalPipe, PercentPipe } from '@angular/common';
 import { environment } from '../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
 import {DataService} from '../../tabit/data/data.service';
+import * as _ from 'lodash';
 
 @Pipe({
     name: 'currency',
@@ -128,10 +129,12 @@ export class OwnersDashboardHourPipe implements PipeTransform {
 
     transform(minutes: any): any {
         minutes = Math.round(minutes);
-        let h = Math.floor(minutes / 60).toString();
+        let h = Math.floor(minutes / 60);
         let m = minutes % 60;
-        h = h < 10 ? '0' + h : h;
-        m = m < 10 ? '0' + m : m;
+
+        _.padStart(h,2,'0');
+        _.padStart(m,2,'0');
+
         return `${h}:${m}`;
     }
 }

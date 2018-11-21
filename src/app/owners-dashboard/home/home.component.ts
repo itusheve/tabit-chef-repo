@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit {
     async renderLaborCost() {
 
         this.dataService.databaseV2$.subscribe(async database => {
-            if (this.env.region !== 'us') {
+            if (this.env.region !== 'us' || !database) {
                 return;
             }
 
