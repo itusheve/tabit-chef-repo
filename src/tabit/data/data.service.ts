@@ -683,7 +683,7 @@ export class DataService {
                         };
                     }
 
-                    if(month.aggregations.days[weekday].count < 4 && !moment(day.businessDate).isSame(currentDate, 'day') && !day.isExcluded) {
+                    if (month.aggregations.days[weekday].count < 4 && !moment(day.businessDate).isSame(currentDate, 'day') && !day.isExcluded) {
                         month.aggregations.days[weekday].count += 1;
                         month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountIncludeVat;
                         month.aggregations.days[weekday].sales.amountWithoutVat += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat / day.vat : day.salesAndRefoundAmountIncludeVat / day.vat;
@@ -693,16 +693,16 @@ export class DataService {
                 });
 
                 _.forEach(month.aggregations.days, (data, weekday) => {
-                    if(data) {
+                    if (data) {
                         let monthDate = month.latestDay;
                         let dayCounter = _.clone(data.count);
-                        while(dayCounter < 4) {
+                        while (dayCounter < 4) {
                             let previousMonth = database[moment(monthDate).subtract(1, 'months').format('YYYYMM')];
                             let days = _.get(previousMonth, 'days');
-                            if(!_.isEmpty(days)) {
+                            if (!_.isEmpty(days)) {
                                 _.forEach(days, day => {
                                     let previousWeekday = moment(day.businessDate).weekday();
-                                    if(previousWeekday === weekday && dayCounter < 4 && !day.isExcluded) {
+                                    if (previousWeekday === weekday && dayCounter < 4 && !day.isExcluded) {
                                         dayCounter++;
                                         month.aggregations.days[weekday].count += 1;
                                         month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountIncludeVat;
@@ -1552,6 +1552,147 @@ export class DataService {
 
         translate.setDefaultLang(currentLanguage);
         translate.use(currentLanguage);
+    }
+
+    async getLaborCostByTime(time: moment.Moment) {
+        let configuration = await this.rosEp.get('configuration/laborCost', null).then(function (res) {
+            return _.get(res, '[0]');
+        });
+
+        let laborCost = await this.rosEp.get('reports/attendance', {time: time.toISOString()}).then(function (res) {
+            return _.get(res, 'byDay');
+        });
+
+        let workHoursForOrangeAlert = _.get(configuration, 'workHoursRules.workHoursForOrangeAlert');
+        let workHoursForRedAlert = _.get(configuration, 'workHoursRules.workHoursForRedAlert');
+        let firstWeekday = _.get(configuration, 'workHoursRules.firstWeekday');
+
+        let sortedLaborCost = {
+            firstWeekday: firstWeekday === 'sunday' ? 0 : 1,
+            byDay: {},
+            weekSummary: {
+                cost: 0,
+                minutes: 0,
+                byAssignments: {},
+                byUser: {}
+            },
+            overtime: {
+                count: 0,
+                users: []
+            }
+        };
+
+        _.forEach(laborCost, (day, date) => {
+            sortedLaborCost.byDay[date] = {
+                cost: 0,
+                minutes: 0,
+                byAssignments: {},
+                byUser: {}
+            };
+
+            _.forEach(day, assignmentPerUser => {
+
+                if(!assignmentPerUser.cost) {
+                    assignmentPerUser.cost = 0;
+                }
+
+                sortedLaborCost.byDay[date].cost += assignmentPerUser.cost;
+                sortedLaborCost.byDay[date].minutes += assignmentPerUser.minutes;
+
+                if(!sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id]) {
+                    sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id] = {
+                        name: assignmentPerUser.assignment.name,
+                        minutes: 0,
+                        cost: 0,
+                        users: {}
+                    };
+                }
+
+                sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].minutes +=  assignmentPerUser.minutes;
+                sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].cost +=  assignmentPerUser.cost;
+
+                if(!sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id]) {
+                    sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id] = {
+                        name: assignmentPerUser.user.firstName + ' ' + assignmentPerUser.user.lastName,
+                        minutes: 0,
+                        cost: 0,
+                        alert: ''
+                    };
+                }
+
+                sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id].minutes = assignmentPerUser.minutes;
+                sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id].cost = assignmentPerUser.cost;
+
+
+                if(!sortedLaborCost.byDay[date].byUser[assignmentPerUser.user._id]) {
+                    sortedLaborCost.byDay[date].byUser[assignmentPerUser.user._id] = {
+                        name: assignmentPerUser.user.firstName + ' ' + assignmentPerUser.user.lastName,
+                        minutes: 0,
+                        cost: 0,
+                        alert: ''
+                    };
+                }
+
+                sortedLaborCost.byDay[date].byUser[assignmentPerUser.user._id].minutes += assignmentPerUser.minutes;
+                sortedLaborCost.byDay[date].byUser[assignmentPerUser.user._id].cost += assignmentPerUser.cost;
+
+                sortedLaborCost.weekSummary.minutes += assignmentPerUser.minutes;
+                sortedLaborCost.weekSummary.cost += assignmentPerUser.cost;
+
+                if(!sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id]) {
+                    sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id] = {
+                        name: assignmentPerUser.assignment.name,
+                        minutes: 0,
+                        cost: 0,
+                        users: {}
+                    };
+                }
+
+                sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].minutes +=  assignmentPerUser.minutes;
+                sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].cost +=  assignmentPerUser.cost;
+
+                if(!sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id]) {
+                    sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id] = {
+                        name: assignmentPerUser.user.firstName + ' ' + assignmentPerUser.user.lastName,
+                        minutes: 0,
+                        cost: 0,
+                        alert: ''
+                    };
+                }
+
+                sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id].minutes += assignmentPerUser.minutes;
+                sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id].cost += assignmentPerUser.cost;
+
+                if(!sortedLaborCost.weekSummary.byUser[assignmentPerUser.user._id]) {
+                    sortedLaborCost.weekSummary.byUser[assignmentPerUser.user._id] = {
+                        name: assignmentPerUser.user.firstName + ' ' + assignmentPerUser.user.lastName,
+                        minutes: 0,
+                        cost: 0,
+                        alert: ''
+                    };
+                }
+
+                sortedLaborCost.weekSummary.byUser[assignmentPerUser.user._id].minutes += assignmentPerUser.minutes;
+                sortedLaborCost.weekSummary.byUser[assignmentPerUser.user._id].cost += assignmentPerUser.cost;
+            });
+        });
+
+        _.forEach(sortedLaborCost.weekSummary.byUser, (user, _id) => {
+            let workHours = user.minutes / 60;
+            if(workHours > workHoursForOrangeAlert) {
+                sortedLaborCost.overtime.count++;
+                if(workHours > workHoursForRedAlert) {
+                    sortedLaborCost.weekSummary.byUser[_id].alert = 'red';
+                }
+                else {
+                    sortedLaborCost.weekSummary.byUser[_id].alert = 'orange';
+                }
+
+                sortedLaborCost.overtime.users.push(sortedLaborCost.weekSummary.byUser[_id]);
+            }
+        });
+
+        return sortedLaborCost;
     }
 
     async getDailyReport(day: moment.Moment) {

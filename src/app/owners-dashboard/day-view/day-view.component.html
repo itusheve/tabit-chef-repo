@@ -36,6 +36,90 @@
             <div class="col-12 px-0 mb-2" *ngIf="cardData">
                 <app-card [cardData]="cardData"></app-card>
             </div>
+
+            <div class="widget" *ngIf="display.laborCost && laborCost">
+                <div class="flex d-col">
+                    <div class="title"><span [translate]="'laborCost'">Labor Cost</span></div>
+                    <div class="flex d-col body">
+                        <mat-accordion>
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title class="justify-content-between">
+                                        <span>Today</span>
+                                        <span>{{laborCost.today.cost | curr:'1'}}&nbsp;&nbsp;&nbsp;{{getPercentage(laborCost.today.cost, laborCost.sales.today) | pct:'1'}}</span>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <mat-accordion [multi]="true">
+                                    <ng-container *ngFor="let assignment of laborCost.today.byAssignments">
+                                        <mat-expansion-panel>
+                                            <mat-expansion-panel-header>
+                                                <mat-panel-title class="justify-content-between small font-weight-normal">
+                                                    <span>{{assignment.name || 'NA'}}</span>
+                                                    <span>{{assignment.cost | curr:'1'}}&nbsp;&nbsp;&nbsp;{{getPercentage(assignment.cost, laborCost.sales.today) | pct:'1'}}</span>
+                                                </mat-panel-title>
+                                            </mat-expansion-panel-header>
+
+                                            <table class="chf-tbl chf-tbl-row-oriented chf-tbl-smaller dayReportDataRow">
+                                                <tr class="header">
+                                                    <td>Name</td>
+                                                    <td>Cost</td>
+                                                    <td>Percentage</td>
+                                                </tr>
+                                                <ng-container *ngFor="let user of assignment.users">
+                                                    <tr>
+                                                        <td>{{user.name}}</td>
+                                                        <td>{{user.cost | curr:'1'}}</td>
+                                                        <td>{{getPercentage(user.cost, laborCost.sales.today) | pct:'1'}}</td>
+                                                    </tr>
+                                                </ng-container>
+                                            </table>
+                                        </mat-expansion-panel>
+                                    </ng-container>
+                                </mat-accordion>
+                            </mat-expansion-panel>
+
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title class="justify-content-between">
+                                        <span>This Week</span>
+                                        <span>{{laborCost.week.cost | curr:'1'}}&nbsp;|&nbsp;&nbsp;{{getPercentage(laborCost.week.cost, laborCost.sales.week) | pct:'1'}}</span>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <mat-accordion [multi]="true">
+                                    <ng-container *ngFor="let assignment of laborCost.week.byAssignments">
+                                        <mat-expansion-panel>
+                                            <mat-expansion-panel-header>
+                                                <mat-panel-title class="justify-content-between small font-weight-normal">
+                                                    <span>{{assignment.name || 'NA'}}</span>
+                                                    <span>{{assignment.cost | curr:'1'}}&nbsp;&nbsp;&nbsp;{{getPercentage(assignment.cost, laborCost.sales.week) | pct:'1'}}</span>
+                                                </mat-panel-title>
+                                            </mat-expansion-panel-header>
+
+                                            <table class="chf-tbl chf-tbl-row-oriented chf-tbl-smaller dayReportDataRow">
+                                                <tr class="header">
+                                                    <td>Name</td>
+                                                    <td>Cost</td>
+                                                    <td>Percentage</td>
+                                                </tr>
+                                                <ng-container *ngFor="let user of assignment.users">
+                                                    <tr>
+                                                        <td>{{user.name}}</td>
+                                                        <td>{{user.cost | curr:'1'}}</td>
+                                                        <td>{{getPercentage(user.cost, laborCost.sales.week) | pct:'1'}}</td>
+                                                    </tr>
+                                                </ng-container>
+                                            </table>
+                                        </mat-expansion-panel>
+                                    </ng-container>
+                                </mat-accordion>
+                            </mat-expansion-panel>
+
+
+                        </mat-accordion>
+                    </div>
+                </div>
+            </div>
+
             <app-day-orders-table
                     class="widget"
                     style="padding-bottom: 0px;"

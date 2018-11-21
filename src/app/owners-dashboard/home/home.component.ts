@@ -13,6 +13,8 @@ import {MatBottomSheet} from '@angular/material';
 import {MonthPickerDialogComponent} from './month-selector/month-picker-dialog.component';
 import {environment} from '../../../environments/environment';
 import {TranslateService} from '@ngx-translate/core';
+import {MatDialog} from '@angular/material';
+import {OverTimeUsersDialogComponent} from './over-time-users/over-time-users-dialog.component';
 
 @Component({
     selector: 'app-home',
@@ -68,6 +70,10 @@ export class HomeComponent implements OnInit {
         aggregations: {}
     };
 
+    public display = {
+        laborCost: false
+    };
+
     private previousBdNotFinal = false;
     public showPreviousDay = false;
     public tabitHelper;
@@ -75,6 +81,8 @@ export class HomeComponent implements OnInit {
     public OlapFailed: boolean;
     public olapError: any;
     public showSummary: boolean;
+    public laborCostCard: any;
+    public laborCost: any;
     private env: any;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
@@ -82,7 +90,8 @@ export class HomeComponent implements OnInit {
                 private router: Router,
                 private monthPickerDialog: MatBottomSheet,
                 private datePipe: DatePipe,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                public dialog: MatDialog) {
 
         this.env = environment;
         this.tabitHelper = new TabitHelper();
@@ -91,6 +100,8 @@ export class HomeComponent implements OnInit {
         ownersDashboardService.toolbarConfig.settings.show = true;
         ownersDashboardService.toolbarConfig.center.showVatComment = environment.region === 'il';
         ownersDashboardService.toolbarConfig.home.show = false;
+
+        this.display.laborCost = false;
     }
 
     ngOnInit() {
@@ -109,9 +120,67 @@ export class HomeComponent implements OnInit {
         this.getYesterdayData();
         this.getForecastData();
         this.getSummary();
+        this.renderLaborCost();
     }
 
-    initRefreshSubscriber(): void {
+    async renderLaborCost() {
+
+        this.dataService.databaseV2$.subscribe(async database => {
+            if (this.env.region !== 'us') {
+                return;
+            }
+
+            let time = moment();
+            let laborCost = await this.dataService.getLaborCostByTime(time);
+            if(!laborCost) {
+                return;
+            }
+
+            this.laborCost = laborCost;
+            let weekStartDate = moment().day(laborCost.firstWeekday);
+
+            let weekSales = 0;
+            while(weekStartDate.isBefore(time)) {
+                let day = database.getDay(weekStartDate);
+                if(day) {
+                    weekSales += day.salesAndRefoundAmountIncludeVat;
+                }
+                weekStartDate.add(1, 'day');
+            }
+
+            weekSales += this.currentBdCardData.sales;
+
+            let today = _.get(laborCost, ['byDay', time.format('YYYY-MM-DD')]);
+            if(today) {
+                this.laborCostCard = {
+                    today: {
+                        cost: today.cost || 0,
+                        percentage: this.currentBdCardData.sales > 0 ? today.cost / this.currentBdCardData.sales : 0
+                    },
+                    week: {
+                        cost: laborCost.weekSummary.cost || 0,
+                        percentage: weekSales > 0 ? laborCost.weekSummary.cost / weekSales : 0
+                    },
+                    overtime: {
+                        count: laborCost.overtime.count || 0
+                    }
+                };
+
+                this.display.laborCost = true;
+            }
+        });
+
+    }
+
+    openOverTimeDialog() {
+        this.dialog.open(OverTimeUsersDialogComponent, {
+            width: '100vw',
+            panelClass: 'overtime-dialog',
+            data: {laborCost: this.laborCost}
+        });
+    }
+
+    initRefreshSubscriber() {
         this.dataService.refresh$.subscribe((refresh) => {
             if (refresh === 'force') {
                 this.loadingOlapData = true;
@@ -141,7 +210,7 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    getTodayData(): void {
+    getTodayData() {
         combineLatest(this.dataService.dailyTotals$, this.dataService.olapToday$, this.dataService.vat$)
             .subscribe(async data => {
                 let dailyTotals = data[0];
@@ -201,7 +270,7 @@ export class HomeComponent implements OnInit {
             });
     }
 
-    getTodayOlapData(): void {
+    getTodayOlapData() {
         combineLatest(this.dataService.databaseV2$, this.dataService.vat$, this.dataService.dailyTotals$).subscribe(data => {
             let database = data[0];
             let incTax = data[1];
@@ -239,7 +308,7 @@ export class HomeComponent implements OnInit {
     }
 
 
-    getYesterdayData(): void {
+    getYesterdayData() {
         combineLatest(this.dataService.databaseV2$, this.dataService.currentRestTime$, this.dataService.vat$)
             .subscribe(data => {
                 this.previousBdCardData.loading = true;
@@ -308,7 +377,7 @@ export class HomeComponent implements OnInit {
                     }
                 }
 
-                let title = this.datePipe.transform(previousDay.format('YYYY-MM-DD'), 'EEEE MMMM d','', this.env.lang);
+                let title = this.datePipe.transform(previousDay.format('YYYY-MM-DD'), 'EEEE MMMM d', '', this.env.lang);
                 this.translate.get('card.yesterday').subscribe((res: string) => {
                     this.previousBdCardData.title = res + ', ' + title;
                 });
@@ -319,7 +388,7 @@ export class HomeComponent implements OnInit {
     }
 
 
-    getForecastData(): void {
+    getForecastData() {
         combineLatest(this.dataService.databaseV2$, this.dataService.vat$)
             .subscribe(data => {
                 this.forecastCardData.loading = true;
@@ -349,7 +418,7 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.diners = month.forecast.diners.count || month.forecast.orders.count;
                 this.forecastCardData.sales = incTax ? month.forecast.sales.amount : month.forecast.sales.amountWithoutVat;
 
-                if(month.forecast.diners.count) {
+                if (month.forecast.diners.count) {
                     let ppa = this.forecastCardData.sales / month.forecast.diners.count;
                     this.forecastCardData.ppa = incTax ? ppa : ppa / month.vat;
                 }
@@ -413,7 +482,7 @@ export class HomeComponent implements OnInit {
 
                 let monthName = this.datePipe.transform(date, 'MMMM', '', this.env.lang);
                 let monthState = moment().month() === date.month() ? tmpTranslations.get('home.month.notFinalTitle') : tmpTranslations.get('home.month.finalTitle');
-                this.summaryCardData.title = monthName + ' ' +  monthState;
+                this.summaryCardData.title = monthName + ' ' + monthState;
 
                 this.summaryCardData.reductions = {
                     cancellations: {

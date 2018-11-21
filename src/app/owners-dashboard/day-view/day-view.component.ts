@@ -183,6 +183,10 @@ export class DayViewComponent implements OnInit {
     private metaData: any;
     public user: any;
     public env: any;
+    public display = {
+        laborCost: false
+    };
+    public laborCost: any;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private dataService: DataService,
@@ -202,6 +206,7 @@ export class DayViewComponent implements OnInit {
         this.hasData = false;
         this.today = moment();
 
+        this.display.laborCost = false;
         this.user = {
             isStaff: false
         };
@@ -277,18 +282,18 @@ export class DayViewComponent implements OnInit {
 
         //get card data for the day
         combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.olapToday$)
-            .subscribe(data => {
+            .subscribe(async data => {
                 let date = data[0];
                 let database = data[1];
                 let dailyTotals = data[2];
                 let OlapToday = data[3];
 
+                this.dayFromDatabase = database.getDay(date);
+
                 this.daySelectorOptions = {
                     minDate: moment(database.getLowestDate()),
                     maxDate: moment(moment())
                 };
-
-                this.dayFromDatabase = database.getDay(date);
 
                 if (this.dayFromDatabase) {
                     this.cardData.holiday = this.dayFromDatabase.holiday;
@@ -330,6 +335,7 @@ export class DayViewComponent implements OnInit {
                     };
                 }
 
+                let totalSalesWithoutTax = 0;
                 if (moment().isSame(date, 'day')) {
                     let totals = dailyTotals.totals;
 
@@ -340,7 +346,7 @@ export class DayViewComponent implements OnInit {
                     let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
 
                     let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
-                    let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
+                    totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
 
                     this.cardData.sales = totalSales;
 
@@ -354,6 +360,59 @@ export class DayViewComponent implements OnInit {
                             change: (totalSales / OlapToday.aggregations.sales.fourWeekAvg) * 100
                         }
                     };
+                }
+
+                if (this.env.region === 'us') {
+                    this.display.laborCost = true;
+                    let laborCostDate = moment(date).utc().hour(23).minute(59).second(59);
+                    let laborCost = await this.dataService.getLaborCostByTime(laborCostDate);
+                    let today = _.get(laborCost, ['byDay', laborCostDate.format('YYYY-MM-DD')]);
+
+
+                    let time = moment();
+                    let weekStartDate = moment().day(laborCost.firstWeekday);
+                    let weekSales = 0;
+                    while(weekStartDate.isBefore(time)) {
+                        let day = database.getDay(weekStartDate);
+                        if(day) {
+                            weekSales += day.salesAndRefoundAmountIncludeVat;
+                        }
+                        weekStartDate.add(1, 'day');
+                    }
+
+                    let todaySales = 0;
+                    if(moment().isSame(date, 'day')) {
+                        todaySales = totalSalesWithoutTax;
+                        weekSales += todaySales;
+                    }
+                    else {
+                        todaySales = this.dayFromDatabase.salesAndRefoundAmountExcludeVat;
+                        weekSales += todaySales;
+                    }
+
+                    this.laborCost = {
+                        today: [],
+                        week: [],
+                        sales: {
+                            week: weekSales,
+                            today: todaySales
+                        }
+                    };
+
+                    //convert to array
+                    this.laborCost.week = laborCost.weekSummary;
+                    this.laborCost.week.byAssignments = _.values(this.laborCost.week.byAssignments);
+                    _.forEach(this.laborCost.week.byAssignments, byAssignments => {
+                        byAssignments.users = _.values(byAssignments.users);
+                    });
+
+                    if (today) {
+                        this.laborCost.today = today;
+                        this.laborCost.today.byAssignments = _.values(this.laborCost.today.byAssignments);
+                        _.forEach(this.laborCost.today.byAssignments, byAssignments => {
+                            byAssignments.users = _.values(byAssignments.users);
+                        });
+                    }
                 }
             });
 
@@ -682,6 +741,14 @@ export class DayViewComponent implements OnInit {
         if (!this.drill) {
 
         }
+    }
+
+    getPercentage(amount, total) {
+        if(!total) {
+            return 0;
+        }
+
+        return amount / total;
     }
 
 }

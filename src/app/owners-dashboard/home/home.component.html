@@ -13,7 +13,8 @@
         <ng-container *ngIf="!OlapFailed">
             <div class="text-center">
                 <dx-load-indicator></dx-load-indicator>
-                <p class="text-center saving"><span [translate]="'fetchingLatestAnalyticsData'">Fetching latest analytics data</span><span>.</span><span>.</span><span>.</span></p>
+                <p class="text-center saving"><span [translate]="'fetchingLatestAnalyticsData'">Fetching latest analytics data</span><span>.</span><span>.</span><span>.</span>
+                </p>
             </div>
         </ng-container>
     </div>
@@ -22,6 +23,46 @@
             <div class="col-sm-12 mb-3" *ngIf="isCurrentMonth()">
                 <app-card [cardData]="currentBdCardData" (click)="onDayRequest({date: 'currentBD'})"
                           style="cursor: pointer"></app-card>
+            </div>
+            <div class="col-sm-12 mb-3" *ngIf="display.laborCost && isCurrentMonth()">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card text-center bg-light dashboard-home-card shadow-card rounded-0">
+                            <div class="card-header font-weight-bold">Labor Cost</div>
+                            <div class="card-body p-0 m-0">
+                                <div class="row px-3">
+                                    <div class="col-4 px-0" (click)="onDayRequest({date: 'currentBD'})">
+                                        <div class="card bg-white text-center">
+                                            <h6 class="mb-0 pt-2">Today</h6>
+                                            <div class="card-body p-2">
+                                                <h5>{{laborCostCard.today.cost | curr:'0'}}</h5>
+                                                <p class="card-text small">{{laborCostCard.today.percentage | pct:'0'}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 px-1" (click)="onDayRequest({date: 'currentBD'})">
+                                        <div class="card bg-white text-center">
+                                            <h6 class="mb-0 pt-2">This Week</h6>
+                                            <div class="card-body p-2">
+                                                <h5>{{laborCostCard.week.cost | curr:'0'}}</h5>
+                                                <p class="card-text small">{{laborCostCard.week.percentage | pct:'0'}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 px-0" (click)="openOverTimeDialog()">
+                                        <div class="card bg-white text-center">
+                                            <h6 class="mb-0 pt-2">Overtime</h6>
+                                            <div class="card-body p-2">
+                                                <h5>{{laborCostCard.overtime.count}}</h5>
+                                                <p class="btn btn-info btn-sm">Show All</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div *ngIf="!loadingOlapData && showPreviousDay && isCurrentMonth()" class="col-sm-12 mb-3">
                 <app-card [cardData]="previousBdCardData" (click)="onDayRequest({date: 'previousBD'})"

@@ -7,7 +7,8 @@ import {
     OwnersDashboardCurrencyPipe,
     OwnersDashboardCountPipe,
     OwnersDashboardPercentPipe,
-    CurrencyPipe
+    CurrencyPipe,
+    OwnersDashboardHourPipe
 } from './owners-dashboard.pipes';
 
 import {HomeComponent} from './home/home.component';
@@ -82,6 +83,7 @@ import {DayRetentionTableComponent} from './day-view/day-retention-table/day-ret
 import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/day-month-summary-table.component';
 import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sales.component';
 import {MonthPickerDialogComponent} from './home/month-selector/month-picker-dialog.component';
+import {OverTimeUsersDialogComponent} from './home/over-time-users/over-time-users-dialog.component';
 import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
@@ -118,6 +120,7 @@ import {TranslateModule} from '@ngx-translate/core';
         CurrencyPipe,
         OwnersDashboardPercentPipe,
         OwnersDashboardCountPipe,
+        OwnersDashboardHourPipe,
 
         HomeComponent,
         OwnerSettingsComponent,
@@ -128,6 +131,7 @@ import {TranslateModule} from '@ngx-translate/core';
         MonthViewComponent,
         MonthSelectorComponent,
         MonthPickerDialogComponent,
+        OverTimeUsersDialogComponent,
         MonthGridComponent,
         DayViewComponent,
         DaySelectorComponent,
@@ -172,7 +176,8 @@ import {TranslateModule} from '@ngx-translate/core';
     ],
     entryComponents: [
         MonthSelectorComponent,
-        MonthPickerDialogComponent
+        MonthPickerDialogComponent,
+        OverTimeUsersDialogComponent
     ],
 })
 export class OwnersDashboardModule {

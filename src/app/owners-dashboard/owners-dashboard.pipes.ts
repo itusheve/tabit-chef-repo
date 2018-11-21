@@ -119,3 +119,19 @@ export class OwnersDashboardCountPipe implements PipeTransform {
         return this.decPipe.transform(value, '1.0-0');
     }
 }
+
+@Pipe({
+    name: 'hour',
+    pure: false
+})
+export class OwnersDashboardHourPipe implements PipeTransform {
+
+    transform(minutes: any): any {
+        minutes = Math.round(minutes);
+        let h = Math.floor(minutes / 60).toString();
+        let m = minutes % 60;
+        h = h < 10 ? '0' + h : h;
+        m = m < 10 ? '0' + m : m;
+        return `${h}:${m}`;
+    }
+}

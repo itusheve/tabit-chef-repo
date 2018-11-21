@@ -2,6 +2,7 @@ import {TranslateLoader} from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 const he = {
+    "laborCost": "עלות תפעול",
     "manager": "מנהל",
     "CHECK_NUMBER": "",
     "Discounts": "הנחה",
@@ -156,6 +157,7 @@ const he = {
     "takeaway": "לקחת"
 };
 const en = {
+    "laborCost": "Labor Cost",
     "manager": "Manager",
     "CHECK_NUMBER": "",
     "Discounts": "Discounts",
