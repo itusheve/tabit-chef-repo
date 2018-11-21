@@ -70,6 +70,8 @@ export class TokenInterceptor implements HttpInterceptor {
                             case 401:
                                 this.ds.log(`tokenInterceptor: intercept: catched error (1): 401`);
                                 return that.handle401Error(request, next);
+                            default:
+                                return observableThrowError(error);
                         }
                     } else {
                         this.ds.err(`tokenInterceptor: intercept: catched non http error`);

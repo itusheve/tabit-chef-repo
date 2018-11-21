@@ -71,7 +71,7 @@ export class OwnersDashboardCurrencyPipe implements PipeTransform {
         if (result) {
             if(!hideSymbol) {
                 if(value < 0){
-                    result = `${this.dataService.currencySymbol$.value}${result}-`;
+                    result = `-${this.dataService.currencySymbol$.value}${result}`;
                 } else {
                     result = `${this.dataService.currencySymbol$.value}${result}`;
                 }
