@@ -281,12 +281,12 @@ export class DayViewComponent implements OnInit {
         //this.dayDebounceStream$ = this.day$.pipe(debounceTime(350));
 
         //get card data for the day
-        combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.olapToday$)
+        combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.openDay$)
             .subscribe(async data => {
                 let date = data[0];
                 let database = data[1];
                 let dailyTotals = data[2];
-                let OlapToday = data[3];
+                let openDay = data[3];
 
                 this.dayFromDatabase = database.getDay(date);
 
@@ -356,8 +356,8 @@ export class DayViewComponent implements OnInit {
                             change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
                         },*/
                         weekly: {
-                            percentage: totalSales ? ((totalSales / OlapToday.aggregations.sales.fourWeekAvg) - 1) : 0,
-                            change: (totalSales / OlapToday.aggregations.sales.fourWeekAvg) * 100
+                            percentage: openDay.prcDiff ? openDay.prcDiff / 100 : 0,
+                            change: openDay.prcDiff
                         }
                     };
                 }

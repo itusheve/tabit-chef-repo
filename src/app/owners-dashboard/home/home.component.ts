@@ -211,10 +211,10 @@ export class HomeComponent implements OnInit {
     }
 
     getTodayData() {
-        combineLatest(this.dataService.dailyTotals$, this.dataService.olapToday$, this.dataService.vat$)
+        combineLatest(this.dataService.dailyTotals$, this.dataService.openDay$, this.dataService.vat$)
             .subscribe(async data => {
                 let dailyTotals = data[0];
-                let day = data[1];
+                let openDay = data[1];
                 let incTax = data[2];
                 let restaurantTime = moment.utc(dailyTotals.businessDate);
 
@@ -252,8 +252,8 @@ export class HomeComponent implements OnInit {
                         change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
                     },*/
                     weekly: {
-                        percentage: totalSales ? ((totalSales / day.aggregations.sales.fourWeekAvg) - 1) : 0,
-                        change: (totalSales / day.aggregations.sales.fourWeekAvg) * 100
+                        percentage: openDay.prcDiff ? openDay.prcDiff / 100 : 0,
+                        change: openDay.prcDiff
                     }
                 };
 

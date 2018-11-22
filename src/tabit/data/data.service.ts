@@ -538,32 +538,13 @@ export class DataService {
         }*/
     });
 
-    public olapToday$: Observable<any> = Observable.create(async obs => {
+    public openDay$: Observable<any> = Observable.create(async obs => {
         this.refresh$
             .subscribe(async refresh => {
                 let currentDateTime = this.getCurrentRestTime();
                 let olapTodayData = await this.olapEp.getToday(currentDateTime);
 
-                let today = _.find(olapTodayData, {type: 'today'});
-                let fourWeekAvg = _.find(olapTodayData, {type: 'avg4weeks'});
-
-                if (!today) {
-                    return;
-                }
-
-                let day = {
-                    netAmount: today.salesNetAmount,
-                    date: currentDateTime,
-                    aggregations: {
-                        sales: {
-                            netAmount: today.salesNetAmount,
-                            amount: today.grossSales,
-                            fourWeekAvgNet: fourWeekAvg.salesNetAmount,
-                            fourWeekAvg: fourWeekAvg.grossSales,
-                        }
-                    }
-                };
-                obs.next(day);
+                obs.next(olapTodayData);
 
             });
     });
