@@ -386,7 +386,7 @@ export class DayViewComponent implements OnInit {
                         weekSales += todaySales;
                     }
                     else {
-                        todaySales = this.dayFromDatabase.salesAndRefoundAmountExcludeVat;
+                        todaySales = _.get(this.dayFromDatabase, 'salesAndRefoundAmountExcludeVat', 0);
                         weekSales += todaySales;
                     }
 

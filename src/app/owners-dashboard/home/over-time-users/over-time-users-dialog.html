@@ -5,19 +5,19 @@
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Hours</th>
-            <th scope="col">Cost</th>
+            <th scope="col" class="start">Name</th>
+            <th scope="col" class="end">Hours</th>
+            <th scope="col" class="end">Cost</th>
             <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
         <ng-container *ngFor="let user of users">
             <tr>
-                <td>{{user.name}}</td>
-                <td>{{user.minutes | hour}}</td>
-                <td>{{user.cost | curr:'1'}}</td>
-                <td *ngIf="user.alert"><i class="material-icons" [ngClass]="getBackgroundClass(user.alert)">priority_high</i></td>
+                <td class="start">{{user.name}}</td>
+                <td class="end">{{user.minutes | hour}}</td>
+                <td class="end">{{user.cost | curr:'2'}}</td>
+                <td *ngIf="user.alert" class="start px-0"><i class="material-icons" [ngClass]="getBackgroundClass(user.alert)">priority_high</i></td>
             </tr>
         </ng-container>
         </tbody>

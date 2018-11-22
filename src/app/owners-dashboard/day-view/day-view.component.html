@@ -46,7 +46,7 @@
                                 <mat-expansion-panel-header>
                                     <mat-panel-title class="justify-content-between">
                                         <span class="labor-header">Today</span>
-                                        <span class="labor-cost">{{laborCost.today.cost | curr:'1'}}</span><span class="labor-percentage">{{getPercentage(laborCost.today.cost, laborCost.sales.today) | pct:'1'}}</span>
+                                        <span class="labor-cost">{{laborCost.today.cost | curr:'2'}}</span><span class="labor-percentage">{{getPercentage(laborCost.today.cost, laborCost.sales.today) | pct:'1'}}</span>
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <mat-accordion [multi]="true">
@@ -55,7 +55,7 @@
                                             <mat-expansion-panel-header>
                                                 <mat-panel-title class="justify-content-between small font-weight-normal">
                                                     <span class="labor-header">{{assignment.name || 'NA'}}</span>
-                                                    <span class="labor-cost">{{assignment.cost | curr:'1'}}</span><span class="labor-percentage">{{getPercentage(assignment.cost, laborCost.sales.today) | pct:'1'}}</span>
+                                                    <span class="labor-cost">{{assignment.cost | curr:'2'}}</span><span class="labor-percentage">{{getPercentage(assignment.cost, laborCost.sales.today) | pct:'1'}}</span>
                                                 </mat-panel-title>
                                             </mat-expansion-panel-header>
 
@@ -68,7 +68,7 @@
                                                 <ng-container *ngFor="let user of assignment.users">
                                                     <tr>
                                                         <td>{{user.name}}</td>
-                                                        <td class="align-end">{{user.cost | curr:'1'}}</td>
+                                                        <td class="align-end">{{user.cost | curr:'2'}}</td>
                                                         <td class="align-end">{{getPercentage(user.cost, laborCost.sales.today) | pct:'1'}}</td>
                                                     </tr>
                                                 </ng-container>
@@ -82,7 +82,7 @@
                                 <mat-expansion-panel-header>
                                     <mat-panel-title class="justify-content-between">
                                         <span class="labor-header">This Week</span>
-                                        <span class="labor-cost">{{laborCost.week.cost | curr:'1'}}</span><span class="labor-percentage">{{getPercentage(laborCost.week.cost, laborCost.sales.week) | pct:'1'}}</span>
+                                        <span class="labor-cost">{{laborCost.week.cost | curr:'2'}}</span><span class="labor-percentage">{{getPercentage(laborCost.week.cost, laborCost.sales.week) | pct:'1'}}</span>
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <mat-accordion [multi]="true">
@@ -91,7 +91,7 @@
                                             <mat-expansion-panel-header>
                                                 <mat-panel-title class="justify-content-between small font-weight-normal">
                                                     <span class="labor-header">{{assignment.name || 'NA'}}</span>
-                                                    <span class="labor-cost">{{assignment.cost | curr:'1'}}</span><span class="labor-percentage">{{getPercentage(assignment.cost, laborCost.sales.week) | pct:'1'}}</span>
+                                                    <span class="labor-cost">{{assignment.cost | curr:'2'}}</span><span class="labor-percentage">{{getPercentage(assignment.cost, laborCost.sales.week) | pct:'1'}}</span>
                                                 </mat-panel-title>
                                             </mat-expansion-panel-header>
 
@@ -104,7 +104,7 @@
                                                 <ng-container *ngFor="let user of assignment.users">
                                                     <tr>
                                                         <td>{{user.name}}</td>
-                                                        <td class="align-end">{{user.cost | curr:'1'}}</td>
+                                                        <td class="align-end">{{user.cost | curr:'2'}}</td>
                                                         <td class="align-end">{{getPercentage(user.cost, laborCost.sales.week) | pct:'1'}}</td>
                                                     </tr>
                                                 </ng-container>

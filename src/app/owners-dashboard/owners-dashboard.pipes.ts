@@ -132,8 +132,8 @@ export class OwnersDashboardHourPipe implements PipeTransform {
         let h = Math.floor(minutes / 60);
         let m = minutes % 60;
 
-        _.padStart(h,2,'0');
-        _.padStart(m,2,'0');
+        h = _.padStart(h,2,'0');
+        m = _.padStart(m,2,'0');
 
         return `${h}:${m}`;
     }

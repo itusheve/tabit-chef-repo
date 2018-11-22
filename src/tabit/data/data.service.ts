@@ -1677,7 +1677,7 @@ export class DataService {
             let workHours = user.minutes / 60;
             if(workHours > workHoursForOrangeAlert) {
                 sortedLaborCost.overtime.count++;
-                if(workHours > workHoursForRedAlert) {
+                if(workHours >= workHoursForRedAlert) {
                     sortedLaborCost.weekSummary.byUser[_id].alert = 'red';
                 }
                 else {
