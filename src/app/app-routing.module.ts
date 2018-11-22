@@ -2,9 +2,7 @@ import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 
 import {LoginComponent} from './auth/login/login.component';
-import {OrgsComponent} from './orgs/orgs.component';
-import {UserGuard} from './auth/user-guard.service';
-import {OrgGuard} from './auth/org-guard.service';
+import {DailyReportGuard} from './auth/daily-report-guard.service';
 import {environment} from '../environments/environment';
 
 const appRoutes: Routes = [
@@ -12,10 +10,11 @@ const appRoutes: Routes = [
         path: 'login',
         component: LoginComponent
     },
-    /*{
-        path: 'owners-dashboard/daily-report/:date',
+    {
+        path: 'daily-report',
+        canActivate: [DailyReportGuard],
         component: LoginComponent
-    },*/
+    },
     {path: '**', redirectTo: environment.managerDashboardMode ? '/managers-dashboard' : '/owners-dashboard/home'}
 ];
 

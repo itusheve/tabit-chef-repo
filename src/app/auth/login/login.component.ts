@@ -62,16 +62,31 @@ export class LoginComponent implements OnInit {
     login() {
         if (this.email.invalid || this.password.invalid) return;
 
+        let returnPath = this.route.snapshot.paramMap.get('path');
+        let businessDate = this.route.snapshot.paramMap.get('businessDate');
+        let siteId = this.route.snapshot.paramMap.get('siteId');
+
         this.authService.login({
             email: this.email.value,
             password: this.password.value
         })
             .then(() => {
-                const paramObj: any = {};
+                const params: any = {};
                 if (this.mode === 'switch') {
-                    paramObj.m = 's';
+                    params.m = 's';
                 }
-                this.router.navigate(['/restaurants', paramObj]);
+                if (businessDate) {
+                    params.businessDate = businessDate;
+                }
+                if (siteId) {
+                    params.siteId = siteId;
+                }
+
+                if(!returnPath) {
+                    returnPath = '/restaurants';
+                }
+
+                this.router.navigate([returnPath, params]);
             })
             .catch(err => {
                 this.snackBar.open(tmpTranslations.get('login.userPassIncorrect'), null, {

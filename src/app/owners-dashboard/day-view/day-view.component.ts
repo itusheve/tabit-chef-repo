@@ -663,13 +663,12 @@ export class DayViewComponent implements OnInit {
             this.byShiftSummaryTblsData = undefined;
         });
 
-        this.route.paramMap
-            .subscribe((params: ParamMap) => {
-                const dateStr = params.get('businessDate');
-                this.day = moment(dateStr);
-                this.category = params.get('category');
-                this.day$.next(this.day);
-            });
+        let businessDate = this.route.snapshot.paramMap.get('businessDate');
+        this.day = moment(businessDate);
+        this.day$.next(this.day);
+
+        this.category = this.route.snapshot.paramMap.get('category');
+        this.day$.next(this.day);
     }
 
     onDateChanged(dateM: moment.Moment) {
