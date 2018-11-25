@@ -2,6 +2,7 @@ import {TranslateLoader} from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 const he = {
+    "ownersDashboard": "דשבורד בעלים",
     "laborCost": "עלות תפעול",
     "manager": "מנהל",
     "CHECK_NUMBER": "",
@@ -157,6 +158,7 @@ const he = {
     "takeaway": "לקחת"
 };
 const en = {
+    "ownersDashboard": "Owners Dashboard",
     "laborCost": "Labor Cost",
     "manager": "Manager",
     "CHECK_NUMBER": "",

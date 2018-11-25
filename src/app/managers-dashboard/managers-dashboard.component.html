@@ -12,13 +12,13 @@
 
     <div class="g-1 flex d-col content">
       <button class="s-0" *ngIf="this.sideNavConfig.content.showMySitesBtn" mat-raised-button [routerLink]="['/restaurants', { m: 's'}]">
-        <span i18n="owners-dashboard@@mySites">My Sites</span>
+        <span [translate]="'menu.mySites'">My Sites</span>
       </button>
       <button class="s-0" mat-raised-button [routerLink]="['/owners-dashboard/home']">
-        <span i18n="owners-dashboard@@ownerDashboard">Owner Dashboard</span>
+        <span [translate]="'ownerDashboard'">Owner Dashboard</span>
       </button>
       <button class="s-0" *ngIf="this.sideNavConfig.content.showLogoutBtn" mat-raised-button (click)="logout()">
-        <span i18n="owners-dashboard@@logout">Logout</span>
+        <span [translate]="'menu.logout'">Logout</span>
       </button>
 
       <div class="versions s-0 flex d-col a-center" style="margin-top: auto;">
