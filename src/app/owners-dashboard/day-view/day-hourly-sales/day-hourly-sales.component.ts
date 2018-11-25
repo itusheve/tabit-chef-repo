@@ -29,10 +29,10 @@ export class DayHourlySalesComponent implements OnChanges {
         this.loading = true;
         this.noData = false;
 
-        let highestRecord = _.max([_.maxBy(this.data, function(o) { return o.salesNetAmount; }), _.maxBy(this.data, function(o) { return o.salesNetAmountAvg; })]);
+        let highestRecord = _.max([_.maxBy(this.data, function(o) { return o.salesNetAmount || 0; }), _.maxBy(this.data, function(o) { return o.salesNetAmountAvg || 0; })]);
 
         if(highestRecord) {
-            this.maxValue = Math.max(highestRecord.salesNetAmount, highestRecord.salesNetAmountAvg);
+            this.maxValue = Math.max(highestRecord.salesNetAmount || 0, highestRecord.salesNetAmountAvg || 0);
         }
     }
 
