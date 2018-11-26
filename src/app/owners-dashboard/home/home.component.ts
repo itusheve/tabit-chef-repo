@@ -130,7 +130,7 @@ export class HomeComponent implements OnInit {
                 return;
             }
 
-            let time = moment();
+            let time = this.dataService.getCurrentRestTime();
             let laborCost = await this.dataService.getLaborCostByTime(time);
             if(!laborCost) {
                 return;

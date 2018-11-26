@@ -401,14 +401,14 @@ export class DayViewComponent implements OnInit {
 
                     //convert to array
                     this.laborCost.week = laborCost.weekSummary;
-                    this.laborCost.week.byAssignments = _.values(this.laborCost.week.byAssignments);
+                    this.laborCost.week.byAssignments = _.values(_.orderBy(this.laborCost.week.byAssignments, ['cost'], ['desc']));
                     _.forEach(this.laborCost.week.byAssignments, byAssignments => {
                         byAssignments.users = _.values(byAssignments.users);
                     });
 
                     if (today) {
                         this.laborCost.today = today;
-                        this.laborCost.today.byAssignments = _.values(this.laborCost.today.byAssignments);
+                        this.laborCost.today.byAssignments = _.values(_.orderBy(this.laborCost.today.byAssignments, ['cost'], ['desc']));
                         _.forEach(this.laborCost.today.byAssignments, byAssignments => {
                             byAssignments.users = _.values(byAssignments.users);
                         });

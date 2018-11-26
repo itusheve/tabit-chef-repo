@@ -61,7 +61,7 @@ export class MonthGridComponent implements OnInit {
             _.each(days, day => {
                 if (day.businessDate !== currentDate.format('YYYY-MM-DD')) {
                     this.days.push(day);
-                    if (day.AvgYearSalesAndRefoundAmountIncludeVat) {
+                    if (day.AvgPySalesAndRefoundAmountIncludeVat) {
                         this.hasYearlyAvg = true;
                     }
                 }
@@ -154,46 +154,6 @@ export class MonthGridComponent implements OnInit {
         else {
             return '';
         }
-    }
-
-    getComparator(day) {
-        let value = 0;
-        if (this.avgPeriodComparator === 'month') {
-            if (this.category === 'sales') {
-                value = day.AvgNweeksSalesAndRefoundAmountIncludeVat;
-            }
-            else if (this.category === 'cancellations') {
-                value = day.avgNweeksVoidsPrc / 100;
-            }
-            else if (this.category === 'retention') {
-                value = day.avgNweeksMrPrc / 100;
-            }
-            else if (this.category === 'operational') {
-                value = day.avgNweeksOperationalPrc / 100;
-            }
-            else if (this.category === 'employee') {
-                value = day.avgEmployeesAmount;
-            }
-        }
-        else if (this.avgPeriodComparator === 'year') {
-            if (this.category === 'sales') {
-                value = day.AvgYearSalesAndRefoundAmountIncludeVat;
-            }
-            else if (this.category === 'cancellations') {
-                value = day.avgYearVoidsPrc / 100;
-            }
-            else if (this.category === 'retention') {
-                value = day.avgYearMrPrc / 100;
-            }
-            else if (this.category === 'operational') {
-                value = day.avgYearOperationalPrc / 100;
-            }
-            else if (this.category === 'employee') {
-                value = day.avgEmployeesAmount;
-            }
-        }
-
-        return value;
     }
 
     getDayValue(day) {
