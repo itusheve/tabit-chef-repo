@@ -114,6 +114,10 @@ export class DayHourlySalesComponent implements OnChanges {
             return inner;
         }
 
+        if(record.salesNetAmount < 0) {
+            return 0;
+        }
+
         return outer;
     }
 
@@ -121,6 +125,7 @@ export class DayHourlySalesComponent implements OnChanges {
         if(!record.salesNetAmountAvg || record.salesNetAmount > record.salesNetAmountAvg) {
             return 100;
         }
+
         return ((record.salesNetAmount / this.maxValue) / (record.salesNetAmountAvg / this.maxValue)) * 100;
     }
 

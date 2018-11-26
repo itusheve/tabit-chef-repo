@@ -70,30 +70,58 @@ export class MonthGridComponent implements OnInit {
             this.month = monthlyData;
 
 
-            let highestSales = _.max([_.maxBy(this.days, function(o) { return o.salesAndRefoundAmountIncludeVat; }), _.maxBy(this.days, function(o) { return o.AvgNweeksSalesAndRefoundAmountIncludeVat; })]);
+            let highestSales = _.max([_.maxBy(this.days, function(o) { return o.salesAndRefoundAmountIncludeVat || 0; }), _.maxBy(this.days, function(o) { return o.AvgNweeksSalesAndRefoundAmountIncludeVat || 0; })]);
             if(highestSales) {
-                this.maxValuesByCategory['sales'] = Math.max(highestSales.salesAndRefoundAmountIncludeVat, highestSales.AvgNweeksSalesAndRefoundAmountIncludeVat);
+                this.maxValuesByCategory['sales'] = Math.max(highestSales.salesAndRefoundAmountIncludeVat || 0, highestSales.AvgNweeksSalesAndRefoundAmountIncludeVat || 0);
             }
 
-            let highestCancellations = _.max([_.maxBy(this.days, function(o) { return o.voidsPrc; }), _.maxBy(this.days, function(o) { return o.avgNweeksVoidsPrc; })]);
+            let highestCancellations = _.max([_.maxBy(this.days, function(o) { return o.voidsPrc || 0; }), _.maxBy(this.days, function(o) { return o.avgNweeksVoidsPrc || 0; })]);
             if(highestCancellations) {
-                this.maxValuesByCategory['cancellations'] = Math.max(highestCancellations.voidsPrc, highestCancellations.avgNweeksVoidsPrc);
+                this.maxValuesByCategory['cancellations'] = Math.max(highestCancellations.voidsPrc || 0, highestCancellations.avgNweeksVoidsPrc || 0);
             }
 
-            let highestRetention = _.max([_.maxBy(this.days, function(o) { return o.mrPrc; }), _.maxBy(this.days, function(o) { return o.avgNweeksMrPrc; })]);
+            let highestRetention = _.max([_.maxBy(this.days, function(o) { return o.mrPrc || 0; }), _.maxBy(this.days, function(o) { return o.avgNweeksMrPrc || 0; })]);
             if(highestRetention) {
-                this.maxValuesByCategory['retention'] = Math.max(highestRetention.mrPrc, highestRetention.avgNweeksMrPrc);
+                this.maxValuesByCategory['retention'] = Math.max(highestRetention.mrPrc || 0, highestRetention.avgNweeksMrPrc || 0);
             }
 
-            let highestOperational = _.max([_.maxBy(this.days, function(o) { return o.operationalPrc; }), _.maxBy(this.days, function(o) { return o.avgNweeksOperationalPrc; })]);
+            let highestOperational = _.max([_.maxBy(this.days, function(o) { return o.operationalPrc || 0; }), _.maxBy(this.days, function(o) { return o.avgNweeksOperationalPrc || 0; })]);
             if(highestOperational) {
-                this.maxValuesByCategory['operational'] = Math.max(highestOperational.operationalPrc, highestOperational.avgNweeksOperationalPrc);
+                this.maxValuesByCategory['operational'] = Math.max(highestOperational.operationalPrc || 0, highestOperational.avgNweeksOperationalPrc || 0);
             }
 
-            let highestEmployee = _.max([_.maxBy(this.days, function(o) { return o.EmployeesAmount; }), _.maxBy(this.days, function(o) { return o.avgEmployeesAmount; })]);
+            let highestEmployee = _.max([_.maxBy(this.days, function(o) { return o.EmployeesAmount || 0; }), _.maxBy(this.days, function(o) { return o.avgEmployeesAmount || 0; })]);
             if(highestEmployee) {
-                this.maxValuesByCategory['employee'] = Math.max(highestEmployee.EmployeesAmount, highestEmployee.avgEmployeesAmount);
+                this.maxValuesByCategory['employee'] = Math.max(highestEmployee.EmployeesAmount || 0, highestEmployee.avgEmployeesAmount || 0);
             }
+
+            ///////////////////////////////////////////////////////////////
+
+            let highestSalesYear = _.max([_.maxBy(this.days, function(o) { return o.salesAndRefoundAmountIncludeVat || 0; }), _.maxBy(this.days, function(o) { return o.AvgPySalesAndRefoundAmountIncludeVat || 0; })]);
+            if(highestSalesYear) {
+                this.maxValuesByCategory['salesYear'] = Math.max(highestSales.salesAndRefoundAmountIncludeVat || 0, highestSales.AvgPySalesAndRefoundAmountIncludeVat || 0);
+            }
+
+            let highestCancellationsYear = _.max([_.maxBy(this.days, function(o) { return o.voidsPrc || 0; }), _.maxBy(this.days, function(o) { return o.avgPyVoidsPrc || 0; })]);
+            if(highestCancellationsYear) {
+                this.maxValuesByCategory['cancellationsYear'] = Math.max(highestCancellations.voidsPrc || 0, highestCancellations.avgPyVoidsPrc || 0);
+            }
+
+            let highestRetentionYear = _.max([_.maxBy(this.days, function(o) { return o.mrPrc || 0; }), _.maxBy(this.days, function(o) { return o.avgPyMrPrc || 0; })]);
+            if(highestRetentionYear) {
+                this.maxValuesByCategory['retentionYear'] = Math.max(highestRetention.mrPrc || 0, highestRetention.avgPyMrPrc || 0);
+            }
+
+            let highestOperationalYear = _.max([_.maxBy(this.days, function(o) { return o.operationalPrc || 0; }), _.maxBy(this.days, function(o) { return o.avgPyOperationalPrc || 0; })]);
+            if(highestOperationalYear) {
+                this.maxValuesByCategory['operationalYear'] = Math.max(highestOperational.operationalPrc || 0, highestOperational.avgPyOperationalPrc || 0);
+            }
+
+            let highestEmployeeYear = _.max([_.maxBy(this.days, function(o) { return o.EmployeesAmount || 0; }), _.maxBy(this.days, function(o) { return o.avgPyEmployeesAmount || 0; })]);
+            if(highestEmployeeYear) {
+                this.maxValuesByCategory['employeeYear'] = Math.max(highestEmployee.EmployeesAmount || 0, highestEmployee.avgPyEmployeesAmount || 0);
+            }
+
         });
     }
 
@@ -241,19 +269,19 @@ export class MonthGridComponent implements OnInit {
         }
         else if (this.avgPeriodComparator === 'year') {
             if (this.category === 'sales') {
-                value = this.incTax ? day.AvgYearSalesAndRefoundAmountIncludeVat : day.AvgNweeksSalesAndRefoundAmountIncludeVat / day.vat;
+                value = this.incTax ? day.AvgYearSalesAndRefoundAmountIncludeVat : day.AvgPySalesAndRefoundAmountIncludeVat / day.vat;
             }
             else if (this.category === 'cancellations') {
-                value = day.avgYearVoidsPrc / 100;
+                value = day.avgPyVoidsPrc / 100;
             }
             else if (this.category === 'retention') {
-                value = day.avgYearMrPrc / 100;
+                value = day.avgPyMrPrc / 100;
             }
             else if (this.category === 'operational') {
-                value = day.avgYearOperationalPrc / 100;
+                value = day.avgPyOperationalPrc / 100;
             }
             else if (this.category === 'employee') {
-                value = this.incTax ? day.avgEmployeesAmount : day.avgEmployeesAmount / day.vat;
+                value = this.incTax ? day.avgPyEmployeesAmount : day.avgPyEmployeesAmount / day.vat;
             }
         }
 
@@ -267,15 +295,30 @@ export class MonthGridComponent implements OnInit {
     //new procedures
     outerWidth(record) {
         let result = 0;
-        if(this.category === 'sales') {
-            result = record.AvgNweeksSalesAndRefoundAmountIncludeVat / this.maxValuesByCategory['sales'] * 100;
+
+        if(this.avgPeriodComparator === 'month') {
+            if(this.category === 'sales') {
+                result = record.AvgNweeksSalesAndRefoundAmountIncludeVat / this.maxValuesByCategory['sales'] * 100;
+            }
+            else if(this.category === 'employee') {
+                result = record.avgEmployeesAmount / this.maxValuesByCategory['employee'] * 100;
+            }
+            else {
+                result = this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category] * 100;
+            }
         }
-        else if(this.category === 'employee') {
-            result = record.avgEmployeesAmount / this.maxValuesByCategory['employee'] * 100;
+        else if(this.avgPeriodComparator === 'year') {
+            if(this.category === 'sales') {
+                result = record.AvgNweeksSalesAndRefoundAmountIncludeVat / this.maxValuesByCategory['salesYear'] * 100;
+            }
+            else if(this.category === 'employee') {
+                result = record.avgEmployeesAmount / this.maxValuesByCategory['employeeYear'] * 100;
+            }
+            else {
+                result = this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category + 'Year'] * 100;
+            }
         }
-        else {
-            result = this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category] * 100;
-        }
+
 
         if(result > 100) {
             return 100;
@@ -287,12 +330,25 @@ export class MonthGridComponent implements OnInit {
     innerAndOuterWidth(record) {
         let outer = this.outerWidth(record);
         let inner;
-        if(this.category === 'sales' || this.category === 'employee') {
-            inner = this.getDayAmount(record) / this.maxValuesByCategory[this.category] * 100;
+
+        if(this.avgPeriodComparator === 'month') {
+            if(this.category === 'sales' || this.category === 'employee') {
+                inner = this.getDayAmount(record) / this.maxValuesByCategory[this.category] * 100;
+            }
+            else {
+                inner = this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category] * 100;
+            }
         }
-        else {
-            inner = this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category] * 100;
+        else if(this.avgPeriodComparator === 'year') {
+            if(this.category === 'sales' || this.category === 'employee') {
+                inner = this.getDayAmount(record) / this.maxValuesByCategory[this.category + 'Year'] * 100;
+            }
+            else {
+                inner = this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category + 'Year'] * 100;
+            }
         }
+
+
 
 
         if(this.getDayAmount(record) > this.getAvgPeriodValueByCategory(record) && inner > outer) {
@@ -311,12 +367,23 @@ export class MonthGridComponent implements OnInit {
             return 100;
         }
 
-        if(this.category === 'sales' || this.category === 'employee') {
-            return ((this.getDayAmount(record) / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) / this.maxValuesByCategory[this.category])) * 100;
+        if(this.avgPeriodComparator === 'month') {
+            if(this.category === 'sales' || this.category === 'employee') {
+                return ((this.getDayAmount(record) / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) / this.maxValuesByCategory[this.category])) * 100;
 
+            }
+            else {
+                return ((this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category])) * 100;
+            }
         }
-        else {
-            return ((this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category])) * 100;
+        else if(this.avgPeriodComparator === 'year') {
+            if(this.category === 'sales' || this.category === 'employee') {
+                return ((this.getDayAmount(record) / this.maxValuesByCategory[this.category + 'Year']) / (this.getAvgPeriodValueByCategory(record) / this.maxValuesByCategory[this.category + 'Year'])) * 100;
+
+            }
+            else {
+                return ((this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category + 'Year']) / (this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category + 'Year'])) * 100;
+            }
         }
     }
 }
