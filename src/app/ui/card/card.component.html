@@ -56,7 +56,7 @@
                                 <span class="text-dark">{{(cardData.averages.yearly.percentage) | pct: 1}}</span>
                                 <span class="text-body px-1" [translate]="'lastYear'"></span>
                             </tr>
-                            <tr *ngIf="cardData.averages?.weekly">
+                            <tr *ngIf="cardData.averages?.weekly && abs(cardData.averages.weekly.percentage) < 400">
                                 <span>
                                     <mat-icon *ngIf="cardData.averages.weekly.percentage"
                                               [ngClass]="[getPercentageCssClass(cardData.averages.weekly.percentage, true, cardData.averages.weekly.change),getIconClass(cardData.averages.weekly.change)]"

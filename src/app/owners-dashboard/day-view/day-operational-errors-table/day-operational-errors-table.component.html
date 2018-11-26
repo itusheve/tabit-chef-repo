@@ -69,9 +69,9 @@
                         (click)="orderClicked(tuple.orderNumber)"
                         [ngClass]="{'lastViewed': lastViewed == tuple.orderNumber}"
                 >
-                    <td dir="rtl">{{tuple.waiter}}<span style="font-size: 12px; display: block">{{tuple.approvedBy}}</span></td>
+                    <td>{{tuple.waiter}}<span style="font-size: 12px; display: block">{{tuple.approvedBy}}</span></td>
                     <td>
-                        <span dir="rtl">
+                        <span>
                             {{tuple.orderNumber}}
                         </span>
                         <br>

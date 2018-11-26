@@ -83,7 +83,7 @@ export class DaySelectorComponent implements OnChanges {
             return this.tabitHelper.getColorClassByPercentage((day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) * 100, true);
         }
         else {
-            return '';
+            return 'bg-secondary text-white';
         }
 
     }

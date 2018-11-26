@@ -91,4 +91,8 @@ export class CardComponent implements OnInit {
         }
         return classList;
     }
+
+    abs(value) {
+        return Math.abs(value);
+    }
 }

@@ -31,7 +31,7 @@ export class CurrencyPipe implements PipeTransform {
         if (result) {
             if(!disableSymbol) {
                 if(value < 0){
-                    result = `<span style="font-size: calc(100% - 4px)">${this.dataService.currencySymbol$.value}</span>${result}-`;
+                    result = `<span style="font-size: calc(100% - 4px)">${this.dataService.currencySymbol$.value}</span>-${result}`;
                 } else {
                     result = `<span style="font-size: calc(100% - 4px)">${this.dataService.currencySymbol$.value}</span>${result}`;
                 }

@@ -38,8 +38,10 @@ export class DayOrdersTableComponent implements OnChanges {
     public sortBy: string;//time, number, waiter, sales
     public sortDir = 'asc';//asc | desc
     public filters: { type: string, on: boolean }[] = [];
+    public env;
 
     constructor(private dataService: DataService) {
+        this.env = environment;
     }
 
     ngOnChanges(o: SimpleChanges) {
