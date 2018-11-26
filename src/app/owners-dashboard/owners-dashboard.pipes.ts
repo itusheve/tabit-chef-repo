@@ -31,13 +31,25 @@ export class CurrencyPipe implements PipeTransform {
         if (result) {
             if(!disableSymbol) {
                 if(value < 0){
-                    result = `<span style="font-size: calc(100% - 4px)">${this.dataService.currencySymbol$.value}</span>-${result}`;
+                    if(environment.lang === 'he') {
+                        result = `<span style="font-size: calc(100% - 4px)">${this.dataService.currencySymbol$.value}</span>${result}-`;
+                    }
+                    else {
+                        result = `<span style="font-size: calc(100% - 4px)">-${this.dataService.currencySymbol$.value}</span>${result}`;
+                    }
+
                 } else {
                     result = `<span style="font-size: calc(100% - 4px)">${this.dataService.currencySymbol$.value}</span>${result}`;
                 }
 
             } else if(value < 0) {
-                result = `-${result}`;
+                if(environment.lang === 'he') {
+                    result = `${result}-`;
+                }
+                else {
+                    result = `-${result}`;
+                }
+
             }
         }
 
@@ -71,13 +83,24 @@ export class OwnersDashboardCurrencyPipe implements PipeTransform {
         if (result) {
             if(!hideSymbol) {
                 if(value < 0){
-                    result = `-${this.dataService.currencySymbol$.value}${result}`;
+                    if(environment.lang === 'he') {
+                        result = `${this.dataService.currencySymbol$.value}${result}-`;
+                    }
+                    else {
+                        result = `-${this.dataService.currencySymbol$.value}${result}`;
+                    }
+
                 } else {
                     result = `${this.dataService.currencySymbol$.value}${result}`;
                 }
 
             } else if(value < 0) {
-                result = `-${result}`;
+                if(environment.lang === 'he') {
+                    result = `${result}-`;
+                }
+                else {
+                    result = `-${result}`;
+                }
             }
         }
 
