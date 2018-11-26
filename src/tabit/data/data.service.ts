@@ -1536,13 +1536,18 @@ export class DataService {
             return _.get(res, '[0]');
         });
 
-        let laborCost = await this.rosEp.get('reports/attendance', {time: time.toISOString()}).then(function (res) {
-            return _.get(res, 'byDay');
-        });
-
         let workHoursForOrangeAlert = _.get(configuration, 'workHoursRules.workHoursForOrangeAlert');
         let workHoursForRedAlert = _.get(configuration, 'workHoursRules.workHoursForRedAlert');
         let firstWeekday = _.get(configuration, 'workHoursRules.firstWeekday');
+        let defaultPeriod = _.get(configuration, 'workHoursRules.defaultPeriod');
+
+        if(defaultPeriod !== 'weekly') {
+            return null;
+        }
+
+        let laborCost = await this.rosEp.get('reports/attendance', {time: time.toISOString()}).then(function (res) {
+            return _.get(res, 'byDay');
+        });
 
         let sortedLaborCost = {
             firstWeekday: firstWeekday === 'sunday' ? 0 : 1,
