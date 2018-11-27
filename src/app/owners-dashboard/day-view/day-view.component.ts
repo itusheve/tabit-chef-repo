@@ -46,6 +46,7 @@ export class DayViewComponent implements OnInit {
     public dayFromDatabase: any;
     public hasData: boolean;
     public hasNoDataForToday: boolean;
+    public salesAmountInProcess: number;
 
     public region: string;
 
@@ -174,7 +175,6 @@ export class DayViewComponent implements OnInit {
     public salesByHour: any;
     public today: moment.Moment;
     public bdIsCurrentBd: boolean;
-    public closedOpenSalesDiff: number;
     public openOrders: any;
 
     private day$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment());

@@ -127,6 +127,7 @@
                     [orders]="orders"
                     [bdIsCurrentBd]="bdIsCurrentBd"
                     [todayOpenOrders]="openOrders"
+                    [todaySales]="this.cardData.sales"
                     (onOrderClicked)="onOrderClicked($event)"
                     (onOpenOrderClicked)="onOpenOrderClicked($event)"
             ></app-day-orders-table>

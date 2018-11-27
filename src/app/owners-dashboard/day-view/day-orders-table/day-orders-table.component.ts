@@ -27,10 +27,12 @@ export class DayOrdersTableComponent implements OnChanges {
     @Input() orders: Order[];
     @Input() lastViewed: Order;
     @Input() bdIsCurrentBd: boolean;
+    @Input() todaySales: any;
     @Input() todayOpenOrders: any;
     @Output() onOrderClicked = new EventEmitter();
     @Output() onOpenOrderClicked = new EventEmitter();
 
+    public salesInProcessingAmount;
     public byOrderTypes: OrderTypeVM[];
 
     datePipe: DatePipe = new DatePipe(environment.tbtLocale);
@@ -92,10 +94,12 @@ export class DayOrdersTableComponent implements OnChanges {
             });
 
             let totalOrdersCount = 0;
+            let totalClosedOrdersAmount = 0;
             orderTypesArr.forEach(ot => {
                 ot.orders = ordersCloned.filter(o => o.orderType.id === ot.id).sort((a, b) => a.number < b.number ? -1 : 1);
                 ot.sales = ot.orders.reduce((acc, curr) => acc + (curr.sales || 0), 0);
                 ot.salesBeforeTip = ot.orders.reduce((acc, curr) => acc + (curr.salesBeforeTip || 0), 0);
+                totalClosedOrdersAmount += ot.salesBeforeTip;
                 ot.ordersCount = ot.orders.reduce((acc, curr) => (acc + 1), 0);
                 totalOrdersCount += ot.ordersCount;
             });
@@ -105,6 +109,7 @@ export class DayOrdersTableComponent implements OnChanges {
                 this.noData = true;
             }
 
+            this.salesInProcessingAmount = this.todaySales - this.openOrders.totalAmount - totalClosedOrdersAmount;
             this.loading = false;
         }
 

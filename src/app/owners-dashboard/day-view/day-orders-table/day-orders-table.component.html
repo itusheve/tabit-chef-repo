@@ -64,7 +64,7 @@
 <div class="flex d-col a-stretch">
     <div class="title">
         <span [translate]="'day.closedOrders2'">Closed orders</span>
-        <span *ngIf="bdIsCurrentBd" [translate]="'day.delayed'" style="font-size: 14px; display: block;">Data delayed by ~15min</span>
+        <span *ngIf="bdIsCurrentBd && salesInProcessingAmount" style="font-size: 14px; display: block;">{{salesInProcessingAmount | curr:'1'}} <span [translate]="'day.inProcessing'"></span></span>
     </div>
     <div class="body flex d-col">
         <div *ngIf="!loading">
