@@ -2,6 +2,7 @@
 @import "fonts";
 @import "./tabit/styles/material-theme.scss";
 @import '~@angular/material/theming';
+@import './tabit/styles/config/frame';
 
 /* Landscape */
 /*@media only screen and (orientation: landscape) {
@@ -10,19 +11,19 @@
     }
 }*/
 
-$blue:    rgb(34, 168, 204);
-$indigo:  #3949AB;
-$purple:  rgb(206, 54, 235);
-$pink:    #D81B60;
-$red:     rgb(191, 57, 44);
+$blue: rgb(34, 168, 204);
+$indigo: #3949AB;
+$purple: rgb(206, 54, 235);
+$pink: #D81B60;
+$red: rgb(191, 57, 44);
 $darkRed: #9B2114;
-$orange:  rgb(245, 113, 35);
+$orange: rgb(245, 113, 35);
 $yellow: rgb(197, 162, 0);
 $green: rgb(100, 171, 17);
-$teal:    #00897B;
-$cyan:    #00ACC1;
-$grey-600:#757575;
-$grey-800:#424242;
+$teal: #00897B;
+$cyan: #00ACC1;
+$grey-600: #757575;
+$grey-800: #424242;
 $darkGreen: rgb(76, 142, 0);
 $titleColor: #00385F;
 
@@ -485,6 +486,7 @@ snack-bar-container {
   justify-content: center;
   height: 100%;
 }
+
 .app-loading .spinner {
   height: 200px;
   width: 200px;
@@ -497,6 +499,7 @@ snack-bar-container {
   right: 0;
   margin: auto;
 }
+
 .app-loading .spinner .path {
   stroke-dasharray: 1, 200;
   stroke-dashoffset: 0;
@@ -504,11 +507,13 @@ snack-bar-container {
   stroke-linecap: round;
   stroke: #ddd;
 }
+
 @keyframes rotate {
   100% {
     transform: rotate(360deg);
   }
 }
+
 @keyframes dash {
   0% {
     stroke-dasharray: 1, 200;
@@ -530,4 +535,101 @@ snack-bar-container {
 
 .end {
   text-align: end;
+}
+
+.month-picker-backdrop {
+  opacity: 0;
+}
+
+.month-picker-dialog-panel {
+
+  padding: 15px !important;
+  max-height: calc(100vh - #{$toolbarHeight}) !important;
+  @media #{$iphone-X-portrait-mq} {
+    max-height: calc(100vh - #{$iphone-X-notch-px} - #{$toolbarHeight}) !important;
+  }
+  @media #{$iphone-6-7-8-portrait-mq} {
+    max-height: calc(100vh - #{$iphone-6-7-8-status-bar-px} - #{$toolbarHeight}) !important;
+  }
+  @media #{$iphone-6-7-8-plus-portrait-mq} {
+    max-height: calc(100vh - #{$iphone-6-7-8-plus-status-bar-px} - #{$toolbarHeight}) !important;
+  }
+  @media #{$ipad-portrait-mq} {
+    max-height: calc(100vh - #{$ipad-status-bar-px} - #{$toolbarHeight}) !important;
+  }
+
+  .mat-bottom-sheet-container {
+
+  }
+
+  .selected {
+    background-color: #BDBDBD;
+  }
+
+  .month-picker-dialog {
+    font-family: 'Assistant', sans-serif;
+  }
+
+  .card {
+    font-family: 'Assistant', sans-serif;
+  }
+
+  /*.dialog-toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: $toolbarHeight;
+    overflow: hidden;
+    z-index: 1;
+
+    background-color: $headerBgColor;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 500;
+    box-sizing: content-box;
+    @media #{$iphone-X-portrait-mq} {
+      padding-top: $iphone-X-notch-px;
+    }
+    @media #{$iphone-6-7-8-portrait-mq} {
+      padding-top: $iphone-6-7-8-status-bar-px;
+    }
+    @media #{$iphone-6-7-8-plus-portrait-mq} {
+      padding-top: $iphone-6-7-8-plus-status-bar-px;
+    }
+    @media #{$ipad-portrait-mq} {
+      padding-top: $ipad-status-bar-px;
+    }
+
+  }*/
+
+  /*.dialog-content-fixed {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 0;
+    .dialog-content {
+      padding: ($toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
+      @media #{$iphone-X-portrait-mq} {
+        padding: ($iphone-X-notch-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
+      }
+      @media #{$iphone-6-7-8-portrait-mq} {
+        padding: ($iphone-6-7-8-status-bar-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
+      }
+      @media #{$iphone-6-7-8-plus-portrait-mq} {
+        padding: ($iphone-6-7-8-plus-status-bar-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
+      }
+      @media #{$ipad-portrait-mq} {
+        padding: ($ipad-status-bar-px + $toolbarHeight + $contentPadding) $contentPadding $contentPadding $contentPadding;
+      }
+
+      background-color: $contentBgColor;
+      width: 100vw;
+      height: calc(100vh - 1px);
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
+  }*/
 }

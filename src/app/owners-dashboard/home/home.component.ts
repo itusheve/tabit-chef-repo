@@ -190,18 +190,28 @@ export class HomeComponent implements OnInit {
     }
 
     openMonthPicker() {
+
+        this.ownersDashboardService.toolbarConfig.left.back.showBtn = true;
+        this.ownersDashboardService.toolbarConfig.menuBtn.show = false;
+        this.ownersDashboardService.toolbarConfig.settings.show = false;
+        this.ownersDashboardService.toolbarConfig.home.show = true;
+
+
         let dialog = this.monthPickerDialog.open(MonthPickerDialogComponent, {
             data: {selected: this.dataService.selectedMonth$.value, onDateChanged: this.onDateChanged},
             hasBackdrop: true,
             closeOnNavigation: true,
             backdropClass: 'month-picker-backdrop',
+            panelClass: 'month-picker-dialog-panel',
             autoFocus: false
         });
 
         dialog.afterDismissed().subscribe(() => {
-            /*if (dialog.instance.selection) {
-                this.onDateChanged(dialog.instance.selection);
-            }*/
+            this.ownersDashboardService.toolbarConfig.left.back.showBtn = false;
+            this.ownersDashboardService.toolbarConfig.menuBtn.show = true;
+            this.ownersDashboardService.toolbarConfig.settings.show = true;
+            this.ownersDashboardService.toolbarConfig.home.show = false;
+
             let item = document.getElementById('monthSelector');// what we want to scroll to
             let wrapper = document.getElementById('main-content');// the wrapper we will scroll inside
             let header = document.getElementById('main-toolbar');// the wrapper we will scroll inside
