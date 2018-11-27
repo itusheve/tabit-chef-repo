@@ -269,7 +269,7 @@ export class MonthGridComponent implements OnInit {
         }
         else if (this.avgPeriodComparator === 'year') {
             if (this.category === 'sales') {
-                value = this.incTax ? day.AvgYearSalesAndRefoundAmountIncludeVat : day.AvgPySalesAndRefoundAmountIncludeVat / day.vat;
+                value = this.incTax ? day.AvgPySalesAndRefoundAmountIncludeVat : day.AvgPySalesAndRefoundAmountIncludeVat / day.vat;
             }
             else if (this.category === 'cancellations') {
                 value = day.avgPyVoidsPrc / 100;
@@ -309,10 +309,10 @@ export class MonthGridComponent implements OnInit {
         }
         else if(this.avgPeriodComparator === 'year') {
             if(this.category === 'sales') {
-                result = record.AvgNweeksSalesAndRefoundAmountIncludeVat / this.maxValuesByCategory['salesYear'] * 100;
+                result = record.AvgPySalesAndRefoundAmountIncludeVat / this.maxValuesByCategory['salesYear'] * 100;
             }
             else if(this.category === 'employee') {
-                result = record.avgEmployeesAmount / this.maxValuesByCategory['employeeYear'] * 100;
+                result = record.avgPyEmployeesAmount / this.maxValuesByCategory['employeeYear'] * 100;
             }
             else {
                 result = this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category + 'Year'] * 100;
