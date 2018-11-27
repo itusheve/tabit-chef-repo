@@ -17,10 +17,10 @@
                             autofocus
                             style="font-size: 25px; color: #fff;"
                     >
-                    <button mat-button *ngIf="loginForm.value.email" matSuffix mat-icon-button aria-label="Clear"
+                    <span mat-button *ngIf="loginForm.value.email" matSuffix mat-icon-button aria-label="Clear"
                             (click)="loginForm.patchValue({email: ''})">
                         <mat-icon>close</mat-icon>
-                    </button>
+                    </span>
                     <mat-error *ngIf="email.invalid && email.value && (email.dirty || email.touched)">
                         <div *ngIf="email.errors.email" [translate]="'login.illegalEmail'">Illegal email</div>
                     </mat-error>
@@ -43,7 +43,7 @@
                     Password
                 </div>
             </div>
-            <button class="as-center" mat-raised-button color="primary" (click)="login()">
+            <button class="as-center" mat-raised-button color="primary" (click)="login()" (keypress.enter)="login()">
                 <span [translate]="'login.login'"></span>
             </button>
         </form>
