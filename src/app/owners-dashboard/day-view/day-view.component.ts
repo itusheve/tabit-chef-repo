@@ -281,12 +281,11 @@ export class DayViewComponent implements OnInit {
         //this.dayDebounceStream$ = this.day$.pipe(debounceTime(350));
 
         //get card data for the day
-        combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.dailyTotals$, this.dataService.openDay$)
+        combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.openDay$)
             .subscribe(async data => {
                 let date = data[0];
                 let database = data[1];
-                let dailyTotals = data[2];
-                let openDay = data[3];
+                let openDay = data[2];
 
                 this.dayFromDatabase = database.getDay(date);
 
@@ -337,6 +336,7 @@ export class DayViewComponent implements OnInit {
 
                 let totalSalesWithoutTax = 0;
                 if (moment().isSame(date, 'day')) {
+                    let dailyTotals = await this.dataService.getDailyTotals(date);
                     let totals = dailyTotals.totals;
 
                     let totalClosedOrders = _.get(totals, 'netSales', 0);

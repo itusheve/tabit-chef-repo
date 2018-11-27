@@ -62,7 +62,7 @@ export class DayOrdersTableComponent implements OnChanges {
                     sales: 0
                 };
 
-                if (openOrder.totals.totalAmount > 0) {
+                if (openOrder.totals.totalAmount) {
                     let sales = openOrder.totals.netSales / 100;
                     this.openOrders.totalAmount += sales;
                     formattedOpenOrder.sales = sales;
