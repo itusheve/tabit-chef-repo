@@ -26,8 +26,8 @@
               "node_modules/bootstrap/dist/css/bootstrap-grid.min.css",
               "node_modules/devextreme/dist/css/dx.common.css",
               "node_modules/devextreme/dist/css/dx.light.css",
-              "src/assets/viewer-package/tlogDocsTemplate.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/document-viewer/dist/main.css"
             ],
             "scripts": [
               "src/js/lib/OrderView_v1/OrderView.js",
@@ -35,11 +35,7 @@
               "src/js/lib/OrderView_v1/Utils.js",
               "src/js/vendor/rpbouman-xmla4j/xmla-min.js",
               "src/js/xmla4j-wrapper.class.js",
-              "src/assets/viewer-package/templateBuilderService.js",
-              "src/assets/viewer-package/tlogDocsService.js",
-              "src/assets/viewer-package/tlogDocsTranslate.js",
-              "src/assets/viewer-package/tlogDocsUtils.js",
-              "src/assets/viewer-package/billService.js"
+              "node_modules/document-viewer/dist/bundle.js"
 
             ]
           },
@@ -148,19 +144,13 @@
               "src/js/lib/OrderView_v1/Translate.js",
               "src/js/lib/OrderView_v1/Utils.js",
               "src/js/vendor/rpbouman-xmla4j/xmla-min.js",
-              "src/js/xmla4j-wrapper.class.js",
-              "src/assets/viewer-package/templateBuilderService.js",
-              "src/assets/viewer-package/tlogDocsService.js",
-              "src/assets/viewer-package/tlogDocsTranslate.js",
-              "src/assets/viewer-package/tlogDocsUtils.js",
-              "src/assets/viewer-package/billService.js"
+              "src/js/xmla4j-wrapper.class.js"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap-reboot.min.css",
               "node_modules/bootstrap/dist/css/bootstrap-grid.min.css",
               "node_modules/devextreme/dist/css/dx.common.css",
               "node_modules/devextreme/dist/css/dx.light.css",
-              "src/assets/viewer-package/tlogDocsTemplate.css",
               "src/styles.scss"
             ],
             "assets": [

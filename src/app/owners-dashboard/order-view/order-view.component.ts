@@ -8,6 +8,7 @@ import {Order} from '../../../tabit/model/Order.model';
 import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
 import {ORDERS_VIEW} from '../../../tabit/data/dc/closedOrders.data.service';
 import {OwnersDashboardService} from '../owners-dashboard.service';
+import {ROSEp} from '../../../tabit/data/ep/ros.ep';
 
 declare var TlogDocsService: any;
 
@@ -41,18 +42,29 @@ export class OrderViewComponent implements OnInit {
     // selectedTabIndex;
 
     constructor(private closedOrdersDataService: ClosedOrdersDataService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute, private rosEp: ROSEp) {
         this.ORDERS_VIEW = ORDERS_VIEW.getTranslations();
         this.orderDocs = {};
     }
 
+/*
+    async renderDocuments(tlogId) {
+        let bill = await this.rosEp.get(`tlogs/${tlogId}/bill`);
+        let DocumentViewer = window['DocumentViewer'];
+        let documentViewer = new DocumentViewer();
+        _.set(window, 'moment', moment);
+        let html = documentViewer.getHTMLDocumentWithoutTlog(bill[0]);
+        console.log(html);
+    }
+*/
+
     ngOnInit() {
-
-        //TODO: implement below
-        //this.tlogDocsService = new TlogDocsService();
-
         this.route.paramMap
             .subscribe((params: ParamMap) => {
+
+                /*if(this.order.tlogId) {
+                    let printData = this.renderDocuments(this.order.tlogId);
+                }*/
 
                 this.order = this.order.tlogId ? this.order : _.find(this.orders, {orderNumber: this.orderNumber});
                 this.closedOrdersDataService.enrichOrder(this.order)
