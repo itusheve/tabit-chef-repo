@@ -272,7 +272,7 @@ const en = {
     "menu.includingVAT": "data included VAT",
     "menu.logout": "Logout",
     "menu.managerDashboard": "Manager Dashboard",
-    "menu.mySites": "My Restaurants ",
+    "menu.mySites": "My Restaurants",
     "menu.noOrgs": "Your user is not authorized to view Restaurants. Please contact support.",
     "menu.personalSettings": "Personal Settings",
     "menu.searchRestaurant": "Search",
