@@ -359,7 +359,7 @@ export class DayViewComponent implements OnInit {
                         },*/
                         weekly: {
                             percentage: openDay.prcDiff ? openDay.prcDiff / 100 : 0,
-                            change: openDay.prcDiff
+                            change: openDay.currentSales / openDay.avg4weeksSales * 100
                         }
                     };
                 }

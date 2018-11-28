@@ -263,12 +263,12 @@ export class HomeComponent implements OnInit {
                     },*/
                     weekly: {
                         percentage: openDay.prcDiff ? openDay.prcDiff / 100 : 0,
-                        change: openDay.prcDiff
+                        change: openDay.currentSales / openDay.avg4weeksSales * 100
                     }
                 };
 
                 if (this.currentBdCardData.averages.weekly.change) {
-                    let value = (this.currentBdCardData.averages.weekly.change);
+                    let value = openDay.currentSales / openDay.avg4weeksSales * 100;
                     this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }
 

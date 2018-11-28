@@ -67,18 +67,6 @@
             <div *ngIf="noData" class="noData" [translate]="'day.noData'">No Data</div>
             <div *ngIf="!noData && byOrderTypes" class="flex d-col a-stretch">
                 <mat-accordion>
-
-                    <mat-expansion-panel *ngIf="bdIsCurrentBd && inProcessSalesAmount" >
-                        <mat-expansion-panel-header>
-                            <mat-panel-title class="col-4 m-0 p-0">
-                                {{'day.inProcessing' | translate}}
-                            </mat-panel-title>
-                            <mat-panel-description class="col-8 m-0 p-0">
-                                    <div class="col-5 start">{{inProcessSalesAmount | curr:'0'}}</div>
-                            </mat-panel-description>
-                        </mat-expansion-panel-header>
-                    </mat-expansion-panel>
-
                     <mat-expansion-panel expanded="false" hideToggle="false" (closed)="panelClosed()"
                                          *ngFor="let orderType of byOrderTypes | hasSales">
                         <mat-expansion-panel-header>
@@ -201,6 +189,16 @@
                                 </td>
                             </tr>
                         </table>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel *ngIf="bdIsCurrentBd && (inProcessSalesAmount > 1 || inProcessSalesAmount < -1 )" >
+                        <mat-expansion-panel-header>
+                            <mat-panel-title class="col-4 m-0 p-0">
+                                {{'day.inProcessing' | translate}}
+                            </mat-panel-title>
+                            <mat-panel-description class="col-8 m-0 p-0">
+                                <div class="col-5 start">{{inProcessSalesAmount | curr:'0'}}</div>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>

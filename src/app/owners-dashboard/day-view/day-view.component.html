@@ -4,6 +4,7 @@
                 class="widget noPadding daySelectorFixed"
                 [currentValue]="day"
                 [dayFromDatabase]="dayFromDatabase"
+                [percentageChange]="cardData?.averages?.weekly?.change"
                 [options]="daySelectorOptions"
                 (onDateChanged)="onDateChanged($event)">
         </app-day-selector>
