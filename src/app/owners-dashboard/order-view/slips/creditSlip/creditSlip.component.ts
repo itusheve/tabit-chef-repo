@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { environment } from '../../../../../environments/environment';
 
-// import { Order } from '../../../../../tabit/model/Order.model';
 
 @Component({
     selector: 'app-order-credit-slip',
@@ -11,6 +11,8 @@ export class OrderCreditSlipComponent implements OnInit {
 
     @Input() data: any;
     @Input() printDataOld: any;
+
+    isUS = environment.region === 'us' ? true : false;
 
     constructor() { }
 

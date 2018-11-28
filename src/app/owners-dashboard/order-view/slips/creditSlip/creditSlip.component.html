@@ -23,7 +23,8 @@
 
     <div class="flex j-sb">
         <span i18n="dateOrTime">Date/Time</span>
-        <span *ngIf="data.PROVIDER_PAYMENT_DATE">{{data.PROVIDER_PAYMENT_DATE | date : 'dd/MM/yyyy HH:mm'}}</span>
+        <span *ngIf="!isUS && data.PROVIDER_PAYMENT_DATE">{{ collections.PROVIDER_PAYMENT_DATE | date : 'dd/MM/yyyy HH:mm' }}</span>
+        <span *ngIf="isUS && data.PROVIDER_PAYMENT_DATE">>{{ collections.PROVIDER_PAYMENT_DATE | date : 'MM/dd/yyyy h:mm a' }}</span>
     </div>
 
     <hr />

@@ -459,7 +459,8 @@ export class ClosedOrdersDataService {
                     promotionsRaw,
                     allModifiersRaw,
                     tloId,
-                    _status
+                    _status,
+                    offersRaw
                 ): Promise<any> {
 
                     let resultOrder = that.orderViewService.TimeLine.enrichOrder(
@@ -470,7 +471,8 @@ export class ClosedOrdersDataService {
                         promotionsRaw,
                         allModifiersRaw,
                         tloId,
-                        _status
+                        _status,
+                        offersRaw
                     );
 
                     function resolveUser(userId): User {
@@ -520,7 +522,8 @@ export class ClosedOrdersDataService {
                         lookupData.promotionsData.promotionsRaw,
                         lookupData.modifierGroupsData.allModifiersRaw,
                         tlog.id,
-                        _status),
+                        _status,
+                        lookupData.offersData.offersRaw),
                     setUpPrintData(billData)
                 ]);
 

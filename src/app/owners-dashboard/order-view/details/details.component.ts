@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { Order } from '../../../../tabit/model/Order.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-order-details',
@@ -15,8 +16,8 @@ export class OrderDetailsComponent implements OnInit {
   // @Input() printDataOld: any;
   @Input() ORDERSVIEW: any;
 
-  isUS = false;
-
+  isUS = environment.region === 'us' ? true : false;
+  
   uiArgs = {
     offers: {
       collapsed: true

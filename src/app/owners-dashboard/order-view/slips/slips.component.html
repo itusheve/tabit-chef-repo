@@ -79,7 +79,8 @@
 
         <!-- DATE -->
         <div class="flex j-center">
-          <div>{{orderOld.created | date : 'dd/MM/yyyy HH:mm'}}</div>
+          <div *ngIf="!isUS">{{orderOld.created | date : 'dd/MM/yyyy HH:mm'}}</div>
+          <div *ngIf="isUS">{{orderOld.created | date : 'MM/dd/yyyy h:mm a'}}</div>
         </div>
 
         <!-- INVOICE / RECEIPT -->

@@ -74,10 +74,56 @@ const OrderViewService = (function () {
         },
         Sources: {
             TabitPay: "tabitPay"
+        },
+        ActionTypes: {
+            kickout: 'kickout',
+            resume: 'resume',
+            suspend: 'suspend'
+        },
+        Resume_Suspend: {
+            manual: 'manual',
+            manager: 'manager',
+            other: 'other',
         }
     }
 
     let billService = {
+        filterOmittedPayments: function (payments) {
+
+            let omittedOrders = [];
+
+            let filteredItems = payments.forEach(p => {
+                if (p.PROVIDER_TRANS_STATUS === 'omitted') {
+                    if (p.CANCELED) {
+
+                        let findRefundPayment = payments.find(r => {
+                            return !r.CANCELED && r.PAYMENT_TYPE === "REFUND" && r.P_AMOUNT === p.P_AMOUNT && r.PROVIDER_TRANS_STATUS === 'omitted';
+                        })
+
+                        if (findRefundPayment) {
+                            omittedOrders.push(p)
+                            omittedOrders.push(findRefundPayment)
+                        }
+
+                    }
+                }
+            })
+
+            if (omittedOrders.length > 0) {
+                omittedOrders.forEach(i => {
+                    let findPayment = payments.findIndex(p => {
+                        return p.P_ID === i.P_ID;
+                    })
+                    if (findPayment !== -1) {
+                        payments.splice(findPayment, 1)
+                    }
+                })
+            }
+
+            return payments;
+
+        },
+
         resolveItems: function (variables, collections) {
 
             let isReturnOrder = false;
@@ -120,7 +166,10 @@ const OrderViewService = (function () {
                             oth.push(item)
                         } else {
 
-                            if (offer.OFFER_CALC_AMT !== 0) { // if the offer amount is 0 not need to show 
+                            if (isReturnOrder) {
+                                item.amount = utils.toFixedSafe(offer.OFFER_AMOUNT, 2)
+                                items.push(item);
+                            } else if (offer.OFFER_CALC_AMT !== 0 && offer.OFFER_CALC_AMT !== null) { // if the offer amount is 0 not need to show 
                                 item.amount = utils.toFixedSafe(offer.OFFER_CALC_AMT, 2)
                                 items.push(item);
                             }
@@ -275,11 +324,10 @@ const OrderViewService = (function () {
 
         },
         resolveTotals: function (order, collections, isCheck) {
-
             let totals = [];
 
-            if (order.TOTAL_SALES_AMOUNT && ((collections.ORDER_DISCOUNTS_LIST && collections.ORDER_DISCOUNTS_LIST.length > 0) ||
-                order.TOTAL_TIPS ||
+            if (order.TOTAL_SALES_AMOUNT !== undefined && ((collections.ORDER_DISCOUNTS_LIST && collections.ORDER_DISCOUNTS_LIST.length > 0) ||
+                order.TOTAL_TIPS !== undefined ||
                 (isUS && collections.EXCLUSIVE_TAXES && collections.EXCLUSIVE_TAXES.length > 0))) {
                 totals.push({
                     name: translateService.getText('TOTAL_ORDER'),
@@ -295,7 +343,6 @@ const OrderViewService = (function () {
                     })
                 })
             }
-
             if (collections.EXCLUSIVE_TAXES && collections.EXCLUSIVE_TAXES.length > 0 && isUS) {
                 collections.EXCLUSIVE_TAXES.forEach(tax => {
                     totals.push({
@@ -340,8 +387,8 @@ const OrderViewService = (function () {
             if (order.TOTAL_TIPS_ON_PAYMENTS !== undefined || order.TOTAL_TIPS !== undefined) {
 
                 let tipAmount = 0;
-                if (order.TOTAL_TIPS_ON_PAYMENTS !== undefined) { tipAmount = order.TOTAL_TIPS_ON_PAYMENTS; }
-                else if (order.TOTAL_TIPS !== undefined) { tipAmount = order.TOTAL_TIPS; }
+                if (order.TOTAL_TIPS_ON_PAYMENTS !== undefined && order.TOTAL_TIPS_ON_PAYMENTS !== 0) { tipAmount = order.TOTAL_TIPS_ON_PAYMENTS; }
+                else if (order.TOTAL_TIPS !== undefined && order.TOTAL_TIPS !== 0) { tipAmount = order.TOTAL_TIPS; }
 
                 if (tipAmount > 0) {
                     totals.push({
@@ -379,13 +426,18 @@ const OrderViewService = (function () {
             return totals;
         },
         resolvePayments: function (order, collections, isCheck) {
+
+            let filteredPyaments = billService.filterOmittedPayments(collections.PAYMENT_LIST);
             let payments = [];
 
-            collections.PAYMENT_LIST.forEach(payment => {
+            filteredPyaments.forEach(payment => {
                 payments.push({
                     name: billService.resolvePaymentName(payment),
                     amount: payment.PAYMENT_TYPE ? utils.toFixedSafe(payment.P_AMOUNT * -1, 2) : utils.toFixedSafe(payment.P_AMOUNT, 2),
-                    holderName: payment.CUSTOMER_NAME !== undefined ? payment.CUSTOMER_NAME : ''
+                    holderName: payment.CUSTOMER_NAME !== undefined ? payment.CUSTOMER_NAME : '',
+                    md: {
+                        payment: payment
+                    }
                 });
             });
 
@@ -473,7 +525,8 @@ const OrderViewService = (function () {
 
             return translateService.getText('PRINT_BY_ORDER',
                 ["order_number", "order_date", "order_time"],
-                [variables.ORDER_NO, moment(variables.CREATED_AT).format('DD/MM/YYYY'), moment(variables.CREATED_AT).format('HH:mm:ss')]
+                [variables.ORDER_NO, isUS ? moment(variables.CREATED_AT).format('MM/DD/YYYY') : moment(variables.CREATED_AT).format('DD/MM/YYYY'),
+                isUS ? moment(variables.CREATED_AT).format('h:mm:ss A') : moment(variables.CREATED_AT).format('HH:mm:ss')]
             );
         },
         resolveWaiterDiners: function (variables) {
@@ -514,7 +567,7 @@ const OrderViewService = (function () {
         }
     }
 
-    function _enrichOrder(tlog, tables, items, users, promotions, allModifiers, tlogId, status) {
+    function _enrichOrder(tlog, tables, items, users, promotions, allModifiers, tlogId, status, offers) {
 
         let ResultOrder = {};
 
@@ -527,6 +580,7 @@ const OrderViewService = (function () {
         let _tables = tables;
         let _items = items;
         let _users = users;
+        let _offers = offers;
         let _promotions = promotions;
         let _allModifiers = allModifiers;
 
@@ -607,7 +661,7 @@ const OrderViewService = (function () {
                     item.tlogId = tlogId;
                     if (item.payments && item.payments[0]._type === Enums.PaymentTypes.CreditCardPayment) {
                         item.confirmationNum = item.payments[0].confirmationNum === undefined ? '' : item.payments[0].confirmationNum;
-                        item.issuerName = item.payments[0].issuer.name === undefined ? '' : item.payments[0].issuer.name;
+                        item.issuerName = _.get(item, 'payments[0].issuer.name') ? item.payments[0].issuer.name : '';
                         if (item.payments[0].providerResponse) {
                             item.last4 = item.payments[0].providerResponse.Last4;
                             item.CCType = item.payments[0].providerResponse.CCType;
@@ -700,6 +754,7 @@ const OrderViewService = (function () {
             return orderedItems.find(item => item._id === orderedItemId);
         }
 
+
         function _resolveDiscount(orderedItemId, discounts) {
             if (discounts && discounts.length > 0) {
                 return discounts.find(c => c.target === orderedItemId);
@@ -710,28 +765,40 @@ const OrderViewService = (function () {
             return _items.find(c => c._id === itemId);
         }
 
+        function _resolveOrderedOffer(offerId) {
+            return _offers.find(offer => offer._id === offerId)
+        }
+
         function _resolveOrderedOferModifiers(modifiers) {
 
             let _modifiers = [];
             modifiers.forEach(modifierItem => {
-                if (modifierItem.price) {
-                    let _modifier = allModifiers.find(modifier => modifier._id === modifierItem.modifier);
+                // if (modifierItem.price) {
+                //     let _modifier = allModifiers.find(modifier => modifier._id === modifierItem.modifier);
 
-                    if (_modifier) {
-                        modifierItem.name = _modifier.name;
-                        _modifiers.push(modifierItem);
-                    }
-                }
+                //     if (_modifier) {
+                //         modifierItem.name = _modifier.name;
+                //         _modifiers.push(modifierItem);
+                //     }
+
+                _modifiers.push(modifierItem);
+                // }
             });
 
             return _modifiers;
+
+            console.log('Modifires: ' + _modifiers);
         }
 
         function _resolveItemsByOrderedOffers(order) {
 
+
             let _orderedOffers = order.orderedOffers;
             let _orderedItems = order.orderedItems;
+
             let _discounts = order.discounts;
+
+
 
             let items = [];
 
@@ -745,46 +812,69 @@ const OrderViewService = (function () {
                             _item.onTheHouse = translateService.getText('OTH')
                         }
 
+
                         items.push(_item);
-                        if (itemOrderedOffer.amount !== itemOrderedOffer.price) {
-                            itemOrderedOffer.orderedItems.forEach(orderedItem => {
-                                let _orderedItem = _resolveOrderedItem(orderedItem, _orderedItems);
-                                let _discount = _resolveDiscount(orderedItem._id, _discounts);
+                        //if (itemOrderedOffer.amount !== itemOrderedOffer.price) {
+                        itemOrderedOffer.orderedItems.forEach(orderedItem => {
+                            let _orderedItem = _resolveOrderedItem(orderedItem, _orderedItems);
+                            let _discount = _resolveDiscount(orderedItem._id, _discounts);
 
-                                if (_discount) {
-                                    _orderedItem.discount = _discount;
-                                }
+                            if (_discount) {
+                                _orderedItem.discount = _discount;
+                            }
 
-                                if (!_orderedItem.price) {
-                                    _orderedItem.price = 0;
-                                }
+                            if (!_orderedItem.price) {
+                                _orderedItem.price = 0;
+                            }
 
-                                _orderedItem.item = _resolveItem(_orderedItem.item);
-                                if (_orderedItem.item) {
-                                    _orderedItem.item.price = _orderedItem.price;
-                                    items.push(_orderedItem.item);
-                                }
+                            _orderedItem.item = _resolveItem(_orderedItem.item);
+                            if (_orderedItem.item) {
+                                _orderedItem.item.price = _orderedItem.price;
+                                items.push(_orderedItem.item);
+                            }
 
-                                _orderedItem.selectedModifiers = _resolveOrderedOferModifiers(_orderedItem.selectedModifiers);
+
+                            _orderedItem.selectedModifiers = _resolveOrderedOferModifiers(_orderedItem.selectedModifiers);
+                            if (_orderedItem.selectedModifiers) {
+                                _orderedItem.selectedModifiers.forEach(selectedModifierItem => {
+                                    let _discount = _resolveDiscount(_orderedItem._id, _discounts);
+                                    if (_discount) {
+                                        selectedModifierItem.discount = _discount;
+                                    }
+
+                                    items.push({
+                                        name: selectedModifierItem.name,
+                                        price: selectedModifierItem.price,
+                                        type: 'modifier',
+                                        _id: selectedModifierItem._id
+
+                                    });
+                                });
+
+                                let _notDefaultSelectedModifiers = [];
                                 if (_orderedItem.selectedModifiers) {
-                                    _orderedItem.selectedModifiers.forEach(selectedModifierItem => {
-                                        let _discount = _resolveDiscount(_orderedItem._id, _discounts);
-                                        if (_discount) {
-                                            selectedModifierItem.discount = _discount;
-                                        }
-
-                                        items.push({
-                                            name: selectedModifierItem.name,
-                                            price: selectedModifierItem.price,
-                                            type: 'modifier',
-                                            _id: selectedModifierItem._id
-                                        });
+                                    _orderedItem.selectedModifiers.forEach(selectedModifier => {
+                                        _notDefaultSelectedModifiers.push(selectedModifier);
                                     });
                                 }
 
-                            });
-                        }
+                                itemOrderedOffer.notDefaultSelectedModifiers = _notDefaultSelectedModifiers;
+
+                                let _allRemovedModifiers = [];
+                                if (_orderedItem.removedModifiers) {
+                                    _orderedItem.removedModifiers.forEach(removedModifier => {
+                                        _allRemovedModifiers.push(removedModifier);
+                                    });
+                                }
+                                itemOrderedOffer.allRemovedModifiers = _allRemovedModifiers;
+                            }
+
+                        });
+                        //}
+
+                        itemOrderedOffer.offer = _resolveOrderedOffer(itemOrderedOffer.offer);
                     }
+
                 });
             }
 
@@ -940,12 +1030,17 @@ const OrderViewService = (function () {
                     _discount.rewardedResources[0].selectedModifier) {
                     //item discount with selected modifiers
                     _item = items.find(c => c._id === _discount.rewardedResources[0].selectedModifier);
-                    _item.discount = { amount: _discount.amount, name: reward.name };
+                    if (_item) {
+                        _item.discount = { amount: _discount.amount, name: reward.name };
+                    }
+
                 }
                 else if (_discount.rewardedResources && _discount.rewardedResources[0].orderedItem) {
                     //item discount
                     _item = items.find(c => c._id === _discount.rewardedResources[0].item);
-                    _item.discount = { amount: _discount.amount, name: reward.name };
+                    if (_item) {
+                        _item.discount = { amount: _discount.amount, name: reward.name };
+                    }
                 }
                 else if (_discount.rewardedResources && _discount.rewardedResources[0].orderedOffer) {
                     //offer discount
@@ -956,7 +1051,9 @@ const OrderViewService = (function () {
                             reward.name = translateService.getText('INITIATED_DISCOUNT')
                         }
                     }
-                    _item.discount = { amount: _discount.amount, name: reward.name };
+                    if (_item) {
+                        _item.discount = { amount: _discount.amount, name: reward.name };
+                    }
                 }
 
 
@@ -1018,7 +1115,6 @@ const OrderViewService = (function () {
         }
 
         function _resolveOrderedOffers(orderedOffers, orderedItems) {
-
             let _orderedItems = orderedItems;
             let _allOffersItems = [];
 
@@ -1026,16 +1122,20 @@ const OrderViewService = (function () {
                 orderedOffers.forEach(offer => {
                     if (offer.orderedItems.length) {
                         offer.items = [];
-                        offer.orderedItems.forEach(item => {
-                            let orderedItem = _orderedItems.find(c => c._id === item);
+
+                        offer.orderedItems.forEach(itemId => {
+                            let orderedItem = _orderedItems.find(c => c._id === itemId);
                             if (orderedItem) {
                                 offer.items.push(orderedItem);
                                 _allOffersItems.push(orderedItem)
                             }
+
                         })
                     }
                 });
             }
+
+
 
             return {
                 orderedOffers: orderedOffers,
@@ -1072,7 +1172,6 @@ const OrderViewService = (function () {
 
             let cencelledItems = [];
             let unasignedItems = [];
-
             if (orderedItems && orderedItems.length > 0) {
                 orderedItems.forEach(item => {
                     if (item.cancellation) {
@@ -1280,6 +1379,31 @@ const OrderViewService = (function () {
             return result;
         }
 
+        function _resolveApprovedByToTimeLine(order) {
+
+            let result = [];
+            order.payments.forEach(payment => {
+                let isApproved = false;
+                let aprroved;
+                if (payment.approved) {
+                    aprroved = payment.approved;
+                    isApproved = true
+                }
+                if (isApproved) {
+                    result.push({
+                        action: translateService.getText('APPROVED'),
+                        data: _resolvePaymentData(payment), // Return array of values.
+                        at: aprroved.at,
+                        by: _resolveUserName(aprroved.by),
+                        isApproved: isApproved //only for the payments record in the time line.
+                    });
+                }
+            });
+            return result;
+        }
+
+
+
         function _resolveOrderOTH(order) {
 
             let result = [];
@@ -1320,11 +1444,11 @@ const OrderViewService = (function () {
             let result = [];
             let data = "";
 
-            if (item.onTheHouse.reason.name) {
+            if (item && item.onTheHouse && item.onTheHouse.reason && item.onTheHouse.reason.name) {
                 data += item.onTheHouse.reason.name;
             }
 
-            if (item.onTheHouse.comment) {
+            if (item && item.onTheHouse && item.onTheHouse.comment) {
                 data += " : " + item.onTheHouse.comment;
             }
 
@@ -1351,19 +1475,22 @@ const OrderViewService = (function () {
             else {
 
                 // OTH request
-                result.push({
-                    action: translateService.getText('OTH_ITEM_APPLIED'),
-                    data: data,
-                    at: item.onTheHouse.applied.at,
-                    by: _resolveUserName(item.onTheHouse.applied.by)
-                });
+                if (item.onTheHouse.applied) {
+                    result.push({
+                        action: translateService.getText('OTH_ITEM_APPLIED'),
+                        data: data,
+                        at: item.onTheHouse.applied ? item.onTheHouse.applied.at : '',
+                        by: _resolveUserName(item.onTheHouse.applied ? item.onTheHouse.applied.by : '')
+                    });
+                }
+
                 // OTH approved
                 if (item.onTheHouse.approved) {
                     result.push({
                         action: translateService.getText('OTH_ITEM_APPROVED'),
                         data: data,
-                        at: item.onTheHouse.approved.at,
-                        by: _resolveUserName(item.onTheHouse.approved.by)
+                        at: item.onTheHouse.approved ? item.onTheHouse.approved.at : '',
+                        by: _resolveUserName(item.onTheHouse.approved ? item.onTheHouse.approved.by : '')
                     });
                 }
 
@@ -1516,8 +1643,8 @@ const OrderViewService = (function () {
                     result.push({
                         action: action,
                         data: data,
-                        at: discount.applied.at,
-                        by: _resolveUserName(discount.applied.by)
+                        at: discount.applied ? discount.applied.at : '',
+                        by: discount.applied ? _resolveUserName(discount.applied.by) : ''
                     });
                 });
             }
@@ -1553,7 +1680,15 @@ const OrderViewService = (function () {
             let result = [];
             if (order.history && order.history.length > 0) {
                 order.history.forEach(historyItem => {
-                    if (historyItem.action === 'kickout') {
+                    if (historyItem.action === Enums.ActionTypes.suspend || historyItem.action === Enums.ActionTypes.resume) {
+                        result.push({
+                            action: getAction(historyItem.action),
+                            data: getDataOfResumeOrSuspendOrder(historyItem),
+                            at: historyItem.at,
+                            by: _resolveUserName(historyItem.by)
+                        });
+                    }
+                    if (historyItem.action === Enums.ActionTypes.kickout) {
                         result.push({
                             action: historyItem.action,
                             data: `Device name: ${historyItem.deviceName}`,
@@ -1567,6 +1702,39 @@ const OrderViewService = (function () {
             return result;
         }
 
+        function getAction(action) {
+            if (action === Enums.ActionTypes.resume) {
+                return translateService.getText('RESUME')
+            }
+
+            if (action === Enums.ActionTypes.suspend) {
+                return translateService.getText('SUSPEND')
+
+            }
+
+        }
+
+        function getDataOfResumeOrSuspendOrder(historyItem) {
+
+            if (historyItem.action === Enums.ActionTypes.suspend) {
+                if (historyItem.data.source === Enums.Resume_Suspend.manual) {
+                    return translateService.getText('SUSPEND_MANUAL')
+                }
+                if (historyItem.data.source === Enums.Resume_Suspend.manager) {
+                    return translateService.getText('SUSPEND_MANAGER')
+
+                }
+                if (historyItem.data.source === Enums.Resume_Suspend.other) {
+                    return translateService.getText('SUSPEND_OTHER')
+                }
+
+            }
+
+            if (historyItem.action === Enums.ActionTypes.resume) {
+                return translateService.getText('RESUME');
+
+            }
+        }
 
         function _resolveTimeline(order) {
 
@@ -1580,6 +1748,9 @@ const OrderViewService = (function () {
 
             let payments = _resolvePaymentsToTimeLine(order);
             payments.forEach(item => { timeline.push(item); });
+
+            let approvedBy = _resolveApprovedByToTimeLine(order);
+            approvedBy.forEach(item => { timeline.push(item); });
 
             let cancellationsAndOTH = _resolveCancellationsAndOTHToTimeLine(order);
             cancellationsAndOTH.forEach(item => { timeline.push(item); });
@@ -1647,8 +1818,22 @@ const OrderViewService = (function () {
                 this.last4 = payment.last4 !== 'xxxx' ? payment.last4 : ''
                 this.amount = payment.amount;
                 this.faceValue = payment.faceValue;
-                this.tipAmount = payment.change ? payment.change.amount : '';
                 this.quantity = payment.auxIntent ? payment.auxIntent.quantity : ''; //auxIntent.quantity
+
+
+                if (isUS) {
+                    this.tipAmount = payment.change ? payment.change.amount : '';
+                    this.quantity = payment.auxIntent ? payment.auxIntent.quantity : '';
+                }
+                else {
+                    if ([Enums.PaymentTypes.CreditCardPayment, Enums.PaymentTypes.ChequePayment].indexOf(payment._type) > -1) {
+                        this.tipAmount = payment.cashback ? payment.cashback.amount : '';
+                    }
+                    else {
+                        this.tipAmount = payment.change ? payment.change.amount : ''; //auxIntent.quantity
+                    }
+                }
+
 
                 if (payment.source === Enums.Sources.TabitPay) {
                     this.source = "(Tabit Pay)";

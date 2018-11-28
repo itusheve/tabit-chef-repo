@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { environment } from '../../../../../../environments/environment';
 
 @Component({
     selector: 'app-order-credit-transaction-data',
@@ -13,6 +14,8 @@ export class OrderCreditTransactionDataComponent implements OnInit {
     variables = undefined;
     collections = undefined;
     payment = undefined;
+
+    isUS = environment.region === 'us' ? true : false;
 
     constructor() { }
 
