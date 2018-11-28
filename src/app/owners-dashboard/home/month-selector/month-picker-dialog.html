@@ -2,8 +2,8 @@
     <div class="dialog-content">
         <div class="month-picker-dialog">
             <div class="container p-0">
-                <div class="row">
-                    <div *ngFor="let month of months" class="col-sm-12 col-md-6 mb-3">
+                <div class="row mx-0">
+                    <div *ngFor="let month of months" class="col-sm-12 col-md-6 mb-3 px-0">
                         <app-card (click)="select($event, month)" [cardData]="month.summary" class="picker-card-container"
                                   style="cursor: pointer"></app-card>
                     </div>

@@ -542,7 +542,7 @@ snack-bar-container {
 }
 
 .month-picker-dialog-panel {
-
+  background-color: $contentBgColor;
   padding: 15px !important;
   max-height: calc(100vh - #{$toolbarHeight}) !important;
   @media #{$iphone-X-portrait-mq} {
