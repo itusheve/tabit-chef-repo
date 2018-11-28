@@ -46,8 +46,6 @@ export class DayViewComponent implements OnInit {
     public dayFromDatabase: any;
     public hasData: boolean;
     public hasNoDataForToday: boolean;
-    public salesAmountInProcess: number;
-
     public region: string;
 
     // for the pie chart
@@ -178,8 +176,11 @@ export class DayViewComponent implements OnInit {
     public openOrders: any;
 
     private day$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment());
+    private totalSales$: BehaviorSubject<any> = new BehaviorSubject<any>(0);
+    private closedOrders$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    private openOrders$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    public inProcessSalesAmount;
 
-    private dayDebounceStream$: Observable<moment.Moment>;
     private metaData: any;
     public user: any;
     public env: any;
@@ -350,6 +351,7 @@ export class DayViewComponent implements OnInit {
 
                     this.cardData.sales = totalSales;
 
+                    this.totalSales$.next(totalSales);
                     this.cardData.averages = {
                         /*yearly: {
                             percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
@@ -372,16 +374,16 @@ export class DayViewComponent implements OnInit {
                     let time = moment();
                     let weekStartDate = moment().day(laborCost.firstWeekday);
                     let weekSales = 0;
-                    while(weekStartDate.isBefore(time)) {
+                    while (weekStartDate.isBefore(time)) {
                         let day = database.getDay(weekStartDate);
-                        if(day) {
+                        if (day) {
                             weekSales += day.salesAndRefoundAmountIncludeVat;
                         }
                         weekStartDate.add(1, 'day');
                     }
 
                     let todaySales = 0;
-                    if(moment().isSame(date, 'day')) {
+                    if (moment().isSame(date, 'day')) {
                         todaySales = totalSalesWithoutTax;
                         weekSales += todaySales;
                     }
@@ -446,6 +448,8 @@ export class DayViewComponent implements OnInit {
             };
             this.orders = this.extractOrders(dailyReport);
 
+            this.closedOrders$.next(this.orders);
+
             dailyReport.summary = _.orderBy(dailyReport.summary, 'orderTypeKey', 'asc');
             let summary = _.filter(dailyReport.summary, summary => summary.serviceKey == '-1');
             let globalSalesIncludingVat = _.sumBy(summary, function (row) {
@@ -466,6 +470,7 @@ export class DayViewComponent implements OnInit {
             else {
                 this.bdIsCurrentBd = true;
                 this.openOrders = await this.dataService.getOpenOrders();
+                this.openOrders$.next(this.openOrders);
             }
 
             this.byShiftSummaryTblsData = [];
@@ -656,6 +661,34 @@ export class DayViewComponent implements OnInit {
         this.hasData = false;
         window.scrollTo(0, 0);
         this.render();
+        this.inProcessSalesAmount = 0;
+        combineLatest(this.totalSales$, this.openOrders$, this.closedOrders$).subscribe(data => {
+            let totalSales = data[0];
+            let openOrders = data[1];
+            let closedOrders = data[2];
+            if (totalSales === 0 && !openOrders && !closedOrders) {
+                return;
+            }
+
+            this.inProcessSalesAmount = 0;
+
+
+            let totalOpenOrdersAmount = 0;
+            _.forEach(openOrders, openOrder => {
+                if (openOrder.totals.totalAmount) {
+                    totalOpenOrdersAmount += openOrder.totals.netSales / 100;
+                }
+            });
+
+            let totalClosedAmount = 0;
+            _.forEach(closedOrders, closedOrder => {
+                if (closedOrder.salesBeforeTip) {
+                    totalClosedAmount += closedOrder.salesBeforeTip;
+                }
+            });
+
+            this.inProcessSalesAmount = totalSales - totalOpenOrdersAmount - totalClosedAmount;
+        });
 
         this.dataService.refresh$.subscribe(refresh => {
             this.hasData = false;
@@ -743,7 +776,7 @@ export class DayViewComponent implements OnInit {
     }
 
     getPercentage(amount, total) {
-        if(!total) {
+        if (!total) {
             return 0;
         }
 
