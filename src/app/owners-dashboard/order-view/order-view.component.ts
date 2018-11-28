@@ -37,6 +37,7 @@ export class OrderViewComponent implements OnInit {
     ORDERS_VIEW: any;
     orderDocs: any;
     tlogDocsService: any;
+    html: any;
 
     //<!-- https://github.com/angular/material2/issues/5269 -->
     // selectedTabIndex;
@@ -47,23 +48,21 @@ export class OrderViewComponent implements OnInit {
         this.orderDocs = {};
     }
 
-/*
+
     async renderDocuments(tlogId) {
         let bill = await this.rosEp.get(`tlogs/${tlogId}/bill`);
         let DocumentViewer = window['DocumentViewer'];
         let documentViewer = new DocumentViewer();
         _.set(window, 'moment', moment);
-        let html = documentViewer.getHTMLDocumentWithoutTlog(bill[0]);
-        console.log(html);
+        this.html = documentViewer.getDocumentHtml(bill[0]);
     }
-*/
 
     ngOnInit() {
         this.route.paramMap
             .subscribe((params: ParamMap) => {
 
                 /*if(this.order.tlogId) {
-                    let printData = this.renderDocuments(this.order.tlogId);
+                    this.renderDocuments(this.order.tlogId);
                 }*/
 
                 this.order = this.order.tlogId ? this.order : _.find(this.orders, {orderNumber: this.orderNumber});
