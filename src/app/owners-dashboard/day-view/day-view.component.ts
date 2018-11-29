@@ -366,7 +366,7 @@ export class DayViewComponent implements OnInit {
 
                 if (this.env.region === 'us') {
                     this.display.laborCost = true;
-                    let laborCostDate = moment(date).utc().hour(23).minute(59).second(59);
+                    let laborCostDate = moment(date.format('YYYY-MM-DD')).hour(23).minute(59).second(59);
                     let laborCost = await this.dataService.getLaborCostByTime(laborCostDate);
                     let today = _.get(laborCost, ['byDay', laborCostDate.format('YYYY-MM-DD')]);
 
