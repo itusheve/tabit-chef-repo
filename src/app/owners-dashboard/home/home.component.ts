@@ -15,6 +15,7 @@ import {environment} from '../../../environments/environment';
 import {TranslateService} from '@ngx-translate/core';
 import {MatDialog} from '@angular/material';
 import {OverTimeUsersDialogComponent} from './over-time-users/over-time-users-dialog.component';
+import {Overlay} from '@angular/cdk/overlay';
 
 @Component({
     selector: 'app-home',
@@ -91,7 +92,8 @@ export class HomeComponent implements OnInit {
                 private monthPickerDialog: MatBottomSheet,
                 private datePipe: DatePipe,
                 private translate: TranslateService,
-                public dialog: MatDialog) {
+                public dialog: MatDialog,
+                private overlay: Overlay) {
 
         this.env = environment;
         this.tabitHelper = new TabitHelper();
@@ -176,7 +178,8 @@ export class HomeComponent implements OnInit {
         this.dialog.open(OverTimeUsersDialogComponent, {
             width: '100vw',
             panelClass: 'overtime-dialog',
-            data: {laborCost: this.laborCost}
+            data: {laborCost: this.laborCost},
+            scrollStrategy: this.overlay.scrollStrategies.noop()
         });
     }
 

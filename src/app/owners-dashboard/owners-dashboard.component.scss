@@ -9,3 +9,9 @@
 .header-organization-name {
   font-size: 4vw;
 }
+
+@media screen and (min-width: 500px) {
+  .header-organization-name {
+    font-size: 22px;
+  }
+}
