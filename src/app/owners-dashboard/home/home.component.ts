@@ -270,6 +270,20 @@ export class HomeComponent implements OnInit {
                     }
                 };
 
+                //temp fix
+                if(this.env.region === 'us') {
+                    this.currentBdCardData.averages = {
+                        /*yearly: {
+                            percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
+                            change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
+                        },*/
+                        weekly: {
+                            percentage: openDay.prcDiff ? openDay.prcDiff / 100 : 0,
+                            change: openDay.currentSales / openDay.avg4weeksSales * 100
+                        }
+                    };
+                }
+
                 if (this.currentBdCardData.averages.weekly.change) {
                     let value = openDay.currentSales / openDay.avg4weeksSales * 100;
                     this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
@@ -410,7 +424,7 @@ export class HomeComponent implements OnInit {
 
                 let month = database.getCurrentMonth();
                 this.loadingOlapData = false;
-                if (!month.latestDay || moment(month.latestDay).isBefore(moment(), 'month')) {
+                if (!month.latestDay) {
                     this.showForecast = false;
                     this.forecastCardData.loading = false;
                     return;
