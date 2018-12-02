@@ -9,7 +9,7 @@
                     {{operationalErrorsData.length}}&nbsp;<span [translate]="'day.actionsWorth'">Actions worth</span>&nbsp;{{totalValue | curr:'0'}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table class="chf-tbl chf-tbl-smaller chf-tbl-row-oriented">
+            <table class="table table-sm table-responsive-sm">
                 <tr class="table-information-row">
                     <td colspan="6">
                         <div><span [translate]="'day.percentageFromSales'">Percentage</span>: <span>{{dayFromDatabase?.operationalPrc / 100 | pct : 1}}</span></div>
@@ -79,8 +79,8 @@
                              ({{tuple.tableId}})
                         </span>
                     </td>
-                    <td class="break">{{tuple.item}}</td>
-                    <td class="ar">{{tuple.operational | curr:'0'}}</td>
+                    <td>{{tuple.item}}</td>
+                    <td>{{tuple.operational | curr:'0'}}</td>
                     <td [translate]="tuple.subType"></td>
                     <td>{{tuple.reasonId}}</td>
                 </tr>
