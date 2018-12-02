@@ -243,9 +243,9 @@ const tmpTranslations_ = {
         monthViewFilters: {
             sales: 'Sales',
             cancellations: 'Voids',
-            operational: 'OP Errors',
-            retention: 'Comps.',
-            employee: 'Emp. Meals',
+            operational: 'Ops. Issues',
+            retention: 'Mktg. Comps',
+            employee: 'Org. Comps',
         },
         managerDash: {
             'ALLORDERS': 'All Orders',

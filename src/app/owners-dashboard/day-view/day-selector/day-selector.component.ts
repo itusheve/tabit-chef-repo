@@ -3,6 +3,7 @@ import {MatDatepickerInputEvent} from '@angular/material';
 import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
 import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 @Component({
     selector: 'app-day-selector',
@@ -88,5 +89,4 @@ export class DaySelectorComponent implements OnChanges {
         }
 
     }
-
 }

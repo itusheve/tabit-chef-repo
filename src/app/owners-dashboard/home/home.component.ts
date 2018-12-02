@@ -139,7 +139,7 @@ export class HomeComponent implements OnInit {
             }
 
             this.laborCost = laborCost;
-            let weekStartDate = moment().day(laborCost.firstWeekday);
+            let weekStartDate = moment().day(laborCost.firstWeekday - 7);
 
             let weekSales = 0;
             while(weekStartDate.isBefore(time)) {
@@ -153,21 +153,23 @@ export class HomeComponent implements OnInit {
             weekSales += this.currentBdCardData.sales;
 
             let today = _.get(laborCost, ['byDay', time.format('YYYY-MM-DD')]);
-            if(today) {
-                this.laborCostCard = {
-                    today: {
-                        cost: today.cost || 0,
-                        percentage: this.currentBdCardData.sales > 0 ? today.cost / this.currentBdCardData.sales : 0
-                    },
-                    week: {
-                        cost: laborCost.weekSummary.cost || 0,
-                        percentage: weekSales > 0 ? laborCost.weekSummary.cost / weekSales : 0
-                    },
-                    overtime: {
-                        count: laborCost.overtime.count || 0
-                    }
-                };
 
+            this.laborCostCard = {
+                today: {
+                    cost: today ? today.cost : 0,
+                    percentage: this.currentBdCardData.sales > 0 ? (today ? today.cost : 0) / this.currentBdCardData.sales : 0
+                },
+                week: {
+                    cost: laborCost.weekSummary.cost || 0,
+                    percentage: weekSales > 0 ? laborCost.weekSummary.cost / weekSales : 0,
+                    actualSales: weekSales
+                },
+                overtime: {
+                    count: laborCost.overtime.count || 0
+                }
+            };
+
+            if(this.laborCostCard.week.cost) {
                 this.display.laborCost = true;
             }
         });
@@ -178,8 +180,7 @@ export class HomeComponent implements OnInit {
         this.dialog.open(OverTimeUsersDialogComponent, {
             width: '100vw',
             panelClass: 'overtime-dialog',
-            data: {laborCost: this.laborCost},
-            scrollStrategy: this.overlay.scrollStrategies.noop()
+            data: {laborCost: this.laborCost}
         });
     }
 
@@ -424,7 +425,7 @@ export class HomeComponent implements OnInit {
 
                 let month = database.getCurrentMonth();
                 this.loadingOlapData = false;
-                if (!month.latestDay) {
+                if (!month.latestDay || moment(month.latestDay).isBefore(moment(), 'month')) {
                     this.showForecast = false;
                     this.forecastCardData.loading = false;
                     return;

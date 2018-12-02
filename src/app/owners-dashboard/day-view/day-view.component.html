@@ -34,7 +34,7 @@
 
         <div [hidden]="!hasData">
 
-            <div class="col-12 px-0 mb-2" *ngIf="cardData">
+            <div class="col-12 px-0 mb-2" *ngIf="cardData?.sales">
                 <app-card [cardData]="cardData"></app-card>
             </div>
 
@@ -47,7 +47,7 @@
                                 <mat-expansion-panel-header>
                                     <mat-panel-title class="justify-content-between">
                                         <span class="labor-header">Day</span>
-                                        <span class="labor-cost">{{laborCost.today.cost | curr:'2'}}</span><span class="labor-percentage">{{getPercentage(laborCost.today.cost, laborCost.sales.today) | pct:'1'}}</span>
+                                        <span class="labor-cost">{{laborCost.today.cost | curr:'2'}}</span><span class="labor-percentage">{{getPercentage(laborCost.today.cost, laborCost.sales.today) | pct:'1'}}<div class="small">({{laborCost.sales.today | curr:'0'}})</div></span>
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <mat-accordion [multi]="true">
@@ -82,8 +82,8 @@
                             <mat-expansion-panel>
                                 <mat-expansion-panel-header>
                                     <mat-panel-title class="justify-content-between">
-                                        <span class="labor-header">Week to date</span>
-                                        <span class="labor-cost">{{laborCost.week.cost | curr:'2'}}</span><span class="labor-percentage">{{getPercentage(laborCost.week.cost, laborCost.sales.week) | pct:'1'}}</span>
+                                        <span class="labor-header">Week</span>
+                                        <span class="labor-cost">{{laborCost.week.cost | curr:'2'}}</span><span class="labor-percentage">{{getPercentage(laborCost.week.cost, laborCost.sales.week) | pct:'1'}}<div class="small">({{laborCost.sales.week | curr:'0'}})</div></span>
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <mat-accordion [multi]="true">
