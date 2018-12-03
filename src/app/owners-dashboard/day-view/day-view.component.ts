@@ -374,11 +374,23 @@ export class DayViewComponent implements OnInit {
                     if (laborCost) {
                         let today = _.get(laborCost, ['byDay', laborCostDate.format('YYYY-MM-DD')]);
 
+                        let weekStartDate;
+                        if(date.day() === laborCost.firstWeekday) {
+                            weekStartDate = moment(date);
+                        }
+                        else {
+                            let day = moment(date);
+                            if(day.day() > 0) {
+                                weekStartDate = day.day(laborCost.firstWeekday);
+                            }
+                            else {
+                                weekStartDate = day.day(laborCost.firstWeekday - 7);
+                            }
+                        }
 
-                        let time = moment();
-                        let weekStartDate = moment().day(laborCost.firstWeekday - 7);
+
                         let weekSales = 0;
-                        while (weekStartDate.isBefore(time)) {
+                        while (weekStartDate.isBefore(date, 'day')) {
                             let day = database.getDay(weekStartDate);
                             if (day) {
                                 weekSales += day.salesAndRefoundAmountIncludeVat;
@@ -389,12 +401,12 @@ export class DayViewComponent implements OnInit {
                         let todaySales = 0;
                         if (moment().isSame(date, 'day')) {
                             todaySales = totalSalesWithoutTax;
-                            weekSales += todaySales;
                         }
                         else {
                             todaySales = _.get(this.dayFromDatabase, 'salesAndRefoundAmountExcludeVat', 0);
-                            weekSales += todaySales;
                         }
+
+                        weekSales += todaySales;
 
                         this.laborCost = {
                             today: [],

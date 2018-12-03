@@ -1547,10 +1547,16 @@ export class DataService {
         translate.use(currentLanguage);
     }
 
-    async getLaborCostByTime(time: moment.Moment) {
+    async getLaborCostConfiguration() {
         let configuration = await this.rosEp.get('configuration/laborCost', null).then(function (res) {
             return _.get(res, '[0]');
         });
+
+        return configuration;
+    }
+
+    async getLaborCostByTime(time: moment.Moment) {
+        let configuration = await this.getLaborCostConfiguration();
 
         let workHoursForOrangeAlert = _.get(configuration, 'workHoursRules.workHoursForOrangeAlert');
         let workHoursForRedAlert = _.get(configuration, 'workHoursRules.workHoursForRedAlert');

@@ -72,7 +72,8 @@ export class HomeComponent implements OnInit {
     };
 
     public display = {
-        laborCost: false
+        laborCost: false,
+        weekToDate: false
     };
 
     private previousBdNotFinal = false;
@@ -83,6 +84,16 @@ export class HomeComponent implements OnInit {
     public olapError: any;
     public showSummary: boolean;
     public laborCostCard: any;
+    public weekToDateCard: CardData = {
+        loading: true,
+        title: '',
+        tag: '',
+        sales: 0,
+        diners: 0,
+        ppa: 0,
+        ppaOrders: 0,
+        aggregations: {}
+    };
     public laborCost: any;
     private env: any;
 
@@ -123,7 +134,127 @@ export class HomeComponent implements OnInit {
         this.getForecastData();
         this.getSummary();
         this.renderLaborCost();
+        //this.renderWeekToDate();
     }
+
+    /*renderWeekToDate() {
+        combineLatest(this.dataService.databaseV2$, this.dataService.vat$)
+            .subscribe(async data => {
+                let database = data[0];
+                let incVat = data[1];
+
+                if (this.env.region !== 'us' || !database) {
+                    return;
+                }
+
+                let time = this.dataService.getCurrentRestTime();
+                let configuration = await this.dataService.getLaborCostConfiguration();
+                let firstWeekday = _.get(configuration, 'workHoursRules.firstWeekday');
+                firstWeekday = (firstWeekday === 'sunday') ? 0 : 1;
+
+                let weekStartDate = moment().day(firstWeekday - 7);
+
+                let currentWeek = {
+                    sales: 0,
+                    orders: 0,
+                    diners: 0,
+                    voids: 0,
+                    employee: 0,
+                    operational: 0,
+                    retention: 0,
+                    vat: 0,
+                };
+
+                let avgs = {
+                    week: {
+                        sales: 0,
+                        voids: 0,
+                        employee: 0,
+                        operational: 0,
+                        retention: 0
+                    },
+                    year: {
+                        sales: 0,
+                        voids: 0,
+                        employee: 0,
+                        operational: 0,
+                        retention: 0
+                    }
+
+                };
+
+                while (weekStartDate.isBefore(time)) {
+                    let day = database.getDay(weekStartDate);
+                    if (day) {
+                        currentWeek.sales += day.salesAndRefoundAmountIncludeVat;
+                        currentWeek.orders += day.orders;
+                        currentWeek.diners += day.diners;
+                        currentWeek.voids += day.voidsPrc * day.salesAndRefoundAmountIncludeVat;
+                        currentWeek.employee += day.employeesPrc * day.salesAndRefoundAmountIncludeVat;
+                        currentWeek.operational += day.operationalPrc * day.salesAndRefoundAmountIncludeVat;
+                        currentWeek.retention += day.mrPrc * day.salesAndRefoundAmountIncludeVat;
+                        currentWeek.vat += day.vat;
+
+                        avgs.week.sales += day.AvgNweeksSalesAndRefoundAmountIncludeVat;
+                        avgs.week.voids += day.avgNweeksVoidsPrc;
+                        avgs.week.employee += day.avgNweeksEmployeesPrc;
+                        avgs.week.operational += day.avgNweeksOperationalPrc;
+                        avgs.week.retention += day.avgNweeksMrPrc;
+
+                        avgs.week.sales += day.AvgPySalesAndRefoundAmountIncludeVat;
+                        avgs.week.voids += day.avgPyVoidsPrc;
+                        avgs.week.employee += day.avgPyEmployeesPrc;
+                        avgs.week.operational += day.avgPyOperationalPrc;
+                        avgs.week.retention += day.avgPyMrPrc;
+                    }
+                    weekStartDate.add(1, 'day');
+                }
+
+                this.weekToDateCard.sales = incVat ? currentWeek.sales : currentWeek.sales / currentWeek.vat;
+                this.weekToDateCard.diners = currentWeek.diners || currentWeek.orders;
+
+                let ppa = this.weekToDateCard.sales / this.weekToDateCard.diners;
+                this.weekToDateCard.ppa = incVat ? ppa : ppa / currentWeek.vat;
+
+                let ppaOrders = this.weekToDateCard.sales / currentWeek.orders;
+                this.weekToDateCard.ppaOrders = incVat ? ppaOrders : ppaOrders / currentWeek.vat;
+
+                this.weekToDateCard.averages = {
+                    yearly: {
+                        percentage: ((day.salesAndRefoundAmountIncludeVat / day.AvgPySalesAndRefoundAmountIncludeVat) - 1),
+                        change: (day.salesAndRefoundAmountIncludeVat / day.AvgPySalesAndRefoundAmountIncludeVat) * 100
+                    },
+                    weekly: {
+                        percentage: ((day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) - 1),
+                        change: (day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) * 100
+                    }
+                };
+
+                this.weekToDateCard.reductions = {
+                    cancellations: {
+                        percentage: day.voidsPrc / 100,
+                        change: day.voidsPrc - day.avgNweeksVoidsPrc
+                    },
+                    employee: {
+                        percentage: day.employeesPrc / 100,
+                        change: day.employeesPrc - day.avgNweeksEmployeesPrc
+                    },
+                    operational: {
+                        percentage: day.operationalPrc / 100,
+                        change: day.operationalPrc - day.avgNweeksOperationalPrc
+                    },
+                    retention: {
+                        percentage: day.mrPrc / 100,
+                        change: day.mrPrc - day.avgNweeksMrPrc
+                    }
+                };
+
+                if (this.weekToDateCard.sales) {
+                    this.display.weekToDate = true;
+                }
+            });
+
+    }*/
 
     async renderLaborCost() {
 
@@ -134,17 +265,31 @@ export class HomeComponent implements OnInit {
 
             let time = this.dataService.getCurrentRestTime();
             let laborCost = await this.dataService.getLaborCostByTime(time);
-            if(!laborCost) {
+            if (!laborCost) {
                 return;
             }
 
             this.laborCost = laborCost;
-            let weekStartDate = moment().day(laborCost.firstWeekday - 7);
+
+            let weekStartDate;
+            if (moment().day() === laborCost.firstWeekday) {
+                weekStartDate = moment();
+            }
+            else {
+                let day = moment();
+                if (day.day() > 0) {
+                    weekStartDate = day.day(laborCost.firstWeekday);
+                }
+                else {
+                    weekStartDate = day.day(laborCost.firstWeekday - 7);
+                }
+            }
+
 
             let weekSales = 0;
-            while(weekStartDate.isBefore(time)) {
+            while (weekStartDate.isBefore(time, 'day')) {
                 let day = database.getDay(weekStartDate);
-                if(day) {
+                if (day) {
                     weekSales += day.salesAndRefoundAmountIncludeVat;
                 }
                 weekStartDate.add(1, 'day');
@@ -169,7 +314,7 @@ export class HomeComponent implements OnInit {
                 }
             };
 
-            if(this.laborCostCard.week.cost) {
+            if (this.laborCostCard.week.cost) {
                 this.display.laborCost = true;
             }
         });
