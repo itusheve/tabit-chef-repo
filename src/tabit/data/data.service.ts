@@ -567,6 +567,7 @@ export class DataService {
             let excludedDates = this.getExcludedDates(rosCalendars, org.id);
             let database = _.keyBy(olapYearlyData, month => month.yearMonth);
 
+            //check for a scenario where latest month is not present and add it for calcs
             let yearMonth = moment().format('YYYYMM');
             if(_.isEmpty(_.get(database, yearMonth))) {
                 //add month
@@ -592,7 +593,6 @@ export class DataService {
                 month.days = orderedDays;
                 delete month.daily;
 
-                month.weekAvg = month.ttlsalesIncludeVat / month.days.length * 7;
                 month.dayAvg = month.ttlsalesIncludeVat / month.days.length;
 
                 //calculate latest month
@@ -680,6 +680,8 @@ export class DataService {
                     }
                 });
 
+                month.weekAvg = 0;
+                let weekDayCounter = 0;
                 _.forEach(month.aggregations.days, (data, weekday) => {
                     if (data) {
                         let monthDate = month.latestDay;
@@ -708,8 +710,11 @@ export class DataService {
 
                         data.sales.avg = month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count;
                         data.sales.avgWithoutVat = month.aggregations.days[weekday].sales.amountWithoutVat / month.aggregations.days[weekday].count;
+                        month.weekAvg += data.sales.avg;
+                        weekDayCounter++;
                     }
                 });
+                month.weekAvg = month.weekAvg / weekDayCounter;
 
 
                 if (month.days && month.days.length) {

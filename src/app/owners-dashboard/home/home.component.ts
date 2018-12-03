@@ -271,20 +271,6 @@ export class HomeComponent implements OnInit {
                     }
                 };
 
-                //temp fix
-                if(this.env.region === 'us') {
-                    this.currentBdCardData.averages = {
-                        /*yearly: {
-                            percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
-                            change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
-                        },*/
-                        weekly: {
-                            percentage: openDay.prcDiff ? openDay.prcDiff / 100 : 0,
-                            change: openDay.currentSales / openDay.avg4weeksSales * 100
-                        }
-                    };
-                }
-
                 if (this.currentBdCardData.averages.weekly.change) {
                     let value = openDay.currentSales / openDay.avg4weeksSales * 100;
                     this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
@@ -370,10 +356,10 @@ export class HomeComponent implements OnInit {
                     this.previousBdCardData.ppaOrders = this.previousBdCardData.sales / day.orders;
 
                     this.previousBdCardData.averages = {
-                        /*yearly: {
-                            percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
-                            change: day.aggregations.sales.amount / day.aggregations.sales.yearAvg
-                        },*/
+                        yearly: {
+                            percentage: ((day.salesAndRefoundAmountIncludeVat / day.AvgPySalesAndRefoundAmountIncludeVat) - 1),
+                            change: (day.salesAndRefoundAmountIncludeVat / day.AvgPySalesAndRefoundAmountIncludeVat) * 100
+                        },
                         weekly: {
                             percentage: ((day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) - 1),
                             change: (day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) * 100
@@ -435,10 +421,10 @@ export class HomeComponent implements OnInit {
 
                 let lastYearMonth = database.getMonth(moment().subtract(1, 'years'));
                 let previousMonth = database.getMonth(moment().subtract(1, 'months'));
-                if (lastYearMonth && lastYearMonth.aggregations && lastYearMonth.aggregations.sales) {
+                if (lastYearMonth && lastYearMonth.weekAvg) {
                     this.forecastCardData.averages.yearly = {
-                        percentage: lastYearMonth.aggregations.sales.amount ? ((month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount) - 1) : 0,
-                        change: month.forecast.sales.amount / lastYearMonth.aggregations.sales.amount * 100
+                        percentage: lastYearMonth ? (month.forecast.sales.amount / lastYearMonth.ttlsalesIncludeVat) - 1 : 0,
+                        change: lastYearMonth ? month.forecast.sales.amount / lastYearMonth.ttlsalesIncludeVat * 100 : 0
                     };
                 }
 
@@ -459,8 +445,8 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.noSeparator = true;
 
                 this.forecastCardData.averages.weekly = {
-                    percentage: previousMonth ? ((month.forecast.sales.amount / previousMonth.forecast.sales.amount) - 1) : 0,
-                    change: previousMonth ? (month.forecast.sales.amount / previousMonth.forecast.sales.amount) * 100 : 0
+                    percentage: previousMonth ? ((month.forecast.sales.amount / previousMonth.ttlsalesIncludeVat) - 1) : 0,
+                    change: previousMonth ? (month.forecast.sales.amount / previousMonth.ttlsalesIncludeVat) * 100 : 0
                 };
 
                 this.showForecast = moment().diff(moment(database.getLowestDate()), 'days') > 8; //do not show forecast for new businesses with less than 8 days of data
@@ -486,6 +472,8 @@ export class HomeComponent implements OnInit {
                     return;
                 }
                 let previousMonth = database.getMonth(moment(month.latestDay).subtract(1, 'months'));
+                let lastYearMonth = database.getMonth(moment(month.latestDay).subtract(1, 'years'));
+
 
                 this.showSummary = true;
                 this.summaryCardData.diners = month.diners || month.orders;
@@ -498,10 +486,10 @@ export class HomeComponent implements OnInit {
 
 
                 this.summaryCardData.averages = {
-                    /*yearly: {
-                        percentage: month.aggregations.sales.lastYearWeekAvg ? ((month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1) : 0,
-                        change: month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg
-                    },*/
+                    yearly: {
+                        percentage: lastYearMonth && lastYearMonth.weekAvg ? ((month.weekAvg / lastYearMonth.weekAvg) - 1) : 0,
+                        change: lastYearMonth ? (month.weekAvg / lastYearMonth.weekAvg) * 100 : 0
+                    },
                     weekly: {
                         percentage: previousMonth && previousMonth.weekAvg ? ((month.weekAvg / previousMonth.weekAvg) - 1) : 0,
                         change: previousMonth ? (month.weekAvg / previousMonth.weekAvg) * 100 : 0
