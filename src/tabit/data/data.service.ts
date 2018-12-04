@@ -671,7 +671,7 @@ export class DataService {
                         };
                     }
 
-                    if (month.aggregations.days[weekday].count < 4 && !moment(day.businessDate).isSame(currentDate, 'day') && !day.isExcluded) {
+                    if (month.aggregations.days[weekday].count < 4 && !moment(day.businessDate).isSame(currentDate, 'day')) {
                         month.aggregations.days[weekday].count += 1;
                         month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountIncludeVat;
                         month.aggregations.days[weekday].sales.amountWithoutVat += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat / day.vat : day.salesAndRefoundAmountIncludeVat / day.vat;
@@ -686,6 +686,18 @@ export class DataService {
                     if (data) {
                         let monthDate = month.latestDay;
                         let dayCounter = _.clone(data.count);
+
+                        //calculate week avg from real week days without historic data
+                        if(moment(monthDate).isSame(moment(), 'month')) {
+                            console.log('in');
+                        }
+                        let weeklySales = month.aggregations.days[weekday].sales.amount;
+                        let weeklySalesDays = month.aggregations.days[weekday].count;
+                        if((weeklySales && weeklySalesDays)) {
+                            month.weekAvg += weeklySales / weeklySalesDays;
+                            weekDayCounter++;
+                        }
+
                         while (dayCounter < 4) {
                             let previousMonth = database[moment(monthDate).subtract(1, 'months').format('YYYYMM')];
                             let days = _.get(previousMonth, 'days');
@@ -710,12 +722,10 @@ export class DataService {
 
                         data.sales.avg = month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count;
                         data.sales.avgWithoutVat = month.aggregations.days[weekday].sales.amountWithoutVat / month.aggregations.days[weekday].count;
-                        month.weekAvg += data.sales.avg;
-                        weekDayCounter++;
                     }
                 });
-                month.weekAvg = month.weekAvg / weekDayCounter;
 
+                month.weekAvg = month.weekAvg / weekDayCounter;
 
                 if (month.days && month.days.length) {
                     let endOfMonth = moment(month.days[0].businessDate).endOf('month');

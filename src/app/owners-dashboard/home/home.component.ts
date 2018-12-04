@@ -629,15 +629,41 @@ export class HomeComponent implements OnInit {
 
                 this.summaryCardData.showDrillArrow = true;
 
+                let previousMonthWeekAvg = 0;
+                let lastYearWeekAvg = 0;
+                let currentdaysCounter = 0;
+                if(date.isSame(moment(), 'month') && date.date() < 7) {
+                    _.forEach(month.aggregations.days, (data, weekday) => {
+                        if(data && weekday !== moment().day()) {
+                            currentdaysCounter++;
+                            let lastYearSalesAmount = _.get(lastYearMonth, ['aggregations','days', weekday, 'sales', 'avg']);
+                            if(lastYearSalesAmount) {
+                                lastYearWeekAvg += lastYearSalesAmount;
+                            }
+
+                            let lastMonthSalesAmount = _.get(previousMonth, ['aggregations','days', weekday, 'sales', 'avg']);
+                            if(lastMonthSalesAmount) {
+                                previousMonthWeekAvg += lastMonthSalesAmount;
+                            }
+                        }
+                    });
+
+                    previousMonthWeekAvg = previousMonthWeekAvg / currentdaysCounter;
+                    lastYearWeekAvg = lastYearWeekAvg / currentdaysCounter;
+                }
+                else {
+                    previousMonthWeekAvg = previousMonth.weekAvg;
+                    lastYearWeekAvg = lastYearMonth.weekAvg;
+                }
 
                 this.summaryCardData.averages = {
                     yearly: {
-                        percentage: lastYearMonth && lastYearMonth.weekAvg ? ((month.weekAvg / lastYearMonth.weekAvg) - 1) : 0,
-                        change: lastYearMonth ? (month.weekAvg / lastYearMonth.weekAvg) * 100 : 0
+                        percentage: lastYearMonth && lastYearWeekAvg ? ((month.weekAvg / lastYearWeekAvg) - 1) : 0,
+                        change: lastYearMonth ? (month.weekAvg / lastYearWeekAvg) * 100 : 0
                     },
                     weekly: {
-                        percentage: previousMonth && previousMonth.weekAvg ? ((month.weekAvg / previousMonth.weekAvg) - 1) : 0,
-                        change: previousMonth ? (month.weekAvg / previousMonth.weekAvg) * 100 : 0
+                        percentage: previousMonth && previousMonthWeekAvg ? ((month.weekAvg / previousMonthWeekAvg) - 1) : 0,
+                        change: previousMonth ? (month.weekAvg / previousMonthWeekAvg) * 100 : 0
                     }
                 };
 
