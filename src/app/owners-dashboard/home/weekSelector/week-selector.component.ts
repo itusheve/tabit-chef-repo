@@ -67,8 +67,12 @@ export class WeekSelectorComponent {
                             ppaOrders: sales / week.orders,
                             averages: {
                                 weekly: {
-                                    percentage: '',
-                                    change: ''
+                                    percentage: 0,
+                                    change: 0
+                                },
+                                yearly: {
+                                    percentage: 0,
+                                    change: 0
                                 }
                             },
                             reductions: {},
