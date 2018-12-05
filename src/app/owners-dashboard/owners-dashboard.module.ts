@@ -83,6 +83,7 @@ import {DayRetentionTableComponent} from './day-view/day-retention-table/day-ret
 import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/day-month-summary-table.component';
 import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sales.component';
 import {MonthPickerDialogComponent} from './home/month-selector/month-picker-dialog.component';
+import {WeekSelectorComponent} from './home/weekSelector/week-selector.component';
 import {OverTimeUsersDialogComponent} from './home/over-time-users/over-time-users-dialog.component';
 import {TranslateModule} from '@ngx-translate/core';
 
@@ -131,6 +132,7 @@ import {TranslateModule} from '@ngx-translate/core';
         MonthViewComponent,
         MonthSelectorComponent,
         MonthPickerDialogComponent,
+        WeekSelectorComponent,
         OverTimeUsersDialogComponent,
         MonthGridComponent,
         DayViewComponent,
@@ -177,6 +179,7 @@ import {TranslateModule} from '@ngx-translate/core';
     entryComponents: [
         MonthSelectorComponent,
         MonthPickerDialogComponent,
+        WeekSelectorComponent,
         OverTimeUsersDialogComponent
     ],
 })

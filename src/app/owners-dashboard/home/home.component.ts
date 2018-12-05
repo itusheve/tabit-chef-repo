@@ -11,6 +11,7 @@ import {OwnersDashboardService} from '../owners-dashboard.service';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
 import {MatBottomSheet} from '@angular/material';
 import {MonthPickerDialogComponent} from './month-selector/month-picker-dialog.component';
+import {WeekSelectorComponent} from './weekSelector/week-selector.component';
 import {environment} from '../../../environments/environment';
 import {TranslateService} from '@ngx-translate/core';
 import {MatDialog} from '@angular/material';
@@ -84,6 +85,7 @@ export class HomeComponent implements OnInit {
     public olapError: any;
     public showSummary: boolean;
     public laborCostCard: any;
+    public weeks: any;
     public weekToDateCard: CardData = {
         loading: true,
         title: '',
@@ -92,7 +94,7 @@ export class HomeComponent implements OnInit {
         diners: 0,
         ppa: 0,
         ppaOrders: 0,
-        aggregations: {}
+        reductions: {}
     };
     public laborCost: any;
     private env: any;
@@ -101,6 +103,7 @@ export class HomeComponent implements OnInit {
                 private dataService: DataService,
                 private router: Router,
                 private monthPickerDialog: MatBottomSheet,
+                private weekPickerDialog: MatBottomSheet,
                 private datePipe: DatePipe,
                 private translate: TranslateService,
                 public dialog: MatDialog,
@@ -134,127 +137,148 @@ export class HomeComponent implements OnInit {
         this.getForecastData();
         this.getSummary();
         this.renderLaborCost();
-        //this.renderWeekToDate();
+        this.renderWeekToDate();
     }
 
-    /*renderWeekToDate() {
-        combineLatest(this.dataService.databaseV2$, this.dataService.vat$)
+    renderWeekToDate() {
+        combineLatest(this.dataService.databaseV2$, this.dataService.currentRestTime$, this.dataService.vat$)
             .subscribe(async data => {
                 let database = data[0];
-                let incVat = data[1];
+                let restTime = data[1];
+                let incVat = data[2];
 
-                if (this.env.region !== 'us' || !database) {
-                    return;
-                }
+                let week = database.getWeekByDate(restTime);
 
-                let time = this.dataService.getCurrentRestTime();
-                let configuration = await this.dataService.getLaborCostConfiguration();
-                let firstWeekday = _.get(configuration, 'workHoursRules.firstWeekday');
-                firstWeekday = (firstWeekday === 'sunday') ? 0 : 1;
+                let title = '';
+                this.translate.get('weekToDate').subscribe((res: string) => {
+                    title = res;
+                });
 
-                let weekStartDate = moment().day(firstWeekday - 7);
+                let dinersOrders = week.diners || week.orders;
+                let sales = incVat ? week.sales.total : week.sales.totalWithoutVat;
+                this.weekToDateCard = {
+                    loading: false,
+                    title: title + ' (' + week.details.number + ')',
+                    tag: '',
+                    sales: sales,
+                    diners: dinersOrders,
+                    ppa: sales / dinersOrders,
+                    ppaOrders: sales / week.orders,
+                };
 
-                let currentWeek = {
+                let previousWeek = database.getWeekByDate(moment(restTime).subtract(1, 'week'));
+                let lastYearWeek = database.getWeek(restTime.weekYear() - 1, restTime.week());
+
+                let previousWeeksAvgs = {
                     sales: 0,
-                    orders: 0,
-                    diners: 0,
-                    voids: 0,
-                    employee: 0,
+                    cancellations: 0,
+                    employees: 0,
                     operational: 0,
                     retention: 0,
-                    vat: 0,
                 };
-
-                let avgs = {
-                    week: {
-                        sales: 0,
-                        voids: 0,
-                        employee: 0,
-                        operational: 0,
-                        retention: 0
-                    },
-                    year: {
-                        sales: 0,
-                        voids: 0,
-                        employee: 0,
-                        operational: 0,
-                        retention: 0
+                let weekCounter = 1;
+                for (let i = 1; i <= 4; i++) {
+                    let historicWeek = database.getWeekByDate(moment(restTime).subtract(i, 'weeks'));
+                    if (historicWeek) {
+                        if(restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
+                            let counter = 0;
+                            _.forEach(historicWeek.days, day => {
+                                if(counter < week.daysInWeek) {
+                                    previousWeeksAvgs.sales += _.get(day, ['sales', 'total']);
+                                    previousWeeksAvgs.cancellations += _.get(day, ['reductions', 'cancellations']);
+                                    previousWeeksAvgs.employees += _.get(day, ['reductions', 'employees']);
+                                    previousWeeksAvgs.operational += _.get(day, ['reductions', 'operational']);
+                                    previousWeeksAvgs.retention += _.get(day, ['reductions', 'retention']);
+                                    counter++;
+                                }
+                            });
+                        }
+                        else {
+                            previousWeeksAvgs.sales += _.get(historicWeek, ['sales', 'total']);
+                            previousWeeksAvgs.cancellations += _.get(previousWeek, ['reductions', 'cancellations']);
+                            previousWeeksAvgs.employees += _.get(previousWeek, ['reductions', 'employees']);
+                            previousWeeksAvgs.operational += _.get(previousWeek, ['reductions', 'operational']);
+                            previousWeeksAvgs.retention += _.get(previousWeek, ['reductions', 'retention']);
+                        }
+                        weekCounter++;
                     }
-
-                };
-
-                while (weekStartDate.isBefore(time)) {
-                    let day = database.getDay(weekStartDate);
-                    if (day) {
-                        currentWeek.sales += day.salesAndRefoundAmountIncludeVat;
-                        currentWeek.orders += day.orders;
-                        currentWeek.diners += day.diners;
-                        currentWeek.voids += day.voidsPrc * day.salesAndRefoundAmountIncludeVat;
-                        currentWeek.employee += day.employeesPrc * day.salesAndRefoundAmountIncludeVat;
-                        currentWeek.operational += day.operationalPrc * day.salesAndRefoundAmountIncludeVat;
-                        currentWeek.retention += day.mrPrc * day.salesAndRefoundAmountIncludeVat;
-                        currentWeek.vat += day.vat;
-
-                        avgs.week.sales += day.AvgNweeksSalesAndRefoundAmountIncludeVat;
-                        avgs.week.voids += day.avgNweeksVoidsPrc;
-                        avgs.week.employee += day.avgNweeksEmployeesPrc;
-                        avgs.week.operational += day.avgNweeksOperationalPrc;
-                        avgs.week.retention += day.avgNweeksMrPrc;
-
-                        avgs.week.sales += day.AvgPySalesAndRefoundAmountIncludeVat;
-                        avgs.week.voids += day.avgPyVoidsPrc;
-                        avgs.week.employee += day.avgPyEmployeesPrc;
-                        avgs.week.operational += day.avgPyOperationalPrc;
-                        avgs.week.retention += day.avgPyMrPrc;
-                    }
-                    weekStartDate.add(1, 'day');
                 }
 
-                this.weekToDateCard.sales = incVat ? currentWeek.sales : currentWeek.sales / currentWeek.vat;
-                this.weekToDateCard.diners = currentWeek.diners || currentWeek.orders;
+                previousWeeksAvgs.sales = previousWeeksAvgs.sales / weekCounter;
+                previousWeeksAvgs.cancellations = previousWeeksAvgs.cancellations / weekCounter;
+                previousWeeksAvgs.employees = previousWeeksAvgs.employees / weekCounter;
+                previousWeeksAvgs.operational = previousWeeksAvgs.operational / weekCounter;
+                previousWeeksAvgs.retention = previousWeeksAvgs.retention / weekCounter;
 
-                let ppa = this.weekToDateCard.sales / this.weekToDateCard.diners;
-                this.weekToDateCard.ppa = incVat ? ppa : ppa / currentWeek.vat;
+                let lastYearWeeksAvgs = {
+                    sales: 0,
+                    cancellations: 0,
+                    employees: 0,
+                    operational: 0,
+                    retention: 0,
+                };
+                if (lastYearWeek) {
+                    if(restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
+                        let counter = 0;
+                        _.forEach(lastYearWeek.days, day => {
+                            if(counter < week.daysInWeek) {
+                                lastYearWeeksAvgs.sales += _.get(day, ['sales', 'total']);
+                                lastYearWeeksAvgs.cancellations += _.get(day, ['reductions', 'cancellations']);
+                                lastYearWeeksAvgs.employees += _.get(day, ['reductions', 'employees']);
+                                lastYearWeeksAvgs.operational += _.get(day, ['reductions', 'operational']);
+                                lastYearWeeksAvgs.retention += _.get(day, ['reductions', 'retention']);
+                                counter++;
+                            }
+                        });
+                    }
+                    else {
+                        lastYearWeeksAvgs.sales += _.get(lastYearWeek, ['sales', 'total']);
+                        lastYearWeeksAvgs.cancellations += _.get(lastYearWeek, ['reductions', 'cancellations']);
+                        lastYearWeeksAvgs.employees += _.get(lastYearWeek, ['reductions', 'employees']);
+                        lastYearWeeksAvgs.operational += _.get(lastYearWeek, ['reductions', 'operational']);
+                        lastYearWeeksAvgs.retention += _.get(lastYearWeek, ['reductions', 'retention']);
+                    }
+                }
 
-                let ppaOrders = this.weekToDateCard.sales / currentWeek.orders;
-                this.weekToDateCard.ppaOrders = incVat ? ppaOrders : ppaOrders / currentWeek.vat;
 
                 this.weekToDateCard.averages = {
                     yearly: {
-                        percentage: ((day.salesAndRefoundAmountIncludeVat / day.AvgPySalesAndRefoundAmountIncludeVat) - 1),
-                        change: (day.salesAndRefoundAmountIncludeVat / day.AvgPySalesAndRefoundAmountIncludeVat) * 100
+                        percentage: ((week.sales.total / lastYearWeeksAvgs.sales) - 1),
+                        change: (week.sales.total / lastYearWeeksAvgs.sales) * 100
                     },
                     weekly: {
-                        percentage: ((day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) - 1),
-                        change: (day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) * 100
+                        percentage: ((week.sales.total / previousWeeksAvgs.sales) - 1),
+                        change: (week.sales.total / previousWeeksAvgs.sales) * 100
                     }
                 };
 
                 this.weekToDateCard.reductions = {
                     cancellations: {
-                        percentage: day.voidsPrc / 100,
-                        change: day.voidsPrc - day.avgNweeksVoidsPrc
+                        percentage: week.reductions.cancellations / previousWeeksAvgs.cancellations,
+                        change: (week.reductions.cancellations / week.sales.total) - (previousWeeksAvgs.cancellations / previousWeeksAvgs.sales)
                     },
                     employee: {
-                        percentage: day.employeesPrc / 100,
-                        change: day.employeesPrc - day.avgNweeksEmployeesPrc
+                        percentage: week.reductions.employees / previousWeeksAvgs.employees,
+                        change: (week.reductions.employees  / week.sales.total) - (previousWeeksAvgs.employees / previousWeeksAvgs.sales)
                     },
                     operational: {
-                        percentage: day.operationalPrc / 100,
-                        change: day.operationalPrc - day.avgNweeksOperationalPrc
+                        percentage: week.reductions.operational / previousWeeksAvgs.operational,
+                        change: (week.reductions.operational / week.sales.total) - (previousWeeksAvgs.operational / previousWeeksAvgs.sales)
                     },
                     retention: {
-                        percentage: day.mrPrc / 100,
-                        change: day.mrPrc - day.avgNweeksMrPrc
+                        percentage: week.reductions.retention / previousWeeksAvgs.retention,
+                        change: (week.reductions.retention / week.sales.total) - (previousWeeksAvgs.retention / previousWeeksAvgs.sales)
                     }
                 };
 
-                if (this.weekToDateCard.sales) {
-                    this.display.weekToDate = true;
+                if (this.weekToDateCard.averages.weekly.percentage) {
+                    let value = (this.weekToDateCard.averages.weekly.change);
+                    this.weekToDateCard.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }
-            });
 
-    }*/
+                this.display.weekToDate = true;
+            });
+    }
 
     async renderLaborCost() {
 
@@ -369,6 +393,37 @@ export class HomeComponent implements OnInit {
         });
     }
 
+    openWeekPicker() {
+
+        this.ownersDashboardService.toolbarConfig.left.back.showBtn = true;
+        this.ownersDashboardService.toolbarConfig.menuBtn.show = false;
+        this.ownersDashboardService.toolbarConfig.settings.show = false;
+        this.ownersDashboardService.toolbarConfig.home.show = true;
+
+
+        let dialog = this.weekPickerDialog.open(WeekSelectorComponent, {
+            data: {weeks: this.weeks},
+            hasBackdrop: true,
+            closeOnNavigation: true,
+            backdropClass: 'month-picker-backdrop',
+            panelClass: 'month-picker-dialog-panel',
+            autoFocus: false
+        });
+
+        dialog.afterDismissed().subscribe(() => {
+            this.ownersDashboardService.toolbarConfig.left.back.showBtn = false;
+            this.ownersDashboardService.toolbarConfig.menuBtn.show = true;
+            this.ownersDashboardService.toolbarConfig.settings.show = true;
+            this.ownersDashboardService.toolbarConfig.home.show = false;
+
+            let item = document.getElementById('monthSelector');// what we want to scroll to
+            let wrapper = document.getElementById('main-content');// the wrapper we will scroll inside
+            let header = document.getElementById('main-toolbar');// the wrapper we will scroll inside
+            let count = item.offsetTop - wrapper.scrollTop - header.scrollHeight - 10; // xx = any extra distance from top ex. 60
+            wrapper.scrollBy({top: count, left: 0, behavior: 'smooth'});
+        });
+    }
+
     getTodayData() {
         combineLatest(this.dataService.dailyTotals$, this.dataService.openDay$, this.dataService.vat$)
             .subscribe(async data => {
@@ -411,13 +466,13 @@ export class HomeComponent implements OnInit {
                         change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
                     },*/
                     weekly: {
-                        percentage: openDay.prcDiff ? openDay.prcDiff / 100 : 0,
-                        change: openDay.currentSales / openDay.avg4weeksSales * 100
+                        percentage: (totalSalesWithoutTax / openDay.avg4weeksSales) - 1,
+                        change: totalSalesWithoutTax / openDay.avg4weeksSales * 100
                     }
                 };
 
                 if (this.currentBdCardData.averages.weekly.change) {
-                    let value = openDay.currentSales / openDay.avg4weeksSales * 100;
+                    let value = totalSalesWithoutTax / openDay.avg4weeksSales * 100;
                     this.currentBdCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }
 
@@ -632,17 +687,17 @@ export class HomeComponent implements OnInit {
                 let previousMonthWeekAvg = 0;
                 let lastYearWeekAvg = 0;
                 let currentdaysCounter = 0;
-                if(date.isSame(moment(), 'month') && date.date() < 7) {
+                if (date.isSame(moment(), 'month') && date.date() < 7) {
                     _.forEach(month.aggregations.days, (data, weekday) => {
-                        if(data && weekday !== moment().day()) {
+                        if (data && weekday !== moment().day()) {
                             currentdaysCounter++;
-                            let lastYearSalesAmount = _.get(lastYearMonth, ['aggregations','days', weekday, 'sales', 'avg']);
-                            if(lastYearSalesAmount) {
+                            let lastYearSalesAmount = _.get(lastYearMonth, ['aggregations', 'days', weekday, 'sales', 'avg']);
+                            if (lastYearSalesAmount) {
                                 lastYearWeekAvg += lastYearSalesAmount;
                             }
 
-                            let lastMonthSalesAmount = _.get(previousMonth, ['aggregations','days', weekday, 'sales', 'avg']);
-                            if(lastMonthSalesAmount) {
+                            let lastMonthSalesAmount = _.get(previousMonth, ['aggregations', 'days', weekday, 'sales', 'avg']);
+                            if (lastMonthSalesAmount) {
                                 previousMonthWeekAvg += lastMonthSalesAmount;
                             }
                         }
