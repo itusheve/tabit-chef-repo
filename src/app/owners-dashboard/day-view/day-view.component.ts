@@ -284,6 +284,7 @@ export class DayViewComponent implements OnInit {
         //get card data for the day
         combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.openDay$)
             .subscribe(async data => {
+                this.display.laborCost = false;
                 let date = data[0];
                 let database = data[1];
                 let openDay = data[2];
@@ -368,7 +369,15 @@ export class DayViewComponent implements OnInit {
                 }
 
                 if (this.env.region === 'us') {
-                    this.display.laborCost = true;
+                    this.laborCost = {
+                        today: [],
+                        week: [],
+                        sales: {
+                            week: 0,
+                            today: 0
+                        }
+                    };
+
                     let laborCostDate = moment(date.format('YYYY-MM-DD')).hour(23).minute(59).second(59);
                     let laborCost = await this.dataService.getLaborCostByTime(laborCostDate);
                     if (laborCost) {
@@ -431,6 +440,7 @@ export class DayViewComponent implements OnInit {
                                 byAssignments.users = _.values(byAssignments.users);
                             });
                         }
+                        this.display.laborCost = true;
                     }
                 }
             });

@@ -707,8 +707,8 @@ export class HomeComponent implements OnInit {
                     lastYearWeekAvg = lastYearWeekAvg / currentdaysCounter;
                 }
                 else {
-                    previousMonthWeekAvg = previousMonth.weekAvg;
-                    lastYearWeekAvg = lastYearMonth.weekAvg;
+                    previousMonthWeekAvg = _.get(previousMonth, 'weekAvg', 0);
+                    lastYearWeekAvg = _.get(lastYearMonth, 'weekAvg', 0);
                 }
 
                 this.summaryCardData.averages = {

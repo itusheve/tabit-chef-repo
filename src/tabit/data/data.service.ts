@@ -782,9 +782,6 @@ export class DataService {
                         let dayCounter = _.clone(data.count);
 
                         //calculate week avg from real week days without historic data
-                        if(moment(monthDate).isSame(moment(), 'month')) {
-                            console.log('in');
-                        }
                         let weeklySales = month.aggregations.days[weekday].sales.amount;
                         let weeklySalesDays = month.aggregations.days[weekday].count;
                         if((weeklySales && weeklySalesDays)) {
