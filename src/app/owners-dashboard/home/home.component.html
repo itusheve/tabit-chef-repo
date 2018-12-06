@@ -68,6 +68,10 @@
                 <app-card [cardData]="previousBdCardData" (click)="onDayRequest({date: 'previousBD'})"
                           style="cursor: pointer"></app-card>
             </div>
+            <div *ngIf="!loadingOlapData && display.weekToDate && isCurrentMonth()" class="col-sm-12 mb-3">
+                <app-card [cardData]="weekToDateCard" (click)="openWeekPicker()"
+                          style="cursor: pointer"></app-card>
+            </div>
             <div *ngIf="!loadingOlapData && showForecast && isCurrentMonth()" class="col-sm-12 mb-3">
                 <app-card [cardData]="forecastCardData"></app-card>
             </div>
