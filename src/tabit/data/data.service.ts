@@ -1857,8 +1857,8 @@ export class DataService {
             let time = _.get(dailySales, 'firedOnHHMM') + '';
             let hours = time.substring(0, 2);
             let minutes = time.substring(3, 5);
-            date.hour(hours);
-            date.minute(minutes);
+            date.hour(parseInt(hours));
+            date.minute(parseInt(minutes));
 
             let unix = date.unix();
             let key = date.format('DHH');
