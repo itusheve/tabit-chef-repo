@@ -1853,6 +1853,13 @@ export class DataService {
         let result = [];
         _.forEach(report.salesByHour, dailySales => {
             let date = moment(dailySales.firedOn);
+
+            let time = _.get(dailySales, 'firedOnHHMM') + '';
+            let hours = time.substring(0, 2);
+            let minutes = time.substring(3, 5);
+            date.hour(hours);
+            date.minute(minutes);
+
             let unix = date.unix();
             let key = date.format('DHH');
 
