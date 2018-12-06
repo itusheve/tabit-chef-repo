@@ -45,7 +45,7 @@
                 <div class="row">
                     <div class="col-12">
                         <table class="table table-borderless table-sm sales-table mb-0">
-                            <tr *ngIf="cardData.averages?.yearly?.percentage">
+                            <tr *ngIf="cardData.averages?.yearly?.percentage && isValid(cardData.averages?.yearly?.percentage)">
                                 <span>
                                     <mat-icon *ngIf="cardData.averages.yearly.percentage"
                                               [ngClass]="[getPercentageCssClass(cardData.averages.yearly.percentage, true, cardData.averages.yearly.change),getIconClass(cardData.averages.yearly.change)]"

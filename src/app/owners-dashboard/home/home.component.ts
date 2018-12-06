@@ -11,7 +11,7 @@ import {OwnersDashboardService} from '../owners-dashboard.service';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
 import {MatBottomSheet} from '@angular/material';
 import {MonthPickerDialogComponent} from './month-selector/month-picker-dialog.component';
-import {WeekSelectorComponent} from './weekSelector/week-selector.component';
+import {WeekSelectorComponent} from './week-selector/week-selector.component';
 import {environment} from '../../../environments/environment';
 import {TranslateService} from '@ngx-translate/core';
 import {MatDialog} from '@angular/material';
@@ -530,6 +530,7 @@ export class HomeComponent implements OnInit {
                 let database = data[0];
                 let restaurantTime = data[1];
                 let incVat = data[2];
+                this.OlapFailed = false;
 
                 if (!database || database.error) {
                     this.OlapFailed = true;

@@ -95,4 +95,8 @@ export class CardComponent implements OnInit {
     abs(value) {
         return Math.abs(value);
     }
+
+    isValid(number) {
+        return isFinite(number) && !isNaN(number);
+    }
 }

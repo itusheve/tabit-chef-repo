@@ -362,8 +362,8 @@ export class DayViewComponent implements OnInit {
                             change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
                         },*/
                         weekly: {
-                            percentage: openDay.prcDiff ? openDay.prcDiff / 100 : 0,
-                            change: openDay.currentSales / openDay.avg4weeksSales * 100
+                            percentage: (totalSalesWithoutTax / openDay.avg4weeksSales) - 1,
+                            change: totalSalesWithoutTax / openDay.avg4weeksSales * 100
                         }
                     };
                 }
