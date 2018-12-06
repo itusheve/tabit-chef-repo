@@ -40,6 +40,7 @@ export class AuthService {
         window.localStorage.removeItem('user');
         window.localStorage.removeItem('userSettings');
         window.localStorage.removeItem('org');
+        window.localStorage.clear();
     }
 
     login(credentials): Promise<any> {

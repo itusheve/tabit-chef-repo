@@ -19,7 +19,7 @@
                         </mat-panel-description>
                     </mat-expansion-panel-header>
 
-                    <table class="chf-tbl">
+                    <table class="table">
                         <tr style="background-color: #f2f2f2;font-weight: bold;">
                             <td>
                                 <div class="flex a-center">
@@ -81,9 +81,9 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
 
-                        <table class="chf-tbl">
+                        <table class="table">
                             <tr style="background-color: #f2f2f2;font-weight: bold;">
-                                <td (click)="sort(orderType, 'time')" style="width:55px;">
+                                <td (click)="sort(orderType, 'time')">
                                     <div class="flex a-center">
                                         <div [translate]="'dayTable.opened'">Opened</div>
                                         <mat-icon class="sortMatIcon" *ngIf="sortBy==='time' && sortDir==='desc'">
@@ -94,7 +94,7 @@
                                         </mat-icon>
                                     </div>
                                 </td>
-                                <td (click)="sort(orderType, 'number')" style="width:65px;">
+                                <td (click)="sort(orderType, 'number')">
                                     <div class="flex a-center">
                                         <div [translate]="'dayTable.orderNumber'">Order #</div>
                                         <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='desc'">
@@ -105,7 +105,7 @@
                                         </mat-icon>
                                     </div>
                                 </td>
-                                <td (click)="sort(orderType, 'waiter')" style="width:65px;">
+                                <td (click)="sort(orderType, 'waiter')">
                                     <div class="flex a-center">
                                         <div [translate]="'day.server'">Server</div>
                                         <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">
@@ -116,7 +116,7 @@
                                         </mat-icon>
                                     </div>
                                 </td>
-                                <td (click)="sort(orderType, 'sales')" style="width:55px;">
+                                <td (click)="sort(orderType, 'sales')">
                                     <div class="flex a-center j-end">
                                         <div [translate]="'dayTable.sales'">Sales</div>
                                         <mat-icon class="sortMatIcon" *ngIf="sortBy==='sales' && sortDir==='desc'">
@@ -128,7 +128,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="flex d-col px-1" style="width:50px;">
+                                    <div class="flex d-col px-1">
                                         <div class="flex">
                                             <div class="iconFilter cancellation flex ml5 mb5"
                                                  [ngClass]="{'on': iconFilterOn('cancellation')}"
