@@ -680,7 +680,7 @@ export class HomeComponent implements OnInit {
                 this.showForecast = moment().diff(moment(database.getLowestDate()), 'days') > 8; //do not show forecast for new businesses with less than 8 days of data
 
                 if (this.forecastCardData.averages.weekly.percentage) {
-                    let value = (month.forecast.sales.amount / previousMonth.forecast.sales.amount) * 100;
+                    let value = (month.forecast.sales.amount / previousMonth.ttlsalesIncludeVat) * 100;
                     this.forecastCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }
             });
@@ -774,7 +774,7 @@ export class HomeComponent implements OnInit {
                 };
 
                 if (this.summaryCardData.averages.weekly.percentage) {
-                    let value = previousMonth ? (month.weekAvg / previousMonth.weekAvg) * 100 : 0;
+                    let value = previousMonth ? (month.weekAvg / previousMonthWeekAvg) * 100 : 0;
                     this.summaryCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }
                 else {
