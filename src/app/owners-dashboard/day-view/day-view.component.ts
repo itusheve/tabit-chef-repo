@@ -207,10 +207,21 @@ export class DayViewComponent implements OnInit {
         this.hasData = false;
         this.today = moment();
 
-        this.display.laborCost = false;
+        this.dataService.settings$.subscribe(settings => {
+            if(settings.laborCost === undefined || settings.laborCost === true) {
+                this.display.laborCost = true;
+            }
+            else {
+                this.display.laborCost = false;
+            }
+        });
+
+
         this.user = {
             isStaff: false
         };
+
+
 
         this.dataService.user$.subscribe(user => {
             this.user = user;
@@ -284,7 +295,6 @@ export class DayViewComponent implements OnInit {
         //get card data for the day
         combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.openDay$)
             .subscribe(async data => {
-                this.display.laborCost = false;
                 let date = data[0];
                 let database = data[1];
                 let openDay = data[2];
@@ -440,7 +450,6 @@ export class DayViewComponent implements OnInit {
                                 byAssignments.users = _.values(byAssignments.users);
                             });
                         }
-                        this.display.laborCost = true;
                     }
                 }
             });

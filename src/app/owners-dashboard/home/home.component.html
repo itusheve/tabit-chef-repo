@@ -24,7 +24,7 @@
                 <app-card [cardData]="currentBdCardData" (click)="onDayRequest({date: 'currentBD'})"
                           style="cursor: pointer"></app-card>
             </div>
-            <div class="col-sm-12 mb-3" *ngIf="display.laborCost && isCurrentMonth()">
+            <div class="col-sm-12 mb-3" *ngIf="showLaborCost()">
                 <div class="row">
                     <div class="col-12">
                         <div class="labor-cost-card card text-center bg-light dashboard-home-card shadow-card rounded-0">
@@ -68,7 +68,7 @@
                 <app-card [cardData]="previousBdCardData" (click)="onDayRequest({date: 'previousBD'})"
                           style="cursor: pointer"></app-card>
             </div>
-            <div *ngIf="!loadingOlapData && display.weekToDate && isCurrentMonth()" class="col-sm-12 mb-3">
+            <div *ngIf="!loadingOlapData && showWeekToDate()" class="col-sm-12 mb-3">
                 <app-card [cardData]="weekToDateCard" (click)="openWeekPicker()"
                           style="cursor: pointer"></app-card>
             </div>
@@ -76,7 +76,7 @@
                 <app-card [cardData]="forecastCardData"></app-card>
             </div>
             <div class="col-sm-12 mb-3">
-                <app-card id="monthSummary" *ngIf="showSummary" [cardData]="summaryCardData"
+                <app-card id="monthSummary" *ngIf="showSummary && display.monthToDate" [cardData]="summaryCardData"
                           (click)="openMonthPicker()"></app-card>
             </div>
         </div>

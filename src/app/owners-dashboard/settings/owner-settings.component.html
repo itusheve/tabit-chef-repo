@@ -62,6 +62,45 @@
                     </li>
                 </ul>
             </div>
+
+            <div class="card">
+                <div class="card-header" [translate]="'settingsPage.data'"></div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item border-0">
+                        <mat-checkbox
+                                color="primary"
+                                [checked]="settings.weekToDate"
+                                (change)="updateWeekToDate($event)"
+                                [indeterminate]="false"
+                                [disabled]="false"
+                                [translate]="'settingsPage.displayWeekToDate'">
+                            {{'settingsPage.displayWeekToDate' | translate}}
+                        </mat-checkbox>
+                    </li>
+                    <li class="list-group-item border-0">
+                        <mat-checkbox
+                                color="primary"
+                                [checked]="settings.monthToDate"
+                                (change)="updateMonthToDate($event)"
+                                [indeterminate]="false"
+                                [disabled]="false"
+                                [translate]="'settingsPage.displayMonthToDate'">
+                            {{'settingsPage.displayMonthToDate' | translate}}
+                        </mat-checkbox>
+                    </li>
+                    <li *ngIf="env.region === 'us'" class="list-group-item border-0">
+                        <mat-checkbox
+                                color="primary"
+                                [checked]="settings.laborCost"
+                                (change)="updateLaborCost($event)"
+                                [indeterminate]="false"
+                                [disabled]="false"
+                                [translate]="'settingsPage.laborCost'">
+                            {{'settingsPage.laborCost' | translate}}
+                        </mat-checkbox>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

@@ -74,7 +74,8 @@ export class HomeComponent implements OnInit {
 
     public display = {
         laborCost: false,
-        weekToDate: false
+        weekToDate: false,
+        monthToDate: false
     };
 
     private previousBdNotFinal = false;
@@ -118,6 +119,31 @@ export class HomeComponent implements OnInit {
         ownersDashboardService.toolbarConfig.home.show = false;
 
         this.display.laborCost = false;
+        this.display.weekToDate = false;
+        this.display.monthToDate = false;
+
+        this.dataService.settings$.subscribe(settings => {
+            if(settings.weekToDate === true) {
+                this.display.weekToDate = true;
+            }
+            else {
+                this.display.weekToDate = false;
+            }
+
+            if(settings.monthToDate === undefined || settings.monthToDate === true) {
+                this.display.monthToDate = true;
+            }
+            else {
+                this.display.monthToDate = false;
+            }
+
+            if(settings.laborCost === undefined || settings.laborCost === true) {
+                this.display.laborCost = true;
+            }
+            else {
+                this.display.laborCost = false;
+            }
+        });
     }
 
     ngOnInit() {
@@ -275,8 +301,6 @@ export class HomeComponent implements OnInit {
                     let value = (this.weekToDateCard.averages.weekly.change);
                     this.weekToDateCard.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }
-
-                this.display.weekToDate = true;
             });
     }
 
@@ -337,10 +361,6 @@ export class HomeComponent implements OnInit {
                     count: laborCost.overtime.count || 0
                 }
             };
-
-            if (this.laborCostCard.week.cost) {
-                this.display.laborCost = true;
-            }
         });
 
     }
@@ -787,5 +807,13 @@ export class HomeComponent implements OnInit {
     isCurrentMonth() {
         let selectedMonth = this.dataService.selectedMonth$.value;
         return selectedMonth.month() === moment().month();
+    }
+
+    showLaborCost() {
+        return this.display.laborCost && this.isCurrentMonth() && _.get(this.laborCostCard, ['today', 'cost']);
+    }
+
+    showWeekToDate() {
+        return this.display.weekToDate && this.isCurrentMonth() && _.get(this.weekToDateCard, ['sales']);
     }
 }

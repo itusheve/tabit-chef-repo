@@ -4,6 +4,7 @@ import {environment} from '../../../environments/environment';
 import {DataService} from '../../../tabit/data/data.service';
 import {OwnersDashboardService} from '../owners-dashboard.service';
 import {TranslateService} from '@ngx-translate/core';
+import * as _ from 'lodash';
 
 @Component({
     templateUrl: './owner-settings.component.html',
@@ -15,7 +16,11 @@ export class OwnerSettingsComponent implements OnInit {
     user: any;
     userInitials: string;
     vat: boolean;
+    weekToDate: boolean;
+    monthToDate: boolean;
+    laborCost: boolean;
     maxItemsPerDepartment: number;
+    settings: any;
 
     toolbarConfig: any;
     sideNavConfig: any;
@@ -57,6 +62,7 @@ export class OwnerSettingsComponent implements OnInit {
         dataService.settings$.subscribe((settings: any) => {
             this.maxItemsPerDepartment = settings.maxItemsPerDepartment || 5;
             this.lang = settings.lang || 'en';
+            this.settings = settings;
         });
     }
 
@@ -70,6 +76,24 @@ export class OwnerSettingsComponent implements OnInit {
         settings.vat = event.checked;
         window.localStorage.setItem('settings', JSON.stringify(settings));
         this.dataService.vat$.next(event.checked);
+    }
+
+    updateMonthToDate(event) {
+        _.set(this.settings, 'monthToDate', event.checked);
+        window.localStorage.setItem('settings', JSON.stringify(this.settings));
+        this.dataService.settings$.next(this.settings);
+    }
+
+    updateWeekToDate(event) {
+        _.set(this.settings, 'weekToDate', event.checked);
+        window.localStorage.setItem('settings', JSON.stringify(this.settings));
+        this.dataService.settings$.next(this.settings);
+    }
+
+    updateLaborCost(event) {
+        _.set(this.settings, 'laborCost', event.checked);
+        window.localStorage.setItem('settings', JSON.stringify(this.settings));
+        this.dataService.settings$.next(this.settings);
     }
 
     updateLanguage() {
