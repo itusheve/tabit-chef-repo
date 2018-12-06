@@ -46,6 +46,7 @@ let TranslateService = (function () {
             "ORDER": "Order",
             "CLOSE": "Close",
             "PAYMENT": "Payment",
+            "APPROVED": "Approved",
             "OTH_ORDER_APPLIED": "Order OTH Requested",
             "OTH_ORDER_APPROVED": "Order OTH Approved",
             "OTH_ITEM_APPLIED": "Item OTH Requested",
@@ -67,7 +68,11 @@ let TranslateService = (function () {
             "ORDER_TYPES_MEDIAEXCHANGE": "Media Exchange",
             "OTH_TYPE_COMPENSATION": "Compensation",
             "OTH_TYPE_CONSERVATION": "Conservation",
-            "OTH_TYPE_ORGANIZATIONAL": "Staff"
+            "OTH_TYPE_ORGANIZATIONAL": "Staff",
+            "SUSPEND_MANUAL": 'Tehchnical Support',
+            "SUSPEND_MANAGER": 'Manual',
+            "RESUME": "Resume",
+            "SUSPEND": "Suspend"
         },
         "he-IL": {
             "OTH": "על חשבון הבית",
@@ -109,6 +114,7 @@ let TranslateService = (function () {
             "ORDER": "הזמנה",
             "CLOSE": "סגירה",
             "PAYMENT": "תשלום",
+            "APPROVED": "אושר",
             "OTH_ORDER_APPLIED": "בקשה ל-OTH חשבון",
             "OTH_ORDER_APPROVED": "אישור OTH חשבון",
             "OTH_ITEM_APPLIED": "בקשה ל-OTH פריט",
@@ -130,7 +136,12 @@ let TranslateService = (function () {
             "ORDER_TYPES_MEDIAEXCHANGE": "טעינת כרטיס",
             "OTH_TYPE_COMPENSATION": "פיצוי לקוחות",
             "OTH_TYPE_CONSERVATION": "שימור לקוחות",
-            "OTH_TYPE_ORGANIZATIONAL": "עובדים"
+            "OTH_TYPE_ORGANIZATIONAL": "עובדים",
+            "SUSPEND_MANUAL": 'צוות טכני',
+            "SUSPEND_MANAGER": 'ידנית',
+            "SUSPEND_OTHER": 'ספק תשלום לא זמין',
+            "RESUME": "חזרה מהשהייה",
+            "SUSPEND": "השהיית הזמנה",
         }
     }
 
