@@ -284,6 +284,7 @@ export class DayViewComponent implements OnInit {
         //get card data for the day
         combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.openDay$)
             .subscribe(async data => {
+                this.display.laborCost = false;
                 let date = data[0];
                 let database = data[1];
                 let openDay = data[2];
@@ -334,6 +335,9 @@ export class DayViewComponent implements OnInit {
                         }
                     };
                 }
+                else {
+                    this.cardData.sales = undefined;
+                }
 
                 let totalSalesWithoutTax = 0;
                 if (moment().isSame(date, 'day')) {
@@ -359,61 +363,84 @@ export class DayViewComponent implements OnInit {
                         },*/
                         weekly: {
                             percentage: openDay.prcDiff ? openDay.prcDiff / 100 : 0,
-                            change: openDay.prcDiff
+                            change: openDay.currentSales / openDay.avg4weeksSales * 100
                         }
                     };
                 }
 
                 if (this.env.region === 'us') {
-                    this.display.laborCost = true;
-                    let laborCostDate = moment(date).utc().hour(23).minute(59).second(59);
-                    let laborCost = await this.dataService.getLaborCostByTime(laborCostDate);
-                    let today = _.get(laborCost, ['byDay', laborCostDate.format('YYYY-MM-DD')]);
-
-
-                    let time = moment();
-                    let weekStartDate = moment().day(laborCost.firstWeekday);
-                    let weekSales = 0;
-                    while (weekStartDate.isBefore(time)) {
-                        let day = database.getDay(weekStartDate);
-                        if (day) {
-                            weekSales += day.salesAndRefoundAmountIncludeVat;
-                        }
-                        weekStartDate.add(1, 'day');
-                    }
-
-                    let todaySales = 0;
-                    if (moment().isSame(date, 'day')) {
-                        todaySales = totalSalesWithoutTax;
-                        weekSales += todaySales;
-                    }
-                    else {
-                        todaySales = _.get(this.dayFromDatabase, 'salesAndRefoundAmountExcludeVat', 0);
-                        weekSales += todaySales;
-                    }
-
                     this.laborCost = {
                         today: [],
                         week: [],
                         sales: {
-                            week: weekSales,
-                            today: todaySales
+                            week: 0,
+                            today: 0
                         }
                     };
 
-                    //convert to array
-                    this.laborCost.week = laborCost.weekSummary;
-                    this.laborCost.week.byAssignments = _.values(_.orderBy(this.laborCost.week.byAssignments, ['cost'], ['desc']));
-                    _.forEach(this.laborCost.week.byAssignments, byAssignments => {
-                        byAssignments.users = _.values(byAssignments.users);
-                    });
+                    let laborCostDate = moment(date.format('YYYY-MM-DD')).hour(23).minute(59).second(59);
+                    let laborCost = await this.dataService.getLaborCostByTime(laborCostDate);
+                    if (laborCost) {
+                        let today = _.get(laborCost, ['byDay', laborCostDate.format('YYYY-MM-DD')]);
 
-                    if (today) {
-                        this.laborCost.today = today;
-                        this.laborCost.today.byAssignments = _.values(_.orderBy(this.laborCost.today.byAssignments, ['cost'], ['desc']));
-                        _.forEach(this.laborCost.today.byAssignments, byAssignments => {
+                        let weekStartDate;
+                        if(date.day() === laborCost.firstWeekday) {
+                            weekStartDate = moment(date);
+                        }
+                        else {
+                            let day = moment(date);
+                            if(day.day() > 0) {
+                                weekStartDate = day.day(laborCost.firstWeekday);
+                            }
+                            else {
+                                weekStartDate = day.day(laborCost.firstWeekday - 7);
+                            }
+                        }
+
+
+                        let weekSales = 0;
+                        while (weekStartDate.isBefore(date, 'day')) {
+                            let day = database.getDay(weekStartDate);
+                            if (day) {
+                                weekSales += day.salesAndRefoundAmountIncludeVat;
+                            }
+                            weekStartDate.add(1, 'day');
+                        }
+
+                        let todaySales = 0;
+                        if (moment().isSame(date, 'day')) {
+                            todaySales = totalSalesWithoutTax;
+                        }
+                        else {
+                            todaySales = _.get(this.dayFromDatabase, 'salesAndRefoundAmountExcludeVat', 0);
+                        }
+
+                        weekSales += todaySales;
+
+                        this.laborCost = {
+                            today: [],
+                            week: [],
+                            sales: {
+                                week: weekSales,
+                                today: todaySales
+                            }
+                        };
+
+                        //convert to array
+                        this.laborCost.week = laborCost.weekSummary;
+                        this.laborCost.week.byAssignments = _.values(_.orderBy(this.laborCost.week.byAssignments, ['cost'], ['desc']));
+                        _.forEach(this.laborCost.week.byAssignments, byAssignments => {
                             byAssignments.users = _.values(byAssignments.users);
                         });
+
+                        if (today) {
+                            this.laborCost.today = today;
+                            this.laborCost.today.byAssignments = _.values(_.orderBy(this.laborCost.today.byAssignments, ['cost'], ['desc']));
+                            _.forEach(this.laborCost.today.byAssignments, byAssignments => {
+                                byAssignments.users = _.values(byAssignments.users);
+                            });
+                        }
+                        this.display.laborCost = true;
                     }
                 }
             });

@@ -1,4 +1,4 @@
-<div [dir]="env.lang === 'he' ? 'ltr' : 'rtl'" style="width: 100%; z-index: 100000" id="daySelector">
+<div [dir]="env.lang === 'he' ? 'rtl' : 'ltr'" style="width: 100%; z-index: 100000" id="daySelector">
     <button id="month" type="button" class="btn btn-lg btn-outline-secondary rounded-0" style="width: 100%" (click)="picker.open()" [ngClass]="getPickerBackground(dayFromDatabase)">
         <mat-icon class="float-left" style="position: relative; top:4px;">calendar_today</mat-icon>
         {{currentValue | date:'fullDate':currentValue.format('ZZ'):env.tbtLocale}}

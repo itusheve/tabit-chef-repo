@@ -6,9 +6,11 @@ export class DatabaseV2 {
 
     private _data: any;
     private _dates: any;
+    private _weeks: any;
 
-    constructor(data:any) {
+    constructor(data:any, weeks: any) {
         this._data = data;
+        this._weeks = weeks;
         let latestMonth = data[data.latestMonth];
         let firstMonth = data[data.firstMonth];
         this._dates = {
@@ -50,5 +52,17 @@ export class DatabaseV2 {
 
     public getLowestDate() {
         return this._dates.lowest;
+    }
+
+    public getWeek(year, weekNumber) {
+        return _.get(this._weeks, [year, weekNumber]);
+    }
+
+    public getWeekByDate(date: moment.Moment) {
+        return _.get(this._weeks, [date.weekYear(), date.week()]);
+    }
+
+    public getWeeks() {
+        return this._weeks;
     }
 }

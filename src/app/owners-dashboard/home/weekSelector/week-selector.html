@@ -1,0 +1,14 @@
+<div class="dialog-content-fixed">
+    <div class="dialog-content">
+        <div class="month-picker-dialog">
+            <div class="container p-0">
+                <div class="row mx-0">
+                    <div *ngFor="let week of weeks" class="col-sm-12 col-md-6 mb-3 px-0">
+                        <app-card [cardData]="week" class="picker-card-container"
+                                  style="cursor: pointer"></app-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

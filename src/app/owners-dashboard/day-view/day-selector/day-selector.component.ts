@@ -3,6 +3,7 @@ import {MatDatepickerInputEvent} from '@angular/material';
 import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
 import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 @Component({
     selector: 'app-day-selector',
@@ -14,6 +15,7 @@ export class DaySelectorComponent implements OnChanges {
 
     @Input() currentValue: moment.Moment;
     @Input() dayFromDatabase: any;
+    @Input() percentageChange: any;
     @Input() options: {
         minDate: moment.Moment,
         maxDate: moment.Moment
@@ -80,12 +82,11 @@ export class DaySelectorComponent implements OnChanges {
 
     getPickerBackground(day) {
         if(day) {
-            return this.tabitHelper.getColorClassByPercentage((day.salesAndRefoundAmountIncludeVat / day.AvgNweeksSalesAndRefoundAmountIncludeVat) * 100, true);
+            return this.tabitHelper.getColorClassByPercentage(this.percentageChange, true);
         }
         else {
             return 'bg-secondary text-white';
         }
 
     }
-
 }

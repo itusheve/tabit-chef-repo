@@ -243,9 +243,9 @@ const tmpTranslations_ = {
         monthViewFilters: {
             sales: 'Sales',
             cancellations: 'Voids',
-            operational: 'OP Errors',
-            retention: 'Comps.',
-            employee: 'Emp. Meals',
+            operational: 'Ops. Issues',
+            retention: 'Mktg. Comps',
+            employee: 'Org. Comps',
         },
         managerDash: {
             'ALLORDERS': 'All Orders',
@@ -432,6 +432,26 @@ export class DataService {
         refCount()
     );
 
+    public laborConfiguration$: Observable<moment.Moment> = Observable.create(obs => {
+        let laborConfiguration = this.getLaborCostConfiguration();
+        obs.next(laborConfiguration);
+    }).pipe(
+        publishReplay(1),
+        refCount()
+    );
+
+    public weekStartDay$: Observable<moment.Moment> = Observable.create(obs => {
+        this.laborConfiguration$.subscribe(laborConfiguration => {
+            let firstWeekday = _.get(laborConfiguration, 'workHoursRules.firstWeekday');
+            obs.next(firstWeekday === 'monday' ? 1 : 0);
+        });
+
+
+    }).pipe(
+        publishReplay(1),
+        refCount()
+    );
+
     public dailyTotals$: Observable<any> = Observable.create(obs => {
         this.refresh$
             .subscribe(async refresh => {
@@ -550,13 +570,15 @@ export class DataService {
     });
 
     public databaseV2$: Observable<any> = Observable.create(async obs => {
-        combineLatest(this.olapYearlyDataV2$, this.calendar$).subscribe(async streamData => {
+        combineLatest(this.olapYearlyDataV2$, this.calendar$, this.weekStartDay$).subscribe(async streamData => {
+            let weeks = {};
             let org = JSON.parse(window.localStorage.getItem('org'));
             if (!org) {
                 return;
             }
             let olapYearlyData = _.cloneDeep(streamData[0]);
             let rosCalendars = _.cloneDeep(streamData[1]);
+            let weekStartDay = _.cloneDeep(streamData[2]);
             let currentDate = moment();
 
             if (!olapYearlyData || olapYearlyData.error) {
@@ -566,6 +588,20 @@ export class DataService {
 
             let excludedDates = this.getExcludedDates(rosCalendars, org.id);
             let database = _.keyBy(olapYearlyData, month => month.yearMonth);
+
+            //check for a scenario where latest month is not present and add it for calcs
+            let yearMonth = moment().format('YYYYMM');
+            if(_.isEmpty(_.get(database, yearMonth))) {
+                //add month
+                _.set(database, yearMonth, {
+                    yearMonth: yearMonth,
+                    daily: [
+                        {businessDate: moment().format('YYYY-MM-DD'), yearMonth: yearMonth}
+                    ]
+                });
+            }
+
+            _.set(database, 'byWeek', {});
 
             let latestMonth = 0;
             _.forEach(database, month => {
@@ -581,7 +617,6 @@ export class DataService {
                 month.days = orderedDays;
                 delete month.daily;
 
-                month.weekAvg = month.ttlsalesIncludeVat / month.days.length * 7;
                 month.dayAvg = month.ttlsalesIncludeVat / month.days.length;
 
                 //calculate latest month
@@ -622,7 +657,7 @@ export class DataService {
                         day.holiday = excludedDetail;
                     }
 
-                    let dayNumber = parseInt(moment(day.businessDate).format('D'), 10);
+                    let dayNumber = moment(day.businessDate).date();
 
                     //get latest day of month
                     if (dayNumber > latestDayNumber) {
@@ -660,19 +695,100 @@ export class DataService {
                         };
                     }
 
-                    if (month.aggregations.days[weekday].count < 4 && !moment(day.businessDate).isSame(currentDate, 'day') && !day.isExcluded) {
+                    if (month.aggregations.days[weekday].count < 4 && !moment(day.businessDate).isSame(currentDate, 'day')) {
                         month.aggregations.days[weekday].count += 1;
                         month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountIncludeVat;
                         month.aggregations.days[weekday].sales.amountWithoutVat += day.isExcluded ? day.AvgNweeksSalesAndRefoundAmountIncludeVat / day.vat : day.salesAndRefoundAmountIncludeVat / day.vat;
                         month.aggregations.days[weekday].diners.count += day.diners || 0;
                         month.aggregations.days[weekday].orders.count += day.orders || 0;
                     }
+
+                    //calculate week
+                    let weekNumber;
+                    let weekYear;
+                    if(weekStartDay === 0){
+                        let date = moment(day.businessDate).locale('en_US');
+                        weekNumber = date.week();
+                        weekYear = date.weekYear();
+                    }
+                    else {
+                        let date = moment(day.businessDate).locale('en_US');
+                        weekNumber = date.week();
+                        weekYear = date.weekYear();
+                    }
+
+                    let week = _.get(weeks, [weekYear, weekNumber]);
+                    if(!week) {
+                        _.set(weeks, [weekYear, weekNumber], {
+                            details: {
+                                number: weekNumber,
+                                year: weekYear
+                            },
+                            sales: {
+                                total: 0,
+                                totalWithoutVat: 0
+                            },
+                            reductions: {
+                                cancellations: 0,
+                                retention: 0,
+                                employees: 0,
+                                operational: 0
+                            },
+                            orders: 0,
+                            diners: 0,
+                            daysInWeek: 0,
+                            dates: [],
+                            days: []
+                        });
+                    }
+
+                    if(!moment(day.businessDate).isSame(moment(), 'day')) {
+                        week = _.get(weeks, [weekYear, weekNumber]);
+                        week.sales.total += day.salesAndRefoundAmountIncludeVat;
+                        week.sales.totalWithoutVat += day.salesAndRefoundAmountExcludeVat;
+                        week.reductions.cancellations += day.voidsPrc * day.salesAndRefoundAmountIncludeVat;
+                        week.reductions.employees += day.EmployeesAmount * day.salesAndRefoundAmountIncludeVat;
+                        week.reductions.retention += day.mrPrc * day.salesAndRefoundAmountIncludeVat;
+                        week.reductions.operational += day.operationalPrc * day.salesAndRefoundAmountIncludeVat;
+                        week.orders += day.orders;
+                        week.diners += day.diners;
+                        week.dates.push(day.businessDate);
+                        week.days.unshift({
+                            details: {
+                                date: day.businessDate
+                            },
+                            sales: {
+                                total: day.salesAndRefoundAmountIncludeVat,
+                                totalWithoutVat: day.salesAndRefoundAmountExcludeVat
+                            },
+                            reductions: {
+                                cancellations: day.voidsPrc * day.salesAndRefoundAmountIncludeVat,
+                                retention: day.mrPrc * day.salesAndRefoundAmountIncludeVat,
+                                employees: day.EmployeesAmount * day.salesAndRefoundAmountIncludeVat,
+                                operational: day.operationalPrc * day.salesAndRefoundAmountIncludeVat
+                            },
+                            orders: day.orders,
+                            diners: day.diners
+                        });
+                        week.daysInWeek++;
+                    }
                 });
 
+                month.weekAvg = 0;
+                let weekDayCounter = 0;
                 _.forEach(month.aggregations.days, (data, weekday) => {
                     if (data) {
                         let monthDate = month.latestDay;
                         let dayCounter = _.clone(data.count);
+
+                        //calculate week avg from real week days without historic data
+                        let weeklySales = month.aggregations.days[weekday].sales.amount;
+                        let weeklySalesDays = month.aggregations.days[weekday].count;
+                        if((weeklySales && weeklySalesDays)) {
+                            month.weekAvg += weeklySales / weeklySalesDays;
+                            weekDayCounter++;
+                        }
+
                         while (dayCounter < 4) {
                             let previousMonth = database[moment(monthDate).subtract(1, 'months').format('YYYYMM')];
                             let days = _.get(previousMonth, 'days');
@@ -700,6 +816,7 @@ export class DataService {
                     }
                 });
 
+                month.weekAvg = month.weekAvg / weekDayCounter;
 
                 if (month.days && month.days.length) {
                     let endOfMonth = moment(month.days[0].businessDate).endOf('month');
@@ -731,7 +848,7 @@ export class DataService {
                 }
             });
 
-            database = new DatabaseV2(database);
+            database = new DatabaseV2(database, weeks);
             obs.next(database);
         });
     }).pipe(
@@ -1531,10 +1648,16 @@ export class DataService {
         translate.use(currentLanguage);
     }
 
-    async getLaborCostByTime(time: moment.Moment) {
+    async getLaborCostConfiguration() {
         let configuration = await this.rosEp.get('configuration/laborCost', null).then(function (res) {
             return _.get(res, '[0]');
         });
+
+        return configuration;
+    }
+
+    async getLaborCostByTime(time: moment.Moment) {
+        let configuration = await this.getLaborCostConfiguration();
 
         let workHoursForOrangeAlert = _.get(configuration, 'workHoursRules.workHoursForOrangeAlert');
         let workHoursForRedAlert = _.get(configuration, 'workHoursRules.workHoursForRedAlert');
@@ -1729,27 +1852,26 @@ export class DataService {
 
         let result = [];
         _.forEach(report.salesByHour, dailySales => {
-            let hour = parseInt(dailySales.firedOnHHMM, 10);
-            if (hour < 6) {
-                hour = hour + 30;
-            }
+            let date = moment(dailySales.firedOn);
+            let unix = date.unix();
+            let key = date.format('DHH');
 
             if (dailySales.ttlSaleAmountIncludeVat) {
-                if (!result[hour]) {
-                    result[hour] = {};
+                if (!result[key]) {
+                    result[key] = {};
                 }
 
-                result[hour].hour = dailySales.firedOnHHMM;
-                result[hour].salesNetAmount = dailySales.ttlSaleAmountIncludeVat;
-                result[hour].salesNetAmountAvg = dailySales.AvgNweekByHour;
+                result[key].hour = dailySales.firedOnHHMM;
+                result[key].salesNetAmount = dailySales.ttlSaleAmountIncludeVat;
+                result[key].salesNetAmountAvg = dailySales.AvgNweekByHour;
+                result[key].unix = unix;
             }
         });
 
-        let newResult = _.orderBy(_.values(_.compact(result)), 'firedOn', 'asc');
+        let newResult = _.orderBy(_.values(_.compact(result)), 'unix', 'asc');
         report.salesByHour = newResult;
         report.date = day;
         return report;
-        /*}*/
     }
 
     async getOpenOrders() {

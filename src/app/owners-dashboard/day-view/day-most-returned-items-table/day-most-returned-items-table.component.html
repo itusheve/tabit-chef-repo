@@ -7,24 +7,24 @@
                     <span [translate]="'day.mostReturnedItems'">Most Returned Items</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table class="chf-tbl chf-tbl-smaller chf-tbl-row-oriented">
+            <table class="table table-sm table-responsive-sm">
                 <tr class="header">
                     <td [translate]="'day.department'">Department</td>
                     <td [translate]="'day.item'">Item</td>
-                    <td class="ar" [translate]="'day.prepared'">Prepared</td>
-                    <td class="ar" [translate]="'day.returned'">Returned</td>
-                    <td class="ar" [translate]="'day.operationalReductionsValue'">Operational Reductions Value</td>
+                    <td [translate]="'day.prepared'">Prepared</td>
+                    <td [translate]="'day.returned'">Returned</td>
+                    <td [translate]="'day.operationalReductionsValue'">Operational Reductions Value</td>
                 </tr>
                 <ng-container *ngFor="let departmentData of data">
                     <tr *ngFor="let dataObj of departmentData.topItems" class="dayReportDataRow">
                         <td>{{departmentData.department}}</td>
-                        <td class="break">{{dataObj.itemName}}</td>
-                        <td class="ar">{{dataObj.itemPrepared | count}}</td>
-                        <td class="ar">
+                        <td>{{dataObj.itemName}}</td>
+                        <td>{{dataObj.itemPrepared | count}}</td>
+                        <td>
                             <div>{{dataObj.itemReturned | count}}</div>
                             <div>({{dataObj.itemReturnedPct | pct:'1'}})</div>
                         </td>
-                        <td class="ar">{{dataObj.itemReturnValue | curr:'0'}}</td>
+                        <td>{{dataObj.itemReturnValue | curr:'0'}}</td>
                     </tr>
                 </ng-container>
             </table>

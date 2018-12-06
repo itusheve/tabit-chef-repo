@@ -1,25 +1,31 @@
-<div class="card">
-    <div class="card-header text-center">
-        Weekly Labor Cost
-    </div>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col" class="start">Name</th>
-            <th scope="col" class="end">Hours</th>
-            <th scope="col" class="end">Cost</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
+<div class="card-header text-center rounded-0">
+    Weekly Labor Cost
+</div>
+<table class="table table-responsive-sm" style="max-height: 60vh; overflow-y: auto">
+    <thead>
+    <tr>
+        <th scope="col" class="start">Name</th>
+        <th scope="col" class="end">Hours</th>
+        <th scope="col" class="end">Cost</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+
         <tbody>
+
         <ng-container *ngFor="let user of users">
             <tr>
                 <td class="start">{{user.name}}</td>
                 <td class="end">{{user.minutes | hour}}</td>
                 <td class="end">{{user.cost | curr:'2'}}</td>
-                <td *ngIf="user.alert" class="start px-0"><i class="material-icons" [ngClass]="getBackgroundClass(user.alert)">priority_high</i></td>
+                <td *ngIf="user.alert" class="start px-0"><i class="material-icons"
+                                                             [ngClass]="getBackgroundClass(user.alert)">priority_high</i>
+                </td>
             </tr>
         </ng-container>
         </tbody>
-    </table>
+</table>
+<div class="card-footer p-0 rounded-0">
+    <button mat-dialog-close class="btn btn-block btn-secondary rounded-0">Close</button>
 </div>
+

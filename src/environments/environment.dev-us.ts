@@ -6,7 +6,7 @@ export const environment = {
     lang: 'en',
     rosConfig: {
         il: 'https://ros-rp-beta.tabit.cloud/',
-        us: 'https://us-ros-rp.tabit.cloud/'
+        us: 'https://us-ros-beta.tabit.cloud/'
     },
     remoteDatabases: {
         il: 'https://analytics-dev.tabit.cloud/chef/handler.ashx',

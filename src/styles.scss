@@ -137,11 +137,19 @@ button {
   word-break: break-word;
 }
 
+.table {
+  font-size: 15px;
+  .header {
+    font-weight: bold;
+    background-color: #eaecee;
+  }
+}
+
 table {
   font-family: 'Assistant', sans-serif;
   font-size: $base-font-size;
 
-  &.chf-tbl {
+  &.chf-tbl{
     color: $fontColor;
     border-collapse: collapse;
     width: 100%;
