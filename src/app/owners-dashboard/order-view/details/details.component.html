@@ -122,8 +122,13 @@
                         <td *ngIf="isUS">{{ row.at | date : 'MM/dd/yyyy HH:mm:ss a' }}</td>
                         <td style="text-transform: capitalize;">{{ row.action }}</td>
                         <td class="break">
-                            <ng-container *ngIf="row.recordType!=='payment'">{{row.data}}</ng-container>
+                            <ng-container *ngIf="row.recordType!=='payment'&&!row.isApproved">{{row.data}}</ng-container>
                             <ng-container class="flex d-row" *ngIf="row.recordType==='payment'">
+                                <ng-container *ngFor="let item of row.data">
+                                    <ng-container *ngIf="item.value">{{item.value}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ng-container>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="row.isApproved">
                                 <ng-container *ngFor="let item of row.data">
                                     <ng-container *ngIf="item.value">{{item.value}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ng-container>
                                 </ng-container>
