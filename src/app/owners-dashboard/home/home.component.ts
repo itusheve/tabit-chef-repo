@@ -403,7 +403,14 @@ export class HomeComponent implements OnInit {
             this.ownersDashboardService.toolbarConfig.left.back.showBtn = false;
             this.ownersDashboardService.toolbarConfig.menuBtn.show = true;
             this.ownersDashboardService.toolbarConfig.settings.show = true;
-            this.ownersDashboardService.toolbarConfig.home.show = false;
+
+            if(this.dataService.selectedMonth$.value.isSame(moment(), 'month')) {
+                this.ownersDashboardService.toolbarConfig.home.show = false;
+            }
+            else {
+                this.ownersDashboardService.toolbarConfig.home.show = true;
+            }
+
 
             let item = document.getElementById('monthSelector');// what we want to scroll to
             let wrapper = document.getElementById('main-content');// the wrapper we will scroll inside
