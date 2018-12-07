@@ -173,6 +173,11 @@ export class HomeComponent implements OnInit {
                 let restTime = data[1];
                 let incVat = data[2];
 
+                let settings = database.getSettings();
+                if(settings.weekStartDay === 1) {
+                    restTime = moment(restTime).locale('en_GB');
+                }
+
                 let week = database.getWeekByDate(restTime);
 
                 let title = '';

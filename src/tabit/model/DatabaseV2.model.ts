@@ -7,10 +7,12 @@ export class DatabaseV2 {
     private _data: any;
     private _dates: any;
     private _weeks: any;
+    private _settings: any;
 
-    constructor(data:any, weeks: any) {
+    constructor(data:any, weeks: any, settings: any) {
         this._data = data;
         this._weeks = weeks;
+        this._settings = settings;
         let latestMonth = data[data.latestMonth];
         let firstMonth = data[data.firstMonth];
         this._dates = {
@@ -18,6 +20,10 @@ export class DatabaseV2 {
             latest: moment(latestMonth.latestDay),
             lowest: moment(this._data.lowestDate)
         };
+    }
+
+    public getSettings() {
+        return this._settings;
     }
 
     public getDates() {

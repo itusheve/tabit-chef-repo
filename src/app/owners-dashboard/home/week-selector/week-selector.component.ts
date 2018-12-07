@@ -48,6 +48,11 @@ export class WeekSelectorComponent {
                 let incVat = data[2];
 
                 let weeks = database.getWeeks();
+                let settings = database.getSettings();
+                if(settings.weekStartDay === 1) {
+                    restTime = moment(restTime).locale('en_GB');
+                }
+
                 _.forEach(weeks, byYear => {
                     byYear.forEach(week => {
                         let title = '';

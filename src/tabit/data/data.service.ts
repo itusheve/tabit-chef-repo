@@ -432,8 +432,8 @@ export class DataService {
         refCount()
     );
 
-    public laborConfiguration$: Observable<moment.Moment> = Observable.create(obs => {
-        let laborConfiguration = this.getLaborCostConfiguration();
+    public laborConfiguration$: Observable<moment.Moment> = Observable.create(async obs => {
+        let laborConfiguration = await this.getLaborCostConfiguration();
         obs.next(laborConfiguration);
     }).pipe(
         publishReplay(1),
@@ -706,8 +706,8 @@ export class DataService {
                     //calculate week
                     let weekNumber;
                     let weekYear;
-                    if(weekStartDay === 0){
-                        let date = moment(day.businessDate).locale('en_US');
+                    if(weekStartDay === 1){
+                        let date = moment(day.businessDate).locale('en_GB');
                         weekNumber = date.week();
                         weekYear = date.weekYear();
                     }
@@ -848,7 +848,7 @@ export class DataService {
                 }
             });
 
-            database = new DatabaseV2(database, weeks);
+            database = new DatabaseV2(database, weeks, {weekStartDay: weekStartDay});
             obs.next(database);
         });
     }).pipe(
