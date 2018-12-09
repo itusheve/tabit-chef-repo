@@ -55,7 +55,7 @@ export class MonthPickerDialogComponent {
                         diners: 0,
                         ppa: 0,
                         aggregations: {},
-                        averages: {weekly: {percentage: 0, change: 0}},
+                        averages: {weekly: {percentage: 0, change: 0}, yearly: {percentage: 0, change: 0}},
                         reductions: {},
                         statusClass: '',
                         showDrillArrow: true
