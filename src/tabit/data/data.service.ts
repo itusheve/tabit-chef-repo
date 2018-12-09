@@ -591,7 +591,7 @@ export class DataService {
 
             //check for a scenario where latest month is not present and add it for calcs
             let yearMonth = moment().format('YYYYMM');
-            if(_.isEmpty(_.get(database, yearMonth))) {
+            if (_.isEmpty(_.get(database, yearMonth))) {
                 //add month
                 _.set(database, yearMonth, {
                     yearMonth: yearMonth,
@@ -686,9 +686,9 @@ export class DataService {
                             month.forecast.sales.amount += day.salesAndRefoundAmountIncludeVat;
                             month.forecast.sales.amountWithoutVat += day.salesAndRefoundAmountExcludeVat;
                             month.forecast.days.push({
-                               sales: day.salesAndRefoundAmountIncludeVat,
-                               type: 'actual',
-                               date: day.businessDate
+                                sales: day.salesAndRefoundAmountIncludeVat,
+                                type: 'actual',
+                                date: day.businessDate
                             });
                         }
                         else {
@@ -726,7 +726,7 @@ export class DataService {
                     //calculate week
                     let weekNumber;
                     let weekYear;
-                    if(weekStartDay === 1){
+                    if (weekStartDay === 1) {
                         let date = moment(day.businessDate).locale('en_GB');
                         weekNumber = date.week();
                         weekYear = date.weekYear();
@@ -738,7 +738,7 @@ export class DataService {
                     }
 
                     let week = _.get(weeks, [weekYear, weekNumber]);
-                    if(!week) {
+                    if (!week) {
                         _.set(weeks, [weekYear, weekNumber], {
                             details: {
                                 number: weekNumber,
@@ -762,7 +762,7 @@ export class DataService {
                         });
                     }
 
-                    if(!moment(day.businessDate).isSame(moment(), 'day')) {
+                    if (!moment(day.businessDate).isSame(moment(), 'day')) {
                         week = _.get(weeks, [weekYear, weekNumber]);
                         week.sales.total += day.salesAndRefoundAmountIncludeVat;
                         week.sales.totalWithoutVat += day.salesAndRefoundAmountExcludeVat;
@@ -790,7 +790,9 @@ export class DataService {
                             orders: day.orders,
                             diners: day.diners
                         });
-                        week.startDate = _.get(week, ['days', 0], 'details', 'date');
+
+                        let moments = week.days.map(day => moment(day.details.date));
+                        _.set(week, 'startDate', moment.min(moments));
                         week.daysInWeek++;
                     }
                 });
@@ -805,7 +807,7 @@ export class DataService {
                         //calculate week avg from real week days without historic data
                         let weeklySales = month.aggregations.days[weekday].sales.amount;
                         let weeklySalesDays = month.aggregations.days[weekday].count;
-                        if((weeklySales && weeklySalesDays)) {
+                        if ((weeklySales && weeklySalesDays)) {
                             month.weekAvg += weeklySales / weeklySalesDays;
                             weekDayCounter++;
                         }
@@ -865,7 +867,7 @@ export class DataService {
                                 }
                             }
                             else {
-                                let sales = (month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count) || 0
+                                let sales = (month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count) || 0;
                                 month.forecast.sales.amount += sales;
                                 month.forecast.sales.amountWithoutVat += (month.aggregations.days[weekday].sales.amountWithoutVat / month.aggregations.days[weekday].count) || 0;
                                 month.forecast.diners.count += (month.aggregations.days[weekday].diners.count / month.aggregations.days[weekday].count) || 0;
@@ -883,36 +885,36 @@ export class DataService {
                     }
                 }
 
-                let forecast = _.get(month, ['forecast','days'], {});
+                let forecast = _.get(month, ['forecast', 'days'], {});
                 let forcastWeekDaysSales = {
-                  0: {
-                      sales: 0,
-                      count: 0
-                  },
-                  1: {
-                      sales: 0,
-                      count: 0
-                  },
-                  2: {
-                      sales: 0,
-                      count: 0
-                  },
-                  3: {
-                      sales: 0,
-                      count: 0
-                  },
-                  4: {
-                      sales: 0,
-                      count: 0
-                  },
-                  5: {
-                      sales: 0,
-                      count: 0
-                  },
-                  6: {
-                      sales: 0,
-                      count: 0
-                  }
+                    0: {
+                        sales: 0,
+                        count: 0
+                    },
+                    1: {
+                        sales: 0,
+                        count: 0
+                    },
+                    2: {
+                        sales: 0,
+                        count: 0
+                    },
+                    3: {
+                        sales: 0,
+                        count: 0
+                    },
+                    4: {
+                        sales: 0,
+                        count: 0
+                    },
+                    5: {
+                        sales: 0,
+                        count: 0
+                    },
+                    6: {
+                        sales: 0,
+                        count: 0
+                    }
                 };
                 _.forEach(forecast, forcastedDay => {
                     let weekDay = moment(forcastedDay.date).weekday();
@@ -973,7 +975,7 @@ export class DataService {
         let firstWeekday = _.get(configuration, 'workHoursRules.firstWeekday');
         let defaultPeriod = _.get(configuration, 'workHoursRules.defaultPeriod');
 
-        if(defaultPeriod !== 'weekly') {
+        if (defaultPeriod !== 'weekly') {
             return null;
         }
 
@@ -1006,14 +1008,14 @@ export class DataService {
 
             _.forEach(day, assignmentPerUser => {
 
-                if(!assignmentPerUser.cost) {
+                if (!assignmentPerUser.cost) {
                     assignmentPerUser.cost = 0;
                 }
 
                 sortedLaborCost.byDay[date].cost += assignmentPerUser.cost;
                 sortedLaborCost.byDay[date].minutes += assignmentPerUser.minutes;
 
-                if(!sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id]) {
+                if (!sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id]) {
                     sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id] = {
                         name: assignmentPerUser.assignment.name,
                         minutes: 0,
@@ -1022,10 +1024,10 @@ export class DataService {
                     };
                 }
 
-                sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].minutes +=  assignmentPerUser.minutes;
-                sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].cost +=  assignmentPerUser.cost;
+                sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].minutes += assignmentPerUser.minutes;
+                sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].cost += assignmentPerUser.cost;
 
-                if(!sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id]) {
+                if (!sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id]) {
                     sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id] = {
                         name: assignmentPerUser.user.firstName + ' ' + assignmentPerUser.user.lastName,
                         minutes: 0,
@@ -1038,7 +1040,7 @@ export class DataService {
                 sortedLaborCost.byDay[date].byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id].cost = assignmentPerUser.cost;
 
 
-                if(!sortedLaborCost.byDay[date].byUser[assignmentPerUser.user._id]) {
+                if (!sortedLaborCost.byDay[date].byUser[assignmentPerUser.user._id]) {
                     sortedLaborCost.byDay[date].byUser[assignmentPerUser.user._id] = {
                         name: assignmentPerUser.user.firstName + ' ' + assignmentPerUser.user.lastName,
                         minutes: 0,
@@ -1053,7 +1055,7 @@ export class DataService {
                 sortedLaborCost.weekSummary.minutes += assignmentPerUser.minutes;
                 sortedLaborCost.weekSummary.cost += assignmentPerUser.cost;
 
-                if(!sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id]) {
+                if (!sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id]) {
                     sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id] = {
                         name: assignmentPerUser.assignment.name,
                         minutes: 0,
@@ -1062,10 +1064,10 @@ export class DataService {
                     };
                 }
 
-                sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].minutes +=  assignmentPerUser.minutes;
-                sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].cost +=  assignmentPerUser.cost;
+                sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].minutes += assignmentPerUser.minutes;
+                sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].cost += assignmentPerUser.cost;
 
-                if(!sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id]) {
+                if (!sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id]) {
                     sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id] = {
                         name: assignmentPerUser.user.firstName + ' ' + assignmentPerUser.user.lastName,
                         minutes: 0,
@@ -1077,7 +1079,7 @@ export class DataService {
                 sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id].minutes += assignmentPerUser.minutes;
                 sortedLaborCost.weekSummary.byAssignments[assignmentPerUser.assignment._id].users[assignmentPerUser.user._id].cost += assignmentPerUser.cost;
 
-                if(!sortedLaborCost.weekSummary.byUser[assignmentPerUser.user._id]) {
+                if (!sortedLaborCost.weekSummary.byUser[assignmentPerUser.user._id]) {
                     sortedLaborCost.weekSummary.byUser[assignmentPerUser.user._id] = {
                         name: assignmentPerUser.user.firstName + ' ' + assignmentPerUser.user.lastName,
                         minutes: 0,
@@ -1093,9 +1095,9 @@ export class DataService {
 
         _.forEach(sortedLaborCost.weekSummary.byUser, (user, _id) => {
             let workHours = user.minutes / 60;
-            if(workHours > workHoursForOrangeAlert) {
+            if (workHours > workHoursForOrangeAlert) {
                 sortedLaborCost.overtime.count++;
-                if(workHours >= workHoursForRedAlert) {
+                if (workHours >= workHoursForRedAlert) {
                     sortedLaborCost.weekSummary.byUser[_id].alert = 'red';
                 }
                 else {
@@ -1357,7 +1359,7 @@ export class DataService {
     public getUser() {
         let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
 
-        if(!userSettings || _.isEmpty(userSettings[environment.region])) {
+        if (!userSettings || _.isEmpty(userSettings[environment.region])) {
             return _.values(userSettings)[0];
         }
 
