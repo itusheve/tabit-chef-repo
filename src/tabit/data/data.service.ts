@@ -625,6 +625,11 @@ export class DataService {
                     database.latestMonth = month.yearMonth;
                 }
 
+                month.avg = {
+                    fourWeek: 0,
+                    year: 0
+                };
+
                 month.forecast = {
                     sales: {amount: 0, amountWithoutVat: 0},
                     diners: {count: 0},
@@ -643,7 +648,9 @@ export class DataService {
                         employee: {
                             amount: 0,
                         },
-                    }
+                    },
+                    days: [],
+                    weekAvg: 0
                 };
                 month.aggregations = {days: []};
 
@@ -672,13 +679,26 @@ export class DataService {
 
                     if (!moment(day.businessDate).isSame(currentDate, 'day')) {
 
+                        month.avg.fourWeek += day.AvgNweeksSalesAndRefoundAmountIncludeVat;
+                        month.avg.year += day.AvgPySalesAndRefoundAmountIncludeVat;
+
                         if (currentDate.isSame(moment(day.businessDate), 'month')) {
                             month.forecast.sales.amount += day.salesAndRefoundAmountIncludeVat;
                             month.forecast.sales.amountWithoutVat += day.salesAndRefoundAmountExcludeVat;
+                            month.forecast.days.push({
+                               sales: day.salesAndRefoundAmountIncludeVat,
+                               type: 'actual',
+                               date: day.businessDate
+                            });
                         }
                         else {
                             month.forecast.sales.amount += day.AvgNweeksSalesAndRefoundAmountIncludeVat;
                             month.forecast.sales.amountWithoutVat += day.AvgNweeksSalesAndRefoundAmountExcludeVat;
+                            month.forecast.days.push({
+                                sales: day.salesAndRefoundAmountIncludeVat,
+                                type: 'fourWeekAvg',
+                                date: day.businessDate
+                            });
                         }
 
                         month.forecast.diners.count += day.diners;
@@ -829,23 +849,83 @@ export class DataService {
                             if (!month.aggregations.days[weekday] || month.aggregations.days[weekday].count === 0) {
                                 let previousMonth = database[moment(datePointer).subtract(1, 'months').format('YYYYMM')];
                                 if (previousMonth && previousMonth.aggregations.days[weekday]) {
-                                    month.forecast.sales.amount += (previousMonth.aggregations.days[weekday].sales.amount / previousMonth.aggregations.days[weekday].count) || 0;
+                                    let sales = (previousMonth.aggregations.days[weekday].sales.amount / previousMonth.aggregations.days[weekday].count) || 0;
+                                    month.forecast.sales.amount += sales;
                                     month.forecast.sales.amountWithoutVat += (previousMonth.aggregations.days[weekday].sales.amountWithoutVat / previousMonth.aggregations.days[weekday].count) || 0;
                                     month.forecast.diners.count += (previousMonth.aggregations.days[weekday].diners.count / previousMonth.aggregations.days[weekday].count) || 0;
                                     month.forecast.orders.count += (previousMonth.aggregations.days[weekday].orders.count / previousMonth.aggregations.days[weekday].count) || 0;
+
+                                    month.forecast.days.push({
+                                        sales: sales,
+                                        type: 'prevoiusMonthDayAggregation',
+                                        date: datePointer.format('YYYY-MM-DD')
+                                    });
+
                                 }
                             }
                             else {
-                                month.forecast.sales.amount += (month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count) || 0;
+                                let sales = (month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count) || 0
+                                month.forecast.sales.amount += sales;
                                 month.forecast.sales.amountWithoutVat += (month.aggregations.days[weekday].sales.amountWithoutVat / month.aggregations.days[weekday].count) || 0;
                                 month.forecast.diners.count += (month.aggregations.days[weekday].diners.count / month.aggregations.days[weekday].count) || 0;
                                 month.forecast.orders.count += (month.aggregations.days[weekday].orders.count / month.aggregations.days[weekday].count) || 0;
+
+                                month.forecast.days.push({
+                                    sales: sales,
+                                    type: 'currentMonthDayAggregation',
+                                    date: datePointer.format('YYYY-MM-DD')
+                                });
                             }
 
                             datePointer.add(1, 'days');
                         }
                     }
                 }
+
+                let forecast = _.get(month, ['forecast','days'], {});
+                let forcastWeekDaysSales = {
+                  0: {
+                      sales: 0,
+                      count: 0
+                  },
+                  1: {
+                      sales: 0,
+                      count: 0
+                  },
+                  2: {
+                      sales: 0,
+                      count: 0
+                  },
+                  3: {
+                      sales: 0,
+                      count: 0
+                  },
+                  4: {
+                      sales: 0,
+                      count: 0
+                  },
+                  5: {
+                      sales: 0,
+                      count: 0
+                  },
+                  6: {
+                      sales: 0,
+                      count: 0
+                  }
+                };
+                _.forEach(forecast, forcastedDay => {
+                    let weekDay = moment(forcastedDay.date).weekday();
+                    forcastWeekDaysSales[weekDay].sales += forcastedDay.sales;
+                    forcastWeekDaysSales[weekDay].count++;
+                });
+
+                let forcastWeekAvg = 0;
+                _.forEach(forcastWeekDaysSales, weekDay => {
+                    weekDay.sales = weekDay.sales / weekDay.count;
+                    forcastWeekAvg += weekDay.sales;
+                });
+
+                month.forecast.weekAvg = forcastWeekAvg / 7;
             });
 
             database = new DatabaseV2(database, weeks, {weekStartDay: weekStartDay});
@@ -855,778 +935,6 @@ export class DataService {
         publishReplay(1),
         refCount()
     );
-
-    /*public database$: Observable<any> = Observable.create(async obs => {
-        combineLatest(this.olapYearlyData$, this.calendar$).subscribe(async streamData => {
-            let org = JSON.parse(window.localStorage.getItem('org'));
-            let olapYearlyData = _.cloneDeep(streamData[0]);
-            let rosCalendars = _.cloneDeep(streamData[1]);
-
-            if (!olapYearlyData || olapYearlyData.error) {
-                obs.next(olapYearlyData);
-                return;
-            }
-
-            let perf = {
-                olap: 0,
-                ros: 0,
-                loop: 0
-            };
-
-            let excludedDates = this.getExcludedDates(rosCalendars, org.id);
-            let database = _.keyBy(olapYearlyData, month => month.YearMonth);
-
-            let latestMonth = 0;
-
-            let t2 = performance.now();
-            _.forEach(database, month => {
-
-                month.amountWithoutVat = month.salesNetAmountWithOutVat;
-                month.amount = month.salesNetAmount;
-                //order days and move into new ver name.
-                let orderedDays = _.orderBy(month.Daily, function (day) {
-                    return moment(day.date).date();
-                }, 'desc');
-                month.days = orderedDays;
-                delete month.Daily;
-
-                //calculate latest month
-                if (month.YearMonth > latestMonth) {
-                    latestMonth = month.YearMonth;
-                    database.latestMonth = month.YearMonth;
-                }
-
-                //prepare month structure TODO: move to class
-                month.forecast = {
-                    sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
-                    diners: {count: 0},
-                    ppa: {amount: 0, amountWithoutVat: 0, count: 0},
-                    reductions: {
-                        cancellations: {
-                            amount: 0,
-                            amountBeforeVat: 0,
-                        },
-                        operational: {
-                            amount: 0,
-                            amountBeforeVat: 0,
-                        },
-                        retention: {
-                            amount: 0,
-                            amountBeforeVat: 0,
-                        },
-                        employee: {
-                            amount: 0,
-                            amountBeforeVat: 0,
-                        },
-                    }
-                };
-
-                month.weeklyAverage = {
-                    sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
-                    diners: {count: 0},
-                    ppa: {amount: 0, amountWithoutVat: 0},
-                    reductions: {
-                        cancellations: {
-                            amount: 0,
-                            amountBeforeVat: 0,
-                        },
-                        operational: {
-                            amount: 0,
-                            amountBeforeVat: 0,
-                        },
-                        retention: {
-                            amount: 0,
-                            amountBeforeVat: 0,
-                        },
-                        employee: {
-                            amount: 0,
-                            amountBeforeVat: 0,
-                        },
-                    }
-                };
-
-                month.aggregations = {
-                    reductions: {
-                        cancellations: {
-                            highest: 0,
-                            lowest: 0,
-                            amount: month.rCancellation,
-                            amountBeforeVat: month.rCancellationBV,
-                            percentage: month.rCancellation / (month.salesNetAmount + month.rCancellation),
-                            threeMonthAvg: 0,
-                            threeMonthAvgPercentage: 0
-                        },
-                        operational: {
-                            highest: 0,
-                            lowest: 0,
-                            amount: month.rOperationalDiscount,
-                            amountBeforeVat: month.rOperationalDiscountBV,
-                            percentage: month.rOperationalDiscount / (month.salesNetAmount + month.rOperationalDiscount),
-                            threeMonthAvg: 0,
-                            threeMonthAvgPercentage: 0
-                        },
-                        retention: {
-                            highest: 0,
-                            lowest: 0,
-                            amount: month.rRetentionDiscount,
-                            amountBeforeVat: month.rRetentionDiscountBV,
-                            percentage: month.rRetentionDiscount / (month.salesNetAmount + month.rRetentionDiscount),
-                            threeMonthAvg: 0,
-                            threeMonthAvgPercentage: 0
-                        },
-                        employee: {
-                            highest: 0,
-                            lowest: 0,
-                            amount: month.rEmployees,
-                            amountBeforeVat: month.rEmployeesBV,
-                            percentage: month.rEmployees / (month.salesNetAmount + month.rEmployees),
-                            threeMonthAvg: 0,
-                            threeMonthAvgPercentage: 0
-                        }
-                    },
-                    sales: {
-                        highest: 0,
-                        lowest: 0,
-                        amount: month.amount,
-                        amountWithoutVat: month.amountWithoutVat,
-                        netAmount: month.salesNetAmount, //amount - tips
-                        netAmountWithoutVat: month.salesNetAmountWithOutVat,
-                        tips: month.salesTipAmount,
-                        tipsBeforeVat: month.salesTipAmountWithOutVat,
-                        weekAvg: 0,
-                        lastYearWeekAvg: 0,
-                        threeMonthAvgNet: 0
-                    },
-                    indicators: {
-                        diners: {
-                            count: 0,
-                            weekAvg: 0,
-                            lastYearWeekAvg: 0,
-                        },
-                        ppa: {
-                            amount: 0,
-                            amountWithoutVat: 0,
-                            weekAvg: 0,
-                            lastYearWeekAvg: 0,
-                        }
-                    },
-                    days: {
-                        0: {
-                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
-                            diners: {count: 0},
-                            ppa: {amount: 0, amountWithoutVat: 0},
-                            count: 0,
-                            reductions: {
-                                cancellations: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                operational: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                retention: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                employee: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                            }
-                        },
-                        1: {
-                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
-                            diners: {count: 0},
-                            ppa: {amount: 0, amountWithoutVat: 0},
-                            count: 0,
-                            reductions: {
-                                cancellations: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                operational: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                retention: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                employee: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                            }
-                        },
-                        2: {
-                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
-                            diners: {count: 0},
-                            ppa: {amount: 0, amountWithoutVat: 0},
-                            count: 0,
-                            reductions: {
-                                cancellations: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                operational: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                retention: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                employee: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                            }
-                        },
-                        3: {
-                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
-                            diners: {count: 0},
-                            ppa: {amount: 0, amountWithoutVat: 0},
-                            count: 0,
-                            reductions: {
-                                cancellations: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                operational: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                retention: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                employee: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                            }
-                        },
-                        4: {
-                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
-                            diners: {count: 0},
-                            ppa: {amount: 0, amountWithoutVat: 0},
-                            count: 0,
-                            reductions: {
-                                cancellations: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                operational: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                retention: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                employee: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                            }
-                        },
-                        5: {
-                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
-                            diners: {count: 0},
-                            ppa: {amount: 0, amountWithoutVat: 0},
-                            count: 0,
-                            reductions: {
-                                cancellations: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                operational: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                retention: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                employee: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                            }
-                        },
-                        6: {
-                            sales: {amount: 0, amountWithoutVat: 0, netAmount: 0, netAmountWithoutVat: 0},
-                            diners: {count: 0},
-                            ppa: {amount: 0, amountWithoutVat: 0},
-                            count: 0,
-                            reductions: {
-                                cancellations: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                operational: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                retention: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                                employee: {
-                                    amount: 0,
-                                    amountBeforeVat: 0,
-                                },
-                            }
-                        }
-                    }
-                };
-
-                //itrrate days in month and prepare data
-                let latestDayNumber = 0;
-                _.forEach(month.days, day => {
-
-                    day.amount = day.salesNetAmount;
-                    day.amountWithoutVat = day.salesNetAmountWithOutVat;
-
-                    if (excludedDates[moment(day.date).format('YYYY-MM-DD')]) {
-                        day.isExcluded = true;
-                        day.holiday = excludedDates[moment(day.date).format('YYYY-MM-DD')];
-                    }
-
-                    let dayNumber = parseInt(moment(day.date).format('D'), 10);
-
-                    //get latest day of month
-                    if (dayNumber > latestDayNumber) {
-                        latestDayNumber = dayNumber;
-                        month.latestDay = day.date;
-                    }
-
-                    //get lowest data of all days in database
-                    if (moment(day.date).isBefore(moment(database.lowestDate), 'days')) {
-                        database.lowestDate = day.date;
-                    }
-
-                    //prepare day structure //TODO: move to class
-                    day.aggregations = {
-                        reductions: {
-                            cancellations: {
-                                amount: day.rCancellation,
-                                amountBeforeVat: day.rCancellationBV,
-                                percentage: day.rCancellation / (day.salesNetAmount + day.rCancellation),
-                                fourWeekAvg: 0,
-                                yearAvg: 0,
-                                threeMonthAvg: 0,
-                                generalAvg: 0,
-                                generalYearAvg: 0
-                            },
-                            operational: {
-                                amount: day.rOperationalDiscount,
-                                amountBeforeVat: day.rOperationalDiscountBV,
-                                percentage: day.rOperationalDiscount / (day.salesNetAmount + day.rOperationalDiscount),
-                                fourWeekAvg: 0,
-                                yearAvg: 0,
-                                threeMonthAvg: 0,
-                                generalAvg: 0,
-                                generalYearAvg: 0
-                            },
-                            retention: {
-                                amount: day.rRetentionDiscount,
-                                amountBeforeVat: day.rRetentionDiscountBV,
-                                percentage: day.rRetentionDiscount / (day.salesNetAmount + day.rRetentionDiscount),
-                                fourWeekAvg: 0,
-                                yearAvg: 0,
-                                threeMonthAvg: 0,
-                                generalAvg: 0,
-                                generalYearAvg: 0
-                            },
-                            employee: {
-                                amount: day.rEmployees,
-                                amountBeforeVat: day.rEmployeesBV,
-                                percentage: day.rEmployees / (day.salesNetAmount + day.rEmployees),
-                                fourWeekAvg: 0,
-                                yearAvg: 0,
-                                threeMonthAvg: 0,
-                                generalAvg: 0,
-                                generalYearAvg: 0
-                            }
-                        },
-                        sales: {
-                            amount: day.amount,
-                            amountWithoutVat: day.amountWithoutVat,
-                            netAmount: day.salesNetAmount,
-                            netAmountWithoutVat: day.salesNetAmountWithOutVat,
-                            fourWeekAvg: 0,
-                            fourWeekAvgNet: 0,
-                            yearAvg: 0,
-                            yearAvgNet: 0,
-                            threeMonthAvg: 0,
-                            threeMonthAvgNet: 0,
-                            generalAvg: 0,
-                            generalAvgNet: 0
-                        },
-                        indicators: {
-                            diners: {
-                                count: day.diners,
-                                fourWeekAvg: 0,
-                                yearAvg: 0,
-                                threeMonthAvg: 0
-                            },
-                            ppa: {
-                                amount: day.ppa,
-                                amountWithoutVat: day.ppaWithoutVat,
-                                fourWeekAvg: 0,
-                                yearAvg: 0,
-                                threeMonthAvg: 0
-                            }
-                        }
-                    };
-                });
-            });
-            perf.loop = performance.now() - t2;
-            let totalsDaysCount = 0;
-            _.forEach(database, month => {
-                let currentDate = moment();
-                _.forEach(month.days, day => {
-                    totalsDaysCount++;
-                    _.forEach([
-                        {
-                            date: moment(day.date),
-                            key: 'generalAvg'
-                        },
-                        {
-                            date: moment(day.date),
-                            key: 'fourWeekAvg'
-                        },
-                        {
-                            date: moment(day.date).subtract(3, 'months'),
-                            key: 'threeMonthAvg'
-                        },
-                        {
-                            date: moment(day.date).subtract(1, 'years'),
-                            key: 'generalYearAvg'
-                        },
-                        {
-                            date: moment(day.date).subtract(1, 'years'),
-                            key: 'yearAvg'
-                        }
-                    ], config => {
-                        let totals = {
-                            reductions: {
-                                cancellationsPercentage: 0,
-                                cancellations: 0,
-                                operationalPercentage: 0,
-                                operational: 0,
-                                retentionPercentage: 0,
-                                retention: 0,
-                                employeePercentage: 0,
-                                employee: 0
-                            },
-                            sales: 0,
-                            salesWithoutVat: 0,
-                            netSales: 0,
-                            indicators: {
-                                diners: 0,
-                                ppa: 0,
-                                ppaWithoutVat: 0
-                            }
-                        };
-
-                        let notFound = 0;
-                        let i = 0;
-                        let stop = false;
-
-                        let numberOfDaysToIncludeInAverage = 4;
-                        let compareToSameDayOfWeek = true;
-                        let skipExcluded = true;
-                        if (config.key === 'generalAvg' || config.key === 'generalYearAvg') {
-                            numberOfDaysToIncludeInAverage = 30;
-                            compareToSameDayOfWeek = false;
-                            skipExcluded = false;
-                        }
-
-                        while (i < numberOfDaysToIncludeInAverage && !stop) {
-                            config.date.subtract(compareToSameDayOfWeek ? 7 : 1, 'days');
-
-                            let monthData = database[config.date.format('YYYYMM')];
-                            if (monthData && monthData.days) {
-                                let previousDayData = _.find(monthData.days, {'date': config.date.format('YYYY-MM-DD')});
-                                if (previousDayData && (skipExcluded || !previousDayData.isExcluded)) {
-                                    totals.sales += previousDayData.amount;
-                                    totals.salesWithoutVat += previousDayData.amountWithoutVat;
-                                    totals.netSales += previousDayData.salesNetAmount;
-                                    totals.indicators.ppa += previousDayData.ppa;
-                                    totals.indicators.ppaWithoutVat += previousDayData.ppaWithoutVat;
-                                    totals.indicators.diners += previousDayData.diners;
-
-                                    //totals.reductions.cancellationsPercentage += previousDayData.aggregations.reductions.cancellations.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.cancellations.amount);
-                                    totals.reductions.cancellations += previousDayData.aggregations.reductions.cancellations.amount;
-
-                                    //totals.reductions.operationalPercentage += previousDayData.aggregations.reductions.operational.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.operational.amount);
-                                    totals.reductions.operational += previousDayData.aggregations.reductions.operational.amount;
-
-                                    //totals.reductions.retentionPercentage += previousDayData.aggregations.reductions.retention.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.retention.amount);
-                                    totals.reductions.retention += previousDayData.aggregations.reductions.retention.amount;
-
-                                    //totals.reductions.employeePercentage += previousDayData.aggregations.reductions.employee.amount / (previousDayData.salesNetAmount + previousDayData.aggregations.reductions.employee.amount);
-                                    totals.reductions.employee += previousDayData.aggregations.reductions.employee.amount;
-                                    i++;
-                                }
-                                else {
-                                    notFound++;
-                                }
-                            }
-                            else {
-                                notFound++;
-                            }
-
-                            if (notFound > 4) {
-                                stop = true;
-                            }
-                        }
-
-                        if (i) {
-                            day.aggregations.sales[config.key] = totals.sales / i;
-                            day.aggregations.sales[config.key + 'Net'] = totals.netSales / i;
-                            day.aggregations.sales[config.key + 'WithoutVat'] = totals.salesWithoutVat / i;
-
-                            day.aggregations.indicators.diners[config.key] = totals.indicators.diners / i;
-                            day.aggregations.indicators.ppa[config.key] = totals.indicators.ppa / i;
-                            day.aggregations.indicators.ppa[config.key + 'WithoutVat'] = totals.indicators.ppaWithoutVat / i;
-
-                            //day.aggregations.reductions.cancellations[config.key + 'Percentage'] = totals.reductions.cancellationsPercentage / i;
-                            day.aggregations.reductions.cancellations[config.key] = totals.reductions.cancellations / i;
-
-                            //day.aggregations.reductions.operational[config.key + 'Percentage'] = totals.reductions.operationalPercentage / i;
-                            day.aggregations.reductions.operational[config.key] = totals.reductions.operational / i;
-
-                            //day.aggregations.reductions.retention[config.key + 'Percentage'] = totals.reductions.retentionPercentage / i;
-                            day.aggregations.reductions.retention[config.key] = totals.reductions.retention / i;
-
-                            //day.aggregations.reductions.employee[config.key + 'Percentage'] = totals.reductions.employeePercentage / i;
-                            day.aggregations.reductions.employee[config.key] = totals.reductions.employee / i;
-                        }
-                    });
-
-                    //get highest and lowest values of sales and reductions
-                    month.aggregations.reductions.cancellations.highest = _.max([day.aggregations.reductions.cancellations.percentage, month.aggregations.reductions.cancellations.highest]);
-                    month.aggregations.reductions.cancellations.lowest = _.min([day.aggregations.reductions.cancellations.percentage, month.aggregations.reductions.cancellations.lowest]);
-
-                    month.aggregations.reductions.operational.highest = _.max([day.aggregations.reductions.operational.percentage, month.aggregations.reductions.operational.highest]);
-                    month.aggregations.reductions.operational.lowest = _.min([day.aggregations.reductions.operational.percentage, month.aggregations.reductions.operational.lowest]);
-
-                    month.aggregations.reductions.retention.highest = _.max([day.aggregations.reductions.retention.percentage, month.aggregations.reductions.retention.highest]);
-                    month.aggregations.reductions.retention.lowest = _.min([day.aggregations.reductions.retention.percentage, month.aggregations.reductions.retention.lowest]);
-
-                    month.aggregations.reductions.employee.highest = _.max([day.aggregations.reductions.employee.percentage, month.aggregations.reductions.employee.highest]);
-                    month.aggregations.reductions.employee.lowest = _.min([day.aggregations.reductions.employee.percentage, month.aggregations.reductions.employee.lowest]);
-
-                    month.aggregations.sales.highest = _.max([day.aggregations.sales.yearAvg, day.aggregations.sales.fourWeekAvg, day.aggregations.sales.amount, month.aggregations.sales.highest]);
-                    month.aggregations.sales.lowest = _.min([day.aggregations.sales.yearAvg, day.aggregations.sales.fourWeekAvg, day.aggregations.sales.amount, month.aggregations.sales.lowest]);
-
-
-                    if (!moment(day.date).isSame(moment(), 'day')) {
-
-                        if (day.aggregations.indicators.ppa.fourWeekAvg) {
-                            month.forecast.ppa.amount += day.aggregations.indicators.ppa.fourWeekAvg;
-                            month.forecast.ppa.amountWithoutVat += day.aggregations.indicators.ppa.fourWeekAvgWithoutVat;
-                            month.forecast.ppa.count += 1;
-                        }
-
-
-                        if (currentDate.isSame(moment(day.date), 'month')) {
-                            month.forecast.sales.amount += day.amount;
-                            month.forecast.sales.amountWithoutVat += day.amountWithoutVat;
-                            month.forecast.diners.count += day.diners;
-                        }
-                        else {
-                            month.forecast.sales.amount += day.aggregations.sales.fourWeekAvg;
-                            month.forecast.sales.amountWithoutVat += day.aggregations.sales.fourWeekAvgWithoutVat;
-                            month.forecast.diners.count += day.aggregations.indicators.diners.fourWeekAvg;
-                        }
-
-                        let weekday = moment(day.date).weekday();
-                        month.aggregations.days[weekday].count += 1;
-                        month.aggregations.days[weekday].sales.amount += day.isExcluded ? day.aggregations.sales.fourWeekAvg : day.amount;
-                        month.aggregations.days[weekday].sales.amountWithoutVat += day.isExcluded ? day.aggregations.sales.fourWeekAvgWithoutVat : day.amountWithoutVat;
-                        month.aggregations.days[weekday].sales.netAmount += day.isExcluded ? day.aggregations.sales.fourWeekAvgNet : day.salesNetAmount;
-                        month.aggregations.days[weekday].diners.count += day.isExcluded ? day.aggregations.indicators.diners.fourWeekAvg : day.diners;
-                        month.aggregations.days[weekday].ppa.amount += day.isExcluded ? day.aggregations.indicators.ppa.fourWeekAvg : day.ppa;
-                        month.aggregations.days[weekday].ppa.amountWithoutVat += day.isExcluded ? day.aggregations.indicators.ppa.fourWeekAvgWithoutVat : day.ppaWithoutVat;
-
-                        month.aggregations.days[weekday].reductions.cancellations.amount += day.isExcluded ? day.aggregations.reductions.cancellations.fourWeekAvg : day.rCancellation;
-                        month.aggregations.days[weekday].reductions.operational.amount += day.isExcluded ? day.aggregations.reductions.operational.fourWeekAvg : day.rOperationalDiscount;
-                        month.aggregations.days[weekday].reductions.retention.amount += day.isExcluded ? day.aggregations.reductions.retention.fourWeekAvg : day.rRetentionDiscount;
-                        month.aggregations.days[weekday].reductions.employee.amount += day.isExcluded ? day.aggregations.reductions.employee.fourWeekAvg : day.rEmployees;
-                    }
-                });
-
-                if (month.aggregations && month.aggregations.days) {
-                    _.forEach(month.aggregations.days, (day, weekDay) => {
-                        let previousMonthWeekDay = moment(month.latestDay).subtract(1, 'months').endOf('month').day(weekDay);
-                        let notFound = 0;
-                        while (day.count < 4 && notFound < 6) {
-                            let previousMonth = database[previousMonthWeekDay.format('YYYYMM')];
-                            if (previousMonth && previousMonth.days) {
-                                let previousDayData = _.find(previousMonth.days, {'date': previousMonthWeekDay.format('YYYY-MM-DD')});
-                                if (previousDayData && !previousDayData.isExcluded) {
-                                    day.count += 1;
-                                    day.sales.amount += previousDayData.amount;
-                                    day.sales.amountWithoutVat += previousDayData.amountWithoutVat;
-                                    day.sales.netAmount += previousDayData.salesNetAmount;
-                                    day.diners.count += previousDayData.diners;
-                                    day.ppa.amount += previousDayData.ppa;
-                                    day.ppa.amountWithoutVat += previousDayData.ppaWithoutVat;
-
-                                    day.reductions.cancellations.amount += previousDayData.rCancellation;
-                                    day.reductions.operational.amount += previousDayData.rOperationalDiscount;
-                                    day.reductions.retention.amount += previousDayData.rRetentionDiscount;
-                                    day.reductions.employee.amount += previousDayData.rEmployees;
-                                }
-                                else {
-                                    notFound++;
-                                }
-                            }
-                            else {
-                                notFound++;
-                            }
-                            previousMonthWeekDay.subtract(7, 'days');
-                        }
-                    });
-                }
-
-                if (month.days && month.days.length) {
-                    let endOfMonth = moment(month.days[0].date).endOf('month');
-                    currentDate.add(1, 'days');
-                    if (currentDate.isSame(endOfMonth, 'month')) {
-                        while (currentDate.isSameOrBefore(endOfMonth, 'day')) {
-                            let weekday = currentDate.weekday();
-                            month.forecast.sales.amount += (month.aggregations.days[weekday].sales.amount / month.aggregations.days[weekday].count) || 0;
-                            month.forecast.sales.amountWithoutVat += (month.aggregations.days[weekday].sales.amountWithoutVat / month.aggregations.days[weekday].count) || 0;
-                            month.forecast.diners.count += (month.aggregations.days[weekday].diners.count / month.aggregations.days[weekday].count) || 0;
-
-                            if (month.aggregations.days[weekday].ppa.amount && month.aggregations.days[weekday].count) {
-                                month.forecast.ppa.amount += (month.aggregations.days[weekday].ppa.amount / month.aggregations.days[weekday].count) || 0;
-                                month.forecast.ppa.amountWithoutVat += (month.aggregations.days[weekday].ppa.amountWithoutVat / month.aggregations.days[weekday].count) || 0;
-                                month.forecast.ppa.count += 1;
-                            }
-
-                            if (month.aggregations.days[weekday].count === 0) {
-                                let previousMonth = database[moment(currentDate).subtract(1, 'months').format('YYYYMM')];
-                                if (previousMonth) {
-                                    month.forecast.sales.amount += (previousMonth.aggregations.days[weekday].sales.amount / previousMonth.aggregations.days[weekday].count) || 0;
-                                    month.forecast.sales.amountWithoutVat += (previousMonth.aggregations.days[weekday].sales.amountWithoutVat / previousMonth.aggregations.days[weekday].count) || 0;
-                                    month.forecast.diners.count += (previousMonth.aggregations.days[weekday].diners.count / previousMonth.aggregations.days[weekday].count) || 0;
-
-                                    if (previousMonth.aggregations.days[weekday].ppa.amount && previousMonth.aggregations.days[weekday].count) {
-                                        month.forecast.ppa.amount += (previousMonth.aggregations.days[weekday].ppa.amount / previousMonth.aggregations.days[weekday].count) || 0;
-                                        month.forecast.ppa.amountWithoutVat += (previousMonth.aggregations.days[weekday].ppa.amountWithoutVat / previousMonth.aggregations.days[weekday].count) || 0;
-                                        month.forecast.ppa.count += 1;
-                                    }
-                                }
-                            }
-                            currentDate.add(1, 'days');
-                        }
-                    }
-
-                    month.forecast.ppa.amount = (month.forecast.ppa.amount / month.forecast.ppa.count);
-                    month.forecast.ppa.amountWithoutVat = (month.forecast.ppa.amountWithoutVat / month.forecast.ppa.count);
-                }
-            });
-
-            //calculate weekAvg of month
-            _.forEach(database, month => {
-                if (month.aggregations) {
-                    _.each(month.aggregations.days, weekDay => {
-                        month.aggregations.sales.weekAvg += weekDay.sales.amount / weekDay.count;
-                        month.aggregations.indicators.diners.weekAvg += weekDay.diners.count / weekDay.count;
-                        month.aggregations.indicators.ppa.weekAvg += weekDay.ppa.amount / weekDay.count;
-                    });
-                }
-            });
-
-            _.forEach(database, month => {
-                if (month.aggregations) {
-                    let date = moment(month.latestDay);
-                    let lastYearMonth = database[moment(date).subtract(1, 'years').format('YYYYMM')];
-                    if (lastYearMonth) {
-                        month.aggregations.sales.lastYearWeekAvg = lastYearMonth.aggregations.sales.weekAvg;
-                        month.aggregations.indicators.diners.lastYearWeekAvg = lastYearMonth.aggregations.indicators.diners.weekAvg;
-                        month.aggregations.indicators.ppa.lastYearWeekAvg += lastYearMonth.aggregations.indicators.ppa.weekAvg;
-                    }
-
-                    //go back 3 months and calculate reductions 3 month average
-                    let i = 1;
-                    let stop = false;
-                    while (i <= 3 && !stop) {
-                        let previousMonth = database[moment(date).subtract(i, 'months').format('YYYYMM')];
-                        if (previousMonth) {
-                            _.each(previousMonth.aggregations.days, aggregatedDay => {
-                                month.aggregations.reductions.cancellations.threeMonthAvg += aggregatedDay.reductions.cancellations.amount;
-                                month.aggregations.reductions.employee.threeMonthAvg += aggregatedDay.reductions.employee.amount;
-                                month.aggregations.reductions.operational.threeMonthAvg += aggregatedDay.reductions.operational.amount;
-                                month.aggregations.reductions.retention.threeMonthAvg += aggregatedDay.reductions.retention.amount;
-
-                                month.aggregations.sales.threeMonthAvgNet += aggregatedDay.sales.netAmount;
-                            });
-
-                            i++;
-                        }
-                        else {
-                            stop = true;
-                        }
-                    }
-
-                    month.aggregations.reductions.cancellations.threeMonthAvg = month.aggregations.reductions.cancellations.threeMonthAvg / i;
-                    month.aggregations.reductions.employee.threeMonthAvg = month.aggregations.reductions.employee.threeMonthAvg / i;
-                    month.aggregations.reductions.operational.threeMonthAvg = month.aggregations.reductions.operational.threeMonthAvg / i;
-                    month.aggregations.reductions.retention.threeMonthAvg = month.aggregations.reductions.retention.threeMonthAvg / i;
-                    month.aggregations.sales.threeMonthAvgNet = month.aggregations.sales.threeMonthAvgNet / i;
-
-                    month.aggregations.reductions.cancellations.threeMonthAvgPercentage = month.aggregations.reductions.cancellations.threeMonthAvg / (month.aggregations.sales.threeMonthAvgNet + month.aggregations.reductions.cancellations.threeMonthAvg);
-                    month.aggregations.reductions.employee.threeMonthAvgPercentage = month.aggregations.reductions.employee.threeMonthAvg / (month.aggregations.sales.threeMonthAvgNet + month.aggregations.reductions.employee.threeMonthAvg);
-                    month.aggregations.reductions.operational.threeMonthAvgPercentage = month.aggregations.reductions.operational.threeMonthAvg / (month.aggregations.sales.threeMonthAvgNet + month.aggregations.reductions.operational.threeMonthAvg);
-                    month.aggregations.reductions.retention.threeMonthAvgPercentage = month.aggregations.reductions.retention.threeMonthAvg / (month.aggregations.sales.threeMonthAvgNet + month.aggregations.reductions.retention.threeMonthAvg);
-                }
-            });
-
-            let localStorage = window.localStorage;
-            let keys = Object.keys(localStorage);
-            _.forEach(keys, key => {
-                if (key.indexOf('database') !== -1) {
-                    localStorage.removeItem(key);
-                }
-            });
-
-            try {
-                window.localStorage.setItem(org.id + '-database', JSON.stringify(database));
-            } catch (domException) {
-                if (domException.name === 'QuotaExceededError' ||
-                    domException.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-                    //log something here
-                }
-            }
-
-            let result = new Database(database);
-
-            let today = moment();
-            let currentMonth = result.getMonth(today);
-            let currentDay = result.getDay(today);
-            if (currentDay) {
-                currentMonth.salesNetAmount = currentMonth.salesNetAmount - currentDay.salesNetAmount;
-                currentMonth.salesNetAmountWithOutVat = currentMonth.salesNetAmountWithOutVat - currentDay.salesNetAmountWithOutVat;
-                currentMonth.salesTipAmount = currentMonth.salesTipAmount - currentDay.salesTipAmount;
-                currentMonth.salesTipAmountWithOutVat = currentMonth.salesTipAmountWithOutVat - currentDay.salesTipAmountWithOutVat;
-                currentMonth.amount = currentMonth.amount - currentDay.amount;
-                currentMonth.amountWithoutVat = currentMonth.amountWithoutVat - currentDay.amountWithoutVat;
-            }
-
-            obs.next(result);
-        });
-    }).pipe(
-        publishReplay(1),
-        refCount()
-    );*/
 
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService, private logz: LogzioService, private translate: TranslateService) {
         let settings = JSON.parse(window.localStorage.getItem('settings'));

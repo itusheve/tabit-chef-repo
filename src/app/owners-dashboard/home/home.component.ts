@@ -656,8 +656,8 @@ export class HomeComponent implements OnInit {
                 let previousMonth = database.getMonth(moment().subtract(1, 'months'));
                 if (lastYearMonth && lastYearMonth.weekAvg) {
                     this.forecastCardData.averages.yearly = {
-                        percentage: lastYearMonth ? (month.forecast.sales.amount / lastYearMonth.ttlsalesIncludeVat) - 1 : 0,
-                        change: lastYearMonth ? month.forecast.sales.amount / lastYearMonth.ttlsalesIncludeVat * 100 : 0
+                        percentage: lastYearMonth ? (month.forecast.weekAvg / lastYearMonth.weekAvg) - 1 : 0,
+                        change: lastYearMonth ? month.forecast.weekAvg / lastYearMonth.weekAvg * 100 : 0
                     };
                 }
 
@@ -678,14 +678,14 @@ export class HomeComponent implements OnInit {
                 this.forecastCardData.noSeparator = true;
 
                 this.forecastCardData.averages.weekly = {
-                    percentage: previousMonth ? ((month.forecast.sales.amount / previousMonth.ttlsalesIncludeVat) - 1) : 0,
-                    change: previousMonth ? (month.forecast.sales.amount / previousMonth.ttlsalesIncludeVat) * 100 : 0
+                    percentage: previousMonth ? ((month.forecast.weekAvg / previousMonth.weekAvg) - 1) : 0,
+                    change: previousMonth ? (month.forecast.weekAvg / previousMonth.weekAvg) * 100 : 0
                 };
 
                 this.showForecast = moment().diff(moment(database.getLowestDate()), 'days') > 8; //do not show forecast for new businesses with less than 8 days of data
 
                 if (this.forecastCardData.averages.weekly.percentage) {
-                    let value = (month.forecast.sales.amount / previousMonth.ttlsalesIncludeVat) * 100;
+                    let value = (month.forecast.weekAvg / previousMonth.weekAvg) * 100;
                     this.forecastCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                 }
             });

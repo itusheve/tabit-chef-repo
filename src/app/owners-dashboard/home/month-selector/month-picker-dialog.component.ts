@@ -62,19 +62,48 @@ export class MonthPickerDialogComponent {
                     };
 
                     let previousMonth = database.getMonth(moment(month.latestDay).subtract(1, 'months'));
+                    let lastYearMonth = database.getMonth(moment(month.latestDay).subtract(1, 'years'));
 
                     summaryCardData.diners = month.diners || month.orders;
                     summaryCardData.ppa = this.incTax ? month.ppaIncludeVat : month.ppaIncludeVat / month.vat;
                     summaryCardData.sales = this.incTax ? month.ttlsalesIncludeVat : month.ttlsalesExcludeVat;
 
+                    let previousMonthWeekAvg = 0;
+                    let lastYearWeekAvg = 0;
+                    let currentdaysCounter = 0;
+                    let date = moment(month.latestDay);
+                    if (date.isSame(moment(), 'month') && date.date() < 7) {
+                        _.forEach(month.aggregations.days, (data, weekday) => {
+                            if (data && weekday !== moment().day()) {
+                                currentdaysCounter++;
+                                let lastYearSalesAmount = _.get(lastYearMonth, ['aggregations', 'days', weekday, 'sales', 'avg']);
+                                if (lastYearSalesAmount) {
+                                    lastYearWeekAvg += lastYearSalesAmount;
+                                }
+
+                                let lastMonthSalesAmount = _.get(previousMonth, ['aggregations', 'days', weekday, 'sales', 'avg']);
+                                if (lastMonthSalesAmount) {
+                                    previousMonthWeekAvg += lastMonthSalesAmount;
+                                }
+                            }
+                        });
+
+                        previousMonthWeekAvg = previousMonthWeekAvg / currentdaysCounter;
+                        lastYearWeekAvg = lastYearWeekAvg / currentdaysCounter;
+                    }
+                    else {
+                        previousMonthWeekAvg = _.get(previousMonth, 'weekAvg', 0);
+                        lastYearWeekAvg = _.get(lastYearMonth, 'weekAvg', 0);
+                    }
+
                     summaryCardData.averages = {
-                        /*yearly: {
-                            percentage: month.aggregations.sales.lastYearWeekAvg ? ((month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg) - 1) : 0,
-                            change: month.aggregations.sales.weekAvg / month.aggregations.sales.lastYearWeekAvg
-                        },*/
+                        yearly: {
+                            percentage: lastYearMonth && lastYearWeekAvg ? ((month.weekAvg / lastYearWeekAvg) - 1) : 0,
+                            change: lastYearMonth ? (month.weekAvg / lastYearWeekAvg) * 100 : 0
+                        },
                         weekly: {
-                            percentage: previousMonth && previousMonth.weekAvg ? ((month.weekAvg / previousMonth.weekAvg) - 1) : 0,
-                            change: previousMonth ? (month.weekAvg / previousMonth.weekAvg) * 100 : 0
+                            percentage: previousMonth && previousMonthWeekAvg ? ((month.weekAvg / previousMonthWeekAvg) - 1) : 0,
+                            change: previousMonth ? (month.weekAvg / previousMonthWeekAvg) * 100 : 0
                         }
                     };
 
@@ -98,7 +127,7 @@ export class MonthPickerDialogComponent {
                     };
 
                     if (summaryCardData.averages.weekly.percentage) {
-                        let value = previousMonth ? (month.weekAvg / previousMonth.weekAvg) * 100 : 0;
+                        let value = previousMonth ? (month.weekAvg / previousMonthWeekAvg) * 100 : 0;
                         summaryCardData.statusClass = this.tabitHelper.getColorClassByPercentage(value, true);
                     }
                     else {
