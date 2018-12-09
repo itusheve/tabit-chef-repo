@@ -790,6 +790,7 @@ export class DataService {
                             orders: day.orders,
                             diners: day.diners
                         });
+                        week.startDate = _.get(week, ['days', 0], 'details', 'date');
                         week.daysInWeek++;
                     }
                 });

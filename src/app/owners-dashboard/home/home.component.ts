@@ -184,6 +184,7 @@ export class HomeComponent implements OnInit {
                 this.translate.get('weekToDate').subscribe((res: string) => {
                     title = res;
                 });
+                title += ' ' + this.datePipe.transform(moment.utc(week.startDate), this.env.lang === 'en' ? 'M/d' : 'd/M', 'GMT', this.env.lang);
 
                 let dinersOrders = week.diners || week.orders;
                 let sales = incVat ? week.sales.total : week.sales.totalWithoutVat;
