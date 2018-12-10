@@ -16,6 +16,6 @@ export class OrderCreditSlipComponent implements OnInit {
 
     constructor() { }
 
-    ngOnInit() { }
+    ngOnInit() {}
 
 }
