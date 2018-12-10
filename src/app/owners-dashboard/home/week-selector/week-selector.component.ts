@@ -59,7 +59,7 @@ export class WeekSelectorComponent {
                         this.translate.get('weekSales').subscribe((res: string) => {
                             title = res;
                         });
-                        title += ' ' + week.details.number + ', ' + this.datePipe.transform(moment.utc(week.startDate), this.env.lang === 'en' ? 'M/d/y' : 'd/M/y', 'GMT', this.env.lang);
+                        title += ' ' + week.details.number + ', ' + week.startDate.format(this.env.region === 'us' ? 'M/D/YY' : 'D/M/YY');
 
                         let dinersOrders = week.diners || week.orders;
                         let sales = incVat ? week.sales.total : week.sales.totalWithoutVat;

@@ -65,7 +65,11 @@ export class DatabaseV2 {
     }
 
     public getWeekByDate(date: moment.Moment) {
-        return _.get(this._weeks, [date.weekYear(), date.week()]);
+        let week = _.get(this._weeks, [date.weekYear(), date.week()]);
+        if(!week) {
+            week = _.get(this._weeks, [date.weekYear(), date.week() - 1]);
+        }
+        return week;
     }
 
     public getWeeks() {

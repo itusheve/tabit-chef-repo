@@ -179,18 +179,21 @@ export class HomeComponent implements OnInit {
                 }
 
                 let week = database.getWeekByDate(restTime);
+                if(!week) {
+                    return;
+                }
 
                 let title = '';
-                this.translate.get('weekToDate').subscribe((res: string) => {
+                this.translate.get('week').subscribe((res: string) => {
                     title = res;
                 });
-                title += ' ' + this.datePipe.transform(moment.utc(week.startDate), this.env.lang === 'en' ? 'M/d' : 'd/M', 'GMT', this.env.lang);
+                title += ' ' + week.details.number + ', ' + week.startDate.format(this.env.region === 'us' ? 'M/D/YY' : 'D/M/YY');
 
                 let dinersOrders = week.diners || week.orders;
                 let sales = incVat ? week.sales.total : week.sales.totalWithoutVat;
                 this.weekToDateCard = {
                     loading: false,
-                    title: title + ' (' + week.details.number + ')',
+                    title: title,
                     tag: '',
                     sales: sales,
                     diners: dinersOrders,
@@ -490,7 +493,7 @@ export class HomeComponent implements OnInit {
                 this.currentBdCardData.sales = incTax ? totalSales : totalSalesWithoutTax;
 
                 this.translate.get('card.today').subscribe((res: string) => {
-                    this.currentBdCardData.title = res + ', ' + this.datePipe.transform(restaurantTime.valueOf(), 'EEEE MMMM d', 'GMT', this.env.lang);
+                    this.currentBdCardData.title = res + ', ' + this.datePipe.transform(restaurantTime.valueOf(), 'EEE. LLL d', 'GMT', this.env.lang);
                 });
 
                 this.currentBdCardData.averages = {
@@ -625,7 +628,7 @@ export class HomeComponent implements OnInit {
                     }
                 }
 
-                let title = this.datePipe.transform(previousDay.format('YYYY-MM-DD'), 'EEEE MMMM d', '', this.env.lang);
+                let title = this.datePipe.transform(previousDay.format('YYYY-MM-DD'), 'EEE. LLL d', '', this.env.lang);
                 this.translate.get('card.yesterday').subscribe((res: string) => {
                     this.previousBdCardData.title = res + ', ' + title;
                 });
