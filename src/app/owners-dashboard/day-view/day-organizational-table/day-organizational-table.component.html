@@ -1,0 +1,65 @@
+<div class="flex d-col">
+    <div class="title">
+        <span [translate]="'day.organizational'">Organizational</span>
+    </div>
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="category === 'employee'">
+            <mat-expansion-panel-header [ngClass]="getCssColorClass()">
+                <mat-panel-title>
+                    {{organizationalData.length}}&nbsp;<span [translate]="'day.actionsWorth'">Actions worth</span>&nbsp;{{totalValue | curr:'0'}}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table class="table table-responsive-sm">
+                <tr class="table-information-row">
+                    <td colspan="6">
+                        <div><span [translate]="'day.percentageFromSales'">Percentage</span>: <span>{{dayFromDatabase?.employeesPrc / 100 | pct : 1}}</span></div>
+                        <div><span [translate]="'day.fourWeekAvg'">4W' Avg</span>: <span>{{dayFromDatabase?.avgNweeksEmployeesPrc / 100 | pct : 1}}</span></div>
+                    </td>
+                </tr>
+                <tr class="header">
+                    <td (click)="sort('waiter')">
+                        <div class="flex a-center">
+                            <div><span [translate]="'day.server'"></span></div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                    <td (click)="sort('orderNumber')">
+                        <div class="flex a-center">
+                            <div>
+                                <span [translate]="'day.order'">Order</span>
+                            </div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                    <td (click)="sort('service')">
+                        <div class="flex a-center">
+                            <div [translate]="'day.service'">Item</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='item' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='item' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                    <td (click)="sort('organizational')">
+                        <div class="flex a-center j-end">
+                            <div [translate]="'day.amount'">Amount</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='organizational' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='organizational' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                </tr>
+                <tr
+                        *ngFor="let tuple of organizationalData"
+                        (click)="orderClicked(tuple.orderNumber)"
+                        [ngClass]="{'lastViewed': lastViewed == tuple.orderNumber}"
+                        class="dayReportDataRow"
+                >
+                    <td>{{tuple.waiter}}</td>
+                    <td>{{tuple.orderNumber}}</td>
+                    <td>{{tuple.service}}</td>
+                    <td>{{tuple.organizational | curr:'0'}}</td>
+                </tr>
+            </table>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

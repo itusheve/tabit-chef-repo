@@ -184,9 +184,17 @@ export class HomeComponent implements OnInit {
                 }
 
                 let title = '';
-                this.translate.get('week').subscribe((res: string) => {
-                    title = res;
-                });
+                if(restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
+                    this.translate.get('weekToDate').subscribe((res: string) => {
+                        title = res;
+                    });
+                }
+                else {
+                    this.translate.get('week').subscribe((res: string) => {
+                        title = res;
+                    });
+                }
+
                 title += ' ' + week.details.number + ', ' + week.startDate.format(this.env.region === 'us' ? 'M/D/YY' : 'D/M/YY');
 
                 let dinersOrders = week.diners || week.orders;
@@ -211,7 +219,7 @@ export class HomeComponent implements OnInit {
                     operational: 0,
                     retention: 0,
                 };
-                let weekCounter = 1;
+                let weekCounter = 0;
                 for (let i = 1; i <= 4; i++) {
                     let historicWeek = database.getWeekByDate(moment(restTime).subtract(i, 'weeks'));
                     if (historicWeek) {
@@ -237,13 +245,17 @@ export class HomeComponent implements OnInit {
                         }
                         weekCounter++;
                     }
+
+                    _.set(historicWeek, 'weekAvg', {data: previousWeeksAvgs, counter: weekCounter});
                 }
 
-                previousWeeksAvgs.sales = previousWeeksAvgs.sales / weekCounter;
-                previousWeeksAvgs.cancellations = previousWeeksAvgs.cancellations / weekCounter;
-                previousWeeksAvgs.employees = previousWeeksAvgs.employees / weekCounter;
-                previousWeeksAvgs.operational = previousWeeksAvgs.operational / weekCounter;
-                previousWeeksAvgs.retention = previousWeeksAvgs.retention / weekCounter;
+                if(weekCounter) {
+                    previousWeeksAvgs.sales = previousWeeksAvgs.sales / weekCounter;
+                    previousWeeksAvgs.cancellations = previousWeeksAvgs.cancellations / weekCounter;
+                    previousWeeksAvgs.employees = previousWeeksAvgs.employees / weekCounter;
+                    previousWeeksAvgs.operational = previousWeeksAvgs.operational / weekCounter;
+                    previousWeeksAvgs.retention = previousWeeksAvgs.retention / weekCounter;
+                }
 
                 let lastYearWeeksAvgs = {
                     sales: 0,
@@ -274,7 +286,6 @@ export class HomeComponent implements OnInit {
                         lastYearWeeksAvgs.retention += _.get(lastYearWeek, ['reductions', 'retention']);
                     }
                 }
-
 
                 this.weekToDateCard.averages = {
                     yearly: {
@@ -826,7 +837,7 @@ export class HomeComponent implements OnInit {
     }
 
     showLaborCost() {
-        return this.display.laborCost && this.isCurrentMonth() && _.get(this.laborCostCard, ['today', 'cost']);
+        return this.display.laborCost && this.isCurrentMonth() && _.get(this.laborCostCard, ['week', 'cost']);
     }
 
     showWeekToDate() {

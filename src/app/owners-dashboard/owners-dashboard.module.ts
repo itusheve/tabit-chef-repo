@@ -80,6 +80,9 @@ import {DayMostReturnedItemsTableComponent} from './day-view/day-most-returned-i
 import {DayPaymentsTableComponent} from './day-view/day-payments-table/day-payments-table.component';
 import {DayOperationalErrorsTableComponent} from './day-view/day-operational-errors-table/day-operational-errors-table.component';
 import {DayRetentionTableComponent} from './day-view/day-retention-table/day-retention-table.component';
+import {DayWasteTableComponent} from './day-view/day-waste-table/day-waste-table.component';
+import {DayOrganizationalTableComponent} from './day-view/day-organizational-table/day-organizational-table.component';
+import {DayCancellationsTableComponent} from './day-view/day-cancellations-table/day-cancellations-table.component';
 import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/day-month-summary-table.component';
 import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sales.component';
 import {MonthPickerDialogComponent} from './home/month-selector/month-picker-dialog.component';
@@ -147,6 +150,9 @@ import {TranslateModule} from '@ngx-translate/core';
         DayPaymentsTableComponent,
         DayOperationalErrorsTableComponent,
         DayRetentionTableComponent,
+        DayWasteTableComponent,
+        DayOrganizationalTableComponent,
+        DayCancellationsTableComponent,
         DayMonthSummaryTableComponent,
         DayHourlySalesComponent,
 

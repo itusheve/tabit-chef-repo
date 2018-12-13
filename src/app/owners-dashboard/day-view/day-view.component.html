@@ -187,8 +187,18 @@
                     [paymentsData]="paymentsData"
             ></app-payments-table>
 
+            <div id="cancellations" style="position: relative;" class="anchor"></div>
+            <app-cancellations-table *ngIf="cancellationsData && cancellationsData.length"
+                                     class="widget"
+                                     [cancellationsData]="cancellationsData"
+                                     [lastViewed]="drilledOrderNumber"
+                                     (onOrderClicked)="onOrderClicked_orderNumber($event)"
+                                     [category]="category"
+                                     [dayFromDatabase]="dayFromDatabase"
+            ></app-cancellations-table>
+
             <div id="operational" style="position: relative;" class="anchor"></div>
-            <app-operational-errors-table *ngIf="operationalErrorsData"
+            <app-operational-errors-table *ngIf="operationalErrorsData && operationalErrorsData.length"
                                           class="widget"
                                           [operationalErrorsData]="operationalErrorsData"
                                           [lastViewed]="drilledOrderNumber"
@@ -198,7 +208,7 @@
             ></app-operational-errors-table>
 
             <div id="retention" style="position: relative;" class="anchor"></div>
-            <app-retention-table *ngIf="retentionData"
+            <app-retention-table *ngIf="retentionData && retentionData.length"
                                  class="widget"
                                  [retentionData]="retentionData"
                                  [lastViewed]="drilledOrderNumber"
@@ -206,6 +216,25 @@
                                  [category]="category"
                                  [dayFromDatabase]="dayFromDatabase"
             ></app-retention-table>
+
+            <div id="employee" style="position: relative;" class="anchor"></div>
+            <app-organizational-table *ngIf="organizationalData && organizationalData.length"
+                                 class="widget"
+                                 [organizationalData]="organizationalData"
+                                 [lastViewed]="drilledOrderNumber"
+                                 (onOrderClicked)="onOrderClicked_orderNumber($event)"
+                                 [category]="category"
+                                 [dayFromDatabase]="dayFromDatabase"
+            ></app-organizational-table>
+
+            <app-waste-table *ngIf="wasteData && wasteData.length"
+                             class="widget"
+                             [wasteData]="wasteData"
+                             [lastViewed]="drilledOrderNumber"
+                             (onOrderClicked)="onOrderClicked_orderNumber($event)"
+                             [category]="category"
+                             [dayFromDatabase]="dayFromDatabase"
+            ></app-waste-table>
 
             <app-day-sales-by-sub-department-table
                     class="widget"

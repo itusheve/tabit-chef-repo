@@ -53,6 +53,7 @@ export class DayViewComponent implements OnInit {
 
     /* the day's Orders */
     public orders: Order[];
+    public organizational: Order[];
 
     public dailySummaryTblData: { title: string; data: SalesTableRow[], globalSalesIncludingVat: any };
     public byShiftSummaryTblsData: { title: string; data: SalesTableRow[], globalSalesIncludingVat: any }[];
@@ -155,6 +156,48 @@ export class DayViewComponent implements OnInit {
         subType: string;
         reasonId: string;
         retention: number;
+        tlogId: string;
+    }[];
+
+    public cancellationsData: {
+        orderType: OrderType;
+        waiter: string;
+        approvedBy: string;
+        orderNumber: number;
+        tableId: string;
+        item: string;
+        subType: string;
+        reasonId: string;
+        cancellations: number;
+        tlogId: string;
+    }[];
+
+    public wasteData: {
+        orderType: OrderType;
+        waiter: string;
+        approvedBy: string;
+        orderNumber: number;
+        tableId: string;
+        item: string;
+        subType: string;
+        reasonId: string;
+        waste: number;
+        tlogId: string;
+    }[];
+
+    public organizationalData: {
+        orderType: OrderType;
+        waiter: string;
+        orderNumber: number;
+        organizational: number;
+        tlogId: string;
+        service: string;
+    }[];
+
+    public employeeData: {
+        orderType: OrderType;
+        orderNumber: number;
+        amount: number;
         tlogId: string;
     }[];
 
@@ -666,6 +709,52 @@ export class DayViewComponent implements OnInit {
                     reasonId: reduction.reasonName,
                     retention: reduction.retentionDiscountAmount,
                     tlogId: reduction.tlogId
+                });
+            });
+
+            this.cancellationsData = [];
+            _.forEach(dailyReport.cancelation, cancelation => {
+                let order = _.find(this.orders, {tlogId: cancelation.tlogId});
+                this.cancellationsData.push({
+                    orderType: {id: cancelation.orderType, rank: 1},
+                    waiter: order.waiter,
+                    approvedBy: cancelation.approvedByName,
+                    orderNumber: cancelation.orderNumber,
+                    tableId: cancelation.tableNumber,
+                    item: cancelation.itemName,
+                    subType: cancelation.reasonSubTypeHebrew,
+                    reasonId: cancelation.reasonName,
+                    cancellations: cancelation.cancellationAmountIncludeVat,
+                    tlogId: cancelation.tlogId
+                });
+            });
+
+            this.wasteData = [];
+            _.forEach(dailyReport.waste, waste => {
+                let order = _.find(this.orders, {tlogId: waste.tlogId});
+                this.wasteData.push({
+                    orderType: {id: waste.orderType, rank: 1},
+                    waiter: order.waiter,
+                    approvedBy: waste.approvedByName,
+                    orderNumber: waste.orderNumber,
+                    tableId: waste.tableNumber,
+                    item: waste.itemName,
+                    subType: waste.reasonSubTypeHebrew,
+                    reasonId: waste.reasonName,
+                    waste: waste.wasteAmountIncludeVat,
+                    tlogId: waste.tlogId
+                });
+            });
+
+            this.organizationalData = [];
+            _.forEach(dailyReport.organizational, organizational => {
+                this.organizationalData.push({
+                    orderType: {id: organizational.orderType, rank: 1},
+                    waiter: organizational.ownerName,
+                    orderNumber: organizational.orderNumber,
+                    organizational: organizational.organizationalAmountIncludeVat,
+                    tlogId: organizational.tlogId,
+                    service: organizational.serviceName
                 });
             });
 

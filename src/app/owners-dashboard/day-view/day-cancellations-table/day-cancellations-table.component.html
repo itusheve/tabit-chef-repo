@@ -1,0 +1,90 @@
+<div class="flex d-col">
+    <div class="title">
+        <span [translate]="'day.cancellations'">Cancellations</span>
+    </div>
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="category === 'cancellations'">
+            <mat-expansion-panel-header [ngClass]="getCssColorClass()">
+                <mat-panel-title>
+                    {{cancellationsData.length}}&nbsp;<span [translate]="'day.actionsWorth'">Actions worth</span>&nbsp;{{totalValue | curr:'0'}}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table class="table table-sm table-responsive-sm">
+                <tr class="table-information-row">
+                    <td colspan="6">
+                        <div><span [translate]="'day.percentageFromSales'">Percentage</span>: <span>{{dayFromDatabase?.voidsPrc / 100 | pct : 1}}</span></div>
+                        <div><span [translate]="'day.fourWeekAvg'">4W' Avg</span>: <span>{{dayFromDatabase?.avgNweeksVoidsPrc / 100 | pct : 1}}</span></div>
+                    </td>
+                </tr>
+                <tr class="header">
+                    <td (click)="sort('waiter')">
+                        <div class="flex a-center">
+                            <div><span [translate]="'day.server'"></span><span><br />({{'manager' | translate}})</span></div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                    <td (click)="sort('orderNumber')">
+                        <div class="flex a-center">
+                            <div>
+                                <span [translate]="'day.order'">Order</span><br />
+                                (<span [translate]="'day.table'">Table</span>)
+                            </div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='tableId' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                    <td (click)="sort('item')">
+                        <div class="flex a-center">
+                            <div [translate]="'day.item'">Item</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='item' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='item' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                    <td (click)="sort('cancellations')">
+                        <div class="flex a-center j-end">
+                            <div [translate]="'day.amount'">Amount</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='cancellations' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='cancellations' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                    <td (click)="sort('subType')">
+                        <div class="flex a-center">
+                            <div [translate]="'day.type'">Type</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='subType' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='subType' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                    <td (click)="sort('reasonId')">
+                        <div class="flex a-center">
+                            <div [translate]="'day.reason'">Reason</div>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='reasonId' && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='reasonId' && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+                </tr>
+                <tr
+                        *ngFor="let tuple of cancellationsData"
+                        (click)="orderClicked(tuple.orderNumber)"
+                        [ngClass]="{'lastViewed': lastViewed == tuple.orderNumber}"
+                        class="dayReportDataRow"
+                >
+                    <td>{{tuple.waiter}}<span style="font-size: 12px; display: block">{{tuple.approvedBy}}</span></td>
+                    <td>
+                        <span>
+                            {{tuple.orderNumber}}
+                        </span>
+                        <br>
+                        <span *ngIf="tuple.tableId">
+                            ({{tuple.tableId}})
+                        </span>
+                    </td>
+                    <td>{{tuple.item}}</td>
+                    <td>{{tuple.cancellations | curr:'0'}}</td>
+                    <td [translate]="tuple.subType"></td>
+                    <td>{{tuple.reasonId}}</td>
+                </tr>
+            </table>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
