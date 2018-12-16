@@ -765,10 +765,10 @@ export class DataService {
                         week = _.get(weeks, [weekYear, weekNumber]);
                         week.sales.total += day.salesAndRefoundAmountIncludeVat;
                         week.sales.totalWithoutVat += day.salesAndRefoundAmountExcludeVat;
-                        week.reductions.cancellations += day.voidsPrc * day.salesAndRefoundAmountIncludeVat;
-                        week.reductions.employees += day.EmployeesAmount * day.salesAndRefoundAmountIncludeVat;
-                        week.reductions.retention += day.mrPrc * day.salesAndRefoundAmountIncludeVat;
-                        week.reductions.operational += day.operationalPrc * day.salesAndRefoundAmountIncludeVat;
+                        week.reductions.cancellations += day.voidsPrc / 100 * day.salesAndRefoundAmountIncludeVat;
+                        week.reductions.employees += day.EmployeesAmount || 0;
+                        week.reductions.retention += day.mrPrc / 100 * day.salesAndRefoundAmountIncludeVat;
+                        week.reductions.operational += day.operationalPrc / 100 * day.salesAndRefoundAmountIncludeVat;
                         week.orders += day.orders;
                         week.diners += day.diners;
                         week.dates.push(day.businessDate);
@@ -781,10 +781,10 @@ export class DataService {
                                 totalWithoutVat: day.salesAndRefoundAmountExcludeVat
                             },
                             reductions: {
-                                cancellations: day.voidsPrc * day.salesAndRefoundAmountIncludeVat,
-                                retention: day.mrPrc * day.salesAndRefoundAmountIncludeVat,
-                                employees: day.EmployeesAmount * day.salesAndRefoundAmountIncludeVat,
-                                operational: day.operationalPrc * day.salesAndRefoundAmountIncludeVat
+                                cancellations: day.voidsPrc / 100 * day.salesAndRefoundAmountIncludeVat,
+                                retention: day.mrPrc / 100 * day.salesAndRefoundAmountIncludeVat,
+                                employees: day.EmployeesAmount || 0,
+                                operational: day.operationalPrc / 100 * day.salesAndRefoundAmountIncludeVat
                             },
                             orders: day.orders,
                             diners: day.diners

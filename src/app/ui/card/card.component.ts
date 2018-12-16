@@ -63,25 +63,36 @@ export class CardComponent implements OnInit {
         }
     }
 
+    getReductionArrow(percentage) {
+        if(!percentage || percentage === 100) {
+            return 'minimize';
+        }
+
+        if(percentage > 100) {
+            return 'arrow_drop_up';
+        }
+        else if(percentage < 100) {
+            return 'arrow_drop_down';
+        }
+    }
+
     getPercentageCssClass(percentage, isUpPositive, change) {
         let cssClass = this.tabitHelper.getTextClassByPercentage(change || percentage, isUpPositive);
         return cssClass;
     }
 
     getReductionPercentageCssClass(change, isUpPositive, percentage) {
-        let normalizedPercentage = percentage * 100;
-        let normalizedAvg = (normalizedPercentage - change);
-
-        normalizedPercentage = +(normalizedPercentage.toFixed(1));
-        normalizedAvg = +(normalizedAvg.toFixed(1));
-
-        let calculatedPercentage = normalizedPercentage / normalizedAvg;
-
-        if(calculatedPercentage === 0) {
-            calculatedPercentage = change;
-        }
-        let cssClass = this.tabitHelper.getTextClassByPercentage(calculatedPercentage * 100, isUpPositive);
+        let cssClass = this.tabitHelper.getTextClassByPercentage(change, isUpPositive);
         return cssClass;
+    }
+
+    getReductionsIconClass(change) {
+        let classList = 'arrowIcon';
+
+        if(!change || change === 100) {
+            classList += ' noChangeIcon';
+        }
+        return classList;
     }
 
     getIconClass(change) {

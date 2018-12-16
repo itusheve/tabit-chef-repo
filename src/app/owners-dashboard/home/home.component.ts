@@ -170,18 +170,19 @@ export class HomeComponent implements OnInit {
         combineLatest(this.dataService.databaseV2$, this.dataService.currentRestTime$, this.dataService.vat$, this.dataService.dailyTotals$)
             .subscribe(async data => {
                 let database = data[0];
+                let restTime  = data[1];
                 let incVat = data[2];
                 let dailyTotals = data[3];
 
-                let restTime = moment.utc(dailyTotals.businessDate);
+                let businessDate = moment.utc(dailyTotals.businessDate);
                 let settings = database.getSettings();
                 if(settings.weekStartDay === 1) {
                     restTime = moment(restTime).locale('en_GB');
                 }
 
-                let week = database.getWeekByDate(restTime);
+                let week = database.getWeekByDate(businessDate);
                 if(!week.startDate) {
-                    week = database.getWeekByDate(restTime.subtract(1, 'weeks'));
+                    week = database.getWeekByDate(businessDate.subtract(1, 'weeks'));
                 }
 
                 if(!week.startDate) {
@@ -215,8 +216,8 @@ export class HomeComponent implements OnInit {
                     showDrillArrow: true
                 };
 
-                let previousWeek = database.getWeekByDate(moment(restTime).subtract(1, 'week'));
-                let lastYearWeek = database.getWeek(restTime.weekYear() - 1, restTime.week());
+                let previousWeek = database.getWeekByDate(moment(businessDate).subtract(1, 'week'));
+                let lastYearWeek = database.getWeek(businessDate.weekYear() - 1, businessDate.week());
 
                 let previousWeeksAvgs = {
                     sales: 0,
@@ -227,7 +228,7 @@ export class HomeComponent implements OnInit {
                 };
                 let weekCounter = 0;
                 for (let i = 1; i <= 4; i++) {
-                    let historicWeek = database.getWeekByDate(moment(restTime).subtract(i, 'weeks'));
+                    let historicWeek = database.getWeekByDate(moment(businessDate).subtract(i, 'weeks'));
                     if (historicWeek) {
                         if(restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
                             let counter = 0;
@@ -304,22 +305,32 @@ export class HomeComponent implements OnInit {
                     }
                 };
 
+                let cancellationsPct = (week.reductions.cancellations / week.sales.total).toFixed(3);
+                let employeePct = (week.reductions.employees / week.sales.total).toFixed(3);
+                let operationalPct = (week.reductions.operational / week.sales.total).toFixed(3);
+                let retentionPct = (week.reductions.retention / week.sales.total).toFixed(3);
+
+                let prevWeekCancellationsPct = (previousWeeksAvgs.cancellations / previousWeeksAvgs.sales).toFixed(3);
+                let prevWeekEmployeePct = (previousWeeksAvgs.employees / previousWeeksAvgs.sales).toFixed(3);
+                let prevWeekOperationalPct = (previousWeeksAvgs.operational / previousWeeksAvgs.sales).toFixed(3);
+                let prevWeekRetentionPct = (previousWeeksAvgs.retention / previousWeeksAvgs.sales).toFixed(3);
+
                 this.weekToDateCard.reductions = {
                     cancellations: {
-                        percentage: (week.reductions.cancellations / previousWeeksAvgs.cancellations) - 1,
-                        change: (week.reductions.cancellations / week.sales.total) - (previousWeeksAvgs.cancellations / previousWeeksAvgs.sales)
+                        percentage: cancellationsPct || 0,
+                        change: cancellationsPct / prevWeekCancellationsPct * 100 || 0
                     },
                     employee: {
-                        percentage: (week.reductions.employees / previousWeeksAvgs.employees) - 1,
-                        change: (week.reductions.employees  / week.sales.total) - (previousWeeksAvgs.employees / previousWeeksAvgs.sales)
+                        percentage: employeePct || 0,
+                        change: employeePct / prevWeekEmployeePct * 100 || 0
                     },
                     operational: {
-                        percentage: week.reductions.operational / previousWeeksAvgs.operational - 1,
-                        change: (week.reductions.operational / week.sales.total) - (previousWeeksAvgs.operational / previousWeeksAvgs.sales)
+                        percentage: operationalPct || 0,
+                        change: operationalPct / prevWeekOperationalPct * 100 || 0
                     },
                     retention: {
-                        percentage: week.reductions.retention / previousWeeksAvgs.retention - 1,
-                        change: (week.reductions.retention / week.sales.total) - (previousWeeksAvgs.retention / previousWeeksAvgs.sales)
+                        percentage: retentionPct || 0,
+                        change: retentionPct / prevWeekRetentionPct * 100 || 0
                     }
                 };
 
@@ -555,19 +566,19 @@ export class HomeComponent implements OnInit {
                 this.currentBdCardData.reductions = {
                     cancellations: {
                         percentage: day.voidsPrc / 100,
-                        change: day.voidsPrc - day.avgNweeksVoidsPrc
+                        change: day.voidsPrc / day.avgNweeksVoidsPrc * 100
                     },
                     employee: {
                         percentage: day.employeesPrc / 100,
-                        change: day.employeesPrc - day.avgNweeksEmployeesPrc
+                        change: day.employeesPrc / day.avgNweeksEmployeesPrc * 100
                     },
                     operational: {
                         percentage: day.operationalPrc / 100,
-                        change: day.operationalPrc - day.avgNweeksOperationalPrc
+                        change: day.operationalPrc / day.avgNweeksOperationalPrc * 100
                     },
                     retention: {
                         percentage: day.mrPrc / 100,
-                        change: day.mrPrc - day.avgNweeksMrPrc
+                        change: day.mrPrc / day.avgNweeksMrPrc * 100
                     }
                 };
             }
@@ -624,19 +635,19 @@ export class HomeComponent implements OnInit {
                     this.previousBdCardData.reductions = {
                         cancellations: {
                             percentage: day.voidsPrc / 100,
-                            change: day.voidsPrc - day.avgNweeksVoidsPrc
+                            change: day.voidsPrc / day.avgNweeksVoidsPrc * 100
                         },
                         employee: {
                             percentage: day.employeesPrc / 100,
-                            change: day.employeesPrc - day.avgNweeksEmployeesPrc
+                            change: day.employeesPrc / day.avgNweeksEmployeesPrc * 100
                         },
                         operational: {
                             percentage: day.operationalPrc / 100,
-                            change: day.operationalPrc - day.avgNweeksOperationalPrc
+                            change: day.operationalPrc / day.avgNweeksOperationalPrc * 100
                         },
                         retention: {
                             percentage: day.mrPrc / 100,
-                            change: day.mrPrc - day.avgNweeksMrPrc
+                            change: day.mrPrc / day.avgNweeksMrPrc * 100
                         }
                     };
 
@@ -781,22 +792,39 @@ export class HomeComponent implements OnInit {
                 let monthState = moment().month() === date.month() ? tmpTranslations.get('home.month.notFinalTitle') : tmpTranslations.get('home.month.finalTitle');
                 this.summaryCardData.title = monthName + ' ' + monthState;
 
+                let cancellationsPct = (month.prcVoidsAmount / 100 || 0).toFixed(3);
+                let employeePct = (month.prcEmployeesAmount / 100 || 0).toFixed(3);
+                let operationalPct = (month.prcOperationalAmount / 100 || 0).toFixed(3);
+                let retentionPct = (month.prcMrAmount / 100 || 0).toFixed(3);
+
+
+                let prevMonthCancellationsPct = 1;
+                let prevMonthEmployeePct = 1;
+                let prevMonthOperationalPct = 1;
+                let prevMonthRetentionPct = 1;
+                if(previousMonth) {
+                    prevMonthCancellationsPct = (previousMonth.prcVoidsAmount / 100 || 0).toFixed(3);
+                    prevMonthEmployeePct = (previousMonth.prcEmployeesAmount / 100 || 0).toFixed(3);
+                    prevMonthOperationalPct = (previousMonth.prcOperationalAmount / 100 || 0).toFixed(3);
+                    prevMonthRetentionPct = (previousMonth.prcMrAmount / 100 || 0).toFixed(3);
+                }
+
                 this.summaryCardData.reductions = {
                     cancellations: {
-                        percentage: month.prcVoidsAmount / 100,
-                        change: previousMonth ? (month.prcVoidsAmount - previousMonth.prcVoidsAmount) : 0
+                        percentage: cancellationsPct|| 0,
+                        change: cancellationsPct / prevMonthCancellationsPct * 100 || 0
                     },
                     employee: {
-                        percentage: month.prcEmployeesAmount / 100,
-                        change: previousMonth ? (month.prcEmployeesAmount - previousMonth.prcEmployeesAmount) : 0
+                        percentage: employeePct || 0,
+                        change: employeePct / prevMonthEmployeePct * 100 || 0
                     },
                     operational: {
-                        percentage: month.prcOperationalAmount / 100,
-                        change: previousMonth ? (month.prcOperationalAmount - previousMonth.prcOperationalAmount) : 0
+                        percentage: operationalPct || 0,
+                        change: operationalPct / prevMonthOperationalPct * 100 || 0
                     },
                     retention: {
-                        percentage: month.prcMrAmount / 100,
-                        change: previousMonth ? (month.prcMrAmount - previousMonth.prcMrAmount) : 0
+                        percentage: retentionPct || 0,
+                        change: retentionPct / prevMonthRetentionPct * 100 || 0
                     }
                 };
 

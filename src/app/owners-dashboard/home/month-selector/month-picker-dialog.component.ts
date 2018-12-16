@@ -107,22 +107,39 @@ export class MonthPickerDialogComponent {
                         }
                     };
 
+                    let cancellationsPct = (month.prcVoidsAmount / 100 || 0).toFixed(3);
+                    let employeePct = (month.prcEmployeesAmount / 100 || 0).toFixed(3);
+                    let operationalPct = (month.prcOperationalAmount / 100 || 0).toFixed(3);
+                    let retentionPct = (month.prcMrAmount / 100 || 0).toFixed(3);
+
+
+                    let prevMonthCancellationsPct = 1;
+                    let prevMonthEmployeePct = 1;
+                    let prevMonthOperationalPct = 1;
+                    let prevMonthRetentionPct = 1;
+                    if(previousMonth) {
+                        prevMonthCancellationsPct = (previousMonth.prcVoidsAmount / 100 || 0).toFixed(3);
+                        prevMonthEmployeePct = (previousMonth.prcEmployeesAmount / 100 || 0).toFixed(3);
+                        prevMonthOperationalPct = (previousMonth.prcOperationalAmount / 100 || 0).toFixed(3);
+                        prevMonthRetentionPct = (previousMonth.prcMrAmount / 100 || 0).toFixed(3);
+                    }
+
                     summaryCardData.reductions = {
                         cancellations: {
-                            percentage: month.prcVoidsAmount / 100,
-                            change: previousMonth ? (month.prcVoidsAmount - previousMonth.prcVoidsAmount) : 0
+                            percentage: cancellationsPct|| 0,
+                            change: cancellationsPct / prevMonthCancellationsPct * 100 || 0
                         },
                         employee: {
-                            percentage: month.prcEmployeesAmount / 100,
-                            change: previousMonth ? (month.prcEmployeesAmount - previousMonth.prcEmployeesAmount) : 0
+                            percentage: employeePct || 0,
+                            change: employeePct / prevMonthEmployeePct * 100 || 0
                         },
                         operational: {
-                            percentage: month.prcOperationalAmount / 100,
-                            change: previousMonth ? (month.prcOperationalAmount - previousMonth.prcOperationalAmount) : 0
+                            percentage: operationalPct || 0,
+                            change: operationalPct / prevMonthOperationalPct * 100 || 0
                         },
                         retention: {
-                            percentage: month.prcMrAmount / 100,
-                            change: previousMonth ? (month.prcMrAmount - previousMonth.prcMrAmount) : 0
+                            percentage: retentionPct || 0,
+                            change: retentionPct / prevMonthRetentionPct * 100 || 0
                         }
                     };
 

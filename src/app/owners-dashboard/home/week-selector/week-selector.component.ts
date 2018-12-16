@@ -49,14 +49,14 @@ export class WeekSelectorComponent {
 
                 let weeks = database.getWeeks();
                 let settings = database.getSettings();
-                if(settings.weekStartDay === 1) {
+                if (settings.weekStartDay === 1) {
                     restTime = moment(restTime).locale('en_GB');
                 }
 
                 _.forEach(weeks, byYear => {
                     byYear.forEach(week => {
                         let title = '';
-                        if(restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
+                        if (restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
                             this.translate.get('weekToDate').subscribe((res: string) => {
                                 title = res;
                             });
@@ -67,7 +67,7 @@ export class WeekSelectorComponent {
                             });
                         }
 
-                        if(!week.startDate) {
+                        if (!week.startDate) {
                             return;
                         }
 
@@ -97,8 +97,8 @@ export class WeekSelectorComponent {
                             statusClass: ''
                         };
 
-                        let previousWeek = database.getWeekByDate(moment(restTime).subtract(1, 'week'));
-                        let lastYearWeek = database.getWeek(restTime.weekYear() - 1, restTime.week());
+                        let previousWeek = database.getWeekByDate(moment(week.startDate).subtract(1, 'week'));
+                        let lastYearWeek = database.getWeek(week.details.year - 1, week.details.number);
 
                         let previousWeeksAvgs = {
                             sales: 0,
@@ -109,12 +109,12 @@ export class WeekSelectorComponent {
                         };
                         let weekCounter = 0;
                         for (let i = 1; i <= 4; i++) {
-                            let historicWeek = database.getWeekByDate(moment(restTime).subtract(i, 'weeks'));
+                            let historicWeek = database.getWeekByDate(moment(week.startDate).subtract(i, 'weeks'));
                             if (historicWeek) {
-                                if(restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
+                                if (restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
                                     let counter = 0;
                                     _.forEach(historicWeek.days, day => {
-                                        if(counter < week.daysInWeek) {
+                                        if (counter < week.daysInWeek) {
                                             previousWeeksAvgs.sales += _.get(day, ['sales', 'total']);
                                             previousWeeksAvgs.cancellations += _.get(day, ['reductions', 'cancellations']);
                                             previousWeeksAvgs.employees += _.get(day, ['reductions', 'employees']);
@@ -137,7 +137,7 @@ export class WeekSelectorComponent {
                             _.set(historicWeek, 'weekAvg', {data: previousWeeksAvgs, counter: weekCounter});
                         }
 
-                        if(weekCounter) {
+                        if (weekCounter) {
                             previousWeeksAvgs.sales = previousWeeksAvgs.sales / weekCounter;
                             previousWeeksAvgs.cancellations = previousWeeksAvgs.cancellations / weekCounter;
                             previousWeeksAvgs.employees = previousWeeksAvgs.employees / weekCounter;
@@ -153,10 +153,10 @@ export class WeekSelectorComponent {
                             retention: 0,
                         };
                         if (lastYearWeek) {
-                            if(restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
+                            if (restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
                                 let counter = 0;
                                 _.forEach(lastYearWeek.days, day => {
-                                    if(counter < week.daysInWeek) {
+                                    if (counter < week.daysInWeek) {
                                         lastYearWeeksAvgs.sales += _.get(day, ['sales', 'total']);
                                         lastYearWeeksAvgs.cancellations += _.get(day, ['reductions', 'cancellations']);
                                         lastYearWeeksAvgs.employees += _.get(day, ['reductions', 'employees']);
@@ -187,22 +187,33 @@ export class WeekSelectorComponent {
                             }
                         };
 
+
+                        let cancellationsPct = (week.reductions.cancellations / week.sales.total).toFixed(3);
+                        let employeePct = (week.reductions.employees / week.sales.total).toFixed(3);
+                        let operationalPct = (week.reductions.operational / week.sales.total).toFixed(3);
+                        let retentionPct = (week.reductions.retention / week.sales.total).toFixed(3);
+
+                        let prevWeekCancellationsPct = (previousWeeksAvgs.cancellations / previousWeeksAvgs.sales).toFixed(3);
+                        let prevWeekEmployeePct = (previousWeeksAvgs.employees / previousWeeksAvgs.sales).toFixed(3);
+                        let prevWeekOperationalPct = (previousWeeksAvgs.operational / previousWeeksAvgs.sales).toFixed(3);
+                        let prevWeekRetentionPct = (previousWeeksAvgs.retention / previousWeeksAvgs.sales).toFixed(3);
+
                         weekToDateCard.reductions = {
                             cancellations: {
-                                percentage: week.reductions.cancellations / previousWeeksAvgs.cancellations - 1,
-                                change: (week.reductions.cancellations / week.sales.total) - (previousWeeksAvgs.cancellations / previousWeeksAvgs.sales)
+                                percentage: cancellationsPct || 0,
+                                change: cancellationsPct / prevWeekCancellationsPct * 100 || 0
                             },
                             employee: {
-                                percentage: week.reductions.employees / previousWeeksAvgs.employees - 1,
-                                change: (week.reductions.employees  / week.sales.total) - (previousWeeksAvgs.employees / previousWeeksAvgs.sales)
+                                percentage: employeePct || 0,
+                                change: employeePct / prevWeekEmployeePct * 100 || 0
                             },
                             operational: {
-                                percentage: week.reductions.operational / previousWeeksAvgs.operational - 1,
-                                change: (week.reductions.operational / week.sales.total) - (previousWeeksAvgs.operational / previousWeeksAvgs.sales)
+                                percentage: operationalPct || 0,
+                                change: operationalPct / prevWeekOperationalPct * 100 || 0
                             },
                             retention: {
-                                percentage: week.reductions.retention / previousWeeksAvgs.retention - 1,
-                                change: (week.reductions.retention / week.sales.total) - (previousWeeksAvgs.retention / previousWeeksAvgs.sales)
+                                percentage: retentionPct || 0,
+                                change: retentionPct / prevWeekRetentionPct * 100 || 0
                             }
                         };
 

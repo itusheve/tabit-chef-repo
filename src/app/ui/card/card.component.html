@@ -79,8 +79,8 @@
                             <tr *ngIf="cardData.reductions?.cancellations">
                                 <span>
                                     <mat-icon
-                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.cancellations.change, false, cardData.reductions.cancellations.percentage),getIconClass(cardData.reductions.cancellations.change)]">
-                                        {{getArrow(cardData.reductions.cancellations.change)}}
+                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.cancellations.change, false, cardData.reductions.cancellations.percentage),getReductionsIconClass(cardData.reductions.cancellations.change)]">
+                                        {{getReductionArrow(cardData.reductions.cancellations.change)}}
                                     </mat-icon>
                                 </span>
                                 <span class="text-dark">{{cardData.reductions.cancellations.percentage || 0 | pct:1}}</span>
@@ -89,8 +89,8 @@
                             <tr *ngIf="cardData.reductions?.operational">
                                 <span>
                                     <mat-icon
-                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.operational.change, false, cardData.reductions.operational.percentage),getIconClass(cardData.reductions.operational.change)]">
-                                        {{getArrow(cardData.reductions.operational.change)}}
+                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.operational.change, false, cardData.reductions.operational.percentage),getReductionsIconClass(cardData.reductions.operational.change)]">
+                                        {{getReductionArrow(cardData.reductions.operational.change)}}
                                     </mat-icon>
                                 </span>
                                 <span class="text-dark">{{cardData.reductions.operational.percentage || 0 | pct:1}}</span>
@@ -99,8 +99,8 @@
                             <tr *ngIf="cardData.reductions?.retention">
                                 <span>
                                     <mat-icon
-                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.retention.change, false, cardData.reductions.retention.percentage),getIconClass(cardData.reductions.retention.change)]">
-                                        {{getArrow(cardData.reductions.retention.change)}}
+                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.retention.change, false, cardData.reductions.retention.percentage),getReductionsIconClass(cardData.reductions.retention.change)]">
+                                        {{getReductionArrow(cardData.reductions.retention.change)}}
                                     </mat-icon>
                                 </span>
                                 <span class="text-dark">{{cardData.reductions.retention.percentage || 0 | pct:1}}</span>
@@ -109,8 +109,8 @@
                             <tr *ngIf="cardData.reductions?.employee">
                                 <span>
                                     <mat-icon
-                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.employee.change, false, cardData.reductions.employee.percentage),getIconClass(cardData.reductions.employee.change)]">
-                                        {{getArrow(cardData.reductions.employee.change)}}
+                                            [ngClass]="[getReductionPercentageCssClass(cardData.reductions.employee.change, false, cardData.reductions.employee.percentage),getReductionsIconClass(cardData.reductions.employee.change)]">
+                                        {{getReductionArrow(cardData.reductions.employee.change)}}
                                     </mat-icon>
                                 </span>
                                 <span class="text-dark">{{cardData.reductions.employee.percentage || 0 | pct:1}}</span>
