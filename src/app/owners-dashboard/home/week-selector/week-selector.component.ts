@@ -67,6 +67,10 @@ export class WeekSelectorComponent {
                             });
                         }
 
+                        if(!week.startDate) {
+                            return;
+                        }
+
                         title += ' ' + week.details.number + ', ' + week.startDate.format(this.env.region === 'us' ? 'M/D/YY' : 'D/M/YY');
 
                         let dinersOrders = week.diners || week.orders;
@@ -185,19 +189,19 @@ export class WeekSelectorComponent {
 
                         weekToDateCard.reductions = {
                             cancellations: {
-                                percentage: week.reductions.cancellations / previousWeeksAvgs.cancellations,
+                                percentage: week.reductions.cancellations / previousWeeksAvgs.cancellations - 1,
                                 change: (week.reductions.cancellations / week.sales.total) - (previousWeeksAvgs.cancellations / previousWeeksAvgs.sales)
                             },
                             employee: {
-                                percentage: week.reductions.employees / previousWeeksAvgs.employees,
+                                percentage: week.reductions.employees / previousWeeksAvgs.employees - 1,
                                 change: (week.reductions.employees  / week.sales.total) - (previousWeeksAvgs.employees / previousWeeksAvgs.sales)
                             },
                             operational: {
-                                percentage: week.reductions.operational / previousWeeksAvgs.operational,
+                                percentage: week.reductions.operational / previousWeeksAvgs.operational - 1,
                                 change: (week.reductions.operational / week.sales.total) - (previousWeeksAvgs.operational / previousWeeksAvgs.sales)
                             },
                             retention: {
-                                percentage: week.reductions.retention / previousWeeksAvgs.retention,
+                                percentage: week.reductions.retention / previousWeeksAvgs.retention - 1,
                                 change: (week.reductions.retention / week.sales.total) - (previousWeeksAvgs.retention / previousWeeksAvgs.sales)
                             }
                         };

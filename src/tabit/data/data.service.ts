@@ -792,6 +792,9 @@ export class DataService {
 
                         let moments = week.days.map(day => moment(day.details.date));
                         _.set(week, 'startDate', moment.min(moments));
+                        if(!week.startDate) {
+                            _.set(week, 'startDate', moment());
+                        }
                         week.daysInWeek++;
                     }
                 });

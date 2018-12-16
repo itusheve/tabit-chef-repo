@@ -167,19 +167,24 @@ export class HomeComponent implements OnInit {
     }
 
     renderWeekToDate() {
-        combineLatest(this.dataService.databaseV2$, this.dataService.currentRestTime$, this.dataService.vat$)
+        combineLatest(this.dataService.databaseV2$, this.dataService.currentRestTime$, this.dataService.vat$, this.dataService.dailyTotals$)
             .subscribe(async data => {
                 let database = data[0];
-                let restTime = data[1];
                 let incVat = data[2];
+                let dailyTotals = data[3];
 
+                let restTime = moment.utc(dailyTotals.businessDate);
                 let settings = database.getSettings();
                 if(settings.weekStartDay === 1) {
                     restTime = moment(restTime).locale('en_GB');
                 }
 
                 let week = database.getWeekByDate(restTime);
-                if(!week) {
+                if(!week.startDate) {
+                    week = database.getWeekByDate(restTime.subtract(1, 'weeks'));
+                }
+
+                if(!week.startDate) {
                     return;
                 }
 
@@ -207,6 +212,7 @@ export class HomeComponent implements OnInit {
                     diners: dinersOrders,
                     ppa: sales / dinersOrders,
                     ppaOrders: sales / week.orders,
+                    showDrillArrow: true
                 };
 
                 let previousWeek = database.getWeekByDate(moment(restTime).subtract(1, 'week'));
@@ -300,19 +306,19 @@ export class HomeComponent implements OnInit {
 
                 this.weekToDateCard.reductions = {
                     cancellations: {
-                        percentage: week.reductions.cancellations / previousWeeksAvgs.cancellations,
+                        percentage: (week.reductions.cancellations / previousWeeksAvgs.cancellations) - 1,
                         change: (week.reductions.cancellations / week.sales.total) - (previousWeeksAvgs.cancellations / previousWeeksAvgs.sales)
                     },
                     employee: {
-                        percentage: week.reductions.employees / previousWeeksAvgs.employees,
+                        percentage: (week.reductions.employees / previousWeeksAvgs.employees) - 1,
                         change: (week.reductions.employees  / week.sales.total) - (previousWeeksAvgs.employees / previousWeeksAvgs.sales)
                     },
                     operational: {
-                        percentage: week.reductions.operational / previousWeeksAvgs.operational,
+                        percentage: week.reductions.operational / previousWeeksAvgs.operational - 1,
                         change: (week.reductions.operational / week.sales.total) - (previousWeeksAvgs.operational / previousWeeksAvgs.sales)
                     },
                     retention: {
-                        percentage: week.reductions.retention / previousWeeksAvgs.retention,
+                        percentage: week.reductions.retention / previousWeeksAvgs.retention - 1,
                         change: (week.reductions.retention / week.sales.total) - (previousWeeksAvgs.retention / previousWeeksAvgs.sales)
                     }
                 };
