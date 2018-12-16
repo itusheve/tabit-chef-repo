@@ -107,10 +107,10 @@ export class MonthPickerDialogComponent {
                         }
                     };
 
-                    let cancellationsPct = (month.prcVoidsAmount / 100 || 0).toFixed(3);
-                    let employeePct = (month.prcEmployeesAmount / 100 || 0).toFixed(3);
-                    let operationalPct = (month.prcOperationalAmount / 100 || 0).toFixed(3);
-                    let retentionPct = (month.prcMrAmount / 100 || 0).toFixed(3);
+                    let cancellationsPct = +(month.prcVoidsAmount / 100 || 0).toFixed(3);
+                    let employeePct = +(month.prcEmployeesAmount / 100 || 0).toFixed(3);
+                    let operationalPct = +(month.prcOperationalAmount / 100 || 0).toFixed(3);
+                    let retentionPct = +(month.prcMrAmount / 100 || 0).toFixed(3);
 
 
                     let prevMonthCancellationsPct = 1;
@@ -118,10 +118,10 @@ export class MonthPickerDialogComponent {
                     let prevMonthOperationalPct = 1;
                     let prevMonthRetentionPct = 1;
                     if(previousMonth) {
-                        prevMonthCancellationsPct = (previousMonth.prcVoidsAmount / 100 || 0).toFixed(3);
-                        prevMonthEmployeePct = (previousMonth.prcEmployeesAmount / 100 || 0).toFixed(3);
-                        prevMonthOperationalPct = (previousMonth.prcOperationalAmount / 100 || 0).toFixed(3);
-                        prevMonthRetentionPct = (previousMonth.prcMrAmount / 100 || 0).toFixed(3);
+                        prevMonthCancellationsPct = +(previousMonth.prcVoidsAmount / 100 || 0).toFixed(3);
+                        prevMonthEmployeePct = +(previousMonth.prcEmployeesAmount / 100 || 0).toFixed(3);
+                        prevMonthOperationalPct = +(previousMonth.prcOperationalAmount / 100 || 0).toFixed(3);
+                        prevMonthRetentionPct = +(previousMonth.prcMrAmount / 100 || 0).toFixed(3);
                     }
 
                     summaryCardData.reductions = {

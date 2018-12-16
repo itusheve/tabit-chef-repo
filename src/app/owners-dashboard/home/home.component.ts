@@ -305,15 +305,15 @@ export class HomeComponent implements OnInit {
                     }
                 };
 
-                let cancellationsPct = (week.reductions.cancellations / week.sales.total).toFixed(3);
-                let employeePct = (week.reductions.employees / week.sales.total).toFixed(3);
-                let operationalPct = (week.reductions.operational / week.sales.total).toFixed(3);
-                let retentionPct = (week.reductions.retention / week.sales.total).toFixed(3);
+                let cancellationsPct = +(week.reductions.cancellations / week.sales.total).toFixed(3);
+                let employeePct = +(week.reductions.employees / week.sales.total).toFixed(3);
+                let operationalPct = +(week.reductions.operational / week.sales.total).toFixed(3);
+                let retentionPct = +(week.reductions.retention / week.sales.total).toFixed(3);
 
-                let prevWeekCancellationsPct = (previousWeeksAvgs.cancellations / previousWeeksAvgs.sales).toFixed(3);
-                let prevWeekEmployeePct = (previousWeeksAvgs.employees / previousWeeksAvgs.sales).toFixed(3);
-                let prevWeekOperationalPct = (previousWeeksAvgs.operational / previousWeeksAvgs.sales).toFixed(3);
-                let prevWeekRetentionPct = (previousWeeksAvgs.retention / previousWeeksAvgs.sales).toFixed(3);
+                let prevWeekCancellationsPct = +(previousWeeksAvgs.cancellations / previousWeeksAvgs.sales).toFixed(3);
+                let prevWeekEmployeePct = +(previousWeeksAvgs.employees / previousWeeksAvgs.sales).toFixed(3);
+                let prevWeekOperationalPct = +(previousWeeksAvgs.operational / previousWeeksAvgs.sales).toFixed(3);
+                let prevWeekRetentionPct = +(previousWeeksAvgs.retention / previousWeeksAvgs.sales).toFixed(3);
 
                 this.weekToDateCard.reductions = {
                     cancellations: {
@@ -792,10 +792,10 @@ export class HomeComponent implements OnInit {
                 let monthState = moment().month() === date.month() ? tmpTranslations.get('home.month.notFinalTitle') : tmpTranslations.get('home.month.finalTitle');
                 this.summaryCardData.title = monthName + ' ' + monthState;
 
-                let cancellationsPct = (month.prcVoidsAmount / 100 || 0).toFixed(3);
-                let employeePct = (month.prcEmployeesAmount / 100 || 0).toFixed(3);
-                let operationalPct = (month.prcOperationalAmount / 100 || 0).toFixed(3);
-                let retentionPct = (month.prcMrAmount / 100 || 0).toFixed(3);
+                let cancellationsPct = +(month.prcVoidsAmount / 100 || 0).toFixed(3);
+                let employeePct = +(month.prcEmployeesAmount / 100 || 0).toFixed(3);
+                let operationalPct = +(month.prcOperationalAmount / 100 || 0).toFixed(3);
+                let retentionPct = +(month.prcMrAmount / 100 || 0).toFixed(3);
 
 
                 let prevMonthCancellationsPct = 1;
@@ -803,10 +803,10 @@ export class HomeComponent implements OnInit {
                 let prevMonthOperationalPct = 1;
                 let prevMonthRetentionPct = 1;
                 if(previousMonth) {
-                    prevMonthCancellationsPct = (previousMonth.prcVoidsAmount / 100 || 0).toFixed(3);
-                    prevMonthEmployeePct = (previousMonth.prcEmployeesAmount / 100 || 0).toFixed(3);
-                    prevMonthOperationalPct = (previousMonth.prcOperationalAmount / 100 || 0).toFixed(3);
-                    prevMonthRetentionPct = (previousMonth.prcMrAmount / 100 || 0).toFixed(3);
+                    prevMonthCancellationsPct = +(previousMonth.prcVoidsAmount / 100 || 0).toFixed(3);
+                    prevMonthEmployeePct = +(previousMonth.prcEmployeesAmount / 100 || 0).toFixed(3);
+                    prevMonthOperationalPct = +(previousMonth.prcOperationalAmount / 100 || 0).toFixed(3);
+                    prevMonthRetentionPct = +(previousMonth.prcMrAmount / 100 || 0).toFixed(3);
                 }
 
                 this.summaryCardData.reductions = {

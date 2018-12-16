@@ -188,15 +188,15 @@ export class WeekSelectorComponent {
                         };
 
 
-                        let cancellationsPct = (week.reductions.cancellations / week.sales.total).toFixed(3);
-                        let employeePct = (week.reductions.employees / week.sales.total).toFixed(3);
-                        let operationalPct = (week.reductions.operational / week.sales.total).toFixed(3);
-                        let retentionPct = (week.reductions.retention / week.sales.total).toFixed(3);
+                        let cancellationsPct = +(week.reductions.cancellations / week.sales.total).toFixed(3);
+                        let employeePct = +(week.reductions.employees / week.sales.total).toFixed(3);
+                        let operationalPct = +(week.reductions.operational / week.sales.total).toFixed(3);
+                        let retentionPct = +(week.reductions.retention / week.sales.total).toFixed(3);
 
-                        let prevWeekCancellationsPct = (previousWeeksAvgs.cancellations / previousWeeksAvgs.sales).toFixed(3);
-                        let prevWeekEmployeePct = (previousWeeksAvgs.employees / previousWeeksAvgs.sales).toFixed(3);
-                        let prevWeekOperationalPct = (previousWeeksAvgs.operational / previousWeeksAvgs.sales).toFixed(3);
-                        let prevWeekRetentionPct = (previousWeeksAvgs.retention / previousWeeksAvgs.sales).toFixed(3);
+                        let prevWeekCancellationsPct = +(previousWeeksAvgs.cancellations / previousWeeksAvgs.sales).toFixed(3);
+                        let prevWeekEmployeePct = +(previousWeeksAvgs.employees / previousWeeksAvgs.sales).toFixed(3);
+                        let prevWeekOperationalPct = +(previousWeeksAvgs.operational / previousWeeksAvgs.sales).toFixed(3);
+                        let prevWeekRetentionPct = +(previousWeeksAvgs.retention / previousWeeksAvgs.sales).toFixed(3);
 
                         weekToDateCard.reductions = {
                             cancellations: {
