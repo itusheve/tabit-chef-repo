@@ -570,13 +570,14 @@ export class HomeComponent implements OnInit {
 
 
     getYesterdayData() {
-        combineLatest(this.dataService.databaseV2$, this.dataService.currentRestTime$, this.dataService.vat$)
+        combineLatest(this.dataService.databaseV2$, this.dataService.currentRestTime$, this.dataService.vat$, this.dataService.dailyTotals$)
             .subscribe(data => {
                 this.previousBdCardData.loading = true;
                 this.loadingOlapData = true;
                 let database = data[0];
                 let restaurantTime = data[1];
                 let incVat = data[2];
+                let dailyTotals = data[3];
                 this.OlapFailed = false;
 
                 if (!database || database.error) {
@@ -585,7 +586,7 @@ export class HomeComponent implements OnInit {
                     return;
                 }
 
-                let previousDay = moment.utc(restaurantTime.format('YYYY-MM-DD')).subtract(1, 'days');
+                let previousDay = moment.utc(dailyTotals.businessDate).subtract(1, 'day');
                 let day = database.getDay(previousDay);
 
                 if (!day) {

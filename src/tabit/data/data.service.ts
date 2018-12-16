@@ -455,8 +455,7 @@ export class DataService {
     public dailyTotals$: Observable<any> = Observable.create(obs => {
         this.refresh$
             .subscribe(async refresh => {
-                let currentRestTime = this.getCurrentRestTime();
-                let dailyTotals = await this.getDailyTotals(currentRestTime);
+                let dailyTotals = await this.getDailyTotals();
                 obs.next(dailyTotals);
             });
     }).pipe(
@@ -1201,10 +1200,12 @@ export class DataService {
         return this.rosEp.get('orders', params);
     }
 
-    getDailyTotals(date) {
-        const params = {
-            businessDate: date.format('YYYY-MM-DD')
-        };
+    getDailyTotals(date = null) {
+        const params = {};
+        if (date) {
+            _.set(params, 'businessDate', date.format('YYYY-MM-DD'));
+        }
+
         return this.rosEp.get('reports/daily-totals', params)
             .then(data => {
                 return data;
