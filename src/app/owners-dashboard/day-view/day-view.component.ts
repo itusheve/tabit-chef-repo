@@ -336,11 +336,12 @@ export class DayViewComponent implements OnInit {
         //this.dayDebounceStream$ = this.day$.pipe(debounceTime(350));
 
         //get card data for the day
-        combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.openDay$)
+        combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.openDay$, this.dataService.dailyTotals$)
             .subscribe(async data => {
                 let date = data[0];
                 let database = data[1];
                 let openDay = data[2];
+                let dailyTotals = data[3];
 
                 this.dayFromDatabase = database.getDay(date);
 
@@ -393,8 +394,7 @@ export class DayViewComponent implements OnInit {
                 }
 
                 let totalSalesWithoutTax = 0;
-                if (moment().isSame(date, 'day')) {
-                    let dailyTotals = await this.dataService.getDailyTotals(date);
+                if (moment.utc(dailyTotals.businessDate).isSame(date, 'day')) {
                     let totals = dailyTotals.totals;
 
                     let totalClosedOrders = _.get(totals, 'netSales', 0);
@@ -497,8 +497,9 @@ export class DayViewComponent implements OnInit {
                 }
             });
 
-        combineLatest(this.day$, this.dataService.refresh$).subscribe(async data => {
+        combineLatest(this.day$, this.dataService.dailyTotals$, this.dataService.refresh$).subscribe(async data => {
             let dayDate = data[0];
+            let dailyTotals = data[1];
             let dailyReport;
             try {
                 dailyReport = await this.dataService.getDailyReport(dayDate);
@@ -542,7 +543,7 @@ export class DayViewComponent implements OnInit {
             };
 
 
-            if (!moment().isSame(dayDate, 'day')) {
+            if (!moment.utc(dailyTotals.businessDate).isSame(dayDate, 'day')) {
                 this.bdIsCurrentBd = false;
                 this.openOrders = null;
             }

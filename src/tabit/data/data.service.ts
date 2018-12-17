@@ -558,13 +558,11 @@ export class DataService {
     });
 
     public openDay$: Observable<any> = Observable.create(async obs => {
-        this.refresh$
-            .subscribe(async refresh => {
-                let currentDateTime = this.getCurrentRestTime();
-                let olapTodayData = await this.olapEp.getToday(currentDateTime);
-
+        combineLatest(this.dailyTotals$, this.refresh$)
+            .subscribe(async data => {
+                let dailyTotals = data[0];
+                let olapTodayData = await this.olapEp.getToday(moment.utc(dailyTotals.businessDate));
                 obs.next(olapTodayData);
-
             });
     });
 
