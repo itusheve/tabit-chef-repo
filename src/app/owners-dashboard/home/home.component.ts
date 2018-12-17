@@ -844,16 +844,16 @@ export class HomeComponent implements OnInit {
         let date = data.date;
         let category = data.category;
         if (date === 'currentBD') {
-            this.dataService.currentRestTime$.pipe(take(1)).subscribe(cbd => {
-                date = cbd.format('YYYY-MM-DD');
+            this.dataService.dailyTotals$.pipe(take(1)).subscribe(dailyTotals => {
+                date = moment.utc(dailyTotals.businessDate).format('YYYY-MM-DD');
                 this.router.navigate(['/owners-dashboard/day', date]);
             });
         } else if (date === 'previousBD') {
             if (this.previousBdNotFinal) {
                 return;
             }
-            this.dataService.previousBd$.pipe(take(1)).subscribe(pbd => {
-                date = pbd.format('YYYY-MM-DD');
+            this.dataService.dailyTotals$.pipe(take(1)).subscribe(dailyTotals => {
+                date = moment.utc(dailyTotals.businessDate).subtract(1, 'days').format('YYYY-MM-DD');
                 this.router.navigate(['/owners-dashboard/day', date]);
             });
         } else {
