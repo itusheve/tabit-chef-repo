@@ -362,19 +362,19 @@ export class DayViewComponent implements OnInit {
                     this.cardData.reductions = {
                         cancellations: {
                             percentage: this.dayFromDatabase.voidsPrc / 100,
-                            change: this.dayFromDatabase.voidsPrc - this.dayFromDatabase.avgNweeksVoidsPrc
+                            change: this.dayFromDatabase.voidsPrc / this.dayFromDatabase.avgNweeksVoidsPrc * 100
                         },
                         employee: {
                             percentage: this.dayFromDatabase.employeesPrc / 100,
-                            change: this.dayFromDatabase.employeesPrc - this.dayFromDatabase.avgNweeksEmployeesPrc
+                            change: this.dayFromDatabase.employeesPrc / this.dayFromDatabase.avgNweeksEmployeesPrc * 100
                         },
                         operational: {
                             percentage: this.dayFromDatabase.operationalPrc / 100,
-                            change: this.dayFromDatabase.operationalPrc - this.dayFromDatabase.avgNweeksOperationalPrc
+                            change: this.dayFromDatabase.operationalPrc / this.dayFromDatabase.avgNweeksOperationalPrc * 100
                         },
                         retention: {
                             percentage: this.dayFromDatabase.mrPrc / 100,
-                            change: this.dayFromDatabase.mrPrc - this.dayFromDatabase.avgNweeksMrPrc
+                            change: this.dayFromDatabase.mrPrc / this.dayFromDatabase.avgNweeksMrPrc * 100
                         }
                     };
 
