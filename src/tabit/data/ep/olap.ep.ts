@@ -79,7 +79,7 @@ export class OlapEp {
                     siteId: org.id,
                     action: 'siteHomePageOpenDay',
                     businessDate: currentTime.format('YYYYMMDD'),
-                    time: currentTime.format('HHmm'),
+                    time: moment().format('HHmm'),
                     currentSales: 0 //ignoring this, not used.
                 },
                 {
