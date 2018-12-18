@@ -77,7 +77,7 @@ export class AuthService {
                         resolve();
                     });
 
-                this.logz.log('chef', 'login', {'user': user.email, 'org': org.id});
+                this.logz.log('chef', 'login', {'user': user.email, 'org': org.name, firstName: user.firstName, lastName: user.lastName});
 
             } else {
                 reject();
@@ -143,7 +143,6 @@ export class AuthService {
                                             userSettings[region] = user;
                                             window.localStorage.setItem('userSettings', JSON.stringify(userSettings));
                                             this.authState = 1;
-                                            this.logz.log('chef', 'login', {'user': user['email']});
 
                                             //if we tried logging in to all environments
                                             if(authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {

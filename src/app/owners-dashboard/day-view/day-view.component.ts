@@ -394,7 +394,8 @@ export class DayViewComponent implements OnInit {
                 }
 
                 let totalSalesWithoutTax = 0;
-                if (moment.utc(dailyTotals.businessDate).isSame(date, 'day')) {
+                let businessDate = moment.utc(dailyTotals.businessDate);
+                if (businessDate.isSame(moment.utc(date.format('YYYY-MM-DD')), 'day')) {
                     let totals = dailyTotals.totals;
 
                     let totalClosedOrders = _.get(totals, 'netSales', 0);

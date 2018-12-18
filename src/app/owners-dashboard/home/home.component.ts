@@ -494,8 +494,8 @@ export class HomeComponent implements OnInit {
                 let dailyTotals = data[0];
                 let openDay = data[1];
                 let incTax = data[2];
-                let restaurantTime = moment.utc(dailyTotals.businessDate);
 
+                let restaurantTime = moment.utc(dailyTotals.businessDate);
                 let totals = dailyTotals.totals;
                 let totalClosedOrders = _.get(totals, 'netSales', 0);
                 let totalClosedOrdersWithoutVat = totalClosedOrders - _.get(totals, 'includedTax', 0);
@@ -561,7 +561,8 @@ export class HomeComponent implements OnInit {
 
                 this.currentBdCardData.diners = day.diners || day.orders;
                 this.currentBdCardData.ppa = incTax ? day.ppaIncludeVat : day.ppaIncludeVat / day.vat;
-                this.currentBdCardData.ppaOrders = this.currentBdCardData.sales / day.orders;
+                this.currentBdCardData.ppaOrders = day.salesAndRefoundAmountIncludeVat / day.orders;
+
 
                 this.currentBdCardData.reductions = {
                     cancellations: {
