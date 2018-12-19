@@ -15,6 +15,7 @@ import {Orders_KPIs, PaymentsKPIs} from '../../../tabit/data/ep/olap.ep';
 import {DebugService} from '../../debug.service';
 import {environment} from '../../../environments/environment';
 import {CardData} from '../../ui/card/card.component';
+import {LogzioService} from '../../logzio.service';
 
 export interface SalesTableRow {
     orderType: OrderType;
@@ -237,7 +238,9 @@ export class DayViewComponent implements OnInit {
                 private closedOrdersDataService: ClosedOrdersDataService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private ds: DebugService) {
+                private ds: DebugService,
+                private logz: LogzioService) {
+
         ownersDashboardService.toolbarConfig.left.back.pre = () => true;
         ownersDashboardService.toolbarConfig.left.back.target = '/owners-dashboard/home';
         ownersDashboardService.toolbarConfig.left.back.showBtn = true;
@@ -268,6 +271,12 @@ export class DayViewComponent implements OnInit {
 
         this.dataService.user$.subscribe(user => {
             this.user = user;
+        });
+
+        combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
+            let user = data[0];
+            let organization = data[1];
+            this.logz.log('chef', 'user action', {action: 'dayDrill', 'user': user.email, 'org': organization.name, firstName: user.firstName, lastName: user.lastName});
         });
     }
 

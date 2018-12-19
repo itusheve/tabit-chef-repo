@@ -17,6 +17,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {MatDialog} from '@angular/material';
 import {OverTimeUsersDialogComponent} from './over-time-users/over-time-users-dialog.component';
 import {Overlay} from '@angular/cdk/overlay';
+import {LogzioService} from '../../logzio.service';
 
 @Component({
     selector: 'app-home',
@@ -108,7 +109,8 @@ export class HomeComponent implements OnInit {
                 private datePipe: DatePipe,
                 private translate: TranslateService,
                 public dialog: MatDialog,
-                private overlay: Overlay) {
+                private overlay: Overlay,
+                private logz: LogzioService) {
 
         this.env = environment;
         this.tabitHelper = new TabitHelper();
@@ -164,6 +166,12 @@ export class HomeComponent implements OnInit {
         this.getSummary();
         this.renderLaborCost();
         this.renderWeekToDate();
+
+        combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
+            let user = data[0];
+            let organization = data[1];
+            this.logz.log('chef', 'user action', {action: 'home', 'user': user.email, 'org': organization.name, firstName: user.firstName, lastName: user.lastName});
+        });
     }
 
     renderWeekToDate() {
@@ -205,13 +213,14 @@ export class HomeComponent implements OnInit {
 
                 let dinersOrders = week.diners || week.orders;
                 let sales = incVat ? week.sales.total : week.sales.totalWithoutVat;
+                let dinerSales = incVat ? week.sales.diners : week.sales.dinersWithoutVat;
                 this.weekToDateCard = {
                     loading: false,
                     title: title,
                     tag: '',
                     sales: sales,
                     diners: dinersOrders,
-                    ppa: sales / dinersOrders,
+                    ppa: dinerSales / dinersOrders,
                     ppaOrders: sales / week.orders,
                     showDrillArrow: true
                 };

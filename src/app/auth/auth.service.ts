@@ -2,8 +2,8 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {DebugService} from '../debug.service';
-import {LogzioService} from '../logzio.service';
 import * as _ from 'lodash';
+
 const loginUrl = 'oauth2/token';
 const meUrl = 'account/me';
 
@@ -19,9 +19,7 @@ export class AuthService {
     };
 
     constructor(private httpClient: HttpClient,
-                private ds: DebugService,
-                private logz: LogzioService) {
-
+                private ds: DebugService) {
         this.authTokens = {
             il: {},
             us: {}
@@ -76,9 +74,6 @@ export class AuthService {
                         this.authState = 2;
                         resolve();
                     });
-
-                this.logz.log('chef', 'login', {'user': user.email, 'org': org.name, firstName: user.firstName, lastName: user.lastName});
-
             } else {
                 reject();
             }
@@ -145,8 +140,8 @@ export class AuthService {
                                             this.authState = 1;
 
                                             //if we tried logging in to all environments
-                                            if(authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {
-                                                if(authenticationStatus.success > 0) {
+                                            if (authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {
+                                                if (authenticationStatus.success > 0) {
                                                     resolve();
                                                 }
                                                 else {
@@ -158,8 +153,8 @@ export class AuthService {
                                             //reverse process upon error
                                             this.ds.err(`authSvc: authenticate: get me failed - unauthenticate (anon auth): ${e}`);
                                             //if we tried logging in to all environments
-                                            if(authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {
-                                                if(authenticationStatus.success > 0) {
+                                            if (authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {
+                                                if (authenticationStatus.success > 0) {
                                                     resolve();
                                                 }
                                                 else {
@@ -175,7 +170,7 @@ export class AuthService {
                                 this.ds.err(`authSvc: authenticate: region login failed`);
                                 let tokens = JSON.parse(window.localStorage.getItem('tokens'));
 
-                                if(_.isEmpty(tokens)) {
+                                if (_.isEmpty(tokens)) {
                                     tokens = {};
                                 }
                                 else {
@@ -187,8 +182,8 @@ export class AuthService {
 
                                 //if we tried logging in to all environments
                                 setTimeout(() => {
-                                    if(authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {
-                                        if(authenticationStatus.success > 0) {
+                                    if (authenticationStatus.totalAttempts === authenticationStatus.availableServersCount) {
+                                        if (authenticationStatus.success > 0) {
                                             resolve();
                                         }
                                         else {

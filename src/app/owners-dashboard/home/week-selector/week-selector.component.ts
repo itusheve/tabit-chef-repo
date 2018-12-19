@@ -75,13 +75,14 @@ export class WeekSelectorComponent {
 
                         let dinersOrders = week.diners || week.orders;
                         let sales = incVat ? week.sales.total : week.sales.totalWithoutVat;
+                        let dinerSales = incVat ? week.sales.diners : week.sales.dinersWithoutVat;
                         let weekToDateCard = {
                             loading: false,
                             title: title,
                             tag: '',
                             sales: sales,
                             diners: dinersOrders,
-                            ppa: sales / dinersOrders,
+                            ppa: dinerSales / dinersOrders,
                             ppaOrders: sales / week.orders,
                             averages: {
                                 weekly: {

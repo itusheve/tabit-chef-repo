@@ -743,7 +743,9 @@ export class DataService {
                             },
                             sales: {
                                 total: 0,
-                                totalWithoutVat: 0
+                                totalWithoutVat: 0,
+                                dinersWithoutVat: 0,
+                                diners: 0
                             },
                             reductions: {
                                 cancellations: 0,
@@ -763,6 +765,8 @@ export class DataService {
                         week = _.get(weeks, [weekYear, weekNumber]);
                         week.sales.total += day.salesAndRefoundAmountIncludeVat;
                         week.sales.totalWithoutVat += day.salesAndRefoundAmountExcludeVat;
+                        week.sales.dinersWithoutVat += day.salesDinersAmountExcludeVat;
+                        week.sales.diners += day.salesDinersAmountExcludeVat * day.vat;
                         week.reductions.cancellations += day.voidsPrc / 100 * day.salesAndRefoundAmountIncludeVat;
                         week.reductions.employees += day.EmployeesAmount || 0;
                         week.reductions.retention += day.mrPrc / 100 * day.salesAndRefoundAmountIncludeVat;
