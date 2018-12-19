@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import {tmpTranslations} from '../../../../tabit/data/data.service';
+import {DataService, tmpTranslations} from '../../../../tabit/data/data.service';
 import {PaymentsKPIs} from '../../../../tabit/data/ep/olap.ep';
 
 @Component({
@@ -40,7 +40,7 @@ export class DayPaymentsTableComponent implements OnChanges {
         }[]
     };
 
-    constructor() {
+    constructor(private dataService: DataService) {
     }
 
     ngOnChanges(o: SimpleChanges) {
@@ -154,17 +154,20 @@ export class DayPaymentsTableComponent implements OnChanges {
                     this.data = data;
                 }
 
-                data.byAccountGroup.forEach(accountGroup => {
-                    accountGroup.paymentsKpis.dailyPrc = accountGroup.paymentsKpis.daily / data.paymentsKpis.daily;
-                    accountGroup.paymentsKpis.monthlyPrc = accountGroup.paymentsKpis.monthly / data.paymentsKpis.monthly;
-                    accountGroup.byClearerName.forEach(clearer => {
-                        clearer.paymentsKpis.dailyPrc = clearer.paymentsKpis.daily / accountGroup.paymentsKpis.daily;
-                        clearer.paymentsKpis.monthlyPrc = clearer.paymentsKpis.monthly / accountGroup.paymentsKpis.monthly;
-                    });
 
-                    accountGroup.byClearerName = _.filter(accountGroup.byClearerName, clearer => {
-                        return clearer.clearerName !== 'מזומן' && clearer.clearerName !== 'cash';
-                    }); //one day, this will be a number when Tabit is old and has proper data architects who do nothing but probably no one would read this anyway
+                this.dataService.settings$.subscribe(settings => {
+                    data.byAccountGroup.forEach(accountGroup => {
+                        accountGroup.paymentsKpis.dailyPrc = accountGroup.paymentsKpis.daily / data.paymentsKpis.daily;
+                        accountGroup.paymentsKpis.monthlyPrc = accountGroup.paymentsKpis.monthly / data.paymentsKpis.monthly;
+                        accountGroup.byClearerName.forEach(clearer => {
+                            clearer.paymentsKpis.dailyPrc = clearer.paymentsKpis.daily / (settings.paymentsReportCalculationMethod == 0 ? data.paymentsKpis.daily : accountGroup.paymentsKpis.daily);
+                            clearer.paymentsKpis.monthlyPrc = clearer.paymentsKpis.monthly / (settings.paymentsReportCalculationMethod == 0 ? data.paymentsKpis.monthly : accountGroup.paymentsKpis.monthly);
+                        });
+
+                        accountGroup.byClearerName = _.filter(accountGroup.byClearerName, clearer => {
+                            return clearer.clearerName !== 'מזומן' && clearer.clearerName !== 'cash';
+                        }); //one day, this will be a number when Tabit is old and has proper data architects who do nothing but probably no one would read this anyway
+                    });
                 });
             }
 

@@ -29,6 +29,14 @@ $titleColor: #00385F;
 
 @import "~bootstrap/scss/bootstrap";
 
+@import '~@angular/material/theming';
+
+// Define a custom typography config that overrides the font-family as well as the
+// `headlines` and `body-1` levels.
+$custom-typography: mat-typography-config(
+        $font-family: 'Assistant, sans-serif'
+);
+
 html, body {
   width: 100vw;
   height: 100vh;
@@ -41,6 +49,10 @@ html, body {
   background-color: black;
   overflow: hidden;
   text-align: start;
+}
+
+.card-revenue {
+  font-size: 16px;
 }
 
 :focus {
@@ -569,6 +581,7 @@ snack-bar-container {
   .selected {
     background-color: #BDBDBD;
   }
+
 
   .month-picker-dialog {
     font-family: 'Assistant', sans-serif;

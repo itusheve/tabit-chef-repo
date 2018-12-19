@@ -28,8 +28,8 @@
                         <h1 class="m-0">
                             <span class="currency">{{currency}}</span><span style="white-space: nowrap;">{{cardData.sales | curr:'0':'':'':true}}</span>
                         </h1>
-                        <div *ngIf="cardData.revenue">
-                            <span class="currency">{{currency}}</span><span style="white-space: nowrap;">{{cardData.revenue | curr:'0':'':'':true}}</span>&nbsp;<span [translate]="'revenueShort'"></span>
+                        <div *ngIf="cardData.revenue" class="card-revenue">
+                            <span class="currency" style="font-size: calc(100% - 4px)">{{currency}}</span><span style="white-space: nowrap;">{{cardData.revenue | curr:'0':'':'':true}}</span>&nbsp;<span style="font-size: calc(100% - 4px)" [translate]="'revenueShort'"></span>
                         </div>
 
                     </div>

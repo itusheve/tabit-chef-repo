@@ -20,6 +20,7 @@ export class OwnerSettingsComponent implements OnInit {
     monthToDate: boolean;
     laborCost: boolean;
     maxItemsPerDepartment: number;
+    paymentsReportCalculationMethod: number;
     settings: any;
 
     toolbarConfig: any;
@@ -61,8 +62,12 @@ export class OwnerSettingsComponent implements OnInit {
 
         dataService.settings$.subscribe((settings: any) => {
             this.maxItemsPerDepartment = settings.maxItemsPerDepartment || 5;
+            this.paymentsReportCalculationMethod = settings.paymentsReportCalculationMethod || 0;
             this.lang = settings.lang || 'en';
             this.settings = settings;
+            _.set(this.settings, 'monthToDate', true);
+            _.set(this.settings, 'weekToDate', false);
+            _.set(this.settings, 'laborCost', true);
         });
     }
 
@@ -96,6 +101,12 @@ export class OwnerSettingsComponent implements OnInit {
         this.dataService.settings$.next(this.settings);
     }
 
+    updateSetting(event, settingsName) {
+        _.set(this.settings, settingsName, event.value);
+        window.localStorage.setItem('settings', JSON.stringify(this.settings));
+        this.dataService.settings$.next(this.settings);
+    }
+
     updateLanguage() {
         this.loading = true;
         let settings = JSON.parse(window.localStorage.getItem('settings'));
@@ -125,6 +136,20 @@ export class OwnerSettingsComponent implements OnInit {
         }
 
         settings.maxItemsPerDepartment = this.maxItemsPerDepartment;
+        this.dataService.settings$.next(settings);
+        window.localStorage.setItem('settings', JSON.stringify(settings));
+    }
+
+    updatePaymentsReportCalculationMethod() {
+        let settings = JSON.parse(window.localStorage.getItem('settings')) || {};
+
+        if(!settings) {
+            settings = {
+                paymentsReportCalculationMethod: 0
+            };
+        }
+
+        settings.paymentsReportCalculationMethod = this.paymentsReportCalculationMethod;
         this.dataService.settings$.next(settings);
         window.localStorage.setItem('settings', JSON.stringify(settings));
     }
