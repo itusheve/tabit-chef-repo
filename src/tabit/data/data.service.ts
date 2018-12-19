@@ -745,7 +745,8 @@ export class DataService {
                                 total: 0,
                                 totalWithoutVat: 0,
                                 dinersWithoutVat: 0,
-                                diners: 0
+                                diners: 0,
+                                revenue: 0
                             },
                             reductions: {
                                 cancellations: 0,
@@ -767,6 +768,7 @@ export class DataService {
                         week.sales.totalWithoutVat += day.salesAndRefoundAmountExcludeVat;
                         week.sales.dinersWithoutVat += day.salesDinersAmountExcludeVat;
                         week.sales.diners += day.salesDinersAmountExcludeVat * day.vat;
+                        week.sales.revenue += day.ttlRevenuencludeVat;
                         week.reductions.cancellations += day.voidsPrc / 100 * day.salesAndRefoundAmountIncludeVat;
                         week.reductions.employees += day.EmployeesAmount || 0;
                         week.reductions.retention += day.mrPrc / 100 * day.salesAndRefoundAmountIncludeVat;

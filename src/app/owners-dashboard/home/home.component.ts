@@ -225,6 +225,7 @@ export class HomeComponent implements OnInit {
                     showDrillArrow: true
                 };
 
+                this.weekToDateCard.revenue = _.get(week, ['sales', 'revenue'], 0);
                 let previousWeek = database.getWeekByDate(moment(businessDate).subtract(1, 'week'));
                 let lastYearWeek = database.getWeek(businessDate.weekYear() - 1, businessDate.week());
 
@@ -526,7 +527,7 @@ export class HomeComponent implements OnInit {
                 if (!yesterdayDailyTotals.isEndOfDay) {
                     this.currentBdCardData.salesComment = endOfDayComment;
                 }
-
+                this.currentBdCardData.revenue = (_.get(totals, ['totalPayments'], 0) / 100) + totalOpenOrders / 100;
                 this.currentBdCardData.sales = incTax ? totalSales : totalSalesWithoutTax;
 
                 this.translate.get('card.today').subscribe((res: string) => {
@@ -628,6 +629,7 @@ export class HomeComponent implements OnInit {
                     this.previousBdCardData.diners = day.diners || day.orders;
                     this.previousBdCardData.ppa = incVat ? day.ppaIncludeVat : day.ppaIncludeVat / day.vat;
                     this.previousBdCardData.sales = incVat ? day.salesAndRefoundAmountIncludeVat : day.salesAndRefoundAmountExcludeVat;
+                    this.previousBdCardData.revenue = _.get(day, 'ttlRevenuencludeVat', 0);
 
                     this.previousBdCardData.ppaOrders = this.previousBdCardData.sales / day.orders;
 
@@ -754,6 +756,7 @@ export class HomeComponent implements OnInit {
                 this.showSummary = true;
                 this.summaryCardData.diners = month.diners || month.orders;
                 this.summaryCardData.sales = incTax ? month.ttlsalesIncludeVat : month.ttlsalesExcludeVat;
+                this.summaryCardData.revenue = _.get(month, 'ttlRevenuencludeVat', 0);
 
                 this.summaryCardData.ppa = incTax ? month.ppaIncludeVat : month.ppaIncludeVat / month.vat;
                 this.summaryCardData.ppaOrders = this.summaryCardData.sales / month.orders;

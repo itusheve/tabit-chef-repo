@@ -2,6 +2,7 @@ import {TranslateLoader} from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 const he = {
+    'revenueShort': 'מחזור',
     'week': 'שבוע',
     'weekSales': 'מכירות שבוע',
     'weekToDate': 'מכירות השבוע',
@@ -170,6 +171,7 @@ const he = {
     'takeaway': 'לקחת'
 };
 const en = {
+    'revenueShort': 'rev.',
     'week': 'Week',
     'weekSales': 'Week',
     'weekToDate': 'Week to Date',

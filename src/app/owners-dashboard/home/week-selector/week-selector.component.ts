@@ -73,6 +73,8 @@ export class WeekSelectorComponent {
 
                         title += ' ' + week.details.number + ', ' + week.startDate.format(this.env.region === 'us' ? 'M/D/YY' : 'D/M/YY');
 
+
+
                         let dinersOrders = week.diners || week.orders;
                         let sales = incVat ? week.sales.total : week.sales.totalWithoutVat;
                         let dinerSales = incVat ? week.sales.diners : week.sales.dinersWithoutVat;
@@ -95,8 +97,11 @@ export class WeekSelectorComponent {
                                 }
                             },
                             reductions: {},
-                            statusClass: ''
+                            statusClass: '',
+                            revenue: 0
                         };
+
+                        weekToDateCard.revenue = _.get(week, ['sales', 'revenue'], 0);
 
                         let previousWeek = database.getWeekByDate(moment(week.startDate).subtract(1, 'week'));
                         let lastYearWeek = database.getWeek(week.details.year - 1, week.details.number);

@@ -367,6 +367,7 @@ export class DayViewComponent implements OnInit {
                     this.cardData.diners = this.dayFromDatabase.diners || this.dayFromDatabase.orders;
                     this.cardData.ppa = this.dayFromDatabase.ppaIncludeVat;
                     this.cardData.ppaOrders = this.cardData.sales / this.dayFromDatabase.orders;
+                    this.cardData.revenue = _.get(this.dayFromDatabase, 'ttlRevenuencludeVat', 0);
 
                     this.cardData.reductions = {
                         cancellations: {
@@ -417,6 +418,7 @@ export class DayViewComponent implements OnInit {
                     totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
 
                     this.cardData.sales = totalSales;
+                    this.cardData.revenue = (_.get(totals, ['totalPayments'], 0) / 100) + totalOpenOrders / 100;
 
                     this.totalSales$.next(totalSales);
                     this.cardData.averages = {

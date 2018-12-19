@@ -58,7 +58,8 @@ export class MonthPickerDialogComponent {
                         averages: {weekly: {percentage: 0, change: 0}, yearly: {percentage: 0, change: 0}},
                         reductions: {},
                         statusClass: '',
-                        showDrillArrow: true
+                        showDrillArrow: true,
+                        revenue: 0
                     };
 
                     let previousMonth = database.getMonth(moment(month.latestDay).subtract(1, 'months'));
@@ -67,6 +68,7 @@ export class MonthPickerDialogComponent {
                     summaryCardData.diners = month.diners || month.orders;
                     summaryCardData.ppa = this.incTax ? month.ppaIncludeVat : month.ppaIncludeVat / month.vat;
                     summaryCardData.sales = this.incTax ? month.ttlsalesIncludeVat : month.ttlsalesExcludeVat;
+                    summaryCardData.revenue = _.get(month, 'ttlRevenuencludeVat', 0);
 
                     let previousMonthWeekAvg = 0;
                     let lastYearWeekAvg = 0;
