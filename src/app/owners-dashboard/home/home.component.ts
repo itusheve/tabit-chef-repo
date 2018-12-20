@@ -712,7 +712,8 @@ export class HomeComponent implements OnInit {
 
                 if (month.forecast.diners.count) {
                     let ppa = this.forecastCardData.sales / month.forecast.diners.count;
-                    this.forecastCardData.ppa = incTax ? ppa : ppa / month.vat;
+                    //this.forecastCardData.ppa = incTax ? ppa : ppa / month.vat;
+                    this.forecastCardData.ppa = null; //TODO: get diners sales for forecast before calculating forecasted diners ppa
                 }
                 else {
                     let ppaOrders = this.forecastCardData.sales / month.forecast.orders.count;

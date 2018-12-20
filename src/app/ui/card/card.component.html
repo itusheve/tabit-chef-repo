@@ -131,7 +131,7 @@
             <div *ngIf="cardData.ppa">
                 <span class="text-dark" [innerHtml]="cardData?.ppa | currency"></span>&nbsp;<span class="text-body" [translate]="'ppa'"></span>
             </div>
-            <div *ngIf="!cardData.ppa">
+            <div *ngIf="!cardData.ppa && cardData.ppaOrders">
                 <span class="text-dark" [innerHtml]="cardData?.ppaOrders | currency"></span>&nbsp;<span class="text-body" [translate]="'ppaOrders'"></span>
             </div>
             <div>

@@ -65,9 +65,9 @@ export class OwnerSettingsComponent implements OnInit {
             this.paymentsReportCalculationMethod = settings.paymentsReportCalculationMethod || 0;
             this.lang = settings.lang || 'en';
             this.settings = settings;
-            _.set(this.settings, 'monthToDate', true);
-            _.set(this.settings, 'weekToDate', false);
-            _.set(this.settings, 'laborCost', true);
+            _.set(this.settings, 'monthToDate', _.get(settings, 'monthToDate', true));
+            _.set(this.settings, 'weekToDate', _.get(settings, 'weekToDate', false));
+            _.set(this.settings, 'laborCost', _.get(settings, 'laborCost', true));
         });
     }
 

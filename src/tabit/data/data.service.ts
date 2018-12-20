@@ -866,7 +866,7 @@ export class DataService {
 
                                     month.forecast.days.push({
                                         sales: sales,
-                                        type: 'prevoiusMonthDayAggregation',
+                                        type: 'previousMonthDayAggregation',
                                         date: datePointer.format('YYYY-MM-DD')
                                     });
 
