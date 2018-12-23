@@ -68,6 +68,7 @@ export class OwnerSettingsComponent implements OnInit {
             _.set(this.settings, 'monthToDate', _.get(settings, 'monthToDate', true));
             _.set(this.settings, 'weekToDate', _.get(settings, 'weekToDate', false));
             _.set(this.settings, 'laborCost', _.get(settings, 'laborCost', true));
+            _.set(this.settings, 'revenue', _.get(settings, 'revenue', false));
         });
     }
 
@@ -101,8 +102,8 @@ export class OwnerSettingsComponent implements OnInit {
         this.dataService.settings$.next(this.settings);
     }
 
-    updateSetting(event, settingsName) {
-        _.set(this.settings, settingsName, event.value);
+    updateRevenue(event) {
+        _.set(this.settings, 'revenue', event.checked);
         window.localStorage.setItem('settings', JSON.stringify(this.settings));
         this.dataService.settings$.next(this.settings);
     }

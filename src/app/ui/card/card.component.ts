@@ -38,6 +38,7 @@ export class CardComponent implements OnInit {
     public currency: any;
     public tabitHelper: TabitHelper;
     public env;
+    public settings;
 
     constructor(private dataService: DataService) {
         this.region = environment.region;
@@ -48,6 +49,10 @@ export class CardComponent implements OnInit {
     ngOnInit() {
         this.dataService.currencySymbol$.subscribe(symbol => {
             this.currency = symbol;
+        });
+
+        this.dataService.settings$.subscribe(settings => {
+            this.settings = settings;
         });
     }
 
