@@ -389,10 +389,10 @@ export class DayViewComponent implements OnInit {
                     };
 
                     this.cardData.averages = {
-                        /*yearly: {
-                            percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
-                            change: day.aggregations.sales.amount / day.aggregations.sales.yearAvg
-                        },*/
+                        yearly: {
+                            percentage: ((this.dayFromDatabase.salesAndRefoundAmountIncludeVat / this.dayFromDatabase.AvgPySalesAndRefoundAmountIncludeVat) - 1),
+                            change: (this.dayFromDatabase.salesAndRefoundAmountIncludeVat / this.dayFromDatabase.AvgPySalesAndRefoundAmountIncludeVat) * 100
+                        },
                         weekly: {
                             percentage: ((this.dayFromDatabase.salesAndRefoundAmountIncludeVat / this.dayFromDatabase.AvgNweeksSalesAndRefoundAmountIncludeVat) - 1),
                             change: (this.dayFromDatabase.salesAndRefoundAmountIncludeVat / this.dayFromDatabase.AvgNweeksSalesAndRefoundAmountIncludeVat) * 100
@@ -422,10 +422,7 @@ export class DayViewComponent implements OnInit {
 
                     this.totalSales$.next(totalSales);
                     this.cardData.averages = {
-                        /*yearly: {
-                            percentage: day.aggregations.sales.yearAvg ? ((day.aggregations.sales.amount / day.aggregations.sales.yearAvg) - 1) : 0,
-                            change: (day.aggregations.sales.amount / day.aggregations.sales.yearAvg)
-                        },*/
+                        yearly: {},
                         weekly: {
                             percentage: (totalSalesWithoutTax / openDay.avg4weeksSales) - 1,
                             change: totalSalesWithoutTax / openDay.avg4weeksSales * 100

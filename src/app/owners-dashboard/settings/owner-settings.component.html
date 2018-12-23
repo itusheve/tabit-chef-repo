@@ -17,7 +17,7 @@
             <div class="card">
                 <div class="card-header" [translate]="'settingsPage.data'"></div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item border-0">
+                    <li *ngIf="env.region !== 'us'" class="list-group-item border-0">
                         <mat-checkbox
                                 color="primary"
                                 [checked]="vat"
@@ -26,6 +26,17 @@
                                 [disabled]="false"
                                 [translate]="'settingsPage.vat'">
                             {{'settingsPage.vat' | translate}}
+                        </mat-checkbox>
+                    </li>
+                    <li class="list-group-item border-0">
+                        <mat-checkbox
+                                color="primary"
+                                [checked]="settings.revenue"
+                                (change)="updateRevenue($event)"
+                                [indeterminate]="false"
+                                [disabled]="false"
+                                [translate]="'settingsPage.revenue'">
+                            {{'settingsPage.revenue' | translate}}
                         </mat-checkbox>
                     </li>
                     <li class="list-group-item border-0">

@@ -103,10 +103,18 @@ export class DayHourlySalesComponent implements OnChanges {
         if(width > 100) {
             return 100;
         }
+        else if(width < 0) {
+            return 0;
+        }
         return width || 0;
     }
 
     innerAndOuterWidth(record) {
+
+        if(record.salesNetAmountAvg < 0) {
+            return 0;
+        }
+
         let outer = this.outerWidth(record);
         let inner = record.salesNetAmount / this.maxValue * 100;
 
@@ -122,6 +130,10 @@ export class DayHourlySalesComponent implements OnChanges {
     }
 
     progressBarWidth(record) {
+        if(record.salesNetAmount < 0) {
+            return 0;
+        }
+
         if(!record.salesNetAmountAvg || record.salesNetAmount > record.salesNetAmountAvg) {
             return 100;
         }
