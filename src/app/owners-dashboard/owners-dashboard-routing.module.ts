@@ -6,6 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { OwnerSettingsComponent } from './settings/owner-settings.component';
 import { DayViewComponent } from './day-view/day-view.component';
 import { OrderViewComponent } from './order-view/order-view.component';
+import { TutorialComponent } from './tutorial/tutorial.component';
 
 import { OrgGuard } from '../auth/org-guard.service';
 
@@ -31,6 +32,10 @@ const ownersDashboardRoutes: Routes = [
             {
                 path: 'settings',
                 component: OwnerSettingsComponent
+            },
+            {
+                path: 'tutorial',
+                component: TutorialComponent
             }
         ]
     }

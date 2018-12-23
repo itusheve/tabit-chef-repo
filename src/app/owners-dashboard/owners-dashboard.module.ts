@@ -89,6 +89,8 @@ import {MonthPickerDialogComponent} from './home/month-selector/month-picker-dia
 import {WeekSelectorComponent} from './home/week-selector/week-selector.component';
 import {OverTimeUsersDialogComponent} from './home/over-time-users/over-time-users-dialog.component';
 import {TranslateModule} from '@ngx-translate/core';
+import {PdfViewerModule} from 'ng2-pdf-viewer';
+import { TutorialComponent } from './tutorial/tutorial.component';
 
 @NgModule({
     imports: [
@@ -116,7 +118,8 @@ import {TranslateModule} from '@ngx-translate/core';
         ReactiveFormsModule,
         MatDialogModule,
         DxLoadIndicatorModule,
-        TranslateModule
+        TranslateModule,
+        PdfViewerModule
     ],
     declarations: [
         OwnersDashboardComponent,
@@ -177,7 +180,8 @@ import {TranslateModule} from '@ngx-translate/core';
         OrderMediaExchangeDetailsComponent,
         OrderGiftCardDetailsComponent,
         OrderCashPaymentFooterComponent,
-        OrderDetailsComponent
+        OrderDetailsComponent,
+        TutorialComponent
     ],
     providers: [
         OwnersDashboardService
