@@ -794,6 +794,8 @@ export class DataService {
                             diners: day.diners
                         });
 
+                        week.days = _.sortBy(week.days, [function(o) { return moment.utc(o.details.date).unix(); }]);
+
                         let moments = week.days.map(day => moment(day.details.date));
                         _.set(week, 'startDate', moment.min(moments));
                         if(!week.startDate) {
