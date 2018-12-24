@@ -24,7 +24,7 @@
   "dependencies": {
     "@angular/animations": "7.0.3",
     "@angular/cdk": "7.0.1",
-    "@angular/cli": "7.0.4",
+    "@angular/cli": "^7.1.4",
     "@angular/common": "7.0.3",
     "@angular/compiler": "7.0.3",
     "@angular/compiler-cli": "7.0.3",
@@ -56,13 +56,14 @@
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.21",
     "ng-block-ui": "^2.0.0-beta.2",
+    "ng2-pdf-viewer": "^5.2.3",
     "ngx-moment": "^3.2.0",
     "rxjs": "^6.3.3",
     "typescript": "3.1.6",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.10.0",
+    "@angular-devkit/build-angular": "^0.11.4",
     "@angular/language-service": "7.0.3",
     "@biesbjerg/ngx-translate-extract": "^2.3.4",
     "@types/jasmine": "2.5.53",
@@ -77,10 +78,10 @@
     "karma-coverage-istanbul-reporter": "1.4.1",
     "karma-jasmine": "1.1.1",
     "karma-jasmine-html-reporter": "0.2.2",
-    "protractor": "5.1.2",
+    "protractor": "^5.4.1",
     "ts-node": "3.2.0",
     "tslint": "5.7.0",
-    "webpack": "^4.17.2"
+    "webpack": "^4.28.2"
   },
   "engines": {
     "node": "8.5.0",

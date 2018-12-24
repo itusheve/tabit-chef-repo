@@ -552,7 +552,9 @@ export class DayViewComponent implements OnInit {
             };
 
 
-            if (!moment.utc(dailyTotals.businessDate).isSame(dayDate, 'day')) {
+            let test = moment.utc(dailyTotals.businessDate);
+            let time = moment(dailyTotals.businessDate);
+            if (!time.isSame(dayDate, 'day')) {
                 this.bdIsCurrentBd = false;
                 this.openOrders = null;
             }
@@ -834,9 +836,7 @@ export class DayViewComponent implements OnInit {
         let businessDate = this.route.snapshot.paramMap.get('businessDate');
         this.day = moment(businessDate);
         this.day$.next(this.day);
-
         this.category = this.route.snapshot.paramMap.get('category');
-        this.day$.next(this.day);
     }
 
     onDateChanged(dateM: moment.Moment) {

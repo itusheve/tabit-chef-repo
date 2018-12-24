@@ -126,6 +126,7 @@ const he = {
     'menu.mySites': 'המסעדות שלי',
     'menu.noOrgs': 'המשתמש אינו מורשה לצפות במסעדות. אנא פנו לתמיכה.',
     'menu.personalSettings': 'הגדרות אישיות',
+    'menu.instructions': 'מדריך שימוש',
     'menu.searchRestaurant': 'חיפוש מסעדה',
     'operational': 'בעיות תפעול',
     'organizational': 'א\' עובדים',
@@ -175,7 +176,7 @@ const he = {
     'takeaway': 'לקחת'
 };
 const en = {
-    'revenueShort': 'rev.',
+    'revenueShort': 'payments',
     'week': 'Week',
     'weekSales': 'Week',
     'weekToDate': 'Week to Date',
@@ -299,6 +300,7 @@ const en = {
     'menu.mySites': 'My Restaurants',
     'menu.noOrgs': 'Your user is not authorized to view Restaurants. Please contact support.',
     'menu.personalSettings': 'Personal Settings',
+    'menu.instructions': 'Instructions Manual',
     'menu.searchRestaurant': 'Search',
     'operational': 'Operational',
     'organizational': 'Employee',
@@ -320,7 +322,7 @@ const en = {
     'totalPayments': 'From total payments',
     'parentCategory': 'From payment group',
     'settingsPage.vat': 'Show Data Including Vat',
-    'settingsPage.revenue': 'Show Revenue',
+    'settingsPage.revenue': 'Show Total Payments',
     'settingsPage.data': 'Data Preferences',
     'settingsPage.displayMonthToDate': 'Show Month To Date',
     'settingsPage.displayWeekToDate': 'Show Week To Date',

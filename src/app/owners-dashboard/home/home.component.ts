@@ -242,8 +242,8 @@ export class HomeComponent implements OnInit {
                     if (historicWeek) {
                         if(restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
                             let counter = 0;
-                            _.forEach(historicWeek.days, day => {
-                                if(counter < week.daysInWeek) {
+                            _.forEach(historicWeek.days, (day, key) => {
+                                if(counter < week.daysInWeek && _.get(week, ['days', key])) {
                                     previousWeeksAvgs.sales += _.get(day, ['sales', 'total']);
                                     previousWeeksAvgs.cancellations += _.get(day, ['reductions', 'cancellations']);
                                     previousWeeksAvgs.employees += _.get(day, ['reductions', 'employees']);
