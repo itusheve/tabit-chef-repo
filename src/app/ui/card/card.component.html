@@ -49,17 +49,6 @@
                 <div class="row">
                     <div class="col-12">
                         <table class="table table-borderless table-sm sales-table mb-0">
-                            <tr *ngIf="cardData.averages?.yearly?.percentage && isValid(cardData.averages?.yearly?.percentage)">
-                                <span>
-                                    <mat-icon *ngIf="cardData.averages.yearly.percentage"
-                                              [ngClass]="[getPercentageCssClass(cardData.averages.yearly.percentage, true, cardData.averages.yearly.change),getIconClass(cardData.averages.yearly.change)]"
-                                    >
-                                        {{getArrow(cardData.averages.yearly.percentage)}}
-                                    </mat-icon>
-                                </span>
-                                <span class="text-dark">{{(cardData.averages.yearly.percentage) | pct: 1}}</span>
-                                <span class="text-body px-1" [translate]="'lastYear'"></span>
-                            </tr>
                             <tr *ngIf="cardData.averages?.weekly && abs(cardData.averages.weekly.percentage) < 400">
                                 <span>
                                     <mat-icon *ngIf="cardData.averages.weekly.percentage"
@@ -70,6 +59,17 @@
                                 </span>
                                 <span class="text-dark">{{(cardData.averages.weekly.percentage || 0) | pct: 1}}</span>
                                 <span class="text-body px-1" [translate]="'fourWeekAvg'"></span>
+                            </tr>
+                            <tr *ngIf="cardData.averages?.yearly?.percentage && isValid(cardData.averages?.yearly?.percentage)">
+                                <span>
+                                    <mat-icon *ngIf="cardData.averages.yearly.percentage"
+                                              [ngClass]="[getPercentageCssClass(cardData.averages.yearly.percentage, true, cardData.averages.yearly.change),getIconClass(cardData.averages.yearly.change)]"
+                                    >
+                                        {{getArrow(cardData.averages.yearly.percentage)}}
+                                    </mat-icon>
+                                </span>
+                                <span class="text-dark">{{(cardData.averages.yearly.percentage) | pct: 1}}</span>
+                                <span class="text-body px-1" [translate]="'lastYear'"></span>
                             </tr>
                         </table>
                     </div>
