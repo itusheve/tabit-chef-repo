@@ -220,6 +220,24 @@ export class MonthGridComponent implements OnInit {
         }
     }
 
+    getDayAmountWithTax(day) {
+        if (this.category === 'sales') {
+            return day.salesAndRefoundAmountIncludeVat;
+        }
+        else if (this.category === 'cancellations') {
+            return day.voidsPrc / 100;
+        }
+        else if (this.category === 'retention') {
+            return day.mrPrc / 100;
+        }
+        else if (this.category === 'operational') {
+            return day.operationalPrc / 100;
+        }
+        else if (this.category === 'employee') {
+            return day.EmployeesAmount;
+        }
+    }
+
     getPercentage(day) {
         let avg = this.getAvgPeriodValueByCategory(day);
         if(!avg) {
@@ -333,25 +351,22 @@ export class MonthGridComponent implements OnInit {
 
         if(this.avgPeriodComparator === 'month') {
             if(this.category === 'sales' || this.category === 'employee') {
-                inner = this.getDayAmount(record) / this.maxValuesByCategory[this.category] * 100;
+                inner = this.getDayAmountWithTax(record) / this.maxValuesByCategory[this.category] * 100;
             }
             else {
-                inner = this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category] * 100;
+                inner = this.getDayAmountWithTax(record) * 100 / this.maxValuesByCategory[this.category] * 100;
             }
         }
         else if(this.avgPeriodComparator === 'year') {
             if(this.category === 'sales' || this.category === 'employee') {
-                inner = this.getDayAmount(record) / this.maxValuesByCategory[this.category + 'Year'] * 100;
+                inner = this.getDayAmountWithTax(record) / this.maxValuesByCategory[this.category + 'Year'] * 100;
             }
             else {
-                inner = this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category + 'Year'] * 100;
+                inner = this.getDayAmountWithTax(record) * 100 / this.maxValuesByCategory[this.category + 'Year'] * 100;
             }
         }
 
-
-
-
-        if(this.getDayAmount(record) > this.getAvgPeriodValueByCategory(record) && inner > outer) {
+        if(this.getDayAmountWithTax(record) > this.getAvgPeriodValueByCategory(record) && inner > outer) {
             if(inner > 100) {
                 return 100;
             }
@@ -363,26 +378,26 @@ export class MonthGridComponent implements OnInit {
 
     getProgressBarWidth(record): number {
         let result = 0;
-        if(this.getDayAmount(record) > this.getAvgPeriodValueByCategory(record)) {
+        if(this.getDayAmountWithTax(record) > this.getAvgPeriodValueByCategory(record)) {
             return 100;
         }
 
         if(this.avgPeriodComparator === 'month') {
             if(this.category === 'sales' || this.category === 'employee') {
-                return ((this.getDayAmount(record) / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) / this.maxValuesByCategory[this.category])) * 100;
+                return ((this.getDayAmountWithTax(record) / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) / this.maxValuesByCategory[this.category])) * 100;
 
             }
             else {
-                return ((this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category])) * 100;
+                return ((this.getDayAmountWithTax(record) * 100 / this.maxValuesByCategory[this.category]) / (this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category])) * 100;
             }
         }
         else if(this.avgPeriodComparator === 'year') {
             if(this.category === 'sales' || this.category === 'employee') {
-                return ((this.getDayAmount(record) / this.maxValuesByCategory[this.category + 'Year']) / (this.getAvgPeriodValueByCategory(record) / this.maxValuesByCategory[this.category + 'Year'])) * 100;
+                return ((this.getDayAmountWithTax(record) / this.maxValuesByCategory[this.category + 'Year']) / (this.getAvgPeriodValueByCategory(record) / this.maxValuesByCategory[this.category + 'Year'])) * 100;
 
             }
             else {
-                return ((this.getDayAmount(record) * 100 / this.maxValuesByCategory[this.category + 'Year']) / (this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category + 'Year'])) * 100;
+                return ((this.getDayAmountWithTax(record) * 100 / this.maxValuesByCategory[this.category + 'Year']) / (this.getAvgPeriodValueByCategory(record) * 100 / this.maxValuesByCategory[this.category + 'Year'])) * 100;
             }
         }
     }
