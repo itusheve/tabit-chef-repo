@@ -517,16 +517,6 @@ export class HomeComponent implements OnInit {
                 let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
                 let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
 
-                let endOfDayComment;
-                this.translate.get('eod').subscribe((res: string) => {
-                    endOfDayComment = res;
-                });
-
-                let yesterdayDate = moment.utc(dailyTotals.businessDate).subtract(1, 'day');
-                let yesterdayDailyTotals = await this.dataService.getDailyTotals(yesterdayDate);
-                if (!yesterdayDailyTotals.isEndOfDay) {
-                    this.currentBdCardData.salesComment = endOfDayComment;
-                }
                 this.currentBdCardData.revenue = (_.get(totals, ['totalPayments'], 0) / 100) + totalOpenOrders / 100;
                 this.currentBdCardData.sales = incTax ? totalSales : totalSalesWithoutTax;
 
@@ -599,7 +589,7 @@ export class HomeComponent implements OnInit {
 
     getYesterdayData() {
         combineLatest(this.dataService.databaseV2$, this.dataService.currentRestTime$, this.dataService.vat$, this.dataService.dailyTotals$)
-            .subscribe(data => {
+            .subscribe(async data => {
                 this.previousBdCardData.loading = true;
                 this.loadingOlapData = true;
                 let database = data[0];
@@ -624,6 +614,18 @@ export class HomeComponent implements OnInit {
                 }
                 else {
                     this.showPreviousDay = true;
+
+
+                    let endOfDayComment;
+                    this.translate.get('eod').subscribe((res: string) => {
+                        endOfDayComment = res;
+                    });
+
+                    let yesterdayDailyTotals = await this.dataService.getDailyTotals(previousDay);
+                    if (!yesterdayDailyTotals.isEndOfDay) {
+                        this.previousBdCardData.salesComment = endOfDayComment;
+                    }
+
 
                     this.previousBdCardData.holiday = day.holiday;
                     this.previousBdCardData.diners = day.diners || day.orders;
