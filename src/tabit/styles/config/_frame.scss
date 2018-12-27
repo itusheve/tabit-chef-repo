@@ -13,7 +13,7 @@ $iphone-6-7-8-plus-status-bar-px: 21px;
 $ipad-6-7-8-plus-status-bar-px: 21px;
 $ipad-status-bar-px: 20px;
 // http://stephen.io/mediaqueries/
-$iphone-X-portrait-mq: "only screen and (orientation : portrait) and (device-width : 375px) and (device-height : 812px) and (-webkit-device-pixel-ratio : 3)";
+$iphone-X-portrait-mq: "only screen and (orientation : portrait) and (device-width : 375px) and (device-height : 812px) and (-webkit-device-pixel-ratio : 3), screen and (orientation : portrait) and (device-width : 414px) and (device-height : 896px) and (-webkit-device-pixel-ratio : 3)";
 $iphone-6-7-8-portrait-mq: "only screen and (orientation : portrait) and (device-width : 375px) and (device-height : 667px)";
 $iphone-6-7-8-plus-portrait-mq: "only screen and (orientation : portrait) and (device-width : 414px) and (device-height : 736px)";
 $ipad-portrait-mq: "only screen and (orientation : portrait) and (device-width : 768px) and (device-height : 1024px)";
