@@ -40,8 +40,11 @@ export class DailyReportGuard implements CanActivate {
                                 this.authService.selectOrg(org).then(() => {
                                     this.router.navigate([`/owners-dashboard/day/${businessDate}`]);
                                     window.location.reload();
-                                    return false;
                                 });
+                            }
+                            else {
+                                this.router.navigate([`/restaurants`]);
+                                return false;
                             }
                         }
                     }
