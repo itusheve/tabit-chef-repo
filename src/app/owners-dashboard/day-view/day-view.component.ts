@@ -518,10 +518,6 @@ export class DayViewComponent implements OnInit {
                 this.hasNoDataForToday = true;
             }
 
-            if (!this.day$.value.isSame(dailyReport.date)) {
-                return;
-            }
-
             if (!dailyReport || !dailyReport.summary) {
                 this.hasData = false;
                 this.hasNoDataForToday = true;
@@ -833,7 +829,7 @@ export class DayViewComponent implements OnInit {
         });
 
         let businessDate = this.route.snapshot.paramMap.get('businessDate');
-        this.day = moment(businessDate);
+        this.day = moment.utc(businessDate);
         this.day$.next(this.day);
         this.category = this.route.snapshot.paramMap.get('category');
     }
@@ -841,7 +837,7 @@ export class DayViewComponent implements OnInit {
     onDateChanged(dateM: moment.Moment) {
         this.hasData = false;
         this.hasNoDataForToday = false;
-        this.day = dateM;
+        this.day = moment.utc(dateM.format('YYYY-MM-DD'));
         this.day$.next(this.day);
         this.category = '';
     }
