@@ -552,8 +552,7 @@ export class DayViewComponent implements OnInit {
             };
 
 
-            let test = moment.utc(dailyTotals.businessDate);
-            let time = moment(dailyTotals.businessDate);
+            let time = moment.utc(dailyTotals.businessDate);
             if (!time.isSame(dayDate, 'day')) {
                 this.bdIsCurrentBd = false;
                 this.openOrders = null;

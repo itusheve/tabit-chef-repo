@@ -22,10 +22,10 @@
             <button class="s-0" mat-raised-button (click)="settings(); sidenav.toggle();">
                 <span [translate]="'menu.personalSettings'">Personal Settings</span>
             </button>
-            <!--<button class="s-0" *ngIf="this.env.lang === 'he'" mat-raised-button (click)="sidenav.toggle();"
+            <button class="s-0" *ngIf="this.env.lang === 'he'" mat-raised-button (click)="sidenav.toggle();"
                     [routerLink]="['/owners-dashboard/tutorial']">
                 <span [translate]="'menu.instructions'">Instructions Manual</span>
-            </button>-->
+            </button>
             <button class="s-0" *ngIf="this.sideNavConfig.content.showLogoutBtn" mat-raised-button (click)="logout()">
                 <span [translate]="'menu.logout'">Logout</span>
             </button>
@@ -35,7 +35,7 @@
                      [ngStyle]="{'color': logEntry.type==='error' ? 'red' : 'black'}">{{logEntry.message}}
                 </div>
             </div>
-            <div class="versions s-0 flex d-col a-center" style=" margin-top: auto;">
+            <div *ngIf="appVersions?.chef || appVersions?.wrapper" class="versions s-0 flex d-col a-center" style=" margin-top: auto;">
                 <div>chef v{{appVersions?.chef}}</div>
                 <div>chef-w v{{appVersions?.wrapper}}</div>
             </div>

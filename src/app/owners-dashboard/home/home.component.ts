@@ -189,11 +189,11 @@ export class HomeComponent implements OnInit {
                 }
 
                 let week = database.getWeekByDate(businessDate);
-                if(!week.startDate) {
+                if(!week || week.startDate) {
                     week = database.getWeekByDate(businessDate.subtract(1, 'weeks'));
                 }
 
-                if(!week.startDate) {
+                if(!week || !week.startDate) {
                     return;
                 }
 
