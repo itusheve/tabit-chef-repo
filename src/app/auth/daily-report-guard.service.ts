@@ -45,15 +45,16 @@ export class DailyReportGuard implements CanActivate {
                             }
                         }
                     }
-
-                    this.router.navigate(['login'], {
-                        queryParams: {
-                            siteId: siteId,
-                            businessDate: businessDate,
-                            path: '/daily-report'
-                        }
-                    });
-                    return false;
+                    else {
+                        this.router.navigate(['login'], {
+                            queryParams: {
+                                siteId: siteId,
+                                businessDate: businessDate,
+                                path: '/daily-report'
+                            }
+                        });
+                        return false;
+                    }
                 }
             );
     }
