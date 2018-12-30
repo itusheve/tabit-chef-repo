@@ -1120,6 +1120,7 @@ export class DataService {
     }
 
     async getDailyReport(day: moment.Moment) {
+        day = moment.utc(day.format('YYYY-MM-DD'));
         /*let org = JSON.parse(window.localStorage.getItem('org'));*/
         /*let reportsCache = JSON.parse(window.localStorage.getItem(org.id + '-daily-reports'));
         if (!reportsCache) {
