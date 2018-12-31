@@ -43,6 +43,7 @@ export class DailyReportGuard implements CanActivate {
                                 });
                             }
                             else {
+                                alert('no org found 1' + siteId);
                                 this.router.navigate([`/restaurants`]);
                                 return false;
                             }
