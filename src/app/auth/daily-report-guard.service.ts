@@ -43,8 +43,8 @@ export class DailyReportGuard implements CanActivate {
                             if (org) {
                                 alert('4');
                                 this.authService.selectOrg(org).then(() => {
+                                    alert('12');
                                     this.router.navigate([`/owners-dashboard/day/${businessDate}`]);
-                                    window.location.reload();
                                 });
                             }
                             else {
