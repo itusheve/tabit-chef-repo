@@ -18,31 +18,37 @@ export class DailyReportGuard implements CanActivate {
         return this.authService.isUserAuthed()
             .then(
                 async (authenticated: boolean) => {
-
+                    alert('0');
                     let businessDate = state.root.queryParamMap.get('businessDate');
                     let siteId = state.root.queryParamMap.get('siteId');
 
                     if (!siteId || !businessDate) {
+                        alert('8');
                         this.router.navigate([`login`]);
                         return false;
                     }
 
                     if (authenticated) {
+                        alert('6');
                         let org = this.dataService.getOrganization();
                         if (org && org._id === siteId) {
+                            alert('7');
                             this.router.navigate([`/owners-dashboard/day/${businessDate}`]);
                             return false;
                         }
                         else {
+                            alert('3');
                             let orgs = await this.dataService.getOrganizations();
                             let org = _.find(orgs, {_id: siteId});
                             if (org) {
+                                alert('4');
                                 this.authService.selectOrg(org).then(() => {
                                     this.router.navigate([`/owners-dashboard/day/${businessDate}`]);
                                     window.location.reload();
                                 });
                             }
                             else {
+                                alert('5');
                                 alert('no org found 1' + siteId);
                                 this.router.navigate([`/restaurants`]);
                                 return false;
@@ -50,6 +56,7 @@ export class DailyReportGuard implements CanActivate {
                         }
                     }
                     else {
+                        alert('2');
                         this.router.navigate(['login'], {
                             queryParams: {
                                 siteId: siteId,
