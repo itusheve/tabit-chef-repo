@@ -15,7 +15,7 @@ const appRoutes: Routes = [
         canActivate: [DailyReportGuard],
         component: LoginComponent
     },
-    {path: '**', redirectTo: environment.managerDashboardMode ? '/managers-dashboard' : '/owners-dashboard/home'}
+    {path: '**', redirectTo: '/owners-dashboard/home'}
 ];
 
 @NgModule({

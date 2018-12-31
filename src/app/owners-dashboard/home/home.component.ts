@@ -884,7 +884,7 @@ export class HomeComponent implements OnInit {
 
     isCurrentMonth() {
         let selectedMonth = this.dataService.selectedMonth$.value;
-        return selectedMonth.month() === moment().month();
+        return selectedMonth.format('YYYY-MM') === moment().format('YYYY-MM');
     }
 
     showLaborCost() {

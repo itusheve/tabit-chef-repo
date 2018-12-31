@@ -219,7 +219,7 @@ export class DayViewComponent implements OnInit {
     public bdIsCurrentBd: boolean;
     public openOrders: any;
 
-    private day$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment());
+    private day$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(null);
     private totalSales$: BehaviorSubject<any> = new BehaviorSubject<any>(0);
     private closedOrders$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     private openOrders$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -347,7 +347,10 @@ export class DayViewComponent implements OnInit {
         //get card data for the day
         combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.openDay$, this.dataService.dailyTotals$)
             .subscribe(async data => {
-                let date = data[0];
+                let date = _.clone(data[0]);
+                if(!date) {
+                    return;
+                }
                 let database = data[1];
                 let openDay = data[2];
                 let dailyTotals = data[3];
@@ -507,7 +510,10 @@ export class DayViewComponent implements OnInit {
             });
 
         combineLatest(this.day$, this.dataService.dailyTotals$, this.dataService.refresh$).subscribe(async data => {
-            let dayDate = data[0];
+            let dayDate = _.clone(data[0]);
+            if(!dayDate) {
+                return;
+            }
             let dailyTotals = data[1];
             let dailyReport;
             try {
