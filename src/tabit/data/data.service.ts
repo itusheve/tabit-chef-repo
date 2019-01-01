@@ -567,6 +567,17 @@ export class DataService {
             let excludedDates = this.getExcludedDates(rosCalendars, org.id);
             let database = _.keyBy(olapYearlyData, month => month.yearMonth);
 
+            let yearMonth = moment().format('YYYYMM');
+            if(_.isEmpty(_.get(database, yearMonth))) {
+                //add month
+                _.set(database, yearMonth, {
+                    yearMonth: yearMonth,
+                    daily: [
+                        {businessDate: moment().format('YYYY-MM-DD'), yearMonth: yearMonth}
+                    ]
+                });
+            }
+
             let latestMonth = 0;
             _.forEach(database, month => {
                 month.vat = (Math.round(month.ttlsalesIncludeVat / month.ttlsalesExcludeVat * 100) / 100).toFixed(2);
