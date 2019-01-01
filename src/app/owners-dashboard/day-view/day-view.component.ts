@@ -509,7 +509,7 @@ export class DayViewComponent implements OnInit {
                 }
             });
 
-        combineLatest(this.day$, this.dataService.dailyTotals$, this.dataService.refresh$).subscribe(async data => {
+        combineLatest(this.day$, this.dataService.dailyTotals$, this.dataService.configuration$, this.dataService.refresh$).subscribe(async data => {
             let dayDate = _.clone(data[0]);
             if(!dayDate) {
                 return;
@@ -523,6 +523,8 @@ export class DayViewComponent implements OnInit {
                 this.hasData = false;
                 this.hasNoDataForToday = true;
             }
+
+            let configuration = data[2];
 
             if (!dailyReport || !dailyReport.summary) {
                 this.hasData = false;
@@ -566,12 +568,24 @@ export class DayViewComponent implements OnInit {
             }
 
             this.byShiftSummaryTblsData = [];
+
+            let ownerDashboardConfiguration = _.get(configuration, ['regionalSettings', 'ownerDashboard']);
+            let shiftStartTimes = {};
+            if(ownerDashboardConfiguration) {
+                shiftStartTimes = {
+                    1: _.get(ownerDashboardConfiguration, 'morningStartTime'),
+                    2: _.get(ownerDashboardConfiguration, 'afternoonStartTime'),
+                    3: _.get(ownerDashboardConfiguration, 'eveningStartTime'),
+                    4: _.get(ownerDashboardConfiguration, 'fourthShiftStartTime'),
+                    5: _.get(ownerDashboardConfiguration, 'fifthShiftStartTime'),
+                };
+            }
             _.forEach(dailyReport.summary, summary => {
                 let serviceKey = _.get(summary, 'serviceKey');
                 if (serviceKey && serviceKey != '-1') {
                     if (!this.byShiftSummaryTblsData[+serviceKey]) {
                         this.byShiftSummaryTblsData[+serviceKey] = {
-                            title: summary.serviceName,
+                            title: summary.serviceName + ' ' + _.get(shiftStartTimes, serviceKey, ''),
                             data: [],
                             globalSalesIncludingVat: globalSalesIncludingVat
                         };

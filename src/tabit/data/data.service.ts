@@ -432,9 +432,17 @@ export class DataService {
         refCount()
     );
 
-    public laborConfiguration$: Observable<moment.Moment> = Observable.create(async obs => {
+    public laborConfiguration$: Observable = Observable.create(async obs => {
         let laborConfiguration = await this.getLaborCostConfiguration();
         obs.next(laborConfiguration);
+    }).pipe(
+        publishReplay(1),
+        refCount()
+    );
+
+    public configuration$: Observable = Observable.create(async obs => {
+        let configuration = await this.getConfiguration();
+        obs.next(configuration);
     }).pipe(
         publishReplay(1),
         refCount()
@@ -969,6 +977,14 @@ export class DataService {
 
     async getLaborCostConfiguration() {
         let configuration = await this.rosEp.get('configuration/laborCost', null).then(function (res) {
+            return _.get(res, '[0]');
+        });
+
+        return configuration;
+    }
+
+    async getConfiguration() {
+        let configuration = await this.rosEp.get('configuration', null).then(function (res) {
             return _.get(res, '[0]');
         });
 
