@@ -432,7 +432,7 @@ export class DataService {
         refCount()
     );
 
-    public laborConfiguration$: Observable = Observable.create(async obs => {
+    public laborConfiguration$: Observable<any> = Observable.create(async obs => {
         let laborConfiguration = await this.getLaborCostConfiguration();
         obs.next(laborConfiguration);
     }).pipe(
@@ -440,7 +440,7 @@ export class DataService {
         refCount()
     );
 
-    public configuration$: Observable = Observable.create(async obs => {
+    public configuration$: Observable<any> = Observable.create(async obs => {
         let configuration = await this.getConfiguration();
         obs.next(configuration);
     }).pipe(
