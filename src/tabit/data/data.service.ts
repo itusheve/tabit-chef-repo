@@ -802,11 +802,13 @@ export class DataService {
                             diners: day.diners
                         });
 
-                        week.days = _.sortBy(week.days, [function(o) { return moment.utc(o.details.date).unix(); }]);
+                        week.days = _.sortBy(week.days, [function (o) {
+                            return moment.utc(o.details.date).unix();
+                        }]);
 
                         let moments = week.days.map(day => moment(day.details.date));
                         _.set(week, 'startDate', moment.min(moments));
-                        if(!week.startDate) {
+                        if (!week.startDate) {
                             _.set(week, 'startDate', moment());
                         }
                         week.daysInWeek++;
@@ -1218,9 +1220,16 @@ export class DataService {
     }
 
     async getMonthReport(month, year) {
-        let date = moment();
-        date.date(2).month(month).year(year);
-        return await this.olapEp.getMonthReport(date);
+        let result = await this.olapEp.getMonthReport();
+        let report;
+        if (result) {
+            report = {
+                summary: _.filter(result.summary, {monthYearId: year + month}),
+                summaryByOrderType: _.filter(result.summaryByOrderType, {monthYearId: year + month}),
+                payments: _.filter(result.payments, {monthYearId: year + month})
+            };
+        }
+        return report;
     }
 
     async getOpenOrders() {

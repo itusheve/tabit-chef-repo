@@ -67,7 +67,7 @@ import {
     MatBottomSheetModule,
     MatListModule,
     MatDatepickerModule,
-    MatDialogModule
+    MatDialogModule, MatNativeDateModule, MatTable, MatTableModule
 } from '@angular/material';//material modules
 
 import {OrderCashRefundComponent} from './order-view/slips/_cashRefund/cashRefund.component';
@@ -115,6 +115,8 @@ import { MonthComponent } from './month/month.component';
         MatBottomSheetModule,
         MatListModule,
         MatDatepickerModule,
+        MatNativeDateModule,
+        MatTableModule,
         FormsModule,
         ReactiveFormsModule,
         MatDialogModule,

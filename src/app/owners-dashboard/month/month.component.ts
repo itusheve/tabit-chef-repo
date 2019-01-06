@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {OwnersDashboardService} from '../owners-dashboard.service';
 import {DataService} from '../../../tabit/data/data.service';
 import {ActivatedRoute} from '@angular/router';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-month',
@@ -10,7 +11,8 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class MonthComponent implements OnInit {
 
-    public month: any;
+    public monthReport: any;
+    public payments: any;
     constructor(private ownersDashboardService: OwnersDashboardService, private dataService: DataService, private route: ActivatedRoute) {
         ownersDashboardService.toolbarConfig.left.back.pre = () => true;
         ownersDashboardService.toolbarConfig.left.back.target = '/owners-dashboard/home';
@@ -24,8 +26,53 @@ export class MonthComponent implements OnInit {
     async ngOnInit() {
         let month = this.route.snapshot.paramMap.get('month');
         let year = this.route.snapshot.paramMap.get('year');
-        let monthlyReport = await this.dataService.getMonthReport(month, year);
-        this.month = monthlyReport;
+        let monthReport = await this.dataService.getMonthReport(month, year);
+        this.monthReport = monthReport;
+
+
+        this.payments = {
+            total: 0,
+            accountGroups: []
+        };
+        let accountGroups = [];
+
+        _.forEach(monthReport.payments, payment => {
+            payment.paymentAmountIncludeVat = parseFloat(payment.paymentAmountIncludeVat.replace(/,/g, ''));
+            if (!payment.subType && payment.type) {
+                let accountGroup = {
+                    type: payment.type,
+                    amount: payment.paymentAmountIncludeVat,
+                    subTypes: []
+                };
+                accountGroups.push(accountGroup);
+            }
+            if(!payment.subType && !payment.type) {
+                this.payments.total = payment.paymentAmountIncludeVat;
+            }
+        });
+
+        _.forEach(monthReport.payments, payment => {
+            if(payment.subType) {
+                let accountGroup = _.find(accountGroups, {type: payment.type});
+                if(payment.subType !== 'מזומן' && payment.subType !== 'cash') {
+                    let subType = _.find(accountGroup.subTypes, {subType: payment.subType});
+                    if (!subType) {
+                        subType = {
+                            subType: payment.subType,
+                            amount: payment.paymentAmountIncludeVat
+                        };
+                        accountGroup.subTypes.push(subType);
+                    }
+                }
+            }
+
+        });
+
+        this.payments.accountGroups = accountGroups;
+
+        /*if (accountGroups) {
+            accountGroups = _.orderBy(accountGroups, 'order');
+        }*/
     }
 
 }

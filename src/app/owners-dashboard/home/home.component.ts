@@ -440,8 +440,14 @@ export class HomeComponent implements OnInit {
     }
 
     openMonthlyReport() {
-        let month = this.dataService.selectedMonth$.value;
-        this.router.navigate(['/owners-dashboard/month', {month: month.month(), year: month.year()}]);
+        //TODO: Temp override until Ofer adds this to US sites
+        if(this.env.region === 'us') {
+            this.openMonthPicker();
+        }
+        else {
+            let month = this.dataService.selectedMonth$.value;
+            this.router.navigate(['/owners-dashboard/month', {month: month.format('MM'), year: month.year()}]);
+        }
     }
 
     openMonthPicker() {
@@ -450,7 +456,6 @@ export class HomeComponent implements OnInit {
         this.ownersDashboardService.toolbarConfig.menuBtn.show = false;
         this.ownersDashboardService.toolbarConfig.settings.show = false;
         this.ownersDashboardService.toolbarConfig.home.show = true;
-
 
         let dialog = this.monthPickerDialog.open(MonthPickerDialogComponent, {
             data: {selected: this.dataService.selectedMonth$.value, onDateChanged: this.onDateChanged},
@@ -489,7 +494,6 @@ export class HomeComponent implements OnInit {
         this.ownersDashboardService.toolbarConfig.settings.show = false;
         this.ownersDashboardService.toolbarConfig.home.show = true;
 
-
         let dialog = this.weekPickerDialog.open(WeekSelectorComponent, {
             data: {weeks: this.weeks},
             hasBackdrop: true,
@@ -527,7 +531,6 @@ export class HomeComponent implements OnInit {
 
                 let totalOpenOrders = _.get(totals, 'openOrders.totalNetSalesAndRefunds', 0);
                 let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
-
 
                 let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
                 let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
@@ -577,7 +580,6 @@ export class HomeComponent implements OnInit {
                 this.currentBdCardData.diners = day.diners || day.orders;
                 this.currentBdCardData.ppa = incTax ? day.ppaIncludeVat : day.ppaIncludeVat / day.vat;
                 this.currentBdCardData.ppaOrders = day.salesAndRefoundAmountIncludeVat / day.orders;
-
 
                 this.currentBdCardData.reductions = {
                     cancellations: {
