@@ -1217,6 +1217,12 @@ export class DataService {
         return report;
     }
 
+    async getMonthReport(month, year) {
+        let date = moment();
+        date.date(2).month(month).year(year);
+        return await this.olapEp.getMonthReport(date);
+    }
+
     async getOpenOrders() {
         let params: any = {
             select: '_id,number,orderType,serviceType,created,lastUpdated,closed,isStaffTable,diners,paymentSummary,source,balance,totals',

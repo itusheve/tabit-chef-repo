@@ -7,8 +7,8 @@ import { OwnerSettingsComponent } from './settings/owner-settings.component';
 import { DayViewComponent } from './day-view/day-view.component';
 import { OrderViewComponent } from './order-view/order-view.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
-
 import { OrgGuard } from '../auth/org-guard.service';
+import {MonthComponent} from './month/month.component';
 
 const ownersDashboardRoutes: Routes = [
     { 
@@ -24,6 +24,10 @@ const ownersDashboardRoutes: Routes = [
             {
                 path: 'day/:businessDate',
                 component: DayViewComponent
+            },
+            {
+                path: 'month',
+                component: MonthComponent
             },
             {
                 path: 'bd/:businessDate/tlogid/:tlogid',
