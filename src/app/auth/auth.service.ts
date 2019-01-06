@@ -56,7 +56,7 @@ export class AuthService {
                 let membership = user.memberships.find(m => {
                     return m.organization === org.id && m.active;
                 });
-                if (!user.isStaff && (!membership || !membership.responsibilities || (membership.responsibilities.indexOf('CHEF') === -1 && membership.role !== 'manager'))) {
+                if (!user.isStaff && (!membership || !membership.responsibilities || (membership.responsibilities.indexOf('CHEF') === -1))) {
                     // not allowed
                     reject('');
                 }
@@ -272,7 +272,7 @@ export class AuthService {
                                                         return m.organization === org.id && m.active;
                                                     });
 
-                                                    if (!membership || !membership.responsibilities || (membership.responsibilities.indexOf('CHEF') === -1 && membership.role !== 'manager')) {
+                                                    if (!membership || !membership.responsibilities || (membership.responsibilities.indexOf('CHEF') === -1)) {
                                                         //log out:
                                                         this.ds.err(`  authSvc: authenticate: user no longer permitted to org ${org.name}: unauthenticate (anon auth)`);
                                                         this.unauthenticate()
