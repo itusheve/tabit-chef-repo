@@ -172,6 +172,10 @@ export class HomeComponent implements OnInit {
             let organization = data[1];
             this.logz.log('chef', 'user action', {action: 'home', 'user': user.email, 'org': organization.name, firstName: user.firstName, lastName: user.lastName});
         });
+
+        document.addEventListener('openDailyReportFromExternalLink', (event) => {
+            this.onDayRequest({date: _.get(event, 'businessDate')});
+        });
     }
 
     renderWeekToDate() {
