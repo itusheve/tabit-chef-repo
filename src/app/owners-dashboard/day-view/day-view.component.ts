@@ -585,7 +585,7 @@ export class DayViewComponent implements OnInit {
                 if (serviceKey && serviceKey != '-1') {
                     if (!this.byShiftSummaryTblsData[+serviceKey]) {
                         this.byShiftSummaryTblsData[+serviceKey] = {
-                            title: summary.serviceName + ' ' + _.get(shiftStartTimes, serviceKey, ''),
+                            title: summary.serviceName + ' ' + _.get(shiftStartTimes, serviceKey, '') + (_.get(shiftStartTimes, serviceKey + 1) ? ' - ' : '') + _.get(shiftStartTimes, serviceKey + 1, ''),
                             data: [],
                             globalSalesIncludingVat: globalSalesIncludingVat
                         };
