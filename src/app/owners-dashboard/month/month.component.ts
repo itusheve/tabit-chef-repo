@@ -13,6 +13,8 @@ export class MonthComponent implements OnInit {
 
     public monthReport: any;
     public payments: any;
+    public summary: any;
+    public summaryByOrderType: any;
     constructor(private ownersDashboardService: OwnersDashboardService, private dataService: DataService, private route: ActivatedRoute) {
         ownersDashboardService.toolbarConfig.left.back.pre = () => true;
         ownersDashboardService.toolbarConfig.left.back.target = '/owners-dashboard/home';
@@ -28,6 +30,8 @@ export class MonthComponent implements OnInit {
         let year = this.route.snapshot.paramMap.get('year');
         let monthReport = await this.dataService.getMonthReport(month, year);
         this.monthReport = monthReport;
+        this.summary = _.get(monthReport, ['summary',0], {});
+        this.summaryByOrderType = _.get(monthReport, ['summaryByOrderType'], {});
 
 
         this.payments = {

@@ -1,37 +1,175 @@
-<div class="flex d-col">
-    <mat-accordion>
-        <mat-expansion-panel expanded="false">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <span [translate]="'day.paymentsReport'">Payments report</span>
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <table *ngIf="payments" class="table">
-                <tr class="header">
-                    <td [translate]="'day.method'">Method</td>
-                    <td class="ar" [translate]="'day.amount'">Amount</td>
-                </tr>
-                <tr class="totalRow">
-                    <td [translate]="'day.total'">Total</td>
-                    <td class="ar">{{payments.total | curr:'0':'':'nullify':true}}</td>
-                </tr>
-                <ng-container *ngIf="payments.accountGroups">
-                    <ng-container *ngFor="let accountGroup of payments.accountGroups">
-                        <ng-container *ngIf="accountGroup">
-                            <tr class="accountTypeRow">
-                                <td>{{accountGroup.type}}</td>
-                                <td class="ar" dir="ltr">{{accountGroup.amount | curr:'0':'':'nullify':true}}<span
-                                        style="display: block"></span></td>
-                            </tr>
-                            <tr *ngFor="let subType of accountGroup.subTypes" class="accountRow">
-                                <td>&nbsp;&nbsp;{{subType.subType}}</td>
-                                <td class="ar" dir="ltr">{{subType.amount | curr:'0':'':'nullify':true}}<span
-                                        *ngIf="subType.amount" style="display: block"></span></td>
-                            </tr>
+<div class="widget p-0">
+    <div class="flex d-col">
+        <div class="title" [translate]="'month.summary'">Month Summary</div>
+        <mat-accordion>
+            <mat-expansion-panel expanded="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span [translate]="'day.total'">Total</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <table *ngIf="summary" class="table">
+                    <tr>
+                        <td><span [translate]="'month.sales'"></span></td>
+                        <td>{{summary.SalesAndRefundAmountExcludeVat}}</td>
+                    </tr>
+                    <tr>
+                        <td><span [translate]="'month.tip'"></span></td>
+                        <td>{{summary.tipAmountIncludeVat}}</td>
+                    </tr>
+                    <tr *ngIf="summary.VatAmount">
+                        <td><span [translate]="'month.vat'"></span></td>
+                        <td>{{summary.VatAmount}}</td>
+                    </tr>
+                    <tr>
+                        <td><span [translate]="'month.revenue'"></span></td>
+                        <td>{{summary.salesRevenueAmountIncludeVat}}</td>
+                    </tr>
+                    <tr>
+                        <td><span [translate]="'month.diners'"></span></td>
+                        <td>{{summary.headerDiners}}</td>
+                    </tr>
+                    <tr>
+                        <td><span [translate]="'month.ppa'"></span></td>
+                        <td>{{summary.AvgPPASeated}}</td>
+                    </tr>
+                </table>
+            </mat-expansion-panel>
+            <mat-expansion-panel expanded="false" *ngFor="let summary of summaryByOrderType">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span>{{summary.orderType}}</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <table *ngIf="summary" class="table">
+                    <tr>
+                        <td><span [translate]="'month.sales'"></span></td>
+                        <td>{{summary.SalesAndRefundAmountExcludeVat}}</td>
+                    </tr>
+                    <tr>
+                        <td><span [translate]="'month.tip'"></span></td>
+                        <td>{{summary.tipAmountIncludeVat}}</td>
+                    </tr>
+                    <tr *ngIf="summary.VatAmount">
+                        <td><span [translate]="'month.vat'"></span></td>
+                        <td>{{summary.VatAmount}}</td>
+                    </tr>
+                    <tr>
+                        <td><span [translate]="'month.revenue'"></span></td>
+                        <td>{{summary.salesRevenueAmountIncludeVat}}</td>
+                    </tr>
+                    <tr>
+                        <td><span [translate]="'month.diners'"></span></td>
+                        <td>{{summary.headerDiners}}</td>
+                    </tr>
+                    <tr>
+                        <td><span [translate]="'month.ppa'"></span></td>
+                        <td>{{summary.AvgPPASeate}}</td>
+                    </tr>
+                </table>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>
+<div class="widget p-0">
+    <div class="flex d-col">
+        <div class="title" [translate]="'day.payments'">Payments</div>
+        <mat-accordion>
+            <mat-expansion-panel expanded="false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span [translate]="'day.paymentsReport'">Payments report</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <table *ngIf="payments" class="table">
+                    <tr class="totalRow">
+                        <td [translate]="'day.total'">Total</td>
+                        <td class="ar">{{payments.total | curr:'0':'':'nullify':true}}</td>
+                    </tr>
+                    <ng-container *ngIf="payments.accountGroups">
+                        <ng-container *ngFor="let accountGroup of payments.accountGroups">
+                            <ng-container *ngIf="accountGroup">
+                                <tr class="accountTypeRow">
+                                    <td>{{accountGroup.type}}</td>
+                                    <td class="ar" dir="ltr">{{accountGroup.amount | curr:'0':'':'nullify':true}}<span
+                                            style="display: block"></span></td>
+                                </tr>
+                                <tr *ngFor="let subType of accountGroup.subTypes" class="accountRow">
+                                    <td>&nbsp;&nbsp;{{subType.subType}}</td>
+                                    <td class="ar" dir="ltr">{{subType.amount | curr:'0':'':'nullify':true}}<span
+                                            *ngIf="subType.amount" style="display: block"></span></td>
+                                </tr>
+                            </ng-container>
                         </ng-container>
                     </ng-container>
-                </ng-container>
-            </table>
-        </mat-expansion-panel>
-    </mat-accordion>
+                </table>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
 </div>
+<div class="widget p-0">
+    <div class="flex d-col">
+        <div class="title">
+            <span [translate]="'month.reductions'">Reductions</span>
+        </div>
+        <mat-accordion>
+            <mat-expansion-panel [expanded]="false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span [translate]="'day.cancellations'"></span>&nbsp;{{summary.cancellationAmountIncludeVat}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <table class="table">
+                    <tr *ngFor="let summary of summaryByOrderType">
+                        <td>{{summary.orderType}}</td>
+                        <td>{{summary.cancellationAmountIncludeVat}}</td>
+                    </tr>
+                </table>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span [translate]="'day.operationalErrors'"></span>&nbsp;{{summary.operationalAmountIncludeVat}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <table class="table">
+                    <tr *ngFor="let summary of summaryByOrderType">
+                        <td>{{summary.orderType}}</td>
+                        <td>{{summary.operationalAmountIncludeVat}}</td>
+                    </tr>
+                </table>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span [translate]="'day.retention'"></span>&nbsp;{{summary.mrAmountIncludeVat}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <table class="table">
+                    <tr *ngFor="let summary of summaryByOrderType">
+                        <td>{{summary.orderType}}</td>
+                        <td>{{summary.mrAmountIncludeVat}}</td>
+                    </tr>
+                </table>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span [translate]="'day.organizational'"></span>&nbsp;{{summary.organizationAmountIncludeVat}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <table class="table">
+                    <tr *ngFor="let summary of summaryByOrderType">
+                        <td>{{summary.orderType}}</td>
+                        <td>{{summary.organizationAmountIncludeVat}}</td>
+                    </tr>
+                </table>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>
+
+
