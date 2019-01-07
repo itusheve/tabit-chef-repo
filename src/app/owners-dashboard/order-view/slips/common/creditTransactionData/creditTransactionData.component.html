@@ -20,7 +20,7 @@
 <div class="flex j-sb d-block" *ngIf="collections.CREDIT_PAYMENTS[0].PROVIDER_PAYMENT_DATE">
     <span i18n="@@transactionTime">Transaction Time</span>
     <span *ngIf="!isUS">{{ collections.CREDIT_PAYMENTS[0].PROVIDER_PAYMENT_DATE | date : 'dd/MM/yyyy HH:mm' }}</span>
-    <span *ngIf="isUS">>{{ collections.CREDIT_PAYMENTS[0].PROVIDER_PAYMENT_DATE | date : 'MM/dd/yyyy h:mm a' }}</span>
+    <span *ngIf="isUS">>{{ collections.CREDIT_PAYMENTS[0].PROVIDER_PAYMENT_DATE | date : 'MM/dd/yyyy h:mm a': '': 'en_US' }}</span>
 
     <!-- US format -->
     <!-- <span>{{printDataOld.PROVIDER_PAYMENT_DATE |date : 'MM/dd/yyyy HH:mm'}}</span> -->

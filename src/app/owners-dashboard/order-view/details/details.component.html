@@ -50,7 +50,7 @@
                         <td>{{orderOld.table}}</td>
                         <td>{{orderOld.dinersNum}}</td>
                         <td *ngIf="!isUS">{{orderOld.created | date : 'dd/MM/yyyy HH:mm'}}</td>
-                        <td *ngIf="isUS">{{orderOld.created | date : 'MM/dd/yyyy HH:mm a'}}</td>
+                        <td *ngIf="isUS">{{orderOld.created | date : 'MM/dd/yyyy HH:mm a' : '': 'en_US'}}</td>
                     </tr>
                 </tbody>
             </table>
