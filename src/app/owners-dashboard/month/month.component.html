@@ -1,24 +1,37 @@
-<table *ngIf="payments" class="table">
-    <tr class="header">
-        <td [translate]="'day.method'">Method</td>
-        <td class="ar" [translate]="'day.amount'">Amount</td>
-    </tr>
-    <tr class="totalRow">
-        <td [translate]="'day.total'">Total</td>
-        <td class="ar">{{payments.total | curr:'0':'':'nullify':true}}</td>
-    </tr>
-    <ng-container *ngIf="payments.accountGroups">
-        <ng-container *ngFor="let accountGroup of payments.accountGroups">
-            <ng-container *ngIf="accountGroup">
-                <tr class="accountTypeRow">
-                    <td>{{accountGroup.type}}</td>
-                    <td class="ar" dir="ltr">{{accountGroup.amount | curr:'0':'':'nullify':true}}<span style="display: block"></span></td>
+<div class="flex d-col">
+    <mat-accordion>
+        <mat-expansion-panel expanded="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <span [translate]="'day.paymentsReport'">Payments report</span>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table *ngIf="payments" class="table">
+                <tr class="header">
+                    <td [translate]="'day.method'">Method</td>
+                    <td class="ar" [translate]="'day.amount'">Amount</td>
                 </tr>
-                <tr *ngFor="let subType of accountGroup.subTypes" class="accountRow">
-                    <td>&nbsp;&nbsp;{{subType.subType}}</td>
-                    <td class="ar" dir="ltr">{{subType.amount | curr:'0':'':'nullify':true}}<span *ngIf="subType.amount" style="display: block"></span></td>
+                <tr class="totalRow">
+                    <td [translate]="'day.total'">Total</td>
+                    <td class="ar">{{payments.total | curr:'0':'':'nullify':true}}</td>
                 </tr>
-            </ng-container>
-        </ng-container>
-    </ng-container>
-</table>
+                <ng-container *ngIf="payments.accountGroups">
+                    <ng-container *ngFor="let accountGroup of payments.accountGroups">
+                        <ng-container *ngIf="accountGroup">
+                            <tr class="accountTypeRow">
+                                <td>{{accountGroup.type}}</td>
+                                <td class="ar" dir="ltr">{{accountGroup.amount | curr:'0':'':'nullify':true}}<span
+                                        style="display: block"></span></td>
+                            </tr>
+                            <tr *ngFor="let subType of accountGroup.subTypes" class="accountRow">
+                                <td>&nbsp;&nbsp;{{subType.subType}}</td>
+                                <td class="ar" dir="ltr">{{subType.amount | curr:'0':'':'nullify':true}}<span
+                                        *ngIf="subType.amount" style="display: block"></span></td>
+                            </tr>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </table>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
