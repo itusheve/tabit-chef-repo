@@ -2,6 +2,8 @@ import {TranslateLoader} from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 const he = {
+    'ok': 'אשר',
+    'cancel': 'בטל',
     'revenueShort': 'מחזור',
     'week': 'שבוע',
     'weekSales': 'מכירות שבוע',
@@ -184,6 +186,8 @@ const he = {
     'month.reductions': 'הפחתות'
 };
 const en = {
+    'ok': 'OK',
+    'cancel': 'Cancel',
     'revenueShort': 'payments',
     'week': 'Week',
     'weekSales': 'Week',

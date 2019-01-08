@@ -167,6 +167,10 @@ export class HomeComponent implements OnInit {
         this.renderLaborCost();
         this.renderWeekToDate();
 
+        if(!this.isCurrentMonth()) {
+            this.ownersDashboardService.toolbarConfig.home.show = true;
+        }
+
         combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
             let user = data[0];
             let organization = data[1];
