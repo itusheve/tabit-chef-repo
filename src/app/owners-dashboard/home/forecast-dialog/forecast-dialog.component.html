@@ -2,10 +2,10 @@
     <span [translate]="'forecastBreakdown'"></span><br/>
     <span *ngIf="env.region === 'il'" class="small" [translate]="'menu.includingVAT'"></span>
 </div>
-<table class="table table-responsive-lg" style="max-height: 60vh; overflow-y: auto;">
+<table class="table" style="max-height: 60vh !important; overflow-y: auto; display: block">
     <ng-container *ngFor="let day of days">
         <tr>
-            <td>{{day.date | date}}</td>
+            <td>{{day.date | date: 'shortDate': '': env.tbtLocale}}</td>
             <td>{{day.sales | curr}}</td>
         </tr>
     </ng-container>
