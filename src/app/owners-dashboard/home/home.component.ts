@@ -125,21 +125,21 @@ export class HomeComponent implements OnInit {
         this.display.monthToDate = false;
 
         this.dataService.settings$.subscribe(settings => {
-            if(settings.weekToDate === true) {
+            if (settings.weekToDate === true) {
                 this.display.weekToDate = true;
             }
             else {
                 this.display.weekToDate = false;
             }
 
-            if(settings.monthToDate === undefined || settings.monthToDate === true) {
+            if (settings.monthToDate === undefined || settings.monthToDate === true) {
                 this.display.monthToDate = true;
             }
             else {
                 this.display.monthToDate = false;
             }
 
-            if(settings.laborCost === undefined || settings.laborCost === true) {
+            if (settings.laborCost === undefined || settings.laborCost === true) {
                 this.display.laborCost = true;
             }
             else {
@@ -167,10 +167,20 @@ export class HomeComponent implements OnInit {
         this.renderLaborCost();
         this.renderWeekToDate();
 
+        if(!this.isCurrentMonth()) {
+            this.ownersDashboardService.toolbarConfig.home.show = true;
+        }
+
         combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
             let user = data[0];
             let organization = data[1];
-            this.logz.log('chef', 'user action', {action: 'home', 'user': user.email, 'org': organization.name, firstName: user.firstName, lastName: user.lastName});
+            this.logz.log('chef', 'user action', {
+                action: 'home',
+                'user': user.email,
+                'org': organization.name,
+                firstName: user.firstName,
+                lastName: user.lastName
+            });
         });
 
         document.addEventListener('openDailyReportFromExternalLink', (event) => {
@@ -182,27 +192,27 @@ export class HomeComponent implements OnInit {
         combineLatest(this.dataService.databaseV2$, this.dataService.currentRestTime$, this.dataService.vat$, this.dataService.dailyTotals$)
             .subscribe(async data => {
                 let database = data[0];
-                let restTime  = data[1];
+                let restTime = data[1];
                 let incVat = data[2];
                 let dailyTotals = data[3];
 
                 let businessDate = moment.utc(dailyTotals.businessDate);
                 let settings = database.getSettings();
-                if(settings.weekStartDay === 1) {
+                if (settings.weekStartDay === 1) {
                     restTime = moment(restTime).locale('en_GB');
                 }
 
                 let week = database.getWeekByDate(businessDate);
-                if(!week || week.startDate) {
+                if (!week || week.startDate) {
                     week = database.getWeekByDate(businessDate.subtract(1, 'weeks'));
                 }
 
-                if(!week || !week.startDate) {
+                if (!week || !week.startDate) {
                     return;
                 }
 
                 let title = '';
-                if(restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
+                if (restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
                     this.translate.get('weekToDate').subscribe((res: string) => {
                         title = res;
                     });
@@ -244,10 +254,10 @@ export class HomeComponent implements OnInit {
                 for (let i = 1; i <= 4; i++) {
                     let historicWeek = database.getWeekByDate(moment(businessDate).subtract(i, 'weeks'));
                     if (historicWeek) {
-                        if(restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
+                        if (restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
                             let counter = 0;
                             _.forEach(historicWeek.days, (day, key) => {
-                                if(counter < week.daysInWeek && _.get(week, ['days', key])) {
+                                if (counter < week.daysInWeek && _.get(week, ['days', key])) {
                                     previousWeeksAvgs.sales += _.get(day, ['sales', 'total']);
                                     previousWeeksAvgs.cancellations += _.get(day, ['reductions', 'cancellations']);
                                     previousWeeksAvgs.employees += _.get(day, ['reductions', 'employees']);
@@ -270,7 +280,7 @@ export class HomeComponent implements OnInit {
                     _.set(historicWeek, 'weekAvg', {data: previousWeeksAvgs, counter: weekCounter});
                 }
 
-                if(weekCounter) {
+                if (weekCounter) {
                     previousWeeksAvgs.sales = previousWeeksAvgs.sales / weekCounter;
                     previousWeeksAvgs.cancellations = previousWeeksAvgs.cancellations / weekCounter;
                     previousWeeksAvgs.employees = previousWeeksAvgs.employees / weekCounter;
@@ -286,10 +296,10 @@ export class HomeComponent implements OnInit {
                     retention: 0,
                 };
                 if (lastYearWeek) {
-                    if(restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
+                    if (restTime.weekYear() === week.details.year && restTime.week() === week.details.number) {
                         let counter = 0;
                         _.forEach(lastYearWeek.days, day => {
-                            if(counter < week.daysInWeek) {
+                            if (counter < week.daysInWeek) {
                                 lastYearWeeksAvgs.sales += _.get(day, ['sales', 'total']);
                                 lastYearWeeksAvgs.cancellations += _.get(day, ['reductions', 'cancellations']);
                                 lastYearWeeksAvgs.employees += _.get(day, ['reductions', 'employees']);
@@ -433,13 +443,23 @@ export class HomeComponent implements OnInit {
         });
     }
 
+    openMonthlyReport() {
+        //TODO: Temp override until Ofer adds this to US sites
+        if(this.env.region === 'us') {
+            this.openMonthPicker();
+        }
+        else {
+            let month = this.dataService.selectedMonth$.value;
+            this.router.navigate(['/owners-dashboard/month', {month: month.format('MM'), year: month.year()}]);
+        }
+    }
+
     openMonthPicker() {
 
         this.ownersDashboardService.toolbarConfig.left.back.showBtn = true;
         this.ownersDashboardService.toolbarConfig.menuBtn.show = false;
         this.ownersDashboardService.toolbarConfig.settings.show = false;
         this.ownersDashboardService.toolbarConfig.home.show = true;
-
 
         let dialog = this.monthPickerDialog.open(MonthPickerDialogComponent, {
             data: {selected: this.dataService.selectedMonth$.value, onDateChanged: this.onDateChanged},
@@ -455,7 +475,7 @@ export class HomeComponent implements OnInit {
             this.ownersDashboardService.toolbarConfig.menuBtn.show = true;
             this.ownersDashboardService.toolbarConfig.settings.show = true;
 
-            if(this.dataService.selectedMonth$.value.isSame(moment(), 'month')) {
+            if (this.dataService.selectedMonth$.value.isSame(moment(), 'month')) {
                 this.ownersDashboardService.toolbarConfig.home.show = false;
             }
             else {
@@ -477,7 +497,6 @@ export class HomeComponent implements OnInit {
         this.ownersDashboardService.toolbarConfig.menuBtn.show = false;
         this.ownersDashboardService.toolbarConfig.settings.show = false;
         this.ownersDashboardService.toolbarConfig.home.show = true;
-
 
         let dialog = this.weekPickerDialog.open(WeekSelectorComponent, {
             data: {weeks: this.weeks},
@@ -516,7 +535,6 @@ export class HomeComponent implements OnInit {
 
                 let totalOpenOrders = _.get(totals, 'openOrders.totalNetSalesAndRefunds', 0);
                 let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
-
 
                 let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
                 let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
@@ -566,7 +584,6 @@ export class HomeComponent implements OnInit {
                 this.currentBdCardData.diners = day.diners || day.orders;
                 this.currentBdCardData.ppa = incTax ? day.ppaIncludeVat : day.ppaIncludeVat / day.vat;
                 this.currentBdCardData.ppaOrders = day.salesAndRefoundAmountIncludeVat / day.orders;
-
 
                 this.currentBdCardData.reductions = {
                     cancellations: {
@@ -822,7 +839,7 @@ export class HomeComponent implements OnInit {
                 let prevMonthEmployeePct = 1;
                 let prevMonthOperationalPct = 1;
                 let prevMonthRetentionPct = 1;
-                if(previousMonth) {
+                if (previousMonth) {
                     prevMonthCancellationsPct = +(previousMonth.prcVoidsAmount / 100 || 0).toFixed(3);
                     prevMonthEmployeePct = +(previousMonth.prcEmployeesAmount / 100 || 0).toFixed(3);
                     prevMonthOperationalPct = +(previousMonth.prcOperationalAmount / 100 || 0).toFixed(3);
@@ -831,7 +848,7 @@ export class HomeComponent implements OnInit {
 
                 this.summaryCardData.reductions = {
                     cancellations: {
-                        percentage: cancellationsPct|| 0,
+                        percentage: cancellationsPct || 0,
                         change: cancellationsPct / prevMonthCancellationsPct * 100 || 0
                     },
                     employee: {

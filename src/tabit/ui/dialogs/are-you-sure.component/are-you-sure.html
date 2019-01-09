@@ -3,6 +3,6 @@
     <p>{{data.content}}</p>
 </div>
 <div mat-dialog-actions>
-    <button mat-button (click)="onCancelClick()" i18n="@@cancel">Cancel</button>
-    <button mat-button (click)="onOkClick()" cdkFocusInitial i18n="@@ok">Ok</button>
+    <button mat-button (click)="onCancelClick()">{{translations.cancel}}</button>
+    <button mat-button (click)="onOkClick()" cdkFocusInitial>{{translations.ok}}</button>
 </div>

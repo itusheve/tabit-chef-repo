@@ -67,7 +67,7 @@ import {
     MatBottomSheetModule,
     MatListModule,
     MatDatepickerModule,
-    MatDialogModule
+    MatDialogModule, MatNativeDateModule, MatTable, MatTableModule
 } from '@angular/material';//material modules
 
 import {OrderCashRefundComponent} from './order-view/slips/_cashRefund/cashRefund.component';
@@ -91,6 +91,7 @@ import {OverTimeUsersDialogComponent} from './home/over-time-users/over-time-use
 import {TranslateModule} from '@ngx-translate/core';
 import {PdfViewerModule} from 'ng2-pdf-viewer';
 import { TutorialComponent } from './tutorial/tutorial.component';
+import { MonthComponent } from './month/month.component';
 
 @NgModule({
     imports: [
@@ -114,6 +115,8 @@ import { TutorialComponent } from './tutorial/tutorial.component';
         MatBottomSheetModule,
         MatListModule,
         MatDatepickerModule,
+        MatNativeDateModule,
+        MatTableModule,
         FormsModule,
         ReactiveFormsModule,
         MatDialogModule,
@@ -181,7 +184,8 @@ import { TutorialComponent } from './tutorial/tutorial.component';
         OrderGiftCardDetailsComponent,
         OrderCashPaymentFooterComponent,
         OrderDetailsComponent,
-        TutorialComponent
+        TutorialComponent,
+        MonthComponent
     ],
     providers: [
         OwnersDashboardService

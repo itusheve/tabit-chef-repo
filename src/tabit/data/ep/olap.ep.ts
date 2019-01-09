@@ -187,6 +187,33 @@ export class OlapEp {
         });
     }
 
+    public getMonthReport(): Promise<any> {
+        return new Promise((resolve, reject) => {
+
+            let org = JSON.parse(window.localStorage.getItem('org'));
+            let headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+            this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
+                    siteId: org.id,
+                    action: 'tabitChefSiteMonthly'
+                },
+                {
+                    headers: headers,
+                    responseType: 'json',
+                    withCredentials: false
+                })
+                .subscribe(
+                    (results: any) => {
+                        resolve(results);
+                    },
+                    (err) => {
+                        console.log(`Handler Proxy Error: ${JSON.stringify(err)}`);
+                        throw err;
+                    }
+                );
+        });
+    }
+
     public getDailySalesByHourReport(date: moment.Moment): Promise<any> {
         return new Promise((resolve, reject) => {
 
