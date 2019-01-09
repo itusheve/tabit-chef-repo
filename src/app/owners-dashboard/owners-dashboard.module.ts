@@ -92,6 +92,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {PdfViewerModule} from 'ng2-pdf-viewer';
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { MonthComponent } from './month/month.component';
+import { ForecastDialogComponent } from './home/forecast-dialog/forecast-dialog.component';
 
 @NgModule({
     imports: [
@@ -185,7 +186,8 @@ import { MonthComponent } from './month/month.component';
         OrderCashPaymentFooterComponent,
         OrderDetailsComponent,
         TutorialComponent,
-        MonthComponent
+        MonthComponent,
+        ForecastDialogComponent
     ],
     providers: [
         OwnersDashboardService
@@ -194,7 +196,8 @@ import { MonthComponent } from './month/month.component';
         MonthSelectorComponent,
         MonthPickerDialogComponent,
         WeekSelectorComponent,
-        OverTimeUsersDialogComponent
+        OverTimeUsersDialogComponent,
+        ForecastDialogComponent
     ],
 })
 export class OwnersDashboardModule {

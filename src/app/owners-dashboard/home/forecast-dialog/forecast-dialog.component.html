@@ -1,0 +1,15 @@
+<div class="card-header text-center rounded-0">
+    <span [translate]="'forecastBreakdown'"></span><br/>
+    <span *ngIf="env.region === 'il'" class="small" [translate]="'menu.includingVAT'"></span>
+</div>
+<table class="table table-responsive-lg" style="max-height: 60vh; overflow-y: auto;">
+    <ng-container *ngFor="let day of days">
+        <tr>
+            <td>{{day.date | date}}</td>
+            <td>{{day.sales | curr}}</td>
+        </tr>
+    </ng-container>
+</table>
+<div class="card-footer p-0 rounded-0">
+    <button mat-dialog-close class="btn btn-block btn-secondary rounded-0">Close</button>
+</div>

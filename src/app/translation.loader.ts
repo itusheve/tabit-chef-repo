@@ -2,6 +2,7 @@ import {TranslateLoader} from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 const he = {
+    'forecastBreakdown': 'הרכב תחזית',
     'ok': 'אשר',
     'cancel': 'בטל',
     'revenueShort': 'מחזור',
@@ -186,6 +187,7 @@ const he = {
     'month.reductions': 'הפחתות'
 };
 const en = {
+    'forecastBreakdown': 'Forecast Breakdown',
     'ok': 'OK',
     'cancel': 'Cancel',
     'revenueShort': 'payments',

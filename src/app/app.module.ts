@@ -3,8 +3,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';//required by some material components
-import {TranslateModule} from '@ngx-translate/core';
-
 
 import {registerLocaleData} from '@angular/common';
 import localeHe from '@angular/common/locales/he';

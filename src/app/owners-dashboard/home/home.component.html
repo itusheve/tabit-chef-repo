@@ -72,7 +72,7 @@
                 <app-card [cardData]="weekToDateCard" (click)="openWeekPicker()"
                           style="cursor: pointer"></app-card>
             </div>
-            <div *ngIf="!loadingOlapData && showForecast && isCurrentMonth()" class="col-sm-12 mb-3">
+            <div *ngIf="!loadingOlapData && showForecast && isCurrentMonth()" class="col-sm-12 mb-3" (click)="openForecastDetails()">
                 <app-card [cardData]="forecastCardData"></app-card>
             </div>
             <div class="col-sm-12 mb-3">

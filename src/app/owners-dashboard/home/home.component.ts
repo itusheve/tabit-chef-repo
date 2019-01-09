@@ -18,6 +18,7 @@ import {MatDialog} from '@angular/material';
 import {OverTimeUsersDialogComponent} from './over-time-users/over-time-users-dialog.component';
 import {Overlay} from '@angular/cdk/overlay';
 import {LogzioService} from '../../logzio.service';
+import {ForecastDialogComponent} from './forecast-dialog/forecast-dialog.component';
 
 @Component({
     selector: 'app-home',
@@ -434,6 +435,13 @@ export class HomeComponent implements OnInit {
         });
     }
 
+    openForecastDetails() {
+        this.dialog.open(ForecastDialogComponent, {
+            width: '100vw',
+            panelClass: 'forecast-dialog',
+        });
+    }
+
     initRefreshSubscriber() {
         this.dataService.refresh$.subscribe((refresh) => {
             if (refresh === 'force') {
@@ -718,6 +726,8 @@ export class HomeComponent implements OnInit {
                     return;
                 }
 
+                this.forecastCardData.showDrillArrow = true;
+
                 this.forecastCardData.averages = {yearly: {}, weekly: {}};
 
                 let lastYearMonth = database.getMonth(moment().subtract(1, 'years'));
@@ -731,7 +741,7 @@ export class HomeComponent implements OnInit {
 
                 this.forecastCardData.title = `${this.datePipe.transform(moment(month.latestDay).startOf('month').format('YYYY-MM-DD'), 'MMMM', '', this.env.lang)} ${tmpTranslations.get('home.month.expected')}`;
                 this.forecastCardData.diners = month.forecast.diners.count || month.forecast.orders.count;
-                this.forecastCardData.sales = incTax ? month.forecast.sales.amount : month.forecast.sales.amountWithoutVat;
+                this.forecastCardData.sales = incTax ? month.forecast.sales.amount : month.forecast.sales.amount / month.vat;
 
                 if (month.forecast.diners.count) {
                     let ppa = this.forecastCardData.sales / month.forecast.diners.count;
