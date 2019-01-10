@@ -1,14 +1,14 @@
 {
   "production": {
-    "version": "1.2.93",
+    "version": "1.2.94",
     "bundles": [
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Assistant",
-      "https://s3-eu-west-1.amazonaws.com/chef-prod.tabit.cloud/styles.css",
-      "https://s3-eu-west-1.amazonaws.com/chef-prod.tabit.cloud/runtime.js",
-      "https://s3-eu-west-1.amazonaws.com/chef-prod.tabit.cloud/polyfills.js",
-      "https://s3-eu-west-1.amazonaws.com/chef-prod.tabit.cloud/scripts.js",
-      "https://s3-eu-west-1.amazonaws.com/chef-prod.tabit.cloud/main.js"
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/styles.css",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/runtime.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/polyfills.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/scripts.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/main.js"
     ]
   },
   "development": {
