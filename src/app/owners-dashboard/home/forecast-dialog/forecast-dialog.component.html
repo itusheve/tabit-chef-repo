@@ -1,14 +1,14 @@
 <div class="dialog-content-fixed">
     <div class="dialog-content">
-        <div class="card-header text-center rounded-0">
+        <div class="card-header text-center rounded-0 bg-secondary text-white">
             <span style="font-size: 18px;" [translate]="'forecast'"></span>&nbsp;<span *ngIf="days && days[0]" style="font-size: 18px;">{{days[0].date | date: 'MMMM, yyyy': '': env.tbtLocale }}</span><br/>
             <span *ngIf="env.region === 'il'" class="small" [translate]="'menu.includingVAT'"></span>
         </div>
-        <table class="table" style="max-height: 60vh !important; overflow-y: auto; display: block">
+        <table class="table" style="max-height: 60vh !important; overflow-y: auto; display: block; font-size: 17px;">
             <ng-container *ngFor="let day of days">
                 <tr>
                     <td style="font-weight: 700;">{{day.date | date: 'dd'}} {{day.date | date: 'EEEEEE': '': env.tbtLocale}}</td>
-                    <td>{{day.sales | curr}}</td>
+                    <td>{{day.sales | curr:'0'}}</td>
                     <td><span *ngIf="day.type === 'currentMonthDayAggregation'" [translate]="'forecast'"></span></td>
                 </tr>
             </ng-container>
