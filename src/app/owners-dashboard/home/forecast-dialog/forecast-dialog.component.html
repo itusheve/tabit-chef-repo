@@ -1,15 +1,20 @@
-<div class="card-header text-center rounded-0">
-    <span [translate]="'forecastBreakdown'"></span><br/>
-    <span *ngIf="env.region === 'il'" class="small" [translate]="'menu.includingVAT'"></span>
-</div>
-<table class="table" style="max-height: 60vh !important; overflow-y: auto; display: block">
-    <ng-container *ngFor="let day of days">
-        <tr>
-            <td>{{day.date | date: 'shortDate': '': env.tbtLocale}}</td>
-            <td>{{day.sales | curr}}</td>
-        </tr>
-    </ng-container>
-</table>
-<div class="card-footer p-0 rounded-0">
-    <button mat-dialog-close class="btn btn-block btn-secondary rounded-0">Close</button>
+<div class="dialog-content-fixed">
+    <div class="dialog-content">
+        <div class="card-header text-center rounded-0">
+            <span style="font-size: 18px;" [translate]="'forecast'"></span>&nbsp;<span *ngIf="days && days[0]" style="font-size: 18px;">{{days[0].date | date: 'MMMM, yyyy': '': env.tbtLocale }}</span><br/>
+            <span *ngIf="env.region === 'il'" class="small" [translate]="'menu.includingVAT'"></span>
+        </div>
+        <table class="table" style="max-height: 60vh !important; overflow-y: auto; display: block">
+            <ng-container *ngFor="let day of days">
+                <tr>
+                    <td style="font-weight: 700;">{{day.date | date: 'dd'}} {{day.date | date: 'EEEEEE': '': env.tbtLocale}}</td>
+                    <td>{{day.sales | curr}}</td>
+                    <td><span *ngIf="day.type === 'currentMonthDayAggregation'" [translate]="'forecast'"></span></td>
+                </tr>
+            </ng-container>
+        </table>
+        <div class="card-footer p-0 rounded-0">
+            <button mat-dialog-close class="btn btn-block btn-secondary rounded-0">Close</button>
+        </div>
+    </div>
 </div>

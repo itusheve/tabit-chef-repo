@@ -18,9 +18,9 @@ export class ForecastDialogComponent implements OnInit {
         dataService.databaseV2$.subscribe(database => {
             let month = database.getCurrentMonth();
             let days = _.get(month, ['forecast', 'days'], []);
-            days = _.sortBy(days, function (day) {
+            days = _.orderBy(days, function (day) {
                 return new Date(day.date);
-            });
+            },'desc');
 
             this.days = days;
         });

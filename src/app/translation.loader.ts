@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 
 const he = {
     'forecastBreakdown': 'הרכב תחזית',
+    'forecast': 'תחזית',
     'ok': 'אשר',
     'cancel': 'בטל',
     'revenueShort': 'מחזור',
@@ -187,6 +188,7 @@ const he = {
     'month.reductions': 'הפחתות'
 };
 const en = {
+    'forecast': 'Forecast',
     'forecastBreakdown': 'Forecast Breakdown',
     'ok': 'OK',
     'cancel': 'Cancel',
