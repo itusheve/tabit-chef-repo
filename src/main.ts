@@ -42,6 +42,7 @@ let siteId = urlParams.get('oid');
 let region = urlParams.get('region');
 if(accessToken && siteId && region) {
     let tokens;
+    region = region.toLowerCase();
     if(region === 'il') {
         tokens = {il: {access_token: accessToken}};
     }
