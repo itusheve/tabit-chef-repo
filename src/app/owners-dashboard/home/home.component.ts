@@ -437,11 +437,12 @@ export class HomeComponent implements OnInit {
     }
 
     openForecastDetails() {
-        this.dialog.open(ForecastDialogComponent, {
+        return;
+        /*this.dialog.open(ForecastDialogComponent, {
             width: '100vw',
             panelClass: 'forecast-dialog',
             scrollStrategy: this.overlay.scrollStrategies.block()
-        });
+        });*/
     }
 
     initRefreshSubscriber() {
@@ -729,7 +730,7 @@ export class HomeComponent implements OnInit {
                     return;
                 }
 
-                this.forecastCardData.showDrillArrow = true;
+                this.forecastCardData.showDrillArrow = false;
 
                 this.forecastCardData.averages = {yearly: {}, weekly: {}};
 
