@@ -226,8 +226,8 @@ export class AuthService {
                     window.localStorage.setItem('userSettings', JSON.stringify(userSettings));
                 }
 
-                this.authTokens = tokens;
                 if (!_.isEmpty(tokens) && userSettings) {
+                    this.authTokens = tokens;
                     this.ds.log('authSvc: authenticate: found access tokens: ' + this.authTokens);
                     if (org) {
                         this.ds.log('authSvc: authenticate: found org: ' + org.name + '; setting authState = 2');
@@ -294,9 +294,15 @@ export class AuthService {
                                 });
                         }
                         else {
-                            return this.selectOrg(org).then(() => {
+                            if(org) {
+                                return this.selectOrg(org).then(() => {
+                                    resolve(this.authTokens);
+                                });
+                            }
+                            else {
                                 resolve(this.authTokens);
-                            });
+                            }
+
                         }
                     });
                 } else {
