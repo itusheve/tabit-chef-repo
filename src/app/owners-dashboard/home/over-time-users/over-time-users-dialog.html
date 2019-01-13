@@ -3,8 +3,8 @@
         <div class="card-header text-center rounded-0">
             Weekly Labor Cost
         </div>
-        <table class="table table-responsive-sm" style="height: calc(50vh - 1px); overflow-y: scroll; -webkit-overflow-scrolling: touch">
-            <thead>
+        <table class="table" style="height: calc(50vh - 1px); overflow-y: scroll; -webkit-overflow-scrolling: touch; display: block;">
+            <thead style="width: 100%; display: table;">
             <tr>
                 <th scope="col" class="start">Name</th>
                 <th scope="col" class="end">Hours</th>
@@ -13,7 +13,7 @@
             </tr>
             </thead>
 
-            <tbody>
+            <tbody style="width: 100%; display: table;">
 
             <ng-container *ngFor="let user of users">
                 <tr>

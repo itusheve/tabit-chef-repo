@@ -432,17 +432,19 @@ export class HomeComponent implements OnInit {
             width: '100vw',
             panelClass: 'overtime-dialog',
             data: {laborCost: this.laborCost},
-            scrollStrategy: this.overlay.scrollStrategies.block()
+            scrollStrategy: this.overlay.scrollStrategies.block(),
+            hasBackdrop: true
         });
     }
 
     openForecastDetails() {
-        return;
-        /*this.dialog.open(ForecastDialogComponent, {
+        this.dialog.open(ForecastDialogComponent, {
             width: '100vw',
             panelClass: 'forecast-dialog',
-            scrollStrategy: this.overlay.scrollStrategies.block()
-        });*/
+            scrollStrategy: this.overlay.scrollStrategies.block(),
+            hasBackdrop: true,
+            backdropClass: 'month-picker-backdrop'
+        });
     }
 
     initRefreshSubscriber() {
@@ -730,7 +732,7 @@ export class HomeComponent implements OnInit {
                     return;
                 }
 
-                this.forecastCardData.showDrillArrow = false;
+                this.forecastCardData.showDrillArrow = true;
 
                 this.forecastCardData.averages = {yearly: {}, weekly: {}};
 
