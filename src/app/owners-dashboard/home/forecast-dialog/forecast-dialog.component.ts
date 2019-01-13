@@ -42,4 +42,7 @@ export class ForecastDialogComponent implements OnInit {
     ngOnInit() {
     }
 
+    getAmount(amount): number {
+      return amount / this.vat;
+    }
 }
