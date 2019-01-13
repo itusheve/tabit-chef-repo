@@ -36,6 +36,26 @@ if (environment.tbtLocale ==='he-IL') {
   providers.push({ provide: TRANSLATIONS_FORMAT, useValue: 'xlf' });
 }
 
+let urlParams = new URLSearchParams(window.location.search);
+let accessToken = urlParams.get('at');
+let siteId = urlParams.get('oid');
+let region = urlParams.get('region');
+if(accessToken && siteId && region) {
+    let tokens;
+    if(region === 'il') {
+        tokens = {il: {access_token: accessToken}};
+    }
+    else if(region === 'us') {
+        tokens = {us: {access_token: accessToken}};
+    }
+
+    window.localStorage.setItem('tokens', JSON.stringify(tokens));
+    window.localStorage.setItem('settings', JSON.stringify({lang: region === 'il' ? 'he' : 'en'}));
+    window.localStorage.setItem('org', JSON.stringify({id: siteId, region: region, name: ''}));
+    window.localStorage.setItem('userSettings', JSON.stringify({lang: region === 'il' ? 'he' : 'en'}));
+}
+
+
 const bootstrap = () => {
   platformBrowserDynamic().bootstrapModule(AppModule, {
     providers: providers

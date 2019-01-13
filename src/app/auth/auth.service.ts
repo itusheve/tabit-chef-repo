@@ -48,9 +48,12 @@ export class AuthService {
     selectOrg(org: any): Promise<any> {
         let region = org.region.toLowerCase();
         this.region = region;
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             if (this.authState >= 1) {
-                const userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
+                let userSettings = JSON.parse(window.localStorage.getItem('userSettings'));
+                let latestUserDetails = await this.httpClient.get(`${this.remoteServers[region]}${meUrl}`).toPromise();
+                userSettings[region] = latestUserDetails;
+                window.localStorage.setItem('userSettings', JSON.stringify(userSettings));
 
                 let user = userSettings[region];
                 let membership = user.memberships.find(m => {
@@ -197,7 +200,6 @@ export class AuthService {
 
             } else {
                 this.ds.log('authSvc: authenticate: authenticating from localStorage');
-
                 //look for token, user and possibly an org
                 let tokens = JSON.parse(window.localStorage.getItem('tokens'));
                 let tokeFromSession = window.sessionStorage.getItem('userToken');
@@ -224,8 +226,8 @@ export class AuthService {
                     window.localStorage.setItem('userSettings', JSON.stringify(userSettings));
                 }
 
+                this.authTokens = tokens;
                 if (!_.isEmpty(tokens) && userSettings) {
-                    this.authTokens = tokens;
                     this.ds.log('authSvc: authenticate: found access tokens: ' + this.authTokens);
                     if (org) {
                         this.ds.log('authSvc: authenticate: found org: ' + org.name + '; setting authState = 2');
@@ -292,7 +294,9 @@ export class AuthService {
                                 });
                         }
                         else {
-                            resolve(this.authToken);
+                            return this.selectOrg(org).then(() => {
+                                resolve(this.authTokens);
+                            });
                         }
                     });
                 } else {
