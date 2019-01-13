@@ -1220,16 +1220,9 @@ export class DataService {
     }
 
     async getMonthReport(month, year) {
-        let result = await this.olapEp.getMonthReport();
-        let report;
-        if (result) {
-            report = {
-                summary: _.filter(result.summary, {monthYearId: year + month}),
-                summaryByOrderType: _.filter(result.summaryByOrderType, {monthYearId: year + month}),
-                payments: _.filter(result.payments, {monthYearId: year + month})
-            };
-        }
-        return report;
+        let date = moment().month(month).year(year).date(2);
+        let result = await this.olapEp.getMonthReport(date);
+        return result;
     }
 
     async getOpenOrders() {

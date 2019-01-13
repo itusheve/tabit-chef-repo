@@ -30,9 +30,7 @@ export class MonthComponent implements OnInit {
         let year = this.route.snapshot.paramMap.get('year');
         let monthReport = await this.dataService.getMonthReport(month, year);
         this.monthReport = monthReport;
-        this.summary = _.get(monthReport, ['summary',0], {});
-        this.summaryByOrderType = _.get(monthReport, ['summaryByOrderType'], {});
-
+        this.summary = _.get(monthReport, ['sales'], {});
 
         this.payments = {
             total: 0,
@@ -41,17 +39,16 @@ export class MonthComponent implements OnInit {
         let accountGroups = [];
 
         _.forEach(monthReport.payments, payment => {
-            payment.paymentAmountIncludeVat = parseFloat(payment.paymentAmountIncludeVat.replace(/,/g, ''));
             if (!payment.subType && payment.type) {
                 let accountGroup = {
                     type: payment.type,
-                    amount: payment.paymentAmountIncludeVat,
+                    amount: payment.paymentAmount,
                     subTypes: []
                 };
                 accountGroups.push(accountGroup);
             }
             if(!payment.subType && !payment.type) {
-                this.payments.total = payment.paymentAmountIncludeVat;
+                this.payments.total = payment.paymentAmount;
             }
         });
 
@@ -63,7 +60,7 @@ export class MonthComponent implements OnInit {
                     if (!subType) {
                         subType = {
                             subType: payment.subType,
-                            amount: payment.paymentAmountIncludeVat
+                            amount: payment.paymentAmount
                         };
                         accountGroup.subTypes.push(subType);
                     }

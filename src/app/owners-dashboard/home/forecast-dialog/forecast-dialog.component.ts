@@ -14,12 +14,14 @@ export class ForecastDialogComponent implements OnInit {
     days: any;
     env: any;
     todayDate: string;
+    forecast: string;
 
     constructor(private dataService: DataService) {
         this.env = environment;
         this.todayDate = moment().format('YYYY-MM-DD');
         dataService.databaseV2$.subscribe(database => {
             let month = database.getCurrentMonth();
+            this.forecast = _.get(month, ['forecast', 'sales', 'amount'], []);
             let days = _.get(month, ['forecast', 'days'], []);
             days = _.orderBy(days, function (day) {
                 return new Date(day.date);
