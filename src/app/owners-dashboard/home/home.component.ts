@@ -16,9 +16,9 @@ import {environment} from '../../../environments/environment';
 import {TranslateService} from '@ngx-translate/core';
 import {MatDialog} from '@angular/material';
 import {OverTimeUsersDialogComponent} from './over-time-users/over-time-users-dialog.component';
-import {Overlay} from '@angular/cdk/overlay';
 import {LogzioService} from '../../logzio.service';
 import {ForecastDialogComponent} from './forecast-dialog/forecast-dialog.component';
+import {Overlay} from '@angular/cdk/overlay';
 
 @Component({
     selector: 'app-home',
@@ -168,7 +168,7 @@ export class HomeComponent implements OnInit {
         this.renderLaborCost();
         this.renderWeekToDate();
 
-        if(!this.isCurrentMonth()) {
+        if (!this.isCurrentMonth()) {
             this.ownersDashboardService.toolbarConfig.home.show = true;
         }
 
@@ -431,7 +431,8 @@ export class HomeComponent implements OnInit {
         this.dialog.open(OverTimeUsersDialogComponent, {
             width: '100vw',
             panelClass: 'overtime-dialog',
-            data: {laborCost: this.laborCost}
+            data: {laborCost: this.laborCost},
+            scrollStrategy: this.overlay.scrollStrategies.block()
         });
     }
 
@@ -439,6 +440,7 @@ export class HomeComponent implements OnInit {
         this.dialog.open(ForecastDialogComponent, {
             width: '100vw',
             panelClass: 'forecast-dialog',
+            scrollStrategy: this.overlay.scrollStrategies.block()
         });
     }
 
@@ -454,12 +456,12 @@ export class HomeComponent implements OnInit {
     openMonthlyReport() {
         this.openMonthPicker();
         //TODO: Temp override until Ofer adds this to US sites
-        /*if(this.env.region === 'us') {
+        /*if (this.env.region === 'us') {
 
         }
         else {
             let month = this.dataService.selectedMonth$.value;
-            this.router.navigate(['/owners-dashboard/month', {month: month.format('MM'), year: month.year()}]);
+            this.router.navigate(['/owners-dashboard/month', {month: month.month(), year: month.year()}]);
         }*/
     }
 

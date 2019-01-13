@@ -187,7 +187,7 @@ export class OlapEp {
         });
     }
 
-    public getMonthReport(): Promise<any> {
+    public getMonthReport(date: moment.Moment): Promise<any> {
         return new Promise((resolve, reject) => {
 
             let org = JSON.parse(window.localStorage.getItem('org'));
@@ -195,7 +195,8 @@ export class OlapEp {
 
             this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
-                    action: 'tabitChefSiteMonthly'
+                    action: 'tabitChefSiteMonthlyDev',
+                    businessDate: date.format('YYYYMMDD')
                 },
                 {
                     headers: headers,

@@ -607,4 +607,21 @@ snack-bar-container {
     }
 
   }
+
+  .dialog-modal-content-fixed {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 0;
+    .dialog-content {
+      background-color: $contentBgColor;
+      width: 100%;
+      height: calc(70vh - 1px);
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
+
+  }
 }
