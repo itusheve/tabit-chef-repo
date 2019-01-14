@@ -617,7 +617,7 @@ snack-bar-container {
     .dialog-content {
       background-color: $contentBgColor;
       width: 100%;
-      height: calc(70vh - 1px);
+      height: calc(80vh - 1px);
       overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
     }

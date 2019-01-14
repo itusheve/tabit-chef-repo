@@ -8,7 +8,7 @@
             <span *ngIf="env.region === 'il' && !incVat" class="small" [translate]="'menu.excludingVAT'"></span>
         </div>
         <table class="table"
-               style="height: calc(50vh - 1px) !important;overflow-y: scroll; -webkit-overflow-scrolling: touch; display: block; font-size: 17px;">
+               style="height: calc(70vh - 1px) !important;overflow-y: scroll; -webkit-overflow-scrolling: touch; display: block; font-size: 20px;">
             <tbody style="width: 100%; display: table;">
             <ng-container *ngFor="let day of days">
                 <tr [ngStyle]="day.date === todayDate ? {'border-bottom':'2px solid black'} : {}">
