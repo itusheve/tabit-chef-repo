@@ -185,7 +185,9 @@ const he = {
     'month.diners': 'סועדים',
     'month.ppa': 'ממוצע',
     'month.revenue': 'מחזור',
-    'month.reductions': 'הפחתות'
+    'month.reductions': 'הפחתות',
+    'revenue': 'מחזור',
+    'monthly': 'חודשי'
 };
 const en = {
     'forecast': 'Forecast',
@@ -371,7 +373,9 @@ const en = {
     'month.diners': 'Diners',
     'month.ppa': 'PPA',
     'month.revenue': 'Revenue',
-    'month.reductions': 'Reductions'
+    'month.reductions': 'Reductions',
+    'revenue': 'Revenue',
+    'monthly': 'Monthly'
 };
 
 export class TranslationLoader implements TranslateLoader {
