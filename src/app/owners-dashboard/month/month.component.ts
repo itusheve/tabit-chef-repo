@@ -42,15 +42,20 @@ export class MonthComponent implements OnInit {
         let monthReport = await this.dataService.getMonthReport(month, year);
         this.monthReport = monthReport;
         this.summary = _.get(monthReport, ['sales'], {});
+        this.title = this.getTitle(month, year);
 
+        this.payments = this.getPayments(monthReport);
+    }
 
+    getTitle(month, year) {
         let date = moment().month(month).year(year);
         let monthName = this.datePipe.transform(date, 'MMMM', '', this.env.lang);
         let monthState = moment().month() === date.month() ? tmpTranslations.get('home.month.notFinalTitle') : tmpTranslations.get('home.month.finalTitle');
-        this.title = monthName + ' ' + monthState;
+        return monthName + ' ' + monthState;
+    }
 
-
-        this.payments = {
+    getPayments(monthReport) {
+        let payments = {
             total: 0,
             accountGroups: []
         };
@@ -65,10 +70,12 @@ export class MonthComponent implements OnInit {
                     order: this.getAccountGroupOrderByType(payment.type)
                 };
                 accountGroups.push(accountGroup);
+
+                if(payment.type === 'Total') {
+                    payments.total = payment.paymentAmount;
+                }
             }
-            if(!payment.subType && !payment.type) {
-                this.payments.total = payment.paymentAmount;
-            }
+
         });
 
         _.forEach(monthReport.payments, payment => {
@@ -87,7 +94,9 @@ export class MonthComponent implements OnInit {
             }
         });
 
-        this.payments.accountGroups = _.orderBy(accountGroups, 'order');
+        _.remove(accountGroups, {type: 'Total'});
+        payments.accountGroups = _.orderBy(accountGroups, 'order');
+        return payments;
     }
 
     getAccountGroupOrderByType(name) {
