@@ -457,15 +457,15 @@ export class HomeComponent implements OnInit {
     }
 
     openMonthlyReport() {
-        this.openMonthPicker();
-        //TODO: Temp override until Ofer adds this to US sites
-        /*if (this.env.region === 'us') {
 
+        //TODO: Temp override until Ofer adds this to US sites
+        if (this.env.region === 'us') {
+            this.openMonthPicker();
         }
         else {
             let month = this.dataService.selectedMonth$.value;
             this.router.navigate(['/owners-dashboard/month', {month: month.month(), year: month.year()}]);
-        }*/
+        }
     }
 
     openMonthPicker() {
