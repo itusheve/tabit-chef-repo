@@ -1,9 +1,9 @@
 <div class="widget p-0">
     <div class="flex d-col">
-        <div class="title"><span [translate]="'monthSummary'"></span> {{title}}</div>
+        <div class="title" style="border-radius: 3px 3px 0px 0px"><span [translate]="'monthSummary'"></span> {{title}}</div>
         <ng-container *ngIf="summary">
             <ng-container *ngFor="let service of summary">
-                <mat-expansion-panel [expanded]="service.name === 'monthly' ? true : false">
+                <mat-expansion-panel [expanded]="service.name === 'monthly' ? true : false" style="border-radius: 0px;">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <span class="font-weight-bold">{{service.name | translate}} {{(incVat ? service.totals.sales : (service.totals.sales - service.totals.vat)) | curr:'0':'':''}}</span>
@@ -97,9 +97,9 @@
         </ng-container>
     </div>
 </div>
-<div class="widget p-0">
+<div class="widget p-0 mt-3">
     <div class="flex d-col">
-        <div class="title" [translate]="'day.payments'">Payments</div>
+        <div class="title" style="border-radius: 3px 3px 0px 0px" [translate]="'day.payments'">Payments</div>
         <mat-accordion>
             <mat-expansion-panel expanded="true">
                 <mat-expansion-panel-header>
