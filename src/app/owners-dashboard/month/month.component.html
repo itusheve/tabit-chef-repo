@@ -9,7 +9,7 @@
                             <span class="font-weight-bold">{{service.name | translate}}</span>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <table class="table">
+                    <table class="table table-sm">
                         <thead>
                         <tr class="bg-secondary font-weight-bold">
                             <td></td>
@@ -107,7 +107,7 @@
                         <span  class="font-weight-bold" [translate]="'day.paymentsReport'">Payments report</span>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <table *ngIf="payments" class="table">
+                <table *ngIf="payments" class="table table-sm">
                     <tr class="totalRow">
                         <td  class="font-weight-bold" [translate]="'day.total'">Total</td>
                         <td class="ar">{{payments.total | curr:'0':'':'nullify':true}}</td>
