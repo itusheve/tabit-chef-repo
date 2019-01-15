@@ -187,7 +187,8 @@ const he = {
     'month.revenue': 'מחזור',
     'month.reductions': 'הפחתות',
     'revenue': 'מחזור',
-    'monthly': 'חודשי'
+    'monthly': 'חודשי',
+    'monthSummary': 'סיכום חודשי'
 };
 const en = {
     'forecast': 'Forecast',
@@ -375,7 +376,8 @@ const en = {
     'month.revenue': 'Revenue',
     'month.reductions': 'Reductions',
     'revenue': 'Revenue',
-    'monthly': 'Monthly'
+    'monthly': 'Monthly',
+    'monthSummary': 'Summary'
 };
 
 export class TranslationLoader implements TranslateLoader {

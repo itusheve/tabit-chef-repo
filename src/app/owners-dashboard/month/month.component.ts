@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {OwnersDashboardService} from '../owners-dashboard.service';
 import {DataService, tmpTranslations} from '../../../tabit/data/data.service';
 import {ActivatedRoute} from '@angular/router';
@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import {DatePipe} from '@angular/common';
 import {environment} from '../../../environments/environment';
-
+import {CardData} from '../../ui/card/card.component';
 
 @Component({
     selector: 'app-month',
@@ -22,10 +22,16 @@ export class MonthComponent implements OnInit {
     public summaryByOrderType: any;
     public env: any;
     public title: string;
+    public incVat: boolean;
 
     constructor(private ownersDashboardService: OwnersDashboardService, private dataService: DataService, private route: ActivatedRoute, private datePipe: DatePipe) {
 
         this.env = environment;
+        this.incVat = false;
+        dataService.vat$.subscribe(vat => {
+            this.incVat = vat;
+        });
+
 
         ownersDashboardService.toolbarConfig.left.back.pre = () => true;
         ownersDashboardService.toolbarConfig.left.back.target = '/owners-dashboard/home';
@@ -37,15 +43,21 @@ export class MonthComponent implements OnInit {
     }
 
     async ngOnInit() {
-        let month = this.route.snapshot.paramMap.get('month');
-        let year = this.route.snapshot.paramMap.get('year');
-        let monthReport = await this.dataService.getMonthReport(month, year);
-        this.monthReport = monthReport;
+        /*let month = this.route.snapshot.paramMap.get('month');
+        let year = this.route.snapshot.paramMap.get('year');*/
 
-        this.title = this.getTitle(month, year);
 
-        this.payments = this.getPayments(monthReport);
-        this.summary = this.getSummary(monthReport);
+        this.dataService.selectedMonth$.subscribe(async date => {
+            let month = date.month();
+            let year = date.year();
+            let monthReport = await this.dataService.getMonthReport(month, year);
+            this.monthReport = monthReport;
+
+            this.title = this.getTitle(month, year);
+
+            this.payments = this.getPayments(monthReport);
+            this.summary = this.getSummary(monthReport);
+        });
     }
 
     getSummary(monthReport) {
@@ -252,9 +264,9 @@ export class MonthComponent implements OnInit {
 
     getTitle(month, year) {
         let date = moment().month(month).year(year);
-        let monthName = this.datePipe.transform(date, 'MMMM', '', this.env.lang);
+        //let monthName = this.datePipe.transform(date, 'MMMM', '', this.env.lang);
         let monthState = moment().month() === date.month() ? tmpTranslations.get('home.month.notFinalTitle') : tmpTranslations.get('home.month.finalTitle');
-        return monthName + ' ' + monthState;
+        return monthState;
     }
 
     getPayments(monthReport) {
@@ -298,6 +310,16 @@ export class MonthComponent implements OnInit {
         });
 
         _.remove(accountGroups, {type: 'Total'});
+
+        this.dataService.settings$.subscribe(settings => {
+            accountGroups.forEach(accountGroup => {
+                _.set(accountGroup, 'percentage', accountGroup.amount / payments.total);
+                accountGroup.subTypes.forEach(subType => {
+                    _.set(subType, 'percentage', settings.paymentsReportCalculationMethod === 0 ? (subType.amount / payments.total) : (subType.amount / accountGroup.amount));
+                });
+            });
+        });
+
         payments.accountGroups = _.orderBy(accountGroups, 'order');
         return payments;
     }

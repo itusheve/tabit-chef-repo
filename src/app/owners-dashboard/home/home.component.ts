@@ -77,7 +77,8 @@ export class HomeComponent implements OnInit {
     public display = {
         laborCost: false,
         weekToDate: false,
-        monthToDate: false
+        monthToDate: false,
+        monthReport: false
     };
 
     private previousBdNotFinal = false;
@@ -101,6 +102,7 @@ export class HomeComponent implements OnInit {
     };
     public laborCost: any;
     private env: any;
+    public selectedMonth: moment.Moment;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private dataService: DataService,
@@ -124,6 +126,7 @@ export class HomeComponent implements OnInit {
         this.display.laborCost = false;
         this.display.weekToDate = false;
         this.display.monthToDate = false;
+        this.display.monthReport = false;
 
         this.dataService.settings$.subscribe(settings => {
             if (settings.weekToDate === true) {
@@ -457,15 +460,19 @@ export class HomeComponent implements OnInit {
     }
 
     openMonthlyReport() {
-
+        this.openMonthPicker();
         //TODO: Temp override until Ofer adds this to US sites
-        if (this.env.region === 'us') {
-            this.openMonthPicker();
+        /*if (this.env.region === 'us') {
+
         }
         else {
             let month = this.dataService.selectedMonth$.value;
             this.router.navigate(['/owners-dashboard/month', {month: month.month(), year: month.year()}]);
-        }
+        }*/
+    }
+
+    getCurrentMonth() {
+        return this.dataService.selectedMonth$.value;
     }
 
     openMonthPicker() {
@@ -784,6 +791,8 @@ export class HomeComponent implements OnInit {
                 let database = data[2];
                 let incTax = data[3];
 
+                this.display.monthReport = true;
+
                 let month = database.getMonth(date);
                 if (!month) {
                     this.showSummary = false;
@@ -916,6 +925,7 @@ export class HomeComponent implements OnInit {
 
     onDateChanged(mom: moment.Moment) {
         const month = moment(mom).startOf('month');
+        this.selectedMonth = month;
         this.dataService.selectedMonth$.next(month);
     }
 
