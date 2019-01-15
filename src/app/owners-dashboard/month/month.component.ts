@@ -118,7 +118,36 @@ export class MonthComponent implements OnInit {
             };
 
             if(!totalMonthSales[service.orderType]) {
-                totalMonthSales[service.orderType] = _.clone(totalsTemplate);
+                totalMonthSales[service.orderType] = {
+                    diners: 0,
+                    ppa: 0,
+                    sales: 0,
+                    vat: 0,
+                    tip: 0,
+                    revenue: 0,
+                    reductions: {
+                        returns: {
+                            amount: 0,
+                            percentage: 0,
+                        },
+                        cancellations: {
+                            amount: 0,
+                            percentage: 0,
+                        },
+                        operational: {
+                            amount: 0,
+                            percentage: 0,
+                        },
+                        organizational: {
+                            amount: 0,
+                            percentage: 0,
+                        },
+                        retention: {
+                            amount: 0,
+                            percentage: 0,
+                        }
+                    }
+                };
             }
 
             totalMonthSales[service.orderType].type = service.orderType;
