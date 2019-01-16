@@ -1,136 +1,159 @@
-<div class="widget p-0">
-    <div class="flex d-col">
-        <div class="title" style="border-radius: 3px 3px 0px 0px"><span [translate]="'monthSummary'"></span> {{title}}</div>
-        <ng-container *ngIf="summary">
-            <ng-container *ngFor="let service of summary">
-                <mat-expansion-panel [expanded]="service.name === 'monthly' ? true : false" style="border-radius: 0px;">
+<ng-container *ngIf="showData">
+    <div class="widget p-0">
+        <div class="flex d-col">
+            <div class="title" style="border-radius: 3px 3px 0px 0px"><span [translate]="'monthSummary'"></span>
+                {{title}}
+            </div>
+            <ng-container *ngIf="summary">
+                <ng-container *ngFor="let service of summary">
+                    <mat-expansion-panel [expanded]="service.name === 'monthly' ? true : false"
+                                         style="border-radius: 0px;">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <span class="font-weight-bold">{{service.name | translate}} {{(incVat ? service.totals.sales : (service.totals.sales - service.totals.vat)) | curr:'0':'':''}}</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <table class="table table-sm">
+                            <thead>
+                            <tr class="header">
+                                <td></td>
+                                <td><span [translate]="'day.total'"></span></td>
+                                <ng-container *ngFor="let orderType of service.kpis">
+                                    <td>{{orderType.type | translate}}</td>
+                                </ng-container>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><span class="font-weight-bold" [translate]="'month.sales'"></span></td>
+                                <td>{{(service.totals.sales - service.totals.vat) | curr:'0':'':'':true}}</td>
+                                <ng-container *ngFor="let orderType of service.kpis">
+                                    <td>{{(orderType.sales - orderType.vat) | curr:'0':'':'':true}}</td>
+                                </ng-container>
+                            </tr>
+                            <tr>
+                                <td><span class="font-weight-bold" [translate]="'day.salesWithTax'"></span></td>
+                                <td>{{service.totals.sales | curr:'0':'':'':true}}</td>
+                                <ng-container *ngFor="let orderType of service.kpis">
+                                    <td>{{orderType.sales | curr:'0':'':'':true}}</td>
+                                </ng-container>
+                            </tr>
+                            <tr *ngIf="service.totals.tip">
+                                <td><span class="font-weight-bold" [translate]="'day.tips'"></span></td>
+                                <td>{{service.totals.tip | curr:'0':'':'':true}}</td>
+                                <ng-container *ngFor="let orderType of service.kpis">
+                                    <td>{{orderType.tip | curr:'0':'':'':true}}</td>
+                                </ng-container>
+                            </tr>
+                            <tr>
+                                <td><span class="font-weight-bold" [translate]="'revenue'"></span></td>
+                                <td>{{service.totals.revenue | curr:'0':'':'':true}}</td>
+                                <ng-container *ngFor="let orderType of service.kpis">
+                                    <td>{{orderType.revenue | curr:'0':'':'':true}}</td>
+                                </ng-container>
+                            </tr>
+                            <!--<tr>
+                                <td><span class="font-weight-bold" [translate]="'day.diners'"></span></td>
+                                <td>{{service.totals.diners | number}}</td>
+                                <ng-container *ngFor="let orderType of service.kpis">
+                                    <td>{{orderType.diners | number}}</td>
+                                </ng-container>
+                            </tr>-->
+                            <!--<tr>
+                                <td><span [translate]="'day.ppa'"></span></td>
+                                <td>{{service.totals.ppa | curr:'0':'':'':true}}</td>
+                                <ng-container *ngFor="let orderType of service.kpis">
+                                    <td>{{orderType.ppa | curr:'0':'':'':true}}</td>
+                                </ng-container>
+                            </tr>-->
+                            <tr>
+                                <td><span class="font-weight-bold" [translate]="'cancellations'"></span></td>
+                                <td>{{service.totals.reductions.cancellations.amount | number}}<span
+                                        style="display: block;font-size: 12px;">({{service.totals.reductions.cancellations.percentage | pct: 1}})</span>
+                                </td>
+                                <ng-container *ngFor="let orderType of service.kpis">
+                                    <td>{{orderType.reductions.cancellations.amount | number}}<span
+                                            style="display: block;font-size: 12px;">({{orderType.reductions.cancellations.percentage | pct: 1}})</span>
+                                    </td>
+                                </ng-container>
+                            </tr>
+                            <tr>
+                                <td><span class="font-weight-bold" [translate]="'operational'"></span></td>
+                                <td>{{service.totals.reductions.operational.amount | number}}<span
+                                        style="display: block;font-size: 12px;">({{service.totals.reductions.operational.percentage | pct: 1}})</span>
+                                </td>
+                                <ng-container *ngFor="let orderType of service.kpis">
+                                    <td>{{orderType.reductions.operational.amount | number}}<span
+                                            style="display: block;font-size: 12px;">({{orderType.reductions.operational.percentage | pct: 1}})</span>
+                                    </td>
+                                </ng-container>
+                            </tr>
+                            <tr>
+                                <td><span class="font-weight-bold" [translate]="'retention'"></span></td>
+                                <td>{{service.totals.reductions.retention.amount | number}}<span
+                                        style="display: block;font-size: 12px;">({{service.totals.reductions.retention.percentage | pct: 1}})</span>
+                                </td>
+                                <ng-container *ngFor="let orderType of service.kpis">
+                                    <td>{{orderType.reductions.retention.amount | number}}<span
+                                            style="display: block;font-size: 12px;">({{orderType.reductions.retention.percentage | pct: 1}})</span>
+                                    </td>
+                                </ng-container>
+                            </tr>
+                            <tr>
+                                <td><span class="font-weight-bold" [translate]="'organizational'"></span></td>
+                                <td>{{service.totals.reductions.organizational.amount | number}}<span
+                                        style="display: block;font-size: 12px;">({{service.totals.reductions.organizational.percentage | pct: 1}})</span>
+                                </td>
+                                <ng-container *ngFor="let orderType of service.kpis">
+                                    <td>{{orderType.reductions.organizational.amount | number}}<span
+                                            style="display: block;font-size: 12px;">({{orderType.reductions.organizational.percentage | pct: 1}})</span>
+                                    </td>
+                                </ng-container>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </mat-expansion-panel>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+    <div class="widget p-0 mt-3">
+        <div class="flex d-col">
+            <div class="title" style="border-radius: 3px 3px 0px 0px" [translate]="'day.payments'">Payments</div>
+            <mat-accordion>
+                <mat-expansion-panel expanded="true">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            <span class="font-weight-bold">{{service.name | translate}} {{(incVat ? service.totals.sales : (service.totals.sales - service.totals.vat)) | curr:'0':'':''}}</span>
+                            <span class="font-weight-bold" [translate]="'day.paymentsReport'">Payments report</span>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <table class="table table-sm">
-                        <thead>
-                        <tr class="bg-secondary font-weight-bold">
-                            <td></td>
-                            <td><span [translate]="'day.total'"></span></td>
-                            <ng-container *ngFor="let orderType of service.kpis">
-                                <td>{{orderType.type | translate}}</td>
-                            </ng-container>
+                    <table *ngIf="payments" class="table table-sm">
+                        <tr class="totalRow">
+                            <td class="header" [translate]="'day.total'">Total</td>
+                            <td class="header">{{payments.total | curr:'0':'':'nullify':true}}</td>
                         </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><span class="font-weight-bold" [translate]="'month.sales'"></span></td>
-                            <td>{{(service.totals.sales - service.totals.vat) | curr:'0':'':'':true}}</td>
-                            <ng-container *ngFor="let orderType of service.kpis">
-                                <td>{{(orderType.sales - orderType.vat) | curr:'0':'':'':true}}</td>
-                            </ng-container>
-                        </tr>
-                        <tr>
-                            <td><span class="font-weight-bold" [translate]="'day.salesWithTax'"></span></td>
-                            <td>{{service.totals.sales | curr:'0':'':'':true}}</td>
-                            <ng-container *ngFor="let orderType of service.kpis">
-                                <td>{{orderType.sales | curr:'0':'':'':true}}</td>
-                            </ng-container>
-                        </tr>
-                        <tr *ngIf="service.totals.tip">
-                            <td><span class="font-weight-bold" [translate]="'day.tips'"></span></td>
-                            <td>{{service.totals.tip | curr:'0':'':'':true}}</td>
-                            <ng-container *ngFor="let orderType of service.kpis">
-                                <td>{{orderType.tip | curr:'0':'':'':true}}</td>
-                            </ng-container>
-                        </tr>
-                        <tr>
-                            <td><span class="font-weight-bold" [translate]="'revenue'"></span></td>
-                            <td>{{service.totals.revenue | curr:'0':'':'':true}}</td>
-                            <ng-container *ngFor="let orderType of service.kpis">
-                                <td>{{orderType.revenue | curr:'0':'':'':true}}</td>
-                            </ng-container>
-                        </tr>
-                        <!--<tr>
-                            <td><span class="font-weight-bold" [translate]="'day.diners'"></span></td>
-                            <td>{{service.totals.diners | number}}</td>
-                            <ng-container *ngFor="let orderType of service.kpis">
-                                <td>{{orderType.diners | number}}</td>
-                            </ng-container>
-                        </tr>-->
-                        <!--<tr>
-                            <td><span [translate]="'day.ppa'"></span></td>
-                            <td>{{service.totals.ppa | curr:'0':'':'':true}}</td>
-                            <ng-container *ngFor="let orderType of service.kpis">
-                                <td>{{orderType.ppa | curr:'0':'':'':true}}</td>
-                            </ng-container>
-                        </tr>-->
-                        <tr>
-                            <td><span class="font-weight-bold" [translate]="'cancellations'"></span></td>
-                            <td>{{service.totals.reductions.cancellations.amount | number}}<span style="display: block;font-size: 12px;">({{service.totals.reductions.cancellations.percentage | pct: 1}})</span></td>
-                            <ng-container *ngFor="let orderType of service.kpis">
-                                <td>{{orderType.reductions.cancellations.amount | number}}<span style="display: block;font-size: 12px;">({{orderType.reductions.cancellations.percentage | pct: 1}})</span></td>
-                            </ng-container>
-                        </tr>
-                        <tr>
-                            <td><span class="font-weight-bold" [translate]="'operational'"></span></td>
-                            <td>{{service.totals.reductions.operational.amount | number}}<span style="display: block;font-size: 12px;">({{service.totals.reductions.operational.percentage | pct: 1}})</span></td>
-                            <ng-container *ngFor="let orderType of service.kpis">
-                                <td>{{orderType.reductions.operational.amount | number}}<span style="display: block;font-size: 12px;">({{orderType.reductions.operational.percentage | pct: 1}})</span></td>
-                            </ng-container>
-                        </tr>
-                        <tr>
-                            <td><span class="font-weight-bold" [translate]="'retention'"></span></td>
-                            <td>{{service.totals.reductions.retention.amount | number}}<span style="display: block;font-size: 12px;">({{service.totals.reductions.retention.percentage | pct: 1}})</span></td>
-                            <ng-container *ngFor="let orderType of service.kpis">
-                                <td>{{orderType.reductions.retention.amount | number}}<span style="display: block;font-size: 12px;">({{orderType.reductions.retention.percentage | pct: 1}})</span></td>
-                            </ng-container>
-                        </tr>
-                        <tr>
-                            <td><span class="font-weight-bold" [translate]="'organizational'"></span></td>
-                            <td>{{service.totals.reductions.organizational.amount | number}}<span style="display: block;font-size: 12px;">({{service.totals.reductions.organizational.percentage | pct: 1}})</span></td>
-                            <ng-container *ngFor="let orderType of service.kpis">
-                                <td>{{orderType.reductions.organizational.amount | number}}<span style="display: block;font-size: 12px;">({{orderType.reductions.organizational.percentage | pct: 1}})</span></td>
-                            </ng-container>
-                        </tr>
-                        </tbody>
-                    </table>
-                </mat-expansion-panel>
-            </ng-container>
-        </ng-container>
-    </div>
-</div>
-<div class="widget p-0 mt-3">
-    <div class="flex d-col">
-        <div class="title" style="border-radius: 3px 3px 0px 0px" [translate]="'day.payments'">Payments</div>
-        <mat-accordion>
-            <mat-expansion-panel expanded="true">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        <span  class="font-weight-bold" [translate]="'day.paymentsReport'">Payments report</span>
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <table *ngIf="payments" class="table table-sm">
-                    <tr class="totalRow">
-                        <td  class="font-weight-bold" [translate]="'day.total'">Total</td>
-                        <td class="ar">{{payments.total | curr:'0':'':'nullify':true}}</td>
-                    </tr>
-                    <ng-container *ngIf="payments.accountGroups">
-                        <ng-container *ngFor="let accountGroup of payments.accountGroups">
-                            <ng-container *ngIf="accountGroup">
-                                <tr class="accountTypeRow">
-                                    <td>{{accountGroup.type}}</td>
-                                    <td class="ar" dir="ltr">{{accountGroup.amount | curr:'0':'':'nullify':true}}<span
-                                            style="display: block">({{accountGroup.percentage | pct:'1'}})</span></td>
-                                </tr>
-                                <tr *ngFor="let subType of accountGroup.subTypes" class="accountRow">
-                                    <td>&nbsp;&nbsp;{{subType.subType}}</td>
-                                    <td class="ar" dir="ltr">{{subType.amount | curr:'0':'':'nullify':true}}<span
-                                            *ngIf="subType.amount" style="display: block">({{subType.percentage | pct:'1'}})</span></td>
-                                </tr>
+                        <ng-container *ngIf="payments.accountGroups">
+                            <ng-container *ngFor="let accountGroup of payments.accountGroups">
+                                <ng-container *ngIf="accountGroup">
+                                    <tr class="accountTypeRow">
+                                        <td>{{accountGroup.type}}</td>
+                                        <td class="ar" dir="ltr">{{accountGroup.amount |
+                                            curr:'0':'':'nullify':true}}<span
+                                                    style="display: block">({{accountGroup.percentage | pct:'1'}})</span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="let subType of accountGroup.subTypes" class="accountRow">
+                                        <td>&nbsp;&nbsp;{{subType.subType}}</td>
+                                        <td class="ar" dir="ltr">{{subType.amount | curr:'0':'':'nullify':true}}<span
+                                                *ngIf="subType.amount" style="display: block">({{subType.percentage | pct:'1'}})</span>
+                                        </td>
+                                    </tr>
+                                </ng-container>
                             </ng-container>
                         </ng-container>
-                    </ng-container>
-                </table>
-            </mat-expansion-panel>
-        </mat-accordion>
+                    </table>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
     </div>
-</div>
-
+</ng-container>

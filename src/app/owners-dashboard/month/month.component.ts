@@ -23,6 +23,7 @@ export class MonthComponent implements OnInit {
     public env: any;
     public title: string;
     public incVat: boolean;
+    public showData: boolean;
 
     constructor(private ownersDashboardService: OwnersDashboardService, private dataService: DataService, private route: ActivatedRoute, private datePipe: DatePipe) {
 
@@ -31,15 +32,6 @@ export class MonthComponent implements OnInit {
         dataService.vat$.subscribe(vat => {
             this.incVat = vat;
         });
-
-
-        ownersDashboardService.toolbarConfig.left.back.pre = () => true;
-        ownersDashboardService.toolbarConfig.left.back.target = '/owners-dashboard/home';
-        ownersDashboardService.toolbarConfig.left.back.showBtn = true;
-        ownersDashboardService.toolbarConfig.menuBtn.show = false;
-        ownersDashboardService.toolbarConfig.settings.show = false;
-        ownersDashboardService.toolbarConfig.center.showVatComment = false;
-        ownersDashboardService.toolbarConfig.home.show = true;
     }
 
     async ngOnInit() {
@@ -48,6 +40,7 @@ export class MonthComponent implements OnInit {
 
 
         this.dataService.selectedMonth$.subscribe(async date => {
+            this.showData = false;
             let month = date.month();
             let year = date.year();
             let monthReport = await this.dataService.getMonthReport(month, year);
@@ -57,6 +50,7 @@ export class MonthComponent implements OnInit {
 
             this.payments = this.getPayments(monthReport);
             this.summary = this.getSummary(monthReport);
+            this.showData = true;
         });
     }
 
