@@ -10,7 +10,7 @@
                                          style="border-radius: 0px;">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                <span class="font-weight-bold">{{service.name | translate}} {{(incVat ? service.totals.sales : (service.totals.sales - service.totals.vat)) | curr:'0':'':''}}</span>
+                                <span class="font-weight-bold" style="width: 25%">{{service.name | translate}}</span> <span style="width: 30%">{{(incVat ? service.totals.sales : (service.totals.sales - service.totals.vat)) | curr:'0':'':''}}</span> <span *ngIf="service.name !== 'monthly'" style="width: 30%"> {{service.totals.percentage | pct: 1}}</span>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <table class="table table-sm">
@@ -134,7 +134,7 @@
                         </tr>
                         <ng-container *ngIf="payments.accountGroups">
                             <ng-container *ngFor="let accountGroup of payments.accountGroups">
-                                <ng-container *ngIf="accountGroup">
+                                <ng-container *ngIf="accountGroup && accountGroup.amount">
                                     <tr class="accountTypeRow">
                                         <td>{{accountGroup.type}}</td>
                                         <td class="ar" dir="ltr">{{accountGroup.amount |

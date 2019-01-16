@@ -58,38 +58,10 @@ export class MonthComponent implements OnInit {
         let salesByService = _.get(monthReport, 'sales');
         let sales = {};
         let totalMonthSales = [];
-        let totalsTemplate = {
-            diners: 0,
-            ppa: 0,
-            sales: 0,
-            vat: 0,
-            tip: 0,
-            revenue: 0,
-            reductions: {
-                returns: {
-                    amount: 0,
-                    percentage: 0,
-                },
-                cancellations: {
-                    amount: 0,
-                    percentage: 0,
-                },
-                operational: {
-                    amount: 0,
-                    percentage: 0,
-                },
-                organizational: {
-                    amount: 0,
-                    percentage: 0,
-                },
-                retention: {
-                    amount: 0,
-                    percentage: 0,
-                }
-            }
-        };
+        let totalSalesForPercentage = 0;
         _.forEach(salesByService, service => {
             let name = service.serviceName;
+            totalSalesForPercentage += service.ttlSalesAmountIncludeVat || 0;
             let kpi = {
                 name: service.serviceName,
                 type: service.orderType,
@@ -200,6 +172,7 @@ export class MonthComponent implements OnInit {
                 diners: 0,
                 ppa: 0,
                 sales: 0,
+                percentage: 0,
                 vat: 0,
                 tip: 0,
                 revenue: 0,
@@ -247,13 +220,13 @@ export class MonthComponent implements OnInit {
             totalSales.reductions.retention.percentage = totalSales.reductions.retention.amount / (totalSales.reductions.retention.amount + totalSales.sales);
 
             totalSales.ppa = totalSales.diners ? totalSales.sales / totalSales.diners : 0;
+            totalSales.percentage = totalSales.sales / totalSalesForPercentage;
             salesByService['totals'] = totalSales;
 
             salesByService.kpis = _.orderBy(salesByService.kpis, ['type']);
         });
 
-        let test = _.values(sales);
-        return test;
+        return _.values(sales);
     }
 
     getTitle(month, year) {
