@@ -189,7 +189,7 @@ const he = {
     'month.reductions': 'הפחתות',
     'revenue': 'מחזור',
     'monthly': 'חודשי',
-    'monthSummary': 'סיכום חודשי'
+    'monthSummary': 'סיכום חודש'
 };
 const en = {
     'forecast': 'Forecast',

@@ -57,7 +57,7 @@ export class MonthComponent implements OnInit {
     getSummary(monthReport) {
         let salesByService = _.get(monthReport, 'sales');
         let sales = {};
-        let totalMonthSales = [];
+        let totalMonthSales = {};
         let totalSalesForPercentage = 0;
         _.forEach(salesByService, service => {
             let name = service.serviceName;
@@ -65,8 +65,9 @@ export class MonthComponent implements OnInit {
             let kpi = {
                 name: service.serviceName,
                 type: service.orderType,
-                diners: service.dinersAmount || 0,
-                ppa: service.dinersAmount ? service.ttlSalesAmountIncludeVat / service.dinersAmount : '',
+                dinersAmount: 0,
+                diners: service.dinersOrders || 0,
+                ppa: service.avgSales || 0,
                 sales: service.ttlSalesAmountIncludeVat,
                 vat: service.vatAmount,
                 tip: service.tipAmountIncludeVat || 0,
@@ -94,11 +95,12 @@ export class MonthComponent implements OnInit {
                     }
                 }
             };
-
+            kpi.dinersAmount = kpi.ppa * kpi.diners;
             if(!totalMonthSales[service.orderType]) {
-                totalMonthSales[service.orderType] = {
+                _.set(totalMonthSales, [service.orderType], {
                     diners: 0,
                     ppa: 0,
+                    dinersAmount: 0,
                     sales: 0,
                     vat: 0,
                     tip: 0,
@@ -125,11 +127,12 @@ export class MonthComponent implements OnInit {
                             percentage: 0,
                         }
                     }
-                };
+                });
             }
 
             totalMonthSales[service.orderType].type = service.orderType;
             totalMonthSales[service.orderType].diners += kpi.diners;
+            totalMonthSales[service.orderType].dinersAmount += (kpi.diners * kpi.ppa);
             totalMonthSales[service.orderType].sales += kpi.sales;
             totalMonthSales[service.orderType].vat += kpi.vat;
             totalMonthSales[service.orderType].tip += kpi.tip;
@@ -150,12 +153,12 @@ export class MonthComponent implements OnInit {
         });
 
         _.forEach(totalMonthSales, byOrderType => {
+            byOrderType.ppa = byOrderType.dinersAmount / byOrderType.diners;
             byOrderType.reductions.returns.percentage = byOrderType.reductions.returns.amount / (byOrderType.reductions.returns.amount + byOrderType.sales);
             byOrderType.reductions.cancellations.percentage = byOrderType.reductions.cancellations.amount / (byOrderType.reductions.cancellations.amount + byOrderType.sales);
             byOrderType.reductions.operational.percentage = byOrderType.reductions.operational.amount / (byOrderType.reductions.operational.amount + byOrderType.sales);
             byOrderType.reductions.organizational.percentage = byOrderType.reductions.organizational.amount / (byOrderType.reductions.organizational.amount + byOrderType.sales);
             byOrderType.reductions.retention.percentage = byOrderType.reductions.retention.amount / (byOrderType.reductions.retention.amount + byOrderType.sales);
-            byOrderType.ppa = byOrderType.sales / byOrderType.diners;
         });
 
         sales[0] = {
@@ -170,6 +173,7 @@ export class MonthComponent implements OnInit {
         _.forEach(sales, salesByService => {
             let totalSales = {
                 diners: 0,
+                dinersAmount: 0,
                 ppa: 0,
                 sales: 0,
                 percentage: 0,
@@ -202,6 +206,7 @@ export class MonthComponent implements OnInit {
 
             _.forEach(salesByService.kpis, salesByOrderType => {
                 totalSales.diners += salesByOrderType.diners;
+                totalSales.dinersAmount += (salesByOrderType.diners * salesByOrderType.ppa);
                 totalSales.sales += salesByOrderType.sales;
                 totalSales.vat += salesByOrderType.vat;
                 totalSales.tip += salesByOrderType.tip;
@@ -219,7 +224,6 @@ export class MonthComponent implements OnInit {
             totalSales.reductions.organizational.percentage = totalSales.reductions.organizational.amount / (totalSales.reductions.organizational.amount + totalSales.sales);
             totalSales.reductions.retention.percentage = totalSales.reductions.retention.amount / (totalSales.reductions.retention.amount + totalSales.sales);
 
-            totalSales.ppa = totalSales.diners ? totalSales.sales / totalSales.diners : 0;
             totalSales.percentage = totalSales.sales / totalSalesForPercentage;
             salesByService['totals'] = totalSales;
 
@@ -231,9 +235,9 @@ export class MonthComponent implements OnInit {
 
     getTitle(month, year) {
         let date = moment().month(month).year(year);
-        //let monthName = this.datePipe.transform(date, 'MMMM', '', this.env.lang);
+        let monthName = this.datePipe.transform(date, 'MMMM', '', this.env.lang);
         let monthState = moment().month() === date.month() ? tmpTranslations.get('home.month.notFinalTitle') : tmpTranslations.get('home.month.finalTitle');
-        return monthState;
+        return monthName + ' ' + monthState;
     }
 
     getPayments(monthReport) {
