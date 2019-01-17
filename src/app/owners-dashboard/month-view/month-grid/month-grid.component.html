@@ -22,7 +22,7 @@
                     </div>
                     <div class="row m-2" style="direction: ltr">
                         <div class="btn-group average-picker">
-                            <span class="btn btn-lg btn-outline-secondary disabled" [translate]="'budget'">budget</span>
+                            <span class="btn btn-lg btn-outline-secondary disabled" [translate]="'forecast'"></span>
                             <span class="btn btn-lg btn-outline-secondary"
                                   [ngClass]="{'active': avgPeriodComparator === 'year', 'disabled': !hasYearlyAvg}"
                                   (click)="changeAvgPeriodComparator('year')" [translate]="'previousYear'">Prev. Year</span>
@@ -57,7 +57,7 @@
                             <span class="btn btn-lg btn-outline-secondary"
                                   [ngClass]="{'active': avgPeriodComparator === 'year', 'disabled': !hasYearlyAvg}"
                                   (click)="changeAvgPeriodComparator('year')" [translate]="'previousYear'">Prev. Year</span>
-                            <span class="btn btn-lg btn-outline-secondary disabled" [translate]="'budget'">budget</span>
+                            <span class="btn btn-lg btn-outline-secondary disabled" [translate]="'forecast'"></span>
                         </div>
                     </div>
                 </div>
