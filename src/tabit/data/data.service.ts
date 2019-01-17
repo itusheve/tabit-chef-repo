@@ -1372,7 +1372,7 @@ export class DataService {
         let excludedDates = [];
         _.each(masterCalendar, day => {
             if (day.behavior === 'IgnoreDate') {
-                excludedDates[moment(day.date).format('YYYY-MM-DD')] = day.holiday;
+                excludedDates[moment(day.date).format('YYYY-MM-DD')] = day.holiday || day.event;
             }
         });
         return excludedDates;
