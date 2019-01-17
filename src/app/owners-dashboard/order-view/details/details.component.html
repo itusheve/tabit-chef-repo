@@ -119,7 +119,7 @@
                 <tbody>
                     <tr *ngFor="let row of orderOld.timeline">
                         <td *ngIf="!isUS">{{ row.at | date : 'dd/MM/yyyy HH:mm:ss' }}</td>
-                        <td *ngIf="isUS">{{ row.at | date : 'MM/dd/yyyy HH:mm:ss a' }}</td>
+                        <td *ngIf="isUS">{{ row.at | date : 'MM/dd/yyyy HH:mm:ss a' : '': 'en_US' }}</td>
                         <td style="text-transform: capitalize;">{{ row.action }}</td>
                         <td class="break">
                             <ng-container *ngIf="row.recordType!=='payment'&&!row.isApproved">{{row.data}}</ng-container>
