@@ -15,7 +15,7 @@
                                 <span *ngIf="service.name !== 'monthly'" style="width: 25%"> {{service.totals.percentage | pct: 1}}</span>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <table class="table table-sm">
+                        <table class="table table-sm table-responsive">
                             <thead>
                             <tr class="header">
                                 <td></td>
@@ -63,51 +63,51 @@
                             </tr>
                             <tr>
                                 <td><span class="font-weight-bold" [translate]="'day.ppa'"></span></td>
-                                <td>{{service.totals.ppa | curr:'0':'':'nullify':true}}</td>
+                                <td>{{service.totals.ppa | curr:'2':'':'nullify':true}}</td>
                                 <ng-container *ngFor="let orderType of service.kpis">
-                                    <td>{{orderType.ppa | curr:'0':'':'nullify':true}}</td>
+                                    <td>{{orderType.ppa | curr:'2':'':'nullify':true}}</td>
                                 </ng-container>
                             </tr>
                             <tr>
                                 <td><span class="font-weight-bold" [translate]="'cancellations'"></span></td>
-                                <td>{{service.totals.reductions.cancellations.amount | number}}<span
+                                <td>{{service.totals.reductions.cancellations.amount | curr:'0':'':'nullify':true}}<span
                                         style="display: block;font-size: 12px;">({{service.totals.reductions.cancellations.percentage | pct: 1}})</span>
                                 </td>
                                 <ng-container *ngFor="let orderType of service.kpis">
-                                    <td>{{orderType.reductions.cancellations.amount | number}}<span
+                                    <td>{{orderType.reductions.cancellations.amount | curr:'0':'':'nullify':true}}<span
                                             style="display: block;font-size: 12px;">({{orderType.reductions.cancellations.percentage | pct: 1}})</span>
                                     </td>
                                 </ng-container>
                             </tr>
                             <tr>
                                 <td><span class="font-weight-bold" [translate]="'operational'"></span></td>
-                                <td>{{service.totals.reductions.operational.amount | number}}<span
+                                <td>{{service.totals.reductions.operational.amount | curr:'0':'':'nullify':true}}<span
                                         style="display: block;font-size: 12px;">({{service.totals.reductions.operational.percentage | pct: 1}})</span>
                                 </td>
                                 <ng-container *ngFor="let orderType of service.kpis">
-                                    <td>{{orderType.reductions.operational.amount | number}}<span
+                                    <td>{{orderType.reductions.operational.amount | curr:'0':'':'nullify':true}}<span
                                             style="display: block;font-size: 12px;">({{orderType.reductions.operational.percentage | pct: 1}})</span>
                                     </td>
                                 </ng-container>
                             </tr>
                             <tr>
                                 <td><span class="font-weight-bold" [translate]="'retention'"></span></td>
-                                <td>{{service.totals.reductions.retention.amount | number}}<span
+                                <td>{{service.totals.reductions.retention.amount | curr:'0':'':'nullify':true}}<span
                                         style="display: block;font-size: 12px;">({{service.totals.reductions.retention.percentage | pct: 1}})</span>
                                 </td>
                                 <ng-container *ngFor="let orderType of service.kpis">
-                                    <td>{{orderType.reductions.retention.amount | number}}<span
+                                    <td>{{orderType.reductions.retention.amount | curr:'0':'':'nullify':true}}<span
                                             style="display: block;font-size: 12px;">({{orderType.reductions.retention.percentage | pct: 1}})</span>
                                     </td>
                                 </ng-container>
                             </tr>
                             <tr>
                                 <td><span class="font-weight-bold" [translate]="'organizational'"></span></td>
-                                <td>{{service.totals.reductions.organizational.amount | number}}<span
+                                <td>{{service.totals.reductions.organizational.amount | curr:'0':'':'nullify':true}}<span
                                         style="display: block;font-size: 12px;">({{service.totals.reductions.organizational.percentage | pct: 1}})</span>
                                 </td>
                                 <ng-container *ngFor="let orderType of service.kpis">
-                                    <td>{{orderType.reductions.organizational.amount | number}}<span
+                                    <td>{{orderType.reductions.organizational.amount | curr:'0':'':'nullify':true}}<span
                                             style="display: block;font-size: 12px;">({{orderType.reductions.organizational.percentage | pct: 1}})</span>
                                     </td>
                                 </ng-container>

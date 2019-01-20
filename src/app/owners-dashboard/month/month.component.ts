@@ -59,6 +59,28 @@ export class MonthComponent implements OnInit {
         let sales = {};
         let totalMonthSales = {};
         let totalSalesForPercentage = 0;
+
+        //temp quick fix request by Barry! probably will stay here a few years...
+        _.forEach(salesByService, service => {
+            if (service.orderType === 'seated') {
+                service.order = 0;
+            }
+            else if (service.orderType === 'takeaway') {
+                service.order = 1;
+            }
+            else if (service.orderType === 'delivery') {
+                service.order = 2;
+            }
+            else if (service.orderType === 'otc') {
+                service.order = 3;
+            }
+            else if (service.orderType === 'refund') {
+                service.order = 4;
+            }
+        });
+        salesByService = _.orderBy(salesByService, ['order']);
+        //end fix TODO: remove this and use numeric values e.g. #order
+
         _.forEach(salesByService, service => {
             let name = service.serviceName;
             totalSalesForPercentage += service.ttlSalesAmountIncludeVat || 0;
@@ -227,7 +249,7 @@ export class MonthComponent implements OnInit {
             totalSales.percentage = totalSales.sales / totalSalesForPercentage;
             salesByService['totals'] = totalSales;
 
-            salesByService.kpis = _.orderBy(salesByService.kpis, ['type']);
+            //salesByService.kpis = _.orderBy(salesByService.kpis, ['type']);
         });
 
         return _.values(sales);
