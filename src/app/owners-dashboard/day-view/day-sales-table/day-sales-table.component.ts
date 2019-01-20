@@ -82,9 +82,11 @@ export class DaySalesTableComponent implements OnChanges {
 
             this.data.forEach(row => {
 
-                if (row.tip || row.ttlTipAmountIncludeVat || row.gratuity) {
-                    this.pivotedData.hasTips = true;
+                if(!row.orderType) {
+                    return;
                 }
+
+                this.pivotedData.hasTips = row.tip || row.ttlTipAmountIncludeVat || row.gratuity;
 
                 if (row.salesRefundTipAmountIncludeVat) {
 
