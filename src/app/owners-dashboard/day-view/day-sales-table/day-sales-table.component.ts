@@ -82,8 +82,16 @@ export class DaySalesTableComponent implements OnChanges {
 
             this.data.forEach(row => {
 
-                if(!row.orderType) {
-                    return;
+                //temp fix TODO: pending Ofer's fix
+                //apparently this is a refund, make sure its negative...
+                if(row.orderTypeKey == '999') {
+                    row.orderType = this.environment.lang === 'he' ? 'החזר' : 'refund';
+                    if(row.ttlSaleAmountIncludeVat > 0) {
+                        row.ttlSaleAmountIncludeVat = row.ttlSaleAmountIncludeVat * -1;
+                    }
+                    if(row.ttlSaleAmountExcludeVat > 0) {
+                        row.ttlSaleAmountExcludeVat = row.ttlSaleAmountExcludeVat * -1;
+                    }
                 }
 
                 this.pivotedData.hasTips = row.tip || row.ttlTipAmountIncludeVat || row.gratuity;
