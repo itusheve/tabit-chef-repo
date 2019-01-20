@@ -94,7 +94,9 @@ export class DaySalesTableComponent implements OnChanges {
                     }
                 }
 
-                this.pivotedData.hasTips = row.tip || row.ttlTipAmountIncludeVat || row.gratuity;
+                if (row.tip || row.ttlTipAmountIncludeVat || row.gratuity) {
+                    this.pivotedData.hasTips = true;
+                }
 
                 if (row.salesRefundTipAmountIncludeVat) {
 
