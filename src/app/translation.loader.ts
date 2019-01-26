@@ -18,6 +18,8 @@ const he = {
     'ORDERS_VIEW.all_order_oth': 'הזמנה על חשבון הבית',
     'ORDERS_VIEW.exempted_tax': 'Tax Exempt',
     'OTC': 'דלפק',
+    'otc': 'דלפק',
+    'refund': 'החזר',
     'OTH': 'על חשבון הבית',
     'Promotions': 'מבצע',
     'Returns': 'החזרה',
@@ -81,7 +83,7 @@ const he = {
     'day.retention': 'שימור ושיווק',
     'day.retentionByServer': 'פעולות ידניות לפי מלצר',
     'day.retentionValue': 'שימור ושיווק',
-    'day.returned': 'הוחזר בהקפה מ',
+    'day.returned': 'הוחזר',
     'day.sales': 'מכירות',
     'day.sales2': 'מכירות',
     'day.sales3': 'מכירות',
@@ -141,7 +143,7 @@ const he = {
     'processingData': 'השרת מבצע עדכון נתונים, מידע עדכני יהיה זמין בעוד מספר דקות.',
     'retention': 'שימור ושיווק',
     'returns': 'החזר',
-    'seated': 'בישיבה',
+    'seated': 'ישיבה',
     'settingsPage.dayPage': 'דו"ח יומי',
     'settingsPage.displayedItemsPerDept': 'מספר פריטים להצגה בקטגוריה',
     'settingsPage.paymentsReportCalculationMethod': 'חישוב אחוז תת קטגוריה בדו"ח תשלומים',
@@ -185,7 +187,11 @@ const he = {
     'month.diners': 'סועדים',
     'month.ppa': 'ממוצע',
     'month.revenue': 'מחזור',
-    'month.reductions': 'הפחתות'
+    'month.reductions': 'הפחתות',
+    'revenue': 'מחזור',
+    'monthly': 'חודשי',
+    'monthSummary': 'סיכום חודש',
+    'actual': 'בפועל'
 };
 const en = {
     'forecast': 'Forecast',
@@ -204,7 +210,9 @@ const en = {
     'ORDERS_VIEW.all_order_oth': 'Order OTH',
     'ORDERS_VIEW.exempted_tax': 'Tax Exempt',
     'OTC': 'OTC',
+    'otc': 'OTC',
     'OTH': 'OTH',
+    'refund': 'Refund',
     'Promotions': 'Promotions',
     'Returns': 'Return',
     'Unknown': 'Unknown',
@@ -309,8 +317,8 @@ const en = {
     'login.login': 'Login',
     'login.password': 'Password',
     'mediaExchange': 'Media Exchange',
-    'menu.excludingVAT': 'Data excluded VAT',
-    'menu.includingVAT': 'data included VAT',
+    'menu.excludingVAT': 'VAT excluded',
+    'menu.includingVAT': 'VAT included',
     'menu.logout': 'Logout',
     'menu.managerDashboard': 'Manager Dashboard',
     'menu.mySites': 'My Restaurants',
@@ -371,7 +379,11 @@ const en = {
     'month.diners': 'Diners',
     'month.ppa': 'PPA',
     'month.revenue': 'Revenue',
-    'month.reductions': 'Reductions'
+    'month.reductions': 'Reductions',
+    'revenue': 'Revenue',
+    'monthly': 'Monthly',
+    'monthSummary': 'Summary',
+    'actual': 'Actual'
 };
 
 export class TranslationLoader implements TranslateLoader {

@@ -484,7 +484,7 @@ export class DataService {
         other: new OrderType('other', 6)
     };
 
-    public vat$: BehaviorSubject<boolean> = new BehaviorSubject<any>(_.get(JSON.parse(window.localStorage.getItem('settings')), 'vat'));
+    public vat$: BehaviorSubject<boolean> = new BehaviorSubject<any>(_.get(JSON.parse(window.localStorage.getItem('settings')), 'vat', true));
 
     public currencySymbol$: BehaviorSubject<any> = new BehaviorSubject<any>(environment.region === 'il' ? '$' : '₪');
 
@@ -962,8 +962,15 @@ export class DataService {
         if (!settings) {
             settings = {
                 lang: this.translate.getBrowserLang(),
-                vat: true
             };
+        }
+
+        if(!settings.vat) {
+            settings.vat = true;
+        }
+
+        if(!settings.weekToDate) {
+            settings.weekToDate = true;
         }
 
         if (settings.lang !== 'he' && settings.lang !== 'en') {
@@ -1372,7 +1379,7 @@ export class DataService {
         let excludedDates = [];
         _.each(masterCalendar, day => {
             if (day.behavior === 'IgnoreDate') {
-                excludedDates[moment(day.date).format('YYYY-MM-DD')] = day.holiday;
+                excludedDates[moment(day.date).format('YYYY-MM-DD')] = day.holiday || day.event;
             }
         });
         return excludedDates;

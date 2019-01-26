@@ -17,3 +17,8 @@ td {
 .pctCell{
   width: 63px;
 }
+
+::ng-deep.mat-expansion-panel-body {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
