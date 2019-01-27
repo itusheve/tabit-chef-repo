@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-forgot-password',
@@ -14,11 +15,12 @@ export class ForgotPasswordDialogComponent {
     });
 
     get email(): any { return this.fgtPswForm.get('email'); }
-
+    public env: any;
     constructor(
         public dialogRef: MatDialogRef<ForgotPasswordDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
+        this.env = environment;
         this.fgtPswForm.setValue({ email: data.email });
     }
 
