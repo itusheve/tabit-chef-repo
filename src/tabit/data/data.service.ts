@@ -969,7 +969,7 @@ export class DataService {
             settings.vat = true;
         }
 
-        if(!settings.weekToDate) {
+        if(settings.weekToDate === undefined) {
             settings.weekToDate = true;
         }
 
