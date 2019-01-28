@@ -600,6 +600,7 @@ export class HomeComponent implements OnInit {
 
             let day = database.getDay(restaurantTime);
             if (day) {
+                this.OlapFailed = false;
                 this.currentBdCardData.holiday = day.holiday;
 
                 this.currentBdCardData.diners = day.diners || day.orders;
@@ -792,7 +793,6 @@ export class HomeComponent implements OnInit {
                 let incTax = data[3];
 
                 this.display.monthReport = true;
-
                 let month = database.getMonth(date);
                 if (!month) {
                     this.showSummary = false;

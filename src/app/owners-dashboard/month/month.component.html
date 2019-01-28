@@ -1,3 +1,8 @@
+<ng-container *ngIf="!showData">
+    <div class="text-center">
+        <dx-load-indicator></dx-load-indicator>
+    </div>
+</ng-container>
 <ng-container *ngIf="showData">
     <div class="widget p-0">
         <div class="flex d-col">

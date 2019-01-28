@@ -4,17 +4,10 @@
 </div>
 
 <div class="container p-0">
-    <div class="alert alert-light" *ngIf="loadingOlapData">
-        <ng-container *ngIf="OlapFailed">
+    <div class="alert alert-light" *ngIf="OlapFailed">
+        <ng-container>
             <div class="text-center" [translate]="'processingData'">
                 We are processing your data, please check back in a few minutes.
-            </div>
-        </ng-container>
-        <ng-container *ngIf="!OlapFailed">
-            <div class="text-center">
-                <dx-load-indicator></dx-load-indicator>
-                <p class="text-center saving"><span [translate]="'fetchingLatestAnalyticsData'">Fetching latest analytics data</span><span>.</span><span>.</span><span>.</span>
-                </p>
             </div>
         </ng-container>
     </div>
@@ -86,9 +79,9 @@
                 <app-month-view *ngIf="!loadingOlapData" (onDayRequest)="onDayRequest($event)"></app-month-view>
             </div>
         </div>
-        <div class="col-sm-12 col-md-6 p-0 mt-3">
+        <div class="col-sm-12 col-md-6 p-0 mt-3" *ngIf="display.monthReport">
             <div class="col-12">
-                <app-month *ngIf="display.monthReport"></app-month>
+                <app-month></app-month>
             </div>
         </div>
     </div>
