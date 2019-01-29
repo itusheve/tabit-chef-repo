@@ -600,6 +600,7 @@ export class HomeComponent implements OnInit {
 
             let day = database.getDay(restaurantTime);
             if (day) {
+                this.OlapFailed = false;
                 this.currentBdCardData.holiday = day.holiday;
 
                 this.currentBdCardData.diners = day.diners || day.orders;
@@ -784,15 +785,15 @@ export class HomeComponent implements OnInit {
     }
 
     getSummary() {
-        combineLatest(this.dataService.selectedMonth$, this.dataService.currentRestTime$, this.dataService.databaseV2$, this.dataService.vat$)
+        combineLatest(this.dataService.selectedMonth$, this.dataService.currentRestTime$, this.dataService.databaseV2$, this.dataService.vat$, this.dataService.organization$)
             .subscribe(data => {
                 let date = data[0];
                 let currentBd = data[1];
                 let database = data[2];
                 let incTax = data[3];
+                let organization = data[4];
 
-                this.display.monthReport = true;
-
+                this.display.monthReport = organization.region === 'il';
                 let month = database.getMonth(date);
                 if (!month) {
                     this.showSummary = false;

@@ -191,7 +191,8 @@ const he = {
     'revenue': 'מחזור',
     'monthly': 'חודשי',
     'monthSummary': 'סיכום חודש',
-    'actual': 'בפועל'
+    'actual': 'בפועל',
+    'close': 'סגור'
 };
 const en = {
     'forecast': 'Forecast',
@@ -383,7 +384,8 @@ const en = {
     'revenue': 'Revenue',
     'monthly': 'Monthly',
     'monthSummary': 'Summary',
-    'actual': 'Actual'
+    'actual': 'Actual',
+    'close': 'Close'
 };
 
 export class TranslationLoader implements TranslateLoader {

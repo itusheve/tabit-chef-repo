@@ -74,13 +74,16 @@ export class OlapEp {
 
             let org = JSON.parse(window.localStorage.getItem('org'));
             let headers = new HttpHeaders({'Content-Type': 'application/json'});
-
+            let users = JSON.parse(window.localStorage.getItem('userSettings')) || {};
+            let userId = _.get(users, [org.region, 'id'], '');
             this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
                     action: 'siteHomePageOpenDay',
                     businessDate: currentTime.format('YYYYMMDD'),
                     time: moment().format('HHmm'),
-                    currentSales: 0 //ignoring this, not used.
+                    currentSales: 0, //ignoring this, not used.
+                    userId: userId
+
                 },
                 {
                     headers: headers,
@@ -103,10 +106,12 @@ export class OlapEp {
 
             let org = JSON.parse(window.localStorage.getItem('org'));
             let headers = new HttpHeaders({'Content-Type': 'application/json'});
-
+            let users = JSON.parse(window.localStorage.getItem('userSettings')) || {};
+            let userId = _.get(users, [org.region, 'id'], '');
             this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
-                    action: 'tabitChefSiteHomePage'
+                    action: 'tabitChefSiteHomePage',
+                    userId: userId
                 },
                 {
                     headers: headers,
@@ -130,10 +135,12 @@ export class OlapEp {
 
             let org = JSON.parse(window.localStorage.getItem('org'));
             let headers = new HttpHeaders({'Content-Type': 'application/json'});
-
+            let users = JSON.parse(window.localStorage.getItem('userSettings')) || {};
+            let userId = _.get(users, [org.region, 'id'], '');
             this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
-                    action: 'tabitChefSiteHomePageV2'
+                    action: 'tabitChefSiteHomePageV2',
+                    userId: userId
                 },
                 {
                     headers: headers,
@@ -158,11 +165,13 @@ export class OlapEp {
             let org = JSON.parse(window.localStorage.getItem('org'));
             let headers = new HttpHeaders({'Content-Type': 'application/json'});
             //this.dailyReportPendingRequestsCount++;
-
+            let users = JSON.parse(window.localStorage.getItem('userSettings')) || {};
+            let userId = _.get(users, [org.region, 'id'], '');
             this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
                     action: 'tabitChefSiteDailyV2',
-                    businessDate: date.format('YYYYMMDD')
+                    businessDate: date.format('YYYYMMDD'),
+                    userId: userId
                 },
                 {
                     headers: headers,
@@ -192,11 +201,13 @@ export class OlapEp {
 
             let org = JSON.parse(window.localStorage.getItem('org'));
             let headers = new HttpHeaders({'Content-Type': 'application/json'});
-
+            let users = JSON.parse(window.localStorage.getItem('userSettings')) || {};
+            let userId = _.get(users, [org.region, 'id'], '');
             this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
-                    action: 'tabitChefSiteMonthlyDev',
-                    businessDate: date.format('YYYYMMDD')
+                    action: 'tabitChefSiteMonthly',
+                    businessDate: date.format('YYYYMMDD'),
+                    userId: userId
                 },
                 {
                     headers: headers,
@@ -220,11 +231,13 @@ export class OlapEp {
 
             let org = JSON.parse(window.localStorage.getItem('org'));
             let headers = new HttpHeaders({'Content-Type': 'application/json'});
-
+            let users = JSON.parse(window.localStorage.getItem('userSettings')) || {};
+            let userId = _.get(users, [org.region, 'id'], '');
             this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
                     action: 'siteDaySalesByHour',
-                    businessDate: date.format('YYYYMMDD')
+                    businessDate: date.format('YYYYMMDD'),
+                    userId: userId
                 },
                 {
                     headers: headers,

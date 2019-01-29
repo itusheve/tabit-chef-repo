@@ -37,9 +37,11 @@ export class MonthComponent implements OnInit {
     async ngOnInit() {
         /*let month = this.route.snapshot.paramMap.get('month');
         let year = this.route.snapshot.paramMap.get('year');*/
-
-
         this.dataService.selectedMonth$.subscribe(async date => {
+            this.title = '';
+            this.summary = {};
+            this.payments = {};
+
             this.showData = false;
             let month = date.month();
             let year = date.year();
