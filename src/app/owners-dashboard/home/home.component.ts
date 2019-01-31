@@ -153,6 +153,11 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
+        const googleAnalytics = (<any>window).ga;
+        if(googleAnalytics) {
+            googleAnalytics.trackView('Home');
+        }
+
         this.loadingOlapData = true;
         this.currentBdCardData.loading = true;
         this.showSummary = false;
