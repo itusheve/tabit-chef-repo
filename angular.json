@@ -26,17 +26,14 @@
               "node_modules/bootstrap/dist/css/bootstrap-grid.min.css",
               "node_modules/devextreme/dist/css/dx.common.css",
               "node_modules/devextreme/dist/css/dx.light.css",
-              "src/styles.scss",
-              "node_modules/document-viewer/dist/main.css"
+              "src/styles.scss"
             ],
             "scripts": [
               "src/js/lib/OrderView_v1/OrderView.js",
               "src/js/lib/OrderView_v1/Translate.js",
               "src/js/lib/OrderView_v1/Utils.js",
               "src/js/vendor/rpbouman-xmla4j/xmla-min.js",
-              "src/js/xmla4j-wrapper.class.js",
-              "node_modules/document-viewer/dist/bundle.js"
-
+              "src/js/xmla4j-wrapper.class.js"
             ]
           },
           "configurations": {

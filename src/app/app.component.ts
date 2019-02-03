@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
             const googleAnalytics = (<any>window).ga;
             if(googleAnalytics) {
                 this.ds.log('GA exists');
+                googleAnalytics.debugMode();
                 (<any>window).ga.startTrackerWithId('UA-133546265-1', 30);
                 googleAnalytics.trackView('Home');
             }
