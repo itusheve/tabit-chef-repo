@@ -115,16 +115,16 @@ export class OrgsComponent implements OnInit {
                         if (usOrg) {
                             usOrg.name = 'Demo Restaurant';
                             usOrg.smallLogo = {url: 'https://office.tabit.cloud/images/restaurant-ico.png'};
-                            usOrg.isDemo = true;
                             usOrg.order = 0;
+                            usOrg.isDemo = true;
                             this.orgsFiltered.splice(0, 0, usOrg);
                         }
 
                         if (ilOrg) {
                             ilOrg.name = 'מסעדה לדוגמא';
                             ilOrg.smallLogo = {url: 'https://office.tabit.cloud/images/restaurant-ico.png'};
-                            ilOrg.isDemo = true;
                             ilOrg.order = 0;
+                            ilOrg.isDemo = true;
                             this.orgsFiltered.splice(0, 0, ilOrg);
                         }
 

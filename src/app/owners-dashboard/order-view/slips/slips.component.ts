@@ -7,6 +7,7 @@ import {ORDERS_VIEW} from '../../../../tabit/data/dc/closedOrders.data.service';
 import {tmpTranslations} from '../../../../tabit/data/data.service';
 
 import {environment} from '../../../../environments/environment';
+import {DataService} from '../../../../tabit/data/data.service';
 
 export interface SlipVM {
     id: string;
@@ -44,20 +45,21 @@ export class OrderSlipsComponent implements OnInit {
 
     isOTH = false;
 
-    constructor() {
+    constructor(dataService: DataService) {
         this.ordersView = ORDERS_VIEW.getTranslations();
+        dataService.organization$.subscribe(organization => {
+            if (organization.isDemo === true) {
+                this.exampleOrgName = organization.name;
+                this.showExampleOrg = true;
+            }
+            else {
+                this.exampleOrgName = undefined;
+                this.showExampleOrg = false;
+            }
+        });
     }
 
     ngOnInit() {
-        try {
-            this.exampleOrgName = JSON.parse(window.localStorage.getItem('exampleOrg')).name;
-        } catch (e) {
-            this.exampleOrgName = undefined;
-        }
-        if (this.exampleOrgName) {
-            this.showExampleOrg = true;
-        }
-
         // check if is OTH order.
         this.isOTH = this.isOthOrder(this.printDataOld.variables);
 
