@@ -33,8 +33,12 @@ export class AppComponent implements OnInit {
             this.ds.log('Cordova exists');
             const googleAnalytics = (<any>window).ga;
             if(googleAnalytics) {
+                this.ds.log('GA exists');
                 (<any>window).ga.startTrackerWithId('UA-133546265-1', 30);
                 googleAnalytics.trackView('Home');
+            }
+            else {
+                this.ds.log('GA does NOT exists');
             }
         } else {
             this.ds.log('Cordova does NOT exist');
