@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {take} from 'rxjs/operators';
 import { AuthService } from '../../../app/auth/auth.service';
 
 import * as moment from 'moment';
@@ -9,8 +8,6 @@ import {ReplaySubject} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {OlapMappings} from './olap.mappings';
 import {HttpHeaders, HttpClient} from '@angular/common/http';
-
-declare var Xmla4JWrapper: any;
 
 // NEW INTERFACES
 
@@ -40,32 +37,8 @@ export interface PaymentsKPIs {
     yearlyPrc: number;
 }
 
-// OLD INTERFACES:
-
-interface MemberConfig {
-    member?: any;
-    dimAttr?: any;
-    memberPath?: any;
-    range?: {
-        from: string;
-        to: string;
-    };
-}
-
-interface MembersConfig {
-    dimAttr: any;
-    as?: string;//what property name to use when providing dat abased on the MemberConfig. by default its the dimAttr
-}
-
 @Injectable()
 export class OlapEp {
-
-    private catalog = environment.olapConfig.catalog;
-    private cube = environment.olapConfig.cube;
-    private baseUrl = environment.olapConfig.baseUrl;
-    private sqlServerProxy = environment.olapConfig.sqlServerProxy;
-    private url$: ReplaySubject<any>;
-    private dailyReportPendingRequestsCount:number = 0;
 
     constructor(private olapMappings: OlapMappings, private httpClient: HttpClient, private authService: AuthService) {}
 
@@ -82,7 +55,8 @@ export class OlapEp {
                     businessDate: currentTime.format('YYYYMMDD'),
                     time: moment().format('HHmm'),
                     currentSales: 0, //ignoring this, not used.
-                    userId: userId
+                    userId: userId,
+                    production: environment.production
 
                 },
                 {
@@ -111,7 +85,8 @@ export class OlapEp {
             this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
                     action: 'tabitChefSiteHomePage',
-                    userId: userId
+                    userId: userId,
+                    production: environment.production
                 },
                 {
                     headers: headers,
@@ -140,7 +115,8 @@ export class OlapEp {
             this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
                     action: 'tabitChefSiteHomePageV2',
-                    userId: userId
+                    userId: userId,
+                    production: environment.production
                 },
                 {
                     headers: headers,
@@ -164,14 +140,14 @@ export class OlapEp {
 
             let org = JSON.parse(window.localStorage.getItem('org'));
             let headers = new HttpHeaders({'Content-Type': 'application/json'});
-            //this.dailyReportPendingRequestsCount++;
             let users = JSON.parse(window.localStorage.getItem('userSettings')) || {};
             let userId = _.get(users, [org.region, 'id'], '');
             this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
                     siteId: org.id,
                     action: 'tabitChefSiteDailyV2',
                     businessDate: date.format('YYYYMMDD'),
-                    userId: userId
+                    userId: userId,
+                    production: environment.production
                 },
                 {
                     headers: headers,
@@ -181,14 +157,8 @@ export class OlapEp {
                 .subscribe(
                     (results: any) => {
                         resolve(results);
-                        /*this.dailyReportPendingRequestsCount--;
-                        if(this.dailyReportPendingRequestsCount <= 0) {
-                            this.dailyReportPendingRequestsCount = 0;
-
-                        }*/
                     },
                     (err) => {
-                        this.dailyReportPendingRequestsCount--;
                         console.log(`Handler Proxy Error: ${JSON.stringify(err)}`);
                         throw err;
                     }
@@ -207,7 +177,8 @@ export class OlapEp {
                     siteId: org.id,
                     action: 'tabitChefSiteMonthly',
                     businessDate: date.format('YYYYMMDD'),
-                    userId: userId
+                    userId: userId,
+                    production: environment.production
                 },
                 {
                     headers: headers,
@@ -237,7 +208,8 @@ export class OlapEp {
                     siteId: org.id,
                     action: 'siteDaySalesByHour',
                     businessDate: date.format('YYYYMMDD'),
-                    userId: userId
+                    userId: userId,
+                    production: environment.production
                 },
                 {
                     headers: headers,
