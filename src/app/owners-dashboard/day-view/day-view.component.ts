@@ -897,7 +897,7 @@ export class DayViewComponent implements OnInit {
 
         this.drilledOrder = openOrder;
         this.drilledOrderNumber = openOrder.number;
-        this.drillTlogTime = openOrder.businessDate;
+        this.drillTlogTime = openOrder.created;
 
         setTimeout(() => {
             this.drill = true;

@@ -43,7 +43,7 @@
                             </td>
                         </tr>
                         <!--(click)="openOrderClicked(openOrder)"-->
-                        <tr *ngFor="let openOrder of openOrders.orders"
+                        <tr *ngFor="let openOrder of openOrders.orders" (click)="openOrderClicked(openOrder)"
                             [ngClass]="{'lastViewed': lastViewed===openOrder, 'clicked': openOrder.__dayOrdersTable__clicked}">
                             <td>{{getOpenOrderHour(openOrder.openingTime)}}</td>
                             <td  class="text-center">{{openOrder.number | number:'1.0-0'}}</td>

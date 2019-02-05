@@ -10,15 +10,9 @@
           <div *ngIf="!show" class="flex aj-center" style="width:100%;height:100%;">
               <dx-load-indicator></dx-load-indicator>
           </div>
-          <app-order-slips
-            *ngIf="show"
-            [order]="order"
-            [orderOld]="orderOld"
-            [printDataOld]="printDataOld"
-            [ORDERSVIEW]="ORDERS_VIEW"
-            [orderDocs]="orderDocs"
-            >
-          </app-order-slips>
+          <ng-container *ngFor="let document of documents">
+              <div [innerHtml]="document"></div>
+          </ng-container>
         </div>
       </ng-template>
     </mat-tab>

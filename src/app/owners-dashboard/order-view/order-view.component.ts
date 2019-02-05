@@ -1,16 +1,12 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, ViewChild, ElementRef} from '@angular/core';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-
-import * as moment from 'moment';
-import * as _ from 'lodash';
 import {Order} from '../../../tabit/model/Order.model';
-
 import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
 import {ORDERS_VIEW} from '../../../tabit/data/dc/closedOrders.data.service';
-import {OwnersDashboardService} from '../owners-dashboard.service';
 import {ROSEp} from '../../../tabit/data/ep/ros.ep';
-
-declare var TlogDocsService: any;
+import {environment} from '../../../environments/environment';
+import {DataService} from '../../../tabit/data/data.service';
+import * as _ from 'lodash';
 
 export interface SlipVM {
     id: number;
@@ -36,86 +32,52 @@ export class OrderViewComponent implements OnInit {
     printDataOld: any;
     ORDERS_VIEW: any;
     orderDocs: any;
-    tlogDocsService: any;
     html: any;
-
-    //<!-- https://github.com/angular/material2/issues/5269 -->
-    // selectedTabIndex;
+    documents: any[];
+    organization;
 
     constructor(private closedOrdersDataService: ClosedOrdersDataService,
-                private route: ActivatedRoute, private rosEp: ROSEp) {
+                private route: ActivatedRoute, private rosEp: ROSEp, private dataService: DataService) {
         this.ORDERS_VIEW = ORDERS_VIEW.getTranslations();
         this.orderDocs = {};
-    }
 
-
-    async renderDocuments(tlogId) {
-        let bill = await this.rosEp.get(`tlogs/${tlogId}/bill`);
-        let DocumentViewer = window['DocumentViewer'];
-        let documentViewer = new DocumentViewer();
-        _.set(window, 'moment', moment);
-        this.html = documentViewer.getDocumentHtml(bill[0]);
-    }
-
-    ngOnInit() {
-        this.route.paramMap
-            .subscribe((params: ParamMap) => {
-
-                /*if(this.order.tlogId) {
-                    this.renderDocuments(this.order.tlogId);
-                }*/
-
-                this.order = this.order.tlogId ? this.order : _.find(this.orders, {orderNumber: this.orderNumber});
-                this.closedOrdersDataService.enrichOrder(this.order)
-                    .then((o: {
-                        order: Order,
-                        orderOld: any,
-                        printDataOld: any
-                    }) => {
-                        const order = o.order;
-                        const orderOld = o.orderOld;
-                        const printDataOld = o.printDataOld;
-                        //TODO use destructuring instead...
-
-                        this.order = order;
-                        this.orderOld = orderOld;
-                        this.printDataOld = printDataOld;
-
-                        this.orderOld.allDocuments.forEach(doc => {
-
-                            this.orderDocs[doc._id] = {
-                                id: doc._id,
-                                docType: doc._type,
-                                isRefund: doc._type.includes('refund'),
-                                loading: true,
-                                data: undefined
-                            };
-
-                        });
-
-                        // set async request to load print data by invoice.
-                        this.initAllDocsAsync();
-
-                        this.show = true;
-                    });
-            });
-
-
-    }
-
-
-    private initAllDocsAsync() {
-
-        this.orderOld.allDocuments.forEach(doc => {
-
-            this.closedOrdersDataService.getPrintData(doc._id)
-                .then((result) => {
-
-                    this.orderDocs[doc._id].loading = false;
-                    this.orderDocs[doc._id].data = result[0];
-
-                });
-
+        this.dataService.organization$.subscribe(organization => {
+            this.organization = organization;
         });
+    }
+
+    async ngOnInit() {
+        const documents = await this.getDocuments();
+        const documentViewer = new (<any>window).DocumentViewer({locale: this.organization.region === 'us' ? 'en-US' : 'he-IL'});
+        console.log(documents);
+
+        this.documents = documents.map(document => {
+            if(this.organization.isDemo) {
+                _.set(document, ['printData', 'variables', 'F_NAME'], this.organization.region === 'il' ? 'זיו': 'Dror');
+                _.set(document, ['printData', 'variables', 'L_NAME'], this.organization.region === 'il' ? 'וטורי': '');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_CITY'], '');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_STREET'], '');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_BN_NUMBER'], '123456');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_LEGAL_NAME'], this.organization.region === 'il' ? 'מסעדה לדוגמא': 'Demo restaurant');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_NAME'], this.organization.region === 'il' ? 'מסעדה לדוגמא': 'Demo restaurant');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_TEL'], '000-123-456');
+            }
+            return documentViewer.getDocumentHtml(document);
+        });
+
+        if (this.order.tlogId) {
+            const enrichedOrder = await this.closedOrdersDataService.enrichOrder(this.order);
+            this.order = enrichedOrder.order;
+            this.orderOld = enrichedOrder.orderOld;
+        }
+        this.show = true;
+    }
+
+    private async getDocuments(): Promise<Array<any>> {
+        if (this.order.tlogId) {
+            return this.rosEp.get(`online-shopper/receipts`, {tlogId: this.order.tlogId});
+        }
+
+        return this.rosEp.get(`orders/${this.order.id}/printdata/orderbill`);
     }
 }

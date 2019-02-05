@@ -31,7 +31,7 @@ export class OrderSlipsComponent implements OnInit {
     @Input() ORDERSVIEW: any;
     @Input() orderDocs: any;
 
-    isUS = environment.region === 'us' ? true : false;
+    isUS = environment.region === 'us';
     showOrderDetails = true;
     isCheck = false;
 

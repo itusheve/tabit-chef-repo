@@ -57,7 +57,8 @@ export class DayOrdersTableComponent implements OnChanges {
                     openingTime: openOrder.created,
                     number: openOrder.number,
                     waiter: openOrder.owner,
-                    sales: 0
+                    sales: 0,
+                    id: openOrder._id
                 };
 
                 if (openOrder.totals.totalAmount) {
