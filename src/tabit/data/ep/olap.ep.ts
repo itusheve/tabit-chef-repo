@@ -56,8 +56,7 @@ export class OlapEp {
                     time: moment().format('HHmm'),
                     currentSales: 0, //ignoring this, not used.
                     userId: userId,
-                    production: environment.production
-
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
@@ -86,7 +85,7 @@ export class OlapEp {
                     siteId: org.id,
                     action: 'tabitChefSiteHomePage',
                     userId: userId,
-                    production: environment.production
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
@@ -116,7 +115,7 @@ export class OlapEp {
                     siteId: org.id,
                     action: 'tabitChefSiteHomePageV2',
                     userId: userId,
-                    production: environment.production
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
@@ -147,7 +146,7 @@ export class OlapEp {
                     action: 'tabitChefSiteDailyV2',
                     businessDate: date.format('YYYYMMDD'),
                     userId: userId,
-                    production: environment.production
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
@@ -178,7 +177,7 @@ export class OlapEp {
                     action: 'tabitChefSiteMonthly',
                     businessDate: date.format('YYYYMMDD'),
                     userId: userId,
-                    production: environment.production
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
@@ -209,7 +208,7 @@ export class OlapEp {
                     action: 'siteDaySalesByHour',
                     businessDate: date.format('YYYYMMDD'),
                     userId: userId,
-                    production: environment.production
+                    environment: environment.environment
                 },
                 {
                     headers: headers,

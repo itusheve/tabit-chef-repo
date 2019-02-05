@@ -2,7 +2,8 @@ export const environment = {
     production: true,
     managerDashboardMode: false,
     region: 'il',
-    tbtLocale: 'he-IL',//
+    tbtLocale: 'he-IL',
+    environment: 'prod',
     lang: 'he',
     rosConfig: {
         il: 'https://ros-rp-beta.tabit.cloud/',

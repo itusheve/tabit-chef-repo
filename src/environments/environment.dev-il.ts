@@ -1,8 +1,9 @@
 export const environment = {
-    production: false,
+    production: true,
     managerDashboardMode: false,
     region: 'il',
     tbtLocale: 'he-IL',
+    environment: 'dev',
     lang: 'he',
     rosConfig: {
         il: 'https://ros-rp-beta.tabit.cloud/',
@@ -12,11 +13,11 @@ export const environment = {
         il: 'https://analytics-dev.tabit.cloud/chef/handler.ashx',
         us: 'https://analytics-us.tabit.cloud/chef/handler.ashx'
     },
-    olapConfig: {//US PROD CUBE
-        baseUrl: 'https://analytics-us.tabit.cloud/olapproxy/proxy.ashx',
-        sqlServerProxy: 'https://analytics-us.tabit.cloud/olapproxy/handler.ashx',
-        catalog: 'usaProd',
+    olapConfig: {//IL PROD CUBE
+        baseUrl: 'https://analytics-dev.tabit.cloud/proxyV2/il-prod/proxy.ashx',
+        sqlServerProxy: 'https://analytics-dev.tabit.cloud/olapproxy/handler.ashx',
+        catalog: 'isrProd',
         cube: 'tlogs',
     },
-    translationBaseUrl: 'http://chef.tabit-dev.com/assets/i18n/'
+    translationBaseUrl: 'https://chef.tabit-dev.com/assets/i18n/'
 };
