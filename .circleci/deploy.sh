@@ -25,7 +25,7 @@ elif [[ "$CIRCLE_BRANCH" == "master" ]]; then
 elif [[ "$CIRCLE_BRANCH" == "ecs-dev" ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
-  ng build --configuration=dev-il --prod --build-optimizer
+  ng build --configuration=dev-il --prod --build-optimizer --aot
   chmod +x _s3/s3-push-dev.sh
   S3_BUCKET="chef.tabit-dev.com" _s3/s3-push-dev.sh
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
@@ -45,7 +45,7 @@ elif [[ "$CIRCLE_BRANCH" == "ecs-chef-prod"  ]]; then
   npm install --ignore-scripts
   npm rebuild node-sass
   echo "On2"
-  ng build --configuration=prod-il --prod --build-optimizer
+  ng build --configuration=prod-il --prod --build-optimizer --aot
   echo "On3"
   chmod +x _s3/s3-push-us-prod.sh
   echo "On4"
