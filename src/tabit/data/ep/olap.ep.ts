@@ -196,6 +196,35 @@ export class OlapEp {
         });
     }
 
+    public getUsers(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            let org = JSON.parse(window.localStorage.getItem('org'));
+            let headers = new HttpHeaders({'Content-Type': 'application/json'});
+            let users = JSON.parse(window.localStorage.getItem('userSettings')) || {};
+            let userId = _.get(users, [org.region, 'id'], '');
+            this.httpClient.post(`${this.authService.getDatabaseUrl()}?customdata=S${org.id}&token=${this.authService.getToken()}&Action=chef-get-data-by-organization`, {
+                    siteId: org.id,
+                    action: 'getUsers',
+                    userId: userId,
+                    environment: environment.environment
+                },
+                {
+                    headers: headers,
+                    responseType: 'json',
+                    withCredentials: false
+                })
+                .subscribe(
+                    (result: any) => {
+                        resolve(result.users);
+                    },
+                    (err) => {
+                        console.log(`Handler Proxy Error: ${JSON.stringify(err)}`);
+                        throw err;
+                    }
+                );
+        });
+    }
+
     public getDailySalesByHourReport(date: moment.Moment): Promise<any> {
         return new Promise((resolve, reject) => {
 

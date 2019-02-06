@@ -56,7 +56,7 @@ export class DayOrdersTableComponent implements OnChanges {
                 let formattedOpenOrder = {
                     openingTime: openOrder.created,
                     number: openOrder.number,
-                    waiter: openOrder.owner,
+                    waiter: openOrder.ownerFirstName + ' ' + openOrder.ownerLastName,
                     sales: 0,
                     id: openOrder._id
                 };
@@ -150,16 +150,20 @@ export class DayOrdersTableComponent implements OnChanges {
     }
 
     private markOrdersAsFiltered() {
-        this.byOrderTypes.forEach(o => {
-            o.orders.forEach(ord => {
-                let filter = false;
-                this.filters.forEach(f => {
-                    if (f.on) {
-                        const reductionAmount = ord['priceReductions'][f.type];
-                        if (!reductionAmount) filter = true;
+        this.byOrderTypes.forEach(orderType => {
+            orderType.orders.forEach(order => {
+                let filtered = false;
+                let reductionAmount = 0;
+                this.filters.forEach(filter => {
+                    if (filter.on) {
+                        reductionAmount += order['priceReductions'][filter.type];
                     }
                 });
-                ord.filtered = filter;
+                if(_.every(this.filters, filter => !filter.on)) {
+                    order.filtered = false;
+                } else {
+                    order.filtered = !reductionAmount;
+                }
             });
         });
     }

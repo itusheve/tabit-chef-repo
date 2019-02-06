@@ -1238,7 +1238,18 @@ export class DataService {
             orderBy: 'created',
         };
 
-        return this.rosEp.get('orders', params);
+        const openOrders = await this.rosEp.get('orders', params);
+        const users = await this.olapEp.getUsers();
+
+        _.forEach(openOrders, openOrder => {
+            if(openOrder.owner) {
+                const user = _.find(users, {userId: openOrder.owner});
+                _.set(openOrder, 'ownerFirstName', _.get(user, 'firstName', 'NA'));
+                _.set(openOrder, 'ownerLastName', _.get(user, 'lastName', 'NA'));
+            }
+        });
+
+        return openOrders;
     }
 
     getDailyTotals(date = null) {

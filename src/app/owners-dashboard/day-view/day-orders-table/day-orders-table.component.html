@@ -31,11 +31,11 @@
                                     <div [translate]="'dayTable.orderNumber'">Order #</div>
                                 </div>
                             </td>
-                            <!--<td>
+                            <td>
                                 <div class="flex a-center">
                                     <div [translate]="'day.server'">Server</div>
                                 </div>
-                            </td>-->
+                            </td>
                             <td>
                                 <div class="flex a-center j-end">
                                     <div [translate]="'dayTable.sales'">Sales</div>
@@ -47,7 +47,7 @@
                             [ngClass]="{'lastViewed': lastViewed===openOrder, 'clicked': openOrder.__dayOrdersTable__clicked}">
                             <td>{{getOpenOrderHour(openOrder.openingTime)}}</td>
                             <td  class="text-center">{{openOrder.number | number:'1.0-0'}}</td>
-                            <!--<td>{{openOrder.waiter}}</td>-->
+                            <td>{{openOrder.waiter}}</td>
                             <td>{{openOrder.sales | curr:'0'}}</td>
                         </tr>
                     </table>
