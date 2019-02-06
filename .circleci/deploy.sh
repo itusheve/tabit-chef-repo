@@ -23,6 +23,10 @@ if [[ "$CIRCLE_TAG" =~ ^release-.*$ ]]; then
 elif [[ "$CIRCLE_BRANCH" == "master" ]]; then
   echo "Not in use"
 elif [[ "$CIRCLE_BRANCH" == "ecs-dev" ]]; then
+  npm cache clean -f
+  npm install -g n
+  n stable
+  npm i -g npm
   npm install --ignore-scripts
   npm rebuild node-sass
   node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --configuration=dev-il --prod --build-optimizer --aot
