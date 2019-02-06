@@ -1,57 +1,58 @@
-<div class="flex d-col a-stretch mb-2" *ngIf="openOrders && openOrders.count > 0">
+<div class="flex d-col a-stretch mb-2" *ngIf="openOrdersByServiceType">
     <div class="title">
         <span [translate]="'day.openOrders'">Open orders</span>
     </div>
     <div class="body flex d-col">
         <div *ngIf="!loading">
-            <div *ngIf="noData" class="noData" [translate]="'day.noData'">No Data</div>
-            <div *ngIf="!noData && byOrderTypes" class="flex d-col a-stretch">
-                <mat-expansion-panel expanded="false">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title class="col-4 m-0 p-0">
-                            <span [translate]="'day.openOrders'">Open Orders</span>
-                        </mat-panel-title>
-                        <mat-panel-description  class="col-8 m-0 p-0">
-                                <div class="col-5 start">{{openOrders.totalAmount | curr:'0'}}</div>
+            <div class="flex d-col a-stretch">
+                <mat-accordion>
+                    <mat-expansion-panel expanded="false" hideToggle="false"
+                                         *ngFor="let openOrderServiceType of openOrdersByServiceType | hasSales">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title class="col-4 m-0 p-0">
+                                {{openOrderServiceType.caption}}
+                            </mat-panel-title>
+                            <mat-panel-description class="col-8 m-0 p-0">
+                                <div class="col-5 start">{{openOrderServiceType.sales | curr:'0'}}</div>
                                 <div class="col-7 end">
-                                    {{openOrders.count | count}}&nbsp;{{'day.orders' | translate}}
+                                    {{openOrderServiceType.ordersCount | count}}&nbsp;{{'day.orders' | translate }}
                                 </div>
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
 
-                    <table class="table">
-                        <tr style="background-color: #f2f2f2;font-weight: bold;">
-                            <td>
-                                <div class="flex a-center">
-                                    <div [translate]="'dayTable.opened'">Opened</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="flex a-center">
-                                    <div [translate]="'dayTable.orderNumber'">Order #</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="flex a-center">
-                                    <div [translate]="'day.server'">Server</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="flex a-center j-end">
-                                    <div [translate]="'dayTable.sales'">Sales</div>
-                                </div>
-                            </td>
-                        </tr>
-                        <!--(click)="openOrderClicked(openOrder)"-->
-                        <tr *ngFor="let openOrder of openOrders.orders" (click)="openOrderClicked(openOrder)"
-                            [ngClass]="{'lastViewed': lastViewed===openOrder, 'clicked': openOrder.__dayOrdersTable__clicked}">
-                            <td>{{getOpenOrderHour(openOrder.openingTime)}}</td>
-                            <td  class="text-center">{{openOrder.number | number:'1.0-0'}}</td>
-                            <td>{{openOrder.waiter}}</td>
-                            <td>{{openOrder.sales | curr:'0'}}</td>
-                        </tr>
-                    </table>
-                </mat-expansion-panel>
+                        <table class="table">
+                            <tr style="background-color: #f2f2f2;font-weight: bold;">
+                                <td>
+                                    <div class="flex a-center">
+                                        <div [translate]="'dayTable.opened'">Opened</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex a-center">
+                                        <div [translate]="'dayTable.orderNumber'">Order #</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex a-center">
+                                        <div [translate]="'day.server'">Server</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex a-center j-end">
+                                        <div [translate]="'dayTable.sales'">Sales</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let openOrder of openOrderServiceType.orders" (click)="openOrderClicked(openOrder)"
+                                [ngClass]="{'lastViewed': lastViewed===openOrder, 'clicked': openOrder.__dayOrdersTable__clicked}">
+                                <td>{{getOpenOrderHour(openOrder.openingTime)}}</td>
+                                <td  class="text-center">{{openOrder.number | number:'1.0-0'}}</td>
+                                <td>{{openOrder.waiter}}</td>
+                                <td>{{openOrder.sales | curr:'0'}}</td>
+                            </tr>
+                        </table>
+                    </mat-expansion-panel>
+                </mat-accordion>
             </div>
         </div>
     </div>

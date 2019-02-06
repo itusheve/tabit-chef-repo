@@ -7,6 +7,7 @@ import {ROSEp} from '../../../tabit/data/ep/ros.ep';
 import {environment} from '../../../environments/environment';
 import {DataService} from '../../../tabit/data/data.service';
 import * as _ from 'lodash';
+import {TranslateService} from '@ngx-translate/core';
 
 export interface SlipVM {
     id: number;
@@ -34,10 +35,11 @@ export class OrderViewComponent implements OnInit {
     orderDocs: any;
     html: any;
     documents: any[];
+    showTimeline: boolean;
     organization;
 
     constructor(private closedOrdersDataService: ClosedOrdersDataService,
-                private route: ActivatedRoute, private rosEp: ROSEp, private dataService: DataService) {
+                private route: ActivatedRoute, private rosEp: ROSEp, private dataService: DataService, private translate: TranslateService) {
         this.ORDERS_VIEW = ORDERS_VIEW.getTranslations();
         this.orderDocs = {};
 
@@ -47,6 +49,7 @@ export class OrderViewComponent implements OnInit {
     }
 
     async ngOnInit() {
+        this.showTimeline = false;
         const documents = await this.getDocuments();
         const documentViewer = new (<any>window).DocumentViewer({locale: this.organization.region === 'us' ? 'en-US' : 'he-IL'});
         console.log(documents);
@@ -64,11 +67,19 @@ export class OrderViewComponent implements OnInit {
             }
             return documentViewer.getDocumentHtml(document);
         });
+        let orderClosedMessage = '';
+        this.translate.get('orderClosed').subscribe((res: string) => {
+            orderClosedMessage = res;
+        });
+        if(this.documents.length === 0) {
+            this.documents.push(orderClosedMessage);
+        }
 
         if (this.order.tlogId) {
             const enrichedOrder = await this.closedOrdersDataService.enrichOrder(this.order);
             this.order = enrichedOrder.order;
             this.orderOld = enrichedOrder.orderOld;
+            this.showTimeline = true;
         }
         this.show = true;
     }

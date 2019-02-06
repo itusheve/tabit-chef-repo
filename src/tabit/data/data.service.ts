@@ -1234,7 +1234,7 @@ export class DataService {
 
     async getOpenOrders() {
         let params: any = {
-            select: '_id,number,orderType,serviceType,created,lastUpdated,closed,isStaffTable,diners,paymentSummary,source,balance,totals,owner',
+            select: '_id,number,orderType,serviceType,created,lastUpdated,closed,isStaffTable,diners,paymentSummary,source,balance,totals,owner,tableIds',
             orderBy: 'created',
         };
 
