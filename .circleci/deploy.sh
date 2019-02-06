@@ -46,6 +46,10 @@ elif [[ "$CIRCLE_BRANCH" == "us-production-rp"  ]]; then
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "ecs-chef-prod"  ]]; then
   echo "On1"
+  npm cache clean -f
+  npm install -g n
+  n stable
+  npm i -g npm
   npm install --ignore-scripts
   npm rebuild node-sass
   echo "On2"
