@@ -10,13 +10,17 @@
                     <div *ngIf="!show" class="flex aj-center" style="width:100%;height:100%;">
                         <dx-load-indicator></dx-load-indicator>
                     </div>
-                    <mat-tab-group>
-                        <ng-container *ngFor="let document of documents">
-                            <mat-tab [label]="document.title">
-                                <div [innerHtml]="document.html"></div>
-                            </mat-tab>
-                        </ng-container>
-                    </mat-tab-group>
+                    <div class="flex d-col mb10 order-ticket">
+                        <div class="d-col flex order-ticket-body">
+                            <mat-tab-group>
+                                <ng-container *ngFor="let document of documents">
+                                    <mat-tab [label]="document.title">
+                                        <div [innerHtml]="document.html"></div>
+                                    </mat-tab>
+                                </ng-container>
+                            </mat-tab-group>
+                        </div>
+                    </div>
                 </div>
             </ng-template>
         </mat-tab>

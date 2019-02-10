@@ -4,11 +4,22 @@
 }
 
 .order-view {
-	height: 100%;
+	height: 101%;
+    overflow-y: scroll; /* has to be scroll, not auto */
+    -webkit-overflow-scrolling: touch;
 }
 .tab {
 	height: 100%;
 	padding: 15px;
+}
+
+.order-ticket-body {
+  padding: 20px 8px;
+  min-height: 350px;
+
+  hr {
+    margin: 15px 0;
+  }
 }
 
 /deep/.mat-tab-body-wrapper {
