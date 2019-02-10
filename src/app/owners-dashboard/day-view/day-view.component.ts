@@ -43,6 +43,7 @@ export class DayViewComponent implements OnInit {
     drilledOrder: any;
     drilledOpenOrder: any;
     drilledOrderNumber: number;
+    drillType: number;
 
     public dayFromDatabase: any;
     public hasData: boolean;
@@ -876,10 +877,9 @@ export class DayViewComponent implements OnInit {
 
     /* called directly by day-orders-table */
     onOrderClicked(order: any) {
-
-        this.drilledOpenOrder = null;
         this.drilledOrder = order;
         this.drilledOrderNumber = order.number;
+        this.drillType = 'closedOrder';
 
         setTimeout(() => {
             this.drill = true;
@@ -895,9 +895,9 @@ export class DayViewComponent implements OnInit {
     }
 
     onOpenOrderClicked(openOrder: any) {
-        this.drilledOrder = null;
         this.drilledOpenOrder = openOrder;
         this.drilledOrderNumber = openOrder.number;
+        this.drillType = 'openOrder';
 
         setTimeout(() => {
             this.drill = true;

@@ -1,5 +1,5 @@
 <div class="container px-0">
-    <div class="flex d-col dayView" *ngIf="!drill">
+    <div class="flex d-col dayView"  [hidden]="drill">
         <app-day-selector
                 class="widget noPadding daySelectorFixed"
                 [currentValue]="day"
@@ -291,7 +291,7 @@
         </div>
     </div>
     <div class="flex d-col drill" *ngIf="drill">
-        <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber" [order]="drilledOrder" [openOrder]="drilledOpenOrder"></app-order-view>
+        <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber" [order]="drilledOrder" [openOrder]="drilledOpenOrder" [drillType]="drillType"></app-order-view>
     </div>
 
     <div class="card text-center" *ngIf="user.isStaff && hasData">

@@ -27,6 +27,7 @@ export class OrderViewComponent implements OnInit {
     @Input() orderNumber: number;
     @Input() order: Order;
     @Input() openOrder: Order;
+    @Input() drillType: any;
 
     show = false;
     orderOld: any;
@@ -87,7 +88,7 @@ export class OrderViewComponent implements OnInit {
     }
 
     private async getDocuments(documentViewer): Promise<Array<any>> {
-        if (this.order && this.order.tlogId) {
+        if (this.drillType === 'closedOrder' && this.order && this.order.tlogId) {
             let documents = [];
             const bills = await this.rosEp.get(`tlogs/${this.order.tlogId}/bill`);
             const bill = _.get(bills, '[0]');
