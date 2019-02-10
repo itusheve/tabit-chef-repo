@@ -875,7 +875,7 @@ export class DayViewComponent implements OnInit {
     }
 
     /* called directly by day-orders-table */
-    onOrderClicked(order: Order) {
+    onOrderClicked(order: any) {
 
         this.drilledOrder = order;
         this.drilledOrderNumber = order.number;
@@ -891,6 +891,7 @@ export class DayViewComponent implements OnInit {
             //prevent navigating back
             return false;
         };
+
     }
 
     onOpenOrderClicked(openOrder: any) {

@@ -5,7 +5,7 @@
     <div class="body flex d-col">
         <div *ngIf="!loading">
             <div class="flex d-col a-stretch">
-                <mat-accordion>
+                <mat-accordion multi="true">
                     <mat-expansion-panel expanded="false" hideToggle="false"
                                          *ngFor="let openOrderServiceType of openOrdersByServiceType | hasSales">
                         <mat-expansion-panel-header>
@@ -22,28 +22,52 @@
 
                         <table class="table">
                             <tr style="background-color: #f2f2f2;font-weight: bold;">
-                                <td>
+                                <td (click)="sortOpenOrder(openOrderServiceType, 'time')">
                                     <div class="flex a-center">
                                         <div [translate]="'dayTable.opened'">Opened</div>
+                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='time' && sortDir==='desc'">
+                                            arrow_drop_down
+                                        </mat-icon>
+                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='time' && sortDir==='asc'">
+                                            arrow_drop_up
+                                        </mat-icon>
                                     </div>
                                 </td>
-                                <td>
+                                <td (click)="sortOpenOrder(openOrderServiceType, 'number')">
                                     <div class="flex a-center">
                                         <div [translate]="'dayTable.orderNumber'">Order #</div>
+                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='desc'">
+                                            arrow_drop_down
+                                        </mat-icon>
+                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='asc'">
+                                            arrow_drop_up
+                                        </mat-icon>
                                     </div>
                                 </td>
-                                <td>
+                                <td (click)="sortOpenOrder(openOrderServiceType, 'waiter')">
                                     <div class="flex a-center">
                                         <div [translate]="'day.server'">Server</div>
+                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">
+                                            arrow_drop_down
+                                        </mat-icon>
+                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">
+                                            arrow_drop_up
+                                        </mat-icon>
                                     </div>
                                 </td>
-                                <td>
+                                <td (click)="sortOpenOrder(openOrderServiceType, 'sales')">
                                     <div class="flex a-center j-end">
                                         <div [translate]="'dayTable.sales'">Sales</div>
+                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='sales' && sortDir==='desc'">
+                                            arrow_drop_down
+                                        </mat-icon>
+                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='sales' && sortDir==='asc'">
+                                            arrow_drop_up
+                                        </mat-icon>
                                     </div>
                                 </td>
                             </tr>
-                            <tr *ngFor="let openOrder of openOrderServiceType.orders" (click)="openOrderClicked(openOrder)"
+                            <tr *ngFor="let openOrder of openOrderServiceType.orders" (click)="openOrderClicked($event, openOrder)"
                                 [ngClass]="{'lastViewed': lastViewed===openOrder, 'clicked': openOrder.__dayOrdersTable__clicked}">
                                 <td>{{getOpenOrderHour(openOrder.openingTime)}}</td>
                                 <td  class="text-center">{{openOrder.number | number:'1.0-0'}}</td>

@@ -115,6 +115,8 @@ export class OrderViewComponent implements OnInit {
             return documents;
         }
 
-        return this.rosEp.get(`orders/${this.order.id}/printdata/orderbill`);
+        const bill = await this.rosEp.get(`orders/${this.order.id}/printdata/orderbill`);
+        _.set(bill, [0, 'title'], environment.tbtLocale === 'en-US' ? 'Order' : 'הזמנה');
+        return bill;
     }
 }

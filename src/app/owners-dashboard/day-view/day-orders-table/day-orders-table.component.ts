@@ -141,7 +141,8 @@ export class DayOrdersTableComponent implements OnChanges {
         this.onOrderClicked.emit(order);
     }
 
-    openOrderClicked(openOrder: any) {
+    openOrderClicked($event, openOrder: any) {
+        $event.preventDefault();
         this.onOpenOrderClicked.emit(openOrder);
     }
 
@@ -171,6 +172,36 @@ export class DayOrdersTableComponent implements OnChanges {
         }
         let dir = this.sortDir === 'asc' ? -1 : 1;
         this.byOrderTypes.find(o => o.id === orderType.id)
+            .orders
+            .sort((a, b) => (a[field] < b[field] ? dir : dir * -1));
+    }
+
+    sortOpenOrder(orderType: any, by: string) {
+        if (this.sortBy && this.sortBy === by) {
+            this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
+        } else {
+            if (by === 'sales') {
+                this.sortDir = 'desc';
+            } else {
+                this.sortDir = 'asc';
+            }
+            this.sortBy = by;
+        }
+        let field;
+        switch (by) {
+            case 'time':
+            case 'number':
+                field = 'number';
+                break;
+            case 'waiter':
+                field = 'waiter';
+                break;
+            case 'sales':
+                field = 'sales';
+                break;
+        }
+        let dir = this.sortDir === 'asc' ? -1 : 1;
+        this.openOrdersByServiceType.find(o => o.id === orderType.id)
             .orders
             .sort((a, b) => (a[field] < b[field] ? dir : dir * -1));
     }
