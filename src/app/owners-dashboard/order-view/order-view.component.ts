@@ -25,8 +25,8 @@ export interface SlipVM {
 export class OrderViewComponent implements OnInit {
 
     @Input() orderNumber: number;
-    @Input() orders: Order[];
     @Input() order: Order;
+    @Input() openOrder: Order;
 
     show = false;
     orderOld: any;
@@ -87,7 +87,7 @@ export class OrderViewComponent implements OnInit {
     }
 
     private async getDocuments(documentViewer): Promise<Array<any>> {
-        if (this.order.tlogId) {
+        if (this.order && this.order.tlogId) {
             let documents = [];
             const bills = await this.rosEp.get(`tlogs/${this.order.tlogId}/bill`);
             const bill = _.get(bills, '[0]');
@@ -114,9 +114,10 @@ export class OrderViewComponent implements OnInit {
             documents.push(...paymentDocuments);
             return documents;
         }
-
-        const bill = await this.rosEp.get(`orders/${this.order.id}/printdata/orderbill`);
-        _.set(bill, [0, 'title'], environment.tbtLocale === 'en-US' ? 'Order' : 'הזמנה');
-        return bill;
+        else if(this.openOrder) {
+            const bill = await this.rosEp.get(`orders/${this.openOrder.id}/printdata/orderbill`);
+            _.set(bill, [0, 'title'], environment.tbtLocale === 'en-US' ? 'Order' : 'הזמנה');
+            return bill;
+        }
     }
 }

@@ -39,9 +39,9 @@ export class DayViewComponent implements OnInit {
 
     dayHasSales: boolean;
 
-    drillTlogTime;
     drill = false;
     drilledOrder: any;
+    drilledOpenOrder: any;
     drilledOrderNumber: number;
 
     public dayFromDatabase: any;
@@ -879,7 +879,6 @@ export class DayViewComponent implements OnInit {
 
         this.drilledOrder = order;
         this.drilledOrderNumber = order.number;
-        this.drillTlogTime = order.businessDate;
 
         setTimeout(() => {
             this.drill = true;
@@ -896,9 +895,8 @@ export class DayViewComponent implements OnInit {
 
     onOpenOrderClicked(openOrder: any) {
 
-        this.drilledOrder = openOrder;
+        this.drilledOpenOrder = openOrder;
         this.drilledOrderNumber = openOrder.number;
-        this.drillTlogTime = openOrder.created;
 
         setTimeout(() => {
             this.drill = true;
