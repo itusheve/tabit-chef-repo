@@ -77,7 +77,7 @@ export class OrderViewComponent implements OnInit {
             });
         }
 
-        if (this.order.tlogId) {
+        if (this.order && this.order.tlogId) {
             const enrichedOrder = await this.closedOrdersDataService.enrichOrder(this.order);
             this.order = enrichedOrder.order;
             this.orderOld = enrichedOrder.orderOld;

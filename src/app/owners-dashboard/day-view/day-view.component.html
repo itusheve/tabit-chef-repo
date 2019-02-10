@@ -291,8 +291,7 @@
         </div>
     </div>
     <div class="flex d-col drill" *ngIf="drill">
-        <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber" [order]="drilledOrder"
-                        [orders]="orders"></app-order-view>
+        <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber" [order]="drilledOrder"></app-order-view>
     </div>
 
     <div class="card text-center" *ngIf="user.isStaff && hasData">

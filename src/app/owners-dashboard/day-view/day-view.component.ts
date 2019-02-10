@@ -41,7 +41,7 @@ export class DayViewComponent implements OnInit {
 
     drillTlogTime;
     drill = false;
-    drilledOrder: Order;
+    drilledOrder: any;
     drilledOrderNumber: number;
 
     public dayFromDatabase: any;
@@ -910,6 +910,8 @@ export class DayViewComponent implements OnInit {
             //prevent navigating back
             return false;
         };
+
+        return true;
     }
 
     closeDrill() {

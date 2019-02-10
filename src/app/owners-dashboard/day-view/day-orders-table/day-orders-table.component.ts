@@ -141,9 +141,8 @@ export class DayOrdersTableComponent implements OnChanges {
         this.onOrderClicked.emit(order);
     }
 
-    openOrderClicked($event, openOrder: any) {
-        $event.preventDefault();
-        this.onOpenOrderClicked.emit(openOrder);
+    openOrderClicked(openOrder: any) {
+        return this.onOpenOrderClicked.emit(openOrder);
     }
 
     sort(orderType: any, by: string) {
