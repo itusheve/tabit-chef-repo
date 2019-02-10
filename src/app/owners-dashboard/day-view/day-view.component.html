@@ -1,5 +1,5 @@
 <div class="container px-0">
-    <div class="flex d-col dayView">
+    <div class="flex d-col dayView" *ngIf="!drill">
         <app-day-selector
                 class="widget noPadding daySelectorFixed"
                 [currentValue]="day"
