@@ -96,9 +96,11 @@ export class OrderViewComponent implements OnInit {
 
             let tlog = await this.rosEp.get(`tlogs/${this.order.tlogId}`);
             let documentInfos = documentViewer.getDocumentsInfoFromTlog(tlog, {});
-            documentInfos = documentInfos.filter(x => x.type !== 'tlog');
+
+            documentInfos = documentInfos.filter(documentInfo => documentInfo.type !== 'tlog' && !documentInfo.isFakeDocument);
+
             let paymentDocuments = await Promise.all(documentInfos.map(async documentInfo => {
-                if(documentInfo.type === 'check') {
+                if (documentInfo.type === 'check') {
                     let check = await this.rosEp.get(`tlogs/${documentInfo.id}/checks`);
                     check = _.get(check, [0]);
                     _.set(check, 'title', documentInfo.title);
@@ -114,7 +116,7 @@ export class OrderViewComponent implements OnInit {
             documents.push(...paymentDocuments);
             return documents;
         }
-        else if(this.openOrder) {
+        else if (this.openOrder) {
             const bill = await this.rosEp.get(`orders/${this.openOrder.id}/printdata/orderbill`);
             _.set(bill, [0, 'title'], environment.tbtLocale === 'en-US' ? 'Order' : 'הזמנה');
             return bill;
