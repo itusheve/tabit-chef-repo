@@ -43,7 +43,7 @@ export class DayViewComponent implements OnInit {
     drilledOrder: any;
     drilledOpenOrder: any;
     drilledOrderNumber: number;
-    drillType: number;
+    drillType: string;
 
     public dayFromDatabase: any;
     public hasData: boolean;
