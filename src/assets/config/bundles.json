@@ -4,24 +4,25 @@
     "bundles": [
       "https://fonts.googleapis.com/icon?family=Material+Icons",
       "https://fonts.googleapis.com/css?family=Assistant",
-      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/styles.css",
-      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/runtime.js",
-      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/polyfills.js",
-      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/scripts.js",
-      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/main.js"
+      "https://s3-eu-west-1.amazonaws.com/chef-prod.tabit.cloud/runtime.js",
+      "https://s3-eu-west-1.amazonaws.com/chef-prod.tabit.cloud/polyfills.js",
+      "https://s3-eu-west-1.amazonaws.com/chef-prod.tabit.cloud/styles.js",
+      "https://s3-eu-west-1.amazonaws.com/chef-prod.tabit.cloud/scripts.js",
+      "https://s3-eu-west-1.amazonaws.com/chef-prod.tabit.cloud/vendor.js",
+      "https://s3-eu-west-1.amazonaws.com/chef-prod.tabit.cloud/main.js"
     ]
   },
   "development": {
-    "version": "1.0.68",
+    "version": "1.3.6",
     "bundles": [
       "https://fonts.googleapis.com/icon?family=Material+Icons",
-      "https://fonts.googleapis.com/css?family=Open+Sans",
-      "http://10.100.10.93:5200/inline.bundle.js",
-      "http://10.100.10.93:5200/polyfills.bundle.js",
-      "http://10.100.10.93:5200/styles.bundle.js",
-      "http://10.100.10.93:5200/scripts.bundle.js",
-      "http://10.100.10.93:5200/vendor.bundle.js",
-      "http://10.100.10.93:5200/main.bundle.js"
+      "https://fonts.googleapis.com/css?family=Assistant",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/runtime.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/polyfills.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/styles.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/scripts.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/vendor.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-dev.com/main.js"
     ]
   }
 }
