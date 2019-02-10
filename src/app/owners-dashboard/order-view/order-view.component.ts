@@ -50,29 +50,31 @@ export class OrderViewComponent implements OnInit {
 
     async ngOnInit() {
         this.showTimeline = false;
-        const documents = await this.getDocuments();
         const documentViewer = new (<any>window).DocumentViewer({locale: this.organization.region === 'us' ? 'en-US' : 'he-IL'});
-        console.log(documents);
-
+        const documents = await this.getDocuments(documentViewer);
         this.documents = documents.map(document => {
-            if(this.organization.isDemo) {
-                _.set(document, ['printData', 'variables', 'F_NAME'], this.organization.region === 'il' ? 'זיו': 'Dror');
-                _.set(document, ['printData', 'variables', 'L_NAME'], this.organization.region === 'il' ? 'וטורי': '');
+            if (this.organization.isDemo) {
+                _.set(document, ['printData', 'variables', 'F_NAME'], this.organization.region === 'il' ? 'זיו' : 'Dror');
+                _.set(document, ['printData', 'variables', 'L_NAME'], this.organization.region === 'il' ? 'וטורי' : '');
                 _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_CITY'], '');
                 _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_STREET'], '');
                 _.set(document, ['printData', 'variables', 'ORGANIZATION_BN_NUMBER'], '123456');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_LEGAL_NAME'], this.organization.region === 'il' ? 'מסעדה לדוגמא': 'Demo restaurant');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_NAME'], this.organization.region === 'il' ? 'מסעדה לדוגמא': 'Demo restaurant');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_TEL'], '000-123-456');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_LEGAL_NAME'], this.organization.region === 'il' ? 'טאביט בר' : 'Tabit Bar');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_NAME'], this.organization.region === 'il' ? 'טאביט בר' : 'Tabit Bar');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_TEL'], '09-9585682');
             }
-            return documentViewer.getDocumentHtml(document);
+            const html = documentViewer.getDocumentHtml(document);
+            return {
+                title: document.title,
+                type: document.documentType,
+                html: html
+            };
         });
-        let orderClosedMessage = '';
-        this.translate.get('orderClosed').subscribe((res: string) => {
-            orderClosedMessage = res;
-        });
-        if(this.documents.length === 0) {
-            this.documents.push(orderClosedMessage);
+
+        if (this.documents.length === 0) {
+            this.translate.get('orderClosed').subscribe((translation: string) => {
+                this.documents.push(translation);
+            });
         }
 
         if (this.order.tlogId) {
@@ -84,9 +86,33 @@ export class OrderViewComponent implements OnInit {
         this.show = true;
     }
 
-    private async getDocuments(): Promise<Array<any>> {
+    private async getDocuments(documentViewer): Promise<Array<any>> {
         if (this.order.tlogId) {
-            return this.rosEp.get(`online-shopper/receipts`, {tlogId: this.order.tlogId});
+            let documents = [];
+            const bills = await this.rosEp.get(`tlogs/${this.order.tlogId}/bill`);
+            const bill = _.get(bills, '[0]');
+            _.set(bill, 'title', environment.tbtLocale === 'en-US' ? 'Order' : 'הזמנה');
+            documents.push(bill);
+
+            let tlog = await this.rosEp.get(`tlogs/${this.order.tlogId}`);
+            let documentInfos = documentViewer.getDocumentsInfoFromTlog(tlog, {});
+            documentInfos = documentInfos.filter(x => x.type !== 'tlog');
+            let paymentDocuments = await Promise.all(documentInfos.map(async documentInfo => {
+                if(documentInfo.type === 'check') {
+                    let check = await this.rosEp.get(`tlogs/${documentInfo.id}/checks`);
+                    check = _.get(check, [0]);
+                    _.set(check, 'title', documentInfo.title);
+                    return check;
+                }
+
+                let document = await this.rosEp.get(`documents/v2/${documentInfo.id}/printdata`);
+                document = _.get(document, [0]);
+                _.set(document, 'title', documentInfo.title);
+                return document;
+            }));
+
+            documents.push(...paymentDocuments);
+            return documents;
         }
 
         return this.rosEp.get(`orders/${this.order.id}/printdata/orderbill`);
