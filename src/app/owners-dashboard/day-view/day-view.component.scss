@@ -82,12 +82,12 @@ $matAccordionHeaderColor: #C5CCD4;
 }
 
 .drill {
-  z-index: 10000;
+  z-index: 10009;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 101vw;
+  height: 101vh;
   padding-top: $toolbarHeight;
   @media #{$iphone-X-portrait-mq} {
     padding-top: $iphone-X-notch-px + $toolbarHeight;
