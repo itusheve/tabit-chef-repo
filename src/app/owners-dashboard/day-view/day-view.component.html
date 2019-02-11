@@ -1,5 +1,5 @@
-<div class="container px-0">
-    <div class="flex d-col dayView"  [hidden]="drill">
+<div class="container px-0" [style.display]="drill ? 'block' : ''">
+    <div class="flex d-col dayView">
         <app-day-selector
                 class="widget noPadding daySelectorFixed"
                 [currentValue]="day"
