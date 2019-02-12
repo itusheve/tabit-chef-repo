@@ -30,17 +30,17 @@ export class AppComponent implements OnInit {
         this.logArr = ds.logArr;
 
         //get external link route // deep link
-        const urlParams = new URLSearchParams(window.location.search);
+        /*const urlParams = new URLSearchParams(window.location.search);
         let linkType = urlParams.get('link');
         let businessDate = urlParams.get('businessDate');
         let siteId = urlParams.get('siteId');
         if(linkType) {
             window.localStorage.setItem('deeplink', JSON.stringify({businessDate: businessDate, siteId: siteId, linkType: linkType}));
-        }
+        }*/
     }
 
     async ngOnInit() {
-        const deeplink = JSON.parse(window.localStorage.getItem('deeplink'));
+        /*const deeplink = JSON.parse(window.localStorage.getItem('deeplink'));
         if(deeplink) {
             const siteId = _.get(deeplink, 'siteId');
             const orgs = await this.dataService.getOrganizations();
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
                     return this.router.navigate(['/owners-dashboard/day', _.get(deeplink, 'businessDate')]);
                 });
             }
-        }
+        }*/
 
         this.cordova = window['cordova'];
         if (typeof window['cordova'] !== 'undefined') {
