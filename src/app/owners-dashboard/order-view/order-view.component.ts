@@ -78,12 +78,19 @@ export class OrderViewComponent implements OnInit {
             });
         }
 
+        if(this.drillType === 'closedOrder') {
+            this.showTimeline = true;
+        }
+        else {
+            this.showTimeline = false;
+        }
+
         if (this.order && this.order.tlogId) {
             const enrichedOrder = await this.closedOrdersDataService.enrichOrder(this.order);
             this.order = enrichedOrder.order;
             this.orderOld = enrichedOrder.orderOld;
-            this.showTimeline = true;
         }
+
         this.show = true;
     }
 
