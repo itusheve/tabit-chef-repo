@@ -97,6 +97,12 @@ export class DayOrdersTableComponent implements OnChanges {
             });
             this.openOrdersByServiceType = openOrdersByType;
         }
+        else {
+            this.openOrdersByServiceType = null;
+            this.openOrders.totalAmount = 0;
+            this.openOrders.count = 0;
+            this.openOrders.orders = [];
+        }
 
         if (o.orders && o.orders.currentValue) {
             this.loading = true;

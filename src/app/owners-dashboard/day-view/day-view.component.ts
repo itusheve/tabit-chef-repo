@@ -342,7 +342,6 @@ export class DayViewComponent implements OnInit {
         this.hasData = false;
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
-
         //this.dayDebounceStream$ = this.day$.pipe(debounceTime(350));
 
         //get card data for the day
@@ -511,6 +510,8 @@ export class DayViewComponent implements OnInit {
             });
 
         combineLatest(this.day$, this.dataService.dailyTotals$, this.dataService.configuration$, this.dataService.refresh$).subscribe(async data => {
+            this.openOrders = null;
+            this.openOrders$.next({});
             let dayDate = _.clone(data[0]);
             if(!dayDate) {
                 return;
@@ -561,6 +562,7 @@ export class DayViewComponent implements OnInit {
             if (!time.isSame(dayDate, 'day')) {
                 this.bdIsCurrentBd = false;
                 this.openOrders = null;
+                this.openOrders$.next({});
             }
             else {
                 this.bdIsCurrentBd = true;

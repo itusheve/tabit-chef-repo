@@ -102,7 +102,7 @@ export class OrderViewComponent implements OnInit {
 
             let paymentDocuments = await Promise.all(documentInfos.map(async documentInfo => {
                 if (documentInfo.type === 'check') {
-                    let check = await this.rosEp.get(`tlogs/${documentInfo.id}/checks`);
+                    let check = await this.rosEp.get(`tlogs/${documentInfo.tlogId}/checks`);
                     check = _.get(check, [0]);
                     _.set(check, 'title', documentInfo.title);
                     return check;
