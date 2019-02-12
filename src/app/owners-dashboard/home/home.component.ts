@@ -817,7 +817,7 @@ export class HomeComponent implements OnInit {
                 let previousMonthWeekAvg = 0;
                 let lastYearWeekAvg = 0;
                 let currentdaysCounter = 0;
-                if (date.isSame(moment(), 'month') && date.date() < 7) {
+                if (date.isSame(moment(), 'month')) {
                     _.forEach(month.aggregations.days, (data, weekday) => {
                         if (data && weekday !== moment().day()) {
                             currentdaysCounter++;
