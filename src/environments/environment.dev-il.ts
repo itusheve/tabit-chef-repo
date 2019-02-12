@@ -19,5 +19,9 @@ export const environment = {
         catalog: 'isrProd',
         cube: 'tlogs',
     },
-    translationBaseUrl: 'https://chef.tabit-dev.com/assets/i18n/'
+    translationBaseUrl: 'https://chef.tabit-dev.com/assets/i18n/',
+    reportingServer: {
+        url: 'http://localhost:3000/',
+    },
 };
+

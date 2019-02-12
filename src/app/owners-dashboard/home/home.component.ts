@@ -25,7 +25,7 @@ import {DataWareHouseService} from '../../services/data-ware-house.service';
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    providers: [DatePipe]
+    providers: [DatePipe, DataWareHouseService]
 })
 export class HomeComponent implements OnInit {
 
@@ -115,7 +115,7 @@ export class HomeComponent implements OnInit {
                 public dialog: MatDialog,
                 private overlay: Overlay,
                 private logz: LogzioService,
-                private dateWareHouseService: DataWareHouseService  ) {
+                private dateWareHouseService: DataWareHouseService) {
 
         this.env = environment;
         this.tabitHelper = new TabitHelper();
