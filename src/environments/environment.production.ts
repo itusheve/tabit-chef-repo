@@ -3,7 +3,7 @@ export const environment = {
     managerDashboardMode: false,
     region: 'il',
     tbtLocale: 'he-IL',
-    environment: 'dev',
+    environment: 'prod',
     lang: 'he',
     rosConfig: {
         il: 'https://ros-rp-beta.tabit.cloud/',
@@ -19,5 +19,5 @@ export const environment = {
         catalog: 'isrProd',
         cube: 'tlogs',
     },
-    translationBaseUrl: 'https://chef.tabit-dev.com/assets/i18n/'
+    translationBaseUrl: 'https://chef-prod.tabit.cloud/assets/i18n/'
 };
