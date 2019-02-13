@@ -23,9 +23,13 @@ if [[ "$CIRCLE_TAG" =~ ^release-.*$ ]]; then
 elif [[ "$CIRCLE_BRANCH" == "master" ]]; then
   echo "Not in use"
 elif [[ "$CIRCLE_BRANCH" == "ecs-dev" ]]; then
+  npm cache clean -f
+  npm install -g n
+  n stable
+  npm i -g npm
   npm install --ignore-scripts
   npm rebuild node-sass
-  ng build --configuration=prod-us --prod --build-optimizer
+  node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod
   chmod +x _s3/s3-push-dev.sh
   S3_BUCKET="chef.tabit-dev.com" _s3/s3-push-dev.sh
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
@@ -42,10 +46,14 @@ elif [[ "$CIRCLE_BRANCH" == "us-production-rp"  ]]; then
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "ecs-chef-prod"  ]]; then
   echo "On1"
+  npm cache clean -f
+  npm install -g n
+  n stable
+  npm i -g npm
   npm install --ignore-scripts
   npm rebuild node-sass
   echo "On2"
-  ng build --configuration=prod-il --prod --build-optimizer
+  node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod
   echo "On3"
   chmod +x _s3/s3-push-us-prod.sh
   echo "On4"

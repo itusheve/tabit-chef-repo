@@ -71,6 +71,7 @@ export class AuthService {
                         if (org.isDemo === true) {
                             _.set(org_, 'name', org.name);
                             _.set(org_, 'smallLogo', org.smallLogo);
+                            _.set(org_, 'isDemo', true);
                         }
                         window.localStorage.setItem('org', JSON.stringify(org_));
                         environment.region = org.region;

@@ -36,7 +36,6 @@
               "src/js/vendor/rpbouman-xmla4j/xmla-min.js",
               "src/js/xmla4j-wrapper.class.js",
               "node_modules/document-viewer/dist/bundle.js"
-
             ]
           },
           "configurations": {
@@ -67,7 +66,7 @@
                 }
               ]
             },
-            "prod-il": {
+            "production": {
               "optimization": true,
               "outputHashing": "none",
               "sourceMap": false,
@@ -80,7 +79,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod-il.ts"
+                  "with": "src/environments/environment.production.ts"
                 }
               ],
               "i18nFile": "src/locale/messages.he.xlf",

@@ -78,5 +78,5 @@ export class ROSEp {
         // return an observable with a user-facing error message
         return throwError(
             'Http error caught.');
-    };
+    }
 }

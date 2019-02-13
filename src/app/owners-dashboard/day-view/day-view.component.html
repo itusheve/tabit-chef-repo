@@ -290,13 +290,14 @@
             ></app-month-summary-table>
         </div>
     </div>
-    <div class="flex d-col drill" *ngIf="drill">
-        <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber" [order]="drilledOrder"
-                        [orders]="orders"></app-order-view>
-    </div>
-
     <div class="card text-center" *ngIf="user.isStaff && hasData">
         EOD: {{metaData?.isEod == '1' ? 'Yes' : 'No'}} |
         Balanced: {{metaData?.isBalanced == '1' ? 'Yes' : 'No'}}
     </div>
 </div>
+<div class="container" *ngIf="drill">
+    <div class="flex d-col drill">
+        <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber" [order]="drilledOrder" [openOrder]="drilledOpenOrder" [drillType]="drillType"></app-order-view>
+    </div>
+</div>
+

@@ -13,7 +13,6 @@ export class OrderDetailsComponent implements OnInit {
 
   @Input() order: Order;
   @Input() orderOld: any;
-  // @Input() printDataOld: any;
   @Input() ORDERSVIEW: any;
 
   isUS = environment.region === 'us' ? true : false;

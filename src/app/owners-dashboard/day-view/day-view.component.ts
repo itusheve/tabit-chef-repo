@@ -39,10 +39,11 @@ export class DayViewComponent implements OnInit {
 
     dayHasSales: boolean;
 
-    drillTlogTime;
     drill = false;
-    drilledOrder: Order;
+    drilledOrder: any;
+    drilledOpenOrder: any;
     drilledOrderNumber: number;
+    drillType: string;
 
     public dayFromDatabase: any;
     public hasData: boolean;
@@ -341,7 +342,6 @@ export class DayViewComponent implements OnInit {
         this.hasData = false;
         this.dailySummaryTblData = undefined;
         this.byShiftSummaryTblsData = undefined;
-
         //this.dayDebounceStream$ = this.day$.pipe(debounceTime(350));
 
         //get card data for the day
@@ -510,6 +510,8 @@ export class DayViewComponent implements OnInit {
             });
 
         combineLatest(this.day$, this.dataService.dailyTotals$, this.dataService.configuration$, this.dataService.refresh$).subscribe(async data => {
+            this.openOrders = null;
+            this.openOrders$.next({});
             let dayDate = _.clone(data[0]);
             if(!dayDate) {
                 return;
@@ -560,6 +562,7 @@ export class DayViewComponent implements OnInit {
             if (!time.isSame(dayDate, 'day')) {
                 this.bdIsCurrentBd = false;
                 this.openOrders = null;
+                this.openOrders$.next({});
             }
             else {
                 this.bdIsCurrentBd = true;
@@ -875,11 +878,10 @@ export class DayViewComponent implements OnInit {
     }
 
     /* called directly by day-orders-table */
-    onOrderClicked(order: Order) {
-
+    onOrderClicked(order: any) {
         this.drilledOrder = order;
         this.drilledOrderNumber = order.number;
-        this.drillTlogTime = order.businessDate;
+        this.drillType = 'closedOrder';
 
         setTimeout(() => {
             this.drill = true;
@@ -891,13 +893,13 @@ export class DayViewComponent implements OnInit {
             //prevent navigating back
             return false;
         };
+
     }
 
     onOpenOrderClicked(openOrder: any) {
-
-        this.drilledOrder = openOrder;
+        this.drilledOpenOrder = openOrder;
         this.drilledOrderNumber = openOrder.number;
-        this.drillTlogTime = openOrder.businessDate;
+        this.drillType = 'openOrder';
 
         setTimeout(() => {
             this.drill = true;
@@ -909,6 +911,8 @@ export class DayViewComponent implements OnInit {
             //prevent navigating back
             return false;
         };
+
+        return true;
     }
 
     closeDrill() {

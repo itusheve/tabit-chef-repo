@@ -2,6 +2,7 @@ import {TranslateLoader} from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 const he = {
+    'orderClosed': 'ההזמנה נסגרה',
     'forecastBreakdown': 'הרכב תחזית',
     'forecast': 'תחזית',
     'ok': 'אשר',
@@ -195,6 +196,7 @@ const he = {
     'close': 'סגור'
 };
 const en = {
+    'orderClosed': 'This order was closed',
     'forecast': 'Forecast',
     'forecastBreakdown': 'Forecast Breakdown',
     'ok': 'OK',

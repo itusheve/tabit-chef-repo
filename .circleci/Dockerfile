@@ -72,7 +72,7 @@ RUN set -ex \
   done
 
 #install node
-ENV NODE_VERSION 8.5.0
+ENV NODE_VERSION 8.15.0
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \

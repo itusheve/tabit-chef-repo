@@ -19,6 +19,7 @@ import {OverTimeUsersDialogComponent} from './over-time-users/over-time-users-di
 import {LogzioService} from '../../logzio.service';
 import {ForecastDialogComponent} from './forecast-dialog/forecast-dialog.component';
 import {Overlay} from '@angular/cdk/overlay';
+import {AuthService} from '../../auth/auth.service';
 
 @Component({
     selector: 'app-home',
@@ -113,8 +114,8 @@ export class HomeComponent implements OnInit {
                 private translate: TranslateService,
                 public dialog: MatDialog,
                 private overlay: Overlay,
-                private logz: LogzioService) {
-
+                private logz: LogzioService,
+    ) {
         this.env = environment;
         this.tabitHelper = new TabitHelper();
         ownersDashboardService.toolbarConfig.left.back.showBtn = false;
@@ -152,7 +153,7 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.loadingOlapData = true;
         this.currentBdCardData.loading = true;
         this.showSummary = false;
@@ -816,7 +817,7 @@ export class HomeComponent implements OnInit {
                 let previousMonthWeekAvg = 0;
                 let lastYearWeekAvg = 0;
                 let currentdaysCounter = 0;
-                if (date.isSame(moment(), 'month') && date.date() < 7) {
+                if (date.isSame(moment(), 'month')) {
                     _.forEach(month.aggregations.days, (data, weekday) => {
                         if (data && weekday !== moment().day()) {
                             currentdaysCounter++;

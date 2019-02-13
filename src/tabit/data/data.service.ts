@@ -1009,7 +1009,7 @@ export class DataService {
         let defaultPeriod = _.get(configuration, 'workHoursRules.defaultPeriod');
 
         if (defaultPeriod !== 'weekly') {
-            return null;
+            return;
         }
 
         let laborCost = await this.rosEp.get('reports/attendance', {time: time.toISOString()}).then(function (res) {
@@ -1234,11 +1234,22 @@ export class DataService {
 
     async getOpenOrders() {
         let params: any = {
-            select: '_id,number,orderType,serviceType,created,lastUpdated,closed,isStaffTable,diners,paymentSummary,source,balance,totals',
+            select: '_id,number,orderType,serviceType,created,lastUpdated,closed,isStaffTable,diners,paymentSummary,source,balance,totals,owner,tableIds',
             orderBy: 'created',
         };
 
-        return this.rosEp.get('orders', params);
+        const openOrders = await this.rosEp.get('orders', params);
+        const users = await this.olapEp.getUsers();
+
+        _.forEach(openOrders, openOrder => {
+            if(openOrder.owner) {
+                const user = _.find(users, {userId: openOrder.owner});
+                _.set(openOrder, 'ownerFirstName', _.get(user, 'firstName', 'NA'));
+                _.set(openOrder, 'ownerLastName', _.get(user, 'lastName', 'NA'));
+            }
+        });
+
+        return openOrders;
     }
 
     getDailyTotals(date = null) {

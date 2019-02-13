@@ -1,16 +1,13 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, ViewChild, ElementRef} from '@angular/core';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-
-import * as moment from 'moment';
-import * as _ from 'lodash';
 import {Order} from '../../../tabit/model/Order.model';
-
 import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
 import {ORDERS_VIEW} from '../../../tabit/data/dc/closedOrders.data.service';
-import {OwnersDashboardService} from '../owners-dashboard.service';
 import {ROSEp} from '../../../tabit/data/ep/ros.ep';
-
-declare var TlogDocsService: any;
+import {environment} from '../../../environments/environment';
+import {DataService} from '../../../tabit/data/data.service';
+import * as _ from 'lodash';
+import {TranslateService} from '@ngx-translate/core';
 
 export interface SlipVM {
     id: number;
@@ -28,94 +25,109 @@ export interface SlipVM {
 export class OrderViewComponent implements OnInit {
 
     @Input() orderNumber: number;
-    @Input() orders: Order[];
     @Input() order: Order;
+    @Input() openOrder: Order;
+    @Input() drillType: any;
 
     show = false;
     orderOld: any;
     printDataOld: any;
     ORDERS_VIEW: any;
     orderDocs: any;
-    tlogDocsService: any;
     html: any;
-
-    //<!-- https://github.com/angular/material2/issues/5269 -->
-    // selectedTabIndex;
+    documents: any[];
+    showTimeline: boolean;
+    organization;
 
     constructor(private closedOrdersDataService: ClosedOrdersDataService,
-                private route: ActivatedRoute, private rosEp: ROSEp) {
+                private route: ActivatedRoute, private rosEp: ROSEp, private dataService: DataService, private translate: TranslateService) {
         this.ORDERS_VIEW = ORDERS_VIEW.getTranslations();
         this.orderDocs = {};
-    }
 
-
-    async renderDocuments(tlogId) {
-        let bill = await this.rosEp.get(`tlogs/${tlogId}/bill`);
-        let DocumentViewer = window['DocumentViewer'];
-        let documentViewer = new DocumentViewer();
-        _.set(window, 'moment', moment);
-        this.html = documentViewer.getDocumentHtml(bill[0]);
-    }
-
-    ngOnInit() {
-        this.route.paramMap
-            .subscribe((params: ParamMap) => {
-
-                /*if(this.order.tlogId) {
-                    this.renderDocuments(this.order.tlogId);
-                }*/
-
-                this.order = this.order.tlogId ? this.order : _.find(this.orders, {orderNumber: this.orderNumber});
-                this.closedOrdersDataService.enrichOrder(this.order)
-                    .then((o: {
-                        order: Order,
-                        orderOld: any,
-                        printDataOld: any
-                    }) => {
-                        const order = o.order;
-                        const orderOld = o.orderOld;
-                        const printDataOld = o.printDataOld;
-                        //TODO use destructuring instead...
-
-                        this.order = order;
-                        this.orderOld = orderOld;
-                        this.printDataOld = printDataOld;
-
-                        this.orderOld.allDocuments.forEach(doc => {
-
-                            this.orderDocs[doc._id] = {
-                                id: doc._id,
-                                docType: doc._type,
-                                isRefund: doc._type.includes('refund'),
-                                loading: true,
-                                data: undefined
-                            };
-
-                        });
-
-                        // set async request to load print data by invoice.
-                        this.initAllDocsAsync();
-
-                        this.show = true;
-                    });
-            });
-
-
-    }
-
-
-    private initAllDocsAsync() {
-
-        this.orderOld.allDocuments.forEach(doc => {
-
-            this.closedOrdersDataService.getPrintData(doc._id)
-                .then((result) => {
-
-                    this.orderDocs[doc._id].loading = false;
-                    this.orderDocs[doc._id].data = result[0];
-
-                });
-
+        this.dataService.organization$.subscribe(organization => {
+            this.organization = organization;
         });
+    }
+
+    async ngOnInit() {
+        this.showTimeline = false;
+        const documentViewer = new (<any>window).DocumentViewer({locale: this.organization.region === 'us' ? 'en-US' : 'he-IL'});
+        const documents = await this.getDocuments(documentViewer);
+        this.documents = documents.map(document => {
+            if (this.organization.isDemo) {
+                _.set(document, ['printData', 'variables', 'F_NAME'], this.organization.region === 'il' ? 'זיו' : 'Dror');
+                _.set(document, ['printData', 'variables', 'L_NAME'], this.organization.region === 'il' ? 'וטורי' : '');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_CITY'], this.organization.region === 'il' ? 'רשפון': 'PLANO, TX 75024');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_STREET'], this.organization.region === 'il' ? 'דרך הפרדס 31': '7700 WINDROSE AVE. G300');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_BN_NUMBER'], '123456');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_LEGAL_NAME'], this.organization.region === 'il' ? '' : '');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_NAME'], this.organization.region === 'il' ? 'TABIT BAR' : 'TABIT RESTAURANT');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_TEL'], this.organization.region === 'il' ? '09-9585682' : '1-833-822-4887');
+            }
+            const html = documentViewer.getDocumentHtml(document);
+            return {
+                title: document.title,
+                type: document.documentType,
+                html: html
+            };
+        });
+
+        if (this.documents.length === 0) {
+            this.translate.get('orderClosed').subscribe((translation: string) => {
+                this.documents.push(translation);
+            });
+        }
+
+        if(this.drillType === 'closedOrder') {
+            this.showTimeline = true;
+        }
+        else {
+            this.showTimeline = false;
+        }
+
+        if (this.order && this.order.tlogId) {
+            const enrichedOrder = await this.closedOrdersDataService.enrichOrder(this.order);
+            this.order = enrichedOrder.order;
+            this.orderOld = enrichedOrder.orderOld;
+        }
+
+        this.show = true;
+    }
+
+    private async getDocuments(documentViewer): Promise<Array<any>> {
+        if (this.drillType === 'closedOrder' && this.order && this.order.tlogId) {
+            let documents = [];
+            const bills = await this.rosEp.get(`tlogs/${this.order.tlogId}/bill`);
+            const bill = _.get(bills, '[0]');
+            _.set(bill, 'title', environment.tbtLocale === 'en-US' ? 'Order' : 'הזמנה');
+            documents.push(bill);
+
+            let tlog = await this.rosEp.get(`tlogs/${this.order.tlogId}`);
+            let documentInfos = documentViewer.getDocumentsInfoFromTlog(tlog, {});
+
+            documentInfos = documentInfos.filter(documentInfo => documentInfo.type !== 'tlog' && !documentInfo.isFakeDocument);
+
+            let paymentDocuments = await Promise.all(documentInfos.map(async documentInfo => {
+                if (documentInfo.type === 'check') {
+                    let check = await this.rosEp.get(`tlogs/${documentInfo.tlogId}/checks`);
+                    check = _.get(check, [0]);
+                    _.set(check, 'title', documentInfo.title);
+                    return check;
+                }
+
+                let document = await this.rosEp.get(`documents/v2/${documentInfo.id}/printdata`);
+                document = _.get(document, [0]);
+                _.set(document, 'title', documentInfo.title);
+                return document;
+            }));
+
+            documents.push(...paymentDocuments);
+            return documents;
+        }
+        else if (this.openOrder) {
+            const bill = await this.rosEp.get(`orders/${this.openOrder.id}/printdata/orderbill`);
+            _.set(bill, [0, 'title'], environment.tbtLocale === 'en-US' ? 'Order' : 'הזמנה');
+            return bill;
+        }
     }
 }

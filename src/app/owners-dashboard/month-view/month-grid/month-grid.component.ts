@@ -68,8 +68,6 @@ export class MonthGridComponent implements OnInit {
             });
 
             this.month = monthlyData;
-
-
             let highestSales = _.max([_.maxBy(this.days, function(o) { return o.salesAndRefoundAmountIncludeVat || 0; }), _.maxBy(this.days, function(o) { return o.AvgNweeksSalesAndRefoundAmountIncludeVat || 0; })]);
             if(highestSales) {
                 this.maxValuesByCategory['sales'] = Math.max(highestSales.salesAndRefoundAmountIncludeVat || 0, highestSales.AvgNweeksSalesAndRefoundAmountIncludeVat || 0);

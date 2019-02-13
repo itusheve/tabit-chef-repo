@@ -91,26 +91,27 @@ export class DayPaymentsTableComponent implements OnChanges {
 
             if(this.paymentsData.env === 'usa') {
 
-                data.byAccountGroup.forEach(byAccountGroupObj => {
-                    byAccountGroupObj.byClearerName.forEach(byClearerNameObj => {
-                        byAccountGroupObj.paymentsKpis.gratuity = 0;
-                        byAccountGroupObj.paymentsKpis.payments = 0;
-                        byAccountGroupObj.paymentsKpis.refund = 0;
-                        byAccountGroupObj.paymentsKpis.sales = 0;
-                        byAccountGroupObj.paymentsKpis.totalPayments = 0;
+                data.paymentsKpis.gratuity = 0;
+                data.paymentsKpis.payments = 0;
+                data.paymentsKpis.refund = 0;
+                data.paymentsKpis.sales = 0;
+                data.paymentsKpis.totalPayments = 0;
 
+                data.byAccountGroup.forEach(byAccountGroupObj => {
+
+                    byAccountGroupObj.paymentsKpis.gratuity = 0;
+                    byAccountGroupObj.paymentsKpis.payments = 0;
+                    byAccountGroupObj.paymentsKpis.refund = 0;
+                    byAccountGroupObj.paymentsKpis.sales = 0;
+                    byAccountGroupObj.paymentsKpis.totalPayments = 0;
+
+                    byAccountGroupObj.byClearerName.forEach(byClearerNameObj => {
                         byAccountGroupObj.paymentsKpis.gratuity += byClearerNameObj.rawData.gratuity ? parseFloat(byClearerNameObj.rawData.gratuity) : 0;
                         byAccountGroupObj.paymentsKpis.payments += byClearerNameObj.rawData.payments ? parseFloat(byClearerNameObj.rawData.payments) : 0;
                         byAccountGroupObj.paymentsKpis.refund += byClearerNameObj.rawData.refund ? parseFloat(byClearerNameObj.rawData.refund) : 0;
                         byAccountGroupObj.paymentsKpis.sales += byClearerNameObj.rawData.sales ? parseFloat(byClearerNameObj.rawData.sales) : 0;
                         byAccountGroupObj.paymentsKpis.totalPayments += byClearerNameObj.rawData.totalPayments ? parseFloat(byClearerNameObj.rawData.totalPayments) : 0;
                     });
-
-                    data.paymentsKpis.gratuity = 0;
-                    data.paymentsKpis.payments = 0;
-                    data.paymentsKpis.refund = 0;
-                    data.paymentsKpis.sales = 0;
-                    data.paymentsKpis.totalPayments = 0;
 
                     data.paymentsKpis.gratuity += byAccountGroupObj.paymentsKpis.gratuity;
                     data.paymentsKpis.payments += byAccountGroupObj.paymentsKpis.payments;

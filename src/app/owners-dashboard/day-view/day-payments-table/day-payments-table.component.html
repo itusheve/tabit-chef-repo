@@ -7,7 +7,7 @@
                     <span [translate]="'day.paymentsReport'">Payments report</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <table *ngIf="paymentsData && paymentsData.env !== 'usa'" class="table">
+            <table *ngIf="paymentsData && paymentsData.env !== 'usa'" class="table table-responsive-sm">
                 <tr class="header">
                     <td [translate]="'day.method'">Method</td>
                     <td class="ar" [translate]="'day.daily'">Daily</td>
@@ -36,7 +36,7 @@
                 </ng-container>
             </table>
 
-            <table *ngIf="paymentsData && paymentsData.env === 'usa'" class="table table-sm table-responsive-sm">
+            <table *ngIf="paymentsData && paymentsData.env === 'usa'" class="table table-responsive-sm">
                 <tr class="header">
                     <td [translate]="'day.method'">Method</td>
                     <td [translate]="'day.sales'">Sales</td>

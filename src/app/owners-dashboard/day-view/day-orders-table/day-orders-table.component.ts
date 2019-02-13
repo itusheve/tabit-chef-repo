@@ -33,6 +33,7 @@ export class DayOrdersTableComponent implements OnChanges {
     @Output() onOpenOrderClicked = new EventEmitter();
 
     public byOrderTypes: OrderTypeVM[];
+    public openOrdersByServiceType: any;
 
     datePipe: DatePipe = new DatePipe(environment.tbtLocale);
 
@@ -52,23 +53,55 @@ export class DayOrdersTableComponent implements OnChanges {
             this.openOrders.totalAmount = 0;
             this.openOrders.count = 0;
             this.openOrders.orders = [];
-            _.forEach(this.todayOpenOrders, openOrder => {
-                let formattedOpenOrder = {
-                    openingTime: openOrder.created,
-                    number: openOrder.number,
-                    waiter: openOrder.owner,
-                    sales: 0
-                };
 
-                if (openOrder.totals.totalAmount) {
-                    let sales = openOrder.totals.netSales / 100;
-                    this.openOrders.totalAmount += sales;
-                    formattedOpenOrder.sales = sales;
-                }
-
-                this.openOrders.count++;
-                this.openOrders.orders.push(formattedOpenOrder);
+            const orderTypesObj = this.dataService.orderTypes;
+            let openOrdersByType = [];
+            Object.keys(orderTypesObj).forEach(key => {
+                openOrdersByType.push({
+                    id: key,
+                    caption: tmpTranslations.get(`orderTypes.${key}`),
+                    rank: orderTypesObj[key].rank
+                });
             });
+            openOrdersByType = openOrdersByType.sort((a, b) => {
+                if (a.rank < b.rank) return -1;
+                return 1;
+            });
+
+            openOrdersByType.forEach(openOrderType => {
+                let filteredOpenOrders = this.todayOpenOrders.filter(openOrder => openOrder.serviceType === openOrderType.id).sort((a, b) => a.number < b.number ? -1 : 1);
+
+                openOrderType.sales = 0;
+                openOrderType.ordersCount = 0;
+                openOrderType.orders = [];
+
+                _.forEach(filteredOpenOrders, openOrder => {
+                    openOrderType.ordersCount++;
+
+                    let formattedOpenOrder = {
+                        openingTime: openOrder.created,
+                        number: openOrder.number,
+                        waiter: openOrder.ownerFirstName + ' ' + openOrder.ownerLastName,
+                        sales: 0,
+                        id: openOrder._id
+                    };
+
+                    if (openOrder.totals.totalAmount) {
+                        let sales = openOrder.totals.netSales / 100;
+                        openOrderType.sales += sales;
+                        formattedOpenOrder.sales = sales;
+                    }
+
+                    openOrderType.orders.push(formattedOpenOrder);
+                });
+            });
+            this.openOrdersByServiceType = openOrdersByType;
+        }
+        else {
+            this.openOrdersByServiceType = null;
+            this.openOrders.totalAmount = 0;
+            this.openOrders.count = 0;
+            this.openOrders.orders = [];
         }
 
         if (o.orders && o.orders.currentValue) {
@@ -115,7 +148,7 @@ export class DayOrdersTableComponent implements OnChanges {
     }
 
     openOrderClicked(openOrder: any) {
-        this.onOpenOrderClicked.emit(openOrder);
+        return this.onOpenOrderClicked.emit(openOrder);
     }
 
     sort(orderType: any, by: string) {
@@ -148,17 +181,51 @@ export class DayOrdersTableComponent implements OnChanges {
             .sort((a, b) => (a[field] < b[field] ? dir : dir * -1));
     }
 
+    sortOpenOrder(orderType: any, by: string) {
+        if (this.sortBy && this.sortBy === by) {
+            this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
+        } else {
+            if (by === 'sales') {
+                this.sortDir = 'desc';
+            } else {
+                this.sortDir = 'asc';
+            }
+            this.sortBy = by;
+        }
+        let field;
+        switch (by) {
+            case 'time':
+            case 'number':
+                field = 'number';
+                break;
+            case 'waiter':
+                field = 'waiter';
+                break;
+            case 'sales':
+                field = 'sales';
+                break;
+        }
+        let dir = this.sortDir === 'asc' ? -1 : 1;
+        this.openOrdersByServiceType.find(o => o.id === orderType.id)
+            .orders
+            .sort((a, b) => (a[field] < b[field] ? dir : dir * -1));
+    }
+
     private markOrdersAsFiltered() {
-        this.byOrderTypes.forEach(o => {
-            o.orders.forEach(ord => {
-                let filter = false;
-                this.filters.forEach(f => {
-                    if (f.on) {
-                        const reductionAmount = ord['priceReductions'][f.type];
-                        if (!reductionAmount) filter = true;
+        this.byOrderTypes.forEach(orderType => {
+            orderType.orders.forEach(order => {
+                let filtered = false;
+                let reductionAmount = 0;
+                this.filters.forEach(filter => {
+                    if (filter.on) {
+                        reductionAmount += order['priceReductions'][filter.type];
                     }
                 });
-                ord.filtered = filter;
+                if(_.every(this.filters, filter => !filter.on)) {
+                    order.filtered = false;
+                } else {
+                    order.filtered = !reductionAmount;
+                }
             });
         });
     }
