@@ -50,8 +50,6 @@ export class DayViewComponent implements OnInit {
     public hasNoDataForToday: boolean;
     public region: string;
 
-    // for the pie chart
-    public salesByOrderType: any;
 
     /* the day's Orders */
     public orders: Order[];

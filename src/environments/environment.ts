@@ -22,5 +22,5 @@ export const environment = {
 
     reportingServer: {
         url: 'http://localhost:3000/'
-    },
+    }
 };

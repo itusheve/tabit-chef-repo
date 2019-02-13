@@ -21,7 +21,7 @@ export const environment = {
     },
     translationBaseUrl: 'https://chef.tabit-dev.com/assets/i18n/',
     reportingServer: {
-        url: 'http://localhost:3000/',
-    },
+        url: 'http://localhost:3000/'
+    }
 };
 
