@@ -1009,7 +1009,7 @@ export class DataService {
         let defaultPeriod = _.get(configuration, 'workHoursRules.defaultPeriod');
 
         if (defaultPeriod !== 'weekly') {
-            return null;
+            return;
         }
 
         let laborCost = await this.rosEp.get('reports/attendance', {time: time.toISOString()}).then(function (res) {
