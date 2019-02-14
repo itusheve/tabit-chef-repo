@@ -62,7 +62,7 @@ export class DaySelectorComponent implements OnChanges {
             this.setDisable();
         }
     }
-
+                    // this function move to new service date-selector-service
     prevDay = (e) => {
         e.stopPropagation();
         if (this.currentValue.isSame(this.options.minDate, 'day')) return;

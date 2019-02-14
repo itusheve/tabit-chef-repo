@@ -20,6 +20,7 @@ import {LogzioService} from '../../logzio.service';
 import {ForecastDialogComponent} from './forecast-dialog/forecast-dialog.component';
 import {Overlay} from '@angular/cdk/overlay';
 import {DataWareHouseService} from '../../services/data-ware-house.service';
+import {AuthService} from '../../auth/auth.service';
 
 @Component({
     selector: 'app-home',
@@ -115,7 +116,7 @@ export class HomeComponent implements OnInit {
                 public dialog: MatDialog,
                 private overlay: Overlay,
                 private logz: LogzioService,
-                private dateWareHouseService: DataWareHouseService) {
+                private dateWareHouseService: DataWareHouseService ) {
 
         this.env = environment;
         this.tabitHelper = new TabitHelper();
@@ -154,7 +155,7 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    async ngOnInit() {
+     async  ngOnInit() {
         this.loadingOlapData = true;
         this.currentBdCardData.loading = true;
         this.showSummary = false;
@@ -177,10 +178,12 @@ export class HomeComponent implements OnInit {
             this.ownersDashboardService.toolbarConfig.home.show = true;
         }
 
-        // const payments = await this.dateWareHouseService.getPayments('20190201', '20190202');
-        //const tlogs = await this.dateWareHouseService.getTlogs('20190201', '20190202');
-        // console.log(payments);
-        // console.log(tlogs);
+         this.ownersDashboardService.toolbarConfig.home.show = true;
+
+         const payments = await this.dateWareHouseService.getPayments('20190201', '20190202');
+         const tlogs = await this.dateWareHouseService.getTlogs('20190201', '20190202');
+         console.log(payments);
+         console.log(tlogs);
 
         combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
             let user = data[0];
@@ -823,7 +826,7 @@ export class HomeComponent implements OnInit {
                 let previousMonthWeekAvg = 0;
                 let lastYearWeekAvg = 0;
                 let currentdaysCounter = 0;
-                if (date.isSame(moment(), 'month') && date.date() < 7) {
+                if (date.isSame(moment(), 'month')) {
                     _.forEach(month.aggregations.days, (data, weekday) => {
                         if (data && weekday !== moment().day()) {
                             currentdaysCounter++;

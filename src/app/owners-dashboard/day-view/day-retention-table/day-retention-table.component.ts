@@ -43,6 +43,7 @@ export class DayRetentionTableComponent implements OnChanges {
         this.tabitHelper = new TabitHelper();
     }
 
+                        // duplicate function - put it on day-function.service
     ngOnChanges(o: SimpleChanges) {
         if (o.retentionData && o.retentionData.currentValue) {
             this.totalValue = this.retentionData.reduce((acc, curr) => (acc + curr.retention), 0);
@@ -55,11 +56,11 @@ export class DayRetentionTableComponent implements OnChanges {
             this.loading = false;
         }
     }
-
+                    // duplicate function - put it on day-function.service
     orderClicked(orderNumber: number) {
         this.onOrderClicked.emit(orderNumber);
     }
-
+                    // duplicate function - put it on day-function.service
     sort(by: string) {
         const that = this;
         if (this.sortBy && this.sortBy === by) {
@@ -76,7 +77,7 @@ export class DayRetentionTableComponent implements OnChanges {
         this.retentionData
             .sort((a, b) => (a[that.sortBy] < b[that.sortBy] ? dir : dir * -1));
     }
-
+                        // duplicate function - put it on day-function.service
     getCssColorClass() {
         if(this.dayFromDatabase && this.dayFromDatabase.mrPrc) {
             return this.tabitHelper.getColorClassByPercentage(this.dayFromDatabase.mrPrc.toFixed(1) / this.dayFromDatabase.avgNweeksMrPrc.toFixed(1) * 100, false);

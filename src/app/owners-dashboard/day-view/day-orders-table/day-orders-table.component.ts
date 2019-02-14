@@ -97,6 +97,12 @@ export class DayOrdersTableComponent implements OnChanges {
             });
             this.openOrdersByServiceType = openOrdersByType;
         }
+        else {
+            this.openOrdersByServiceType = null;
+            this.openOrders.totalAmount = 0;
+            this.openOrders.count = 0;
+            this.openOrders.orders = [];
+        }
 
         if (o.orders && o.orders.currentValue) {
             this.loading = true;
@@ -145,6 +151,8 @@ export class DayOrdersTableComponent implements OnChanges {
         return this.onOpenOrderClicked.emit(openOrder);
     }
 
+                            // duplicate function - put it on day-function.service
+
     sort(orderType: any, by: string) {
         if (this.sortBy && this.sortBy === by) {
             this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
@@ -174,6 +182,7 @@ export class DayOrdersTableComponent implements OnChanges {
             .orders
             .sort((a, b) => (a[field] < b[field] ? dir : dir * -1));
     }
+                // move this function to day-function.service
 
     sortOpenOrder(orderType: any, by: string) {
         if (this.sortBy && this.sortBy === by) {

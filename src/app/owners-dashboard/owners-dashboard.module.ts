@@ -93,6 +93,7 @@ import {PdfViewerModule} from 'ng2-pdf-viewer';
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { MonthComponent } from './month/month.component';
 import { ForecastDialogComponent } from './home/forecast-dialog/forecast-dialog.component';
+import { MonthWasteComponent } from './month/month-waste/month-waste.component';
 
 @NgModule({
     imports: [
@@ -187,7 +188,8 @@ import { ForecastDialogComponent } from './home/forecast-dialog/forecast-dialog.
         OrderDetailsComponent,
         TutorialComponent,
         MonthComponent,
-        ForecastDialogComponent
+        ForecastDialogComponent,
+        MonthWasteComponent
     ],
     providers: [
         OwnersDashboardService

@@ -74,7 +74,7 @@ export class MonthPickerDialogComponent {
                     let lastYearWeekAvg = 0;
                     let currentdaysCounter = 0;
                     let date = moment(month.latestDay);
-                    if (date.isSame(moment(), 'month') && date.date() < 7) {
+                    if (date.isSame(moment(), 'month') && month.aggregations) {
                         _.forEach(month.aggregations.days, (data, weekday) => {
                             if (data && weekday !== moment().day()) {
                                 currentdaysCounter++;

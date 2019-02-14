@@ -20,17 +20,6 @@ export class DataWareHouseEpService {
             }).pipe(retry(1), catchError(this.handleError)).toPromise();
     }
 
-    /*post(url, paylod?, region?): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.httpClient.post(this.authService.getRosUrl(region) + url, paylod || {})
-                .subscribe((results: any) => {
-                        resolve(results);
-                    }, (err) => {
-                        this.debugService.err(`DataWareHouseEpService: ${JSON.stringify(err)}`);
-                    }
-                );
-        });
-    }*/
 
     private handleError(error: HttpErrorResponse) {
         if (error.error instanceof ErrorEvent) {

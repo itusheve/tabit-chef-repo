@@ -2,6 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {DebugService} from './debug.service';
 import {TranslateService} from '@ngx-translate/core';
 import {environment} from '../environments/environment';
+import {DataService} from '../tabit/data/data.service';
+import {AuthService} from './auth/auth.service';
+import {Router} from '@angular/router';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-root',
@@ -22,12 +26,32 @@ export class AppComponent implements OnInit {
 
     logArr: { type: string, message: string }[];
 
-    constructor(private ds: DebugService, private translate: TranslateService) {
+    constructor(private ds: DebugService, private translate: TranslateService, private dataService: DataService, private authService: AuthService, private router: Router) {
         this.logArr = ds.logArr;
+
+        //get external link route // deep link
+        /*const urlParams = new URLSearchParams(window.location.search);
+        let linkType = urlParams.get('link');
+        let businessDate = urlParams.get('businessDate');
+        let siteId = urlParams.get('siteId');
+        if(linkType) {
+            window.localStorage.setItem('deeplink', JSON.stringify({businessDate: businessDate, siteId: siteId, linkType: linkType}));
+        }*/
     }
 
-    ngOnInit() {
-        /* TLA: */
+    async ngOnInit() {
+        /*const deeplink = JSON.parse(window.localStorage.getItem('deeplink'));
+        if(deeplink) {
+            const siteId = _.get(deeplink, 'siteId');
+            const orgs = await this.dataService.getOrganizations();
+            const org = _.find(orgs, {_id: siteId});
+            if (org) {
+                this.authService.selectOrg(org).then(() => {
+                    return this.router.navigate(['/owners-dashboard/day', _.get(deeplink, 'businessDate')]);
+                });
+            }
+        }*/
+
         this.cordova = window['cordova'];
         if (typeof window['cordova'] !== 'undefined') {
             this.ds.log('Cordova exists');

@@ -78,12 +78,19 @@ export class OrderViewComponent implements OnInit {
             });
         }
 
+        if(this.drillType === 'closedOrder') {
+            this.showTimeline = true;
+        }
+        else {
+            this.showTimeline = false;
+        }
+
         if (this.order && this.order.tlogId) {
             const enrichedOrder = await this.closedOrdersDataService.enrichOrder(this.order);
             this.order = enrichedOrder.order;
             this.orderOld = enrichedOrder.orderOld;
-            this.showTimeline = true;
         }
+
         this.show = true;
     }
 
@@ -102,7 +109,7 @@ export class OrderViewComponent implements OnInit {
 
             let paymentDocuments = await Promise.all(documentInfos.map(async documentInfo => {
                 if (documentInfo.type === 'check') {
-                    let check = await this.rosEp.get(`tlogs/${documentInfo.id}/checks`);
+                    let check = await this.rosEp.get(`tlogs/${documentInfo.tlogId}/checks`);
                     check = _.get(check, [0]);
                     _.set(check, 'title', documentInfo.title);
                     return check;
