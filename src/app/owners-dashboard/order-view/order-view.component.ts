@@ -57,12 +57,12 @@ export class OrderViewComponent implements OnInit {
             if (this.organization.isDemo) {
                 _.set(document, ['printData', 'variables', 'F_NAME'], this.organization.region === 'il' ? 'זיו' : 'Dror');
                 _.set(document, ['printData', 'variables', 'L_NAME'], this.organization.region === 'il' ? 'וטורי' : '');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_CITY'], '');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_STREET'], '');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_CITY'], this.organization.region === 'il' ? 'רשפון': 'PLANO, TX 75024');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_STREET'], this.organization.region === 'il' ? 'דרך הפרדס 31': '7700 WINDROSE AVE. G300');
                 _.set(document, ['printData', 'variables', 'ORGANIZATION_BN_NUMBER'], '123456');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_LEGAL_NAME'], this.organization.region === 'il' ? 'טאביט בר' : 'Tabit Bar');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_NAME'], this.organization.region === 'il' ? 'טאביט בר' : 'Tabit Bar');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_TEL'], '09-9585682');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_LEGAL_NAME'], this.organization.region === 'il' ? '' : '');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_NAME'], this.organization.region === 'il' ? 'TABIT BAR' : 'TABIT RESTAURANT');
+                _.set(document, ['printData', 'variables', 'ORGANIZATION_TEL'], this.organization.region === 'il' ? '09-9585682' : '1-833-822-4887');
             }
             const html = documentViewer.getDocumentHtml(document);
             return {
