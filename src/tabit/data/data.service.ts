@@ -24,6 +24,7 @@ import {environment} from '../../environments/environment';
 import {DebugService} from '../../app/debug.service';
 import {LogzioService} from '../../app/logzio.service';
 import {TranslateService} from '@ngx-translate/core';
+import {TabitHelper} from '../helpers/tabit.helper';
 
 const tmpTranslations_ = {
     'he': {
@@ -381,6 +382,8 @@ export const appVersions = (document as any).tbtAppVersions;
 @Injectable()
 export class DataService {
 
+    private tabitHelper;
+
     private ordersCache: Map<string, Order[]> = new Map<string, Order[]>();
 
     private organizations: any[];
@@ -450,8 +453,9 @@ export class DataService {
 
     public weekStartDay$: Observable<moment.Moment> = Observable.create(obs => {
         this.laborConfiguration$.subscribe(laborConfiguration => {
-            let firstWeekday = _.get(laborConfiguration, 'workHoursRules.firstWeekday');
-            obs.next(firstWeekday === 'monday' ? 1 : 0);
+            const firstWeekday = _.get(laborConfiguration, 'workHoursRules.firstWeekday');
+            const dayOffset = moment(firstWeekday, 'dddd').day();
+            obs.next(dayOffset);
         });
 
 
@@ -729,18 +733,9 @@ export class DataService {
                     }
 
                     //calculate week
-                    let weekNumber;
-                    let weekYear;
-                    if (weekStartDay === 1) {
-                        let date = moment(day.businessDate).locale('en_GB');
-                        weekNumber = date.week();
-                        weekYear = date.weekYear();
-                    }
-                    else {
-                        let date = moment(day.businessDate).locale('en_US');
-                        weekNumber = date.week();
-                        weekYear = date.weekYear();
-                    }
+                    let date = moment(day.businessDate);
+                    let weekNumber = this.tabitHelper.getWeekNumber(date, weekStartDay);
+                    let weekYear = this.tabitHelper.getWeekYear(date, weekStartDay);
 
                     let week = _.get(weeks, [weekYear, weekNumber]);
                     if (!week) {
@@ -958,6 +953,9 @@ export class DataService {
     );
 
     constructor(private olapEp: OlapEp, private rosEp: ROSEp, private ds: DebugService, private logz: LogzioService, private translate: TranslateService) {
+
+        this.tabitHelper = new TabitHelper();
+
         let settings = JSON.parse(window.localStorage.getItem('settings'));
         if (!settings) {
             settings = {
@@ -1016,8 +1014,10 @@ export class DataService {
             return _.get(res, 'byDay');
         });
 
+        const dayOffset = moment(firstWeekday, 'dddd').day();
+
         let sortedLaborCost = {
-            firstWeekday: firstWeekday === 'sunday' ? 0 : 1,
+            firstWeekday: dayOffset,
             byDay: {},
             weekSummary: {
                 cost: 0,

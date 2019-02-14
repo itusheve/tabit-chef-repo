@@ -454,7 +454,7 @@ export class DayViewComponent implements OnInit {
                         }
                         else {
                             let day = moment(date);
-                            if(day.day() > 0) {
+                            if(day.day() >= laborCost.firstWeekday) {
                                 weekStartDate = day.day(laborCost.firstWeekday);
                             }
                             else {

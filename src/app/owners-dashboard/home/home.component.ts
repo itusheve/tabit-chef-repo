@@ -203,9 +203,7 @@ export class HomeComponent implements OnInit {
 
                 let businessDate = moment.utc(dailyTotals.businessDate);
                 let settings = database.getSettings();
-                if (settings.weekStartDay === 1) {
-                    restTime = moment(restTime).locale('en_GB');
-                }
+                restTime = moment(restTime);
 
                 let week = database.getWeekByDate(businessDate);
                 if (!week || !week.startDate) {
@@ -391,7 +389,7 @@ export class HomeComponent implements OnInit {
             }
             else {
                 let day = moment();
-                if (day.day() > 0) {
+                if (day.day() >= laborCost.firstWeekday) {
                     weekStartDate = day.day(laborCost.firstWeekday);
                 }
                 else {
