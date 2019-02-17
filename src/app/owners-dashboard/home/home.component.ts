@@ -182,8 +182,10 @@ export class HomeComponent implements OnInit {
 
          const payments = await this.dateWareHouseService.getPayments('20190201', '20190202');
          const tlogs = await this.dateWareHouseService.getTlogs('20190201', '20190202');
+         const refund = await this.dateWareHouseService.getRefund('20190201', '20190202');
          console.log(payments);
          console.log(tlogs);
+         console.log(refund);
 
         combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
             let user = data[0];

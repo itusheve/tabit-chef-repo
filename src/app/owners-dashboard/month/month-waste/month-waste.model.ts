@@ -29,5 +29,18 @@ export class  MonthWaste{
             retention: number;
         }[];
 
+    wasteData: {
+        orderType: OrderType;
+        waiter: string;
+        approvedBy: string;
+        orderNumber: number;
+        tableId: string;
+        item: string;
+        subType: string;
+        reasonId: string;
+        reasons: string;
+        waste: number;
+    }[];
+
 
 }
