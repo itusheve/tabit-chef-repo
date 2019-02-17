@@ -448,39 +448,13 @@ export class DayViewComponent implements OnInit {
                     if (laborCost) {
                         let today = _.get(laborCost, ['byDay', laborCostDate.format('YYYY-MM-DD')]);
 
-                        let weekStartDate;
-                        if(date.day() === laborCost.firstWeekday) {
-                            weekStartDate = moment(date);
-                        }
-                        else {
-                            let day = moment(date);
-                            if(day.day() >= laborCost.firstWeekday) {
-                                weekStartDate = day.day(laborCost.firstWeekday);
-                            }
-                            else {
-                                weekStartDate = day.day(laborCost.firstWeekday - 7);
-                            }
-                        }
+                        let week = database.getWeekByDate(date);
+                        let weekSales = _.get(week, ['sales', 'total']);
 
-
-                        let weekSales = 0;
-                        while (weekStartDate.isBefore(date, 'day')) {
-                            let day = database.getDay(weekStartDate);
-                            if (day) {
-                                weekSales += day.salesAndRefoundAmountIncludeVat;
-                            }
-                            weekStartDate.add(1, 'day');
-                        }
-
-                        let todaySales = 0;
+                        let todaySales = this.cardData.sales;
                         if (moment().isSame(date, 'day')) {
-                            todaySales = totalSalesWithoutTax;
+                            weekSales += todaySales;
                         }
-                        else {
-                            todaySales = _.get(this.dayFromDatabase, 'salesAndRefoundAmountExcludeVat', 0);
-                        }
-
-                        weekSales += todaySales;
 
                         this.laborCost = {
                             today: [],

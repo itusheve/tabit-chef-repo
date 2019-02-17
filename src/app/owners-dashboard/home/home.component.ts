@@ -383,30 +383,8 @@ export class HomeComponent implements OnInit {
 
             this.laborCost = laborCost;
 
-            let weekStartDate;
-            if (moment().day() === laborCost.firstWeekday) {
-                weekStartDate = moment();
-            }
-            else {
-                let day = moment();
-                if (day.day() >= laborCost.firstWeekday) {
-                    weekStartDate = day.day(laborCost.firstWeekday);
-                }
-                else {
-                    weekStartDate = day.day(laborCost.firstWeekday - 7);
-                }
-            }
-
-
-            let weekSales = 0;
-            while (weekStartDate.isBefore(time, 'day')) {
-                let day = database.getDay(weekStartDate);
-                if (day) {
-                    weekSales += day.salesAndRefoundAmountIncludeVat;
-                }
-                weekStartDate.add(1, 'day');
-            }
-
+            let week = database.getWeekByDate(time);
+            let weekSales = _.get(week, ['sales', 'total']);
             weekSales += this.currentBdCardData.sales;
 
             let today = _.get(laborCost, ['byDay', time.format('YYYY-MM-DD')]);
