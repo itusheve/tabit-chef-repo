@@ -449,11 +449,26 @@ export class DayViewComponent implements OnInit {
                         let today = _.get(laborCost, ['byDay', laborCostDate.format('YYYY-MM-DD')]);
 
                         let week = database.getWeekByDate(date);
-                        let weekSales = _.get(week, ['sales', 'total']);
+                        let weekSales = 0;
+
+                        let weekStartDate = moment.utc(week.startDate);
+                        while (weekStartDate.isBefore(date, 'day')) {
+                            let day = database.getDay(weekStartDate);
+                            if (day) {
+                                weekSales += day.salesAndRefoundAmountIncludeVat;
+                            }
+                            weekStartDate.add(1, 'day');
+                        }
 
                         let todaySales = this.cardData.sales;
                         if (moment().isSame(date, 'day')) {
                             weekSales += todaySales;
+                        }
+                        else {
+                            let day = database.getDay(weekStartDate);
+                            if (day) {
+                                weekSales += day.salesAndRefoundAmountIncludeVat;
+                            }
                         }
 
                         this.laborCost = {
