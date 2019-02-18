@@ -461,7 +461,7 @@ export class DayViewComponent implements OnInit {
                         }
 
                         let todaySales = this.cardData.sales;
-                        if (moment().isSame(date, 'day')) {
+                        if (moment().utc().isSame(date, 'day')) {
                             weekSales += todaySales;
                         }
                         else {
