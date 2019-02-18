@@ -62,8 +62,16 @@ export class TabitHelper {
     public getWeekNumber(date: moment.Moment, firstWeekdayNumber: number) {
         const januaryFirst = date.clone().startOf('year');
         const firstDayOfFirstWeekOfYear = this.getStartOfWeek(januaryFirst, firstWeekdayNumber);
-        const weekNumber = Math.abs(date.diff(firstDayOfFirstWeekOfYear, 'days')) / 7;
-        return Math.floor(weekNumber) + 1;
+        const weekNumber = Math.floor(Math.abs(date.diff(firstDayOfFirstWeekOfYear, 'days')) / 7) + 1;
+
+        if(weekNumber > 52) {
+            const startOfWeek = this.getStartOfWeek(date, firstWeekdayNumber);
+            const endOfWeek = this.getEndOfWeek(date, firstWeekdayNumber);
+            if(startOfWeek.year() !== endOfWeek.year()) {
+                return 1;
+            }
+        }
+        return weekNumber;
     }
 
     public getWeekYear(date: moment.Moment,  firstWeekdayNumber: number) {
