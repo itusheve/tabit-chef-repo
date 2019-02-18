@@ -1,11 +1,12 @@
 import {EventEmitter, Injectable, Input, Output, SimpleChanges} from '@angular/core';
-import {MonthWaste} from '../../owners-dashboard/month/month-waste/month-waste.model';
+import {MonthWaste} from '../../owners-dashboard/month/month-waste/month-waste-model/month-waste.model';
 import {Data} from '../../models-new/data-models/data.model';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DayFunctionService {
+export class DuplicateFunctionService {
 
   @Input() dayFromDatabase: any;
   @Output() onOrderClicked = new EventEmitter();
@@ -19,6 +20,8 @@ export class DayFunctionService {
   private data: Data;
   private loading = true;
   public openOrdersByServiceType: any;
+
+  public settings$: BehaviorSubject<any> = new BehaviorSubject<any>(JSON.parse(window.localStorage.getItem('settings')) || {});
 
 
   constructor() { }

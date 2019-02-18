@@ -2,7 +2,7 @@ import {OrderType} from '../../../../tabit/model/OrderType.model';
 
 
 export class  MonthWaste{
-    asteData: {
+    WasteData: {
         orderType: OrderType;
         waiter: string;
         approvedBy: string;
