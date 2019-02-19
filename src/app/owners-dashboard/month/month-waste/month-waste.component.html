@@ -1,4 +1,19 @@
-<div class="flex d-col">
+ <div class="flex d-col">
   <div class="title">
     <span [translate]="'month.waste'">Waste</span>
-  </div>
+  </div><mat-expansion-panel [expanded]="category === 'waste' ">
+  <mat-expansion-panel-header [ngClass]="dayFunctionService.getCssColorClass()">\
+  <mat-panel-title>
+    {{monthWaste.wasteData.length}} <span [translate]="'month.actionWorth'"></span> {{totalValye | curr: '0'}}
+  </mat-panel-title>
+    </mat-expansion-panel-header>
+      <table class="table table-sm table-responsive-sm">
+        <tr class="table-information-row">
+          <td colspan="6">
+            <div><span [translate]="'month.percetageFromSales'">Percentage</span>: <span>{{dayFromDatabase?.wastePro / 100 | pct: 1}}</span></div>
+          </td>
+        </tr>
+        <td></td> /// keep working from here
+      </table>
+
+</mat-expansion-panel>

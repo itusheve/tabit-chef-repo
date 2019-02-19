@@ -2,6 +2,8 @@ import {EventEmitter, Injectable, Input, Output, SimpleChanges} from '@angular/c
 import {MonthWaste} from '../../owners-dashboard/month/month-waste/month-waste-model/month-waste.model';
 import {Data} from '../../models-new/data-models/data.model';
 import {BehaviorSubject} from 'rxjs';
+import * as moment from 'moment';
+import {OlapEp} from '../../../tabit/data/ep/olap.ep';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +26,7 @@ export class DuplicateFunctionService {
   public settings$: BehaviorSubject<any> = new BehaviorSubject<any>(JSON.parse(window.localStorage.getItem('settings')) || {});
 
 
-  constructor() { }
+  constructor(private olapEp: OlapEp) { }
 
   getSort(by: string) {
     if (this.sortBy && this.sortBy === by) {
@@ -65,6 +67,12 @@ export class DuplicateFunctionService {
 
       this.loading = false;
     }
+  }
+
+  async getMonthReport(month, year) {
+    let date = moment().month(month).year(year).date(2);
+    let result = await this.olapEp.getMonthReport(date);
+    return result;
   }
 
 

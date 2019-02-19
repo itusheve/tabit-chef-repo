@@ -1,8 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
-import {MonthWaste} from './month-waste.model';
-import {OrderType} from '../../../../tabit/model/OrderType.model';
+import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges,OnChanges} from '@angular/core';
+import {MonthWaste} from './month-waste-model/month-waste.model';
 import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
-import  {DayFunctionService} from '../../../services/day-function-service/day-function.service';
+import  {DuplicateFunctionService} from '../../../services/duplicate-function-service/duplicate-function.service';
 import { DataWareHouseService } from '../../../services/data-ware-house.service';
 
 @Component({
@@ -10,7 +9,7 @@ import { DataWareHouseService } from '../../../services/data-ware-house.service'
   templateUrl: './month-waste.component.html',
   styleUrls: ['./month-waste.component.scss']
 })
-export class MonthWasteComponent implements OnInit {
+export class MonthWasteComponent implements OnInit, OnChanges {
 
   @Input() lastViewed: number;
   @Input() category: string;
@@ -29,7 +28,7 @@ export class MonthWasteComponent implements OnInit {
   public tabitHelper: any;
 
 
-  constructor(private dayFunctionService: DayFunctionService, private dataWareHouseService: DataWareHouseService) {
+  constructor(private dayFunctionService: DuplicateFunctionService, private dataWareHouseService: DataWareHouseService) {
     this.tabitHelper = new TabitHelper();
   }
 
@@ -70,4 +69,6 @@ export class MonthWasteComponent implements OnInit {
     this.monthWaste.wasteData
         .sort((a,b) => (a[that.sortBy] < b[that.sortBy] ? dir : dir * -1));
   }
+
+
 }

@@ -1,4 +1,4 @@
-import {OrderType} from '../../../../tabit/model/OrderType.model';
+import {OrderType} from '../../../../../tabit/model/OrderType.model';
 
 
 export class  MonthWaste{
