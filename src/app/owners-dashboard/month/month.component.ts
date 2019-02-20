@@ -6,7 +6,6 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import {DatePipe} from '@angular/common';
 import {environment} from '../../../environments/environment';
-import {CardData} from '../../ui/card/card.component';
 
 @Component({
     selector: 'app-month',
@@ -19,7 +18,6 @@ export class MonthComponent implements OnInit {
     public monthReport: any;
     public payments: any;
     public summary: any;
-    public summaryByOrderType: any;
     public env: any;
     public title: string;
     public incVat: boolean;
@@ -50,7 +48,6 @@ export class MonthComponent implements OnInit {
 
             this.title = this.getTitle(month, year);
 
-            this.payments = this.getPayments(monthReport);
             this.summary = this.getSummary(monthReport);
             this.showData = true;
         });
@@ -264,71 +261,6 @@ export class MonthComponent implements OnInit {
         return monthName + ' ' + monthState;
     }
 
-    getPayments(monthReport) {
-        let payments = {
-            total: 0,
-            accountGroups: []
-        };
-        let accountGroups = [];
-
-        _.forEach(monthReport.payments, payment => {
-            if (!payment.subType && payment.type) {
-                let accountGroup = {
-                    type: payment.type,
-                    amount: payment.paymentAmount,
-                    subTypes: [],
-                    order: this.getAccountGroupOrderByType(payment.type)
-                };
-                accountGroups.push(accountGroup);
-
-                if (payment.type === 'Total') {
-                    payments.total = payment.paymentAmount;
-                }
-            }
-
-        });
-
-        _.forEach(monthReport.payments, payment => {
-            if (payment.subType) {
-                let accountGroup = _.find(accountGroups, {type: payment.type});
-                if (payment.subType !== 'מזומן' && payment.subType !== 'cash') {
-                    let subType = _.find(accountGroup.subTypes, {subType: payment.subType});
-                    if (!subType) {
-                        subType = {
-                            subType: payment.subType,
-                            amount: payment.paymentAmount
-                        };
-                        accountGroup.subTypes.push(subType);
-                    }
-                }
-            }
-        });
-
-        _.remove(accountGroups, {type: 'Total'});
-
-        this.dataService.settings$.subscribe(settings => {
-            accountGroups.forEach(accountGroup => {
-                _.set(accountGroup, 'percentage', accountGroup.amount / payments.total);
-                accountGroup.subTypes.forEach(subType => {
-                    _.set(subType, 'percentage', settings.paymentsReportCalculationMethod === 0 ? (subType.amount / payments.total) : (subType.amount / accountGroup.amount));
-                });
-            });
-        });
-
-        payments.accountGroups = _.orderBy(accountGroups, 'order');
-        return payments;
-    }
-
-    getAccountGroupOrderByType(name) {
-        if (name === 'מזומן' || name === 'Cash') {
-            return 1;
-        }
-        else if (name === 'אשראי' || name === 'Credit') {
-            return 2;
-        }
-
-        return 3;
-    }
 
     stringify(data) {
         return JSON.stringify(data);

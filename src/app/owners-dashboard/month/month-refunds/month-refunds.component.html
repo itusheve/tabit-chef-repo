@@ -1,3 +1,67 @@
-<p>
-  month-refunds works!
-</p>
+<!--
+<div calss="flex d-col">
+  <div class="title" [translate]="'month.mostReturnedItems'">Most Returned Items</div>
+  <mat-accordion>
+      <mat-expansion-panel [expanded]="dataType === 'refunds'"></mat-expansion-panel>
+      <mat-expansion-panel-header [ngClass]="duplicateFunctionService.getCssColorClass()">
+      <mat-panel-title>
+        {{dataType.length}} <span [translate]="'month.actionsWorth'">Actions worth</span>{{totalValue | }} //keep going with new ref
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <table class="table table-sm table-responsive-sm">
+      <tr class="table-information-row">
+        <td colspan="3">
+        </td>
+      </tr>
+      <tr class="header">
+        <td (click)="sort(GroupTypes.WAITER)"> ///change to a new func name
+          <div class="flex a-center">
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.WAITER && sortDir==='desc'">arrow_drop_down</mat-icon>  // change to a new sortBy
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.WAITER && sortDir==='asc'">arrow_drop_up</mat-icon>    // change to a new sortBy
+          </div>
+        </td>
+        <td (click)="sort(GroupTypes.QUANTITY)"> ///change to a new func name
+          <div class="flex a-center">
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.QUANTITY && sortDir==='desc'">arrow_drop_down</mat-icon>  // change to a new sortBy
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.QUANTITY && sortDir==='asc'">arrow_drop_up</mat-icon>    // change to a new sortBy
+          </div>
+        </td>
+        <td (click)="sort(GroupTypes.AMOUNT)">
+          <div class="flex a-center j-end">
+            <div [translate]="'day.amount'">Amount</div>
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.AMOUNT && sortDir==='desc'">arrow_drop_down</mat-icon>  // change to a new sortBy
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.AMOUNT && sortDir==='asc'">arrow_drop_up</mat-icon>   // change to a new sortBy
+          </div>
+        </td>
+      </tr>
+    </table>
+    <table class="table table-sm table-responsive-sm">
+      <tr class="table-information-row">
+        <td colspan="3">
+        </td>
+      </tr>
+      <tr class="header">
+        <td (click)="sort(GroupTypes.REASON)"> ///change to a new func name
+          <div class="flex a-center">
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.REASON && sortDir==='desc'">arrow_drop_down</mat-icon>  // change to a new sortBy
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.REASON && sortDir==='asc'">arrow_drop_up</mat-icon>    // change to a new sortBy
+          </div>
+        </td>
+        <td (click)="sort(GroupTypes.QUANTITY)"> ///change to a new func name
+          <div class="flex a-center">
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.QUANTITY && sortDir==='desc'">arrow_drop_down</mat-icon>  // change to a new sortBy
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.QUANTITY && sortDir==='asc'">arrow_drop_up</mat-icon>    // change to a new sortBy
+          </div>
+        </td>
+        <td (click)="sort(GroupTypes.AMOUNT)">
+          <div class="flex a-center j-end">
+            <div [translate]="'day.amount'">Amount</div>
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.AMOUNT && sortDir==='desc'">arrow_drop_down</mat-icon>  // change to a new sortBy
+            <mat-icon class="sortMatIcon" *ngIf="sortBy===GroupTypes.AMOUNT && sortDir==='asc'">arrow_drop_up</mat-icon>   // change to a new sortBy
+          </div>
+        </td>
+      </tr>
+    </table>
+  </mat-accordion>
+</div>
+-->

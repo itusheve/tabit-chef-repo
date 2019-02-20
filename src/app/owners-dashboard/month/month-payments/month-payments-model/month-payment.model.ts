@@ -1,12 +1,14 @@
-export interface MonthPaymentModel {
-    payment:  {
-        total: number,
-        accountGroups: string
-    };
+import * as _ from 'lodash';
 
-    accountGroup: {
-      typr: any,
-      amount: any,
-      order: any
+export class MonthPaymentModel {
+    amount: string[];
+    accountName: string[];
+    isBold: boolean;
+    rn: number[];
+    type: string[];
+
+    constructor(data: any) {
+        _.assign(this, data);
     }
+
 }
