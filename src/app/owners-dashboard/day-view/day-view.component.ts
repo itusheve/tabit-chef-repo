@@ -458,7 +458,7 @@ export class DayViewComponent implements OnInit {
                             weekStartDate.add(1, 'day');
                         }
 
-                        let todaySales = totalSales;
+                        let todaySales = this.cardData.sales;
                         if (dailyTotals.isEndOfDay == false) {
                             weekSales += todaySales;
                         }
