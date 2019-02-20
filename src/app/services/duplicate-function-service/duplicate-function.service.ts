@@ -50,7 +50,8 @@ export class DuplicateFunctionService {
 
   getCssColorClass() {
     if(this.dayFromDatabase && this.dayFromDatabase.employeesPrc) {
-      return this.tabitHelper.getColorClassByPercentage(this.dayFromDatabase.employeesPrc.toFixed(1) / this.dayFromDatabase.avgNweeksEmployeesPrc.toFixed(1) * 100, false);
+      return this.tabitHelper.getColorClassByPercentage(this.dayFromDatabase.employeesPrc.toFixed(1)
+          / this.dayFromDatabase.avgNweeksEmployeesPrc.toFixed(1) * 100, false);
     }
 
     return 'bg-secondary';

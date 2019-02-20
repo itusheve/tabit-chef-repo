@@ -2,12 +2,12 @@
 <div calss="flex d-col">
   <div class="title" [translate]="'month.mostReturnedItems'">Most Returned Items</div>
   <mat-accordion>
-      <mat-expansion-panel [expanded]="dataType === 'refunds'"></mat-expansion-panel>
-      <mat-expansion-panel-header [ngClass]="duplicateFunctionService.getCssColorClass()">
+     &lt;!&ndash; <mat-expansion-panel [expanded]="dataType === 'refunds'"></mat-expansion-panel>
+      <mat-expansion-panel-header [ngClass]="getMonthCssColorClass()">
       <mat-panel-title>
-        {{dataType.length}} <span [translate]="'month.actionsWorth'">Actions worth</span>{{totalValue | }} //keep going with new ref
+        {{dataType.length}} <span [translate]="'month.actionsWorth'">Actions worth</span> //keep going with new ref
       </mat-panel-title>
-    </mat-expansion-panel-header>
+    </mat-expansion-panel-header>&ndash;&gt;
     <table class="table table-sm table-responsive-sm">
       <tr class="table-information-row">
         <td colspan="3">

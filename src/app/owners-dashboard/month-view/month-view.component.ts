@@ -9,7 +9,6 @@ import {CardData} from '../../ui/card/card.component';
 import {TrendModel} from '../../../tabit/model/Trend.model';
 import {environment} from '../../../environments/environment';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
-
 import {OwnersDashboardService} from '../owners-dashboard.service';
 
 interface DailyTrends {
@@ -46,7 +45,7 @@ export class MonthViewComponent implements OnInit {
         this.env = environment;
     }
 
-    ngOnInit() {
+   async ngOnInit() {
         combineLatest(this.dataService.selectedMonth$, this.dataService.currentRestTime$, this.dataService.databaseV2$, this.dataService.vat$)
             .subscribe(data => {
                 this.update(data[0], data[1], data[2], data[3]);
