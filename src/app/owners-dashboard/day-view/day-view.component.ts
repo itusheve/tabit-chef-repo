@@ -362,6 +362,16 @@ export class DayViewComponent implements OnInit {
                     maxDate: moment(moment())
                 };
 
+                let totals = dailyTotals.totals;
+                let totalClosedOrders = _.get(totals, 'netSales', 0);
+                let totalClosedOrdersWithoutVat = totalClosedOrders - _.get(totals, 'includedTax', 0);
+
+                let totalOpenOrders = _.get(totals, 'openOrders.totalNetSalesAndRefunds', 0);
+                let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
+
+                let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
+                let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
+
                 if (this.dayFromDatabase) {
                     this.cardData.holiday = this.dayFromDatabase.holiday;
 
@@ -406,20 +416,8 @@ export class DayViewComponent implements OnInit {
                     this.cardData.sales = undefined;
                 }
 
-                let totalSalesWithoutTax = 0;
                 let businessDate = moment.utc(dailyTotals.businessDate);
                 if (businessDate.isSame(moment.utc(date.format('YYYY-MM-DD')), 'day')) {
-                    let totals = dailyTotals.totals;
-
-                    let totalClosedOrders = _.get(totals, 'netSales', 0);
-                    let totalClosedOrdersWithoutVat = totalClosedOrders - _.get(totals, 'includedTax', 0);
-
-                    let totalOpenOrders = _.get(totals, 'openOrders.totalNetSalesAndRefunds', 0);
-                    let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
-
-                    let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
-                    totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
-
                     this.cardData.sales = totalSales;
                     this.cardData.revenue = (_.get(totals, ['totalPayments'], 0) / 100) + totalOpenOrders / 100;
 
@@ -460,8 +458,8 @@ export class DayViewComponent implements OnInit {
                             weekStartDate.add(1, 'day');
                         }
 
-                        let todaySales = this.cardData.sales;
-                        if (moment().utc().isSame(date, 'day')) {
+                        let todaySales = totalSales;
+                        if (dailyTotals.isEndOfDay == false) {
                             weekSales += todaySales;
                         }
                         else {
