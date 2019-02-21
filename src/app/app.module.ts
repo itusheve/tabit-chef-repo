@@ -74,7 +74,7 @@ import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslationLoader} from './translation.loader';
 import localeHebrew from '@angular/common/locales/he';
 import localeEnglish from '@angular/common/locales/en';
-import { AbstrackTableComponent } from '../tabit/ui/abstrack-table/abstrack-table.component';
+import { AbstractTableComponent } from './ui/abstract-table/abstract-table.component';
 
 registerLocaleData(localeHebrew, 'he');
 registerLocaleData(localeEnglish, 'en');
@@ -96,8 +96,7 @@ if (environment.tbtLocale === 'he-IL') {
         AreYouSureDialogComponent,
         ForgotPasswordDialogComponent,
         AppComponent,
-        LoginComponent,
-        AbstrackTableComponent
+        LoginComponent
     ],
     imports: [
         BrowserModule,

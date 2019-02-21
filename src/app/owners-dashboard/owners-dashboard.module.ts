@@ -17,7 +17,7 @@ import {OwnerSettingsComponent} from './settings/owner-settings.component';
 import {MomentModule} from 'ngx-moment';
 
 import {MonthViewComponent} from './month-view/month-view.component';
-import {MonthSelectorComponent} from './home/month-selector/month-selector.component';
+import {MonthSelectorComponent} from './month/month-selector/month-selector.component';
 import {MonthGridComponent} from './month-view/month-grid/month-grid.component';
 
 import {DayViewComponent} from './day-view/day-view.component';
@@ -85,7 +85,7 @@ import {DayOrganizationalTableComponent} from './day-view/day-organizational-tab
 import {DayCancellationsTableComponent} from './day-view/day-cancellations-table/day-cancellations-table.component';
 import {DayMonthSummaryTableComponent} from './day-view/day-month-summary-table/day-month-summary-table.component';
 import {DayHourlySalesComponent} from './day-view/day-hourly-sales/day-hourly-sales.component';
-import {MonthPickerDialogComponent} from './home/month-selector/month-picker-dialog.component';
+import {MonthPickerDialogComponent} from './month/month-selector/month-picker-dialog.component';
 import {WeekSelectorComponent} from './home/week-selector/week-selector.component';
 import {OverTimeUsersDialogComponent} from './home/over-time-users/over-time-users-dialog.component';
 import {TranslateModule} from '@ngx-translate/core';
@@ -95,7 +95,6 @@ import { MonthComponent } from './month/month.component';
 import { ForecastDialogComponent } from './home/forecast-dialog/forecast-dialog.component';
 import { MonthWasteComponent } from './month/month-waste/month-waste.component';
 import { MonthPaymentsComponent } from './month/month-payments/month-payments.component';
-import { MonthVoidsComponent } from './month/month-voids/month-voids.component';
 import { MonthOperationalErrorsComponent } from './month/month-operational-errors/month-operational-errors.component';
 import { MonthRetentionComponent } from './month/month-retention/month-retention.component';
 import { MonthOrganizationalComponent } from './month/month-organizational/month-organizational.component';
@@ -103,6 +102,8 @@ import { MonthRefundsComponent } from './month/month-refunds/month-refunds.compo
 import { MonthSalesByMainAndSubCategoriesComponent } from './month/month-sales-by-main-and-sub-categories/month-sales-by-main-and-sub-categories.component';
 import { MonthMostSoldItemsComponent } from './month/month-most-sold-items/month-most-sold-items.component';
 import { MonthMostReturnedItemsComponent } from './month/month-most-returned-items/month-most-returned-items.component';
+import { MonthCancellationComponent } from './month/month-cancellation/month-cancellation.component';
+import { MonthPromotionsComponent } from './month/month-promotions/month-promotions.component';
 
 @NgModule({
     imports: [
@@ -200,14 +201,15 @@ import { MonthMostReturnedItemsComponent } from './month/month-most-returned-ite
         ForecastDialogComponent,
         MonthWasteComponent,
         MonthPaymentsComponent,
-        MonthVoidsComponent,
         MonthOperationalErrorsComponent,
         MonthRetentionComponent,
         MonthOrganizationalComponent,
         MonthRefundsComponent,
         MonthSalesByMainAndSubCategoriesComponent,
         MonthMostSoldItemsComponent,
-        MonthMostReturnedItemsComponent
+        MonthMostReturnedItemsComponent,
+        MonthCancellationComponent,
+        MonthPromotionsComponent
     ],
     providers: [
         OwnersDashboardService

@@ -1,19 +1,23 @@
 <div class="flex d-col">
     <div class="title">
-        <span [translate]="title.translated">{{title.en}}</span>
+        <span [translate]="'' + title.translated"></span>
     </div>
     <mat-accordion>
-        <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel [expanded]="false">
             <mat-expansion-panel-header [ngClass]="getCssColorClass()">
                 <mat-panel-title>
-             <!--   {{wasteData.length}}&nbsp;<span [translate]="'day.actionsWorth'">enStrings.summary</span>&nbsp;{{totalValue | curr:'0'}}-->
+               {{summary.actions}} &nbsp; <span [translate]="'' + summary.connect "></span> &nbsp;{{summary.total}}
             </mat-panel-title>
             </mat-expansion-panel-header>
-            <table class="table table-sm table-responsive-sm">
+            <div class ="btn-group category-picker" role="group" style="width:100%">
+                <button class="btn btn-outline-secondary" style="width:50%"><span [translate]="'' + options.opt1"></span></button>
+                <button class="btn btn-outline-secondary" style="width:50%"><span [translate]="'' + options.opt2"></span></button>
+            </div>
+            <table class="table table-sm">
                 <tr class="header">
                     <td *ngFor = "let column of columns">
                         <div class="flex a-center">
-                            <div><span [translate]="'' + column.translated"></span><span><br />({{column.en | translate}})</span></div>
+                            <div><span [translate]="'' + column.translated"></span></div>
                         <!--    <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
                             <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>-->
                         </div>
@@ -23,7 +27,6 @@
                         *ngFor="let tuple of data"
                         class="dayReportDataRow"
                 >
-
                     <td *ngFor="let column of columns">
                         {{tuple[column.dataKey]}}
                     </td>

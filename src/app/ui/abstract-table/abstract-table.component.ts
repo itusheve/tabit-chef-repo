@@ -6,9 +6,11 @@ export abstract class AbstractTableComponent implements OnInit {
 
   protected data: any[] =[];
 
-  protected title: {};
+  protected title: {} = {};
 
-  abstract createTitle(): String;
+  protected summary:{} = {};
+
+  protected options:{} = {};
 
   abstract getCssColorClass(): String;
 

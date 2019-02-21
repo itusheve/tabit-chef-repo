@@ -4,11 +4,11 @@ import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.
 import * as moment from 'moment';
 
 @Component({
-  selector: 'app-month-retention',
+  selector: 'app-month-cancellation',
   templateUrl: '../../../ui/abstract-table/abstract-table.component.html',
-  styleUrls: ['./month-retention.component.scss']
+  styleUrls: ['./month-cancellation.component.scss']
 })
-export class MonthRetentionComponent extends AbstractTableComponent implements OnInit, OnChanges {
+export class MonthCancellationComponent extends AbstractTableComponent implements OnInit, OnChanges {
 
   constructor(private dataService: DataWareHouseService) {
     super();
@@ -17,7 +17,7 @@ export class MonthRetentionComponent extends AbstractTableComponent implements O
       {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
       {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
     ];
-    this.title = {en: 'retention', translated: 'month.retention'};
+    this.title = {en:'Cancellation',translated:'month.cancellations'};
   }
 
   async ngOnInit() {
@@ -25,15 +25,16 @@ export class MonthRetentionComponent extends AbstractTableComponent implements O
     let dateEnd = moment('2019-02-01').format('YYYYMMDD');
 
     let result = await this.dataService.getReductionByReason(dateStart, dateEnd);
-    this.data = result.retention;
-    this.summary = {total: result.retention[0].amountIncludeVat,connect
-          :'day.actionsWorth', actions: result.retention[0].qty};
-          this.options = {opt1:'details.date',opt2:'day.reason'};
+    this.data = result.cancellation;
+    this.summary = {total: result.cancellation[0].amountIncludeVat,connect
+    :'day.actionsWorth', action: result.cancellation[0].qty};
+    this.options = {opt1:'details.date',opt2:'day.reason'};
+
   }
 
   createTitle(): String {
 
-    return "";
+    return '';
 
   }
 

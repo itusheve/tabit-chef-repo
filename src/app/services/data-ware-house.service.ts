@@ -36,6 +36,13 @@ export class DataWareHouseService {
         });
     }
 
+    public getMostLeastSoldItems(fromBusinessDate, toBusinessDate) {
+        return this.dataWarehouse.get('report/mostLeastSoldItems', {
+            fromBusinessDate: fromBusinessDate,
+            toBusinessDate: toBusinessDate
+        });
+    }
+
     /*public getDataBAASE(): Promise<any> {
         return new Promise((resolve, reject) => {
                 this.httpClient.get('http://localhost:3000/report/payments', {

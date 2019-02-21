@@ -10,7 +10,7 @@ import {CardData} from '../../ui/card/card.component';
 import {OwnersDashboardService} from '../owners-dashboard.service';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
 import {MatBottomSheet} from '@angular/material';
-import {MonthPickerDialogComponent} from './month-selector/month-picker-dialog.component';
+import {MonthPickerDialogComponent} from '../month/month-selector/month-picker-dialog.component';
 import {WeekSelectorComponent} from './week-selector/week-selector.component';
 import {environment} from '../../../environments/environment';
 import {TranslateService} from '@ngx-translate/core';
@@ -187,6 +187,7 @@ export class HomeComponent implements OnInit {
          console.log(tlogs);
          console.log(refund);
          console.log(reductionByReason);
+
 
         combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
             let user = data[0];
