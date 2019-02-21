@@ -1,15 +1,19 @@
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import 'moment-timezone';
+import {TabitHelper} from '../helpers/tabit.helper';
 
 export class DatabaseV2 {
 
+    private tabitHelper;
     private _data: any;
     private _dates: any;
     private _weeks: any;
     private _settings: any;
 
     constructor(data:any, weeks: any, settings: any) {
+        this.tabitHelper = new TabitHelper();
+
         this._data = data;
         this._weeks = weeks;
         this._settings = settings;
@@ -65,9 +69,13 @@ export class DatabaseV2 {
     }
 
     public getWeekByDate(date: moment.Moment) {
-        let week = _.get(this._weeks, [date.weekYear(), date.week()]);
+
+        let weekNumber = this.tabitHelper.getWeekNumber(date, this._settings.weekStartDay);
+        let weekYear = this.tabitHelper.getWeekYear(date, this._settings.weekStartDay);
+
+        let week = _.get(this._weeks, [weekYear, weekNumber]);
         if(!week) {
-            week = _.get(this._weeks, [date.weekYear(), date.week() - 1]);
+            week = _.get(this._weeks, [weekYear, weekNumber - 1]);
         }
         return week;
     }

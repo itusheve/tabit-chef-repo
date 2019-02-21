@@ -10,7 +10,7 @@ export const environment = {
         us: 'https://us-ros-beta.tabit.cloud/'
     },
     remoteDatabases: {
-        il: 'https://analytics-dev.tabit.cloud/handler/chef.ashx',
+        il: 'https://analytics-dev.tabit.cloud/chef/handler.ashx',
         us: 'https://analytics-us.tabit.cloud/chef/handler.ashx'
     },
     olapConfig: {

@@ -203,9 +203,7 @@ export class HomeComponent implements OnInit {
 
                 let businessDate = moment.utc(dailyTotals.businessDate);
                 let settings = database.getSettings();
-                if (settings.weekStartDay === 1) {
-                    restTime = moment(restTime).locale('en_GB');
-                }
+                restTime = moment(restTime);
 
                 let week = database.getWeekByDate(businessDate);
                 if (!week || !week.startDate) {
@@ -372,10 +370,17 @@ export class HomeComponent implements OnInit {
 
     async renderLaborCost() {
 
-        this.dataService.databaseV2$.subscribe(async database => {
+        combineLatest(this.dataService.dailyTotals$, this.dataService.databaseV2$).subscribe(async data => {
+            const dailyTotals = data[0];
+            const database = data[1];
             if (this.env.region !== 'us' || !database) {
                 return;
             }
+
+            let totals = _.get(dailyTotals, 'totals', {});
+            let totalClosedOrders = _.get(totals, 'netSales', 0);
+            let totalOpenOrders = _.get(totals, 'openOrders.totalNetSalesAndRefunds', 0);
+            let todaySales = (totalClosedOrders + totalOpenOrders) / 100;
 
             let time = this.dataService.getCurrentRestTime();
             let laborCost = await this.dataService.getLaborCostByTime(time);
@@ -385,38 +390,16 @@ export class HomeComponent implements OnInit {
 
             this.laborCost = laborCost;
 
-            let weekStartDate;
-            if (moment().day() === laborCost.firstWeekday) {
-                weekStartDate = moment();
-            }
-            else {
-                let day = moment();
-                if (day.day() > 0) {
-                    weekStartDate = day.day(laborCost.firstWeekday);
-                }
-                else {
-                    weekStartDate = day.day(laborCost.firstWeekday - 7);
-                }
-            }
+            let week = database.getWeekByDate(time);
+            let weekSales = _.get(week, ['sales', 'total'], 0);
+            weekSales += todaySales;
 
-
-            let weekSales = 0;
-            while (weekStartDate.isBefore(time, 'day')) {
-                let day = database.getDay(weekStartDate);
-                if (day) {
-                    weekSales += day.salesAndRefoundAmountIncludeVat;
-                }
-                weekStartDate.add(1, 'day');
-            }
-
-            weekSales += this.currentBdCardData.sales;
-
-            let today = _.get(laborCost, ['byDay', time.format('YYYY-MM-DD')]);
+            let todayLaborCost = _.get(laborCost, ['byDay', time.format('YYYY-MM-DD')]);
 
             this.laborCostCard = {
                 today: {
-                    cost: today ? today.cost : 0,
-                    percentage: this.currentBdCardData.sales > 0 ? (today ? today.cost : 0) / this.currentBdCardData.sales : 0
+                    cost: todayLaborCost ? todayLaborCost.cost : 0,
+                    percentage: todaySales > 0 ? (todayLaborCost ? todayLaborCost.cost : 0) / todaySales : 0
                 },
                 week: {
                     cost: laborCost.weekSummary.cost || 0,
