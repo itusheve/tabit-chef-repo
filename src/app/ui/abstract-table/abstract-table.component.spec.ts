@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AbstrackTableComponent } from './abstrack-table.component';
+import { AbstractTableComponent } from './abstract-table.component';
 
-describe('AbstrackTableComponent', () => {
-  let component: AbstrackTableComponent;
-  let fixture: ComponentFixture<AbstrackTableComponent>;
+describe('AbstractTableComponent', () => {
+  let component: AbstractTableComponent;
+  let fixture: ComponentFixture<AbstractTableComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AbstrackTableComponent ]
+      declarations: [ AbstractTableComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AbstrackTableComponent);
+    fixture = TestBed.createComponent(AbstractTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
