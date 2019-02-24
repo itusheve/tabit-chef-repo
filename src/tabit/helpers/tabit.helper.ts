@@ -1,4 +1,5 @@
 import {Directive, Injectable} from '@angular/core';
+import * as moment from 'moment';
 
 export class TabitHelper {
 
@@ -56,6 +57,37 @@ export class TabitHelper {
         }
 
         return 'text-secondary';
+    }
+
+    public getWeekNumber(date: moment.Moment, firstWeekdayNumber: number) {
+        const januaryFirst = date.clone().startOf('year');
+        const firstDayOfFirstWeekOfYear = this.getStartOfWeek(januaryFirst, firstWeekdayNumber);
+        const weekNumber = Math.floor(Math.abs(date.diff(firstDayOfFirstWeekOfYear, 'days')) / 7) + 1;
+
+        if(weekNumber > 52) {
+            const startOfWeek = this.getStartOfWeek(date, firstWeekdayNumber);
+            const endOfWeek = this.getEndOfWeek(date, firstWeekdayNumber);
+            if(startOfWeek.year() !== endOfWeek.year()) {
+                return 1;
+            }
+        }
+        return weekNumber;
+    }
+
+    public getWeekYear(date: moment.Moment,  firstWeekdayNumber: number) {
+        return this.getEndOfWeek(date, firstWeekdayNumber).year();
+    }
+
+    public getStartOfWeek(time, firstWeekdayNumber: number) {
+        let weekStartDate = time.clone().startOf('week');
+        weekStartDate.add(time.day() >= firstWeekdayNumber ? firstWeekdayNumber : (firstWeekdayNumber - 7), 'days');
+        return weekStartDate;
+    }
+
+    public getEndOfWeek(time, firstWeekdayNumber: number) {
+        const startOfWeek = this.getStartOfWeek(time, firstWeekdayNumber);
+        const endOfWeek = startOfWeek.add(6, 'day').endOf('day');
+        return endOfWeek;
     }
 }
 

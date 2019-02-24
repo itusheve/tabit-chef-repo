@@ -360,6 +360,16 @@ export class DayViewComponent implements OnInit {
                     maxDate: moment(moment())
                 };
 
+                let totals = dailyTotals.totals;
+                let totalClosedOrders = _.get(totals, 'netSales', 0);
+                let totalClosedOrdersWithoutVat = totalClosedOrders - _.get(totals, 'includedTax', 0);
+
+                let totalOpenOrders = _.get(totals, 'openOrders.totalNetSalesAndRefunds', 0);
+                let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
+
+                let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
+                let totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
+
                 if (this.dayFromDatabase) {
                     this.cardData.holiday = this.dayFromDatabase.holiday;
 
@@ -404,20 +414,8 @@ export class DayViewComponent implements OnInit {
                     this.cardData.sales = undefined;
                 }
 
-                let totalSalesWithoutTax = 0;
                 let businessDate = moment.utc(dailyTotals.businessDate);
                 if (businessDate.isSame(moment.utc(date.format('YYYY-MM-DD')), 'day')) {
-                    let totals = dailyTotals.totals;
-
-                    let totalClosedOrders = _.get(totals, 'netSales', 0);
-                    let totalClosedOrdersWithoutVat = totalClosedOrders - _.get(totals, 'includedTax', 0);
-
-                    let totalOpenOrders = _.get(totals, 'openOrders.totalNetSalesAndRefunds', 0);
-                    let totalOpenOrdersWithoutVat = totalOpenOrders - _.get(totals, 'openOrders.totalIncludedTax', 0);
-
-                    let totalSales = (totalClosedOrders + totalOpenOrders) / 100;
-                    totalSalesWithoutTax = (totalClosedOrdersWithoutVat + totalOpenOrdersWithoutVat) / 100;
-
                     this.cardData.sales = totalSales;
                     this.cardData.revenue = (_.get(totals, ['totalPayments'], 0) / 100) + totalOpenOrders / 100;
 
@@ -446,22 +444,10 @@ export class DayViewComponent implements OnInit {
                     if (laborCost) {
                         let today = _.get(laborCost, ['byDay', laborCostDate.format('YYYY-MM-DD')]);
 
-                        let weekStartDate;
-                        if(date.day() === laborCost.firstWeekday) {
-                            weekStartDate = moment(date);
-                        }
-                        else {
-                            let day = moment(date);
-                            if(day.day() > 0) {
-                                weekStartDate = day.day(laborCost.firstWeekday);
-                            }
-                            else {
-                                weekStartDate = day.day(laborCost.firstWeekday - 7);
-                            }
-                        }
-
-
+                        let week = database.getWeekByDate(date);
                         let weekSales = 0;
+
+                        let weekStartDate = moment.utc(week.startDate);
                         while (weekStartDate.isBefore(date, 'day')) {
                             let day = database.getDay(weekStartDate);
                             if (day) {
@@ -470,15 +456,16 @@ export class DayViewComponent implements OnInit {
                             weekStartDate.add(1, 'day');
                         }
 
-                        let todaySales = 0;
-                        if (moment().isSame(date, 'day')) {
-                            todaySales = totalSalesWithoutTax;
+                        let todaySales = this.cardData.sales;
+                        if (dailyTotals.isEndOfDay == false) {
+                            weekSales += todaySales;
                         }
                         else {
-                            todaySales = _.get(this.dayFromDatabase, 'salesAndRefoundAmountExcludeVat', 0);
+                            let day = database.getDay(weekStartDate);
+                            if (day) {
+                                weekSales += day.salesAndRefoundAmountIncludeVat;
+                            }
                         }
-
-                        weekSales += todaySales;
 
                         this.laborCost = {
                             today: [],

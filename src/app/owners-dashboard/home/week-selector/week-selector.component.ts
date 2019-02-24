@@ -49,9 +49,7 @@ export class WeekSelectorComponent {
 
                 let weeks = database.getWeeks();
                 let settings = database.getSettings();
-                if (settings.weekStartDay === 1) {
-                    restTime = moment(restTime).locale('en_GB');
-                }
+                restTime = moment(restTime);
 
                 _.forEach(weeks, byYear => {
                     byYear.forEach(week => {
