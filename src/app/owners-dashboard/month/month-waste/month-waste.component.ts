@@ -1,7 +1,6 @@
 import {Component, OnInit, SimpleChanges,OnChanges} from '@angular/core';
 import { DataWareHouseService } from '../../../services/data-ware-house.service';
-import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
-import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
+import {AbstractTableComponent, DataOption} from '../../../ui/abstract-table/abstract-table.component';
 import * as moment from 'moment';
 
 @Component({
@@ -11,14 +10,26 @@ import * as moment from 'moment';
 })
 export class MonthWasteComponent extends AbstractTableComponent implements OnInit, OnChanges {
 
+  columns_primary = [
+    {en : 'Date' , dataKey:'date',translated:'details.date'}, //chewck the exac datakey on the response
+    {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
+    {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
+
+  ];
+
+  columns_alternative = [
+    {en : 'Date' , dataKey:'date',translated:'details.date'}, //chewck the exac datakey on the response
+    {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
+    {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
+  ];
+
+
 
   constructor(private dataService: DataWareHouseService){
     super();
-    this.columns = [
-      {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
-      {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
-    ];
-    console.log(this.columns);
+
+    this.columns = this.columns_primary;
+
     this.title = {en:'Waste',translated:'month.waste'};
   }
   async ngOnInit() {
@@ -29,7 +40,6 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
     this.data = result.wasteEod;
     this.summary = {total: result.wasteEod[0].amountIncludeVat,connect
           :'day.actionsWorth', actions:result.wasteEod[0].qty};
-      console.log(this.data);
       this.options = {opt1:'details.date',opt2:'day.reason'};
 
 
@@ -37,8 +47,13 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
 
   createTitle(): String {
 
-    return "";
+    return '';
 
+  }
+
+  changeData(dataOption: DataOption) {
+    super.changeData(dataOption);
+    this.columns = dataOption === DataOption.PRIMARY ? this.columns_primary : this.columns_alternative;
   }
 
   getCssColorClass(): String {

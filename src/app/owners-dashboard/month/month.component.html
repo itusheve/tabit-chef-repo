@@ -125,10 +125,11 @@
         </div>
     </div>
     <app-month-payments></app-month-payments>
-    <app-month-cancellation class="widget" style="padding:0"></app-month-cancellation>
-    <app-month-promotions class="widget" style="padding:0"></app-month-promotions>
-    <app-month-retention class="widget" style="padding:0"></app-month-retention>
-    <app-month-organizational class="widget" style="padding:0"></app-month-organizational>
-    <app-month-waste class="widget" style="padding:0"></app-month-waste>
-    <app-month-refunds></app-month-refunds>
+    <app-month-cancellation [dataOptionMode] = "false" class="widget" style="padding:0"></app-month-cancellation>
+    <app-month-promotions  [dataOptionMode] = "true" class="widget" style="padding:0"></app-month-promotions>
+    <app-month-retention  [dataOptionMode] = "true" class="widget" style="padding:0"></app-month-retention>
+
+    <app-month-operational-errors [dataOptionMode] = "true" class="widget" style="padding:0"></app-month-operational-errors>
+    <app-month-organizational  [dataOptionMode] = "true"  class="widget" style="padding:0"></app-month-organizational>
+    <app-month-waste  [dataOptionMode] = "true" class="widget" style="padding:0"></app-month-waste>
 </ng-container>

@@ -5,7 +5,6 @@ import {map, catchError, tap} from 'rxjs/operators';
 import {DataWareHouseEpService} from '../../../services/end-points/data-ware-house-ep.service';
 
 //models
-import {MonthRefundsSum} from '../month-refunds/month-refunds-model/month-refunds-sum.model';
 import {MonthPaymentModel} from '../month-payments/month-payments-model/month-payment.model';
 
 

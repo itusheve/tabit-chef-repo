@@ -196,6 +196,8 @@ const he = {
     'month.cancellations': 'ביטולים',
     'month.promotion': 'שימור ושיווק - מבצעים',
     'month.retention': 'שימור ושיווק - פעולות ידניות לפי מלצר',
+    'month.operationalErrorsByServer': 'החזר פריטים, OTH והנחות לפי מלצר',
+    'month.corporationRefund': 'החזרים - 10 פריטים בשווי 20 שח',
     'revenue': 'מחזור',
     'monthly': 'חודשי',
     'monthSummary': 'סיכום חודש',

@@ -1,6 +1,6 @@
 import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { DataWareHouseService } from '../../../services/data-ware-house.service';
-import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
+import {AbstractTableComponent, DataOption} from '../../../ui/abstract-table/abstract-table.component';
 import * as moment from 'moment';
 
 @Component({
@@ -10,15 +10,27 @@ import * as moment from 'moment';
 })
 export class MonthRetentionComponent extends AbstractTableComponent implements OnInit, OnChanges {
 
+  columns_primary = [
+    {en : 'reasonName' , dataKey:'reasonName',translated:'day.reason'},
+    {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
+    {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
+  ];
+
+  columns_alternative = [
+    {en : 'Waiter' , dataKey:'waiterName',translated:'slips.server'}, // check the exac data
+    {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
+    {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
+  ];
+
   constructor(private dataService: DataWareHouseService) {
     super();
-    this.columns = [
-      {en : 'reasonName' , dataKey:'reasonName',translated:'day.reason'},
-      {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
-      {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
-    ];
+
+    this.columns = this.columns_primary;
+
     this.title = {en: 'retention', translated: 'month.retention'};
+
   }
+
 
   async ngOnInit() {
     let dateStart = moment('2019-01-01').format('YYYYMMDD');
@@ -35,6 +47,11 @@ export class MonthRetentionComponent extends AbstractTableComponent implements O
 
     return "";
 
+  }
+
+  changeData(dataOption: DataOption) {
+    super.changeData(dataOption);
+    this.columns = dataOption === DataOption.PRIMARY ? this.columns_primary : this.columns_alternative;
   }
 
   getCssColorClass(): String {

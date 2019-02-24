@@ -9,9 +9,9 @@
                {{summary.actions}} &nbsp; <span [translate]="'' + summary.connect "></span> &nbsp;{{summary.total}}
             </mat-panel-title>
             </mat-expansion-panel-header>
-            <div class ="btn-group category-picker" role="group" style="width:100%">
-                <button class="btn btn-outline-secondary" style="width:50%"><span [translate]="'' + options.opt1"></span></button>
-                <button class="btn btn-outline-secondary" style="width:50%"><span [translate]="'' + options.opt2"></span></button>
+            <div *ngIf="dataOptionMode == true" class ="btn-group category-picker" role="group" style="width:100%">
+                <button class="btn btn-outline-secondary" style="width:50%" (click)="changeData(getDataOption().PRIMARY)" [ngClass]="{'btnClicked':currentDataOption == getDataOption().PRIMARY}" ><span [translate]="'' + options.opt1"></span></button>
+                <button class="btn btn-outline-secondary" style="width:50%" (click)="changeData(getDataOption().ALTERNATIVE)" [ngClass]="{'btnClicked':currentDataOption ==  getDataOption().ALTERNATIVE}"><span [translate]="'' + options.opt2"></span></button>
             </div>
             <table class="table table-sm">
                 <tr class="header">
