@@ -183,10 +183,12 @@ export class HomeComponent implements OnInit {
          const tlogs = await this.dateWareHouseService.getTlogs('20190201', '20190202');
          const refund = await this.dateWareHouseService.getRefund('20190201', '20190202');
          const reductionByReason = await this.dateWareHouseService.getReductionByReason('20190201', '20190202');
+         const mostLeastSoldItems = await this.dateWareHouseService.getMostLeastSoldItems('20190201', '20190210');
          console.log(payments);
          console.log(tlogs);
          console.log(refund);
          console.log(reductionByReason);
+         console.log(mostLeastSoldItems);
 
 
         combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {

@@ -1,6 +1,6 @@
 import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { DataWareHouseService } from '../../../services/data-ware-house.service';
-import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
+import {AbstractTableComponent, DataOption} from '../../../ui/abstract-table/abstract-table.component';
 import * as moment from 'moment';
 
 @Component({
@@ -10,21 +10,23 @@ import * as moment from 'moment';
 })
 export class MonthCancellationComponent extends AbstractTableComponent implements OnInit, OnChanges {
 
-  columns_opt1 = [
+  columns_primary = [
     {en : 'reasonName' , dataKey:'reasonName',translated:'day.reason'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
     {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
   ];
 
- /* columns_opt2 = [
-    {en : 'Waiter' , dataKey:'waiterName',translated:'slips.server'},
+  columns_alternative = [
+    {en : 'Waiter' , dataKey:'waiterName',translated:'month.server'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
     {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
-  ];*/
+  ];
 
   constructor(private dataService: DataWareHouseService) {
     super();
-    this.columns = this.columns_opt1;
+
+    this.columns = this.columns_primary;
+
     this.title = {en:'Cancellation',translated:'month.cancellations'};
   }
 
@@ -44,7 +46,11 @@ export class MonthCancellationComponent extends AbstractTableComponent implement
   createTitle(): String {
 
     return '';
+  }
 
+  changeData(dataOption: DataOption) {
+    super.changeData(dataOption);
+    this.columns = dataOption === DataOption.PRIMARY ? this.columns_primary : this.columns_alternative;
   }
 
   getCssColorClass(): String {

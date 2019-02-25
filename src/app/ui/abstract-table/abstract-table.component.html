@@ -6,8 +6,8 @@
         <mat-expansion-panel [expanded]="false">
             <mat-expansion-panel-header [ngClass]="getCssColorClass()">
                 <mat-panel-title>
-               {{summary.actions}} &nbsp; <span [translate]="'' + summary.connect "></span> &nbsp;{{summary.total}}
-            </mat-panel-title>
+               {{summary.actions}} &nbsp; <span [translate]="'' + summary.connect "></span> &nbsp;{{summary.total | curr:'0':'':'nullify'}}
+                </mat-panel-title>
             </mat-expansion-panel-header>
             <div *ngIf="dataOptionMode == true" class ="btn-group category-picker" role="group" style="width:100%">
                 <button class="btn btn-outline-secondary" style="width:50%" (click)="changeData(getDataOption().PRIMARY)" [ngClass]="{'btnClicked':currentDataOption == getDataOption().PRIMARY}" ><span [translate]="'' + options.opt1"></span></button>
@@ -18,8 +18,6 @@
                     <td *ngFor = "let column of columns">
                         <div class="flex a-center">
                             <div><span [translate]="'' + column.translated"></span></div>
-                        <!--    <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='desc'">arrow_drop_down</mat-icon>
-                            <mat-icon class="sortMatIcon" *ngIf="sortBy==='waiter' && sortDir==='asc'">arrow_drop_up</mat-icon>-->
                         </div>
                     </td>
                 </tr>
@@ -28,7 +26,7 @@
                         class="dayReportDataRow"
                 >
                     <td *ngFor="let column of columns">
-                        {{tuple[column.dataKey]}}
+                        {{tuple[column.dataKey] | curr:'0':'':'nullify':true}}
                     </td>
 
                 </tr>

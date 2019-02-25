@@ -17,7 +17,7 @@ export class MonthPromotionsComponent extends AbstractTableComponent implements 
  ];
 
   columns_alternative = [
-    {en : 'Waiter' , dataKey:'waiterName',translated:'slips.server'}, // check the exac data
+    {en : 'Waiter' , dataKey:'waiterName',translated:'month.server'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
     {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
   ];
@@ -29,10 +29,6 @@ export class MonthPromotionsComponent extends AbstractTableComponent implements 
     this.title = {en: 'promotion', translated: 'month.promotion'};
   }
 
-  changeData(dataOption: DataOption) {
-    super.changeData(dataOption);
-    this.columns = dataOption === DataOption.PRIMARY ? this.columns_primary : this.columns_alternative;
-  }
 
   async ngOnInit() {
     let dateStart = moment('2019-01-01').format('YYYYMMDD');
@@ -42,7 +38,7 @@ export class MonthPromotionsComponent extends AbstractTableComponent implements 
     this.data = result.promotions;
     this.summary = {total: result.promotions[0].amountIncludeVat,connect
           :'day.actionsWorth', actions: result.promotions[0].qty};
-          this.options = {opt1:'details.date',opt2:'day.reason'};
+          this.options = {opt1:'day.reason',opt2:'month.server'};
   }
 
   createTitle(): String {
@@ -50,6 +46,11 @@ export class MonthPromotionsComponent extends AbstractTableComponent implements 
     return '';
 
   }
+
+    changeData(dataOption: DataOption) {
+        super.changeData(dataOption);
+        this.columns = dataOption === DataOption.PRIMARY ? this.columns_primary : this.columns_alternative;
+    }
 
   getCssColorClass(): String {
     return 'bg-primary';

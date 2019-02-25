@@ -17,7 +17,7 @@ export class MonthRetentionComponent extends AbstractTableComponent implements O
   ];
 
   columns_alternative = [
-    {en : 'Waiter' , dataKey:'waiterName',translated:'slips.server'}, // check the exac data
+    {en : 'Waiter' , dataKey:'waiterName',translated:'month.server'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
     {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
   ];
@@ -40,12 +40,12 @@ export class MonthRetentionComponent extends AbstractTableComponent implements O
     this.data = result.retention;
     this.summary = {total: result.retention[0].amountIncludeVat,connect
           :'day.actionsWorth', actions: result.retention[0].qty};
-          this.options = {opt1:'details.date',opt2:'day.reason'};
+          this.options = {opt1:'day.reason',opt2:'month.server'};
   }
 
   createTitle(): String {
 
-    return "";
+    return '';
 
   }
 

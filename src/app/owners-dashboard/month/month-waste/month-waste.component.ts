@@ -18,7 +18,7 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
   ];
 
   columns_alternative = [
-    {en : 'Date' , dataKey:'date',translated:'details.date'}, //chewck the exac datakey on the response
+    {en : 'Date' , dataKey:'date',translated:'month.server'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
     {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
   ];

@@ -17,7 +17,7 @@ export abstract class AbstractTableComponent implements OnInit {
 
   protected title: {} = {};
 
-  protected summary:{} = {};
+  protected summary: {} = {};
 
   protected options:{} = {};
 
@@ -26,16 +26,15 @@ export abstract class AbstractTableComponent implements OnInit {
 
   abstract getCssColorClass(): String;
 
+  ngOnInit() {
+  }
+
   getDataOption(){
     return DataOption;
   }
 
-
   changeData(dataOption:DataOption){
     this.currentDataOption = dataOption;
-  }
-
-  ngOnInit() {
   }
 
 }

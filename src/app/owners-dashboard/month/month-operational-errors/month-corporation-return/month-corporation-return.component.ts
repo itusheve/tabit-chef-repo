@@ -5,7 +5,7 @@ import * as moment from 'moment';
 
 @Component({
   selector: 'app-month-corporation-return',
-  templateUrl: '../../../ui/abstract-table/abstract-table.component.html',
+  templateUrl: '../../../../ui/abstract-table/abstract-table.component.html',
   styleUrls: ['./month-corporation-return.component.scss']
 })
 export class MonthCorporationReturnComponent extends AbstractTableComponent implements OnInit, OnChanges {
@@ -19,7 +19,7 @@ export class MonthCorporationReturnComponent extends AbstractTableComponent impl
   ];
 
   columns_alternative = [
-    {en : 'Waiter' , dataKey:'waiterName',translated:'slips.server'}, // check the exac data
+    {en : 'Waiter' , dataKey:'waiterName',translated:'month.server'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
     {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
   ];
@@ -44,7 +44,7 @@ export class MonthCorporationReturnComponent extends AbstractTableComponent impl
     this.data = result.corporationReturn;
     this.summary = {total: result.retention[0].amountIncludeVat,connect
           :'day.actionsWorth', actions: result.corporationReturn[0].qty};
-    this.options = {opt1:'details.date',opt2:'day.reason'};
+    this.options = {opt1:'day.reason',opt2:'month.server'};
 
 
   }
