@@ -121,7 +121,8 @@
                                 </td>
                                 <td (click)="sort(orderType, 'number')">
                                     <div class="flex a-center">
-                                        <div [translate]="'dayTable.orderNumber'">Order #</div>
+                                        <div *ngIf="orderType.id != 'seated'" [translate]="'dayTable.orderNumber'">Order #</div>
+                                        <div *ngIf="orderType.id == 'seated'" [translate]="'dayTable.tableNumber'">Table #</div>
                                         <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='desc'">
                                             arrow_drop_down
                                         </mat-icon>
@@ -196,8 +197,7 @@
                                 class="dayReportDataRow"
                                 [ngClass]="{'lastViewed': lastViewed===order, 'clicked': order.__dayOrdersTable__clicked}">
                                 <td>{{getClosedOrderHour(order.openingTime)}}</td>
-
-                                <td class="text-center">{{order.number | number:'1.0-0'}}</td>
+                                <td class="text-center">{{orderType.id == 'seated' ? order.tableNumber : order.number | number:'1.0-0'}}</td>
                                 <td>{{order.waiter}}</td>
                                 <td>{{order.sales | curr:'0'}}</td>
                                 <td>

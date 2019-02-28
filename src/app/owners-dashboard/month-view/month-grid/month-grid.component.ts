@@ -42,9 +42,11 @@ export class MonthGridComponent implements OnInit {
             employee: 0
         };
 
-        combineLatest(dataService.selectedMonth$, dataService.databaseV2$).subscribe(data => {
+        combineLatest(dataService.selectedMonth$, dataService.databaseV2$, dataService.dailyTotals$).subscribe(data => {
             let selectedMonth = data[0];
             let database = data[1];
+            let dailyTotals = data[2];
+            let businessDate = moment.utc(dailyTotals.businessDate);
 
             let monthlyData = database.getMonth(selectedMonth);
 
@@ -59,7 +61,7 @@ export class MonthGridComponent implements OnInit {
             this.hasYearlyAvg = false;
             this.days = [];
             _.each(days, day => {
-                if (day.businessDate !== currentDate.format('YYYY-MM-DD')) {
+                if (day.businessDate !== businessDate.format('YYYY-MM-DD')) {
                     this.days.push(day);
                     if (day.AvgPySalesAndRefoundAmountIncludeVat) {
                         this.hasYearlyAvg = true;

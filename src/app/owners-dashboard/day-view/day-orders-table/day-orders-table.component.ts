@@ -81,6 +81,7 @@ export class DayOrdersTableComponent implements OnChanges {
                     let formattedOpenOrder = {
                         openingTime: openOrder.created,
                         number: openOrder.number,
+                        tableNumber: openOrder.tableNumber,
                         waiter: openOrder.ownerFirstName + ' ' + openOrder.ownerLastName,
                         sales: 0,
                         id: openOrder._id
