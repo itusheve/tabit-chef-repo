@@ -1,18 +1,18 @@
 <div class="flex d-col">
     <div class="title">
-        <span [translate]="'' + title.translated"></span>
+        <span [translate]="'operational'"></span>
     </div>
     <mat-accordion>
         <mat-expansion-panel [expanded]="false">
-            <mat-panel-title>
-                {{summary.actions}} &nbsp; <span [translate]="'' + summary.connect "></span> &nbsp;{{summary.total}}
-            </mat-panel-title>
-            <mat-accordion>
-                <app-month-corporation-return [dataOptionMode] = "true" class="widget" style="padding:0"></app-month-corporation-return>
-            </mat-accordion>
-            <mat-accordion>
-                <app-month-corporation [dataOptionMode] = "true" class="widget" style="padding:0" ></app-month-corporation>
-            </mat-accordion>
+            <mat-expansion-panel-header [ngStyle]="{'background-color':getCssColorClass()}">
+                <mat-panel-title>
+                    {{summary.actions}}&nbsp;<span [translate]="'' + summary.connect "></span>&nbsp;{{summary.total | curr:'0':'':'nullify'}}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+                <app-month-corporation-return #compensationReturn [headerBg]="'bg-white'" [data] = "monthCompensationData" [dataOptionMode] = "true" class="widget" style="padding:0"></app-month-corporation-return>
+                <app-month-corporation #compensation [headerBg]="'bg-white'" [data]="monthCompensationReturnData" [dataOptionMode] = "true" class="widget" style="padding:0" ></app-month-corporation>
+
         </mat-expansion-panel>
     </mat-accordion>
 </div>

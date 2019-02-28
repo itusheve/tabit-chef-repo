@@ -6,7 +6,8 @@ import {DataWareHouseEpService} from './end-points/data-ware-house-ep.service';
 
 export class DataWareHouseService {
 
-    constructor(private dataWarehouse: DataWareHouseEpService) {}
+    constructor(private dataWarehouse: DataWareHouseEpService) {
+    }
 
     public getPayments(fromBusinessDate, toBusinessDate) {
         return this.dataWarehouse.get('report/payments', {
@@ -36,8 +37,17 @@ export class DataWareHouseService {
         });
     }
 
-    public getMostLeastSoldItems(fromBusinessDate, toBusinessDate) {
-        return this.dataWarehouse.get('report/mostLeastSoldItems', {
+    public async getMostLeastSoldItems(fromBusinessDate, toBusinessDate): Promise<any[]> {
+        let result = await this.dataWarehouse.get('report/mostLeastSoldItems', {
+            fromBusinessDate: fromBusinessDate,
+            toBusinessDate: toBusinessDate
+        });
+
+        return result.mostLeastSoldItems;
+    }
+
+    public getReductionByFired(fromBusinessDate, toBusinessDate) {
+        return this.dataWarehouse.get('report/reductionByfiredBy', {
             fromBusinessDate: fromBusinessDate,
             toBusinessDate: toBusinessDate
         });

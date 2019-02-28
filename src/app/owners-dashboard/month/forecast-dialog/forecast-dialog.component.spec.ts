@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupmodelComponent } from './popupmodel.component';
+import { ForecastDialogComponent } from './forecast-dialog.component';
 
-describe('PopupmodelComponent', () => {
-  let component: PopupmodelComponent;
-  let fixture: ComponentFixture<PopupmodelComponent>;
+describe('ForecastDialogComponent', () => {
+  let component: ForecastDialogComponent;
+  let fixture: ComponentFixture<ForecastDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PopupmodelComponent ]
+      declarations: [ ForecastDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopupmodelComponent);
+    fixture = TestBed.createComponent(ForecastDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

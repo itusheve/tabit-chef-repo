@@ -1,6 +1,7 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { DataWareHouseService } from '../../../../services/data-ware-house.service';
-import {AbstractTableComponent, DataOption} from '../../../../ui/abstract-table/abstract-table.component';
+import {AbstractTableComponent} from '../../../../ui/abstract-table/abstract-table.component';
+import {MonthComponent} from '../../month.component';
 import * as moment from 'moment';
 
 @Component({
@@ -10,7 +11,6 @@ import * as moment from 'moment';
 })
 export class MonthCorporationReturnComponent extends AbstractTableComponent implements OnInit, OnChanges {
 
-
   columns_primary = [
     {en : 'reasonName' , dataKey:'reasonName',translated:'day.reason'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
@@ -19,7 +19,7 @@ export class MonthCorporationReturnComponent extends AbstractTableComponent impl
   ];
 
   columns_alternative = [
-    {en : 'Waiter' , dataKey:'waiterName',translated:'month.server'},
+    {en : 'Waiter' , dataKey:'fullName',translated:'month.server'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
     {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
   ];
@@ -28,31 +28,21 @@ export class MonthCorporationReturnComponent extends AbstractTableComponent impl
 
 
 
-  constructor(private dataService: DataWareHouseService) {
+  constructor() {
     super();
 
-    this.columns = this.columns_primary;
+    this.columns = {primary: this.columns_primary,alt: this.columns_alternative};
 
-    this.title = {en: 'corporationReturn', translated: 'month.corporationRefund'}; // check the exac data
-  }
-
-  async ngOnInit() {
-    let dateStart = moment('2019-01-01').format('YYYYMMDD');
-    let dateEnd = moment('2019-02-01').format('YYYYMMDD');
-
-    let result = await this.dataService.getReductionByReason(dateStart, dateEnd);
-    this.data = result.corporationReturn;
-    this.summary = {total: result.retention[0].amountIncludeVat,connect
-          :'day.actionsWorth', actions: result.corporationReturn[0].qty};
-    this.options = {opt1:'day.reason',opt2:'month.server'};
-
+    this.title = {en: 'corporationReturn', translated: 'month.corporationRefund'};
 
   }
 
-  changeData(dataOption: DataOption) {
-    super.changeData(dataOption);
-    this.columns = dataOption === DataOption.PRIMARY ? this.columns_primary : this.columns_alternative;
+  ngOnInit() {
+    super.ngOnInit();
+    this.options = {primary:'day.reason',alt:'month.server'};
   }
+
+
 
   getCssColorClass(): String {
     return 'bg-primary';

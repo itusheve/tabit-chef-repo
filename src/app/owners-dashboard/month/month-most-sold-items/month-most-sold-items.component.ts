@@ -1,16 +1,44 @@
-import { Component, OnInit } from '@angular/core';
-import { DataWareHouseService } from '../../../services/data-ware-house.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {DataWareHouseService} from '../../../services/data-ware-house.service';
+import * as _ from 'lodash';
 
 @Component({
-  selector: 'app-month-most-sold-items',
-  templateUrl: './month-most-sold-items.component.html',
-  styleUrls: ['./month-most-sold-items.component.scss']
+    selector: 'app-month-most-sold-items',
+    templateUrl: './month-most-sold-items.component.html',
+    styleUrls: ['./month-most-sold-items.component.scss']
 })
 export class MonthMostSoldItemsComponent implements OnInit {
 
-  constructor(private dataWareHouseService: DataWareHouseService) { }
+    @Input()
+    data;
+    allDayData = {};
+    lunchData = {};
+    eveningData = {};
+    nightData = {};
 
-  ngOnInit() {
-  }
+
+    constructor() {
+    }
+
+    ngOnInit() {
+
+        console.log(this.data);
+        this.allDayData = {primary:this.data.filter(e => e.serviceId === -1),alt:[]};
+        this.lunchData =  {primary:this.data.filter(e => e.serviceId === 10),alt:[]};
+        this.eveningData = {primary :this.data.filter(e => e.serviceId === 20),alt:[]};
+        this.nightData =  {primary:this.data.filter(e => e.serviceId >= 30),alt:[]};
+/*
+        this.itemsByService = _.values(_.groupBy(this.items, 'serviceId')).map(serviceEntries => {
+            return {
+                title: serviceEntries[0].serviceName,
+                data: {
+                    something: {
+                        entries: serviceEntries,
+                    }
+
+                }
+            };
+        });*/
+    }
 
 }

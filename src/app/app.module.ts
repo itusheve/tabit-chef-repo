@@ -74,7 +74,7 @@ import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslationLoader} from './translation.loader';
 import localeHebrew from '@angular/common/locales/he';
 import localeEnglish from '@angular/common/locales/en';
-import { PopupmodelComponent } from './ui/popupmodel/popupmodel.component';
+
 
 registerLocaleData(localeHebrew, 'he');
 registerLocaleData(localeEnglish, 'en');
@@ -96,8 +96,7 @@ if (environment.tbtLocale === 'he-IL') {
         AreYouSureDialogComponent,
         ForgotPasswordDialogComponent,
         AppComponent,
-        LoginComponent,
-        PopupmodelComponent
+        LoginComponent
     ],
     imports: [
         BrowserModule,

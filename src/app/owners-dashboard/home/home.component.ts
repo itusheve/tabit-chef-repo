@@ -73,7 +73,8 @@ export class HomeComponent implements OnInit {
         diners: 0,
         ppa: 0,
         ppaOrders: 0,
-        aggregations: {}
+        aggregations: {},
+        type: ''
     };
 
     public display = {
@@ -179,19 +180,11 @@ export class HomeComponent implements OnInit {
 
          this.ownersDashboardService.toolbarConfig.home.show = true;
 
-         const payments = await this.dateWareHouseService.getPayments('20190201', '20190202');
-         const tlogs = await this.dateWareHouseService.getTlogs('20190201', '20190202');
-         const refund = await this.dateWareHouseService.getRefund('20190201', '20190202');
-         const reductionByReason = await this.dateWareHouseService.getReductionByReason('20190201', '20190202');
          const mostLeastSoldItems = await this.dateWareHouseService.getMostLeastSoldItems('20190201', '20190210');
-         console.log(payments);
-         console.log(tlogs);
-         console.log(refund);
-         console.log(reductionByReason);
          console.log(mostLeastSoldItems);
 
 
-        combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
+         combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
             let user = data[0];
             let organization = data[1];
             this.logz.log('chef', 'user action', {
@@ -801,6 +794,7 @@ export class HomeComponent implements OnInit {
                 let previousMonth = database.getMonth(moment(month.latestDay).subtract(1, 'months'));
                 let lastYearMonth = database.getMonth(moment(month.latestDay).subtract(1, 'years'));
 
+                this.summaryCardData.type = 'month';
 
                 this.showSummary = true;
                 this.summaryCardData.diners = month.diners || month.orders;

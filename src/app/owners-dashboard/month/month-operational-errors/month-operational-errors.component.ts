@@ -1,5 +1,5 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {AbstractTableComponent, DataOption} from '../../../ui/abstract-table/abstract-table.component';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
 import * as moment from 'moment';
 import {DataWareHouseService} from '../../../services/data-ware-house.service';
 
@@ -8,34 +8,52 @@ import {DataWareHouseService} from '../../../services/data-ware-house.service';
   templateUrl: './month-operational-errors.html',
   styleUrls: ['./month-operational-errors.component.scss']
 })
-export class MonthOperationalErrorsComponent extends AbstractTableComponent implements OnInit, OnChanges {
+export class MonthOperationalErrorsComponent implements OnInit, AfterViewInit {
 
-    @Input() 'app-month-corporation-return';
-    @Input() 'app-month-corporation';
+    @Input()
+        data;
+    @ViewChild('compensationReturn')
+    compensationReturn:AbstractTableComponent;
+    @ViewChild('compensation')
+    compensation:AbstractTableComponent;
 
-  constructor(private dataService: DataWareHouseService) {
-    super();
 
-    this.title = {en: 'operationalErrors', translated: 'day.operationalErrors'};
+    private monthCompensationData={};
+   private  monthCompensationReturnData={};
+    private summary:any={};
+
+  constructor() {
+
   }
 
-  async ngOnInit(){
-     let dateStart = moment('2019-01-01').format('YYYYMMDD');
-     let dateEnd = moment('2019-02-01').format('YYYYMMDD');
+   ngOnInit(){
+    let total=0,actions=0;
+    console.log(this.compensationReturn);
+     this.monthCompensationData = this.data.compensation;
+     this.monthCompensationReturnData = this.data.compensationReturns;
 
-     let result = await this.dataService.getReductionByReason(dateStart, dateEnd); // check to currect contezt how come from the server
-     this.data = result.corporation + result.corporationReturn;
-     this.summary = {total: result.corporation[0].amountIncludeVat + result.corporationReturn[0].amountIncludeVat, connect: 'day.actionsWorth',
-       actions: result.corporation[0].qty + result.corporationReturn[0].qty};
-     this.options = {opt1:'details.date',opt2:'day.reason'};
+
    }
 
+   ngAfterViewInit(){
+      setTimeout(()=>{
+          let total = this.compensation.summary.total + this.compensationReturn.summary.total;
+          let actions = this.compensation.summary.actions + this.compensationReturn.summary.actions;
+          this.summary = {
+              total : total,
+              actions :actions,
+              connect :'day.actionsWorth',
+          };
+      });
 
-  getCssColorClass(): String {
-    return '';
-  }
+   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-  }
+    getCssColorClass(): String {
+        const elements = document.getElementsByClassName('card-operational');
+        const color = window.getComputedStyle(elements[0], null).getPropertyValue('color');
+        return color;
+    }
+
+
 }
 

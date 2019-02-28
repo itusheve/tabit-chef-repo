@@ -1,6 +1,6 @@
 import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { DataWareHouseService } from '../../../../services/data-ware-house.service';
-import {AbstractTableComponent, DataOption} from '../../../../ui/abstract-table/abstract-table.component';
+import {AbstractTableComponent} from '../../../../ui/abstract-table/abstract-table.component';
 import * as moment from 'moment';
 
 @Component({
@@ -18,34 +18,30 @@ export class MonthCorporationComponent extends AbstractTableComponent implements
   ];
 
   columns_alternative = [
-    {en : 'Waiter' , dataKey:'waiterName',translated:'month.server'},
+    {en : 'Waiter' , dataKey:'fullName',translated:'month.server'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
     {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
   ];
 
+
   constructor(private dataService: DataWareHouseService) {
     super();
 
-    this.columns = this.columns_primary;
+    this.columns = {primary: this.columns_primary,alt: this.columns_alternative};
 
     this.title = {en: 'corporation', translated: 'month.corporation'};
 
   }
 
-  async ngOnInit() {
-    let dateStart = moment('2019-01-01').format('YYYYMMDD');
-    let dateEnd = moment('2019-02-01').format('YYYYMMDD');
-
-    let result = await this.dataService.getReductionByReason(dateStart, dateEnd); // check to currect contezt how come from the server
-    this.data = result.corporation;
-    this.summary = {total: result.retention[0].amountIncludeVat, connect: 'day.actionsWorth', actions: result.corporation[0].qty};
-    this.options = {opt1:'day.reason',opt2:'month.server'};
+   ngOnInit() {
+    super.ngOnInit();
+    this.options = {primary:'day.reason',alt:'month.server'};
   }
 
-  changeData(dataOption: DataOption) {
+ /* changeData(dataOption: DataOption) {
     super.changeData(dataOption);
-    this.columns = dataOption === DataOption.PRIMARY ? this.columns_primary : this.columns_alternative;
-  }
+    this.columns = this.currentDataOption === DataOption.PRIMARY ? this.columns_primary : this.columns_alternative;
+  }*/
 
 
   getCssColorClass(): String {

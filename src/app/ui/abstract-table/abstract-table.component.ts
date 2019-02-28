@@ -1,41 +1,66 @@
 import {Input, OnInit} from '@angular/core';
-import {EnumValue} from '@angular/compiler-cli/src/ngtsc/metadata';
-
-export enum DataOption{
-  PRIMARY,
-  ALTERNATIVE
-}
 
 export abstract class AbstractTableComponent implements OnInit {
 
-  @Input()
-  dataOptionMode:boolean;
+    @Input()
+    data: {
+        primary:any[],
+        alt: any[]
+    } = {
+        primary:[],
+        alt:[]
+    };
+    columns:{primary:any[],alt:any[]} = {primary:[],alt:[]};
 
-  protected columns: any[] =[];
+    @Input()
+    headerBg: String;
 
-  protected data: any[] =[];
+    @Input()
+     title: {} = {};
 
-  protected title: {} = {};
+    protected options:{primary:string,alt:string}={primary:'',alt:''};
 
-  protected summary: {} = {};
+    @Input()
+    dataOptionMode=true;
 
-  protected options:{} = {};
+    @Input()
+    summaryOption = true;
 
-  protected currentDataOption:DataOption = DataOption.PRIMARY;
+    public summary: any = {};
+
+    protected selectedOption;
+
+    abstract getCssColorClass(): String;
+
+    constructor(){
+        this.selectedOption = 'primary';
+    }
+
+    ngOnInit() {
+        console.log(this.data);
+        let total = 0;
+        let actions = 0;
+        this.data[this.selectedOption].forEach(e => {
+            total += e.amountIncludeVat;
+            actions += e.qty;
+        });
+
+        this.summary = {
+            total: total,
+            actions: actions,
+            connect: 'day.actionsWorth',
+        };
+    }
+
+    isNumber(num) {
+        return (typeof num) === 'number';
+    }
 
 
-  abstract getCssColorClass(): String;
 
-  ngOnInit() {
-  }
-
-  getDataOption(){
-    return DataOption;
-  }
-
-  changeData(dataOption:DataOption){
-    this.currentDataOption = dataOption;
-  }
+  /*  shouldShowOptionButtons() {
+        return Object.keys(this.data || {}).length > 1;
+    }*/
 
 }
 

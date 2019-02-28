@@ -1,7 +1,7 @@
 import {Component, OnInit, SimpleChanges,OnChanges} from '@angular/core';
 import { DataWareHouseService } from '../../../services/data-ware-house.service';
-import {AbstractTableComponent, DataOption} from '../../../ui/abstract-table/abstract-table.component';
-import * as moment from 'moment';
+import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
+
 
 @Component({
   selector: 'app-month-waste',
@@ -11,36 +11,27 @@ import * as moment from 'moment';
 export class MonthWasteComponent extends AbstractTableComponent implements OnInit, OnChanges {
 
   columns_primary = [
-    {en : 'Date' , dataKey:'date',translated:'details.date'}, //chewck the exac datakey on the response
-    {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
-    {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
-
+    {en: 'Date', dataKey: 'businessDateCaption', translated: 'details.date'},
+    {en: 'Quantity', dataKey: 'qty', translated: 'month.quantity'},
+    {en: 'Amount', dataKey: 'amountIncludeVat', translated: 'month.amount'}
   ];
 
   columns_alternative = [
-    {en : 'Date' , dataKey:'date',translated:'month.server'},
-    {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
-    {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
+    {en: 'Waiter', dataKey: 'fullName', translated: 'month.server'},
+    {en: 'Quantity', dataKey: 'qty', translated: 'month.quantity'},
+    {en: 'Amount', dataKey: 'amountIncludeVat', translated: 'month.amount'}
   ];
 
 
-
-  constructor(private dataService: DataWareHouseService){
+  constructor(){
     super();
 
-    this.columns = this.columns_primary;
-
+    this.columns = {primary:this.columns_primary,alt:this.columns_alternative};
     this.title = {en:'Waste',translated:'month.waste'};
   }
-  async ngOnInit() {
-    let dateStart = moment('2019-01-01').format('YYYYMMDD');
-    let dateEnd = moment('2019-02-01').format('YYYYMMDD');
-
-    let result = await this.dataService.getReductionByReason(dateStart,dateEnd);
-    this.data = result.wasteEod;
-    this.summary = {total: result.wasteEod[0].amountIncludeVat,connect
-          :'day.actionsWorth', actions:result.wasteEod[0].qty};
-      this.options = {opt1:'details.date',opt2:'day.reason'};
+   ngOnInit() {
+      super.ngOnInit();
+     this.options = {primary: 'details.date', alt: 'month.server'};
 
 
   }
@@ -51,19 +42,13 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
 
   }
 
-  changeData(dataOption: DataOption) {
-    super.changeData(dataOption);
-    this.columns = dataOption === DataOption.PRIMARY ? this.columns_primary : this.columns_alternative;
-  }
-
-  getCssColorClass(): String {
-    return 'bg-primary';
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
   }
 
-
+  getCssColorClass(): String {
+    return 'bg-white';
+  }
 
 
 
