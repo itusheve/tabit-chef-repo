@@ -121,6 +121,7 @@ export class MonthComponent implements OnInit {
                 diners: service.dinersOrders || 0,
                 ppa: service.avgSales || 0,
                 sales: service.ttlSalesAmountIncludeVat,
+                percentage: 0,
                 vat: service.vatAmount,
                 tip: service.tipAmountIncludeVat || 0,
                 revenue: (service.ttlSalesAmountIncludeVat + _.get(service, 'tipAmountIncludeVat', 0)),
@@ -277,10 +278,17 @@ export class MonthComponent implements OnInit {
             totalSales.reductions.retention.percentage = totalSales.reductions.retention.amount / (totalSales.reductions.retention.amount + totalSales.sales);
 
             totalSales.percentage = totalSales.sales / totalSalesForPercentage;
+
+            _.forEach(salesByService.kpis, salesByOrderType => {
+                salesByOrderType.percentage = salesByOrderType.sales / totalSales.sales;
+            });
+
             salesByService['totals'] = totalSales;
 
             //salesByService.kpis = _.orderBy(salesByService.kpis, ['type']);
         });
+
+
 
         return _.values(sales);
     }

@@ -33,9 +33,9 @@
                             <tbody>
                             <tr>
                                 <td><span class="font-weight-bold" [translate]="'month.sales'"></span></td>
-                                <td>{{(service.totals.sales - service.totals.vat) | curr:'0':'':'':true}}</td>
+                                <td>{{(service.totals.sales - service.totals.vat) | curr:'0':'':'':true}} ({{service.totals.percentage | pct: 1}})</td>
                                 <ng-container *ngFor="let orderType of service.kpis">
-                                    <td>{{(orderType.sales - orderType.vat) | curr:'0':'':'':true}}</td>
+                                    <td>{{(orderType.sales - orderType.vat) | curr:'0':'':'':true}} (({{orderType.percentage | pct: 1}}))</td>
                                 </ng-container>
                             </tr>
                             <tr>

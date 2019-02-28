@@ -297,6 +297,7 @@ export class DayViewComponent implements OnInit {
             order.sales = environment.region === 'us' ? tlog.netSalesAmount : tlog.totalAmount;
             order.salesBeforeTip = environment.region === 'us' ? tlog.netSalesAmount : tlog.totalBeforeTip;
             order.tlogId = tlog.tlogId;
+            order.tableNumber = tlog.tableNumber;
             order.waiter = tlog.userName;
             order.openingTime = tlog.HHMM; //weird hack, talk to BI to get it formatted
             order.businessDate = moment(tlog.businessDate, 'YYYYMMDD'); //weird hack, talk to BI to get it formatted

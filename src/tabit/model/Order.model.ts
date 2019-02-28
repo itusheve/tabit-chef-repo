@@ -8,6 +8,7 @@ export class Order {
     openingTime: string;
     businessDate: moment.Moment;
     number: number;
+    tableNumber: number;
     waiter: string;
     users: {
         openedBy: User;
