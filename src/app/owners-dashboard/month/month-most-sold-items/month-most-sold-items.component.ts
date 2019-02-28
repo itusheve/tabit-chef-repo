@@ -27,18 +27,7 @@ export class MonthMostSoldItemsComponent implements OnInit {
         this.lunchData =  {primary:this.data.filter(e => e.serviceId === 10),alt:[]};
         this.eveningData = {primary :this.data.filter(e => e.serviceId === 20),alt:[]};
         this.nightData =  {primary:this.data.filter(e => e.serviceId >= 30),alt:[]};
-/*
-        this.itemsByService = _.values(_.groupBy(this.items, 'serviceId')).map(serviceEntries => {
-            return {
-                title: serviceEntries[0].serviceName,
-                data: {
-                    something: {
-                        entries: serviceEntries,
-                    }
 
-                }
-            };
-        });*/
     }
 
 }
