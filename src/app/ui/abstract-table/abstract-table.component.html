@@ -7,7 +7,7 @@
         <mat-expansion-panel [expanded]="false" (opened)="selectedOption='primary'">
             <mat-expansion-panel-header [ngStyle]="{'background-color':getCssColorClass()}">
                 <mat-panel-title>
-                    <span *ngIf="summaryOption == true">{{summary.actions}}&nbsp;<span [translate]="'' + summary.connect "></span>&nbsp;{{summary.total | curr:'0':'':'nullify'}}</span>
+                    <span style="font-weight: bold; font-size: 18px !important" *ngIf="summaryOption == true">{{summary.actions}}&nbsp;<span [translate]="'' + summary.connect "></span>&nbsp;{{summary.total | curr:'0':'':'nullify'}}</span>
                     <span style="font-weight: bold" *ngIf ="summaryOption == false" [translate]="'' + title.translated"></span>
 
                 </mat-panel-title>
@@ -26,9 +26,8 @@
 
                 <tr *ngFor="let tuple of data[selectedOption]" class="dayReportDataRow">
                     <td *ngFor="let column of columns[selectedOption]">
-                        <span *ngIf = "isNumber(tuple[column.dataKey[0]]) == true">{{tuple[column.dataKey] }}</span>
-                        <span *ngIf = "isNumber(tuple[column.dataKey]) == true">{{tuple[column.dataKey]| number}}</span>
-                        <span *ngIf = "isNumber(tuple[column.dataKey]) == false">{{tuple[column.dataKey]}}</span>
+                        <span *ngIf="column.dataType === 'currency'">{{tuple[column.dataKey] | curr}}</span>
+                        <span *ngIf="column.dataType !== 'currency'">{{tuple[column.dataKey]}}</span>
                     </td>
                 </tr>
                 <mat-dialog-content>

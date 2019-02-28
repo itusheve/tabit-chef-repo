@@ -28,7 +28,6 @@ export class MonthOperationalErrorsComponent implements OnInit, AfterViewInit {
 
    ngOnInit(){
     let total=0,actions=0;
-    console.log(this.compensationReturn);
      this.monthCompensationData = this.data.compensation;
      this.monthCompensationReturnData = this.data.compensationReturns;
 

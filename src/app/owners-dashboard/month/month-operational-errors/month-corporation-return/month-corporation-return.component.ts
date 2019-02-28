@@ -14,14 +14,14 @@ export class MonthCorporationReturnComponent extends AbstractTableComponent impl
   columns_primary = [
     {en : 'reasonName' , dataKey:'reasonName',translated:'day.reason'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
-    {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
+    {en : 'Amount' , dataKey:'amountIncludeVat', dataType: 'currency',translated:'month.amount'}
 
   ];
 
   columns_alternative = [
     {en : 'Waiter' , dataKey:'fullName',translated:'month.server'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
-    {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
+    {en : 'Amount' , dataKey:'amountIncludeVat', dataType: 'currency',translated:'month.amount'}
   ];
 
 

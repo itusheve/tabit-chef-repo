@@ -115,8 +115,7 @@ export class HomeComponent implements OnInit {
                 private translate: TranslateService,
                 public dialog: MatDialog,
                 private overlay: Overlay,
-                private logz: LogzioService,
-                private dateWareHouseService: DataWareHouseService ) {
+                private logz: LogzioService) {
 
         this.env = environment;
         this.tabitHelper = new TabitHelper();
@@ -180,8 +179,6 @@ export class HomeComponent implements OnInit {
 
          this.ownersDashboardService.toolbarConfig.home.show = true;
 
-         const mostLeastSoldItems = await this.dateWareHouseService.getMostLeastSoldItems('20190201', '20190210');
-         console.log(mostLeastSoldItems);
 
 
          combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {

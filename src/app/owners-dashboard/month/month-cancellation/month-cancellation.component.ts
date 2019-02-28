@@ -13,7 +13,7 @@ export class MonthCancellationComponent extends AbstractTableComponent implement
   columns_primary = [
     {en : 'Waiter' , dataKey:'fullName',translated:'month.server'},
     {en : 'Quantity' , dataKey:'qty',translated:'month.quantity'},
-    {en : 'Amount' , dataKey:'amountIncludeVat',translated:'month.amount'}
+    {en : 'Amount' , dataKey:'amountIncludeVat', dataType: 'currency',translated:'month.amount'}
   ];
 
 
@@ -24,7 +24,6 @@ export class MonthCancellationComponent extends AbstractTableComponent implement
   }
 
    ngOnInit() {
-    console.log(this.data);
     super.ngOnInit();
     this.options = {primary:'details.date',alt:'day.reason'};
 

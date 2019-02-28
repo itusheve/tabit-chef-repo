@@ -13,13 +13,13 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
   columns_primary = [
     {en: 'Date', dataKey: 'businessDateCaption', translated: 'details.date'},
     {en: 'Quantity', dataKey: 'qty', translated: 'month.quantity'},
-    {en: 'Amount', dataKey: 'amountIncludeVat', translated: 'month.amount'}
+    {en: 'Amount', dataKey: 'amountIncludeVat', dataType: 'currency', translated: 'month.amount'}
   ];
 
   columns_alternative = [
     {en: 'Waiter', dataKey: 'fullName', translated: 'month.server'},
     {en: 'Quantity', dataKey: 'qty', translated: 'month.quantity'},
-    {en: 'Amount', dataKey: 'amountIncludeVat', translated: 'month.amount'}
+    {en: 'Amount', dataKey: 'amountIncludeVat', dataType: 'currency', translated: 'month.amount'}
   ];
 
 

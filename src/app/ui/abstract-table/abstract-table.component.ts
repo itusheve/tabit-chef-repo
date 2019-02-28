@@ -37,7 +37,6 @@ export abstract class AbstractTableComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.data);
         let total = 0;
         let actions = 0;
         this.data[this.selectedOption].forEach(e => {

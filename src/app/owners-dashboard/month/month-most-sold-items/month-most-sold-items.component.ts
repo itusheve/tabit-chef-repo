@@ -22,7 +22,6 @@ export class MonthMostSoldItemsComponent implements OnInit {
 
     ngOnInit() {
 
-        console.log(this.data);
         this.allDayData = {primary:this.data.filter(e => e.serviceId === -1),alt:[]};
         this.lunchData =  {primary:this.data.filter(e => e.serviceId === 10),alt:[]};
         this.eveningData = {primary :this.data.filter(e => e.serviceId === 20),alt:[]};
