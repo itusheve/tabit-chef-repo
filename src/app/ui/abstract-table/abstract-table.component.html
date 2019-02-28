@@ -26,8 +26,8 @@
 
                 <tr *ngFor="let tuple of data[selectedOption]" class="dayReportDataRow">
                     <td *ngFor="let column of columns[selectedOption]">
-                        <span *ngIf = "isNumber(tuple[column.dataKey[0]]) == true">{{tuple[column.dataKey]}}</span>
-                        <span *ngIf = "isNumber(tuple[column.dataKey]) == true">{{tuple[column.dataKey]}}</span>
+                        <span *ngIf = "isNumber(tuple[column.dataKey[0]]) == true">{{tuple[column.dataKey] }}</span>
+                        <span *ngIf = "isNumber(tuple[column.dataKey]) == true">{{tuple[column.dataKey]| number}}</span>
                         <span *ngIf = "isNumber(tuple[column.dataKey]) == false">{{tuple[column.dataKey]}}</span>
                     </td>
                 </tr>

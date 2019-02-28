@@ -24,7 +24,7 @@ export class MonthCorporationComponent extends AbstractTableComponent implements
   ];
 
 
-  constructor(private dataService: DataWareHouseService) {
+  constructor() {
     super();
 
     this.columns = {primary: this.columns_primary,alt: this.columns_alternative};
@@ -38,10 +38,6 @@ export class MonthCorporationComponent extends AbstractTableComponent implements
     this.options = {primary:'day.reason',alt:'month.server'};
   }
 
- /* changeData(dataOption: DataOption) {
-    super.changeData(dataOption);
-    this.columns = this.currentDataOption === DataOption.PRIMARY ? this.columns_primary : this.columns_alternative;
-  }*/
 
 
   getCssColorClass(): String {

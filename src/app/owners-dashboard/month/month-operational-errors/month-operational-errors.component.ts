@@ -18,9 +18,9 @@ export class MonthOperationalErrorsComponent implements OnInit, AfterViewInit {
     compensation:AbstractTableComponent;
 
 
-    private monthCompensationData={};
-   private  monthCompensationReturnData={};
-    private summary:any={};
+    public monthCompensationData={};
+    public  monthCompensationReturnData={};
+    public summary:any={};
 
   constructor() {
 
