@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {DataWareHouseService} from '../../../services/data-ware-house.service';
-import * as _ from 'lodash';
+
 
 @Component({
     selector: 'app-month-most-sold-items',

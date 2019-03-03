@@ -432,7 +432,7 @@ export class HomeComponent implements OnInit {
     openForecastDetails() {
         this.dialog.open(ForecastDialogComponent, {
             width: '100vw',
-            panelClass: 'forecast-dialog',
+            panelClass: 'month-forecast-dialog',
             scrollStrategy: this.overlay.scrollStrategies.block(),
             hasBackdrop: true,
             backdropClass: 'month-picker-backdrop'
