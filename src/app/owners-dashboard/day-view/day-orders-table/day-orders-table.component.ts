@@ -81,6 +81,7 @@ export class DayOrdersTableComponent implements OnChanges {
                     let formattedOpenOrder = {
                         openingTime: openOrder.created,
                         number: openOrder.number,
+                        tableNumber: openOrder.tableNumber,
                         waiter: openOrder.ownerFirstName + ' ' + openOrder.ownerLastName,
                         sales: 0,
                         id: openOrder._id
@@ -151,6 +152,8 @@ export class DayOrdersTableComponent implements OnChanges {
         return this.onOpenOrderClicked.emit(openOrder);
     }
 
+                            // duplicate function - put it on day-function.service
+
     sort(orderType: any, by: string) {
         if (this.sortBy && this.sortBy === by) {
             this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
@@ -180,6 +183,7 @@ export class DayOrdersTableComponent implements OnChanges {
             .orders
             .sort((a, b) => (a[field] < b[field] ? dir : dir * -1));
     }
+                // move this function to day-function.service
 
     sortOpenOrder(orderType: any, by: string) {
         if (this.sortBy && this.sortBy === by) {

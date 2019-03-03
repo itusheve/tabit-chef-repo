@@ -19,5 +19,9 @@ export const environment = {
         catalog: 'isrProd',
         cube: 'tlogs',
     },
-    translationBaseUrl: './assets/i18n/'
+    translationBaseUrl: './assets/i18n/',
+
+    reportingServer: {
+        url: 'http://localhost:3000/'
+    }
 };

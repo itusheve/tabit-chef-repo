@@ -1,0 +1,24 @@
+.totalRow {
+  font-weight: bold;
+}
+
+.accountTypeRow {
+  font-weight: bold;
+}
+.accountRow td:first-child {
+  // text-indent: 10px;
+  font-weight: normal;
+}
+
+td {
+  word-wrap: break-word;
+}
+
+.pctCell{
+  width: 63px;
+}
+
+::ng-deep.mat-expansion-panel-body {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}

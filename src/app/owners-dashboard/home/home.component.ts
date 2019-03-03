@@ -19,13 +19,14 @@ import {OverTimeUsersDialogComponent} from './over-time-users/over-time-users-di
 import {LogzioService} from '../../logzio.service';
 import {ForecastDialogComponent} from './forecast-dialog/forecast-dialog.component';
 import {Overlay} from '@angular/cdk/overlay';
+import {DataWareHouseService} from '../../services/data-ware-house.service';
 import {AuthService} from '../../auth/auth.service';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    providers: [DatePipe]
+    providers: [DatePipe, DataWareHouseService]
 })
 export class HomeComponent implements OnInit {
 
@@ -72,7 +73,8 @@ export class HomeComponent implements OnInit {
         diners: 0,
         ppa: 0,
         ppaOrders: 0,
-        aggregations: {}
+        aggregations: {},
+        type: ''
     };
 
     public display = {
@@ -81,7 +83,6 @@ export class HomeComponent implements OnInit {
         monthToDate: false,
         monthReport: false
     };
-
     private previousBdNotFinal = false;
     public showPreviousDay = false;
     public tabitHelper;
@@ -114,8 +115,8 @@ export class HomeComponent implements OnInit {
                 private translate: TranslateService,
                 public dialog: MatDialog,
                 private overlay: Overlay,
-                private logz: LogzioService,
-    ) {
+                private logz: LogzioService) {
+
         this.env = environment;
         this.tabitHelper = new TabitHelper();
         ownersDashboardService.toolbarConfig.left.back.showBtn = false;
@@ -153,7 +154,7 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    async ngOnInit() {
+     async  ngOnInit() {
         this.loadingOlapData = true;
         this.currentBdCardData.loading = true;
         this.showSummary = false;
@@ -176,7 +177,11 @@ export class HomeComponent implements OnInit {
             this.ownersDashboardService.toolbarConfig.home.show = true;
         }
 
-        combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
+         this.ownersDashboardService.toolbarConfig.home.show = true;
+
+
+
+         combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
             let user = data[0];
             let organization = data[1];
             this.logz.log('chef', 'user action', {
@@ -427,7 +432,7 @@ export class HomeComponent implements OnInit {
     openForecastDetails() {
         this.dialog.open(ForecastDialogComponent, {
             width: '100vw',
-            panelClass: 'forecast-dialog',
+            panelClass: 'month-forecast-dialog',
             scrollStrategy: this.overlay.scrollStrategies.block(),
             hasBackdrop: true,
             backdropClass: 'month-picker-backdrop'
@@ -786,6 +791,7 @@ export class HomeComponent implements OnInit {
                 let previousMonth = database.getMonth(moment(month.latestDay).subtract(1, 'months'));
                 let lastYearMonth = database.getMonth(moment(month.latestDay).subtract(1, 'years'));
 
+                this.summaryCardData.type = 'month';
 
                 this.showSummary = true;
                 this.summaryCardData.diners = month.diners || month.orders;

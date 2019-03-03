@@ -1,0 +1,42 @@
+<div class="widget p-0 mt-3" *ngIf="payments">
+  <div class="flex d-col">
+    <div class="title" style="border-radius: 3px 3px 0px 0px" [translate]="'day.payments'">Payments</div>
+    <mat-accordion>
+      <mat-expansion-panel expanded="false">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <span class="font-weight-bold" [translate]="'day.paymentsReport'">Payments report</span>&nbsp;&nbsp;<span>{{payments.total | curr:'0':'':'nullify'}}</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <table *ngIf="payments" class="table table-sm">
+          <tr class="totalRow">
+            <td class="header" [translate]="'day.total'">Total</td>
+            <td class="header">{{payments.total | curr:'0':'':'nullify':true}}</td>
+          </tr>
+          <ng-container *ngIf="payments.accountGroups">
+            <ng-container *ngFor="let accountGroup of payments.accountGroups">
+              <ng-container *ngIf="accountGroup">
+                <tr class="accountTypeRow">
+                  <td>{{accountGroup.type}}</td>
+                  <td class="ar" dir="ltr">{{accountGroup.amount |
+                          curr:'0':'':'nullify':true}}<span
+                          style="display: block">({{accountGroup.percentage | pct:'1'}})</span>
+                  </td>
+                </tr>
+                <ng-container *ngFor="let subType of accountGroup.subTypes">
+                  <tr *ngIf="subType.amount !== 0" class="accountRow">
+                    <td>&nbsp;&nbsp;{{subType.subType}}</td>
+                    <td class="ar" dir="ltr">{{subType.amount |
+                            curr:'0':'':'nullify':true}}<span
+                            *ngIf="subType.amount" style="display: block">({{subType.percentage | pct:'1'}})</span>
+                    </td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </table>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>

@@ -33,9 +33,9 @@
                             <tbody>
                             <tr>
                                 <td><span class="font-weight-bold" [translate]="'month.sales'"></span></td>
-                                <td>{{(service.totals.sales - service.totals.vat) | curr:'0':'':'':true}}</td>
+                                <td>{{(service.totals.sales - service.totals.vat) | curr:'0':'':'':true}} ({{service.totals.percentage | pct: 1}})</td>
                                 <ng-container *ngFor="let orderType of service.kpis">
-                                    <td>{{(orderType.sales - orderType.vat) | curr:'0':'':'':true}}</td>
+                                    <td>{{(orderType.sales - orderType.vat) | curr:'0':'':'':true}} (({{orderType.percentage | pct: 1}}))</td>
                                 </ng-container>
                             </tr>
                             <tr>
@@ -124,46 +124,12 @@
             </ng-container>
         </div>
     </div>
-    <div class="widget p-0 mt-3">
-        <div class="flex d-col">
-            <div class="title" style="border-radius: 3px 3px 0px 0px" [translate]="'day.payments'">Payments</div>
-            <mat-accordion>
-                <mat-expansion-panel expanded="false">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            <span class="font-weight-bold" [translate]="'day.paymentsReport'">Payments report</span>&nbsp;&nbsp;<span>{{payments.total | curr:'0':'':'nullify'}}</span>
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <table *ngIf="payments" class="table table-sm">
-                        <tr class="totalRow">
-                            <td class="header" [translate]="'day.total'">Total</td>
-                            <td class="header">{{payments.total | curr:'0':'':'nullify':true}}</td>
-                        </tr>
-                        <ng-container *ngIf="payments.accountGroups">
-                            <ng-container *ngFor="let accountGroup of payments.accountGroups">
-                                <ng-container *ngIf="accountGroup">
-                                    <tr class="accountTypeRow">
-                                        <td>{{accountGroup.type}}</td>
-                                        <td class="ar" dir="ltr">{{accountGroup.amount |
-                                            curr:'0':'':'nullify':true}}<span
-                                                    style="display: block">({{accountGroup.percentage | pct:'1'}})</span>
-                                        </td>
-                                    </tr>
-                                    <ng-container *ngFor="let subType of accountGroup.subTypes">
-                                        <tr *ngIf="subType.amount !== 0" class="accountRow">
-                                            <td>&nbsp;&nbsp;{{subType.subType}}</td>
-                                            <td class="ar" dir="ltr">{{subType.amount |
-                                                curr:'0':'':'nullify':true}}<span
-                                                        *ngIf="subType.amount" style="display: block">({{subType.percentage | pct:'1'}})</span>
-                                            </td>
-                                        </tr>
-                                    </ng-container>
-                                </ng-container>
-                            </ng-container>
-                        </ng-container>
-                    </table>
-                </mat-expansion-panel>
-            </mat-accordion>
-        </div>
-    </div>
+    <app-month-payments></app-month-payments>
+    <app-month-cancellation *ngIf="cancellation" [data] = "cancellation" [dataOptionMode]="false" class="widget" style="padding:0"></app-month-cancellation>
+    <app-month-promotions *ngIf="promotions" [data]="promotions"  class="widget" style="padding:0"></app-month-promotions>
+    <app-month-retention *ngIf="retention" [data]="retention" class="widget" style="padding:0"></app-month-retention>
+    <app-month-operational-errors *ngIf="monthlyReports.compensation" [data] = "monthlyReports" class="widget" style="padding:0"></app-month-operational-errors>
+    <app-month-organizational *ngIf="organizational"  [data] = "organizational" class="widget" style="padding:0"></app-month-organizational>
+    <app-month-waste *ngIf="wasteEod"  [data] = "wasteEod" class="widget" style="padding:0" ></app-month-waste>
+   <app-month-most-sold-items *ngIf="mostSoldItems.length > 0" [data]= "mostSoldItems" class="widget" style="padding:0"></app-month-most-sold-items>
 </ng-container>

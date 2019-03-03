@@ -93,6 +93,20 @@ import {PdfViewerModule} from 'ng2-pdf-viewer';
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { MonthComponent } from './month/month.component';
 import { ForecastDialogComponent } from './home/forecast-dialog/forecast-dialog.component';
+import { MonthWasteComponent } from './month/month-waste/month-waste.component';
+import { MonthPaymentsComponent } from './month/month-payments/month-payments.component';
+import { MonthOperationalErrorsComponent } from './month/month-operational-errors/month-operational-errors.component';
+import { MonthRetentionComponent } from './month/month-retention/month-retention.component';
+import { MonthOrganizationalComponent } from './month/month-organizational/month-organizational.component';
+import { MonthSalesByMainAndSubCategoriesComponent } from './month/month-sales-by-main-and-sub-categories/month-sales-by-main-and-sub-categories.component';
+import { MonthMostSoldItemsComponent } from './month/month-most-sold-items/month-most-sold-items.component';
+import { MonthMostReturnedItemsComponent } from './month/month-most-returned-items/month-most-returned-items.component';
+import { MonthCancellationComponent } from './month/month-cancellation/month-cancellation.component';
+import { MonthPromotionsComponent } from './month/month-promotions/month-promotions.component';
+import { MonthCorporationReturnComponent } from './month/month-operational-errors/month-corporation-return/month-corporation-return.component';
+import { MonthCorporationComponent } from './month/month-operational-errors/month-corporation/month-corporation.component';
+import { MostSoldTimeComponent } from './month/month-most-sold-items/most-sold-time/most-sold-time.component';
+import {MonthForecastDialogComponent} from './month/month-forecast-dialog/month-forecast-dialog.component';
 
 @NgModule({
     imports: [
@@ -187,7 +201,21 @@ import { ForecastDialogComponent } from './home/forecast-dialog/forecast-dialog.
         OrderDetailsComponent,
         TutorialComponent,
         MonthComponent,
-        ForecastDialogComponent
+        ForecastDialogComponent,
+        MonthWasteComponent,
+        MonthPaymentsComponent,
+        MonthOperationalErrorsComponent,
+        MonthRetentionComponent,
+        MonthOrganizationalComponent,
+        MonthSalesByMainAndSubCategoriesComponent,
+        MonthMostSoldItemsComponent,
+        MonthMostReturnedItemsComponent,
+        MonthCancellationComponent,
+        MonthPromotionsComponent,
+        MonthCorporationReturnComponent,
+        MonthCorporationComponent,
+        MostSoldTimeComponent,
+        MonthForecastDialogComponent
     ],
     providers: [
         OwnersDashboardService

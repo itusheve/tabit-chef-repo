@@ -6,7 +6,7 @@
         <mat-expansion-panel [expanded]="category === 'employee'">
             <mat-expansion-panel-header [ngClass]="getCssColorClass()">
                 <mat-panel-title>
-                    {{organizationalData.length}}&nbsp;<span [translate]="'day.actionsWorth'">Actions worth</span>&nbsp;{{totalValue | curr:'0'}}
+                    {{organizationalData?.length}}&nbsp;<span [translate]="'day.actionsWorth'">Actions worth</span>&nbsp;{{totalValue | curr:'0'}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <table class="table table-responsive-sm">

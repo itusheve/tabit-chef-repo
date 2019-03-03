@@ -9,6 +9,7 @@ import { OrderViewComponent } from './order-view/order-view.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { OrgGuard } from '../auth/org-guard.service';
 import {MonthComponent} from './month/month.component';
+import {MonthPaymentsComponent} from './month/month-payments/month-payments.component';
 
 const ownersDashboardRoutes: Routes = [
     { 
@@ -28,6 +29,10 @@ const ownersDashboardRoutes: Routes = [
             {
                 path: 'month',
                 component: MonthComponent
+            },
+            {
+                path: 'monthPayment',
+                component: MonthPaymentsComponent
             },
             {
                 path: 'bd/:businessDate/tlogid/:tlogid',

@@ -52,6 +52,8 @@ export class DayOrganizationalTableComponent implements OnChanges {
         }
     }
 
+            // duplicate function - put it on day-function.service
+
     orderClicked(orderNumber: number) {
         this.onOrderClicked.emit(orderNumber);
     }
@@ -73,9 +75,13 @@ export class DayOrganizationalTableComponent implements OnChanges {
             .sort((a, b) => (a[that.sortBy] < b[that.sortBy] ? dir : dir * -1));
     }
 
+                            // duplicate function - put it on day-function.service
+
+
     getCssColorClass() {
         if(this.dayFromDatabase && this.dayFromDatabase.employeesPrc) {
-            return this.tabitHelper.getColorClassByPercentage(this.dayFromDatabase.employeesPrc.toFixed(1) / this.dayFromDatabase.avgNweeksEmployeesPrc.toFixed(1) * 100, false);
+            return this.tabitHelper.getColorClassByPercentage(this.dayFromDatabase.employeesPrc.toFixed(1)
+                / this.dayFromDatabase.avgNweeksEmployeesPrc.toFixed(1) * 100, false);
         }
 
         return 'bg-secondary';

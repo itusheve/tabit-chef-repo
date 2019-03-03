@@ -75,6 +75,7 @@ import {TranslationLoader} from './translation.loader';
 import localeHebrew from '@angular/common/locales/he';
 import localeEnglish from '@angular/common/locales/en';
 
+
 registerLocaleData(localeHebrew, 'he');
 registerLocaleData(localeEnglish, 'en');
 

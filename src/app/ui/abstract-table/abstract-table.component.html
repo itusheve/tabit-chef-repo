@@ -1,0 +1,40 @@
+<div class="flex d-col">
+    <div *ngIf ="summaryOption == true" class="title">
+        <span [translate]="'' + title.translated"></span>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="false" (opened)="selectedOption='primary'">
+            <mat-expansion-panel-header [ngStyle]="{'background-color':getCssColorClass()}">
+                <mat-panel-title>
+                    <span style="font-weight: bold; font-size: 18px !important" *ngIf="summaryOption == true">{{summary.actions}}&nbsp;<span [translate]="'' + summary.connect "></span>&nbsp;{{summary.total | curr:'0':'':'nullify'}}</span>
+                    <span style="font-weight: bold" *ngIf ="summaryOption == false" [translate]="'' + title.translated"></span>
+
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div *ngIf="dataOptionMode==true" class ="btn-group category-picker" role="group" style="width:100%">
+                <button class="btn btn-outline-secondary" style="width:50%" (click)="selectedOption = 'primary'" [ngClass]="{'btnClicked':selectedOption == 'primary'}" ><span [translate]="'' + options.primary"></span></button>
+                <button class="btn btn-outline-secondary" style="width:50%" (click)="selectedOption = 'alt'" [ngClass]="{'btnClicked': selectedOption == 'alt'}"><span [translate]="'' + options.alt"></span></button>
+            </div>
+            <table class="table table-sm">
+
+               <tr class="header">
+                   <td *ngFor="let column of columns[selectedOption]">
+                    <span [translate]="'' + column.translated"></span>
+               </td>
+               </tr>
+
+                <tr *ngFor="let tuple of data[selectedOption]" class="dayReportDataRow">
+                    <td *ngFor="let column of columns[selectedOption]">
+                        <span *ngIf="column.dataType === 'currency'">{{tuple[column.dataKey] | curr}}</span>
+                        <span *ngIf="column.dataType !== 'currency'">{{tuple[column.dataKey]}}</span>
+                    </td>
+                </tr>
+                <mat-dialog-content>
+                    <mat-dialog-actions></mat-dialog-actions>
+                </mat-dialog-content>
+            </table>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+

@@ -6,7 +6,8 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import {DatePipe} from '@angular/common';
 import {environment} from '../../../environments/environment';
-import {CardData} from '../../ui/card/card.component';
+import {DataWareHouseEpService} from '../../services/end-points/data-ware-house-ep.service';
+import {DataWareHouseService} from '../../services/data-ware-house.service';
 
 @Component({
     selector: 'app-month',
@@ -15,17 +16,26 @@ import {CardData} from '../../ui/card/card.component';
     providers: [DatePipe]
 })
 export class MonthComponent implements OnInit {
+    @Input()
+    data=[];
 
     public monthReport: any;
     public payments: any;
     public summary: any;
-    public summaryByOrderType: any;
     public env: any;
     public title: string;
     public incVat: boolean;
     public showData: boolean;
-
-    constructor(private ownersDashboardService: OwnersDashboardService, private dataService: DataService, private route: ActivatedRoute, private datePipe: DatePipe) {
+    public reductionsByReason:any = {};
+    private mostSoldItems: any = [];
+    public reductionsByWaiter: any = {};
+    private promotions: any;
+    private retention: any;
+    private  organizational: any;
+    private  wasteEod: any;
+    private cancellation: any;
+    private monthlyReports: any={};
+    constructor(private ownersDashboardService: OwnersDashboardService, private dataService: DataService,private dataWareHouseService:DataWareHouseService, private route: ActivatedRoute, private datePipe: DatePipe) {
 
         this.env = environment;
         this.incVat = false;
@@ -50,10 +60,28 @@ export class MonthComponent implements OnInit {
 
             this.title = this.getTitle(month, year);
 
-            this.payments = this.getPayments(monthReport);
             this.summary = this.getSummary(monthReport);
             this.showData = true;
+
+            let dateStart = moment('2019-01-01').format('YYYYMMDD');
+            let dateEnd = moment('2019-02-01').format('YYYYMMDD');
+
+            this.reductionsByReason = await this.dataWareHouseService.getReductionByReason(dateStart,dateEnd);
+            this.reductionsByWaiter = await this.dataWareHouseService.getReductionByFired(dateStart, dateEnd);
+            this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart,dateEnd);
+
+            this.promotions = this.setReductionData('promotions',true);
+            this.monthlyReports = {compensation:this.setReductionData('compensation',true),compensationReturns:this.setReductionData('compensationReturns',true)};
+            this.cancellation = this.setReductionData('cancellation',false);
+            this.retention = this.setReductionData('retention',true);
+            this.organizational = this.setReductionData('organizational',true);
+            this.wasteEod = this.setReductionData('wasteEod',true);
+
         });
+    }
+
+    setReductionData(key,dataOption){
+        return dataOption === true ? {primary:this.reductionsByReason[key],alt:this.reductionsByWaiter[key]}:{primary:this.reductionsByWaiter[key],alt:[]};
     }
 
     getSummary(monthReport) {
@@ -93,6 +121,7 @@ export class MonthComponent implements OnInit {
                 diners: service.dinersOrders || 0,
                 ppa: service.avgSales || 0,
                 sales: service.ttlSalesAmountIncludeVat,
+                percentage: 0,
                 vat: service.vatAmount,
                 tip: service.tipAmountIncludeVat || 0,
                 revenue: (service.ttlSalesAmountIncludeVat + _.get(service, 'tipAmountIncludeVat', 0)),
@@ -249,10 +278,17 @@ export class MonthComponent implements OnInit {
             totalSales.reductions.retention.percentage = totalSales.reductions.retention.amount / (totalSales.reductions.retention.amount + totalSales.sales);
 
             totalSales.percentage = totalSales.sales / totalSalesForPercentage;
+
+            _.forEach(salesByService.kpis, salesByOrderType => {
+                salesByOrderType.percentage = salesByOrderType.sales / totalSales.sales;
+            });
+
             salesByService['totals'] = totalSales;
 
             //salesByService.kpis = _.orderBy(salesByService.kpis, ['type']);
         });
+
+
 
         return _.values(sales);
     }
@@ -264,71 +300,6 @@ export class MonthComponent implements OnInit {
         return monthName + ' ' + monthState;
     }
 
-    getPayments(monthReport) {
-        let payments = {
-            total: 0,
-            accountGroups: []
-        };
-        let accountGroups = [];
-
-        _.forEach(monthReport.payments, payment => {
-            if (!payment.subType && payment.type) {
-                let accountGroup = {
-                    type: payment.type,
-                    amount: payment.paymentAmount,
-                    subTypes: [],
-                    order: this.getAccountGroupOrderByType(payment.type)
-                };
-                accountGroups.push(accountGroup);
-
-                if (payment.type === 'Total') {
-                    payments.total = payment.paymentAmount;
-                }
-            }
-
-        });
-
-        _.forEach(monthReport.payments, payment => {
-            if (payment.subType) {
-                let accountGroup = _.find(accountGroups, {type: payment.type});
-                if (payment.subType !== 'מזומן' && payment.subType !== 'cash') {
-                    let subType = _.find(accountGroup.subTypes, {subType: payment.subType});
-                    if (!subType) {
-                        subType = {
-                            subType: payment.subType,
-                            amount: payment.paymentAmount
-                        };
-                        accountGroup.subTypes.push(subType);
-                    }
-                }
-            }
-        });
-
-        _.remove(accountGroups, {type: 'Total'});
-
-        this.dataService.settings$.subscribe(settings => {
-            accountGroups.forEach(accountGroup => {
-                _.set(accountGroup, 'percentage', accountGroup.amount / payments.total);
-                accountGroup.subTypes.forEach(subType => {
-                    _.set(subType, 'percentage', settings.paymentsReportCalculationMethod === 0 ? (subType.amount / payments.total) : (subType.amount / accountGroup.amount));
-                });
-            });
-        });
-
-        payments.accountGroups = _.orderBy(accountGroups, 'order');
-        return payments;
-    }
-
-    getAccountGroupOrderByType(name) {
-        if (name === 'מזומן' || name === 'Cash') {
-            return 1;
-        }
-        else if (name === 'אשראי' || name === 'Credit') {
-            return 2;
-        }
-
-        return 3;
-    }
 
     stringify(data) {
         return JSON.stringify(data);

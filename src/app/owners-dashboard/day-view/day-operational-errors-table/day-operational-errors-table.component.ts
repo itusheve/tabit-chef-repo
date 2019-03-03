@@ -59,6 +59,7 @@ export class DayOperationalErrorsTableComponent implements OnChanges {
         this.onOrderClicked.emit(orderNumber);
     }
 
+                                // duplicate function - put it on day-function.service
     sort(by: string) {
         if (this.sortBy && this.sortBy === by) {
             this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';

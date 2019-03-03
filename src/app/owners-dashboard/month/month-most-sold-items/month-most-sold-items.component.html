@@ -1,0 +1,17 @@
+<div class="flex d-col">
+    <div class="title">
+        <span [translate]="'day.mostSoldItems'"></span>
+    </div>
+    <mat-accordion>
+        <ng-container>
+        <mat-expansion-panel [expanded]="true">
+
+            <app-most-sold-time  [summaryOption] = "false"  [data] = "allDayData" [title]="{translated:'day.allDay'}" [dataOptionMode] = "false" style="padding:0" ></app-most-sold-time>
+            <app-most-sold-time  [summaryOption] = "false"  [data] = "lunchData"  [title]="{translated:'month.lunch'}" [dataOptionMode] = "false"  style="padding:0"></app-most-sold-time>
+            <app-most-sold-time   [summaryOption] = "false"  [data] = "eveningData"  [title]="{translated:'month.dinner'}" [dataOptionMode] = "false"  style="padding:0"></app-most-sold-time>
+            <app-most-sold-time   [summaryOption] = "false"  [data] = "nightData"  [title]="{translated:'month.night'}" [dataOptionMode] = "false"  style="padding:0"></app-most-sold-time>
+
+        </mat-expansion-panel>
+        </ng-container>
+    </mat-accordion>
+</div>
