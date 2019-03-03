@@ -11,7 +11,7 @@ export class MostSoldTimeComponent extends AbstractTableComponent implements OnI
   columns = {
     primary: [
       {en: 'Department', dataKey: 'departmentName', translated: 'day.department'},
-      {en: 'Item', dataKey: 'itemName', translated: 'day.item'}, // פריט
+      {en: 'Item', dataKey: 'itemName', translated: 'day.item'},
       {en: 'Sales', dataKey: 'salesAmountIncludeVat', translated: 'month.sales'},
       {en: 'Sold', dataKey: 'sold', translated: 'day.sold'}
 

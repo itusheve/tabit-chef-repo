@@ -107,6 +107,7 @@ import { MonthCorporationReturnComponent } from './month/month-operational-error
 import { MonthCorporationComponent } from './month/month-operational-errors/month-corporation/month-corporation.component';
 import { MostSoldTimeComponent } from './month/month-most-sold-items/most-sold-time/most-sold-time.component';
 import {MonthForecastDialogComponent} from './month/month-forecast-dialog/month-forecast-dialog.component';
+import { ForecastDialogItemComponent } from './month/month-forecast-dialog/forecast-dialog-item/forecast-dialog-item.component';
 
 @NgModule({
     imports: [
@@ -215,7 +216,8 @@ import {MonthForecastDialogComponent} from './month/month-forecast-dialog/month-
         MonthCorporationReturnComponent,
         MonthCorporationComponent,
         MostSoldTimeComponent,
-        MonthForecastDialogComponent
+        MonthForecastDialogComponent,
+        ForecastDialogItemComponent
     ],
     providers: [
         OwnersDashboardService
