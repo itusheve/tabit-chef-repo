@@ -7,7 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MonthForecastDialogComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
+
+
 
   ngOnInit() {
   }
