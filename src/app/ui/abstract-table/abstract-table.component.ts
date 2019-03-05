@@ -1,4 +1,4 @@
-import {EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Input, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {ReportdialogComponent} from '../reportdialog/reportdialog.component';
 import {DataWareHouseService} from '../../services/data-ware-house.service';

@@ -35,7 +35,6 @@ export class DataWareHouseService {
         return this.dataWarehouse.get('report/reductionByReason', {
             fromBusinessDate: fromBusinessDate,
             toBusinessDate: toBusinessDate,
-            //items: items
         });
     }
 
