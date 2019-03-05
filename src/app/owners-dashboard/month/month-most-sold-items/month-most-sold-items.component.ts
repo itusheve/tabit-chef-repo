@@ -21,11 +21,30 @@ export class MonthMostSoldItemsComponent implements OnInit {
 
     ngOnInit() {
 
-        this.allDayData = {primary:this.data.filter(e => e.serviceId === -1),alt:[]};
-        this.lunchData =  {primary:this.data.filter(e => e.serviceId === 10),alt:[]};
-        this.eveningData = {primary :this.data.filter(e => e.serviceId === 20),alt:[]};
-        this.nightData =  {primary:this.data.filter(e => e.serviceId >= 30),alt:[]};
+       let data = [-1,10,20,30].map(
+           serviceId => {
+              let d =  this.data.filter(e => e.serviceId === serviceId);
+              d.sort(this.sort);
+              d.sort(this.sortString);
+              return d;
+           }
+
+       )
+        this.allDayData = {primary:data[0],alt:[]};
+        this.lunchData =  {primary:data[1],alt:[]};
+        this.eveningData = {primary:data[2],alt:[]};
+        this.nightData =  {primary:data[3],alt:[]};
 
     }
+
+    sort(a,b){
+        return b.salesAmountIncludeVat - a.salesAmountIncludeVat;
+    }
+
+    sortString(a,b){
+        return b.departmentName.localeCompare(a.departmentName);
+    }
+
+
 
 }

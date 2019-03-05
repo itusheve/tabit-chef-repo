@@ -77,6 +77,8 @@ export class MonthComponent implements OnInit {
             this.organizational = this.setReductionData('organizational',true);
             this.wasteEod = this.setReductionData('wasteEod',true);
 
+
+
         });
     }
 

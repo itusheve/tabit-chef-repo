@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {DataWareHouseEpService} from './end-points/data-ware-house-ep.service';
+import * as moment from 'moment';
 
 
 @Injectable()
@@ -33,7 +34,40 @@ export class DataWareHouseService {
     public getReductionByReason(fromBusinessDate, toBusinessDate) {
         return this.dataWarehouse.get('report/reductionByReason', {
             fromBusinessDate: fromBusinessDate,
-            toBusinessDate: toBusinessDate
+            toBusinessDate: toBusinessDate,
+            //items: items
+        });
+    }
+
+
+/*    type: 'wasteEod',
+    reasonId: '5bc5d30192da8d01004823eb',
+    reasonName: 'פחת סוף יום'*/
+    public getReductionByReasondialog(type,reasonId,reasonName):Promise<any> {
+        let fromBusinessDate = moment('2019-01-01').format('YYYYMMDD');
+        let toBusinessDate = moment('2019-02-01').format('YYYYMMDD');
+        return this.dataWarehouse.get('report/ReductionByReasonDialog', {
+            fromBusinessDate: fromBusinessDate,
+            toBusinessDate: toBusinessDate,
+            items: JSON.stringify({
+                type:type,
+                reasonId: reasonId,
+                reasonName: reasonName
+            })
+        });
+    }
+
+    public getReductionByFiredDialog(type,firedBy,fullName):Promise<any> {
+        let fromBusinessDate = moment('2019-01-01').format('YYYYMMDD');
+        let toBusinessDate = moment('2019-02-01').format('YYYYMMDD');
+        return this.dataWarehouse.get('report/ReductionByReasonDialog', {
+            fromBusinessDate: fromBusinessDate,
+            toBusinessDate: toBusinessDate,
+            items: JSON.stringify({
+                type:type,
+                firedBy: firedBy,
+                fullName: fullName
+            })
         });
     }
 

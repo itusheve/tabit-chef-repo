@@ -1,0 +1,30 @@
+<div class="dialog-modal-content-fixed">
+  <div class="dialog-content">
+    <div class="card-header text-center rounded-0 bg-secondary text-white">
+      <span style="font-size: 18px;" [translate]="'' + data.title"></span><br>
+    <span style="font-size: 18px;" [translate]="'day.reason'"></span>:&nbsp;<span  style="font-size: 18px;">{{data.reason}}</span><br>
+    <span style="font-size: 18px;" [translate]="'month.quantity'"></span>:&nbsp;<span  style="font-size: 18px;">{{data.quantity}}</span><br>
+     <span  style="font-size: 18px;" [translate]="'month.amount'"></span>:&nbsp;<span style="font-size: 18px;">{{data.amount}}</span>
+    </div>
+   <table class="table"  style="height: calc(70vh - 1px) !important; overflow-y: scroll; -webkit-overflow-scrolling: touch; font-size: 20px;display:block">
+
+       <tbody style="width: 100%; display: table;">
+
+     <tr class="header">
+       <td colspan="5"><span [translate]="'day.reason'"></span></td>
+       <td colspan="5"><span [translate]="'month.quantity'"></span></td>
+       <td colspan="5"><span [translate]="'month.amount'"></span></td>
+     </tr>
+
+    <tr *ngFor="let item of items">
+         <td colspan="5" style="font-weight: 700">{{item.itemName}}</td>
+         <td colspan="5" style="font-weight: 700">{{item.qty}}</td>
+         <td colspan="5" style="font-weight: 700">{{item.amountIncludeVat}}</td>
+     </tr>
+       </tbody>
+      </table>
+    <div class="card-footer p-0 rounded-0">
+      <button mat-dialog-close class="btn btn-block btn-secondary rounded-0"><span [translate]="'close'"></span></button>
+    </div>
+  </div>
+</div>

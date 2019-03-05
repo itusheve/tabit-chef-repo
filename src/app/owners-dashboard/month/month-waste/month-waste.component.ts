@@ -1,6 +1,7 @@
 import {Component, OnInit, SimpleChanges,OnChanges} from '@angular/core';
-import { DataWareHouseService } from '../../../services/data-ware-house.service';
 import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
+import {MatDialog} from '@angular/material';
+import {DataWareHouseService} from '../../../services/data-ware-house.service';
 
 
 @Component({
@@ -12,20 +13,19 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
 
   columns_primary = [
     {en: 'Date', dataKey: 'businessDateCaption', translated: 'details.date'},
-    {en: 'Quantity', dataKey: 'qty', translated: 'month.quantity'},
+    {en: 'Quantity',  dataType: 'number', dataKey: 'qty', translated: 'month.quantity'},
     {en: 'Amount', dataKey: 'amountIncludeVat', dataType: 'currency', translated: 'month.amount'}
   ];
 
   columns_alternative = [
     {en: 'Waiter', dataKey: 'fullName', translated: 'month.server'},
-    {en: 'Quantity', dataKey: 'qty', translated: 'month.quantity'},
+    {en: 'Quantity',  dataType: 'number', dataKey: 'qty', translated: 'month.quantity'},
     {en: 'Amount', dataKey: 'amountIncludeVat', dataType: 'currency', translated: 'month.amount'}
   ];
 
 
-  constructor(){
-    super();
-
+  constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService){
+    super(dialog,dataWareHouseService);
     this.columns = {primary:this.columns_primary,alt:this.columns_alternative};
     this.title = {en:'Waste',translated:'month.waste'};
   }
@@ -48,6 +48,10 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
 
   getCssColorClass(): String {
     return 'bg-white';
+  }
+
+  protected getType(): string {
+    return 'wasteEod';
   }
 
 

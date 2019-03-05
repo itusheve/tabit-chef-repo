@@ -7,7 +7,7 @@
         <mat-expansion-panel [expanded]="false" (opened)="selectedOption='primary'">
             <mat-expansion-panel-header [ngStyle]="{'background-color':getCssColorClass()}">
                 <mat-panel-title>
-                    <span style="font-weight: bold; font-size: 18px !important" *ngIf="summaryOption == true">{{summary.actions}}&nbsp;<span [translate]="'' + summary.connect "></span>&nbsp;{{summary.total | curr:'0':'':'nullify'}}</span>
+                    <span style="font-weight: bold; font-size: 18px !important" *ngIf="summaryOption == true">{{summary.actions | number}}&nbsp;<span [translate]="'' + summary.connect "></span>&nbsp;{{summary.total | curr:'0':'':'nullify'}}</span>
                     <span style="font-weight: bold" *ngIf ="summaryOption == false" [translate]="'' + title.translated"></span>
 
                 </mat-panel-title>
@@ -19,15 +19,22 @@
             <table class="table table-sm">
 
                <tr class="header">
-                   <td *ngFor="let column of columns[selectedOption]">
-                    <span [translate]="'' + column.translated"></span>
-               </td>
+                   <td *ngFor="let column of columns[selectedOption]" (click)="sort(column.dataKey)" style="width:60%">
+                       <div class="flex a-center">
+                           <span [translate]="'' + column.translated"></span>
+                           <mat-icon class="sortMatIcon" *ngIf="sortKey=== column.dataKey && sortDir==='desc'">arrow_drop_down</mat-icon>
+                           <mat-icon class="sortMatIcon" *ngIf="sortKey=== column.dataKey && sortDir==='asc'">arrow_drop_up</mat-icon>
+                       </div>
+                   </td>
+
                </tr>
 
-                <tr *ngFor="let tuple of data[selectedOption]" class="dayReportDataRow">
-                    <td *ngFor="let column of columns[selectedOption]">
-                        <span *ngIf="column.dataType === 'currency'">{{tuple[column.dataKey] | curr}}</span>
-                        <span *ngIf="column.dataType !== 'currency'">{{tuple[column.dataKey]}}</span>
+                <tr *ngFor="let tuple of data[selectedOption]" class="dayReportDataRow" style="line-height: 30px !important;">
+                    <td *ngFor="let column of columns[selectedOption]; let i = index">
+                        <span *ngIf="i == 0" style="cursor:pointer" (click)="showReportDialog(tuple)">{{tuple[column.dataKey]}}</span>
+                        <span *ngIf="column.dataType === 'currency' && i!=0">{{tuple[column.dataKey] | curr:'0'}}</span>
+                        <span *ngIf="column.dataType === 'number' && i!=0">{{tuple[column.dataKey] | number}}</span>
+                        <span *ngIf="column.dataType === 'item' && i!=0">{{tuple[column.dataKey]}}</span>
                     </td>
                 </tr>
                 <mat-dialog-content>

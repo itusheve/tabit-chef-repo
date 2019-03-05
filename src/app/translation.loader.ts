@@ -204,6 +204,7 @@ const he = {
     'month.lunch': 'צהריים',
     'month.dinner': 'ערב',
     'month.night': 'לילה',
+    'month.allMonth': 'כל החודש',
     'revenue': 'מחזור',
     'monthly': 'חודשי',
     'monthSummary': 'סיכום חודש',

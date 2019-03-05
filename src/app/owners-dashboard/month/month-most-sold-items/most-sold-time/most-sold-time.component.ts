@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AbstractTableComponent} from '../../../../ui/abstract-table/abstract-table.component';
+import {MatDialog} from '@angular/material';
+import {DataWareHouseService} from '../../../../services/data-ware-house.service';
 
 @Component({
   selector: 'app-most-sold-time',
@@ -11,17 +13,19 @@ export class MostSoldTimeComponent extends AbstractTableComponent implements OnI
   columns = {
     primary: [
       {en: 'Department', dataKey: 'departmentName', translated: 'day.department'},
-      {en: 'Item', dataKey: 'itemName', translated: 'day.item'},
-      {en: 'Sales', dataKey: 'salesAmountIncludeVat', translated: 'month.sales'},
-      {en: 'Sold', dataKey: 'sold', translated: 'day.sold'}
+      {en: 'Item', dataType: 'item', dataKey: 'itemName', translated: 'day.item'},
+      {en: 'Sold', dataType: 'number', dataKey: 'sold', translated: 'day.sold'},
+      {en: 'Sales',  dataKey: 'salesAmountIncludeVat',  dataType: 'currency', translated: 'month.sales'}
 
     ],
     alt:[]
   };
 
 
-  constructor() {
-    super();
+
+
+  constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService){
+    super(dialog,dataWareHouseService);
 
   }
 
@@ -31,5 +35,10 @@ export class MostSoldTimeComponent extends AbstractTableComponent implements OnI
   getCssColorClass(): String {
     return 'bg-white';
   }
+
+  protected getType(): string {
+    return 'mostSoldLeastItems';
+  }
+
 
 }
