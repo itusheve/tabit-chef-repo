@@ -33,7 +33,7 @@ export abstract class AbstractTableComponent implements OnInit {
 
     public summary: any = {};
 
-    protected selectedOption;
+    public selectedOption;
 
     abstract getCssColorClass(): String;
 
