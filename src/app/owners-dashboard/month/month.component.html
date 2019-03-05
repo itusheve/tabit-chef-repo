@@ -125,11 +125,11 @@
         </div>
     </div>
     <app-month-payments></app-month-payments>
-    <app-month-cancellation *ngIf="cancellation" [data] = "cancellation" [dataOptionMode]="false" class="widget" style="padding:0"></app-month-cancellation>
-    <app-month-promotions *ngIf="promotions" [data]="promotions"  class="widget" style="padding:0"></app-month-promotions>
-    <app-month-retention *ngIf="retention" [data]="retention" class="widget" style="padding:0"></app-month-retention>
-    <app-month-operational-errors *ngIf="monthlyReports.compensation" [data] = "monthlyReports" class="widget" style="padding:0"></app-month-operational-errors>
-    <app-month-organizational *ngIf="organizational"  [data] = "organizational" class="widget" style="padding:0"></app-month-organizational>
-    <app-month-waste *ngIf="wasteEod"  [data] = "wasteEod" class="widget" style="padding:0" ></app-month-waste>
+    <app-month-cancellation *ngIf="cancellation" [data] = "cancellation" [date]="date" [dataOptionMode]="false" class="widget" style="padding:0"></app-month-cancellation>
+    <app-month-promotions *ngIf="promotions" [data]="promotions" [date]="date"  class="widget" style="padding:0"></app-month-promotions>
+    <app-month-retention *ngIf="retention" [data]="retention" [date]="date" class="widget" style="padding:0"></app-month-retention>
+    <app-month-operational-errors *ngIf="monthlyReports.compensation" [data] = "monthlyReports" [date]="date" class="widget" style="padding:0"></app-month-operational-errors>
+    <app-month-organizational *ngIf="organizational"  [data] = "organizational" [date]="date" class="widget" style="padding:0"></app-month-organizational>
+    <app-month-waste *ngIf="wasteEod"  [data] = "wasteEod" [date]="date" class="widget" style="padding:0" ></app-month-waste>
    <app-month-most-sold-items *ngIf="mostSoldItems.length > 0" [data]= "mostSoldItems" class="widget" style="padding:0"></app-month-most-sold-items>
 </ng-container>

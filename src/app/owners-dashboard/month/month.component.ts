@@ -19,6 +19,8 @@ export class MonthComponent implements OnInit {
     @Input()
     data=[];
 
+    public date:any;
+
     public monthReport: any;
     public payments: any;
     public summary: any;
@@ -51,6 +53,7 @@ export class MonthComponent implements OnInit {
             this.title = '';
             this.summary = {};
             this.payments = {};
+            this.date = date;
 
             this.showData = false;
             let month = date.month();

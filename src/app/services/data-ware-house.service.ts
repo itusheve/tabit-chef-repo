@@ -40,13 +40,13 @@ export class DataWareHouseService {
     }
 
 
-/*    type: 'wasteEod',
-    reasonId: '5bc5d30192da8d01004823eb',
-    reasonName: 'פחת סוף יום'*/
-    public getReductionByReasondialog(type,reasonId,reasonName):Promise<any> {
-        let fromBusinessDate = moment('2019-01-01').format('YYYYMMDD');
-        let toBusinessDate = moment('2019-02-01').format('YYYYMMDD');
-        return this.dataWarehouse.get('report/ReductionByReasonDialog', {
+
+    public getReductionByReasondialog(type,reasonId,reasonName,options):Promise<any> {
+
+        let fromBusinessDate = options.start;
+        let toBusinessDate = options.end;
+
+        return this.dataWarehouse.get('report/ReductionItemsByReason', {
             fromBusinessDate: fromBusinessDate,
             toBusinessDate: toBusinessDate,
             items: JSON.stringify({
@@ -57,10 +57,12 @@ export class DataWareHouseService {
         });
     }
 
-    public getReductionByFiredDialog(type,firedBy,fullName):Promise<any> {
-        let fromBusinessDate = moment('2019-01-01').format('YYYYMMDD');
-        let toBusinessDate = moment('2019-02-01').format('YYYYMMDD');
-        return this.dataWarehouse.get('report/ReductionByReasonDialog', {
+    public getReductionByFiredDialog(type,firedBy,fullName,options):Promise<any> {
+
+        let fromBusinessDate = options.start;
+        let toBusinessDate = options.end;
+
+        return this.dataWarehouse.get('report/ReductionItemsByReason', {
             fromBusinessDate: fromBusinessDate,
             toBusinessDate: toBusinessDate,
             items: JSON.stringify({

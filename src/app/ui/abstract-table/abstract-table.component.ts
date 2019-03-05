@@ -1,7 +1,8 @@
-import {Input, OnInit} from '@angular/core';
+import {EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {ReportdialogComponent} from '../reportdialog/reportdialog.component';
 import {DataWareHouseService} from '../../services/data-ware-house.service';
+import * as moment from 'moment';
 
 export abstract class AbstractTableComponent implements OnInit {
 
@@ -14,6 +15,9 @@ export abstract class AbstractTableComponent implements OnInit {
         alt:[]
     };
     columns:{primary:any[],alt:any[]} = {primary:[],alt:[]};
+
+    @Input()
+    date:any;
 
    sortDir;
    sortKey;
@@ -31,6 +35,7 @@ export abstract class AbstractTableComponent implements OnInit {
     @Input()
     summaryOption = true;
 
+
     public summary: any = {};
 
     public selectedOption;
@@ -46,6 +51,7 @@ export abstract class AbstractTableComponent implements OnInit {
     }
 
     ngOnInit() {
+
         let total = 0;
         let actions = 0;
         this.data[this.selectedOption].forEach(e => {
@@ -69,7 +75,7 @@ export abstract class AbstractTableComponent implements OnInit {
     showReportDialog(row){
         this.dialog.open(ReportdialogComponent,{
             width:'110vw',
-            data:this.setDataForDialog(row)
+            data:this.setDataForDialog(row,this.date)
         });
 
     }
@@ -93,19 +99,27 @@ export abstract class AbstractTableComponent implements OnInit {
     }
 
 
-     setDataForDialog(row){
+     setDataForDialog(row,date){
+
+        const options = {
+            start :  moment(date).startOf('month').format('YYYYMMDD'),
+            end :moment(date).startOf('month').format('YYYYMMDD')
+        };
+
         return{
+            reason: row.reasonName,
             title:this.title.translated,
             itemName: row[this.columns[this.selectedOption][0].dataKey],
             quantity:row.qty,
             amount:row.amountIncludeVat,
             itemsPromise:
             this.selectedOption === 'alt' ?
-                this.dataWareHouseService.getReductionByFiredDialog(this.getType(),row.firedBy,row.fullName)
-                : this.dataWareHouseService.getReductionByReasondialog(this.getType(),row.reasonId, row.reasonName)
+                this.dataWareHouseService.getReductionByFiredDialog(this.getType(),row.firedBy,row.fullName,options )
+                : this.dataWareHouseService.getReductionByReasondialog(this.getType(),row.reasonId, row.reasonName,options)
         };
 
      }
+
 
      protected  abstract getType():string;
 

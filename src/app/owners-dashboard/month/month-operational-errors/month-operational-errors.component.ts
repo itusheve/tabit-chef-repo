@@ -10,8 +10,10 @@ import {DataWareHouseService} from '../../../services/data-ware-house.service';
 })
 export class MonthOperationalErrorsComponent implements OnInit, AfterViewInit {
 
-    @Input()
-        data;
+    @Input() data;
+
+    @Input() date:any;
+
     @ViewChild('compensationReturn')
     compensationReturn:AbstractTableComponent;
     @ViewChild('compensation')
