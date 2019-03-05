@@ -63,8 +63,8 @@ export class MonthComponent implements OnInit {
             this.summary = this.getSummary(monthReport);
             this.showData = true;
 
-            let dateStart = moment('2019-01-01').format('YYYYMMDD');
-            let dateEnd = moment('2019-02-01').format('YYYYMMDD');
+            let dateStart = moment(date).startOf('month').format('YYYYMMDD');
+            let dateEnd = moment(date).startOf('month').format('YYYYMMDD');
 
             this.reductionsByReason = await this.dataWareHouseService.getReductionByReason(dateStart,dateEnd);
             this.reductionsByWaiter = await this.dataWareHouseService.getReductionByFired(dateStart, dateEnd);
