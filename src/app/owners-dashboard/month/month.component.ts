@@ -17,9 +17,9 @@ import {DataWareHouseService} from '../../services/data-ware-house.service';
 })
 export class MonthComponent implements OnInit {
     @Input()
-    data=[];
+    data = [];
 
-    public date:any;
+    public date: any;
 
     public monthReport: any;
     public payments: any;
@@ -28,16 +28,17 @@ export class MonthComponent implements OnInit {
     public title: string;
     public incVat: boolean;
     public showData: boolean;
-    public reductionsByReason:any = {};
+    public reductionsByReason: any = {};
     private mostSoldItems: any = [];
     public reductionsByWaiter: any = {};
     private promotions: any;
     private retention: any;
-    private  organizational: any;
-    private  wasteEod: any;
+    private organizational: any;
+    private wasteEod: any;
     private cancellation: any;
-    private monthlyReports: any={};
-    constructor(private ownersDashboardService: OwnersDashboardService, private dataService: DataService,private dataWareHouseService:DataWareHouseService, private route: ActivatedRoute, private datePipe: DatePipe) {
+    private monthlyReports: any = {};
+
+    constructor(private ownersDashboardService: OwnersDashboardService, private dataService: DataService, private dataWareHouseService: DataWareHouseService, private route: ActivatedRoute, private datePipe: DatePipe) {
 
         this.env = environment;
         this.incVat = false;
@@ -67,26 +68,39 @@ export class MonthComponent implements OnInit {
             this.showData = true;
 
             let dateStart = moment(date).startOf('month').format('YYYYMMDD');
-            let dateEnd = moment(date).startOf('month').format('YYYYMMDD');
+            let dateEnd = moment(date).endOf('month').format('YYYYMMDD');
 
-            this.reductionsByReason = await this.dataWareHouseService.getReductionByReason(dateStart,dateEnd);
+            Promise.all([
+                this.dataWareHouseService.getReductionByReason(dateStart, dateEnd),
+                this.dataWareHouseService.getReductionByFired(dateStart, dateEnd),
+                this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd)
+            ]).then(result => {
+                this.reductionsByReason = result[0];
+                this.reductionsByWaiter = result[1];
+                this.mostSoldItems = result[2];
+            });
+
+            this.reductionsByReason = await this.dataWareHouseService.getReductionByReason(dateStart, dateEnd);
             this.reductionsByWaiter = await this.dataWareHouseService.getReductionByFired(dateStart, dateEnd);
-            this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart,dateEnd);
+            this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd);
 
-            this.promotions = this.setReductionData('promotions',true);
-            this.monthlyReports = {compensation:this.setReductionData('compensation',true),compensationReturns:this.setReductionData('compensationReturns',true)};
-            this.cancellation = this.setReductionData('cancellation',false);
-            this.retention = this.setReductionData('retention',true);
-            this.organizational = this.setReductionData('organizational',true);
-            this.wasteEod = this.setReductionData('wasteEod',true);
-
-
-
+            this.promotions = this.getReductionData('promotions', true);
+            this.monthlyReports = {
+                compensation: this.getReductionData('compensation', true),
+                compensationReturns: this.getReductionData('compensationReturns', true)
+            };
+            this.cancellation = this.getReductionData('cancellation', false);
+            this.retention = this.getReductionData('retention', true);
+            this.organizational = this.getReductionData('organizational', true);
+            this.wasteEod = this.getReductionData('wasteEod', true);
         });
     }
 
-    setReductionData(key,dataOption){
-        return dataOption === true ? {primary:this.reductionsByReason[key],alt:this.reductionsByWaiter[key]}:{primary:this.reductionsByWaiter[key],alt:[]};
+    getReductionData(key, dataOption) {
+        return dataOption === true ? {
+            primary: this.reductionsByReason[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
+            alt: this.reductionsByWaiter[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
+        } : {primary: this.reductionsByWaiter[key], alt: []};
     }
 
     getSummary(monthReport) {
@@ -99,17 +113,13 @@ export class MonthComponent implements OnInit {
         _.forEach(salesByService, service => {
             if (service.orderType === 'seated') {
                 service.order = 0;
-            }
-            else if (service.orderType === 'takeaway') {
+            } else if (service.orderType === 'takeaway') {
                 service.order = 1;
-            }
-            else if (service.orderType === 'delivery') {
+            } else if (service.orderType === 'delivery') {
                 service.order = 2;
-            }
-            else if (service.orderType === 'otc') {
+            } else if (service.orderType === 'otc') {
                 service.order = 3;
-            }
-            else if (service.orderType === 'refund') {
+            } else if (service.orderType === 'refund') {
                 service.order = 4;
             }
         });
@@ -154,7 +164,7 @@ export class MonthComponent implements OnInit {
                 }
             };
             kpi.dinersAmount = kpi.ppa * kpi.diners;
-            if(!totalMonthSales[service.orderType]) {
+            if (!totalMonthSales[service.orderType]) {
                 _.set(totalMonthSales, [service.orderType], {
                     diners: 0,
                     ppa: 0,
@@ -292,7 +302,6 @@ export class MonthComponent implements OnInit {
 
             //salesByService.kpis = _.orderBy(salesByService.kpis, ['type']);
         });
-
 
 
         return _.values(sales);

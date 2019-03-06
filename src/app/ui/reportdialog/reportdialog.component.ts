@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 
+
 export interface DialogData {
   amount:number;
   quantity:number;
@@ -14,11 +15,12 @@ export interface DialogData {
   templateUrl: './reportdialog.component.html',
   styleUrls: ['./reportdialog.component.scss']
 })
+
 export class ReportdialogComponent implements OnInit {
 
   private items: any[] = [];
 
-  constructor(dialogRef:MatDialogRef<ReportdialogComponent>, @Inject(MAT_DIALOG_DATA)public data:DialogData) {
+  constructor(dialogRef:MatDialogRef<ReportdialogComponent>, @Inject(MAT_DIALOG_DATA)public data:DialogData ) {
 
   }
 
@@ -26,6 +28,9 @@ export class ReportdialogComponent implements OnInit {
     this.data.itemsPromise.then(itemsResponse =>{
       this.items = itemsResponse.items;
     });
+
   }
+
+
 
 }

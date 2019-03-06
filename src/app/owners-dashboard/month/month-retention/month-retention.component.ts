@@ -24,7 +24,8 @@ export class MonthRetentionComponent extends AbstractTableComponent implements O
 
   constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService){
     super(dialog,dataWareHouseService);
-    this.columns = {primary:this.columns_primary,alt:[]};
+
+    this.columns = {primary:this.columns_primary,alt:this.columns_alternative};
     this.title = {en: 'retention', translated: 'month.retention'};
   }
 
@@ -32,12 +33,6 @@ export class MonthRetentionComponent extends AbstractTableComponent implements O
   async ngOnInit() {
       super.ngOnInit();
     this.options = {primary: 'day.reason', alt: 'month.server'};
-  }
-
-  createTitle(): String {
-
-    return '';
-
   }
 
 

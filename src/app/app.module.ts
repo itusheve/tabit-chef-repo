@@ -75,6 +75,7 @@ import {TranslationLoader} from './translation.loader';
 import localeHebrew from '@angular/common/locales/he';
 import localeEnglish from '@angular/common/locales/en';
 import { ReportdialogComponent } from './ui/reportdialog/reportdialog.component';
+import {CurrencyPipeDialog, OwnersDashboardCurrencyPipeDialog} from './ui/reportdialog/reportdialog.pipe';
 
 
 registerLocaleData(localeHebrew, 'he');
@@ -98,7 +99,9 @@ if (environment.tbtLocale === 'he-IL') {
         ForgotPasswordDialogComponent,
         AppComponent,
         LoginComponent,
-        ReportdialogComponent
+        ReportdialogComponent,
+        OwnersDashboardCurrencyPipeDialog,
+        CurrencyPipeDialog
     ],
     imports: [
         BrowserModule,

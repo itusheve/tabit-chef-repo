@@ -1,7 +1,7 @@
 import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
-import {MatDialog} from '@angular/material';
 import {DataWareHouseService} from '../../../services/data-ware-house.service';
+import {MatDialog} from '@angular/material';
 
 @Component({
     selector: 'app-month-promotions',
@@ -24,8 +24,11 @@ export class MonthPromotionsComponent extends AbstractTableComponent implements 
 
     constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService){
         super(dialog,dataWareHouseService);
-        this.columns = {primary: this.columns_primary, alt: this.columns_alternative};
+
+        this.columns = {primary: this.columns_primary,alt: this.columns_alternative};
+
         this.title = {en: 'promotion', translated: 'month.promotion'};
+
 
     }
 
@@ -33,18 +36,26 @@ export class MonthPromotionsComponent extends AbstractTableComponent implements 
     ngOnInit() {
         super.ngOnInit();
         this.options = {primary: 'day.reason', alt: 'month.server'};
+
+        this.sortAmount('primary');
+        this.sortAmount('alt');
+    }
+
+    sortAmount(option){
+        this.data[option].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']);
     }
 
 
-    ngOnChanges(changes: SimpleChanges): void {
-    }
 
     getCssColorClass(): String {
         return 'bg-white';
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+    }
+
     protected getType(): string {
-        return 'promotion';
+        return 'promotions';
     }
 
 }

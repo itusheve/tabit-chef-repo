@@ -45,11 +45,9 @@ export abstract class AbstractTableComponent implements OnInit {
     constructor(protected dialog:MatDialog,protected dataWareHouseService:DataWareHouseService){
         this.selectedOption = 'primary';
         this.sortDir = 'asc';
-
     }
 
     ngOnInit() {
-
         let total = 0;
         let actions = 0;
         this.data[this.selectedOption].forEach(e => {
@@ -57,15 +55,14 @@ export abstract class AbstractTableComponent implements OnInit {
             actions += e.qty;
         });
 
+        this.sortAmount('primary');
+        this.sortAmount('alt');
+
         this.summary = {
             total: total,
             actions: actions,
             connect: 'day.actionsWorth',
         };
-
-        this.sortAmount('primary');
-        this.sortAmount('alt');
-
 
     }
 

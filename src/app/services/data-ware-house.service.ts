@@ -61,7 +61,7 @@ export class DataWareHouseService {
         let fromBusinessDate = options.start;
         let toBusinessDate = options.end;
 
-        return this.dataWarehouse.get('report/ReductionItemsByReason', {
+        return this.dataWarehouse.get('report/ReductionItemsByFired', {
             fromBusinessDate: fromBusinessDate,
             toBusinessDate: toBusinessDate,
             items: JSON.stringify({

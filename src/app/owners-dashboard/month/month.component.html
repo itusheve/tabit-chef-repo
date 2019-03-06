@@ -126,7 +126,7 @@
     </div>
     <app-month-payments></app-month-payments>
     <app-month-cancellation *ngIf="cancellation" [data] = "cancellation" [date]="date" [dataOptionMode]="false" class="widget" style="padding:0"></app-month-cancellation>
-    <app-month-promotions *ngIf="promotions" [data]="promotions" [date]="date"  class="widget" style="padding:0"></app-month-promotions>
+    <app-month-promotions  *ngIf="promotions" [data]="promotions" [date]="date"  class="widget" style="padding:0"></app-month-promotions>
     <app-month-retention *ngIf="retention" [data]="retention" [date]="date" class="widget" style="padding:0"></app-month-retention>
     <app-month-operational-errors *ngIf="monthlyReports.compensation" [data] = "monthlyReports" [date]="date" class="widget" style="padding:0"></app-month-operational-errors>
     <app-month-organizational *ngIf="organizational"  [data] = "organizational" [date]="date" class="widget" style="padding:0"></app-month-organizational>

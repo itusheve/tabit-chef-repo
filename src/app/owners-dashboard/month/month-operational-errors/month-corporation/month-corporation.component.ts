@@ -1,7 +1,6 @@
 import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { DataWareHouseService } from '../../../../services/data-ware-house.service';
 import {AbstractTableComponent} from '../../../../ui/abstract-table/abstract-table.component';
-import * as moment from 'moment';
 import {MatDialog} from '@angular/material';
 
 @Component({
@@ -39,7 +38,6 @@ export class MonthCorporationComponent extends AbstractTableComponent implements
    ngOnInit() {
     super.ngOnInit();
     this.options = {primary:'day.reason',alt:'month.server'};
-     this.sort('amountIncludeVat');
   }
 
 
