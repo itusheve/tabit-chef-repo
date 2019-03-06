@@ -18,7 +18,7 @@ export interface DialogData {
 
 export class ReportdialogComponent implements OnInit {
 
-  private items: any[] = [];
+  public items: any[] = [];
 
   constructor(dialogRef:MatDialogRef<ReportdialogComponent>, @Inject(MAT_DIALOG_DATA)public data:DialogData ) {
 
