@@ -220,12 +220,12 @@ import {ReportdialogComponent} from '../ui/reportdialog/reportdialog.component';
         OwnersDashboardService
     ],
     entryComponents: [
-        ReportdialogComponent,
         MonthSelectorComponent,
         MonthPickerDialogComponent,
         WeekSelectorComponent,
         OverTimeUsersDialogComponent,
-        ForecastDialogComponent
+        ForecastDialogComponent,
+        ReportdialogComponent
     ],
 })
 export class OwnersDashboardModule {

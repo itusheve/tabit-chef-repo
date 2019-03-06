@@ -45,8 +45,6 @@ export abstract class AbstractTableComponent implements OnInit {
     constructor(protected dialog:MatDialog,protected dataWareHouseService:DataWareHouseService){
         this.selectedOption = 'primary';
         this.sortDir = 'asc';
-       this.sortAmount('primary');
-        this.sortAmount('alt');
 
     }
 
@@ -64,6 +62,9 @@ export abstract class AbstractTableComponent implements OnInit {
             actions: actions,
             connect: 'day.actionsWorth',
         };
+
+        this.sortAmount('primary');
+        this.sortAmount('alt');
 
 
     }

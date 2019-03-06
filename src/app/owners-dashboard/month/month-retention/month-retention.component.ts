@@ -24,7 +24,7 @@ export class MonthRetentionComponent extends AbstractTableComponent implements O
 
   constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService){
     super(dialog,dataWareHouseService);
-    this.columns = {primary:this.columns_primary,alt:this.columns_alternative};
+    this.columns = {primary:this.columns_primary,alt:[]};
     this.title = {en: 'retention', translated: 'month.retention'};
   }
 
