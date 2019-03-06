@@ -100,7 +100,7 @@ export class MonthComponent implements OnInit {
         return dataOption === true ? {
             primary: this.reductionsByReason[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
             alt: this.reductionsByWaiter[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
-        } : {primary: this.reductionsByWaiter[key], alt: []};
+        } : {primary: this.reductionsByWaiter[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']), alt: []};
     }
 
     getSummary(monthReport) {

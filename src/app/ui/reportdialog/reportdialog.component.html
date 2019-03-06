@@ -19,7 +19,7 @@
     <tr *ngFor="let item of items">
          <td colspan="5" style="font-weight: 700">{{item.itemName}}</td>
          <td colspan="5" style="font-weight: 700">{{item.qty}}</td>
-         <td colspan="5" style="font-weight: 700">{{item.amountIncludeVat}}</td>
+         <td colspan="5" style="font-weight: 700">{{item.amountIncludeVat | curr: '0'}}</td>
      </tr>
        </tbody>
       </table>
