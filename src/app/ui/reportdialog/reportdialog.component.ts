@@ -20,6 +20,7 @@ export class ReportdialogComponent implements OnInit {
 
   public items: any[] = [];
 
+
   constructor(dialogRef:MatDialogRef<ReportdialogComponent>, @Inject(MAT_DIALOG_DATA)public data:DialogData ) {
 
   }

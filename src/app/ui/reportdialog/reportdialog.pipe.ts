@@ -1,15 +1,17 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { DecimalPipe, PercentPipe } from '@angular/common';
+import {Input, Pipe, PipeTransform} from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
 import {DataService} from '../../../tabit/data/data.service';
-import * as _ from 'lodash';
+
 
 
 @Pipe({
     name: 'currency',
     pure: false
 })
+
+
 export class CurrencyPipeDialog implements PipeTransform {
     private decPipe: DecimalPipe = new DecimalPipe(environment.region === 'il' ? 'he-IL' : 'en-US');
 
@@ -107,4 +109,9 @@ export class OwnersDashboardCurrencyPipeDialog implements PipeTransform {
 
         return result;
     }
+
+
+
+
+
 }

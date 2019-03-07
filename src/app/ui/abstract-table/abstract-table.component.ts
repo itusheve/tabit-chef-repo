@@ -115,7 +115,7 @@ export abstract class AbstractTableComponent implements OnInit {
             amount:row.amountIncludeVat,
             itemsPromise:
             this.selectedOption === 'alt' ?
-                this.dataWareHouseService.getReductionByFiredDialog(this.getType(),row.fullName,row.firedBy, row.businessDate, options)
+                this.dataWareHouseService.getReductionByFiredDialog(this.getType(),row.reasonId, row.reasonName, row.fullName, row.firedBy, row.businessDate, options)
                 : this.dataWareHouseService.getReductionByReasondialog(this.getType(),row.reasonId, row.reasonName,row.firedBy, row.businessDate, options)
 
         };

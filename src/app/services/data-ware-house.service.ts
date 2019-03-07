@@ -58,7 +58,7 @@ export class DataWareHouseService {
         });
     }
 
-    public getReductionByFiredDialog(type,fullName, firedBy, businessDate, options):Promise<any> {
+    public getReductionByFiredDialog(type, firedBy, fullName, reasonId, reasonName, businessDate, options):Promise<any> {
 
         let fromBusinessDate = options.start;
         let toBusinessDate = options.end;
@@ -68,8 +68,10 @@ export class DataWareHouseService {
             toBusinessDate: toBusinessDate,
             items: JSON.stringify({
                 type: type,
-                fullName: fullName,
                 firedBy: firedBy,
+                fullName: fullName,
+                reasonId: reasonId,
+                reasonName: reasonName,
                 businessDate: businessDate,
             })
         });
