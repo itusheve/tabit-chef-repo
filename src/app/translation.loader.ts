@@ -196,7 +196,7 @@ const he = {
     'month.organizational': 'ארוחות עובדים',
     'month.cancellations': 'ביטולים',
     'month.promotion': 'שימור ושיווק - מבצעים',
-    'month.retention': 'שימור ושיווק - פעולות ידניות לפי מלצר',
+    'month.retention': 'שימור ושיווק - פעולות ידניות ',
     'month.operationalErrorsByServer': 'החזר פריטים, OTH והנחות לפי מלצר',
     'month.corporationRefund': 'החזרים',
     'month.corporation': 'הנחות וOTH',

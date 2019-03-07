@@ -40,7 +40,7 @@ export class DataWareHouseService {
 
 
 
-    public getReductionByReasondialog(type,reasonId,reasonName,options):Promise<any> {
+    public getReductionByReasondialog(type,reasonId,reasonName, firedBy,  businessDate,options):Promise<any> {
 
         let fromBusinessDate = options.start;
         let toBusinessDate = options.end;
@@ -51,12 +51,14 @@ export class DataWareHouseService {
             items: JSON.stringify({
                 type:type,
                 reasonId: reasonId,
-                reasonName: reasonName
+                reasonName: reasonName,
+                firedBy: firedBy,
+                businessDate: businessDate,
             })
         });
     }
 
-    public getReductionByFiredDialog(type,firedBy,fullName,options):Promise<any> {
+    public getReductionByFiredDialog(type,fullName, firedBy, businessDate, options):Promise<any> {
 
         let fromBusinessDate = options.start;
         let toBusinessDate = options.end;
@@ -65,9 +67,10 @@ export class DataWareHouseService {
             fromBusinessDate: fromBusinessDate,
             toBusinessDate: toBusinessDate,
             items: JSON.stringify({
-                type:type,
+                type: type,
+                fullName: fullName,
                 firedBy: firedBy,
-                fullName: fullName
+                businessDate: businessDate,
             })
         });
     }

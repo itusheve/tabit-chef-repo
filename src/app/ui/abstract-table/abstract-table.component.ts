@@ -101,19 +101,23 @@ export abstract class AbstractTableComponent implements OnInit {
 
         const options = {
             start :  moment(date).startOf('month').format('YYYYMMDD'),
-            end :moment(date).startOf('month').format('YYYYMMDD')
+            end :moment(date).endOf('month').format('YYYYMMDD')
         };
+
 
         return{
             reason: row.reasonName,
+            firedBy: row.firedBy,
+            fullName: row.fullName,
             title:this.title.translated,
             itemName: row[this.columns[this.selectedOption][0].dataKey],
             quantity:row.qty,
             amount:row.amountIncludeVat,
             itemsPromise:
             this.selectedOption === 'alt' ?
-                this.dataWareHouseService.getReductionByFiredDialog(this.getType(),row.firedBy,row.fullName,options )
-                : this.dataWareHouseService.getReductionByReasondialog(this.getType(),row.reasonId, row.reasonName,options)
+                this.dataWareHouseService.getReductionByFiredDialog(this.getType(),row.fullName,row.firedBy, row.businessDate, options)
+                : this.dataWareHouseService.getReductionByReasondialog(this.getType(),row.reasonId, row.reasonName,row.firedBy, row.businessDate, options)
+
         };
 
      }

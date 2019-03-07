@@ -30,13 +30,14 @@ export class MonthComponent implements OnInit {
     public showData: boolean;
     public reductionsByReason: any = {};
     private mostSoldItems: any = [];
-    public reductionsByWaiter: any = {};
+    public reductionsByFired: any = {};
     private promotions: any;
     private retention: any;
     private organizational: any;
     private wasteEod: any;
     private cancellation: any;
     private monthlyReports: any = {};
+    public monthlyReportsInProgress:boolean ;
 
     constructor(private ownersDashboardService: OwnersDashboardService, private dataService: DataService, private dataWareHouseService: DataWareHouseService, private route: ActivatedRoute, private datePipe: DatePipe) {
 
@@ -48,9 +49,14 @@ export class MonthComponent implements OnInit {
     }
 
     async ngOnInit() {
+
+
         /*let month = this.route.snapshot.paramMap.get('month');
         let year = this.route.snapshot.paramMap.get('year');*/
         this.dataService.selectedMonth$.subscribe(async date => {
+
+            this.monthlyReportsInProgress = true;
+
             this.title = '';
             this.summary = {};
             this.payments = {};
@@ -59,6 +65,9 @@ export class MonthComponent implements OnInit {
             this.showData = false;
             let month = date.month();
             let year = date.year();
+            let startOf = date.startOf('month').format('DD');
+            let endOf = date.endOf('month').format('DD');
+
             let monthReport = await this.dataService.getMonthReport(month, year);
             this.monthReport = monthReport;
 
@@ -67,28 +76,25 @@ export class MonthComponent implements OnInit {
             this.summary = this.getSummary(monthReport);
             this.showData = true;
 
+            date = moment().month(month).year(year).date(2);
+
             let dateStart = moment(date).startOf('month').format('YYYYMMDD');
             let dateEnd = moment(date).endOf('month').format('YYYYMMDD');
 
-            Promise.all([
-                this.dataWareHouseService.getReductionByReason(dateStart, dateEnd),
-                this.dataWareHouseService.getReductionByFired(dateStart, dateEnd),
-                this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd)
-            ]).then(result => {
-                this.reductionsByReason = result[0];
-                this.reductionsByWaiter = result[1];
-                this.mostSoldItems = result[2];
-            });
-
-            this.reductionsByReason = await this.dataWareHouseService.getReductionByReason(dateStart, dateEnd);
-            this.reductionsByWaiter = await this.dataWareHouseService.getReductionByFired(dateStart, dateEnd);
+            this.reductionsByReason  = await this.dataWareHouseService.getReductionByReason(dateStart, dateEnd);
+            this.reductionsByFired  = await this.dataWareHouseService.getReductionByFired(dateStart, dateEnd);
             this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd);
+
+
 
             this.promotions = this.getReductionData('promotions', true);
             this.monthlyReports = {
                 compensation: this.getReductionData('compensation', true),
                 compensationReturns: this.getReductionData('compensationReturns', true)
             };
+
+            this.monthlyReportsInProgress = false;
+
             this.cancellation = this.getReductionData('cancellation', false);
             this.retention = this.getReductionData('retention', true);
             this.organizational = this.getReductionData('organizational', true);
@@ -97,10 +103,11 @@ export class MonthComponent implements OnInit {
     }
 
     getReductionData(key, dataOption) {
+
         return dataOption === true ? {
             primary: this.reductionsByReason[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
-            alt: this.reductionsByWaiter[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
-        } : {primary: this.reductionsByWaiter[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']), alt: []};
+            alt: this.reductionsByFired[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
+        } : {primary: this.reductionsByFired[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']), alt: []};
     }
 
     getSummary(monthReport) {
