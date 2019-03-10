@@ -31,7 +31,6 @@ export class MonthComponent implements OnInit {
     public reductionsByReason: any = {};
     private mostSoldItems: any = [];
     public reductionsByFired: any = {};
-    public reductionItemsByFiredTest: any = [];
     private promotions: any;
     private retention: any;
     private organizational: any;
@@ -104,9 +103,6 @@ export class MonthComponent implements OnInit {
             this.wasteEod = this.getReductionData('wasteEod', true);
 
         });
-
-        this.reductionItemsByFiredTest = this.dataWareHouseService.getReductionByFiredDialogTest('','')
-        console.log(this.reductionItemsByFiredTest);
     }
 
     getReductionData(key, dataOption) {

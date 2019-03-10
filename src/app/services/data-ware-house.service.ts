@@ -74,7 +74,7 @@ export class DataWareHouseService {
             })
         });
     }
-    public getReductionByFiredDialogTest(type, filters):Promise<any> {
+   /* public getReductionByFiredDialogTest(type, filters):Promise<any> {
         return this.dataWarehouse.get('report/reductionItemsByfired', {
             items: JSON.stringify({
                 type: type,
@@ -82,7 +82,7 @@ export class DataWareHouseService {
             })
         });
 
-    }
+    }*/
 
 
     public async getMostLeastSoldItems(fromBusinessDate, toBusinessDate): Promise<any[]> {
