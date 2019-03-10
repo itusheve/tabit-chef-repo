@@ -38,6 +38,7 @@ export abstract class AbstractTableComponent implements OnInit {
 
     public summary: any = {};
 
+
     public selectedOption;
 
     abstract getCssColorClass(): String;
@@ -71,8 +72,10 @@ export abstract class AbstractTableComponent implements OnInit {
     }
 
     showReportDialog(row){
+
         this.dialog.open(ReportdialogComponent,{
             width:'110vw',
+            height: '95%',
             data:this.setDataForDialog(row,this.date)
         });
 
@@ -112,14 +115,20 @@ export abstract class AbstractTableComponent implements OnInit {
             title:this.title.translated,
             itemName: row[this.columns[this.selectedOption][0].dataKey],
             quantity:row.qty,
+            isWaiter: this.selectedOption === 'alt',
             amount:row.amountIncludeVat,
             itemsPromise:
             this.selectedOption === 'alt' ?
-                this.dataWareHouseService.getReductionByFiredDialog(this.getType(),row.reasonId, row.reasonName, row.fullName, row.firedBy, row.businessDate, options)
+                this.dataWareHouseService.getReductionByFiredDialog({
+                    type : this.getType(),
+                    firedBy: row.firedBy,
+                    start :  options.start,
+                    end : options.end
+                })
                 : this.dataWareHouseService.getReductionByReasondialog(this.getType(),row.reasonId, row.reasonName,row.firedBy, row.businessDate, options)
 
         };
-
+//this.getType(),row.fullName, row.firedBy, row.businessDate, options
      }
 
 

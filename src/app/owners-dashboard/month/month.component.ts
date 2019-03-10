@@ -31,6 +31,7 @@ export class MonthComponent implements OnInit {
     public reductionsByReason: any = {};
     private mostSoldItems: any = [];
     public reductionsByFired: any = {};
+    public reductionItemsByFiredTest: any = [];
     private promotions: any;
     private retention: any;
     private organizational: any;
@@ -86,12 +87,14 @@ export class MonthComponent implements OnInit {
             this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd);
 
 
-
             this.promotions = this.getReductionData('promotions', true);
             this.monthlyReports = {
+
                 compensation: this.getReductionData('compensation', true),
                 compensationReturns: this.getReductionData('compensationReturns', true)
             };
+
+            this.monthlyReports.isShowing = this.monthlyReports.compensation.isShowing || this.monthlyReports.compensationReturns.isShowing;
 
             this.monthlyReportsInProgress = false;
 
@@ -99,15 +102,21 @@ export class MonthComponent implements OnInit {
             this.retention = this.getReductionData('retention', true);
             this.organizational = this.getReductionData('organizational', true);
             this.wasteEod = this.getReductionData('wasteEod', true);
+
         });
+
+        this.reductionItemsByFiredTest = this.dataWareHouseService.getReductionByFiredDialogTest('','')
+        console.log(this.reductionItemsByFiredTest);
     }
 
     getReductionData(key, dataOption) {
 
-        return dataOption === true ? {
+        let data =  dataOption === true ? {
             primary: this.reductionsByReason[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
             alt: this.reductionsByFired[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
         } : {primary: this.reductionsByFired[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']), alt: []};
+
+        return Object.assign(data,{isShowing:data.primary.length > 0 || data.alt.length > 0});
     }
 
     getSummary(monthReport) {

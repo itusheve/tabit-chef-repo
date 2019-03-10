@@ -58,24 +58,32 @@ export class DataWareHouseService {
         });
     }
 
-    public getReductionByFiredDialog(type, firedBy, fullName, reasonId, reasonName, businessDate, options):Promise<any> {
+    public getReductionByFiredDialog(options):Promise<any> {
 
         let fromBusinessDate = options.start;
         let toBusinessDate = options.end;
+        let firedBy = options.firedBy;
+        let type = options.type;
 
-        return this.dataWarehouse.get('report/ReductionItemsByFired', {
+        return this.dataWarehouse.get('report/reductionItemsByfired', {
             fromBusinessDate: fromBusinessDate,
             toBusinessDate: toBusinessDate,
             items: JSON.stringify({
                 type: type,
-                firedBy: firedBy,
-                fullName: fullName,
-                reasonId: reasonId,
-                reasonName: reasonName,
-                businessDate: businessDate,
+                firedBy: firedBy
             })
         });
     }
+    public getReductionByFiredDialogTest(type, filters):Promise<any> {
+        return this.dataWarehouse.get('report/reductionItemsByfired', {
+            items: JSON.stringify({
+                type: type,
+               filters: filters
+            })
+        });
+
+    }
+
 
     public async getMostLeastSoldItems(fromBusinessDate, toBusinessDate): Promise<any[]> {
         let result = await this.dataWarehouse.get('report/mostLeastSoldItems', {

@@ -1,8 +1,8 @@
 <div class="dialog-modal-content-fixed">
-  <div class="dialog-content">
+  <div class="dialog-content MatDialogConfig">
     <div class="card-header text-center rounded-0 bg-secondary text-white">
       <span style="font-size: 18px;" [translate]="'' + data.title"></span><br>
-    <span style="font-size: 18px;" [translate]="'day.reason'"></span>:&nbsp;<span  style="font-size: 18px;">{{data.reason}}</span><br>
+    <span style="font-size: 18px;" [translate]="data.isWaiter === false ? 'day.reason' : 'month.server'"></span>:&nbsp;<span  style="font-size: 18px;">{{data.isWaiter === false ? data.reason : data.fullName}}</span><br>
     <span style="font-size: 18px;" [translate]="'month.quantity'"></span>:&nbsp;<span  style="font-size: 18px;">{{data.quantity}}</span><br>
      <span  style="font-size: 18px;" [translate]="'month.amount'"></span>:&nbsp;<span style="font-size: 18px;">{{data.amount | curr: '0'}}</span>
     </div>
@@ -11,7 +11,7 @@
        <tbody style="width: 100%; display: table;">
 
      <tr class="header">
-       <td colspan="5"><span [translate]="'day.item'"></span></td>
+       <td colspan="5"><span [translate]="data.isWaiter === false?  'day.item': 'day.reason'"></span></td>
        <td colspan="5"><span [translate]="'month.quantity'"></span></td>
        <td colspan="5"><span [translate]="'month.amount'"></span></td>
      </tr>

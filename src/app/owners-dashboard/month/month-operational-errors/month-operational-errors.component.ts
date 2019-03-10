@@ -39,6 +39,7 @@ export class MonthOperationalErrorsComponent implements OnInit, AfterViewInit {
    }
 
    ngAfterViewInit(){
+
       setTimeout(()=>{
           let total = this.compensation.summary.total + this.compensationReturn.summary.total;
           let actions = this.compensation.summary.actions + this.compensationReturn.summary.actions;

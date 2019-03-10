@@ -19,7 +19,7 @@
             <table class="table table-sm">
 
                <tr class="header">
-                   <td *ngFor="let column of columns[selectedOption]" (click)="sort(column.dataKey)" style="width:60%">
+                   <td *ngFor="let column of columns[selectedOption]" (click)="sort(column.dataKey)" style="width:50%">
                        <div class="flex a-center">
                            <span [translate]="'' + column.translated"></span>
                            <mat-icon class="sortMatIcon" *ngIf="sortKey=== column.dataKey && sortDir==='desc'">arrow_drop_down</mat-icon>
@@ -29,9 +29,9 @@
 
                </tr>
 
-                <tr *ngFor="let tuple of data[selectedOption]" class="dayReportDataRow" style="line-height: 30px !important;">
+                <tr *ngFor="let tuple of data[selectedOption]" class="dayReportDataRow" (click)="showReportDialog(tuple)" style="line-height: 30px !important; cursor:pointer ">
                     <td *ngFor="let column of columns[selectedOption]; let i = index">
-                        <span *ngIf="i == 0" style="cursor:pointer" (click)="showReportDialog(tuple)">{{tuple[column.dataKey]}}</span>
+                        <span *ngIf="i == 0">{{tuple[column.dataKey]}}</span>
                         <span *ngIf="column.dataType === 'currency' && i!=0">{{tuple[column.dataKey] | curr:'0'}}</span>
                         <span *ngIf="column.dataType === 'number' && i!=0">{{tuple[column.dataKey] | number}}</span>
                         <span *ngIf="column.dataType === 'item' && i!=0">{{tuple[column.dataKey]}}</span>

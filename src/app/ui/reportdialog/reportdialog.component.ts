@@ -32,6 +32,12 @@ export class ReportdialogComponent implements OnInit {
 
   }
 
+  sort(a,b){
+    return b.salesAmountIncludeVat - a.salesAmountIncludeVat;
+  }
+
+
+
 
 
 }
