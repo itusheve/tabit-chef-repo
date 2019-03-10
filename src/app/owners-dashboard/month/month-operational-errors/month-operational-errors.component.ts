@@ -21,7 +21,7 @@ export class MonthOperationalErrorsComponent implements OnInit, AfterViewInit {
 
 
     public monthCompensationData={};
-    public  monthCompensationReturnData={};
+    public  monthCompensationReturnData: any = {};
     public summary:any={};
 
   constructor() {

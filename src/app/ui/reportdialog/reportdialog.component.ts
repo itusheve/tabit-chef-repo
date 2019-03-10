@@ -3,12 +3,15 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 
 
+
 export interface DialogData {
   amount:number;
   quantity:number;
   title:string;
   itemsPromise:Promise<any>;
   reason:string;
+  isWaiter: string;
+  fullName: string;
 }
 @Component({
   selector: 'app-reportdialog',
