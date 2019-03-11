@@ -65,6 +65,10 @@ RUN set -ex \
     B9AE9905FFD7803F25714661B63B535A4C206CA9 \
     56730D5401028683275BD23C23EFEFE93C4CFFFE \
     77984A986EBC2AA786BC0F66B01FBB92821C587A \
+    A48C2BEE680E841632CD4E44F07496B3EB3C1762 \
+    4ED778F539E3634C779C87C6D7062848A1AB005C \
+    8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
+    B9E2F5981AA6E0CD28160D9FF13993A75599653C \
   ; do \
     gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
     gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
@@ -72,7 +76,7 @@ RUN set -ex \
   done
 
 #install node
-ENV NODE_VERSION 8.15.0
+ENV NODE_VERSION 10.15.1
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
