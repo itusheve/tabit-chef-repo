@@ -109,7 +109,6 @@ export abstract class AbstractTableComponent implements OnInit {
             end :moment(date).endOf('month').format('YYYYMMDD')
         };
 
-
         return{
             reason: row.reasonName,
             firedBy: row.firedBy,
@@ -122,12 +121,9 @@ export abstract class AbstractTableComponent implements OnInit {
             itemsPromise:
             this.selectedOption === 'alt' ?
                 this.dataWareHouseService.getReductionByFiredDialog({
-                    type : this.getType(),
-                    firedBy: row.firedBy,
-                    start :  options.start,
-                    end : options.end
+                    filters : row.filters
                 })
-                : this.dataWareHouseService.getReductionByReasondialog(this.getType(),row.reasonId, row.reasonName,row.firedBy, row.businessDate, options)
+                : this.dataWareHouseService.getReductionByReasondialog(this.getType(),row.reasonId, row.reasonName,row.firedBy, row.businessDate, row.filters, options)
 
         };
 //this.getType(),row.fullName, row.firedBy, row.businessDate, options

@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import {DatePipe} from '@angular/common';
 import {environment} from '../../../environments/environment';
-import {DataWareHouseEpService} from '../../services/end-points/data-ware-house-ep.service';
+
 import {DataWareHouseService} from '../../services/data-ware-house.service';
 
 @Component({

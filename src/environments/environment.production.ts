@@ -1,5 +1,5 @@
 export const environment = {
-    production: true,
+    production: false,
     managerDashboardMode: false,
     region: 'il',
     tbtLocale: 'he-IL',
@@ -19,6 +19,7 @@ export const environment = {
         catalog: 'isrProd',
         cube: 'tlogs',
     },
+
     translationBaseUrl: 'https://chef.tabit-dev.com/assets/i18n/',
     reportingServer: {
         url: 'https://prd-azure.tabit.cloud/dwh/il/'

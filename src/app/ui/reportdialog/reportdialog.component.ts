@@ -10,7 +10,7 @@ export interface DialogData {
   title:string;
   itemsPromise:Promise<any>;
   reason:string;
-  isWaiter: string;
+  isWaiter: any;
   fullName: string;
 }
 @Component({
@@ -22,8 +22,8 @@ export interface DialogData {
 export class ReportdialogComponent implements OnInit {
 
   public items: any[] = [];
-  private sortDir: boolean;
-  private sortKey: string;
+  public sortDir: boolean;
+  public sortKey: string;
 
 
   constructor(dialogRef:MatDialogRef<ReportdialogComponent>, @Inject(MAT_DIALOG_DATA)public data:DialogData ) {
