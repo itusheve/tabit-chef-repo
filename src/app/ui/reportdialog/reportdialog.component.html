@@ -1,5 +1,5 @@
 <div class="dialog-modal-content-fixed">
-  <div class="dialog-content MatDialogConfig">
+  <div class="dialog-content">
     <div class="card-header text-center rounded-0 bg-secondary text-white">
       <span style="font-size: 18px;" [translate]="'' + data.title"></span><br>
     <span style="font-size: 18px;" [translate]="data.isWaiter === false ? 'day.reason' : 'month.server'"></span>:&nbsp;<span  style="font-size: 18px;">{{data.isWaiter === false ? data.reason : data.fullName}}</span><br>
@@ -12,8 +12,20 @@
 
      <tr class="header">
        <td colspan="5"><span [translate]="data.isWaiter === false?  'day.item': 'day.reason'"></span></td>
-       <td colspan="5"><span [translate]="'month.quantity'"></span></td>
-       <td colspan="5"><span [translate]="'month.amount'"></span></td>
+       <td colspan="5" (click)="sort('qty')" style="cursor: pointer">
+           <div class="flex a-center">
+               <span [translate]="'month.quantity'"></span>
+               <mat-icon class="sortMatIcon" *ngIf="sortKey==='qty' && sortDir===false">arrow_drop_down</mat-icon>
+               <mat-icon class="sortMatIcon" *ngIf="sortKey==='qty' && sortDir===true">arrow_drop_up</mat-icon>
+           </div>
+       </td>
+       <td colspan="5" (click)="sort('amountIncludeVat')"  style="cursor:pointer">
+           <div class="flex a-center">
+               <span [translate]="'month.amount'"></span>
+               <mat-icon class="sortMatIcon" *ngIf="sortKey==='amountIncludeVat' && sortDir===false">arrow_drop_down</mat-icon>
+               <mat-icon class="sortMatIcon" *ngIf="sortKey==='amountIncludeVat'&& sortDir===true">arrow_drop_up</mat-icon>
+           </div>
+       </td>
      </tr>
 
     <tr *ngFor="let item of items">

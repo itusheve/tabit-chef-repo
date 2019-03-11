@@ -22,6 +22,8 @@ export interface DialogData {
 export class ReportdialogComponent implements OnInit {
 
   public items: any[] = [];
+  private sortDir: boolean;
+  private sortKey: string;
 
 
   constructor(dialogRef:MatDialogRef<ReportdialogComponent>, @Inject(MAT_DIALOG_DATA)public data:DialogData ) {
@@ -29,14 +31,16 @@ export class ReportdialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.data.itemsPromise.then(itemsResponse =>{
+    this.data.itemsPromise.then(itemsResponse => {
       this.items = itemsResponse.items;
     });
 
   }
-
-  sort(a,b){
-    return b.salesAmountIncludeVat - a.salesAmountIncludeVat;
+  
+  sort(key){
+    this.sortKey = key;
+    this.sortDir = !this.sortDir;
+    this.items.sort((a,b)=> (a[key] - b[key]) * (this.sortDir === true ? 1 : -1));
   }
 
 
