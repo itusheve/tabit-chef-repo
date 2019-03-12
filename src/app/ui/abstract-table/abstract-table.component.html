@@ -19,7 +19,7 @@
             <table class="table table-sm">
 
                <tr class="header">
-                   <td *ngFor="let column of columns[selectedOption]" (click)="sort(column.dataKey)" style="width:50%">
+                   <td *ngFor="let column of columns[selectedOption]" (click)="sort(column.dataKey)">
                        <div class="flex a-center">
                            <span [translate]="'' + column.translated"></span>
                            <mat-icon class="sortMatIcon" *ngIf="sortKey=== column.dataKey && sortDir==='desc'">arrow_drop_down</mat-icon>
