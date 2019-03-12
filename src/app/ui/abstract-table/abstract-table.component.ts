@@ -4,6 +4,7 @@ import {ReportdialogComponent} from '../reportdialog/reportdialog.component';
 import {DataWareHouseService} from '../../services/data-ware-house.service';
 import * as moment from 'moment';
 
+
 export abstract class AbstractTableComponent implements OnInit {
 
     @Input()
@@ -14,7 +15,7 @@ export abstract class AbstractTableComponent implements OnInit {
         primary:[],
         alt:[]
     };
-    columns:{primary:any[],alt:any[]} = {primary:[],alt:[]};
+    columns:{primary:any,alt:any} = {primary:{},alt:{}};
 
     @Input()
     date:any;
@@ -37,7 +38,6 @@ export abstract class AbstractTableComponent implements OnInit {
 
 
     public summary: any = {};
-
 
     public selectedOption;
 
@@ -65,6 +65,9 @@ export abstract class AbstractTableComponent implements OnInit {
             connect: 'day.actionsWorth',
         };
 
+
+
+
     }
 
     isNumber(num) {
@@ -75,6 +78,7 @@ export abstract class AbstractTableComponent implements OnInit {
 
         this.dialog.open(ReportdialogComponent,{
             width: '100vw',
+            height: '98vh',
             panelClass: 'repor-dialog',
             hasBackdrop: true,
             backdropClass: 'report-dialog-backdrop',
@@ -115,6 +119,7 @@ export abstract class AbstractTableComponent implements OnInit {
             fullName: row.fullName,
             title:this.title.translated,
             itemName: row[this.columns[this.selectedOption][0].dataKey],
+            reasonName: row.filters.reasonName,
             quantity:row.qty,
             isWaiter: this.selectedOption === 'alt',
             amount:row.amountIncludeVat,
@@ -122,10 +127,16 @@ export abstract class AbstractTableComponent implements OnInit {
             this.selectedOption === 'alt' ?
                 this.dataWareHouseService.getReductionByFiredDialog({
                     filters : row.filters
+
                 })
-                : this.dataWareHouseService.getReductionByReasondialog(this.getType(),row.reasonId, row.reasonName,row.firedBy, row.businessDate, row.filters, options)
+                : this.dataWareHouseService.getReductionByReasondialog({
+                    filters: row.filters
+
+                }),
 
         };
+
+
 //this.getType(),row.fullName, row.firedBy, row.businessDate, options
      }
 

@@ -22,6 +22,6 @@ export const environment = {
     translationBaseUrl: './assets/i18n/',
 
     reportingServer: {
-        url: 'https://prd-azure.tabit.cloud/dwh/il/'
+        url: 'http://localhost:3000/'
     }
 };

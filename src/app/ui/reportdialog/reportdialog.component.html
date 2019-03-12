@@ -6,7 +6,7 @@
     <span style="font-size: 18px;" [translate]="'month.quantity'"></span>:&nbsp;<span  style="font-size: 18px;">{{data.quantity}}</span><br>
      <span  style="font-size: 18px;" [translate]="'month.amount'"></span>:&nbsp;<span style="font-size: 18px;">{{data.amount | curr: '0'}}</span>
     </div>
-   <table class="table"  style="height: calc(70vh - 1px) !important; overflow-y: scroll; -webkit-overflow-scrolling: touch; font-size: 20px;display:block">
+   <table class="table"  style="height: calc(70vh - 1px) !important; overflow-y: scroll; -webkit-overflow-scrolling: touch; display:block; font-size: 20px;">
 
        <tbody style="width: 100%; display: table;">
 
@@ -29,7 +29,7 @@
      </tr>
 
     <tr *ngFor="let item of items">
-         <td colspan="5" style="font-weight: 700">{{item.itemName}}</td>
+         <td colspan="5" style="font-weight: 700">{{ data.isWaiter === false ? item.itemName : item.reasonName}}</td>
          <td colspan="5" style="font-weight: 700">{{item.qty}}</td>
          <td colspan="5" style="font-weight: 700">{{item.amountIncludeVat | curr: '0'}}</td>
      </tr>

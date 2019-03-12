@@ -35,8 +35,11 @@ export class ReportdialogComponent implements OnInit {
       this.items = itemsResponse.items;
     });
 
+
   }
-  
+
+
+
   sort(key){
     this.sortKey = key;
     this.sortDir = !this.sortDir;

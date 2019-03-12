@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AbstractTableComponent} from '../../../../ui/abstract-table/abstract-table.component';
-import {MatDialog} from '@angular/material';
 import {DataWareHouseService} from '../../../../services/data-ware-house.service';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-most-sold-time',
@@ -25,7 +25,7 @@ export class MostSoldTimeComponent extends AbstractTableComponent implements OnI
 
 
   constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService){
-    super(dialog,dataWareHouseService);
+    super(dialog ,dataWareHouseService);
 
   }
 
@@ -34,6 +34,10 @@ export class MostSoldTimeComponent extends AbstractTableComponent implements OnI
 
   getCssColorClass(): String {
     return 'bg-white';
+  }
+
+  showReportDialog(row) {
+    return false;
   }
 
   protected getType(): string {
