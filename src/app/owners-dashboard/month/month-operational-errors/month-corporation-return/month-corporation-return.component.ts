@@ -32,7 +32,7 @@ export class MonthCorporationReturnComponent extends AbstractTableComponent impl
 
     this.columns = {primary: this.columns_primary,alt: this.columns_alternative};
 
-    this.title = {en: 'corporationReturn', translated: 'month.corporationRefund'};
+    this.title = {en: 'CorporationReturn', translated: 'month.corporationRefund'};
 
   }
 

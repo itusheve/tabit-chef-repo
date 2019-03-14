@@ -27,7 +27,7 @@ export class MonthPromotionsComponent extends AbstractTableComponent implements 
 
         this.columns = {primary: this.columns_primary,alt: this.columns_alternative};
 
-        this.title = {en: 'promotion', translated: 'Promotions'};
+        this.title = {en: 'Promotion', translated: 'month.promotion'};
 
 
     }
