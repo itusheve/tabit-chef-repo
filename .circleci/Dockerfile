@@ -104,7 +104,7 @@ RUN apt-get install --fix-missing -y -f openjdk-7-jre
 RUN apt-get update && \
     apt-get install -y jq python-pip ruby && \
     gem install s3_website && \
-    npm install -g @angular/cli@1.7.2 --unsafe
+    npm install -g @angular/cli@7.3.1 --unsafe
 
 # Here we install Docker in Docker. We need it because our builds will run, well, Docker! Note that all we're really
 # using is the Docker client, as CircleCi will mount a socket for us to talk to a Docker server outside of this
