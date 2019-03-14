@@ -52,7 +52,7 @@
                                     <td>{{orderType.tip | curr:'0':'':'':true}}</td>
                                 </ng-container>
                             </tr>
-                            <tr>
+                            <tr style="border-bottom: 6px solid #eaecee;">
                                 <td><span class="font-weight-bold" [translate]="'revenue'"></span></td>
                                 <td>{{service.totals.revenue | curr:'0':'':'':true}}</td>
                                 <ng-container *ngFor="let orderType of service.kpis">
@@ -127,9 +127,9 @@
     <app-month-payments></app-month-payments>
     <app-month-cancellation *ngIf="cancellation && cancellation.isShowing === true" [data] = "cancellation" [date]="date" [dataOptionMode]="false" class="widget" style="padding:0"></app-month-cancellation>
     <app-month-operational-errors *ngIf="!monthlyReportsInProgress && monthlyReports.isShowing === true" [data] = "monthlyReports" [date]="date" class="widget" style="padding:0"></app-month-operational-errors>
-    <app-month-promotions  *ngIf="promotions && promotions.isShowing === true " [data]="promotions" [date]="date"  class="widget" style="padding:0"></app-month-promotions>
-    <app-month-retention *ngIf="retention && retention.isShowing === true" [data]="retention" [date]="date" class="widget" style="padding:0"></app-month-retention>
-    <app-month-organizational *ngIf="organizational && organizational.isShowing === true"  [data] = "organizational" [date]="date" class="widget" style="padding:0"></app-month-organizational>
+    <app-month-promotions  *ngIf="!monthlyReportsInProgress && promotions.isShowing === true " [data]="promotions" [date]="date"  class="widget" style="padding:0"></app-month-promotions>
+    <app-month-retention *ngIf="!monthlyReportsInProgress && retention.isShowing === true" [data]="retention" [date]="date" class="widget" style="padding:0"></app-month-retention>
+    <app-month-organizational *ngIf="!monthlyReportsInProgress && organizational.isShowing === true"  [data] = "organizational" [date]="date" class="widget" style="padding:0"></app-month-organizational>
     <app-month-waste *ngIf="wasteEod && wasteEod.isShowing === true > 0"  [data] = "wasteEod" [date]="date" class="widget" style="padding:0" ></app-month-waste>
    <app-month-most-sold-items *ngIf="mostSoldItems.length > 0" [data]= "mostSoldItems" class="widget" style="padding:0"></app-month-most-sold-items>
 </ng-container>

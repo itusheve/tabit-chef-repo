@@ -26,7 +26,7 @@ export class MonthRetentionComponent extends AbstractTableComponent implements O
     super(dialog,dataWareHouseService);
 
     this.columns = {primary:this.columns_primary,alt:this.columns_alternative};
-    this.title = {en: 'retention', translated: 'month.retention'};
+    this.title = {en: 'retention', translated: 'retention'};
   }
 
 

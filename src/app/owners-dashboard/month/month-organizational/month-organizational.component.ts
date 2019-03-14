@@ -26,7 +26,7 @@ export class MonthOrganizationalComponent extends AbstractTableComponent impleme
   constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService){
     super(dialog,dataWareHouseService);
     this.columns = {primary:this.columns_primary,alt:this.columns_alternative};
-    this.title = {en: 'organizational', translated: 'day.organizational'};
+    this.title = {en: 'organizational', translated: 'organizational'};
   }
 
    ngOnInit() {

@@ -21,7 +21,7 @@ export class MonthCancellationComponent extends AbstractTableComponent implement
     constructor(dialog: MatDialog, dataWareHouseService: DataWareHouseService) {
         super(dialog, dataWareHouseService);
         this.columns = {primary: this.columns_primary, alt: []};
-        this.title = {en: 'Cancellation', translated: 'month.cancellations'};
+        this.title = {en: 'cancellations', translated: 'cancellations'};
     }
 
     ngOnInit() {
