@@ -39,33 +39,6 @@
             ]
           },
           "configurations": {
-            "dev-il": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev-il.ts"
-                }
-              ],
-              "i18nFile": "src/locale/messages.he.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "he"
-            },
-            "int-il": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.int-il.ts"
-                }
-              ]
-            },
-            "dev-us": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev-us.ts"
-                }
-              ]
-            },
             "production": {
               "optimization": true,
               "outputHashing": "none",
@@ -111,18 +84,7 @@
             "browserTarget": "dashboard:build"
           },
           "configurations": {
-            "dev-il": {
-              "browserTarget": "dashboard:build:dev-il"
-            },
-            "dev-us": {
-              "browserTarget": "dashboard:build:dev-us"
-            },
-            "prod-il": {
-              "browserTarget": "dashboard:build:prod-il"
-            },
-            "prod-us": {
-              "browserTarget": "dashboard:build:prod-us"
-            }
+
           }
         },
         "extract-i18n": {
