@@ -56,7 +56,7 @@ export class OlapEp {
                     time: moment().format('HHmm'),
                     currentSales: 0, //ignoring this, not used.
                     userId: userId,
-                    environment: environment
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
@@ -85,7 +85,7 @@ export class OlapEp {
                     siteId: org.id,
                     action: 'tabitChefSiteHomePage',
                     userId: userId,
-                    environment: environment
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
@@ -115,7 +115,7 @@ export class OlapEp {
                     siteId: org.id,
                     action: 'tabitChefSiteHomePageV2',
                     userId: userId,
-                    environment: environment
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
@@ -146,7 +146,7 @@ export class OlapEp {
                     action: 'tabitChefSiteDailyV2',
                     businessDate: date.format('YYYYMMDD'),
                     userId: userId,
-                    environment: environment
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
@@ -177,7 +177,7 @@ export class OlapEp {
                     action: 'tabitChefSiteMonthly',
                     businessDate: date.format('YYYYMMDD'),
                     userId: userId,
-                    environment: environment
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
@@ -206,7 +206,7 @@ export class OlapEp {
                     siteId: org.id,
                     action: 'getUsers',
                     userId: userId,
-                    environment: environment
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
@@ -237,7 +237,7 @@ export class OlapEp {
                     action: 'siteDaySalesByHour',
                     businessDate: date.format('YYYYMMDD'),
                     userId: userId,
-                    environment: environment
+                    environment: environment.environment
                 },
                 {
                     headers: headers,
