@@ -199,7 +199,7 @@ const he = {
     'month.retention': 'שימור ושיווק - פעולות ידניות ',
     'month.operationalErrorsByServer': 'החזר פריטים, OTH והנחות לפי מלצר',
     'month.corporationRefund': 'החזרים',
-    'month.corporation': 'הנחות וOTH',
+    'month.corporation': 'הנחות ו-OTH',
     'month.server': 'מלצר',
     'month.lunch': 'צהריים',
     'month.dinner': 'ערב',

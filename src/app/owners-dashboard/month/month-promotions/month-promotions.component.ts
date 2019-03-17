@@ -37,11 +37,11 @@ export class MonthPromotionsComponent extends AbstractTableComponent implements 
         super.ngOnInit();
         this.options = {primary: 'day.reason', alt: 'month.server'};
 
-        this.sortAmount('primary');
-        this.sortAmount('alt');
+        this.sortData('primary');
+        this.sortData('alt');
     }
 
-    sortAmount(option){
+    sortData(option){
         this.data[option].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']);
     }
 

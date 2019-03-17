@@ -3,6 +3,7 @@ import {MatDialog} from '@angular/material';
 import {ReportdialogComponent} from '../reportdialog/reportdialog.component';
 import {DataWareHouseService} from '../../services/data-ware-house.service';
 import * as moment from 'moment';
+import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
 
 
 export abstract class AbstractTableComponent implements OnInit {
@@ -10,10 +11,12 @@ export abstract class AbstractTableComponent implements OnInit {
     @Input()
     data: {
         primary:any[],
-        alt: any[]
+        alt: any[],
+        percent:number
     } = {
         primary:[],
-        alt:[]
+        alt:[],
+        percent:-1
     };
     columns:{primary:any,alt:any} = {primary:{},alt:{}};
 
@@ -40,12 +43,17 @@ export abstract class AbstractTableComponent implements OnInit {
     public summary: any = {};
 
     public selectedOption;
+    public tabitHelper: TabitHelper;
+/*    protected getCssColorClass(): any{
+        let percent = this.data.percent * 100;
+        return this.tabitHelper.getColorClassByPercentage(percent,true);
+    }*/
 
-    abstract getCssColorClass(): String;
 
     constructor(protected dialog:MatDialog,protected dataWareHouseService:DataWareHouseService){
         this.selectedOption = 'primary';
         this.sortDir = 'asc';
+        this.tabitHelper = new TabitHelper();
     }
 
     ngOnInit() {
@@ -56,8 +64,8 @@ export abstract class AbstractTableComponent implements OnInit {
             actions += e.qty;
         });
 
-        this.sortAmount('primary');
-        this.sortAmount('alt');
+        this.sortData('primary');
+        this.sortData('alt');
 
         this.summary = {
             total: total,
@@ -87,7 +95,7 @@ export abstract class AbstractTableComponent implements OnInit {
 
     }
 
-    sortAmount(option){
+    protected sortData(option){
         this.data[option].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']);
     }
 

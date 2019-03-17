@@ -11,10 +11,12 @@ export class MonthMostSoldItemsComponent implements OnInit {
 
     @Input()
     data;
-    allDayData = {};
+
+    services: any[] = []
+   /* allDayData = {};
     lunchData = {};
     eveningData = {};
-    nightData = {};
+    nightData = {};*/
 
 
     constructor(private dataService:DataService) {
@@ -24,43 +26,23 @@ export class MonthMostSoldItemsComponent implements OnInit {
 
         this.dataService.settings$.subscribe(settings =>{
             let servicesData =  _.groupBy(this.data, 'serviceId');
-
-            let finalData = {};
-
+            let c = 0;
             Object.keys(servicesData).forEach(serviceKey => {
+
                 let data =  servicesData[serviceKey];
                 let departmentData = _.groupBy(data,'departmentName');
-                finalData[serviceKey] = [];
+                this.services.push({data:{primary:[],alt:[]},title:data[0].serviceName});
                 Object.keys(departmentData).forEach(departmentKey =>{
                     let data = departmentData[departmentKey];
                     data.sort(this.sort);
                     data = data.slice(0,settings.maxItemsPerDepartment);
-                    finalData[serviceKey] = finalData[serviceKey].concat(data);
+                    this.services[c].data.primary = this.services[c].data.primary.concat(data);
                 });
-
+                this.services[c].data.primary.sort((a,b)=>b.departmentName.localeCompare(a.departmentName));
+                c++;
             });
 
-            this.allDayData = {primary:finalData['-1'],alt:[]};
-            this.lunchData =  {primary:finalData['10'],alt:[]};
-            this.eveningData = {primary:finalData['20'],alt:[]};
-            this.nightData =  {primary:finalData['30'],alt:[]};
         });
-
-
-
-/*       console.log(servicesData);
-       let data = [-1,10,20,30].map(
-           serviceId => {
-              let d =  this.data.filter(e => e.serviceId === serviceId);
-              d.sort(this.sort);
-              d.sort(this.sortString);
-              return d;
-           }
-
-       )*/
-
-
-
 
     }
 

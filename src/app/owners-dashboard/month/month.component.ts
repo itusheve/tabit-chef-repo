@@ -70,10 +70,11 @@ export class MonthComponent implements OnInit {
 
             let monthReport = await this.dataService.getMonthReport(month, year);
             this.monthReport = monthReport;
-
+            console.log(this.monthReport);
             this.title = this.getTitle(month, year);
 
             this.summary = this.getSummary(monthReport);
+            console.log(this.summary);
             this.showData = true;
 
             date = moment().month(month).year(year).date(2);
@@ -86,33 +87,33 @@ export class MonthComponent implements OnInit {
             this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd);
 
 
-            this.promotions = this.getReductionData('promotions', true);
+            this.promotions = this.getReductionData('promotions', true,'');
             this.monthlyReports = {
-
-                compensation: this.getReductionData('compensation', true),
-                compensationReturns: this.getReductionData('compensationReturns', true)
+                percent:this.summary[0].totals.reductions['operational'],
+                compensation: this.getReductionData('compensation', true,''),
+                compensationReturns: this.getReductionData('compensationReturns', true,'')
             };
 
             this.monthlyReports.isShowing = this.monthlyReports.compensation.isShowing || this.monthlyReports.compensationReturns.isShowing;
 
             this.monthlyReportsInProgress = false;
 
-            this.cancellation = this.getReductionData('cancellation', false);
-            this.retention = this.getReductionData('retention', true);
-            this.organizational = this.getReductionData('organizational', true);
-            this.wasteEod = this.getReductionData('wasteEod', true);
+            this.cancellation = this.getReductionData('cancellation', false,'cancellations');
+            this.retention = this.getReductionData('retention', true,'retention');
+            this.organizational = this.getReductionData('organizational', true, 'organizational');
+            this.wasteEod = this.getReductionData('wasteEod', true,'');
 
         });
     }
 
-    getReductionData(key, dataOption) {
+    getReductionData(key, dataOption,percentKey) {
 
         let data =  dataOption === true ? {
             primary: this.reductionsByReason[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
             alt: this.reductionsByFired[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
         } : {primary: this.reductionsByFired[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']), alt: []};
 
-        return Object.assign(data,{isShowing:data.primary.length > 0 || data.alt.length > 0});
+        return Object.assign(data,{isShowing:data.primary.length > 0 || data.alt.length > 0,percent:this.summary[0].totals.reductions[percentKey] ? this.summary[0].totals.reductions[percentKey].percentage : 0});
     }
 
     getSummary(monthReport) {

@@ -54,6 +54,16 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
     return 'wasteEod';
   }
 
+  protected sortData(option){
+    if (option === 'alt') {
+      this.data[option].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']);
+    }
+    else {
+      this.data[option].sort((a, b) => a['businessDateCaption'].localeCompare(b['businessDateCaption']));
+    }
+    
+  }
+
 
 
 
