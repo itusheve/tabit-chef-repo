@@ -30,6 +30,7 @@ export class MonthComponent implements OnInit {
     public showData: boolean;
     public reductionsByReason: any = {};
     private mostSoldItems: any = [];
+    private mostReturnsItems : any = [];
     public reductionsByFired: any = {};
     private promotions: any;
     private retention: any;
@@ -85,6 +86,8 @@ export class MonthComponent implements OnInit {
             this.reductionsByReason  = await this.dataWareHouseService.getReductionByReason(dateStart, dateEnd);
             this.reductionsByFired  = await this.dataWareHouseService.getReductionByFired(dateStart, dateEnd);
             this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd);
+            this.mostReturnsItems = await this.dataWareHouseService.getMostLeastReturnsItems(dateStart, dateEnd);
+
 
 
             this.promotions = this.getReductionData('promotions', true,'');

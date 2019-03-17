@@ -66,6 +66,15 @@ export class DataWareHouseService {
         return result.mostLeastSoldItems;
     }
 
+    public async getMostLeastReturnsItems(fromBusinessDate, toBusinessDate): Promise<any[]> {
+        let result = await this.dataWarehouse.get('report/mostLeastReturnItems', {
+            fromBusinessDate: fromBusinessDate,
+            toBusinessDate: toBusinessDate
+        });
+
+        return result.mostLeastReturnsItems;
+    }
+
     public getReductionByFired(fromBusinessDate, toBusinessDate) {
         return this.dataWarehouse.get('report/reductionByfiredBy', {
             fromBusinessDate: fromBusinessDate,

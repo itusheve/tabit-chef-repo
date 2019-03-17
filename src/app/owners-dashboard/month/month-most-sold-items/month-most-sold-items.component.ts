@@ -12,11 +12,8 @@ export class MonthMostSoldItemsComponent implements OnInit {
     @Input()
     data;
 
-    services: any[] = []
-   /* allDayData = {};
-    lunchData = {};
-    eveningData = {};
-    nightData = {};*/
+    services: any[] = [];
+
 
 
     constructor(private dataService:DataService) {
