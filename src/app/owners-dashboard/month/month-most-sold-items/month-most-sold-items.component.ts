@@ -22,7 +22,7 @@ export class MonthMostSoldItemsComponent implements OnInit {
     ngOnInit() {
 
         this.dataService.settings$.subscribe(settings =>{
-            let servicesData =  _.groupBy(this.data, 'serviceId');
+            let servicesData =  _.groupBy(this.data, 'serviceId', 'serviceName');
             let c = 0;
             Object.keys(servicesData).forEach(serviceKey => {
 

@@ -66,14 +66,16 @@ export class DataWareHouseService {
         return result.mostLeastSoldItems;
     }
 
-    public async getMostLeastReturnsItems(fromBusinessDate, toBusinessDate): Promise<any[]> {
-        let result = await this.dataWarehouse.get('report/mostLeastReturnItems', {
+    public async getMostReturnItems(fromBusinessDate, toBusinessDate): Promise<any[]> {
+        let result = await this.dataWarehouse.get('report/mostReturnItems', {
             fromBusinessDate: fromBusinessDate,
             toBusinessDate: toBusinessDate
         });
 
-        return result.mostLeastReturnsItems;
+        return result.mostReturnItems;
     }
+
+
 
     public getReductionByFired(fromBusinessDate, toBusinessDate) {
         return this.dataWarehouse.get('report/reductionByfiredBy', {
@@ -81,6 +83,15 @@ export class DataWareHouseService {
             toBusinessDate: toBusinessDate
         });
     }
+
+    public getHqChefHomePage(fromBusinessDate, toBusinessDate) {
+        return this.dataWarehouse.get('report/hqChefHomePage', {
+            fromBusinessDate: fromBusinessDate,
+            toBusinessDate: toBusinessDate
+        });
+    }
+
+
 
     /*public getDataBAASE(): Promise<any> {
         return new Promise((resolve, reject) => {
