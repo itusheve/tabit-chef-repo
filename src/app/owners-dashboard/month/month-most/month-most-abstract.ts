@@ -15,6 +15,7 @@ export abstract class MonthMostAbstract implements OnInit {
     }
 
     ngOnInit() {
+        // abstract //
 
         this.dataService.settings$.subscribe(settings =>{
             let servicesData =  _.groupBy(this.data, 'serviceId', 'serviceName');
