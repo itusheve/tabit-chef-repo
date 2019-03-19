@@ -24,7 +24,7 @@ export class ReportdialogComponent implements OnInit {
   public items: any[] = [];
   public sortDir: boolean;
   public sortKey: string;
-
+  isLoading:boolean = true;
 
   constructor(dialogRef:MatDialogRef<ReportdialogComponent>, @Inject(MAT_DIALOG_DATA)public data:DialogData ) {
 
@@ -34,6 +34,7 @@ export class ReportdialogComponent implements OnInit {
     this.data.itemsPromise.then(itemsResponse => {
       this.items = itemsResponse.items;
       this.items.sort((a,b)=> (a['amountIncludeVat'] - b['amountIncludeVat']) * (this.sortDir === true ? 1 : -1));
+      this.isLoading = false;
     });
 
 

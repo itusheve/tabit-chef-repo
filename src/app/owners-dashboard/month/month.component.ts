@@ -30,7 +30,9 @@ export class MonthComponent implements OnInit {
     public showData: boolean;
     public reductionsByReason: any = {};
     private mostSoldItems: any = [];
+    private mostReturnsItems: any = [];
     public reductionsByFired: any = {};
+    public hqChefHomePage: any = [];
     private promotions: any;
     private retention: any;
     private organizational: any;
@@ -82,9 +84,19 @@ export class MonthComponent implements OnInit {
             let dateStart = moment(date).startOf('month').format('YYYYMMDD');
             let dateEnd = moment(date).endOf('month').format('YYYYMMDD');
 
+            let dataSatartHq = moment(date).startOf('day').format('YYYYMMDD');
+            let dataEndHq = moment(date).endOf('day').format('YYYYMMDD');
+
             this.reductionsByReason  = await this.dataWareHouseService.getReductionByReason(dateStart, dateEnd);
             this.reductionsByFired  = await this.dataWareHouseService.getReductionByFired(dateStart, dateEnd);
             this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd);
+            this.mostReturnsItems = await this.dataWareHouseService.getMostReturnItems(dateStart, dateEnd);
+
+            this.hqChefHomePage = await this.dataWareHouseService.getHqChefHomePage(dataSatartHq, dataEndHq);
+
+
+
+
 
 
             this.promotions = this.getReductionData('promotions', true,'');
