@@ -1,12 +1,20 @@
 <div class="dialog-modal-content-fixed">
   <div class="dialog-content">
+
     <div class="card-header text-center rounded-0 bg-secondary text-white">
       <span style="font-size: 18px;" [translate]="'' + data.title"></span><br>
     <span style="font-size: 18px;" [translate]="data.isWaiter === false ? 'day.reason' : 'month.server'"></span>:&nbsp;<span  style="font-size: 18px;">{{data.isWaiter === false ? data.reason : data.fullName}}</span><br>
     <span style="font-size: 18px;" [translate]="'month.quantity'"></span>:&nbsp;<span  style="font-size: 18px;">{{data.quantity | number}}</span><br>
      <span  style="font-size: 18px;" [translate]="'month.amount'"></span>:&nbsp;<span style="font-size: 18px;">{{data.amount | curr: '0'}}</span>
     </div>
-   <table class="table">
+
+      <div class="text-center" *ngIf="isLoading === true">
+          <dx-load-indicator></dx-load-indicator>
+          <p class="text-center saving"><span
+                  [translate]="'month.dialog.fetching'">Fetching</span><span>.</span><span>.</span><span>.</span>
+          </p>
+      </div>
+   <table class="table" *ngIf="isLoading===false">
 
        <tbody style="width: 100%; display: table;">
 
@@ -19,6 +27,8 @@
                <mat-icon class="sortMatIcon" *ngIf="sortKey==='qty' && sortDir===true">arrow_drop_up</mat-icon>
            </div>
        </td>
+
+
        <td colspan="5" (click)="sort('amountIncludeVat')"  style="cursor:pointer">
            <div class="flex a-center">
                <span [translate]="'month.amount'"></span>

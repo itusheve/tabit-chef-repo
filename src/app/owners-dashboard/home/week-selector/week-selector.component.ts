@@ -232,6 +232,14 @@ export class WeekSelectorComponent {
             });
     }
 
+    select(event: MouseEvent, week): void {
+        this.selection = week.date;
+        this.currentMonth = week.date;
+        //this.onDateChanged(this.selection);
+        this.bottomSheetRef.dismiss();
+        event.preventDefault();
+    }
+
     goHome() {
         this.ownersDashboardService.toolbarConfig.home.goHome();
         this.bottomSheetRef.dismiss();

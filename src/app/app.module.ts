@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';//required by some material components
-
+import {DxLoadIndicatorModule} from 'devextreme-angular';
 import {registerLocaleData} from '@angular/common';
 import localeHe from '@angular/common/locales/he';
 import localeHeExtra from '@angular/common/locales/extra/he';
@@ -99,12 +99,14 @@ if (environment.tbtLocale === 'he-IL') {
         ForgotPasswordDialogComponent,
         AppComponent,
         LoginComponent,
+
         ReportdialogComponent,
         OwnersDashboardCurrencyPipeDialog,
         CurrencyPipeDialog
     ],
     imports: [
         BrowserModule,
+        DxLoadIndicatorModule,
         HttpClientModule,
         ReactiveFormsModule,
         // ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),

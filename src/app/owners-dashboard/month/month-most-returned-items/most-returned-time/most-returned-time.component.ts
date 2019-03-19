@@ -17,7 +17,7 @@ export class MostReturnedTimeComponent extends AbstractTableComponent implements
       {en: 'Department', dataKey: 'departmentName', translated: 'day.department'},
       {en: 'Item', dataType: 'item', dataKey: 'itemName', translated: 'day.item'},
       {en: 'Prepared', dataType: 'number', dataKey: 'prepared', translated: 'month.prepared'},
-      {en: 'Returned', dataKey: 'return', dataType: 'number', translated: 'month.returned'},
+      {en: 'Returned', dataKey: 'return', additionalDataKey:'prc', dataType: 'number', translated: 'month.returned'},
       {en: 'OperationalReductionsValue',  dataKey: 'returnAmount',  dataType: 'currency', translated: 'month.operationalReductionsValue'}
 
     ],

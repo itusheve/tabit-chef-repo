@@ -33,7 +33,7 @@
                     <td *ngFor="let column of columns[selectedOption]; let i = index">
                         <span *ngIf="i == 0">{{tuple[column.dataKey]}}</span>
                         <span *ngIf="column.dataType === 'currency' && i!=0">{{tuple[column.dataKey] | curr:'0'}}</span>
-                        <span *ngIf="column.dataType === 'number' && i!=0">{{tuple[column.dataKey] | number}}</span>
+                        <span *ngIf="column.dataType === 'number' && i!=0">{{column.additionalDataKey ? '(' + tuple[column.additionalDataKey] + '% )':''}}&nbsp;{{tuple[column.dataKey] | number}}</span>
                         <span *ngIf="column.dataType === 'item' && i!=0">{{tuple[column.dataKey]}}</span>
                     </td>
                 </tr>

@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
-import * as _ from 'lodash';
+import {Component} from '@angular/core';
 import {DataService} from '../../../../tabit/data/data.service';
+import {MonthMostAbstract} from '../month-most/month-most-abstract';
 
 
 @Component({
@@ -8,39 +8,12 @@ import {DataService} from '../../../../tabit/data/data.service';
   templateUrl: './month-most-returned-items.component.html',
   styleUrls: ['./month-most-returned-items.component.scss']
 })
-export class MonthMostReturnedItemsComponent implements OnInit {
+export class MonthMostReturnedItemsComponent extends MonthMostAbstract{
 
-  @Input()
-  data;
 
-  services: any[] = [];
-
-  constructor(private dataService: DataService) { }
-
-  ngOnInit() {
-    this.dataService.settings$.subscribe(settings =>{
-      let servicesData = _.groupBy(this.data,'serviceId');
-      let e = 0;
-      Object.keys(servicesData).forEach( serviceKey =>{
-        let data = servicesData[serviceKey];
-        let departmentData = _.groupBy(data,'departmentName');
-        this.services.push({data:{primary:[],alt:[]},title:data[0].serviceName});
-        Object.keys(departmentData).forEach(departmentKey => {
-          let data = departmentData[departmentKey];
-          data.sort(this.sort);
-          data = data.slice(0,settings.maxItemsPerDepartment);
-          this.services[e].data.primary = this.services[e].data.primary.concat(data);
-        });
-        this.services[e].data.primary.sort((a,b)=> b.departmentName.localeCompare(a.departmentName));
-        e++;
-      });
-
-    });
-        console.log(this.data);
+  constructor(protected dataService: DataService) {
+    super(dataService);
   }
 
 
-  sort(a,b){
-    return b.returnAmount - a.returnAmount;
-  }
 }
