@@ -93,7 +93,7 @@ export abstract class AbstractTableComponent implements OnInit {
 
         this.dialog.open(ReportdialogComponent,{
             width: '100vw',
-            height: '90vh',
+            height: '85vh',
             panelClass: 'repor-dialog',
             hasBackdrop: true,
             backdropClass: 'report-dialog-backdrop',

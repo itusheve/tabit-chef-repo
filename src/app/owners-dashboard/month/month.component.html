@@ -33,16 +33,16 @@
                             <tbody>
                             <tr>
                                 <td><span class="font-weight-bold" [translate]="'month.sales'"></span></td>
-                                <td>{{(service.totals.sales - service.totals.vat) | curr:'0':'':'':true}} ({{service.totals.percentage | pct: 1}})</td>
+                                <td>{{(service.totals.sales - service.totals.vat) | curr:'0':'':'':true}}</td>
                                 <ng-container *ngFor="let orderType of service.kpis">
-                                    <td>{{(orderType.sales - orderType.vat) | curr:'0':'':'':true}} (({{orderType.percentage | pct: 1}}))</td>
+                                    <td>{{(orderType.sales - orderType.vat) | curr:'0':'':'':true}}</td>
                                 </ng-container>
                             </tr>
                             <tr>
                                 <td><span class="font-weight-bold" [translate]="'day.salesWithTax'"></span></td>
-                                <td>{{service.totals.sales | curr:'0':'':'':true}}</td>
+                                <td>{{service.totals.sales | curr:'0':'':'':true}}<br> ({{service.totals.percentage | pct: 1}})</td>
                                 <ng-container *ngFor="let orderType of service.kpis">
-                                    <td>{{orderType.sales | curr:'0':'':'':true}}</td>
+                                    <td>{{orderType.sales | curr:'0':'':'':true}}<br> ({{orderType.percentage | pct: 1}})</td>
                                 </ng-container>
                             </tr>
                             <tr *ngIf="service.totals.tip">
