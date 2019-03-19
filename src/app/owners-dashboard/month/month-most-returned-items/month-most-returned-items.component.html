@@ -1,3 +1,13 @@
-<p>
-  month-most-returned-items works!
-</p>
+<div class="flex d-col">
+  <div class="title">
+    <span [translate]="'day.mostReturnedItems'"></span>
+  </div>
+  <mat-accordion>
+    <ng-container>
+      <mat-expansion-panel [expanded]="true">
+        <app-most-returned-time *ngFor="let service of services" [summaryOption]="false" [data]="service.data" [title]="{translated:'' + service.title}" [dataOptionMode] = "false" style="padding:0px"></app-most-returned-time>
+
+      </mat-expansion-panel>
+    </ng-container>
+  </mat-accordion>
+</div>

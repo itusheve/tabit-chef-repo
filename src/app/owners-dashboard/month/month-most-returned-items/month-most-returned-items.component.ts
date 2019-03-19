@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import {DataWareHouseService} from '../../../services/data-ware-house.service';
+import {Component} from '@angular/core';
+import {DataService} from '../../../../tabit/data/data.service';
+import {MonthMostAbstract} from '../month-most/month-most-abstract';
+
 
 @Component({
   selector: 'app-month-most-returned-items',
   templateUrl: './month-most-returned-items.component.html',
   styleUrls: ['./month-most-returned-items.component.scss']
 })
-export class MonthMostReturnedItemsComponent implements OnInit {
+export class MonthMostReturnedItemsComponent extends MonthMostAbstract{
 
-  constructor(private dataWareHouseService: DataWareHouseService) { }
 
-  ngOnInit() {
+  constructor(protected dataService: DataService) {
+    super(dataService);
   }
+
 
 }

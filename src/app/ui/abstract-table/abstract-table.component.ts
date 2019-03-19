@@ -6,6 +6,13 @@ import * as moment from 'moment';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
 
 
+export interface AbstractDataRow {
+    en:String;
+    dataKey:String;
+    additionalDataKey?:String;
+    dataType?:String;
+    translated:String;
+};
 export abstract class AbstractTableComponent implements OnInit {
 
     @Input()
@@ -18,7 +25,7 @@ export abstract class AbstractTableComponent implements OnInit {
         alt:[],
         percent:-1
     };
-    columns:{primary:any,alt:any} = {primary:{},alt:{}};
+    columns:{primary:AbstractDataRow[],alt:AbstractDataRow[]} = {primary:[],alt:[]};
 
     @Input()
     date:any;
