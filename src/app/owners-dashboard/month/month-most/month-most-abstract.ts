@@ -7,7 +7,7 @@ export abstract class MonthMostAbstract implements OnInit {
     @Input()
     protected data;
 
-    private services: any[] = [];
+    services: any[] = [];
 
 
 
