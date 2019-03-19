@@ -13,7 +13,8 @@ import {DataWareHouseService} from '../../services/data-ware-house.service';
 @Component({
   selector: 'app-week',
   templateUrl: './week.component.html',
-  styleUrls: ['./week.component.scss']
+  styleUrls: ['./week.component.scss'],
+  providers: [DatePipe]
 })
 export class WeekComponent implements OnInit {
 
@@ -48,6 +49,7 @@ export class WeekComponent implements OnInit {
               private datePipe: DatePipe ) { }
 
   ngOnInit() {
+    this.env = environment;
     this.dataService.selectedWeek$.subscribe( async date =>{
 
       this.weeklyReportsInProgress = true;

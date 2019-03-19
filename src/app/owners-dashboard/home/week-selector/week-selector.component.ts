@@ -10,6 +10,7 @@ import {environment} from '../../../../environments/environment';
 import {combineLatest} from 'rxjs/internal/observable/combineLatest';
 import {OwnersDashboardService} from '../../owners-dashboard.service';
 import {TranslateService} from '@ngx-translate/core';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-week-selector',
@@ -34,7 +35,8 @@ export class WeekSelectorComponent {
         @Inject(MAT_BOTTOM_SHEET_DATA) data,
         private dataService: DataService,
         public translate: TranslateService,
-        public ownersDashboardService: OwnersDashboardService) {
+        public ownersDashboardService: OwnersDashboardService,
+        private router: Router) {
         this.env = environment;
         this.tabitHelper = new TabitHelper();
         this.onDateChanged = data.onDateChanged;
@@ -236,8 +238,9 @@ export class WeekSelectorComponent {
         this.selection = week.date;
         this.currentMonth = week.date;
         //this.onDateChanged(this.selection);
-        this.bottomSheetRef.dismiss();
-        event.preventDefault();
+        this.router.navigate(['/owners-dashboard/week']);
+        //this.bottomSheetRef.dismiss();
+        //event.preventDefault();
     }
 
     goHome() {

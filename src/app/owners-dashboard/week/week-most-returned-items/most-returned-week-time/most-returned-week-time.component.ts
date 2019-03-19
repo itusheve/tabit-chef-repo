@@ -4,12 +4,11 @@ import {DataWareHouseService} from '../../../../services/data-ware-house.service
 import {MatDialog} from '@angular/material';
 
 @Component({
-  selector: 'app-most-returned-time',
+  selector: 'app-most-returned-week-time',
   templateUrl: '../../../../ui/abstract-table/abstract-table.component.html',
-  styleUrls: ['./most-returned-time.component.scss']
+  styleUrls: ['./most-returned-week-time.component.scss']
 })
-export class MostReturnedTimeComponent extends AbstractTableComponent implements OnInit {
-
+export class MostReturnedWeekTimeComponent extends AbstractTableComponent implements OnInit {
 
   columns = {
     primary: [
@@ -23,14 +22,11 @@ export class MostReturnedTimeComponent extends AbstractTableComponent implements
     alt:[]
   };
 
-  constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService){
+  constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService) {
     super(dialog ,dataWareHouseService);
-
   }
 
   ngOnInit() {
-    /*this.percent = this.date['prc'];
-    console.log(this.percent);*/
   }
 
   getCssColorClass(): String {
@@ -44,5 +40,4 @@ export class MostReturnedTimeComponent extends AbstractTableComponent implements
   protected getType(): string {
     return 'mostReturnLeastItems';
   }
-
 }

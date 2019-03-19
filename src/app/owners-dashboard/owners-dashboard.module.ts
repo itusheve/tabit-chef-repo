@@ -98,7 +98,6 @@ import { MonthPaymentsComponent } from './month/month-payments/month-payments.co
 import { MonthOperationalErrorsComponent } from './month/month-operational-errors/month-operational-errors.component';
 import { MonthRetentionComponent } from './month/month-retention/month-retention.component';
 import { MonthOrganizationalComponent } from './month/month-organizational/month-organizational.component';
-import { MonthSalesByMainAndSubCategoriesComponent } from './month/month-sales-by-main-and-sub-categories/month-sales-by-main-and-sub-categories.component';
 import { MonthMostSoldItemsComponent } from './month/month-most-sold-items/month-most-sold-items.component';
 import { MonthMostReturnedItemsComponent } from './month/month-most-returned-items/month-most-returned-items.component';
 import { MonthCancellationComponent } from './month/month-cancellation/month-cancellation.component';
@@ -111,6 +110,12 @@ import { MostReturnedTimeComponent } from './month/month-most-returned-items/mos
 import { WeekComponent } from './week/week.component';
 import { WeekCancellationComponent } from './week/week-cacellation/week-cancellation.component';
 import { WeekOrganizationalComponent } from './week/week-organizational/week-organizational.component';
+import { WeekPromotionComponent } from './week/week-promotion/week-promotion.component';
+import { WeekRetentionComponent } from './week/week-retention/week-retention.component';
+import { WeekWasteComponent } from './week/week-waste/week-waste.component';
+import { WeekMostReturnedItemsComponent } from './week/week-most-returned-items/week-most-returned-items.component';
+import { MostReturnedWeekTimeComponent } from './week/week-most-returned-items/most-returned-week-time/most-returned-week-time.component';
+
 
 @NgModule({
     imports: [
@@ -211,7 +216,6 @@ import { WeekOrganizationalComponent } from './week/week-organizational/week-org
         MonthOperationalErrorsComponent,
         MonthRetentionComponent,
         MonthOrganizationalComponent,
-        MonthSalesByMainAndSubCategoriesComponent,
         MonthMostSoldItemsComponent,
         MonthMostReturnedItemsComponent,
         MonthCancellationComponent,
@@ -222,7 +226,12 @@ import { WeekOrganizationalComponent } from './week/week-organizational/week-org
         MostReturnedTimeComponent,
         WeekComponent,
         WeekCancellationComponent,
-        WeekOrganizationalComponent
+        WeekOrganizationalComponent,
+        WeekPromotionComponent,
+        WeekRetentionComponent,
+        WeekWasteComponent,
+        WeekMostReturnedItemsComponent,
+        MostReturnedWeekTimeComponent
     ],
     providers: [
         OwnersDashboardService
