@@ -109,6 +109,8 @@ import { MostSoldTimeComponent } from './month/month-most-sold-items/most-sold-t
 import {ReportdialogComponent} from '../ui/reportdialog/reportdialog.component';
 import { MostReturnedTimeComponent } from './month/month-most-returned-items/most-returned-time/most-returned-time.component';
 import { WeekComponent } from './week/week.component';
+import { WeekCancellationComponent } from './week/week-cacellation/week-cancellation.component';
+import { WeekOrganizationalComponent } from './week/week-organizational/week-organizational.component';
 
 @NgModule({
     imports: [
@@ -218,7 +220,9 @@ import { WeekComponent } from './week/week.component';
         MonthCorporationComponent,
         MostSoldTimeComponent,
         MostReturnedTimeComponent,
-        WeekComponent
+        WeekComponent,
+        WeekCancellationComponent,
+        WeekOrganizationalComponent
     ],
     providers: [
         OwnersDashboardService
