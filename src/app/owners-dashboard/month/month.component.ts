@@ -25,6 +25,7 @@ export class MonthComponent implements OnInit {
     public payments: any;
     public summary: any;
     public env: any;
+    public totals: any;
     public title: string;
     public incVat: boolean;
     public showData: boolean;
@@ -73,11 +74,10 @@ export class MonthComponent implements OnInit {
 
             let monthReport = await this.dataService.getMonthReport(month, year);
             this.monthReport = monthReport;
-            console.log(this.monthReport);
+
             this.title = this.getTitle(month, year);
 
             this.summary = this.getSummary(monthReport);
-            console.log(this.summary);
             this.showData = true;
 
             date = moment().month(month).year(year).date(2);
@@ -93,8 +93,7 @@ export class MonthComponent implements OnInit {
             this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd);
             this.mostReturnsItems = await this.dataWareHouseService.getMostReturnItems(dateStart, dateEnd);
             this.refund = await this.dataWareHouseService.getRefund(dateStart, dateEnd);
-
-            console.log(this.refund);
+            
 
             this.hqChefHomePage = await this.dataWareHouseService.getHqChefHomePage(dataSatartHq, dataEndHq);
 
