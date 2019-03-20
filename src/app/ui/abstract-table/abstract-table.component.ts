@@ -82,7 +82,6 @@ export abstract class AbstractTableComponent implements OnInit {
 
 
 
-
     }
 
     isNumber(num) {

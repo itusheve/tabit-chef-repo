@@ -33,7 +33,7 @@ export class MonthComponent implements OnInit {
     private mostSoldItems: any = [];
     private mostReturnsItems: any = [];
     public reductionsByFired: any = {};
-    public refund: any = [];
+    public refund: any  = [];
     public hqChefHomePage: any = [];
     private promotions: any;
     private retention: any;
@@ -98,10 +98,9 @@ export class MonthComponent implements OnInit {
             this.hqChefHomePage = await this.dataWareHouseService.getHqChefHomePage(dataSatartHq, dataEndHq);
 
 
+                console.log(this.refund);
 
-
-
-
+           /* this.refund = this.getReductionData('refund', false, 'refund');*/
             this.promotions = this.getReductionData('promotions', true,'');
             this.monthlyReports = {
                 percent:this.summary[0].totals.reductions['operational'],
@@ -130,6 +129,8 @@ export class MonthComponent implements OnInit {
 
         return Object.assign(data,{isShowing:data.primary.length > 0 || data.alt.length > 0,percent:this.summary[0].totals.reductions[percentKey] ? this.summary[0].totals.reductions[percentKey].percentage : 0});
     }
+
+
 
     getSummary(monthReport) {
         let salesByService = _.get(monthReport, 'sales');

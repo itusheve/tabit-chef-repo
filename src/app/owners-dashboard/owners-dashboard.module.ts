@@ -115,6 +115,7 @@ import { WeekRetentionComponent } from './week/week-retention/week-retention.com
 import { WeekWasteComponent } from './week/week-waste/week-waste.component';
 import { WeekMostReturnedItemsComponent } from './week/week-most-returned-items/week-most-returned-items.component';
 import { MostReturnedWeekTimeComponent } from './week/week-most-returned-items/most-returned-week-time/most-returned-week-time.component';
+import { MonthRefundsComponent } from './month/month-refunds/month-refunds.component';
 
 
 @NgModule({
@@ -222,6 +223,7 @@ import { MostReturnedWeekTimeComponent } from './week/week-most-returned-items/m
         MonthPromotionsComponent,
         MonthCorporationReturnComponent,
         MonthCorporationComponent,
+        MonthRefundsComponent,
         MostSoldTimeComponent,
         MostReturnedTimeComponent,
         WeekComponent,
@@ -231,7 +233,7 @@ import { MostReturnedWeekTimeComponent } from './week/week-most-returned-items/m
         WeekRetentionComponent,
         WeekWasteComponent,
         WeekMostReturnedItemsComponent,
-        MostReturnedWeekTimeComponent
+        MostReturnedWeekTimeComponent,
     ],
     providers: [
         OwnersDashboardService
