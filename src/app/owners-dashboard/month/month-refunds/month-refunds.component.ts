@@ -1,7 +1,8 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {DataWareHouseService} from '../../../services/data-ware-house.service';
 import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
 import {MatDialog} from '@angular/material';
+import data from 'devextreme/bundles/dx.all';
 
 @Component({
   selector: 'app-month-refunds',
@@ -9,6 +10,8 @@ import {MatDialog} from '@angular/material';
   styleUrls: ['./month-refunds.component.scss', '../../../ui/abstract-table/abstract-table.component.scss']
 })
 export class MonthRefundsComponent extends AbstractTableComponent implements OnInit, OnChanges {
+
+  @Input()
 
   columns_primary = [
     {en: 'Date', dataKey: 'opened', translated: 'details.date'},

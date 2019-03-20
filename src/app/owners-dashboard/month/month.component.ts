@@ -98,9 +98,9 @@ export class MonthComponent implements OnInit {
             this.hqChefHomePage = await this.dataWareHouseService.getHqChefHomePage(dataSatartHq, dataEndHq);
 
 
-                console.log(this.refund);
 
-           /* this.refund = this.getReductionData('refund', false, 'refund');*/
+
+
             this.promotions = this.getReductionData('promotions', true,'');
             this.monthlyReports = {
                 percent:this.summary[0].totals.reductions['operational'],
