@@ -159,8 +159,7 @@ export class OrderViewComponent implements OnInit {
     }
 
     public onSelectDocument(tabChangeEvent: MatTabChangeEvent) {
-        console.log('tabChangeEvent => ', tabChangeEvent);
-        console.log('index => ', tabChangeEvent.index);
+
         let documentItem = this.documentsList[tabChangeEvent.index];
 
         this.selectedDocument = documentItem;
@@ -282,8 +281,6 @@ export class OrderViewComponent implements OnInit {
                     this.rosEp.get(`documents/v2/${doc.id}/printdata`)
                         .then(printData => {
 
-                            console.log("1");
-
                             if (printData.length <= 0)
                                 return;
 
@@ -308,8 +305,6 @@ export class OrderViewComponent implements OnInit {
 
                     this.getChecks(doc)
                         .then(checks => {
-
-                            console.log("2");
 
                             checks.forEach(printData => {
 
