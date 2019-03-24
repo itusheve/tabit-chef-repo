@@ -64,6 +64,16 @@ export abstract class AbstractTableComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        this.sortData('primary');
+        this.sortData('alt');
+
+        this.summary = this.getSummary();
+
+
+    }
+
+    protected getSummary(){
         let total = 0;
         let actions = 0;
         this.data[this.selectedOption].forEach(e => {
@@ -71,16 +81,11 @@ export abstract class AbstractTableComponent implements OnInit {
             actions += e.qty;
         });
 
-        this.sortData('primary');
-        this.sortData('alt');
-
-        this.summary = {
+        return {
             total: total,
             actions: actions,
             connect: 'day.actionsWorth',
         };
-
-
 
     }
 
