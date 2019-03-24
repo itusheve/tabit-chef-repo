@@ -12,9 +12,9 @@ import * as moment from 'moment';
 export class MonthCancellationComponent extends AbstractTableComponent implements OnInit, OnChanges {
 
     columns_primary = [
-        {en: 'Waiter', dataKey: 'fullName', translated: 'month.server'},
-        {en: 'Quantity', dataType: 'number', dataKey: 'qty', translated: 'month.quantity'},
-        {en: 'Amount', dataKey: 'amountIncludeVat', dataType: 'currency', translated: 'month.amount'}
+        {en: 'Waiter', dataKey: 'fullName', translated: 'month.server', width: '40%'},
+        {en: 'Quantity', dataType: 'number', dataKey: 'qty', translated: 'month.quantity', width: '30%'},
+        {en: 'Amount', dataKey: 'amountIncludeVat', dataType: 'currency', translated: 'month.amount', width: '30%'}
     ];
 
 
