@@ -27,7 +27,6 @@ export class MonthCancellationComponent extends AbstractTableComponent implement
     ngOnInit() {
         super.ngOnInit();
         this.options = {primary: 'details.date', alt: 'day.reason'};
-        console.log(this.data);
 
     }
 
