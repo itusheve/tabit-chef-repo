@@ -131,7 +131,7 @@
     <app-month-retention *ngIf="!monthlyReportsInProgress && retention.isShowing === true" [data]="retention" [date]="date" class="widget" style="padding:0"></app-month-retention>
     <app-month-organizational *ngIf="!monthlyReportsInProgress && organizational.isShowing === true"  [data] = "organizational" [date]="date" class="widget" style="padding:0"></app-month-organizational>
     <app-month-waste *ngIf="wasteEod && wasteEod.isShowing === true > 0"  [data] = "wasteEod" [date]="date" class="widget" style="padding:0" ></app-month-waste>
-   <!-- <app-month-refunds [data] = "refunds" [date]="date" class="widget" style="padding:0" ></app-month-refunds>-->
+    <app-month-refunds *ngIf="!monthlyReportsInProgress" [data] = "refunds" [date]="date" class="widget" style="padding:0" [dataOptionMode]="false"  ></app-month-refunds>
     <app-month-most-sold-items *ngIf="mostSoldItems.length > 0" [data]= "mostSoldItems" class="widget" style="padding:0"></app-month-most-sold-items>
     <app-month-most-returned-items *ngIf="mostReturnsItems.length > 0" [data]="mostReturnsItems" class="widget" style="padding:0"></app-month-most-returned-items>
 </ng-container>

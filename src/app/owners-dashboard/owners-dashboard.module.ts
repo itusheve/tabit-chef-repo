@@ -118,6 +118,7 @@ import { MostReturnedWeekTimeComponent } from './week/week-most-returned-items/m
 import { MonthRefundsComponent } from './month/month-refunds/month-refunds.component';
 import { WeekMostSoldItemsComponent } from './week/week-most-sold-items/week-most-sold-items.component';
 import { MostSoldWeekTimeComponent } from './week/week-most-sold-items/most-sold-week-time/most-sold-week-time.component';
+import {DataWareHouseService} from '../services/data-ware-house.service';
 
 
 @NgModule({
@@ -240,7 +241,8 @@ import { MostSoldWeekTimeComponent } from './week/week-most-sold-items/most-sold
         MostSoldWeekTimeComponent,
     ],
     providers: [
-        OwnersDashboardService
+        OwnersDashboardService,
+        DataWareHouseService
     ],
     entryComponents: [
         MonthSelectorComponent,

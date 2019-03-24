@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {DataWareHouseService} from '../../../services/data-ware-house.service';
 import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
 import {MatDialog} from '@angular/material';
-import data from 'devextreme/bundles/dx.all';
+
 
 @Component({
   selector: 'app-month-refunds',
@@ -15,10 +15,10 @@ export class MonthRefundsComponent extends AbstractTableComponent implements OnI
 
   columns_primary = [
     {en: 'Date', dataKey: 'opened', translated: 'details.date'},
-    {en: 'Waiter', dataKey: 'approveByName', translated: 'month.server'},
+    {en: 'Waiter', dataKey: 'approveByName', dataType: 'item', translated: 'month.server'},
     {en: 'OrderNumber', dataType: 'number', dataKey: 'orderNumber', translated: 'month.order'},
     {en: 'Amount', dataKey: 'amount', dataType: 'currency', translated: 'month.amount'},
-    {en: 'Payments', dataKey: 'paymentsName',  translated: 'month.payments'}
+    {en: 'Payments', dataType:'item' ,dataKey: 'paymentsName',  translated: 'month.payments'}
   ];
 
 
@@ -35,7 +35,6 @@ export class MonthRefundsComponent extends AbstractTableComponent implements OnI
   ngOnInit() {
     super.ngOnInit();
     this.options = {primary: 'details.date', alt: 'day.reason'};
-    console.log(this.data);
 
   }
 
@@ -43,17 +42,29 @@ export class MonthRefundsComponent extends AbstractTableComponent implements OnI
     return false;
   }
 
+  protected getSummary() {
+    let total = 0;
+    this.data.primary.forEach(e =>total += e.amount);
+    return {
+      total: total,
+      actions: this.data.primary.length,
+      connect: 'day.actionsWorth',
+    };
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
   }
 
-  getCssColorClass() {
-    const elements = document.getElementsByClassName('card-cancellation');
-    const color = window.getComputedStyle(elements[0], null).getPropertyValue('color');
-    return color;
+  getCssColorClass(): String {
+    return 'bg-white';
   }
 
   protected getType(): string {
     return 'refund';
+  }
+
+  protected  sortData(option) {
+
   }
 
 }

@@ -61,11 +61,9 @@ export class MonthGridComponent implements OnInit {
             this.hasYearlyAvg = false;
             this.days = [];
             _.each(days, day => {
-                if (day.businessDate !== businessDate.format('YYYY-MM-DD')) {
-                    this.days.push(day);
-                    if (day.AvgPySalesAndRefoundAmountIncludeVat) {
-                        this.hasYearlyAvg = true;
-                    }
+                this.days.push(day);
+                if (day.AvgPySalesAndRefoundAmountIncludeVat) {
+                    this.hasYearlyAvg = true;
                 }
             });
 
