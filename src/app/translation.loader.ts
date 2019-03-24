@@ -20,7 +20,7 @@ const he = {
     'ORDERS_VIEW.exempted_tax': 'Tax Exempt',
     'OTC': 'דלפק',
     'otc': 'דלפק',
-    'refund': 'החזר',
+    'refund': 'החזרים כספיים',
     'OTH': 'על חשבון הבית',
     'Promotions': 'מבצע',
     'Returns': 'החזרה',
