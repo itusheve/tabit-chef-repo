@@ -10,7 +10,6 @@ import { TutorialComponent } from './tutorial/tutorial.component';
 import { OrgGuard } from '../auth/org-guard.service';
 import {MonthComponent} from './month/month.component';
 import {MonthPaymentsComponent} from './month/month-payments/month-payments.component';
-import {WeekComponent} from './week/week.component';
 
 const ownersDashboardRoutes: Routes = [
     { 
@@ -30,10 +29,6 @@ const ownersDashboardRoutes: Routes = [
             {
                 path: 'month',
                 component: MonthComponent
-            },
-            {
-                path: 'week',
-                component: WeekComponent
             },
             {
                 path: 'monthPayment',

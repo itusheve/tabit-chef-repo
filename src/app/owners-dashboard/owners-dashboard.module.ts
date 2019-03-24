@@ -107,17 +107,7 @@ import { MonthCorporationComponent } from './month/month-operational-errors/mont
 import { MostSoldTimeComponent } from './month/month-most-sold-items/most-sold-time/most-sold-time.component';
 import {ReportdialogComponent} from '../ui/reportdialog/reportdialog.component';
 import { MostReturnedTimeComponent } from './month/month-most-returned-items/most-returned-time/most-returned-time.component';
-import { WeekComponent } from './week/week.component';
-import { WeekCancellationComponent } from './week/week-cacellation/week-cancellation.component';
-import { WeekOrganizationalComponent } from './week/week-organizational/week-organizational.component';
-import { WeekPromotionComponent } from './week/week-promotion/week-promotion.component';
-import { WeekRetentionComponent } from './week/week-retention/week-retention.component';
-import { WeekWasteComponent } from './week/week-waste/week-waste.component';
-import { WeekMostReturnedItemsComponent } from './week/week-most-returned-items/week-most-returned-items.component';
-import { MostReturnedWeekTimeComponent } from './week/week-most-returned-items/most-returned-week-time/most-returned-week-time.component';
 import { MonthRefundsComponent } from './month/month-refunds/month-refunds.component';
-import { WeekMostSoldItemsComponent } from './week/week-most-sold-items/week-most-sold-items.component';
-import { MostSoldWeekTimeComponent } from './week/week-most-sold-items/most-sold-week-time/most-sold-week-time.component';
 import {DataWareHouseService} from '../services/data-ware-house.service';
 import { DayRefundComponent } from './day-view/day-refund/day-refund.component';
 
@@ -230,16 +220,6 @@ import { DayRefundComponent } from './day-view/day-refund/day-refund.component';
         MonthRefundsComponent,
         MostSoldTimeComponent,
         MostReturnedTimeComponent,
-        WeekComponent,
-        WeekCancellationComponent,
-        WeekOrganizationalComponent,
-        WeekPromotionComponent,
-        WeekRetentionComponent,
-        WeekWasteComponent,
-        WeekMostReturnedItemsComponent,
-        MostReturnedWeekTimeComponent,
-        WeekMostSoldItemsComponent,
-        MostSoldWeekTimeComponent,
         DayRefundComponent,
     ],
     providers: [
