@@ -1,15 +1,14 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Order } from '../../../tabit/model/Order.model';
-import { ClosedOrdersDataService } from '../../../tabit/data/dc/closedOrders.data.service';
-import { ORDERS_VIEW } from '../../../tabit/data/dc/closedOrders.data.service';
-import { ROSEp } from '../../../tabit/data/ep/ros.ep';
-import { environment } from '../../../environments/environment';
-import { DataService } from '../../../tabit/data/data.service';
+import {Component, OnInit, Input, ViewChild, ElementRef} from '@angular/core';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {Order} from '../../../tabit/model/Order.model';
+import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
+import {ORDERS_VIEW} from '../../../tabit/data/dc/closedOrders.data.service';
+import {ROSEp} from '../../../tabit/data/ep/ros.ep';
+import {DataService} from '../../../tabit/data/data.service';
 import * as _ from 'lodash';
-import { TranslateService } from '@ngx-translate/core';
-import { ContentObserver } from '@angular/cdk/observers';
-import { MatTabChangeEvent } from '@angular/material';
+import {TranslateService} from '@ngx-translate/core';
+import {MatTabChangeEvent} from '@angular/material';
+import { environment } from '../../../environments/environment';
 
 export interface SlipVM {
     id: number;
@@ -39,7 +38,6 @@ export class OrderViewComponent implements OnInit {
     ORDERS_VIEW: any;
     orderDocs: any;
     html: any;
-    documents: any[];
     showTimeline: boolean;
     organization;
 
@@ -62,7 +60,7 @@ export class OrderViewComponent implements OnInit {
     templateHTML;
 
     constructor(private closedOrdersDataService: ClosedOrdersDataService,
-        private route: ActivatedRoute, private rosEp: ROSEp, private dataService: DataService, private translate: TranslateService) {
+                private route: ActivatedRoute, private rosEp: ROSEp, private dataService: DataService, private translate: TranslateService) {
         this.ORDERS_VIEW = ORDERS_VIEW.getTranslations();
         this.orderDocs = {};
 
@@ -73,89 +71,24 @@ export class OrderViewComponent implements OnInit {
 
     async ngOnInit() {
         this.showTimeline = false;
-        this.documentViewer = new (<any>window).DocumentViewer({ locale: this.organization.region === 'us' ? 'en-US' : 'he-IL' });
-        const documents = await this.getDocuments();
+        this.documentViewer = new (<any>window).DocumentViewer({locale: this.organization.region === 'us' ? 'en-US' : 'he-IL'});
 
-
-        this.documents = documents.map(document => {
-            if (this.organization.isDemo) {
-                _.set(document, ['printData', 'variables', 'F_NAME'], this.organization.region === 'il' ? 'זיו' : 'Dror');
-                _.set(document, ['printData', 'variables', 'L_NAME'], this.organization.region === 'il' ? 'וטורי' : '');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_CITY'], this.organization.region === 'il' ? 'רשפון' : 'PLANO, TX 75024');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_STREET'], this.organization.region === 'il' ? 'דרך הפרדס 31' : '7700 WINDROSE AVE. G300');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_BN_NUMBER'], '123456');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_LEGAL_NAME'], this.organization.region === 'il' ? '' : '');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_NAME'], this.organization.region === 'il' ? 'TABIT BAR' : 'TABIT RESTAURANT');
-                _.set(document, ['printData', 'variables', 'ORGANIZATION_TEL'], this.organization.region === 'il' ? '09-9585682' : '1-833-822-4887');
-            }
-            const html = this.documentViewer.getDocumentHtml(document);
-            return {
-                title: document.title,
-                type: document.documentType,
-                html: html
-            };
-        });
-
-        if (this.documents.length === 0) {
-            this.translate.get('orderClosed').subscribe((translation: string) => {
-                this.documents.push(translation);
-            });
-        }
-
+        // Timeline related - to be removed when timeline is integrated into document viewer
         if (this.drillType === 'closedOrder') {
             this.showTimeline = true;
-        }
-        else {
+        } else {
             this.showTimeline = false;
         }
-
         if (this.order && this.order.tlogId) {
             const enrichedOrder = await this.closedOrdersDataService.enrichOrder(this.order);
             this.order = enrichedOrder.order;
             this.orderOld = enrichedOrder.orderOld;
         }
+        // end timeline related block
 
         await this.init();
 
         this.show = true;
-    }
-
-    private async getDocuments(): Promise<Array<any>> {
-
-        if (this.drillType === 'closedOrder' && this.order && this.order.tlogId) {
-            let documents = [];
-            const bills = await this.rosEp.get(`tlogs/${this.order.tlogId}/bill`);
-            const bill = _.get(bills, '[0]');
-            _.set(bill, 'title', environment.tbtLocale === 'en-US' ? 'Order' : 'הזמנה');
-            documents.push(bill);
-
-            let tlog = await this.rosEp.get(`tlogs/${this.order.tlogId}`);
-            let documentInfos = this.documentViewer.getDocumentsInfoFromTlog(tlog, {});
-
-            documentInfos = documentInfos.filter(documentInfo => documentInfo.type !== 'tlog' && !documentInfo.isFakeDocument);
-
-            let paymentDocuments = await Promise.all(documentInfos.map(async documentInfo => {
-                if (documentInfo.type === 'check') {
-                    let check = await this.rosEp.get(`tlogs/${documentInfo.tlogId}/checks`);
-                    check = _.get(check, [0]);
-                    _.set(check, 'title', documentInfo.title);
-                    return check;
-                }
-
-                let document = await this.rosEp.get(`documents/v2/${documentInfo.id}/printdata`);
-                document = _.get(document, [0]);
-                _.set(document, 'title', documentInfo.title);
-                return document;
-            }));
-
-            documents.push(...paymentDocuments);
-            return documents;
-        }
-        else if (this.openOrder) {
-            const bill = await this.rosEp.get(`orders/${this.openOrder.id}/printdata/orderbill`);
-            _.set(bill, [0, 'title'], environment.tbtLocale === 'en-US' ? 'Order' : 'הזמנה');
-            return bill;
-        }
     }
 
     public onSelectDocument(tabChangeEvent: MatTabChangeEvent) {
@@ -170,6 +103,9 @@ export class OrderViewComponent implements OnInit {
             this.BILL_DATA.printData.variables.ORDER_BILL_TYPE = this.BILL_DATA.ORDER_BILL_TYPE;
             //end patch
 
+            if (this.organization.isDemo) {
+                this.BILL_DATA = this.maskPrintDataForDemoMode(this.BILL_DATA);
+            }
             let tpl = this.documentViewer.getHTMLDocument(this.selectedDocument, this.BILL_DATA);
 
             this.templateHTML = tpl;
@@ -192,7 +128,7 @@ export class OrderViewComponent implements OnInit {
                 documentData.printData = {
                     collections: this.BILL_DATA.printData.collections,
                     variables: this.BILL_DATA.printData.variables
-                }
+                };
             } else if (selectedDocument.docType === 'invoice') {
 
                 documentData = selectedDocument.data; // set print data of 'Invoice'.
@@ -211,7 +147,7 @@ export class OrderViewComponent implements OnInit {
 
                 let data = documentItem.md.signature;
                 if (_.get(documentItem, 'md.signature.data') === undefined) {
-                    documentItem.md.signature = { data: data }
+                    documentItem.md.signature = {data: data};
                 }
             } else if (_.get(selectedDocument, 'signature') !== undefined) {
                 documentItem.md.signature = selectedDocument.signature;
@@ -222,6 +158,10 @@ export class OrderViewComponent implements OnInit {
             documentData.printData.variables.L_NAME = this.serverName.L_NAME;
             documentData.printData.variables.ORDER_BILL_TYPE = this.billData.ORDER_BILL_TYPE;
             //end patch
+
+            if (this.organization.isDemo) {
+                documentData = this.maskPrintDataForDemoMode(documentData);
+            }
 
             let tpl = this.documentViewer.getHTMLDocument(documentItem, {
                 documentType: documentData.documentType,
@@ -237,25 +177,45 @@ export class OrderViewComponent implements OnInit {
 
     }
 
+    private async getBillData(drillType, order) {
+        if (drillType === 'closedOrder' && order && order.tlogId) {
+            return await this.rosEp.get(`tlogs/${this.order.tlogId}/bill`);
+        }
+        else {
+            const bill = await this.rosEp.get(`orders/${this.openOrder.id}/printdata/orderbill`);
+            _.set(bill, [0, 'title'], environment.tbtLocale === 'en-US' ? 'Order' : 'הזמנה');
+            return bill;
+        }
+    }
+
     private async init() {
 
-        const bills = await this.rosEp.get(`tlogs/${this.order.tlogId}/bill`);
-
+        const bills = await this.getBillData(this.drillType, this.order || this.openOrder);
         this.BILL_DATA = _.get(bills, '[0]');
-        let tlog = await this.rosEp.get(`tlogs/${this.order.tlogId}`);
-        let documentInfos = this.documentViewer.getDocumentsInfoFromTlog(tlog, {});
 
-
+        let documentInfos;
+        if(this.drillType === 'closedOrder') {
+            let tlog = await this.rosEp.get(`tlogs/${this.order.tlogId}`);
+             documentInfos = this.documentViewer.getDocumentsInfoFromTlog(tlog, {});
+        }
+        else {
+            let order = await this.rosEp.get(`orders/${this.openOrder.id}`);
+            let tlog = this.resolveOrderByStatus({status: 'opened',data :order});
+             documentInfos = this.documentViewer.getDocumentsInfoFromTlog(tlog, {});
+        }
         this.documentsList = this.create(documentInfos);
-
         this.selectedDocument = this.documentsList[0];
 
         this.serverName = {
             F_NAME: this.BILL_DATA.printData.variables.F_NAME,
             L_NAME: this.BILL_DATA.printData.variables.L_NAME
-        }
+        };
 
         this.BILL_DATA.printData.variables.ORDER_BILL_TYPE = this.BILL_DATA.printData.variables.ORDER_TYPE;
+
+        if (this.organization.isDemo) {
+            this.BILL_DATA = this.maskPrintDataForDemoMode(this.BILL_DATA);
+        }
 
         let tpl = this.documentViewer.getHTMLDocument(this.selectedDocument, this.BILL_DATA);
 
@@ -273,7 +233,7 @@ export class OrderViewComponent implements OnInit {
                 docType: doc.type,
                 inProgress: true,
                 data: undefined
-            }
+            };
 
             if (this.isDocumentType(doc.type)) {
 
@@ -289,7 +249,7 @@ export class OrderViewComponent implements OnInit {
                             this.documents2[doc.id].inProgress = false;
                             this.documents2[doc.id].data = _printData;
 
-                            if (_printData.documentType === "invoice" || _printData.documentType === "deliveryNote") {
+                            if (_printData.documentType === 'invoice' || _printData.documentType === 'deliveryNote') {
                                 this.documents2[doc.id].signature = this.resolveSignature(_printData, this.orderOld);
                             }
 
@@ -309,7 +269,7 @@ export class OrderViewComponent implements OnInit {
                             checks.forEach(printData => {
 
                                 let checkNumber = _.get(printData, 'printData.variables.CHECK_NO');
-                                let doc = docs.find(c => c.md && c.md.checkNumber === checkNumber && c.type === "check");
+                                let doc = docs.find(c => c.md && c.md.checkNumber === checkNumber && c.type === 'check');
 
                                 if (doc) {
                                     this.documents2[doc.id].inProgress = false;
@@ -348,10 +308,10 @@ export class OrderViewComponent implements OnInit {
         if (status === 'opened') {
             return {
                 _id: data._id,
-                _type: "tlog",
+                _type: 'tlog',
                 order: [data],
                 number: data.number,
-            }
+            };
         } else {
             return this.orderOld;
         }
@@ -372,11 +332,23 @@ export class OrderViewComponent implements OnInit {
     }
 
     private isDocumentType(type) {
-        return (["check", "tlog"].indexOf(type) === -1)
+        return (['check', 'tlog'].indexOf(type) === -1);
     }
 
     private isCheckType(type) {
-        return (type === "check");
+        return (type === 'check');
     }
 
+    private maskPrintDataForDemoMode(document) {
+        _.set(document, ['printData', 'variables', 'F_NAME'], this.organization.region === 'il' ? 'זיו' : 'Dror');
+        _.set(document, ['printData', 'variables', 'L_NAME'], this.organization.region === 'il' ? 'וטורי' : '');
+        _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_CITY'], this.organization.region === 'il' ? 'רשפון' : 'PLANO, TX 75024');
+        _.set(document, ['printData', 'variables', 'ORGANIZATION_ADDR_STREET'], this.organization.region === 'il' ? 'דרך הפרדס 31' : '7700 WINDROSE AVE. G300');
+        _.set(document, ['printData', 'variables', 'ORGANIZATION_BN_NUMBER'], '123456');
+        _.set(document, ['printData', 'variables', 'ORGANIZATION_LEGAL_NAME'], this.organization.region === 'il' ? '' : '');
+        _.set(document, ['printData', 'variables', 'ORGANIZATION_NAME'], this.organization.region === 'il' ? 'TABIT BAR' : 'TABIT RESTAURANT');
+        _.set(document, ['printData', 'variables', 'ORGANIZATION_TEL'], this.organization.region === 'il' ? '09-9585682' : '1-833-822-4887');
+
+        return document;
+    }
 }
