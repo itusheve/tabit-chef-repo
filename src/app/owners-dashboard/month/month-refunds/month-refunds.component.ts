@@ -1,19 +1,21 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {DataWareHouseService} from '../../../services/data-ware-house.service';
-import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
 import {MatDialog} from '@angular/material';
 
 
 @Component({
   selector: 'app-month-refunds',
-  templateUrl: '../../../ui/abstract-table/abstract-table.component.html',
+  templateUrl: './month-refunds.component.html',
   styleUrls: ['./month-refunds.component.scss', '../../../ui/abstract-table/abstract-table.component.scss']
 })
-export class MonthRefundsComponent extends AbstractTableComponent implements OnInit, OnChanges {
 
+export class MonthRefundsComponent implements OnInit, OnChanges {
   @Input()
+  data: any = [];
 
-  columns_primary = [
+  @Output() onOrderClicked = new EventEmitter();
+
+  columns = [
     {en: 'Date', dataKey: 'opened', translated: 'details.date'},
     {en: 'Waiter', dataKey: 'approveByName', dataType: 'item', translated: 'month.server'},
     {en: 'OrderNumber', dataType: 'number', dataKey: 'orderNumber', translated: 'month.order'},
@@ -21,20 +23,24 @@ export class MonthRefundsComponent extends AbstractTableComponent implements OnI
     {en: 'Payments', dataType:'item' ,dataKey: 'paymentsName',  translated: 'month.payments'}
   ];
 
+  title = {en: 'refund', translated: 'refund'};
+  private service: DataWareHouseService;
+  private summary: { total: number; actions: any; connect: string };
+
 
 
   constructor(dialog: MatDialog, dataWareHouseService: DataWareHouseService) {
-    super(dialog, dataWareHouseService);
-    this.columns = {primary: this.columns_primary, alt: []};
-    this.title = {en: 'refund', translated: 'refund'};
+    this.service = dataWareHouseService;
+  }
 
 
-
+  OrderClicked(order){
+    this.onOrderClicked.emit(order);
   }
 
   ngOnInit() {
-    super.ngOnInit();
-    this.options = {primary: 'details.date', alt: 'day.reason'};
+  this.summary = this.getSummary();
+  this.data.sort((e1,e2)=>e1.opened.localeCompare(e2.opened));
 
   }
 
@@ -44,10 +50,10 @@ export class MonthRefundsComponent extends AbstractTableComponent implements OnI
 
   protected getSummary() {
     let total = 0;
-    this.data.primary.forEach(e =>total += e.amount);
+    this.data.forEach(e =>total += e.amount);
     return {
       total: total,
-      actions: this.data.primary.length,
+      actions: this.data.length,
       connect: 'day.actionsWorth',
     };
   }

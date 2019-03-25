@@ -41,6 +41,10 @@ export class OrderViewComponent implements OnInit {
 
     constructor(private closedOrdersDataService: ClosedOrdersDataService,
                 private route: ActivatedRoute, private rosEp: ROSEp, private dataService: DataService, private translate: TranslateService) {
+
+
+        debugger
+
         this.ORDERS_VIEW = ORDERS_VIEW.getTranslations();
         this.orderDocs = {};
 
