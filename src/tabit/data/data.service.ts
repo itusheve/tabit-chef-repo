@@ -421,6 +421,7 @@ export class DataService {
 
     selectedMonth$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment().startOf('month'));
     selectedWeek$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment().startOf('week'));
+    selectedDay$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment().startOf('day'));
 
     /*
         emits the Previous Business Date ("pbd") which is the day before the Current Business Day ("cbd")

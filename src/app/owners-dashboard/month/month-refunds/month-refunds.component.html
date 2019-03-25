@@ -1,0 +1,39 @@
+<div class="flex d-col">
+    <div class="title">
+        <span [translate]="'' + title.translated"></span>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="false">
+            <mat-expansion-panel-header [ngStyle]="{'background-color':getCssColorClass()}">
+                <mat-panel-title>
+                    <span style="font-weight: bold; font-size: 18px !important">{{summary.actions | number}}&nbsp;<span [translate]="'' + summary.connect "></span>&nbsp;{{summary.total | curr:'0':'':'nullify'}}</span>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table class="table table-sm">
+
+                <tr class="header">
+                    <td *ngFor="let column of columns" (click)="sort(column.dataKey)" [style.width]="column.width">
+                        <div class="flex a-center">
+                            <span [translate]="'' + column.translated"></span>
+                            <mat-icon class="sortMatIcon" *ngIf="sortKey=== column.dataKey && sortDir==='desc'">arrow_drop_down</mat-icon>
+                            <mat-icon class="sortMatIcon" *ngIf="sortKey=== column.dataKey && sortDir==='asc'">arrow_drop_up</mat-icon>
+                        </div>
+                    </td>
+
+                </tr>
+
+                <tr *ngFor="let tuple of data" class="dayReportDataRow" (click)="OrderClicked(tuple)" style="line-height: 30px !important; cursor:pointer ">
+                    <td *ngFor="let column of columns; let i = index">
+                        <span *ngIf="i == 0">{{tuple[column.dataKey]}}</span>
+                        <span *ngIf="column.dataType === 'currency' && i!=0">{{tuple[column.dataKey] | curr:'0'}}</span>
+                        <span *ngIf="column.dataType === 'number' && i!=0">{{tuple[column.dataKey] | number}}<br>{{column.additionalDataKey ? '(' + tuple[column.additionalDataKey] + '% )':''}}</span>
+                        <span *ngIf="column.dataType === 'item' && i!=0">{{tuple[column.dataKey]}}</span>
+                    </td>
+                </tr>
+
+            </table>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+

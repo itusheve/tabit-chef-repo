@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DayRefundComponent } from './day-refund.component';
+import { GridComponentComponent } from './grid-component.component';
 
-describe('DayRefundComponent', () => {
-  let component: DayRefundComponent;
-  let fixture: ComponentFixture<DayRefundComponent>;
+describe('GridComponentComponent', () => {
+  let component: GridComponentComponent;
+  let fixture: ComponentFixture<GridComponentComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DayRefundComponent ]
+      declarations: [ GridComponentComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DayRefundComponent);
+    fixture = TestBed.createComponent(GridComponentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

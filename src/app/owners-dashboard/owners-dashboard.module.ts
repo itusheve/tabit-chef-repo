@@ -109,6 +109,7 @@ import {ReportdialogComponent} from '../ui/reportdialog/reportdialog.component';
 import { MostReturnedTimeComponent } from './month/month-most-returned-items/most-returned-time/most-returned-time.component';
 import { MonthRefundsComponent } from './month/month-refunds/month-refunds.component';
 import {DataWareHouseService} from '../services/data-ware-house.service';
+import { GridComponentComponent } from './month/grid-component/grid-component.component';
 import { DayRefundComponent } from './day-view/day-refund/day-refund.component';
 
 
@@ -220,6 +221,7 @@ import { DayRefundComponent } from './day-view/day-refund/day-refund.component';
         MonthRefundsComponent,
         MostSoldTimeComponent,
         MostReturnedTimeComponent,
+        GridComponentComponent,
         DayRefundComponent,
     ],
     providers: [

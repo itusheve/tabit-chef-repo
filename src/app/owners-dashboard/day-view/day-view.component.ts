@@ -7,7 +7,6 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 import {zip, combineLatest, Subject, Observable, BehaviorSubject} from 'rxjs';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {Order} from '../../../tabit/model/Order.model';
 import {OrderType} from '../../../tabit/model/OrderType.model';
 import {OwnersDashboardService} from '../owners-dashboard.service';
@@ -16,6 +15,7 @@ import {DebugService} from '../../debug.service';
 import {environment} from '../../../environments/environment';
 import {CardData} from '../../ui/card/card.component';
 import {LogzioService} from '../../logzio.service';
+import {DataWareHouseService} from '../../services/data-ware-house.service';
 
 export interface SalesTableRow {
     orderType: OrderType;
@@ -232,13 +232,18 @@ export class DayViewComponent implements OnInit {
     };
     public laborCost: any;
 
+    public refunds: any = [];
+    public date: any;
+    public dailyReportsInProgress: boolean;
+
     constructor(private ownersDashboardService: OwnersDashboardService,
                 private dataService: DataService,
                 private closedOrdersDataService: ClosedOrdersDataService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private ds: DebugService,
-                private logz: LogzioService) {
+                private logz: LogzioService,
+                private dataWareHouseService: DataWareHouseService) {
 
         ownersDashboardService.toolbarConfig.left.back.pre = () => true;
         ownersDashboardService.toolbarConfig.left.back.target = '/owners-dashboard/home';
@@ -802,7 +807,21 @@ export class DayViewComponent implements OnInit {
         this.hasData = false;
         window.scrollTo(0, 0);
         this.render();
-        this.inProcessSalesAmount = 0;
+        this.dataService.selectedDay$.subscribe(async date =>{
+
+            this.dailyReportsInProgress = true;
+
+            this.date = date;
+            let dateStart = moment(date).startOf('day').format('YYYYMMDD');
+            let dateEnd = moment(date).endOf('day').format('YYYYMMDD');
+
+            this.refunds = await this.dataWareHouseService.getRefund(dateStart, dateEnd);
+            this.refunds = {data: this.refunds.refund, isShowing: this.refunds.refund.length > 0};
+            this.inProcessSalesAmount = 0;
+
+            this.dailyReportsInProgress = false;
+        });
+
         combineLatest(this.totalSales$, this.openOrders$, this.closedOrders$).subscribe(data => {
             let totalSales = data[0];
             let openOrders = data[1];
@@ -922,5 +941,6 @@ export class DayViewComponent implements OnInit {
 
         return amount / total;
     }
+
 
 }
