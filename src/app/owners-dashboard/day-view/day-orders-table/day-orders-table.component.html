@@ -80,7 +80,7 @@
                                 <td>{{getOpenOrderHour(openOrder.openingTime)}}</td>
                                 <td class="text-center">
                                     <span *ngIf="openOrderServiceType.id === 'seated'">
-                                        #{{openOrder.tableNumber}}
+                                        {{openOrder.tableNumber}}
                                     </span>
                                     <span *ngIf="openOrderServiceType.id !== 'seated'">
                                         {{openOrder.number}}
