@@ -46,7 +46,7 @@ export class MonthComponent implements OnInit {
     private summaryHelper: SummaryHelper;
     private drilledOrderNumber: any;
     private drillType: string;
-    private drill: boolean = false;
+    public drill: boolean = false;
     private drilledOrder: any;
 
 
