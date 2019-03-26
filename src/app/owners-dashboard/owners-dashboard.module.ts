@@ -237,5 +237,4 @@ import { DayRefundComponent } from './day-view/day-refund/day-refund.component';
         ReportdialogComponent
     ],
 })
-export class OwnersDashboardModule {
-}
+export class OwnersDashboardModule {}

@@ -425,6 +425,8 @@ const en = {
     'month.sales': 'Sales',
     'month.tip': 'Tip',
     'month.vat': 'Vat',
+    'month.order': 'Order No.',
+    'month.payments': 'Payment Type',
     'month.diners': 'Diners',
     'month.ppa': 'PPA',
     'month.revenue': 'Revenue',
