@@ -25,7 +25,7 @@ export class MonthRefundsComponent implements OnInit, OnChanges {
 
   title = {en: 'refund', translated: 'refund'};
   private service: DataWareHouseService;
-  private summary: { total: number; actions: any; connect: string };
+  public summary: { total: number; actions: any; connect: string };
 
 
 
