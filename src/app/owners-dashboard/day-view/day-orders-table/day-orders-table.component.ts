@@ -1,11 +1,11 @@
-import {Component, OnChanges, Input, Output, EventEmitter, SimpleChanges} from '@angular/core';
-import {DatePipe} from '@angular/common';
+import { Component, OnChanges, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
-import {Order} from '../../../../tabit/model/Order.model';
-import {DataService, tmpTranslations} from '../../../../tabit/data/data.service';
+import { Order } from '../../../../tabit/model/Order.model';
+import { DataService, tmpTranslations } from '../../../../tabit/data/data.service';
 
 import * as _ from 'lodash';
-import {environment} from '../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import * as moment from 'moment';
 
 export interface OrderTypeVM {
@@ -47,7 +47,7 @@ export class DayOrdersTableComponent implements OnChanges {
     }
 
     ngOnChanges(o: SimpleChanges) {
-        this.openOrders = {totalAmount: 0, count: 0, orders: []};
+        this.openOrders = { totalAmount: 0, count: 0, orders: [] };
         if (this.todayOpenOrders && this.bdIsCurrentBd) {
             this.noData = false;
             this.openOrders.totalAmount = 0;
@@ -81,6 +81,7 @@ export class DayOrdersTableComponent implements OnChanges {
                     let formattedOpenOrder = {
                         openingTime: openOrder.created,
                         number: openOrder.number,
+                        tableNumber: openOrder.tableNumber,
                         waiter: openOrder.ownerFirstName + ' ' + openOrder.ownerLastName,
                         sales: 0,
                         id: openOrder._id
@@ -221,7 +222,7 @@ export class DayOrdersTableComponent implements OnChanges {
                         reductionAmount += order['priceReductions'][filter.type];
                     }
                 });
-                if(_.every(this.filters, filter => !filter.on)) {
+                if (_.every(this.filters, filter => !filter.on)) {
                     order.filtered = false;
                 } else {
                     order.filtered = !reductionAmount;
@@ -256,7 +257,7 @@ export class DayOrdersTableComponent implements OnChanges {
 
     getClosedOrderHour(time) {
         time = moment.utc(time, 'HH:mm');
-        if(environment.tbtLocale === 'he-IL') {
+        if (environment.tbtLocale === 'he-IL') {
             return time.format('HH:mm');
         }
         else {
@@ -266,7 +267,7 @@ export class DayOrdersTableComponent implements OnChanges {
 
     getOpenOrderHour(time) {
         time = moment(time);
-        if(environment.tbtLocale === 'he-IL') {
+        if (environment.tbtLocale === 'he-IL') {
             return time.format('HH:mm');
         }
         else {

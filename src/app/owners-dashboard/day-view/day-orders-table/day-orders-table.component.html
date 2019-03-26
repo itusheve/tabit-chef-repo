@@ -7,7 +7,7 @@
             <div class="flex d-col a-stretch">
                 <mat-accordion multi="true">
                     <mat-expansion-panel expanded="false" hideToggle="false"
-                                         *ngFor="let openOrderServiceType of openOrdersByServiceType | hasSales">
+                        *ngFor="let openOrderServiceType of openOrdersByServiceType | hasSales">
                         <mat-expansion-panel-header>
                             <mat-panel-title class="col-4 m-0 p-0">
                                 {{openOrderServiceType.caption}}
@@ -35,7 +35,14 @@
                                 </td>
                                 <td (click)="sortOpenOrder(openOrderServiceType, 'number')">
                                     <div class="flex a-center">
-                                        <div [translate]="'dayTable.orderNumber'">Order #</div>
+                                        <div *ngIf="openOrderServiceType.id === 'seated'">
+                                            <span [translate]="'dayTable.tableNumber'">Table #</span>
+                                        </div>
+
+                                        <div *ngIf="openOrderServiceType.id !== 'seated'">
+                                            <span [translate]="'dayTable.orderNumber'">Order #</span>
+                                        </div>
+
                                         <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='desc'">
                                             arrow_drop_down
                                         </mat-icon>
@@ -67,10 +74,18 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr *ngFor="let openOrder of openOrderServiceType.orders" (click)="openOrderClicked(openOrder)"
+                            <tr *ngFor="let openOrder of openOrderServiceType.orders"
+                                (click)="openOrderClicked(openOrder)"
                                 [ngClass]="{'lastViewed': lastViewed===openOrder, 'clicked': openOrder.__dayOrdersTable__clicked}">
                                 <td>{{getOpenOrderHour(openOrder.openingTime)}}</td>
-                                <td  class="text-center">{{openOrder.number | number:'1.0-0'}}</td>
+                                <td class="text-center">
+                                    <span *ngIf="openOrderServiceType.id === 'seated'">
+                                        #{{openOrder.tableNumber}}
+                                    </span>
+                                    <span *ngIf="openOrderServiceType.id !== 'seated'">
+                                        {{openOrder.number}}
+                                    </span>
+                                </td>
                                 <td>{{openOrder.waiter}}</td>
                                 <td>{{openOrder.sales | curr:'0'}}</td>
                             </tr>
@@ -93,16 +108,16 @@
             <div *ngIf="!noData && byOrderTypes" class="flex d-col a-stretch">
                 <mat-accordion>
                     <mat-expansion-panel expanded="false" hideToggle="false" (closed)="panelClosed()"
-                                         *ngFor="let orderType of byOrderTypes | hasSales">
+                        *ngFor="let orderType of byOrderTypes | hasSales">
                         <mat-expansion-panel-header>
                             <mat-panel-title class="col-4 m-0 p-0">
                                 {{orderType.caption}}
                             </mat-panel-title>
                             <mat-panel-description class="col-8 m-0 p-0">
-                                    <div class="col-5 start">{{orderType.salesBeforeTip | curr:'0'}}</div>
-                                    <div class="col-7 end">
-                                        {{orderType.ordersCount | count}}&nbsp;{{'day.orders' | translate }}
-                                    </div>
+                                <div class="col-5 start">{{orderType.salesBeforeTip | curr:'0'}}</div>
+                                <div class="col-7 end">
+                                    {{orderType.ordersCount | count}}&nbsp;{{'day.orders' | translate }}
+                                </div>
                             </mat-panel-description>
                         </mat-expansion-panel-header>
 
@@ -156,37 +171,37 @@
                                     <div class="flex d-col px-1">
                                         <div class="flex">
                                             <div class="iconFilter cancellation flex ml5 mb5"
-                                                 [ngClass]="{'on': iconFilterOn('cancellation')}"
-                                                 (click)="filter(orderType, 'cancellation')">
+                                                [ngClass]="{'on': iconFilterOn('cancellation')}"
+                                                (click)="filter(orderType, 'cancellation')">
                                                 <i *ngIf="iconFilterOn('cancellation')"
-                                                   class="icon iconOperationalAndCancellations"></i>
+                                                    class="icon iconOperationalAndCancellations"></i>
                                                 <i *ngIf="!iconFilterOn('cancellation')"
-                                                   class="icon iconOperationalAndCancellations_off"></i>
+                                                    class="icon iconOperationalAndCancellations_off"></i>
                                             </div>
                                             <div class="iconFilter discountsAndOTH flex mb5"
-                                                 [ngClass]="{'on': iconFilterOn('discountsAndOTH')}"
-                                                 (click)="filter(orderType, 'discountsAndOTH')">
+                                                [ngClass]="{'on': iconFilterOn('discountsAndOTH')}"
+                                                (click)="filter(orderType, 'discountsAndOTH')">
                                                 <i *ngIf="iconFilterOn('discountsAndOTH')"
-                                                   class="icon iconRetention"></i>
+                                                    class="icon iconRetention"></i>
                                                 <i *ngIf="!iconFilterOn('discountsAndOTH')"
-                                                   class="icon iconRetention_off"></i>
+                                                    class="icon iconRetention_off"></i>
                                             </div>
                                         </div>
                                         <div class="flex">
                                             <div class="iconFilter employees flex ml5"
-                                                 [ngClass]="{'on': iconFilterOn('employees')}"
-                                                 (click)="filter(orderType, 'employees')">
+                                                [ngClass]="{'on': iconFilterOn('employees')}"
+                                                (click)="filter(orderType, 'employees')">
                                                 <i *ngIf="iconFilterOn('employees')"
-                                                   class="icon iconOrganizational"></i>
+                                                    class="icon iconOrganizational"></i>
                                                 <i *ngIf="!iconFilterOn('employees')"
-                                                   class="icon iconOrganizational_off"></i>
+                                                    class="icon iconOrganizational_off"></i>
                                             </div>
                                             <div class="iconFilter promotions flex"
-                                                 [ngClass]="{'on': iconFilterOn('promotions')}"
-                                                 (click)="filter(orderType, 'promotions')">
+                                                [ngClass]="{'on': iconFilterOn('promotions')}"
+                                                (click)="filter(orderType, 'promotions')">
                                                 <i *ngIf="iconFilterOn('promotions')" class="icon iconPromotions"></i>
                                                 <i *ngIf="!iconFilterOn('promotions')"
-                                                   class="icon iconPromotions_off"></i>
+                                                    class="icon iconPromotions_off"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -203,19 +218,20 @@
                                 <td>
                                     <div class="flex a-center" style="height:100%;">
                                         <i class="mh3 icon iconOperationalAndCancellations"
-                                           *ngIf="order.priceReductions.cancellation > 0"></i>
+                                            *ngIf="order.priceReductions.cancellation > 0"></i>
                                         <i class="mh3 icon iconRetention"
-                                           *ngIf="order.priceReductions.discountsAndOTH > 0"></i>
+                                            *ngIf="order.priceReductions.discountsAndOTH > 0"></i>
                                         <i class="mh3 icon iconOrganizational"
-                                           *ngIf="order.priceReductions.employees > 0"></i>
+                                            *ngIf="order.priceReductions.employees > 0"></i>
                                         <i class="mh3 icon iconPromotions"
-                                           *ngIf="order.priceReductions.promotions > 0"></i>
+                                            *ngIf="order.priceReductions.promotions > 0"></i>
                                     </div>
                                 </td>
                             </tr>
                         </table>
                     </mat-expansion-panel>
-                    <mat-expansion-panel *ngIf="bdIsCurrentBd && (inProcessSalesAmount > 1 || inProcessSalesAmount < -1 )" >
+                    <mat-expansion-panel
+                        *ngIf="bdIsCurrentBd && (inProcessSalesAmount > 1 || inProcessSalesAmount < -1 )">
                         <mat-expansion-panel-header>
                             <mat-panel-title class="col-4 m-0 p-0">
                                 {{'day.inProcessing' | translate}}

@@ -1,21 +1,21 @@
-import {Component, OnInit} from '@angular/core';
-import {DataService} from '../../../tabit/data/data.service';
-import {Router, ActivatedRoute, ParamMap} from '@angular/router';
-import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
+import { Component, OnInit } from '@angular/core';
+import { DataService } from '../../../tabit/data/data.service';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
+import { ClosedOrdersDataService } from '../../../tabit/data/dc/closedOrders.data.service';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
-import {zip, combineLatest, Subject, Observable, BehaviorSubject} from 'rxjs';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
-import {Order} from '../../../tabit/model/Order.model';
-import {OrderType} from '../../../tabit/model/OrderType.model';
-import {OwnersDashboardService} from '../owners-dashboard.service';
-import {Orders_KPIs, PaymentsKPIs} from '../../../tabit/data/ep/olap.ep';
-import {DebugService} from '../../debug.service';
-import {environment} from '../../../environments/environment';
-import {CardData} from '../../ui/card/card.component';
-import {LogzioService} from '../../logzio.service';
+import { zip, combineLatest, Subject, Observable, BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Order } from '../../../tabit/model/Order.model';
+import { OrderType } from '../../../tabit/model/OrderType.model';
+import { OwnersDashboardService } from '../owners-dashboard.service';
+import { Orders_KPIs, PaymentsKPIs } from '../../../tabit/data/ep/olap.ep';
+import { DebugService } from '../../debug.service';
+import { environment } from '../../../environments/environment';
+import { CardData } from '../../ui/card/card.component';
+import { LogzioService } from '../../logzio.service';
 
 export interface SalesTableRow {
     orderType: OrderType;
@@ -228,6 +228,7 @@ export class DayViewComponent implements OnInit {
 
     private metaData: any;
     public user: any;
+    public tables: any;
     public env: any;
     public display = {
         laborCost: false
@@ -235,12 +236,12 @@ export class DayViewComponent implements OnInit {
     public laborCost: any;
 
     constructor(private ownersDashboardService: OwnersDashboardService,
-                private dataService: DataService,
-                private closedOrdersDataService: ClosedOrdersDataService,
-                private route: ActivatedRoute,
-                private router: Router,
-                private ds: DebugService,
-                private logz: LogzioService) {
+        private dataService: DataService,
+        private closedOrdersDataService: ClosedOrdersDataService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private ds: DebugService,
+        private logz: LogzioService) {
 
         ownersDashboardService.toolbarConfig.left.back.pre = () => true;
         ownersDashboardService.toolbarConfig.left.back.target = '/owners-dashboard/home';
@@ -255,7 +256,7 @@ export class DayViewComponent implements OnInit {
         this.today = moment();
 
         this.dataService.settings$.subscribe(settings => {
-            if(settings.laborCost === undefined || settings.laborCost === true) {
+            if (settings.laborCost === undefined || settings.laborCost === true) {
                 this.display.laborCost = true;
             }
             else {
@@ -274,10 +275,12 @@ export class DayViewComponent implements OnInit {
             this.user = user;
         });
 
+
+
         combineLatest(this.dataService.user$, this.dataService.organization$).subscribe(data => {
             let user = data[0];
             let organization = data[1];
-            this.logz.log('chef', 'user action', {action: 'dayDrill', 'user': user.email, 'org': organization.name, firstName: user.firstName, lastName: user.lastName});
+            this.logz.log('chef', 'user action', { action: 'dayDrill', 'user': user.email, 'org': organization.name, firstName: user.firstName, lastName: user.lastName });
         });
     }
 
@@ -309,7 +312,7 @@ export class DayViewComponent implements OnInit {
                 employees: 0,
                 promotions: 0
             };
-            let tlogFlag = _.find(dailyReport.flags, {tlogId: tlog.tlogId});
+            let tlogFlag = _.find(dailyReport.flags, { tlogId: tlog.tlogId });
 
             if (tlogFlag) {
                 let reductions = tlogFlag.NameValues ? tlogFlag.NameValues.split(',') : [];
@@ -348,7 +351,7 @@ export class DayViewComponent implements OnInit {
         combineLatest(this.day$, this.dataService.databaseV2$, this.dataService.openDay$, this.dataService.dailyTotals$)
             .subscribe(async data => {
                 let date = _.clone(data[0]);
-                if(!date) {
+                if (!date) {
                     return;
                 }
                 let database = data[1];
@@ -500,7 +503,7 @@ export class DayViewComponent implements OnInit {
             this.openOrders = null;
             this.openOrders$.next({});
             let dayDate = _.clone(data[0]);
-            if(!dayDate) {
+            if (!dayDate) {
                 return;
             }
             let dailyTotals = data[1];
@@ -561,7 +564,7 @@ export class DayViewComponent implements OnInit {
 
             let ownerDashboardConfiguration = _.get(configuration, ['regionalSettings', 'ownerDashboard']);
             let shiftStartTimes = {};
-            if(ownerDashboardConfiguration) {
+            if (ownerDashboardConfiguration) {
                 shiftStartTimes = {
                     1: _.get(ownerDashboardConfiguration, 'morningStartTime'),
                     2: _.get(ownerDashboardConfiguration, 'afternoonStartTime'),
@@ -624,7 +627,7 @@ export class DayViewComponent implements OnInit {
                 }
             });
 
-            this.mostSoldItems = {byItem: []};
+            this.mostSoldItems = { byItem: [] };
             _.forEach(dailyReport.topItemSales, item => {
                 this.mostSoldItems.byItem.push(
                     {
@@ -660,7 +663,7 @@ export class DayViewComponent implements OnInit {
                 });
             });
 
-            this.mostReturnedItems = {byItem: []};
+            this.mostReturnedItems = { byItem: [] };
             _.forEach(dailyReport.mostReturnItems, item => {
                 this.mostReturnedItems.byItem.push(
                     {
@@ -675,7 +678,7 @@ export class DayViewComponent implements OnInit {
                 );
             });
 
-            this.paymentsData = {env: '', payments: []};
+            this.paymentsData = { env: '', payments: [] };
             _.forEach(dailyReport.payments, payment => {
                 this.paymentsData.env = dailyReport.env;
                 this.paymentsData.payments.push({
@@ -697,9 +700,9 @@ export class DayViewComponent implements OnInit {
 
             this.operationalErrorsData = [];
             _.forEach(dailyReport.operational, record => {
-                let order = _.find(this.orders, {tlogId: record.tlogId});
+                let order = _.find(this.orders, { tlogId: record.tlogId });
                 this.operationalErrorsData.push({
-                    orderType: {id: record.orderType, rank: 1},
+                    orderType: { id: record.orderType, rank: 1 },
                     waiter: order.waiter,
                     approvedBy: record.approvedByName,
                     orderNumber: record.orderNumber,
@@ -714,9 +717,9 @@ export class DayViewComponent implements OnInit {
 
             this.retentionData = [];
             _.forEach(dailyReport.reduction, reduction => {
-                let order = _.find(this.orders, {tlogId: reduction.tlogId});
+                let order = _.find(this.orders, { tlogId: reduction.tlogId });
                 this.retentionData.push({
-                    orderType: {id: reduction.orderType, rank: 1},
+                    orderType: { id: reduction.orderType, rank: 1 },
                     waiter: order.waiter,
                     approvedBy: reduction.approvedByName,
                     orderNumber: reduction.orderNumber,
@@ -731,9 +734,9 @@ export class DayViewComponent implements OnInit {
 
             this.cancellationsData = [];
             _.forEach(dailyReport.cancelation, cancelation => {
-                let order = _.find(this.orders, {tlogId: cancelation.tlogId});
+                let order = _.find(this.orders, { tlogId: cancelation.tlogId });
                 this.cancellationsData.push({
-                    orderType: {id: cancelation.orderType, rank: 1},
+                    orderType: { id: cancelation.orderType, rank: 1 },
                     waiter: order.waiter,
                     approvedBy: cancelation.approvedByName,
                     orderNumber: cancelation.orderNumber,
@@ -748,9 +751,9 @@ export class DayViewComponent implements OnInit {
 
             this.wasteData = [];
             _.forEach(dailyReport.waste, waste => {
-                let order = _.find(this.orders, {tlogId: waste.tlogId});
+                let order = _.find(this.orders, { tlogId: waste.tlogId });
                 this.wasteData.push({
-                    orderType: {id: waste.orderType, rank: 1},
+                    orderType: { id: waste.orderType, rank: 1 },
                     waiter: order.waiter,
                     approvedBy: waste.approvedByName,
                     orderNumber: waste.orderNumber,
@@ -766,7 +769,7 @@ export class DayViewComponent implements OnInit {
             this.organizationalData = [];
             _.forEach(dailyReport.organizational, organizational => {
                 this.organizationalData.push({
-                    orderType: {id: organizational.orderType, rank: 1},
+                    orderType: { id: organizational.orderType, rank: 1 },
                     waiter: organizational.ownerName,
                     orderNumber: organizational.orderNumber,
                     organizational: organizational.organizationalAmountIncludeVat,
