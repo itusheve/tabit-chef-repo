@@ -187,6 +187,8 @@
                     [paymentsData]="paymentsData"
             ></app-payments-table>
 
+            <app-day-refund *ngIf="!dailyReportsInProgress && refunds.isShowing === true"  (onOrderClicked)="onOrderClicked($event)" [data] = "refunds.data" class="widget" style="padding:0"></app-day-refund>
+
             <div id="cancellations" style="position: relative;" class="anchor"></div>
             <app-cancellations-table *ngIf="cancellationsData && cancellationsData.length"
                                      class="widget"
@@ -235,8 +237,6 @@
                              [category]="category"
                              [dayFromDatabase]="dayFromDatabase"
             ></app-waste-table>
-
-            <app-day-refund *ngIf="!dailyReportsInProgress && refunds.isShowing === true"  (onOrderClicked)="onOrderClicked($event)" [data] = "refunds.data" class="widget" style="padding:0"></app-day-refund>
 
             <app-day-sales-by-sub-department-table
                     class="widget"
