@@ -8,7 +8,8 @@ import {
     OwnersDashboardCountPipe,
     OwnersDashboardPercentPipe,
     CurrencyPipe,
-    OwnersDashboardHourPipe
+    OwnersDashboardHourPipe,
+    SafePipe
 } from './owners-dashboard.pipes';
 
 import {HomeComponent} from './home/home.component';
@@ -132,6 +133,7 @@ import { ForecastDialogComponent } from './home/forecast-dialog/forecast-dialog.
         OwnersDashboardPercentPipe,
         OwnersDashboardCountPipe,
         OwnersDashboardHourPipe,
+        SafePipe,
 
         HomeComponent,
         OwnerSettingsComponent,

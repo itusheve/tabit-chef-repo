@@ -1,13 +1,13 @@
-import {Component, OnInit, Input, ViewChild, ElementRef} from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
-import {Order} from '../../../tabit/model/Order.model';
-import {ClosedOrdersDataService} from '../../../tabit/data/dc/closedOrders.data.service';
-import {ORDERS_VIEW} from '../../../tabit/data/dc/closedOrders.data.service';
-import {ROSEp} from '../../../tabit/data/ep/ros.ep';
-import {DataService} from '../../../tabit/data/data.service';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Order } from '../../../tabit/model/Order.model';
+import { ClosedOrdersDataService } from '../../../tabit/data/dc/closedOrders.data.service';
+import { ORDERS_VIEW } from '../../../tabit/data/dc/closedOrders.data.service';
+import { ROSEp } from '../../../tabit/data/ep/ros.ep';
+import { DataService } from '../../../tabit/data/data.service';
 import * as _ from 'lodash';
-import {TranslateService} from '@ngx-translate/core';
-import {MatTabChangeEvent} from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
+import { MatTabChangeEvent } from '@angular/material';
 import { environment } from '../../../environments/environment';
 
 export interface SlipVM {
@@ -60,7 +60,7 @@ export class OrderViewComponent implements OnInit {
     templateHTML;
 
     constructor(private closedOrdersDataService: ClosedOrdersDataService,
-                private route: ActivatedRoute, private rosEp: ROSEp, private dataService: DataService, private translate: TranslateService) {
+        private route: ActivatedRoute, private rosEp: ROSEp, private dataService: DataService, private translate: TranslateService) {
         this.ORDERS_VIEW = ORDERS_VIEW.getTranslations();
         this.orderDocs = {};
 
@@ -71,7 +71,7 @@ export class OrderViewComponent implements OnInit {
 
     async ngOnInit() {
         this.showTimeline = false;
-        this.documentViewer = new (<any>window).DocumentViewer({locale: this.organization.region === 'us' ? 'en-US' : 'he-IL'});
+        this.documentViewer = new (<any>window).DocumentViewer({ locale: this.organization.region === 'us' ? 'en-US' : 'he-IL' });
 
         // Timeline related - to be removed when timeline is integrated into document viewer
         if (this.drillType === 'closedOrder') {
@@ -106,9 +106,9 @@ export class OrderViewComponent implements OnInit {
             if (this.organization.isDemo) {
                 this.BILL_DATA = this.maskPrintDataForDemoMode(this.BILL_DATA);
             }
-            let tpl = this.documentViewer.getHTMLDocument(this.selectedDocument, this.BILL_DATA);
 
-            this.templateHTML = tpl;
+            this.templateHTML = this.documentViewer.getHTMLDocument(this.selectedDocument, this.BILL_DATA);
+            
         } else {
 
 
@@ -143,11 +143,12 @@ export class OrderViewComponent implements OnInit {
                 documentItem.md = {};
             }
 
+            debugger
             if (!_.isEmpty(documentItem.md.signature)) {
 
                 let data = documentItem.md.signature;
                 if (_.get(documentItem, 'md.signature.data') === undefined) {
-                    documentItem.md.signature = {data: data};
+                    documentItem.md.signature = { data: data };
                 }
             } else if (_.get(selectedDocument, 'signature') !== undefined) {
                 documentItem.md.signature = selectedDocument.signature;
@@ -163,7 +164,7 @@ export class OrderViewComponent implements OnInit {
                 documentData = this.maskPrintDataForDemoMode(documentData);
             }
 
-            let tpl = this.documentViewer.getHTMLDocument(documentItem, {
+            this.templateHTML = this.documentViewer.getHTMLDocument(documentItem, {
                 documentType: documentData.documentType,
                 organizationId: documentData.organizationId,
                 printData: {
@@ -172,7 +173,6 @@ export class OrderViewComponent implements OnInit {
                 }
             });
 
-            this.templateHTML = tpl;
         }
 
     }
@@ -194,14 +194,14 @@ export class OrderViewComponent implements OnInit {
         this.BILL_DATA = _.get(bills, '[0]');
 
         let documentInfos;
-        if(this.drillType === 'closedOrder') {
+        if (this.drillType === 'closedOrder') {
             let tlog = await this.rosEp.get(`tlogs/${this.order.tlogId}`);
-             documentInfos = this.documentViewer.getDocumentsInfoFromTlog(tlog, {});
+            documentInfos = this.documentViewer.getDocumentsInfoFromTlog(tlog, {});
         }
         else {
             let order = await this.rosEp.get(`orders/${this.openOrder.id}`);
-            let tlog = this.resolveOrderByStatus({status: 'opened',data :order});
-             documentInfos = this.documentViewer.getDocumentsInfoFromTlog(tlog, {});
+            let tlog = this.resolveOrderByStatus({ status: 'opened', data: order });
+            documentInfos = this.documentViewer.getDocumentsInfoFromTlog(tlog, {});
         }
         this.documentsList = this.create(documentInfos);
         this.selectedDocument = this.documentsList[0];
@@ -217,9 +217,7 @@ export class OrderViewComponent implements OnInit {
             this.BILL_DATA = this.maskPrintDataForDemoMode(this.BILL_DATA);
         }
 
-        let tpl = this.documentViewer.getHTMLDocument(this.selectedDocument, this.BILL_DATA);
-
-        this.templateHTML = tpl;
+        this.templateHTML = this.documentViewer.getHTMLDocument(this.selectedDocument, this.BILL_DATA);
     }
 
     private create(docs: Array<any>) {
@@ -249,6 +247,7 @@ export class OrderViewComponent implements OnInit {
                             this.documents2[doc.id].inProgress = false;
                             this.documents2[doc.id].data = _printData;
 
+                            debugger
                             if (_printData.documentType === 'invoice' || _printData.documentType === 'deliveryNote') {
                                 this.documents2[doc.id].signature = this.resolveSignature(_printData, this.orderOld);
                             }
@@ -319,7 +318,7 @@ export class OrderViewComponent implements OnInit {
     }
 
     private resolveSignature(printData, tlog) {
-
+        debugger
         let data = this.resolveOrderByStatus({
             status: status,
             data: this.orderOld
