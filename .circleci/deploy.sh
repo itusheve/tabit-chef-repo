@@ -40,9 +40,9 @@ elif [[ "$CIRCLE_BRANCH" == "ecs-stage" ]]; then
   npm i -g npm
   npm install --ignore-scripts
   npm rebuild node-sass
-  ng build --prod
-  chmod +x _s3/s3-push-dev.sh
-  S3_BUCKET="chef.tabit-stage.com" _s3/s3-push-dev.sh
+  ng build --configuration=stage
+  chmod +x _s3/s3-push-stage.sh
+  S3_BUCKET="chef.tabit-stage.com" _s3/s3-push-stage.sh
   echo "On $CIRCLE_BRANCH branch. Deploying $SERVICES to $ACCOUNT in $REGIONS"
 elif [[ "$CIRCLE_BRANCH" == "ecs-chef-prod"  ]]; then
   echo "On1"
