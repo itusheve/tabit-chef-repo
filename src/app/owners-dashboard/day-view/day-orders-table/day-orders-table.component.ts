@@ -155,6 +155,7 @@ export class DayOrdersTableComponent implements OnChanges {
                             // duplicate function - put it on day-function.service
 
     sort(orderType: any, by: string) {
+
         if (this.sortBy && this.sortBy === by) {
             this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
         } else {
@@ -176,6 +177,9 @@ export class DayOrdersTableComponent implements OnChanges {
                 break;
             case 'sales':
                 field = 'sales';
+                break;
+            case 'tableNumber':
+                field = 'tableNumber';
                 break;
         }
         let dir = this.sortDir === 'asc' ? -1 : 1;

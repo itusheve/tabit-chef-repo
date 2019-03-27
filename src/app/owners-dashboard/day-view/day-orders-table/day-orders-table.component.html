@@ -134,14 +134,14 @@
                                         </mat-icon>
                                     </div>
                                 </td>
-                                <td (click)="sort(orderType, 'number')">
+                                <td (click)="sort(orderType, orderType.id !== 'seated' ? 'number' : 'tableNumber')">
                                     <div class="flex a-center">
-                                        <div *ngIf="orderType.id != 'seated'" [translate]="'dayTable.orderNumber'">Order #</div>
-                                        <div *ngIf="orderType.id == 'seated'" [translate]="'dayTable.tableNumber'">Table #</div>
-                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='desc'">
+                                        <div *ngIf="orderType.id !== 'seated'" [translate]="'dayTable.orderNumber'">Order #</div>
+                                        <div *ngIf="orderType.id === 'seated'" [translate]="'dayTable.tableNumber'">Table #</div>
+                                        <mat-icon class="sortMatIcon" *ngIf="(sortBy==='number' || sortBy==='tableNumber') && sortDir==='desc'">
                                             arrow_drop_down
                                         </mat-icon>
-                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='asc'">
+                                        <mat-icon class="sortMatIcon" *ngIf="(sortBy==='number' || sortBy==='tableNumber') && sortDir==='asc'">
                                             arrow_drop_up
                                         </mat-icon>
                                     </div>

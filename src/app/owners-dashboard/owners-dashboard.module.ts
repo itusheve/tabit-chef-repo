@@ -8,7 +8,8 @@ import {
     OwnersDashboardCountPipe,
     OwnersDashboardPercentPipe,
     CurrencyPipe,
-    OwnersDashboardHourPipe
+    OwnersDashboardHourPipe,
+    SafePipe
 } from './owners-dashboard.pipes';
 
 import {HomeComponent} from './home/home.component';
@@ -151,6 +152,7 @@ import { DayRefundComponent } from './day-view/day-refund/day-refund.component';
         OwnersDashboardPercentPipe,
         OwnersDashboardCountPipe,
         OwnersDashboardHourPipe,
+        SafePipe,
 
         HomeComponent,
         OwnerSettingsComponent,

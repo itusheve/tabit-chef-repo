@@ -15,7 +15,7 @@
                             <mat-tab-group #tabGroup (selectedTabChange)="onSelectDocument($event)">
                                 <ng-container *ngFor="let document of documentsList">
                                     <mat-tab [label]="document.title">
-                                        <div innerHTML="{{templateHTML}}"></div>
+                                        <div [innerHtml]="templateHTML | safe: 'html'"></div>
                                     </mat-tab>
                                 </ng-container>
                             </mat-tab-group>
