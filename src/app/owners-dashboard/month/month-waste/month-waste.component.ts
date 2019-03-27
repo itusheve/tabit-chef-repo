@@ -32,9 +32,8 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
    ngOnInit() {
       super.ngOnInit();
      this.options = {primary: 'details.date', alt: 'month.server'};
-
-
   }
+
 
   createTitle(): String {
 
@@ -55,6 +54,7 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
   }
 
   protected sortData(option){
+
     if (option === 'alt') {
       this.data[option].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']);
     }

@@ -38,6 +38,12 @@ export class MonthCorporationComponent extends AbstractTableComponent implements
    ngOnInit() {
     super.ngOnInit();
     this.options = {primary:'day.reason',alt:'month.server'};
+     this.sortData('primary');
+     this.sortData('alt');
+   }
+
+  sortData(option){
+    this.data[option].sort((a, b) => b['qty'] - a['qty']);
   }
 
 

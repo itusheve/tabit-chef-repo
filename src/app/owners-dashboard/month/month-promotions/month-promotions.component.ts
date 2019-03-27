@@ -42,7 +42,7 @@ export class MonthPromotionsComponent extends AbstractTableComponent implements 
     }
 
     sortData(option){
-        this.data[option].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']);
+        this.data[option].sort((a, b) => b['qty'] - a['qty']);
     }
 
 

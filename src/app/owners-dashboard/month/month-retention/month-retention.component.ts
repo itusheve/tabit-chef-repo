@@ -33,6 +33,12 @@ export class MonthRetentionComponent extends AbstractTableComponent implements O
   async ngOnInit() {
       super.ngOnInit();
     this.options = {primary: 'day.reason', alt: 'month.server'};
+    this.sortData('primary');
+    this.sortData('alt');
+  }
+
+  sortData(option){
+    this.data[option].sort((a, b) => b['qty'] - a['qty']);
   }
 
 
