@@ -80,6 +80,7 @@
 	"day.type": "Type",
 	"dayTable.opened": "Opened",
 	"dayTable.orderNumber": "Order #",
+	"dayTable.tableNumber": "Table #",
 	"dayTable.revenue": "Revenue",
 	"dayTable.sales": "Sales",
 	"dayTable.total": "Total",

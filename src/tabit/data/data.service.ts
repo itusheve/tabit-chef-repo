@@ -1,9 +1,9 @@
 //angular
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 //rxjs
-import {Observable, combineLatest, BehaviorSubject} from 'rxjs';
-import {publishReplay, refCount} from 'rxjs/operators';
+import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
+import { publishReplay, refCount } from 'rxjs/operators';
 
 
 //tools
@@ -12,19 +12,19 @@ import * as moment from 'moment';
 import 'moment-timezone';
 
 //models
-import {Database} from '../model/Database.model';
-import {DatabaseV2} from '../model/DatabaseV2.model';
+import { Database } from '../model/Database.model';
+import { DatabaseV2 } from '../model/DatabaseV2.model';
 
 //end points
-import {OlapEp} from './ep/olap.ep';
-import {ROSEp} from './ep/ros.ep';
-import {OrderType} from '../model/OrderType.model';
-import {Order} from '../model/Order.model';
-import {environment} from '../../environments/environment';
-import {DebugService} from '../../app/debug.service';
-import {LogzioService} from '../../app/logzio.service';
-import {TranslateService} from '@ngx-translate/core';
-import {TabitHelper} from '../helpers/tabit.helper';
+import { OlapEp } from './ep/olap.ep';
+import { ROSEp } from './ep/ros.ep';
+import { OrderType } from '../model/OrderType.model';
+import { Order } from '../model/Order.model';
+import { environment } from '../../environments/environment';
+import { DebugService } from '../../app/debug.service';
+import { LogzioService } from '../../app/logzio.service';
+import { TranslateService } from '@ngx-translate/core';
+import { TabitHelper } from '../helpers/tabit.helper';
 
 const tmpTranslations_ = {
     'he': {
@@ -517,7 +517,7 @@ export class DataService {
                 rosCalendars = await context.rosEp.get('dynamic-organization-storage/calendar?x-explain=true&withParents=1');
                 obs.next(rosCalendars);
 
-                context.logz.log('chef', 'getDatabase', {'timing': performance.now() - perfStartTime});
+                context.logz.log('chef', 'getDatabase', { 'timing': performance.now() - perfStartTime });
 
                 let localStorage = window.localStorage;
                 let keys = Object.keys(localStorage);
@@ -546,7 +546,7 @@ export class DataService {
             let olapYearlyData = await this.olapEp.getDatabase();
             obs.next(olapYearlyData);
 
-            this.logz.log('chef', 'getDatabase', {'timing': performance.now() - perfStartTime});
+            this.logz.log('chef', 'getDatabase', { 'timing': performance.now() - perfStartTime });
 
         });
         /*let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
@@ -562,7 +562,7 @@ export class DataService {
             let olapYearlyData = await this.olapEp.getDatabaseV2();
             obs.next(olapYearlyData);
 
-            this.logz.log('chef', 'getDatabaseV2', {'timing': performance.now() - perfStartTime});
+            this.logz.log('chef', 'getDatabaseV2', { 'timing': performance.now() - perfStartTime });
 
         });
         /*let data = JSON.parse(window.localStorage.getItem(org.id + '-database'));
@@ -607,7 +607,7 @@ export class DataService {
                 _.set(database, yearMonth, {
                     yearMonth: yearMonth,
                     daily: [
-                        {businessDate: moment().format('YYYY-MM-DD'), yearMonth: yearMonth}
+                        { businessDate: moment().format('YYYY-MM-DD'), yearMonth: yearMonth }
                     ]
                 });
             }
@@ -642,10 +642,10 @@ export class DataService {
                 };
 
                 month.forecast = {
-                    sales: {amount: 0, amountWithoutVat: 0},
-                    diners: {count: 0},
-                    orders: {count: 0},
-                    ppa: {amount: 0, amountWithoutVat: 0},
+                    sales: { amount: 0, amountWithoutVat: 0 },
+                    diners: { count: 0 },
+                    orders: { count: 0 },
+                    ppa: { amount: 0, amountWithoutVat: 0 },
                     reductions: {
                         cancellations: {
                             amount: 0,
@@ -663,7 +663,7 @@ export class DataService {
                     days: [],
                     weekAvg: 0
                 };
-                month.aggregations = {days: []};
+                month.aggregations = { days: [] };
 
                 //itrrate days in month and prepare data
                 let latestDayNumber = 0;
@@ -720,9 +720,9 @@ export class DataService {
                     if (!month.aggregations.days[weekday]) {
                         month.aggregations.days[weekday] = {
                             count: 0,
-                            sales: {amount: 0, amountWithoutVat: 0, avg: 0, avgWithoutVat: 0},
-                            diners: {count: 0},
-                            orders: {count: 0}
+                            sales: { amount: 0, amountWithoutVat: 0, avg: 0, avgWithoutVat: 0 },
+                            diners: { count: 0 },
+                            orders: { count: 0 }
                         };
                     }
 
@@ -946,7 +946,7 @@ export class DataService {
                 month.forecast.weekAvg = forcastWeekAvg / 7;
             });
 
-            database = new DatabaseV2(database, weeks, {weekStartDay: weekStartDay});
+            database = new DatabaseV2(database, weeks, { weekStartDay: weekStartDay });
             obs.next(database);
         });
     }).pipe(
@@ -965,11 +965,11 @@ export class DataService {
             };
         }
 
-        if(!settings.vat) {
+        if (!settings.vat) {
             settings.vat = true;
         }
 
-        if(settings.weekToDate === undefined) {
+        if (settings.weekToDate === undefined) {
             settings.weekToDate = true;
         }
 
@@ -1012,7 +1012,7 @@ export class DataService {
             return;
         }
 
-        let laborCost = await this.rosEp.get('reports/attendance', {time: time.toISOString()}).then(function (res) {
+        let laborCost = await this.rosEp.get('reports/attendance', { time: time.toISOString() }).then(function (res) {
             return _.get(res, 'byDay');
         });
 
@@ -1163,7 +1163,7 @@ export class DataService {
         else {*/
         let perfStartTime = performance.now();
         let report = await this.olapEp.getDailyReport(day);
-        this.logz.log('chef', 'getDailyReport', {'timing': performance.now() - perfStartTime});
+        this.logz.log('chef', 'getDailyReport', { 'timing': performance.now() - perfStartTime });
 
         /*if (dailyReport) {
             reportsCache = _.filter(reportsCache, function (report) {
@@ -1241,16 +1241,26 @@ export class DataService {
         };
 
         const openOrders = await this.rosEp.get('orders', params);
+        const tables = await this.rosEp.get('tables', params);
         const users = await this.olapEp.getUsers();
-
+        
         _.forEach(openOrders, openOrder => {
-            if(openOrder.owner) {
-                const user = _.find(users, {userId: openOrder.owner});
+            if (openOrder.owner) {
+                const user = _.find(users, { userId: openOrder.owner });
                 _.set(openOrder, 'ownerFirstName', _.get(user, 'firstName', 'NA'));
                 _.set(openOrder, 'ownerLastName', _.get(user, 'lastName', 'NA'));
             }
-        });
 
+            // Set table number to open order.
+            let tableId = _.get(openOrder, 'tableIds[0]');
+            let table = tables.find(c => c._id === tableId);
+            if (table) {
+                let tableNumber = table.number;
+                openOrder.tableNumber = tableNumber;
+            } 
+
+        });
+        
         return openOrders;
     }
 
@@ -1275,7 +1285,7 @@ export class DataService {
 
         let now = moment();
 
-        let dailySalesReport = _.find(reportsCache, {date: day.format('YYYYMMDD')});
+        let dailySalesReport = _.find(reportsCache, { date: day.format('YYYYMMDD') });
         if (!day.isSame(now, 'days') && dailySalesReport && moment(dailySalesReport.createTime, 'YYYY-MM-DD HH:mm').isSameOrAfter(now.subtract(10, 'minutes'))) {
             return dailySalesReport.data;
         }
@@ -1314,7 +1324,7 @@ export class DataService {
 
             let newResult = _.values(_.compact(result));
 
-            this.logz.log('chef', 'getDailySalesByHours', {'timing': performance.now() - perfStartTime});
+            this.logz.log('chef', 'getDailySalesByHours', { 'timing': performance.now() - perfStartTime });
 
             if (dailySalesReport) {
                 reportsCache = _.filter(reportsCache, function (report) {
@@ -1379,7 +1389,7 @@ export class DataService {
     }
 
     private getExcludedDates(calendars, organizationId) {
-        let organizationalCalendar = _.find(calendars, {organization: organizationId}) || {};
+        let organizationalCalendar = _.find(calendars, { organization: organizationId }) || {};
 
         let masterCalendar = {};
         _.each(calendars, calendar => {

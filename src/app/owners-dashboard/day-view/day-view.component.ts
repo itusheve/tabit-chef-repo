@@ -807,19 +807,13 @@ export class DayViewComponent implements OnInit {
         this.hasData = false;
         window.scrollTo(0, 0);
         this.render();
-        this.dataService.selectedDay$.subscribe(async date =>{
-
-            this.dailyReportsInProgress = true;
-
-            this.date = date;
-            let dateStart = moment(date).startOf('day').format('YYYYMMDD');
-            let dateEnd = moment(date).endOf('day').format('YYYYMMDD');
-
-            this.refunds = await this.dataWareHouseService.getRefund(dateStart, dateEnd);
-            this.refunds = {data: this.refunds.refund, isShowing: this.refunds.refund.length > 0};
-            this.inProcessSalesAmount = 0;
-
-            this.dailyReportsInProgress = false;
+        this.day$.subscribe( async day =>{
+            if(day){
+                this.dailyReportsInProgress = true;
+                this.refunds = await this.dataWareHouseService.getRefund(day.format('YYYYMMDD'), day.format('YYYYMMDD'));
+                this.refunds = {data: this.refunds.refund, isShowing: this.refunds.refund ? true : false};
+                this.dailyReportsInProgress = false;
+            }
         });
 
         combineLatest(this.totalSales$, this.openOrders$, this.closedOrders$).subscribe(data => {
