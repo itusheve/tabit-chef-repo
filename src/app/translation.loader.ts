@@ -217,7 +217,8 @@ const he = {
     'week.quantity': 'כמות',
     'week.amount': 'סכום',
     'revenue': 'מחזור',
-    'monthly': 'חודשי',
+    'monthly': 'סה"כ',
+    'total': 'סה"כ',
     'monthSummary': 'סיכום חודש',
     'actual': 'בפועל',
     'close': 'סגור'
@@ -432,7 +433,7 @@ const en = {
     'month.revenue': 'Revenue',
     'month.reductions': 'Reductions',
     'revenue': 'Revenue',
-    'monthly': 'Monthly',
+    'monthly': 'Total',
     'monthSummary': 'Summary',
     'actual': 'Actual',
     'close': 'Close'

@@ -33,20 +33,18 @@
                                         </mat-icon>
                                     </div>
                                 </td>
-                                <td (click)="sortOpenOrder(openOrderServiceType, 'number')">
+                                <td (click)="sortOpenOrder(openOrderServiceType, openOrderServiceType.id !== 'seated' ? 'number' : 'tableNumber')">
                                     <div class="flex a-center">
                                         <div *ngIf="openOrderServiceType.id === 'seated'">
                                             <span [translate]="'dayTable.tableNumber'">Table #</span>
                                         </div>
-
                                         <div *ngIf="openOrderServiceType.id !== 'seated'">
                                             <span [translate]="'dayTable.orderNumber'">Order #</span>
                                         </div>
-
-                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='desc'">
+                                        <mat-icon class="sortMatIcon"*ngIf="(sortBy==='number' || sortBy==='tableNumber') && sortDir==='desc'">
                                             arrow_drop_down
                                         </mat-icon>
-                                        <mat-icon class="sortMatIcon" *ngIf="sortBy==='number' && sortDir==='asc'">
+                                        <mat-icon class="sortMatIcon"*ngIf="(sortBy==='number' || sortBy==='tableNumber') && sortDir==='asc'">
                                             arrow_drop_up
                                         </mat-icon>
                                     </div>

@@ -12,7 +12,7 @@
 
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <div *ngIf="dataOptionMode==true" class ="btn-group category-picker" role="group" style="width:100%; padding: 5px">
+            <div *ngIf="dataOptionMode==true" class ="btn-group category-picker" role="group" style="width:100%; padding: 5px 12px 5px ">
                 <button class="btn btn-outline-secondary" style="width:50%; border-radius: 0 0.25rem 0.25rem 0; margin-left: 4px" (click)="selectedOption = 'primary'" [ngClass]="{'btnClicked':selectedOption == 'primary'}" ><span [translate]="'' + options.primary"></span></button>
                 <button class="btn btn-outline-secondary" style="width:50%; border-radius: 0.25rem 0 0 0.25rem;" (click)="selectedOption = 'alt'" [ngClass]="{'btnClicked': selectedOption == 'alt'}"><span [translate]="'' + options.alt"></span></button>
             </div>
@@ -29,7 +29,7 @@
 
                </tr>
 
-                <tr *ngFor="let tuple of data[selectedOption]" class="dayReportDataRow" (click)="showReportDialog(tuple)" style="line-height: 30px !important; cursor:pointer ">
+                <tr *ngFor="let tuple of data[selectedOption]" class="dayReportDataRow" (click)="showReportDialog(tuple)" style="line-height: 30px !important; cursor:pointer; white-space:nowrap ">
                     <td *ngFor="let column of columns[selectedOption]; let i = index">
                         <span *ngIf="i == 0">{{tuple[column.dataKey]}}</span>
                         <span *ngIf="column.dataType === 'currency' && i!=0">{{tuple[column.dataKey] | curr:'0'}}</span>

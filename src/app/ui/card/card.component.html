@@ -1,6 +1,6 @@
 <div class="card bg-light dashboard-home-card shadow-card rounded-0"
      ontouchstart="event.target.closest('.card').classList.remove('shadow-card');"
-     ontouchend="event.target.closest('.card').classList.add('shadow-card')">
+     ontouchend="event.target.closest('.card').classList.add('shadow-card')" style="border-radius: 5px 5px 0 0 !important;">
     <div *ngIf="cardData.title" class="card-header text-center" style="font-size: 18px;"
          [ngClass]="cardData.statusClass || 'bg-light'">
 

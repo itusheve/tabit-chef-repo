@@ -212,6 +212,9 @@ export class DayOrdersTableComponent implements OnChanges {
             case 'sales':
                 field = 'sales';
                 break;
+            case 'tableNumber':
+                field = 'tableNumber';
+                break;
         }
         let dir = this.sortDir === 'asc' ? -1 : 1;
         this.openOrdersByServiceType.find(o => o.id === orderType.id)
