@@ -16,7 +16,7 @@
                 <button class="btn btn-outline-secondary" style="width:50%; border-radius: 0 0.25rem 0.25rem 0; margin-left: 4px" (click)="selectedOption = 'primary'" [ngClass]="{'btnClicked':selectedOption == 'primary'}" ><span [translate]="'' + options.primary"></span></button>
                 <button class="btn btn-outline-secondary" style="width:50%; border-radius: 0.25rem 0 0 0.25rem;" (click)="selectedOption = 'alt'" [ngClass]="{'btnClicked': selectedOption == 'alt'}"><span [translate]="'' + options.alt"></span></button>
             </div>
-            <table class="table table-sm">
+            <table class="table table-sm" style="font-size: 13px !important;">
 
                <tr class="header">
                    <td *ngFor="let column of columns[selectedOption]" (click)="sort(column.dataKey)" [style.width]="column.width">
