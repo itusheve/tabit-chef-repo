@@ -110,7 +110,7 @@ export class OrgsComponent implements OnInit {
 
                     if (user.email.indexOf('@tabit.cloud') > 0) {
                         let usOrg = _.clone(_.find(this.orgsFiltered, {id: '59c3f78cd1ea272200200880'}));
-                        let ilOrg = _.clone(_.find(this.orgsFiltered, {id: '53eb1ee2e6c77111203d8503'}));
+                        let ilOrg = _.clone(_.find(this.orgsFiltered, {id: '5a801346e1158e2900338ef8'}));
 
                         if (usOrg) {
                             usOrg.name = 'Demo Restaurant';
