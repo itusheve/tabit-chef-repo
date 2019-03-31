@@ -7,7 +7,7 @@ import {OwnersDashboardService} from '../../owners-dashboard.service';
 import {DataService, tmpTranslations} from '../../../../tabit/data/data.service';
 import * as moment from 'moment';
 import {DatePipe} from '@angular/common';
-import {environment} from '../../../../environments/environment.dev-il';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-month-payments',

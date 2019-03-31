@@ -1,0 +1,12 @@
+{
+    "version": "5.1.10",
+    "bundles": [
+      "https://fonts.googleapis.com/icon?family=Material+Icons",
+      "https://fonts.googleapis.com/css?family=Assistant",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-stage.com/styles.css",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-stage.com/runtime.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-stage.com/polyfills.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-stage.com/scripts.js",
+      "https://s3-eu-west-1.amazonaws.com/chef.tabit-stage.com/main.js"
+    ]
+  }

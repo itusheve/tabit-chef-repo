@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "license": "",
   "scripts": {
-    "postinstall": "ng build --configuration=prod-us --prod --output-hashing=none",
-    "postinstall-il": "ng build --configuration=prod-il --prod --output-hashing=none",
-    "postinstall-us": "ng build --configuration=prod-us --prod --output-hashing=none",
     "ng": "ng",
     "start": "node server.js",
     "build": "ng build",
