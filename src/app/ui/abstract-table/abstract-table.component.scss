@@ -8,7 +8,11 @@
   border-radius: 0 0.25rem 0 0;
 }
 
+.mat-expansion-panel-body, table, .table-sm , th, td  {
+  paddong: 0px !important;
+}
 
-
-
-
+.table-sm th,
+.table-sm td {
+  padding: 0px !important;
+}
