@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {catchError, retry} from 'rxjs/operators';
-import {throwError} from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { catchError, retry } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
-export class DataWareHouseEpService {
+export class DWHEp {
 
     constructor(private httpClient: HttpClient) {
     }
 
 
     get(url, params?): Promise<any> {
-            return this.httpClient.get(environment.reportingServer.url + url, {
-                params: params || {}
-            }).pipe(retry(1), catchError(this.handleError)).toPromise();
+        return this.httpClient.get(environment.reportingServer.url + url, {
+            params: params || {}
+        }).pipe(retry(1), catchError(this.handleError)).toPromise();
     }
 
 
