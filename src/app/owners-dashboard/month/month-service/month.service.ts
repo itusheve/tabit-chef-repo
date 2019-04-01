@@ -1,22 +1,23 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
-import {map, catchError, tap} from 'rxjs/operators';
-import {DataWareHouseEpService} from '../../../services/end-points/data-ware-house-ep.service';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { map, catchError, tap } from 'rxjs/operators';
+import { DWHEp } from '../../../../tabit/data/ep/dwh.ep';
 
 //models
-import {MonthPaymentModel} from '../month-payments/month-payments-model/month-payment.model';
+import { MonthPaymentModel } from '../month-payments/month-payments-model/month-payment.model';
+
 
 
 @Injectable()
 
 export class DataWareHouseService {
 
-    constructor(private dataWarehouse: DataWareHouseEpService) {
+    constructor(private dwhEp: DWHEp) {
     }
 
     public async getMonthlyPayments(fromBusinessDate, toBusinessDate): Promise<MonthPaymentModel> {
-        const payments = await  this.dataWarehouse.get('report/payments', {
+        const payments = await this.dwhEp.get('report/payments', {
             fromBusinessDate: fromBusinessDate,
             toBusinessDate: toBusinessDate
         });
@@ -24,7 +25,7 @@ export class DataWareHouseService {
     }
 
     public getMonthlyTlogs(fromBusinessDate, toBusinessDate) {
-        return this.dataWarehouse.get('report/tlogs', {
+        return this.dwhEp.get('report/tlogs', {
             fromBusinessDate: fromBusinessDate,
             toBusinessDate: toBusinessDate
         });
