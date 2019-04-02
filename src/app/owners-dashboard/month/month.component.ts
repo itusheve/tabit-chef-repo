@@ -4,6 +4,7 @@ import {DataService, tmpTranslations} from '../../../tabit/data/data.service';
 import {ActivatedRoute} from '@angular/router';
 
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import {DatePipe} from '@angular/common';
 import {environment} from '../../../environments/environment';
 
@@ -99,7 +100,7 @@ export class MonthComponent implements OnInit {
             this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd);
             this.mostReturnsItems = await this.dataWareHouseService.getMostReturnItems(dateStart, dateEnd);
             this.refunds = await this.dataWareHouseService.getRefund(dateStart, dateEnd);
-            /*this.refunds = {data: this.refunds.refund, isShowing: this.refunds.refund.length > 0};*/
+            this.refunds = {data: _.get(this,'refunds.refund'), isShowing: _.get(this,'refunds.refund.length') > 0};
             this.hqChefHomePage = await this.dataWareHouseService.getHqChefHomePage(dataSatartHq, dataEndHq);
 
 
