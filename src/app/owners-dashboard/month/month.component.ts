@@ -92,8 +92,6 @@ export class MonthComponent implements OnInit {
             let dateStart = moment(date).startOf('month').format('YYYYMMDD');
             let dateEnd = moment(date).endOf('month').format('YYYYMMDD');
 
-            let dataSatartHq = moment(date).startOf('day').format('YYYYMMDD');
-            let dataEndHq = moment(date).endOf('day').format('YYYYMMDD');
 
             this.reductionsByReason = await this.dataWareHouseService.getReductionByReason(dateStart, dateEnd);
             this.reductionsByFired = await this.dataWareHouseService.getReductionByFired(dateStart, dateEnd);
@@ -101,7 +99,6 @@ export class MonthComponent implements OnInit {
             this.mostReturnsItems = await this.dataWareHouseService.getMostReturnItems(dateStart, dateEnd);
             this.refunds = await this.dataWareHouseService.getRefund(dateStart, dateEnd);
             this.refunds = {data: _.get(this,'refunds.refund'), isShowing: _.get(this,'refunds.refund.length') > 0};
-            this.hqChefHomePage = await this.dataWareHouseService.getHqChefHomePage(dataSatartHq, dataEndHq);
 
 
             this.promotions = this.getReductionData('promotions', true, '');
