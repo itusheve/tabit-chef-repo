@@ -99,7 +99,7 @@ export class MonthComponent implements OnInit {
             this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd);
             this.mostReturnsItems = await this.dataWareHouseService.getMostReturnItems(dateStart, dateEnd);
             this.refunds = await this.dataWareHouseService.getRefund(dateStart, dateEnd);
-            this.refunds = {data: this.refunds.refund, isShowing: this.refunds.refund.length > 0};
+            /*this.refunds = {data: this.refunds.refund, isShowing: this.refunds.refund.length > 0};*/
             this.hqChefHomePage = await this.dataWareHouseService.getHqChefHomePage(dataSatartHq, dataEndHq);
 
 
