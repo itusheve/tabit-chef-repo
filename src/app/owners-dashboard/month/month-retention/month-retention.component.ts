@@ -2,6 +2,7 @@ import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { DataWareHouseService } from '../../../services/data-ware-house.service';
 import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
 import {MatDialog} from '@angular/material';
+import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 
 @Component({
   selector: 'app-month-retention',
@@ -42,11 +43,7 @@ export class MonthRetentionComponent extends AbstractTableComponent implements O
   }
 
 
-  getCssColorClass(): String {
-    const elements = document.getElementsByClassName('card-retention');
-    const color = window.getComputedStyle(elements[0], null).getPropertyValue('color');
-    return color;
-  }
+
 
   ngOnChanges(changes: SimpleChanges): void {
   }

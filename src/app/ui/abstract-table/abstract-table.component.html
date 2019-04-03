@@ -5,7 +5,7 @@
 
     <mat-accordion>
         <mat-expansion-panel [expanded]="false" (opened)="selectedOption='primary'">
-            <mat-expansion-panel-header [ngStyle]="{'background-color':getCssColorClass()}">
+            <mat-expansion-panel-header [ngClass]="getCssColorClass()">
                 <mat-panel-title>
                     <span style="font-weight: bold; font-size: 18px !important" *ngIf="summaryOption == true">{{summary.actions | number}}&nbsp;<span [translate]="'' + summary.connect "></span>&nbsp;{{summary.total | curr:'0':'':'nullify'}}</span>
                     <span style="font-weight: bold" *ngIf ="summaryOption == false" [translate]="'' + title.translated"></span>

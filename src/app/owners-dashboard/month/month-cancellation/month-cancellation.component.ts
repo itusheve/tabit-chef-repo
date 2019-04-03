@@ -3,6 +3,7 @@ import {DataWareHouseService} from '../../../services/data-ware-house.service';
 import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
 import {MatDialog} from '@angular/material';
 import * as moment from 'moment';
+import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 
 @Component({
     selector: 'app-month-cancellation',
@@ -56,17 +57,17 @@ export class MonthCancellationComponent extends AbstractTableComponent implement
     }
 
 
-    getCssColorClass() {
-        const elements = document.getElementsByClassName('card-cancellation');
-        const color = window.getComputedStyle(elements[0], null).getPropertyValue('color');
-        return color;
-    }
 
     ngOnChanges(changes: SimpleChanges): void {
     }
 
     protected getType(): string {
         return 'cancellation';
+    }
+
+    getCssColorClass(): String {
+        let percent = this.data.percent * 100;
+        return new TabitHelper().getColorClassByPercentage(percent,true);
     }
 
 }

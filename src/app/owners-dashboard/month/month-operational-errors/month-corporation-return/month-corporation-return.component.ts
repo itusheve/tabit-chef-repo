@@ -50,10 +50,6 @@ export class MonthCorporationReturnComponent extends AbstractTableComponent impl
 
 
 
-  getCssColorClass(): String {
-    return 'bg-primary';
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
   }
 

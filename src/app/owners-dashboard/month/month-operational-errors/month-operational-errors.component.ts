@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
+import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 
 
 @Component({
@@ -50,12 +51,11 @@ export class MonthOperationalErrorsComponent implements OnInit, AfterViewInit {
 
     }
 
-    getCssColorClass(): String {
-        const elements = document.getElementsByClassName('card-operational');
-        const color = window.getComputedStyle(elements[0], null).getPropertyValue('color');
-        return color;
-    }
-
+    /*getCssColorClass(): String {
+            let percent = this.data.percent * 100;
+            return new TabitHelper().getColorClassByPercentage(percent,false);
+        }
+*/
 
 }
 

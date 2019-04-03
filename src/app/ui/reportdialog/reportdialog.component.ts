@@ -33,7 +33,7 @@ export class ReportdialogComponent implements OnInit {
   ngOnInit() {
     this.data.itemsPromise.then(itemsResponse => {
       this.items = itemsResponse.items;
-      this.items.sort((a,b)=> (a['amountIncludeVat'] - b['amountIncludeVat']) * (this.sortDir === true ? 1 : -1));
+      this.items.sort((a,b)=> (a['qty'] - b['qty']) * (this.sortDir === true ? 1 : -1));
       this.isLoading = false;
     });
 

@@ -2,6 +2,7 @@ import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
 import {MatDialog} from '@angular/material';
 import {DataWareHouseService} from '../../../services/data-ware-house.service';
+import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 
 
 @Component({
@@ -38,6 +39,11 @@ export class MonthOrganizationalComponent extends AbstractTableComponent impleme
      this.sortData('alt');
   }
 
+  getCssColorClass(): String {
+   let percent = this.data.percent * 100;
+   return new TabitHelper().getColorClassByPercentage(percent,false);
+ }
+
   sortData(option){
     this.data[option].sort((a, b) => b['qty'] - a['qty']);
   }
@@ -48,20 +54,13 @@ export class MonthOrganizationalComponent extends AbstractTableComponent impleme
 
   }
 
-
-  getCssColorClass(): String {
-    const elements = document.getElementsByClassName('card-oganizational');
-    const color = window.getComputedStyle(elements[0], null).getPropertyValue('color');
-    return color;
-  }
-
-
   ngOnChanges(changes: SimpleChanges): void {
   }
 
   protected getType(): string {
     return 'organizational';
   }
+
 
 
 }
