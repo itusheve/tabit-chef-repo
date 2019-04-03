@@ -51,7 +51,7 @@ export abstract class AbstractTableComponent implements OnInit {
 
     public selectedOption;
     public tabitHelper: TabitHelper;
-    protected getCssColorClass(): any{
+    public getCssColorClass(): any{
         let percent = this.data.percent * 100;
         return this.tabitHelper.getColorClassByPercentage(percent,true);
 
