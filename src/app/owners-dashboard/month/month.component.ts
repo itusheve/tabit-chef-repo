@@ -93,11 +93,15 @@ export class MonthComponent implements OnInit {
             let dateEnd = moment(date).endOf('month').format('YYYYMMDD');
 
 
-            this.reductionsByReason = await this.dataWareHouseService.getReductionByReason(dateStart, dateEnd);
-            this.reductionsByFired = await this.dataWareHouseService.getReductionByFired(dateStart, dateEnd);
-            this.mostSoldItems = await this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd);
-            this.mostReturnsItems = await this.dataWareHouseService.getMostReturnItems(dateStart, dateEnd);
-            this.refunds = await this.dataWareHouseService.getRefund(dateStart, dateEnd);
+            let compData = await this.getComponentData(dateStart, dateEnd);
+
+            this.reductionsByReason = compData.reductionsByReason;
+            this.reductionsByFired = compData.reductionsByFired;
+            this.mostSoldItems = compData.mostSoldItems;
+            this.mostReturnsItems = compData.mostReturnsItems;
+            this.refunds = compData.refunds;
+
+
             this.refunds = {data: _.get(this,'refunds.refund'), isShowing: _.get(this,'refunds.refund.length') > 0};
 
 
@@ -119,6 +123,29 @@ export class MonthComponent implements OnInit {
             this.showData = true;
         });
     }
+
+        async getComponentData(dateStart, dateEnd) {
+
+            return Promise.all([
+             this.dataWareHouseService.getReductionByReason(dateStart, dateEnd),
+             this.dataWareHouseService.getReductionByFired(dateStart, dateEnd),
+             this.dataWareHouseService.getMostLeastSoldItems(dateStart, dateEnd),
+             this.dataWareHouseService.getMostReturnItems(dateStart, dateEnd),
+             this.dataWareHouseService.getRefund(dateStart, dateEnd)
+         ]).then(result => {
+
+             return {
+                reductionsByReason: result[0],
+                reductionsByFired: result[1],
+                mostSoldItems: result[2],
+                mostReturnsItems: result[3],
+                refunds: result[4]
+                }
+
+        });
+
+    }
+
 
     getReductionData(key, dataOption, percentKey) {
 
