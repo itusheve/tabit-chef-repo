@@ -3,7 +3,6 @@ import {DataWareHouseService} from '../../../services/data-ware-house.service';
 import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
 import {MatDialog} from '@angular/material';
 import * as moment from 'moment';
-import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
 import {DataService} from '../../../../tabit/data/data.service';
 
 @Component({
