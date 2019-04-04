@@ -16,11 +16,11 @@ export class MonthRefundsComponent implements OnInit, OnChanges {
   @Output() onOrderClicked = new EventEmitter();
 
   columns = [
-    {en: 'Date', dataKey: 'opened', translated: 'details.date'},
-    {en: 'Waiter', dataKey: 'approveByName', dataType: 'item', translated: 'month.server'},
-    {en: 'OrderNumber', dataType: 'number', dataKey: 'orderNumber', translated: 'month.order'},
-    {en: 'Amount', dataKey: 'amount', dataType: 'currency', translated: 'month.amount'},
-    {en: 'Payments', dataType:'item' ,dataKey: 'paymentsName',  translated: 'month.payments'}
+    {en: 'Date', dataKey: 'opened', translated: 'details.date', width: '30%'},
+    {en: 'Waiter', dataKey: 'approveByName', dataType: 'item', translated: 'month.server', width: '25%'},
+    {en: 'OrderNumber', dataType: 'number', dataKey: 'orderNumber', translated: 'month.order', width: '15%'},
+    {en: 'Amount', dataKey: 'amount', dataType: 'currency', translated: 'month.amount' , width: '15%'},
+    {en: 'Payments', dataType:'item' ,dataKey: 'paymentsName',  translated: 'month.payments' , width: '15%'}
   ];
 
   title = {en: 'refund', translated: 'refund'};

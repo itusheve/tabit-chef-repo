@@ -27,15 +27,15 @@ export abstract class MonthMostAbstract implements OnInit {
             servicesKeys.forEach(serviceKey => {
 
                 let data =  servicesData[serviceKey];
-                let departmentData = _.groupBy(data,'departmentName');
+                let sortOrder = _.groupBy(data,'departmentName');
                 this.services.push({data:{primary:[],alt:[]},title:data[0].serviceName});
-                Object.keys(departmentData).forEach(departmentKey =>{
-                    let data = departmentData[departmentKey];
+                Object.keys(sortOrder).forEach(sortOrderKey =>{
+                    let data = sortOrder[sortOrderKey];
                     data.sort(this.sort);
                     data = data.slice(0,settings.maxItemsPerDepartment);
                     this.services[c].data.primary = this.services[c].data.primary.concat(data);
                 });
-                this.services[c].data.primary.sort((a,b)=>b.departmentName.localeCompare(a.departmentName));
+                this.services[c].data.primary = this.services[c].data.primary.sort((a,b)=>b.sortOrderKey + a.sortOrderKey);
                 c++;
             });
 
@@ -44,7 +44,8 @@ export abstract class MonthMostAbstract implements OnInit {
     }
 
     sort(a,b){
-        return b.salesAmountIncludeVat - a.salesAmountIncludeVat;
+        return b.sold - a.sold;
     }
+
 
 }

@@ -61,7 +61,7 @@ export class MonthGridComponent implements OnInit {
             this.hasYearlyAvg = false;
             this.days = [];
             _.each(days, day => {
-                if (moment(day.businessDate).isBefore(moment(dailyTotals.businessDate), 'day')) {
+                if (moment.utc(day.businessDate).isBefore(moment.utc(dailyTotals.businessDate), 'day') || (moment.utc(day.businessDate).isSameOrBefore(moment.utc(dailyTotals.businessDate), 'day') && dailyTotals.isEndOfDay)) {
                     this.days.push(day);
                     if (day.AvgPySalesAndRefoundAmountIncludeVat) {
                         this.hasYearlyAvg = true;
