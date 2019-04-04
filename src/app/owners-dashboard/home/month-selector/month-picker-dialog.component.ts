@@ -182,6 +182,8 @@ export class MonthPickerDialogComponent {
         this.currentMonth = month.date;
         this.onDateChanged(this.selection);
         this.bottomSheetRef.dismiss();
+
+        this.dataService.setMonthlyReductions(month.summary)
         event.preventDefault();
     }
 

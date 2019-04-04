@@ -4,7 +4,7 @@
     </div>
     <mat-accordion>
         <mat-expansion-panel [expanded]="false">
-            <mat-expansion-panel-header>
+            <mat-expansion-panel-header [ngClass]="getCssColorClass()">
                 <mat-panel-title style="font-weight: bold; font-size: 18px !important">
                     {{summary.actions}}&nbsp;<span [translate]="'' + summary.connect "></span>&nbsp;{{summary.total | curr:'0':'':'nullify'}}
                 </mat-panel-title>

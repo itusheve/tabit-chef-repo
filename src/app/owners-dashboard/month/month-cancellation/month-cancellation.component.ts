@@ -4,6 +4,7 @@ import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.
 import {MatDialog} from '@angular/material';
 import * as moment from 'moment';
 import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
+import {DataService} from '../../../../tabit/data/data.service';
 
 @Component({
     selector: 'app-month-cancellation',
@@ -19,8 +20,8 @@ export class MonthCancellationComponent extends AbstractTableComponent implement
     ];
 
 
-    constructor(dialog: MatDialog, dataWareHouseService: DataWareHouseService) {
-        super(dialog, dataWareHouseService);
+    constructor(dialog: MatDialog, dataWareHouseService: DataWareHouseService, dataService:DataService) {
+        super(dialog, dataWareHouseService, dataService);
         this.columns = {primary: this.columns_primary, alt: []};
         this.title = {en: 'cancellations', translated: 'cancellations'};
     }
@@ -31,10 +32,10 @@ export class MonthCancellationComponent extends AbstractTableComponent implement
 
     }
 
-    createTitle(): String {
-
-        return '';
+    sortData(option){
+        this.data[option].sort((a, b) => b['qty'] - a['qty']);
     }
+
 
     setDataForDialog(row, date) {
         const options = {
@@ -65,9 +66,5 @@ export class MonthCancellationComponent extends AbstractTableComponent implement
         return 'cancellation';
     }
 
-    getCssColorClass(): String {
-        let percent = this.data.percent * 100;
-        return new TabitHelper().getColorClassByPercentage(percent,true);
-    }
 
 }

@@ -105,22 +105,23 @@ export class MonthComponent implements OnInit {
             this.refunds = {data: _.get(this,'refunds.refund'), isShowing: _.get(this,'refunds.refund.length') > 0};
 
 
-            this.promotions = this.getReductionData('promotions', true, '');
+            this.promotions = this.getReductionData('promotions', true, '',false);
             this.monthlyReports = {
-                percent: this.summary[0].totals.reductions['operational'],
-                compensation: this.getReductionData('compensation', true, ''),
-                compensationReturns: this.getReductionData('compensationReturns', true, '')
+                percent: this.dataService.monthlyReductions.reductions['operational'].change,
+                compensation: this.getReductionData('compensation', true, '',false),
+                compensationReturns: this.getReductionData('compensationReturns', true, '',false)
             };
 
             this.monthlyReports.isShowing = this.monthlyReports.compensation.isShowing || this.monthlyReports.compensationReturns.isShowing;
 
             this.monthlyReportsInProgress = false;
 
-            this.cancellation = this.getReductionData('cancellation', false, 'cancellations');
-            this.retention = this.getReductionData('retention', true, 'retention');
-            this.organizational = this.getReductionData('organizational', true, 'organizational');
-            this.wasteEod = this.getReductionData('wasteEod', true, '');
+            this.cancellation = this.getReductionData('cancellation', false, 'cancellations',true);
+            this.retention = this.getReductionData('retention', true, 'retention',true);
+            this.organizational = this.getReductionData('organizational', true, 'employee',true);
+            this.wasteEod = this.getReductionData('wasteEod', true, '',false);
             this.showData = true;
+
         });
     }
 
@@ -140,14 +141,14 @@ export class MonthComponent implements OnInit {
                 mostSoldItems: result[2],
                 mostReturnsItems: result[3],
                 refunds: result[4]
-                }
+                };
 
         });
 
     }
 
 
-    getReductionData(key, dataOption, percentKey) {
+    getReductionData(key, dataOption, percentKey, needsPercent) {
 
         let data = dataOption === true ? {
             primary: this.reductionsByReason[key].sort((a, b) => b['amountIncludeVat'] - a['amountIncludeVat']),
@@ -159,8 +160,8 @@ export class MonthComponent implements OnInit {
 
         return Object.assign(data, {
             isShowing: data.primary.length > 0 || data.alt.length > 0,
-            percent: this.summary[0].totals ? this.summary[0].totals.reductions[percentKey] ? this.summary[0].totals.reductions[percentKey].percentage : 0 : 0
-        });
+            percent: needsPercent ? this.dataService.monthlyReductions.reductions[percentKey].change
+                    :null});
     }
 
 

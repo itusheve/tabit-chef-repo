@@ -388,6 +388,8 @@ export class DataService {
 
     private organizations: any[];
 
+    public monthlyReductions: any = {};
+
     public region = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';
     public timezone = environment.region === 'us' ? 'America/Chicago' : 'Asia/Jerusalem';
 
@@ -418,6 +420,10 @@ export class DataService {
             obs.next(database.getCurrentBusinessDay());
         });
     });
+
+    public setMonthlyReductions(monthlyReductions){
+        this.monthlyReductions = monthlyReductions;
+    }
 
     selectedMonth$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment().startOf('month'));
     selectedWeek$: BehaviorSubject<moment.Moment> = new BehaviorSubject<moment.Moment>(moment().startOf('week'));

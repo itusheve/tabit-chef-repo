@@ -3,6 +3,7 @@ import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.
 import {MatDialog} from '@angular/material';
 import {DataWareHouseService} from '../../../services/data-ware-house.service';
 import {TabitHelper} from '../../../../tabit/helpers/tabit.helper';
+import {DataService} from '../../../../tabit/data/data.service';
 
 
 @Component({
@@ -24,8 +25,8 @@ export class MonthOrganizationalComponent extends AbstractTableComponent impleme
     {en: 'Amount', dataKey: 'amountIncludeVat', dataType: 'currency', translated: 'month.amount', width: '30%'}
   ];
 
-  constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService){
-    super(dialog,dataWareHouseService);
+  constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService, dataService:DataService){
+    super(dialog,dataWareHouseService, dataService);
     this.columns = {primary:this.columns_primary,alt:this.columns_alternative};
     this.title = {en: 'Organizational', translated: 'month.organizational'};
   }
@@ -39,10 +40,6 @@ export class MonthOrganizationalComponent extends AbstractTableComponent impleme
      this.sortData('alt');
   }
 
-  getCssColorClass(): String {
-   let percent = this.data.percent * 100;
-   return new TabitHelper().getColorClassByPercentage(percent,false);
- }
 
   sortData(option){
     this.data[option].sort((a, b) => b['qty'] - a['qty']);

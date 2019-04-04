@@ -54,6 +54,9 @@ export class CardComponent implements OnInit {
         this.dataService.settings$.subscribe(settings => {
             this.settings = settings;
         });
+
+
+
     }
 
     getArrow(percentage) {

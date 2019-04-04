@@ -2,6 +2,7 @@ import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { DataWareHouseService } from '../../../../services/data-ware-house.service';
 import {AbstractTableComponent} from '../../../../ui/abstract-table/abstract-table.component';
 import {MatDialog} from '@angular/material';
+import {DataService} from '../../../../../tabit/data/data.service';
 
 @Component({
   selector: 'app-month-corporation',
@@ -24,8 +25,8 @@ export class MonthCorporationComponent extends AbstractTableComponent implements
   ];
 
 
-  constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService){
-    super(dialog,dataWareHouseService);
+  constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService, dataService:DataService){
+    super(dialog,dataWareHouseService, dataService);
 
     this.columns = {primary: this.columns_primary,alt: this.columns_alternative};
 

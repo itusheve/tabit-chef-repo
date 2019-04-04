@@ -449,7 +449,9 @@ export class HomeComponent implements OnInit {
     }
 
     openMonthlyReport() {
+
         this.openMonthPicker();
+
         //TODO: Temp override until Ofer adds this to US sites
         /*if (this.env.region === 'us') {
 
@@ -890,6 +892,7 @@ export class HomeComponent implements OnInit {
                 }
 
                 this.summaryCardData.loading = false;
+                this.dataService.setMonthlyReductions(this.summaryCardData);
             });
     }
 

@@ -4,6 +4,7 @@ import {ReportdialogComponent} from '../reportdialog/reportdialog.component';
 import {DataWareHouseService} from '../../services/data-ware-house.service';
 import * as moment from 'moment';
 import {TabitHelper} from '../../../tabit/helpers/tabit.helper';
+import {DataService} from '../../../tabit/data/data.service';
 
 
 export interface AbstractDataRow {
@@ -51,16 +52,19 @@ export abstract class AbstractTableComponent implements OnInit {
 
     public selectedOption;
     public tabitHelper: TabitHelper;
-    public getCssColorClass(): any{
-        let percent = this.data.percent * 100;
-        return this.tabitHelper.getColorClassByPercentage(percent,true);
 
+    public getCssColorClass(): any{
+
+        if(this.data.percent !== null){
+            let percent = this.data.percent ;
+            return this.tabitHelper.getColorClassByPercentage(percent,false);
+        } else return null;
 
     }
 
 
 
-    constructor(protected dialog:MatDialog,protected dataWareHouseService:DataWareHouseService){
+    constructor(protected dialog:MatDialog,protected dataWareHouseService:DataWareHouseService,protected dataService:DataService){
         this.selectedOption = 'primary';
         this.sortDir = 'asc';
         this.tabitHelper = new TabitHelper();
@@ -143,7 +147,7 @@ export abstract class AbstractTableComponent implements OnInit {
             itemName: row[this.columns[this.selectedOption][0].dataKey],
             reasonName: row.filters.reasonName,
             quantity:row.qty,
-            isWaiter: this.selectedOption === 'alt',
+            isWaiter: this.selectedOption === 'alt' && this.optional(),
             amount:row.amountIncludeVat,
             itemsPromise:
             this.selectedOption === 'alt' ?
@@ -160,6 +164,10 @@ export abstract class AbstractTableComponent implements OnInit {
 
 
 //this.getType(),row.fullName, row.firedBy, row.businessDate, options
+     }
+
+     protected optional(){
+        return true;
      }
 
 

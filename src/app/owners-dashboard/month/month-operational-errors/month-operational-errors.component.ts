@@ -18,13 +18,18 @@ export class MonthOperationalErrorsComponent implements OnInit, AfterViewInit {
     compensationReturn: AbstractTableComponent;
     @ViewChild('compensation')
     compensation: AbstractTableComponent;
-
+    tabitHelper;
     public monthCompensationData: any = {};
     public monthCompensationReturnData: any = {};
     public summary: any = {};
 
     constructor() {
+        this.tabitHelper = new TabitHelper();
+    }
 
+    public getCssColorClass(): any{
+        let percent = this.data.percent;
+        return this.tabitHelper.getColorClassByPercentage(percent,false);
     }
 
     ngOnInit() {
@@ -51,11 +56,6 @@ export class MonthOperationalErrorsComponent implements OnInit, AfterViewInit {
 
     }
 
-    /*getCssColorClass(): String {
-            let percent = this.data.percent * 100;
-            return new TabitHelper().getColorClassByPercentage(percent,false);
-        }
-*/
 
 }
 

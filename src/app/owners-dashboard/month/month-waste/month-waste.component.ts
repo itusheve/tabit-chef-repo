@@ -2,6 +2,8 @@ import {Component, OnInit, SimpleChanges,OnChanges} from '@angular/core';
 import {AbstractTableComponent} from '../../../ui/abstract-table/abstract-table.component';
 import {MatDialog} from '@angular/material';
 import {DataWareHouseService} from '../../../services/data-ware-house.service';
+import {DataService} from '../../../../tabit/data/data.service';
+import data from 'devextreme/bundles/dx.all';
 
 
 @Component({
@@ -24,8 +26,8 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
   ];
 
 
-  constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService){
-    super(dialog,dataWareHouseService);
+  constructor(dialog:MatDialog, dataWareHouseService:DataWareHouseService,dataService:DataService){
+    super(dialog,dataWareHouseService,dataService);
     this.columns = {primary:this.columns_primary,alt:this.columns_alternative};
     this.title = {en:'Waste',translated:'month.waste'};
   }
@@ -33,6 +35,11 @@ export class MonthWasteComponent extends AbstractTableComponent implements OnIni
       super.ngOnInit();
      this.options = {primary: 'details.date', alt: 'month.server'};
   }
+
+  protected optional(){
+    return false;
+  }
+
 
 
   createTitle(): String {
