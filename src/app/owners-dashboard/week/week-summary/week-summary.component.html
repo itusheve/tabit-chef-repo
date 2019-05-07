@@ -1,0 +1,22 @@
+<div class="widget p-0">
+<div class="flex d-col">
+    <div class="title">
+        <span [translate]="'weekSummary'"></span>
+    </div>
+    <mat-accordion>
+        <ng-container *ngFor="let service of services">
+            <mat-expansion-panel expanded="false"
+                                 style="border-radius: 0px;">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span class="font-weight-bold" style="width: 30%">{{service.name | translate}}</span>
+                        <span style="width: 45%">{{(incVat ? service.totals.sales : (service.totals.sales - service.totals.vat)) | curr:'0':'':''}}</span>
+                        <span *ngIf="service.name !== 'monthly'" style="width: 25%"> {{service.totals.percentage | pct: 1}}</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+            <app-week-summary-table [service]="service" ></app-week-summary-table>
+            </mat-expansion-panel>
+        </ng-container>
+    </mat-accordion>
+</div>
+</div>

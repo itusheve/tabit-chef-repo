@@ -1,0 +1,36 @@
+<div class="flex d-col">
+    <div class="title">
+        <span [translate]="'' + title.translated"></span>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="false">
+            <mat-expansion-panel-header [ngStyle]="{'background-color':getCssColorClass()}">
+                <mat-panel-title>
+                    <span
+                            style="font-weight: bold; font-size: 16px !important">{{titleData.actions | number}}&nbsp;<span
+                            [translate]="'' + titleData.connect "></span>&nbsp;{{titleData.total | curr:'0':'':'nullify'}}</span>
+                </mat-panel-title>
+
+            </mat-expansion-panel-header>
+            <div class="btn-group category-picker wastePicker" role="group">
+                <button class="btn btn-outline-secondary" style="width:50%; border-radius: 0 0.25rem 0.25rem 0; margin-left: 4px" (click)="selectedOption = 'primary'"
+                        [ngClass]="{'btnClicked':selectedOption == 'primary'}"><span
+                        [translate]="'' + options.reasons"></span></button>
+                <button class="btn btn-outline-secondary" style="width:50%; border-radius: 0.25rem 0 0 0.25rem;" (click)="selectedOption = 'alt'"
+                        [ngClass]="{'btnClicked': selectedOption == 'alt'}"><span
+                        [translate]="'' + options.servers"></span></button>
+            </div>
+            <!-- Grid Component-->
+            <div *ngIf="selectedOption === 'primary'">
+                <app-grid [data]="reasonsGrid.data" [columns]="reasonsGrid.columns" [options]="reasonsGrid.options">
+                </app-grid>
+            </div>
+            <div *ngIf="selectedOption === 'alt'">
+                <app-grid [data]="serverGrid.data" [columns]="serverGrid.columns" [options]="serverGrid.options">
+                </app-grid>
+            </div>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

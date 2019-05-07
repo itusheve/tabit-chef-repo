@@ -1,0 +1,13 @@
+<div class="flex d-col">
+  <div class="title">
+    <span [translate]="'day.mostReturnedItems'"></span>
+  </div>
+  <mat-accordion>
+    <ng-container>
+      <mat-expansion-panel [expanded]="true" style="padding:0 !important">
+        <app-week-most-return-single *ngFor="let service of services" [data]="service.data" [title]="{translated:'' + service.title}"></app-week-most-return-single>
+
+      </mat-expansion-panel>
+    </ng-container>
+  </mat-accordion>
+</div>

@@ -1,0 +1,24 @@
+<div class="flex d-col">
+    <div class="title">
+        <span [translate]="'' + title.translated"></span>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <span
+                            style="font-weight: bold; font-size: 18px !important">{{titleData.actions | number}}&nbsp;<span
+                            [translate]="'' + titleData.connect "></span>&nbsp;{{titleData.total | curr:'0':'':'nullify'}}</span>
+                </mat-panel-title>
+
+            </mat-expansion-panel-header>
+            <!-- Grid Component-->
+            <div *ngIf="selectedOption === 'primary'">
+                <app-grid style="line-height: 20px !important; cursor:pointer"
+                          [data]="reasonsGrid.data" [columns]="reasonsGrid.columns" [options]="reasonsGrid.options">
+                </app-grid>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

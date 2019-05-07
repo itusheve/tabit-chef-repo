@@ -1,0 +1,100 @@
+
+<table class="table table-sm">
+      <thead>
+      <tr class="header">
+        <td></td>
+        <td><span [translate]="'day.total'"></span></td>
+        <ng-container *ngFor="let orderType of service.kpis">
+          <td>{{orderType.type | translate}}</td>
+        </ng-container>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td><span class="font-weight-bold" [translate]="'month.sales'"></span></td>
+        <td>{{(service.totals.sales - service.totals.vat) | curr:'0':'':'':true}}</td>
+        <ng-container *ngFor="let orderType of service.kpis">
+          <td>{{(orderType.sales - orderType.vat) | curr:'0':'':'':true}}</td>
+        </ng-container>
+      </tr>
+      <tr>
+        <td><span class="font-weight-bold" [translate]="'day.salesWithTax'"></span></td>
+        <td>{{service.totals.sales | curr:'0':'':'':true}}<br> ({{service.totals.percentage | pct: 1}})</td>
+        <ng-container *ngFor="let orderType of service.kpis">
+          <td>{{orderType.sales | curr:'0':'':'':true}}<br> ({{orderType.percentage | pct: 1}})</td>
+        </ng-container>
+      </tr>
+      <tr *ngIf="service.totals.tip">
+        <td><span class="font-weight-bold" [translate]="'day.tips'"></span></td>
+        <td>{{service.totals.tip | curr:'0':'':'':true}}</td>
+        <ng-container *ngFor="let orderType of service.kpis">
+          <td>{{orderType.tip | curr:'0':'':'':true}}</td>
+        </ng-container>
+      </tr>
+      <tr style="border-bottom: 6px solid #eaecee;">
+        <td><span class="font-weight-bold" [translate]="'revenue'"></span></td>
+        <td>{{service.totals.revenue | curr:'0':'':'':true}}</td>
+        <ng-container *ngFor="let orderType of service.kpis">
+          <td>{{orderType.revenue | curr:'0':'':'':true}}</td>
+        </ng-container>
+      </tr>
+      <tr>
+        <td><span class="font-weight-bold" [translate]="'day.dinersOrders'"></span></td>
+        <td>{{service.totals.diners | number}}</td>
+        <ng-container *ngFor="let orderType of service.kpis">
+          <td>{{orderType.diners | number}}</td>
+        </ng-container>
+      </tr>
+      <tr>
+        <td><span class="font-weight-bold" [translate]="'day.ppa'"></span></td>
+        <td>{{service.totals.ppa | curr:'2':'':'nullify':true}}</td>
+        <ng-container *ngFor="let orderType of service.kpis">
+          <td>{{orderType.ppa | curr:'2':'':'nullify':true}}</td>
+        </ng-container>
+      </tr>
+      <tr>
+        <td><span class="font-weight-bold" [translate]="'cancellations'"></span></td>
+        <td>{{service.totals.reductions.cancellations.amount | curr:'0':'':'nullify':true}}<span
+                style="display: block;font-size: 12px;">({{service.totals.reductions.cancellations.percentage | pct: 1}})</span>
+        </td>
+        <ng-container *ngFor="let orderType of service.kpis">
+          <td>{{orderType.reductions.cancellations.amount | curr:'0':'':'nullify':true}}<span
+                  style="display: block;font-size: 12px;">({{orderType.reductions.cancellations.percentage | pct: 1}})</span>
+          </td>
+        </ng-container>
+      </tr>
+      <tr>
+        <td><span class="font-weight-bold" [translate]="'operational'"></span></td>
+        <td>{{service.totals.reductions.operational.amount | curr:'0':'':'nullify':true}}<span
+                style="display: block;font-size: 12px;">({{service.totals.reductions.operational.percentage | pct: 1}})</span>
+        </td>
+        <ng-container *ngFor="let orderType of service.kpis">
+          <td>{{orderType.reductions.operational.amount | curr:'0':'':'nullify':true}}<span
+                  style="display: block;font-size: 12px;">({{orderType.reductions.operational.percentage | pct: 1}})</span>
+          </td>
+        </ng-container>
+      </tr>
+      <tr>
+        <td><span class="font-weight-bold" [translate]="'retention'"></span></td>
+        <td>{{service.totals.reductions.retention.amount | curr:'0':'':'nullify':true}}<span
+                style="display: block;font-size: 12px;">({{service.totals.reductions.retention.percentage | pct: 1}})</span>
+        </td>
+        <ng-container *ngFor="let orderType of service.kpis">
+          <td>{{orderType.reductions.retention.amount | curr:'0':'':'nullify':true}}<span
+                  style="display: block;font-size: 12px;">({{orderType.reductions.retention.percentage | pct: 1}})</span>
+          </td>
+        </ng-container>
+      </tr>
+      <tr>
+        <td><span class="font-weight-bold" [translate]="'organizational'"></span></td>
+        <td>{{service.totals.reductions.organizational.amount | curr:'0':'':'nullify':true}}<span
+                style="display: block;font-size: 12px;">({{service.totals.reductions.organizational.percentage | pct: 1}})</span>
+        </td>
+        <ng-container *ngFor="let orderType of service.kpis">
+          <td>{{orderType.reductions.organizational.amount | curr:'0':'':'nullify':true}}<span
+                  style="display: block;font-size: 12px;">({{orderType.reductions.organizational.percentage | pct: 1}})</span>
+          </td>
+        </ng-container>
+      </tr>
+      </tbody>
+    </table>

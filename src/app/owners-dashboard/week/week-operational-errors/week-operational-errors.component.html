@@ -1,0 +1,16 @@
+<div class="flex d-col">
+  <div class="title">
+    <span [translate]="'operational'"></span>
+  </div>
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="false">
+      <mat-expansion-panel-header [ngClass]="getCssColorClass()">
+        <mat-panel-title style="font-weight: bold; font-size: 16px !important">
+          {{summary.actions}}&nbsp;<span [translate]="'' + summary.connect "></span>&nbsp;{{summary.total | curr:'0':'':'nullify'}}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-week-corporation-return class="corporationReturn widget"  #weekCompensationReturn [data]="weekCompensationReturnData" [date]="date" style="padding:0;"></app-week-corporation-return>
+      <app-week-corporation class="corporation widget" #weekCompensation [data]="weekCompensationData" [date]="date" style="padding:0; margin-bottom:0px"></app-week-corporation>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

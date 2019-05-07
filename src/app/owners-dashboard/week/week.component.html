@@ -1,0 +1,36 @@
+<ng-container *ngIf="isLoading == true">
+  <div class="text-center">
+    <dx-load-indicator></dx-load-indicator>
+  </div>
+</ng-container>
+
+<div class="row mx-0">
+  <div  class="col-sm-12 col-md-6 mb-3 px-0">
+    <app-card  [cardData]="weekCardData" class="picker-card-container"
+               style="cursor: pointer"></app-card>
+  </div>
+</div>
+
+<div style="margin-bottom:10px">
+  <app-month-grid  #grid (onDateClicked)="onDateClicked($event)" [isWeekGrid]="true"></app-month-grid>
+</div>
+
+<app-week-summary *ngIf = "mostSoldItems.length" [data]="salesWeek"></app-week-summary>
+<app-week-payments class="cancellationGrid widget" [data]="payments"></app-week-payments>
+<app-week-refunds *ngIf="refunds && refunds.isShowing ===true" class="cancellationGrid widget" (onOrderClicked)="onOrderClicked($event)" [data]="refunds" style="padding:0"></app-week-refunds>
+<app-week-cancellation *ngIf="cancellation && cancellation.isShowing ===true" class="cancellationGrid widget" [data]="cancellation" [date]="date"></app-week-cancellation>
+<app-week-operational-errors *ngIf="weeklyReportsInProgress == false && weeklyReports.isShowing ===true"  class="cancellationGrid widget" [data]="weeklyReports" [date]="date"></app-week-operational-errors>
+<app-week-promotions *ngIf="promotions && promotions.isShowing ===true" class="promotionGrid widget" [data]="promotions" [date]="date"></app-week-promotions>
+<app-week-retention *ngIf="retention && retention.isShowing ===true" class="retentionGrid widget" [data]="retention" [date]="date"></app-week-retention>
+<app-week-organizational *ngIf="organizational && organizational.isShowing ===true"  class="organizationalGrid widget" [data]="organizational" [date]="date" ></app-week-organizational>
+<app-week-waste *ngIf="wasteEod && wasteEod.isShowing === true > 0  "  class="wasteGrid widget" [data]="wasteEod" [date]="date"></app-week-waste>
+<app-week-most-sold-items *ngIf="mostSoldItems.length" [data] = "mostSoldItems" class="widget" style="padding:0"></app-week-most-sold-items>
+<app-week-most-returned-items *ngIf="mostReturnsItems.length" [data] = "mostReturnsItems" class="widget" style="padding:0"></app-week-most-returned-items>
+
+
+<div class="container" *ngIf="drill == true">
+  <div class="flex d-col drill">
+    <app-order-view style="width:100%;" [orderNumber]="drilledOrderNumber" [order]="drilledOrder" [openOrder]="drilledOrder" [drillType]="drillType"></app-order-view>
+  </div>
+</div>
+

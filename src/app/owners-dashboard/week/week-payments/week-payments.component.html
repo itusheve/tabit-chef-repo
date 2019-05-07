@@ -1,0 +1,22 @@
+<div class="flex d-col">
+  <div class="title">
+    <span [translate]="'day.paymentsReport'"></span>
+  </div>
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span [translate]="'' + title.translated" style="font-weight: bold; font-size: 16px !important"></span>
+        </mat-panel-title>
+
+      </mat-expansion-panel-header>
+
+      <!-- Grid Component-->
+      <div>
+        <app-grid [data]="paymentGrid.data" [columns]="paymentGrid.columns" [options]="paymentGrid.options">
+        </app-grid>
+      </div>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

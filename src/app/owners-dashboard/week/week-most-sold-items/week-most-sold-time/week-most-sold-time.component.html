@@ -1,0 +1,18 @@
+<div class="flex d-col">
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <span [translate]="'' + title.translated" style="font-weight: bold; font-size: 14px !important"></span>
+                </mat-panel-title>
+
+            </mat-expansion-panel-header>
+
+            <!-- Grid Component-->
+            <div>
+                <app-grid [data]="reasonsGrid.data" [columns]="reasonsGrid.columns" [options]="reasonsGrid"></app-grid>
+            </div>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

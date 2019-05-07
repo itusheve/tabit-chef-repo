@@ -1,0 +1,84 @@
+.organizationalGrid {
+    padding:0;
+}
+
+.cancellationGrid {
+    padding:0;
+}
+
+.promotionGrid {
+    padding:0;
+}
+
+.retentionGrid {
+    padding:0;
+}
+
+.wasteGrid {
+    padding:0;
+}
+
+
+
+@import '../../../tabit/styles/config/frame';
+@import '../../../tabit/styles/config/colors';
+
+.totalRow {
+    font-weight: bold;
+}
+
+.accountTypeRow {
+    font-weight: bold;
+}
+.accountRow td:first-child {
+    // text-indent: 10px;
+    font-weight: normal;
+}
+
+td {
+    word-wrap: break-word;
+}
+
+.pctCell{
+    width: 63px;
+}
+
+::ng-deep.mat-expansion-panel-body {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding: 0 0 0 !important;
+}
+
+
+
+
+.drill {
+    z-index: 10009;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 101vw;
+    height: 101vh;
+    padding-top: $toolbarHeight;
+    @media #{$iphone-X-portrait-mq} {
+        padding-top: $iphone-X-notch-px + $toolbarHeight;
+    }
+    @media #{$iphone-6-7-8-portrait-mq} {
+        padding-top: $iphone-6-7-8-status-bar-px + $toolbarHeight;
+    }
+    @media #{$iphone-6-7-8-plus-portrait-mq} {
+        padding-top: $iphone-6-7-8-plus-status-bar-px + $toolbarHeight;
+    }
+    @media #{$ipad-portrait-mq} {
+        padding-top: $ipad-status-bar-px + $toolbarHeight;
+    }
+    background-color: #edf1f2;
+    overflow: hidden;
+    // -webkit-overflow-scrolling: touch;This caused bad behaviour with the fixed order-view - on ios user was able to scroll to see the view beneath. removing this solved the problem, and momentum scrolling is still working on ios.
+}
+
+mat-dialog-content{
+    font-family: Roboto,"Helvetica Neue",sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
+}
